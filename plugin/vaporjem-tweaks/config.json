@@ -337,6 +337,7 @@
                 {   
                     "text": "Paste", 
                     "icon": "edit-paste", 
+                    "customIcon": false, 
                     "action": "edit_paste"
                 },
                 {   

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=vaporjem-tweaks
+X-Python-2-Compatible=false
+X-Krita-Manual=manual.html
+Name=VaporJem Tweaks
+Comment=Tweaks and QOL Addons for Krita
