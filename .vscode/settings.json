@@ -1,5 +1,14 @@
 {
     "files.exclude": {
         "**/__pycache__": true
+    },
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "match": ".*",
+                "isAsync": true,
+                "cmd": "${workspaceFolder}/dev-flatpak-install.sh"
+            }
+        ]
     }
 }
