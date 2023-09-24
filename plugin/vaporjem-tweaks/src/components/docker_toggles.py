@@ -15,8 +15,8 @@ class DockerToggles:
                 docker.setVisible(not docker.isVisible())
 
     def addDocker(self, window, menu, actionName, id, text, actionPath):
-        action = window.createAction(actionName, text, actionPath)    
-        icon = ResourceManager.customIcon('dockers', id)
+        action = window.createAction(actionName, "Docker: " + text, actionPath)    
+        icon = ResourceManager.iconLoader(id, 'dockers', True)
         action.setIcon(icon)
 
         menu.addAction(action)
@@ -28,11 +28,13 @@ class DockerToggles:
         data = []
 
         for docker in dockersList:
-            x = Config_Docker(docker.windowTitle(), docker.objectName())
+            x = Config_Docker()
+            x.display_name = docker.windowTitle()
+            x.docker_name = docker.objectName()
             data.append(x)
         
         cfg.auto_dockers = data
-        ConfigManager.saveJSON(cfg)
+        cfg.save()
             
     def createActions(self, window, actionPath):
 
@@ -43,15 +45,7 @@ class DockerToggles:
 
         subItemPath = actionPath + "/" + sectionName
 
-        cacheDockerNamesAction = window.createAction("Refresh Known Dockers", "Refresh Known Dockers", subItemPath)
-        cacheDockerNamesAction.triggered.connect(lambda: self.reloadDockers())
-        root_menu.addAction(cacheDockerNamesAction)
-
-        seperator = window.createAction("DockerTogglesSeperator", "", subItemPath)
-        seperator.setSeparator(True)
-        root_menu.addAction(seperator)
-
         cfg = ConfigManager.getJSON()
 
         for docker in cfg.auto_dockers:
-            self.addDocker(window, root_menu, 'DockerToggles_{0}'.format(docker["docker_name"]), docker["docker_name"], '{0}'.format(docker["display_name"]), subItemPath)
+            self.addDocker(window, root_menu, 'DockerToggles_{0}'.format(docker.docker_name), docker.docker_name, '{0}'.format(docker.display_name), subItemPath)

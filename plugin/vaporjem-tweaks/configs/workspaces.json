@@ -1,0 +1,44 @@
+{
+    "items": [
+        {
+            "display_name": "Animation",
+            "id": "Animation"
+        },
+        {
+            "display_name": "Big_Paint_2",
+            "id": "Big_Paint_2"
+        },
+        {
+            "display_name": "Big_Paint",
+            "id": "Big_Paint"
+        },
+        {
+            "display_name": "Big_Vector",
+            "id": "Big_Vector"
+        },
+        {
+            "display_name": "Default",
+            "id": "Default"
+        },
+        {
+            "display_name": "Minimal",
+            "id": "Minimal"
+        },
+        {
+            "display_name": "Small_Vector",
+            "id": "Small_Vector"
+        },
+        {
+            "display_name": "Storyboarding",
+            "id": "Storyboarding"
+        },
+        {
+            "display_name": "VFX_Paint",
+            "id": "VFX_Paint"
+        },
+        {
+            "display_name": "Personal",
+            "id": "Personal"
+        }
+    ]
+}

@@ -9,6 +9,7 @@ from .src.components.docker_toggles import *
 from .src.components.docker_groups import *
 from .src.components.popup_buttons import *
 from .src.components.workspace_toggles import *
+#from .src.components.hotkey_bar import *
 
 
 
@@ -18,6 +19,10 @@ class VaporJem(Extension):
 
     def setup(self):
         pass
+
+    def reloadKnownItems(self):
+        self.basic_dockers.reloadDockers()
+        self.workspace_toggles.reloadWorkspaces()
             
     def createActions(self, window):
         ConfigManager.init(os.path.dirname(__file__))
@@ -27,6 +32,15 @@ class VaporJem(Extension):
         root = window.createAction("VaporJem", "VaporJem", subItemPath)
         root_menu = QtWidgets.QMenu("VaporJem", window.qwindow())
         root.setMenu(root_menu)
+
+
+        cacheDockerNamesAction = window.createAction("VaporJem_ReloadKnownItems", "VaporJem: Reload Known Items", subItemPath)
+        cacheDockerNamesAction.triggered.connect(lambda: self.reloadKnownItems())
+        root_menu.addAction(cacheDockerNamesAction)
+
+        seperator = window.createAction("", "", subItemPath)
+        seperator.setSeparator(True)
+        root_menu.addAction(seperator)
 
         self.basic_dockers = DockerToggles()
         self.basic_dockers.createActions(window, subItemPath)

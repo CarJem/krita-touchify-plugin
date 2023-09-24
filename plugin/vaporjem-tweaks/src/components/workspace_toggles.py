@@ -22,8 +22,8 @@ class WorkspaceToggles:
                 break
 
     def addWorkspace(self, window, menu, actionName, id, text, actionPath):
-        action = window.createAction(actionName, text, actionPath)    
-        icon = ResourceManager.customIcon('dockers', id)
+        action = window.createAction(actionName, "Workspace: " + text, actionPath)    
+        icon = ResourceManager.iconLoader(id, 'workspaces', True)
         action.setIcon(icon)
 
         menu.addAction(action)
@@ -43,12 +43,14 @@ class WorkspaceToggles:
                             if workspace.isSeparator():
                                 break
                             else:
-                                action_text = workspace.text()
-                                Workspaces.append(Config_Workspace(action_text, action_text))
+                                action = Config_Workspace()
+                                action.display_name = workspace.text()
+                                action.id = workspace.text()
+                                Workspaces.append(action)
                 break
         
         cfg.workspaces = Workspaces
-        ConfigManager.saveJSON(cfg)
+        cfg.save()
 
     def createActions(self, window, actionPath):
 
@@ -59,14 +61,6 @@ class WorkspaceToggles:
 
         subItemPath = actionPath + "/" + sectionName
 
-        refreshWorkspacesAction = window.createAction("Refresh Known Workspaces", "Refresh Known Workspaces", subItemPath)
-        refreshWorkspacesAction.triggered.connect(lambda: self.reloadWorkspaces())
-        root_menu.addAction(refreshWorkspacesAction)
-
-        seperator = window.createAction("WorkspaceTogglesSeperator", "", subItemPath)
-        seperator.setSeparator(True)
-        root_menu.addAction(seperator)
-
         cfg = ConfigManager.getJSON()
         for workspace in cfg.workspaces:
-            self.addWorkspace(window, root_menu, 'WorkspaceToggles_{0}'.format(workspace["id"]), workspace["id"], '{0}'.format(workspace["display_name"]), subItemPath)
+            self.addWorkspace(window, root_menu, 'WorkspaceToggles_{0}'.format(workspace.id), workspace.id, '{0}'.format(workspace.display_name), subItemPath)

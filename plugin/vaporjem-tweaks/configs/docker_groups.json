@@ -1,0 +1,29 @@
+{
+    "items": [
+        {
+            "display_name": "History Panel",
+            "id": "HistoryDockers",
+            "docker_names": [
+                "History",
+                "Snapshot"
+            ]
+        },
+        {
+            "display_name": "Colors Panel",
+            "id": "ColorDockers",
+            "docker_names": [
+                "SmallColorSelector",
+                "SpecificColorSelector",
+                "PaletteDocker",
+                "PatternDocker"
+            ]
+        },
+        {
+            "display_name": "Brushes Panel",
+            "id": "BrushesCustom",
+            "docker_names": [
+                "PresetDocker"
+            ]
+        }
+    ]
+}

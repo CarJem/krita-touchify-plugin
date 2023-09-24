@@ -35,7 +35,7 @@ class DockerGroups:
         global custom_docker_states
 
         action = window.createAction(actionName, text, actionPath) 
-        icon = ResourceManager.customIcon('docker_groups', groupId)
+        icon = ResourceManager.iconLoader(groupId, 'buttons', True)
         action.setIcon(icon)
 
         custom_docker_states[groupId] = {
@@ -57,4 +57,4 @@ class DockerGroups:
 
         cfg = ConfigManager.getJSON()
         for docker in cfg.custom_dockers:
-            self.createCustomAction(window, root_menu, 'DockerToggles_Custom_{0}'.format(docker["id"]), docker["id"], docker["docker_names"], '{0}'.format(docker["display_name"]), subItemPath)
+            self.createCustomAction(window, root_menu, 'DockerToggles_Custom_{0}'.format(docker.id), docker.id, docker.docker_names, '{0}'.format(docker.display_name), subItemPath)

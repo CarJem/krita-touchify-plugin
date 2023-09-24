@@ -16,6 +16,12 @@ class ResourceManager:
         else:
             icon = ResourceManager.getFallbackIcon()
             return icon
+        
+    def iconLoader(iconName, type, isCustom):
+        if not isCustom:
+            return ResourceManager.kritaIcon(iconName)
+        else:
+            return ResourceManager.customIcon(type, iconName)
     
     def kritaIcon(iconName):
         return Krita.instance().icon(iconName)
