@@ -1,101 +1,71 @@
 from typing import List
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 import json
 import os
-
-def default_assignment(args, attributeName, defaultValue):
-    if attributeName in args:
-        return args[attributeName]
-    else:
-        return defaultValue
-    
-def list_assignment(array, classSrc, arraySrc):
-    for i in array:
-        arraySrc.append(classSrc.create(i))
-
-
+from ..ext.extensions import *
 
 class Config_PopupInfo:
-    text: str
-    action: str
-    icon: str
-    customIcon: bool
+    text: str = ""
+    action: str = ""
+    icon: str = ""
+    customIcon: bool = False
 
     def create(args):
         obj = Config_PopupInfo()
-        obj.text = default_assignment(args, "text", "")
-        obj.action = default_assignment(args, "action", "")
-        obj.icon = default_assignment(args, "icon", "")
-        obj.customIcon = default_assignment(args, "customIcon", False)
+        Extensions.dictToObject(obj, args)
         return obj
 
 class Config_Popup:
-    id: str
-    btnName: str
-    isIconCustom: bool
-    icon: str
-    type: str
-    docker_id: str
-    grid_width: int
-    grid_padding: int
-    item_width: int
-    item_height: int
-    icon_width: int
-    icon_height: int
-    items: List[Config_PopupInfo]
-
-
-    def __init__(self):
-        pass
+    id: str = ""
+    btnName: str = ""
+    isIconCustom: bool = False
+    icon: str = ""
+    type: str = "actions"
+    docker_id: str = ""
+    grid_width: int = 3
+    grid_padding: int = 2
+    item_width: int = 100
+    item_height: int = 100
+    icon_width: int = 30
+    icon_height: int = 30
+    hotkeyNumber: int = -1
+    items: List[Config_PopupInfo] = []
 
     def create(args):
         obj = Config_Popup()
-        obj.id = default_assignment(args, "id", "")
-        obj.btnName = default_assignment(args, "btnName", "")
-        obj.icon = default_assignment(args, "icon", "")
-        obj.type = default_assignment(args, "type", "actions")
-        obj.docker_id = default_assignment(args, "docker_id", "")
-        obj.isIconCustom = default_assignment(args, "isIconCustom", True)
-        obj.grid_width = default_assignment(args, "grid_width", 3)
-        obj.grid_padding = default_assignment(args, "grid_padding", 2)
-        obj.item_width = default_assignment(args, "item_width", 100)
-        obj.item_height = default_assignment(args, "item_height", 100)
-        obj.icon_width = default_assignment(args, "icon_width", 30)
-        obj.icon_height = default_assignment(args, "icon_height", 30)
+        Extensions.dictToObject(obj, args)
         obj.items = []
-        items = default_assignment(args, "items", [])
-        list_assignment(items, Config_PopupInfo, obj.items)
+        items = Extensions.default_assignment(args, "items", [])
+        Extensions.list_assignment(items, Config_PopupInfo, obj.items)
         return obj
 
 class Config_Docker:
-    display_name: str
-    docker_name: str
+    display_name: str = ""
+    docker_name: str = ""
 
     def create(args):
         obj = Config_Docker()
-        obj.display_name = default_assignment(args, "display_name", "")
-        obj.docker_name = default_assignment(args, "docker_name", "")
+        Extensions.dictToObject(obj, args)
         return obj
 
 class Config_DockerGroup:
-    display_name: str
-    id: str
-    docker_names: List[str]
+    display_name: str = ""
+    docker_names: List[str] = []
+    id: str = ""
 
     def create(args):
         obj = Config_DockerGroup()
-        obj.display_name = default_assignment(args, "display_name", "")
-        obj.id = default_assignment(args, "id", "")
-        obj.docker_names = default_assignment(args, "docker_names", [])
+        Extensions.dictToObject(obj, args)
         return obj
 
 class Config_Workspace:
-    display_name: str
-    id: str
+    display_name: str = ""
+    id: str = ""
 
     def create(args):
         obj = Config_Workspace()
-        obj.display_name = default_assignment(args, "display_name", "")
-        obj.id = default_assignment(args, "id", "")
+        Extensions.dictToObject(obj, args)
         return obj
 
 class ConfigFile:
@@ -104,20 +74,17 @@ class ConfigFile:
     popups: List[Config_Popup] = []
     workspaces: List[Config_Workspace] = []
 
-
-
     def load_chunk(self, configName):
-        CONFIG_FILE = os.path.join(self.base_dir, 'configs', configName + ".json")
+        CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
         with open(CONFIG_FILE) as f:
             jsonData = json.load(f)
             return jsonData["items"]
 
     def save_chunk(self, cfg, configName):
-        CONFIG_FILE = os.path.join(self.base_dir, 'configs', configName + ".json")
+        CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
         jsonData = { "items": cfg }
         with open(CONFIG_FILE, "w") as f:
             json.dump(jsonData, f, default=lambda o: o.__dict__, indent=4)
-
 
     def save(self):
         self.save_chunk(self.auto_dockers, "dockers")
@@ -126,17 +93,23 @@ class ConfigFile:
         self.save_chunk(self.workspaces, "workspaces")
 
     def __init__(self, base_dir):
-        self.base_dir = base_dir
-        list_assignment(self.load_chunk("dockers"), Config_Docker, self.auto_dockers)
-        list_assignment(self.load_chunk("docker_groups"), Config_DockerGroup, self.custom_dockers)
-        list_assignment(self.load_chunk("popups"), Config_Popup, self.popups)
-        list_assignment(self.load_chunk("workspaces"), Config_Workspace, self.workspaces)
+        self.__base_dir__ = base_dir
+        Extensions.list_assignment(self.load_chunk("dockers"), Config_Docker, self.auto_dockers)
+        Extensions.list_assignment(self.load_chunk("docker_groups"), Config_DockerGroup, self.custom_dockers)
+        Extensions.list_assignment(self.load_chunk("popups"), Config_Popup, self.popups)
+        Extensions.list_assignment(self.load_chunk("workspaces"), Config_Workspace, self.workspaces)
 
 class ConfigManager:
+
+
+    hotkeys_storage = {}
 
     def init(path):
         global base_dir
         global cfg
+        global hotkeys_storage
+
+        hotkeys_storage = {}
         base_dir = path
         cfg = ConfigFile(base_dir)
 
@@ -147,6 +120,15 @@ class ConfigManager:
     def getResourceFolder():
         global base_dir
         return os.path.join(base_dir, "resources")
+    
+
+    def getHotkeyAction(index):
+        global hotkeys_storage
+        return hotkeys_storage[index]
+
+    def addHotkey(index, action):
+        global hotkeys_storage
+        hotkeys_storage[index] = action
 
     def getJSON() -> ConfigFile:
         global cfg

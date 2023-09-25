@@ -5,6 +5,7 @@ import json
 import sys
 import importlib.util
 from .src.classes.config import *
+from .src.ui.settings import *
 from .src.components.docker_toggles import *
 from .src.components.docker_groups import *
 from .src.components.popup_buttons import *
@@ -23,6 +24,9 @@ class VaporJem(Extension):
     def reloadKnownItems(self):
         self.basic_dockers.reloadDockers()
         self.workspace_toggles.reloadWorkspaces()
+
+    def openSettings(self):
+        SettingsDialog().show()
             
     def createActions(self, window):
         ConfigManager.init(os.path.dirname(__file__))
@@ -34,13 +38,22 @@ class VaporJem(Extension):
         root.setMenu(root_menu)
 
 
-        cacheDockerNamesAction = window.createAction("VaporJem_ReloadKnownItems", "VaporJem: Reload Known Items", subItemPath)
+        cacheDockerNamesAction = window.createAction("VaporJem_ReloadKnownItems", "Reload Known Items...", subItemPath)
         cacheDockerNamesAction.triggered.connect(lambda: self.reloadKnownItems())
         root_menu.addAction(cacheDockerNamesAction)
+
+        #act = window.createAction("VaporJem_OpenSettings", "Settings...", subItemPath)
+        #act.triggered.connect(lambda: self.openSettings())
+        #root_menu.addAction(act)
 
         seperator = window.createAction("", "", subItemPath)
         seperator.setSeparator(True)
         root_menu.addAction(seperator)
+
+        for i in range(1, 10):
+            hotkeyName = "vjt_action" + str(i)
+            hotkeyAction = window.createAction(hotkeyName, "Custom action: " + str(i), subItemPath + "/Hotkeys")
+            ConfigManager.addHotkey(i, hotkeyAction)
 
         self.basic_dockers = DockerToggles()
         self.basic_dockers.createActions(window, subItemPath)

@@ -183,6 +183,7 @@
             "item_height": 400,
             "icon_width": 30,
             "icon_height": 30,
+            "hotkeyNumber": 1,
             "items": []
         }
     ]

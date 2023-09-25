@@ -16,7 +16,10 @@ BUTTON_INDICATOR = "⠀"
 
 
 class PopupDialog(QDialog):
-    def __init__(self, parent, args: Config_Popup):     
+
+    parent: QMainWindow
+
+    def __init__(self, parent: QMainWindow, args: Config_Popup):     
         super().__init__(parent)    
 
         self.parent = parent
@@ -155,20 +158,36 @@ class PopupDialog(QDialog):
 
     #endregion
 
-    def getGeometry(self, button):
+    def getGeometry(self, position, width, height, isMouse = False):
         dialog_width, dialog_height = self.generateSize()
 
-        pos = button.mapToGlobal(QPoint(0,0))
-        screenSize = QtWidgets.QApplication.primaryScreen().size()
+        screen = QtGui.QGuiApplication.screenAt(position)
+        screen_geometry = screen.geometry()
+        screenSize = screen.size()
 
-        intScreenHeight = screenSize.height()
-        intScreenWidth = screenSize.width()
+        screen_x = screen_geometry.x()
+        screen_y = screen_geometry.y()
+        screen_height = screenSize.height()
+        screen_width = screenSize.width()
 
-        offset_x = pos.x() + (button.width() // 2) - (dialog_width // 2)
-        offset_y = pos.y() + (button.height())
+        
+        offset_x = position.x() 
+        offset_y = position.y()
+        
+        if not isMouse:
+            offset_x += (width // 2) - (dialog_width // 2)
+            offset_y += (height)
 
-        actual_x = min(offset_x, intScreenWidth - dialog_width)
-        actual_y = min(offset_y, intScreenHeight - dialog_height)
+        actual_x = offset_x
+        actual_y = offset_y
+
+        if actual_x + dialog_width > screen_x + screen_width:
+            actual_x = screen_x + screen_width - dialog_width
+        elif actual_x < screen_x:
+            actual_x = screen_x
+
+        if actual_y + dialog_height > screen_y + screen_height:
+            actual_y = screen_y + screen_height - dialog_height
 
         return [actual_x, actual_y, dialog_width, dialog_height]
         
@@ -197,27 +216,41 @@ class PopupDialog(QDialog):
             return [int(dialog_width), int(dialog_height)]
         else:
             return [0, 0]
+        
 
-    def showPopup(self):
+
+    def _openPopup(self, actual_x, actual_y, dialog_width, dialog_height):
+        if self.popupType == "actions":
+            self.showActionsPopup(actual_x, actual_y, dialog_width, dialog_height)
+        elif self.popupType == "docker":
+            self.showDockerPopup(actual_x, actual_y, dialog_width, dialog_height)
+        
+    def showButtonPopup(self):
         for qobj in self.parent.findChildren(QToolButton):
             actions = qobj.actions()
             if actions:
                 for action in actions:
                     if action.text() == self.metadata.btnName + BUTTON_INDICATOR:
-                        actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(qobj)
-                        if self.popupType == "actions":
-                            self.showActionsPopup(actual_x, actual_y, dialog_width, dialog_height)
-                        elif self.popupType == "docker":
-                            self.showDockerPopup(actual_x, actual_y, dialog_width, dialog_height)
+                        actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(qobj.mapToGlobal(QPoint(0,0)), qobj.width(), qobj.height())
+                        self._openPopup(actual_x, actual_y, dialog_width, dialog_height)
+
+    def showMousePopup(self):
+        actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(QtGui.QCursor.pos(), 0, 0, True)
+        self._openPopup(actual_x, actual_y, dialog_width, dialog_height)
+
+
 
 class PopupButtons:
 
-    def showPopup(self, id, data: Config_Popup):
+    def showPopup(self, id, data: Config_Popup, mode: str):
         if not id in popup_dialogs:
             qwin = Krita.instance().activeWindow().qwindow()
             popup_dialogs[id] = PopupDialog(qwin, data)
 
-        popup_dialogs[id].showPopup()
+        if mode == "mouse":
+            popup_dialogs[id].showMousePopup()
+        else:
+            popup_dialogs[id].showButtonPopup()
 
     def addPopup(self, window, menu, popup: Config_Popup, actionPath):
 
@@ -226,11 +259,16 @@ class PopupButtons:
         iconName = popup.icon
         isCustomIcon = popup.isIconCustom
         id = popup.id
+        hotkeyNumber = popup.hotkeyNumber
 
         action = window.createAction(actionName, displayName, actionPath)
-        icon = ResourceManager.iconLoader(iconName, "buttons", isCustomIcon)
+        icon = ResourceManager.iconLoader(iconName, "buttons", isCustomIcon)        
         action.setIcon(icon)
-        action.triggered.connect(partial(self.showPopup, id, popup))
+        action.triggered.connect(partial(self.showPopup, id, popup, "button"))
+
+        if not hotkeyNumber == -1:
+            ConfigManager.getHotkeyAction(hotkeyNumber).triggered.connect(partial(self.showPopup, id, popup, "mouse"))
+
         menu.addAction(action)
 
     def createActions(self, window, actionPath):
