@@ -3,6 +3,7 @@
         {
             "display_name": "History Panel",
             "id": "HistoryDockers",
+            "hotkeyNumber": 3,
             "docker_names": [
                 "History",
                 "Snapshot"

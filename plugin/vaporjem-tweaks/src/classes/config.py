@@ -55,6 +55,7 @@ class Config_DockerGroup:
     docker_names: List[str] = []
     id: str = ""
     hotkeyNumber: int = -1
+    tabsMode: bool = True
 
     def create(args):
         obj = Config_DockerGroup()

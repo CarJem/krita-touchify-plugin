@@ -118,7 +118,8 @@
         },
         {
             "display_name": "Touch Docker",
-            "docker_name": "TouchDocker"
+            "docker_name": "TouchDocker",
+            "hotkeyNumber": 4
         },
         {
             "display_name": "Comics Manager",

@@ -1,6 +1,6 @@
-from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QToolButton, QGridLayout, QSizePolicy
-from PyQt5.QtCore import Qt, QEvent, QPoint, QRect, QSize
+from PyQt5 import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 import os
 import json
 from functools import partial
@@ -21,23 +21,51 @@ class PopupDialog(QDialog):
 
     parent: QMainWindow
 
+    dockerWidget: QDockWidget = None
+    dockerWindow: QMainWindow = None
+    dockerLocation: Qt.DockWidgetArea = None
+    dockerVisibility: bool = False
+
     def __init__(self, parent: QMainWindow, args: Config_Popup):     
         super().__init__(parent)    
 
         self.parent = parent
         self.metadata = args
 
+
+
         self.popupType = self.metadata.type
         if self.popupType == "actions":
-            self.initActionsPopup()
+            self.grid = self.generateActionsLayout()
         elif self.popupType == "docker":
-            self.initDockerPopup()
-            pass
+            self.grid = self.generateDockerLayout()
+            self.getDockerDetails(True)
         else:
             raise Exception("Invalid popup type: " + self.popupType)
+        
+        self.initLayout()
+    
+    def closeEvent(self, event):
+        self.updateDocker(True)
+        super().closeEvent(event)
 
+    def initLayout(self):
+        self.frame = QFrame()
+        self.frame.setFrameShape(QFrame.Box)
+        self.frame.setFrameShadow(QFrame.Plain)
+        self.frame.setLineWidth(1)
+        self.frame.setObjectName("popupFrame")
+        self.frame.setStyleSheet("QFrame#popupFrame { border: 1px solid white }")
+        self.frame.setLayout(self.grid)
 
-    #region Actions Popup
+        layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(self.frame)
+        self.setLayout(layout)
+                
+        self.setFocusPolicy(Qt.ClickFocus)
+        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
+        self.setWindowFlags(Qt.Popup | Qt.FramelessWindowHint)
 
     def runAction(self, actionName):
         try:
@@ -108,57 +136,39 @@ class PopupDialog(QDialog):
         layout.setHorizontalSpacing(padding)
         layout.setVerticalSpacing(padding)
         return layout
-    
-    def initActionsPopup(self):
-        self.grid = self.generateActionsLayout()
+   
+    def generateDockerLayout(self):
+        grid = QHBoxLayout()
+        return grid
 
-        self.frame = QFrame()
-        self.frame.setFrameShape(QFrame.Box)
-        self.frame.setFrameShadow(QFrame.Plain)
-        self.frame.setLineWidth(1)
-        self.frame.setStyleSheet("border: 1px solid white")
-        self.frame.setLayout(self.grid)
+    def updateDocker(self, closing = False):
+        if closing:
+            if self.dockerWindow:
+                self.grid.removeWidget(self.dockerWidget)
+                self.dockerWindow.addDockWidget(self.dockerLocation, self.dockerWidget)
 
-        layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(self.frame)
-        self.setLayout(layout)
-                
-        self.setFocusPolicy(Qt.ClickFocus)
-        self.setWindowFlags(Qt.Popup | Qt.FramelessWindowHint)
+                titlebarSetting = Krita.instance().readSetting("", "showDockerTitleBars", "false")
+                showTitlebar = True if titlebarSetting == "true" else False
+                self.dockerWidget.titleBarWidget().setVisible(showTitlebar)
 
-    def showActionsPopup(self, actual_x, actual_y, dialog_width, dialog_height):
-        self.setGeometry(actual_x, actual_y, dialog_width, dialog_height)
-        self.show()
+                self.dockerWidget.setVisible(self.dockerVisibility)
+        else:
+            self.getDockerDetails()
+            self.dockerWidget.titleBarWidget().setVisible(False)
+            self.grid.addWidget(self.dockerWidget)
+            self.dockerWidget.setVisible(True)
 
-    #endregion
-
-    #region Docker Popup
-
-    def popupDockerVisibilityChanged(self, s):
-        if self.docker_instance.isVisible() == False:
-            self.docker_instance.setWindowFlags(self.docker_oldWindowFlags)
-            self.docker_instance.visibilityChanged.disconnect(self.popupDockerVisibilityChanged)
-
-            self.docker_instance = None
-            self.docker_oldWindowFlags = None
-        
-    def showDockerPopup(self, actual_x, actual_y, dialog_width, dialog_height):
-        dockersList = Krita.instance().dockers()
-        for docker in dockersList:
-            if (docker.objectName() == self.docker_id):
-                self.docker_instance = docker
-                self.docker_oldWindowFlags = self.docker_instance.windowFlags()
-
-                self.docker_instance.setGeometry(actual_x, actual_y, dialog_width, dialog_height)
-                self.docker_instance.setWindowFlags(Qt.Popup | Qt.FramelessWindowHint)
-                self.docker_instance.visibilityChanged.connect(self.popupDockerVisibilityChanged)
-                self.docker_instance.setVisible(True)
-
-    def initDockerPopup(self):
-        self.docker_id = self.metadata.docker_id
-
-    #endregion
+    def getDockerDetails(self, firstLoad = False):
+        if firstLoad:
+            dockersList = Krita.instance().dockers()
+            for docker in dockersList:
+                if (docker.objectName() == self.metadata.docker_id):
+                    self.dockerWidget = docker
+                    self.dockerWindow = Krita.instance().activeWindow().qwindow()
+                    return
+            
+        self.dockerVisibility = self.dockerWidget.isVisible()
+        self.dockerLocation = self.dockerWindow.dockWidgetArea(self.dockerWidget)
 
     def getGeometry(self, position, width, height, isMouse = False):
         dialog_width, dialog_height = self.generateSize()
@@ -218,25 +228,32 @@ class PopupDialog(QDialog):
             return [int(dialog_width), int(dialog_height)]
         else:
             return [0, 0]
-        
+    
+    def triggerPopup(self, mode):
+
+        if self.isVisible():
+            self.close()
+
+        actual_x = 0
+        actual_y = 0
+        dialog_width = 0
+        dialog_height = 0
+
+        if mode == "mouse":
+            actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(QtGui.QCursor.pos(), 0, 0, True)
+        else:
+            for qobj in self.parent.findChildren(QToolButton):
+                actions = qobj.actions()
+                if actions:
+                    for action in actions:
+                        if action.text() == self.metadata.btnName + POPUP_BTN_IDENTIFIER:
+                            actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(qobj.mapToGlobal(QPoint(0,0)), qobj.width(), qobj.height())
+
+        if self.popupType == "docker":
+            self.updateDocker()
 
 
-    def _openPopup(self, actual_x, actual_y, dialog_width, dialog_height):
-        if self.popupType == "actions":
-            self.showActionsPopup(actual_x, actual_y, dialog_width, dialog_height)
-        elif self.popupType == "docker":
-            self.showDockerPopup(actual_x, actual_y, dialog_width, dialog_height)
-        
-    def showButtonPopup(self):
-        for qobj in self.parent.findChildren(QToolButton):
-            actions = qobj.actions()
-            if actions:
-                for action in actions:
-                    if action.text() == self.metadata.btnName + POPUP_BTN_IDENTIFIER:
-                        actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(qobj.mapToGlobal(QPoint(0,0)), qobj.width(), qobj.height())
-                        self._openPopup(actual_x, actual_y, dialog_width, dialog_height)
+        self.setGeometry(actual_x, actual_y, dialog_width, dialog_height)
+        self.show()
 
-    def showMousePopup(self):
-        actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(QtGui.QCursor.pos(), 0, 0, True)
-        self._openPopup(actual_x, actual_y, dialog_width, dialog_height)
 

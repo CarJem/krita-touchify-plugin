@@ -59,7 +59,7 @@ class WorkspaceToggles:
         for action in pending_actions:
             root_menu.addAction(action)
    
-    def createAction(self, window, workspace, actionPath):
+    def createAction(self, window, workspace: Config_Workspace, actionPath):
 
         actionName = 'WorkspaceToggles_{0}'.format(workspace.id)
         id = workspace.id
@@ -69,6 +69,9 @@ class WorkspaceToggles:
         action = window.createAction(actionName, "Workspace: " + text, actionPath)    
         icon = ResourceManager.iconLoader(id, 'workspaces', True)
         action.setIcon(icon)
+
+        if not workspace.hotkeyNumber == -1:
+            ConfigManager.getHotkeyAction(workspace.hotkeyNumber).triggered.connect(lambda: self.toggleWorkspace(id))
 
         pending_actions.append(action)
         action.triggered.connect(lambda: self.toggleWorkspace(id))

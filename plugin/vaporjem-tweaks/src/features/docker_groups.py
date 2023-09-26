@@ -44,7 +44,7 @@ class DockerGroups:
         for action in pending_actions:
             root_menu.addAction(action)
     
-    def createAction(self, window, docker, actionPath):
+    def createAction(self, window, docker: Config_DockerGroup, actionPath):
         global custom_docker_states
 
         actionName = 'DockerToggles_Custom_{0}'.format(docker.id)
@@ -60,6 +60,9 @@ class DockerGroups:
             "enabled": False,
             "paths": paths,
         }
+
+        if not docker.hotkeyNumber == -1:
+            ConfigManager.getHotkeyAction(docker.hotkeyNumber).triggered.connect(lambda: self.toggleDockers(groupId))
 
         pending_actions.append(action)
         action.triggered.connect(lambda: self.toggleDockers(groupId))

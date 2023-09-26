@@ -1,3 +1,4 @@
+from functools import partial
 from PyQt5 import QtWidgets, QtGui
 import os
 import json
@@ -43,7 +44,7 @@ class DockerToggles:
         for action in pending_actions:
             root_menu.addAction(action)
 
-    def createAction(self, window, docker, actionPath):
+    def createAction(self, window, docker: Config_Docker, actionPath):
         actionName ='DockerToggles_{0}'.format(docker.docker_name)
         id = docker.docker_name
         text ='{0}'.format(docker.display_name)
@@ -52,6 +53,10 @@ class DockerToggles:
         icon = ResourceManager.iconLoader(id, 'dockers', True)
         action.setIcon(icon)
         pending_actions.append(action)
+
+        if not docker.hotkeyNumber == -1:
+            ConfigManager.getHotkeyAction(docker.hotkeyNumber).triggered.connect(lambda: self.toggleDocker(id))
+
         action.triggered.connect(lambda: self.toggleDocker(id))
 
     def createActions(self, window, actionPath):

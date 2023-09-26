@@ -26,11 +26,7 @@ class PopupButtons:
         if not id in popup_dialogs:
             qwin = Krita.instance().activeWindow().qwindow()
             popup_dialogs[id] = PopupDialog(qwin, data)
-
-        if mode == "mouse":
-            popup_dialogs[id].showMousePopup()
-        else:
-            popup_dialogs[id].showButtonPopup()
+        popup_dialogs[id].triggerPopup(mode)
 
 
     def buildMenu(self, menu: QMenu):

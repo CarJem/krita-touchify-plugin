@@ -2,7 +2,8 @@
     "items": [
         {
             "display_name": "Animation",
-            "id": "Animation"
+            "id": "Animation",
+            "hotkeyNumber": 2
         },
         {
             "display_name": "Big_Paint_2",
