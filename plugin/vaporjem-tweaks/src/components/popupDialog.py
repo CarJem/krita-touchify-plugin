@@ -31,11 +31,11 @@ class PopupDialog(QDialog):
 
         self.parent = parent
         self.metadata = args
-
-
+        self.allowOpacity = False
 
         self.popupType = self.metadata.type
         if self.popupType == "actions":
+            self.allowOpacity = True
             self.grid = self.generateActionsLayout()
         elif self.popupType == "docker":
             self.grid = self.generateDockerLayout()
@@ -49,13 +49,21 @@ class PopupDialog(QDialog):
         self.updateDocker(True)
         super().closeEvent(event)
 
+    def paintEvent(self, event=None):
+        if self.allowOpacity:
+            painter = QPainter(self)
+            baseColor = self.palette().brush(QPalette.ColorRole.Window)
+            painter.setOpacity(self.metadata.opacity)
+            painter.setBrush(baseColor)
+            painter.setPen(baseColor.color())   
+            painter.drawRect(self.rect())
+
     def initLayout(self):
         self.frame = QFrame()
         self.frame.setFrameShape(QFrame.Box)
         self.frame.setFrameShadow(QFrame.Plain)
         self.frame.setLineWidth(1)
         self.frame.setObjectName("popupFrame")
-        self.frame.setStyleSheet("QFrame#popupFrame { border: 1px solid white }")
         self.frame.setLayout(self.grid)
 
         layout = QVBoxLayout()
@@ -64,8 +72,18 @@ class PopupDialog(QDialog):
         self.setLayout(layout)
                 
         self.setFocusPolicy(Qt.ClickFocus)
-        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
-        self.setWindowFlags(Qt.Popup | Qt.FramelessWindowHint)
+        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, True)
+        self.window().setWindowFlags(Qt.WindowType.Popup | Qt.WindowType.FramelessWindowHint)
+
+        stylesheet = "border: 1px solid white;"
+
+        if self.allowOpacity:
+            self.setAttribute(Qt.WA_TranslucentBackground, True)
+            self.setWindowOpacity(self.metadata.opacity)
+            stylesheet = f"""border: 1px solid rgba(255,255,255, {self.metadata.opacity}); opacity: {self.metadata.opacity};"""
+            
+        self.frame.setStyleSheet("QFrame#popupFrame { " + stylesheet  + " }")
+            
 
     def runAction(self, actionName):
         try:
@@ -80,22 +98,23 @@ class PopupDialog(QDialog):
             
     def createActionButton(self, layout, text, icon, isCustomIcon, action, x, y):
 
-        btn_stylesheet = """
-            QToolButton {
+        opacityLevel = self.metadata.opacity
+        btn_stylesheet = f"""
+            QToolButton {{
                 border-radius: 0px; 
-                background-color: rgba(0,0,0,0.5); 
+                background-color: rgba(0,0,0,{opacityLevel}); 
                 padding: 5px 5px;
                 border: 0px solid transparent; 
                 font-size: 12px
-            }
+            }}
             
-            QToolButton:hover {
-                background-color: rgba(155,155,155,0.5); 
-            }
+            QToolButton:hover {{
+                background-color: rgba(155,155,155,{opacityLevel}); 
+            }}
                           
-            QToolButton:pressed {
-                background-color: rgba(128,128,128,0.5); 
-            }
+            QToolButton:pressed {{
+                background-color: rgba(128,128,128,{opacityLevel}); 
+            }}
         """
 
         btn = QToolButton()
@@ -107,6 +126,7 @@ class PopupDialog(QDialog):
             btn.setIcon(self.getActionIcon(icon, isCustomIcon))
             btn.setIconSize(QSize(self.metadata.icon_width, self.metadata.icon_height))
 
+        btn.setWindowOpacity(opacityLevel)
         btn.setFixedSize(self.metadata.item_width, self.metadata.item_height)
         btn.clicked.connect(lambda: self.runAction(action))
         layout.addWidget(btn, x, y)

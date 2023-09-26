@@ -23,6 +23,7 @@ class Config_Popup:
     icon: str = ""
     type: str = "actions"
     docker_id: str = ""
+    opacity: float = 1.0
     grid_width: int = 3
     grid_padding: int = 2
     item_width: int = 100
@@ -56,6 +57,7 @@ class Config_DockerGroup:
     id: str = ""
     hotkeyNumber: int = -1
     tabsMode: bool = True
+    groupId: str = ""
 
     def create(args):
         obj = Config_DockerGroup()
@@ -104,8 +106,6 @@ class ConfigFile:
         Extensions.list_assignment(self.load_chunk("workspaces"), Config_Workspace, self.workspaces)
 
 class ConfigManager:
-
-
     hotkeys_storage = {}
 
     def init(path):
@@ -124,7 +124,6 @@ class ConfigManager:
     def getResourceFolder():
         global base_dir
         return os.path.join(base_dir, "resources")
-    
 
     def getHotkeyAction(index):
         global hotkeys_storage

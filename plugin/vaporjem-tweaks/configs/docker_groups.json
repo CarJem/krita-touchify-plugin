@@ -4,6 +4,7 @@
             "display_name": "History Panel",
             "id": "HistoryDockers",
             "hotkeyNumber": 3,
+            "groupId": "GroupA",
             "docker_names": [
                 "History",
                 "Snapshot"
@@ -12,6 +13,7 @@
         {
             "display_name": "Colors Panel",
             "id": "ColorDockers",
+            "groupId": "GroupA",
             "docker_names": [
                 "SmallColorSelector",
                 "SpecificColorSelector",
@@ -20,8 +22,17 @@
             ]
         },
         {
+            "display_name": "Layers Panel",
+            "id": "LayerDockers",
+            "groupId": "GroupB",
+            "docker_names": [
+                "KisLayerBox"
+            ]
+        },
+        {
             "display_name": "Brushes Panel",
             "id": "BrushesCustom",
+            "tabsMode": false,
             "docker_names": [
                 "PresetDocker"
             ]
