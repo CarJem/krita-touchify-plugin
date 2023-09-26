@@ -32,8 +32,15 @@ class PopupButtons:
         else:
             popup_dialogs[id].showButtonPopup()
 
-    def addPopup(self, window, popup: Config_Popup, actionPath):
 
+    def buildMenu(self, menu: QMenu):
+        root_menu = QtWidgets.QMenu("Popups", menu)
+        menu.addMenu(root_menu)
+
+        for action in pending_actions:
+            root_menu.addAction(action)
+
+    def createAction(self, window, popup: Config_Popup, actionPath):
         actionName = 'VaporJem_Popup_{0}'.format(popup.btnName)
         displayName = popup.btnName + POPUP_BTN_IDENTIFIER
         iconName = popup.icon
@@ -51,13 +58,6 @@ class PopupButtons:
 
         pending_actions.append(action)
 
-    def buildMenu(self, menu: QMenu):
-        root_menu = QtWidgets.QMenu("Popups", menu)
-        menu.addMenu(root_menu)
-
-        for action in pending_actions:
-            root_menu.addAction(action)
-
     def createActions(self, window, actionPath):
         sectionName = "VaporJem_Popups"
 
@@ -65,6 +65,6 @@ class PopupButtons:
 
         cfg = ConfigManager.getJSON()
         for popup in cfg.popups:
-            self.addPopup(window, popup, subItemPath)
+            self.createAction(window, popup, subItemPath)
 
 
