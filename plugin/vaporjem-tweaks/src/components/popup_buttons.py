@@ -12,6 +12,7 @@ from ..classes.config import *
 from ..classes.resources import *
 
 popup_dialogs = {}
+pending_actions = []
 BUTTON_INDICATOR = "⠀"
 
 
@@ -238,8 +239,6 @@ class PopupDialog(QDialog):
         actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(QtGui.QCursor.pos(), 0, 0, True)
         self._openPopup(actual_x, actual_y, dialog_width, dialog_height)
 
-
-
 class PopupButtons:
 
     def showPopup(self, id, data: Config_Popup, mode: str):
@@ -252,7 +251,7 @@ class PopupButtons:
         else:
             popup_dialogs[id].showButtonPopup()
 
-    def addPopup(self, window, menu, popup: Config_Popup, actionPath):
+    def addPopup(self, window, popup: Config_Popup, actionPath):
 
         actionName = 'VaporJem_Popup_{0}'.format(popup.btnName)
         displayName = popup.btnName + BUTTON_INDICATOR
@@ -269,18 +268,22 @@ class PopupButtons:
         if not hotkeyNumber == -1:
             ConfigManager.getHotkeyAction(hotkeyNumber).triggered.connect(partial(self.showPopup, id, popup, "mouse"))
 
-        menu.addAction(action)
+        pending_actions.append(action)
+
+    def buildMenu(self, menu: QMenu):
+        root_menu = QtWidgets.QMenu("Popups", menu)
+        menu.addMenu(root_menu)
+
+        for action in pending_actions:
+            root_menu.addAction(action)
 
     def createActions(self, window, actionPath):
         sectionName = "VaporJem_Popups"
-        root = window.createAction(sectionName, "Popups", actionPath)
-        root_menu = QtWidgets.QMenu(sectionName, window.qwindow())
-        root.setMenu(root_menu)
 
         subItemPath = actionPath + "/" + sectionName
 
         cfg = ConfigManager.getJSON()
         for popup in cfg.popups:
-            self.addPopup(window, root_menu, popup, subItemPath)
+            self.addPopup(window, popup, subItemPath)
 
 

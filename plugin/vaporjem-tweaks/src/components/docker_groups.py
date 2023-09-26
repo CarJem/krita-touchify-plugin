@@ -8,6 +8,7 @@ from ..classes.config import *
 from ..classes.resources import *
 
 custom_docker_states = {}
+pending_actions = []
 
 class DockerGroups:
 
@@ -31,7 +32,7 @@ class DockerGroups:
                 if (docker.objectName() == path):
                     docker.setVisible(isVisible)
 
-    def createCustomAction(self, window, menu, actionName, groupId, paths, text, actionPath):
+    def createCustomAction(self, window, actionName, groupId, paths, text, actionPath):
         global custom_docker_states
 
         action = window.createAction(actionName, text, actionPath) 
@@ -43,18 +44,21 @@ class DockerGroups:
             "paths": paths,
         }
 
-        menu.addAction(action)
+        pending_actions.append(action)
         action.triggered.connect(lambda: self.toggleDockers(groupId))
+
+    def buildMenu(self, menu: QMenu):
+        root_menu = QtWidgets.QMenu("Docker Groups", menu)
+        menu.addMenu(root_menu)
+
+        for action in pending_actions:
+            root_menu.addAction(action)
 
     def createActions(self, window, actionPath):
 
         sectionName = "VaporJem_DockerGroups"
-        root = window.createAction(sectionName, "Docker Groups", actionPath)
-        root_menu = QtWidgets.QMenu(sectionName, window.qwindow())
-        root.setMenu(root_menu)
-
         subItemPath = actionPath + "/" + sectionName
 
         cfg = ConfigManager.getJSON()
         for docker in cfg.custom_dockers:
-            self.createCustomAction(window, root_menu, 'DockerToggles_Custom_{0}'.format(docker.id), docker.id, docker.docker_names, '{0}'.format(docker.display_name), subItemPath)
+            self.createCustomAction(window, 'DockerToggles_Custom_{0}'.format(docker.id), docker.id, docker.docker_names, '{0}'.format(docker.display_name), subItemPath)

@@ -7,6 +7,9 @@ import importlib.util
 from ..classes.config import *
 from ..classes.resources import *
 
+
+pending_actions = []
+
 class WorkspaceToggles:
 
     def toggleWorkspace(self, path):
@@ -21,12 +24,12 @@ class WorkspaceToggles:
                                 break
                 break
 
-    def addWorkspace(self, window, menu, actionName, id, text, actionPath):
+    def addWorkspace(self, window, actionName, id, text, actionPath):
         action = window.createAction(actionName, "Workspace: " + text, actionPath)    
         icon = ResourceManager.iconLoader(id, 'workspaces', True)
         action.setIcon(icon)
 
-        menu.addAction(action)
+        pending_actions.append(action)
         action.triggered.connect(lambda: self.toggleWorkspace(id))
 
     def reloadWorkspaces(self):
@@ -52,15 +55,17 @@ class WorkspaceToggles:
         cfg.workspaces = Workspaces
         cfg.save()
 
+    def buildMenu(self, menu: QMenu):
+        root_menu = QtWidgets.QMenu("Popups", menu)
+        menu.addMenu(root_menu)
+
+        for action in pending_actions:
+            root_menu.addAction(action)
+
     def createActions(self, window, actionPath):
-
         sectionName = "VaporJem_Workspaces"
-        root = window.createAction(sectionName, "Workspaces", actionPath)
-        root_menu = QtWidgets.QMenu(sectionName, window.qwindow())
-        root.setMenu(root_menu)
-
         subItemPath = actionPath + "/" + sectionName
 
         cfg = ConfigManager.getJSON()
         for workspace in cfg.workspaces:
-            self.addWorkspace(window, root_menu, 'WorkspaceToggles_{0}'.format(workspace.id), workspace.id, '{0}'.format(workspace.display_name), subItemPath)
+            self.addWorkspace(window, 'WorkspaceToggles_{0}'.format(workspace.id), workspace.id, '{0}'.format(workspace.display_name), subItemPath)

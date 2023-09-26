@@ -7,6 +7,9 @@ import importlib.util
 from ..classes.config import *
 from ..classes.resources import *
 
+
+pending_actions = []
+
 class DockerToggles:
     def toggleDocker(self, path):
         dockersList = Krita.instance().dockers()
@@ -14,12 +17,11 @@ class DockerToggles:
             if (docker.objectName() == path):
                 docker.setVisible(not docker.isVisible())
 
-    def addDocker(self, window, menu, actionName, id, text, actionPath):
+    def addDocker(self, window, actionName, id, text, actionPath):
         action = window.createAction(actionName, "Docker: " + text, actionPath)    
         icon = ResourceManager.iconLoader(id, 'dockers', True)
         action.setIcon(icon)
-
-        menu.addAction(action)
+        pending_actions.append(action)
         action.triggered.connect(lambda: self.toggleDocker(id))
 
     def reloadDockers(self):
@@ -35,17 +37,19 @@ class DockerToggles:
         
         cfg.auto_dockers = data
         cfg.save()
-            
+
+    def buildMenu(self, menu: QMenu):
+        root_menu = QtWidgets.QMenu("Dockers", menu)
+        menu.addMenu(root_menu)
+
+        for action in pending_actions:
+            root_menu.addAction(action)
+
+
     def createActions(self, window, actionPath):
-
         sectionName = "VaporJem_Dockers"
-        root = window.createAction(sectionName, "Dockers", actionPath)
-        root_menu = QtWidgets.QMenu(sectionName, window.qwindow())
-        root.setMenu(root_menu)
-
         subItemPath = actionPath + "/" + sectionName
-
         cfg = ConfigManager.getJSON()
 
         for docker in cfg.auto_dockers:
-            self.addDocker(window, root_menu, 'DockerToggles_{0}'.format(docker.docker_name), docker.docker_name, '{0}'.format(docker.display_name), subItemPath)
+            self.addDocker(window, 'DockerToggles_{0}'.format(docker.docker_name), docker.docker_name, '{0}'.format(docker.display_name), subItemPath)
