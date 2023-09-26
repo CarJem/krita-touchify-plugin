@@ -1,8 +1,11 @@
-
-from krita import Krita, Extension
 from PyQt5 import QtWidgets, QtGui
 import os
 from .config import *
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..ext.PyKrita import *
+else:
+    from krita import *
 
 class ResourceManager:
     def customIcon(path, iconName):

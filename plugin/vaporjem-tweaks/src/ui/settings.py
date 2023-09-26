@@ -1,4 +1,3 @@
-from krita import Krita, Extension
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -14,6 +13,12 @@ import re
 import functools
 import copy
 import json
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..ext.PyKrita import *
+else:
+    from krita import *
 
 
 class SettingsGenerator:

@@ -43,6 +43,7 @@ class Config_Popup:
 class Config_Docker:
     display_name: str = ""
     docker_name: str = ""
+    hotkeyNumber: int = -1
 
     def create(args):
         obj = Config_Docker()
@@ -53,6 +54,7 @@ class Config_DockerGroup:
     display_name: str = ""
     docker_names: List[str] = []
     id: str = ""
+    hotkeyNumber: int = -1
 
     def create(args):
         obj = Config_DockerGroup()
@@ -62,6 +64,7 @@ class Config_DockerGroup:
 class Config_Workspace:
     display_name: str = ""
     id: str = ""
+    hotkeyNumber: int = -1
 
     def create(args):
         obj = Config_Workspace()

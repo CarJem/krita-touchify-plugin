@@ -1,4 +1,3 @@
-from krita import Krita, Extension
 from PyQt5 import QtWidgets, QtGui
 import os
 import json
@@ -6,6 +5,11 @@ import sys
 import importlib.util
 from ..classes.config import *
 from ..classes.resources import *
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..ext.PyKrita import *
+else:
+    from krita import *
 
 custom_docker_states = {}
 pending_actions = []

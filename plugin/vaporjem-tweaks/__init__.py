@@ -1,4 +1,3 @@
-from krita import Krita, Extension
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
 import os
@@ -7,16 +6,15 @@ import sys
 import importlib.util
 from .src.classes.config import *
 from .src.ui.settings import *
-from .src.components.docker_toggles import *
-from .src.components.docker_groups import *
-from .src.components.popup_buttons import *
-from .src.components.workspace_toggles import *
-#from .src.components.hotkey_bar import *
+from .src.features.docker_toggles import *
+from .src.features.docker_groups import *
+from .src.features.popup_buttons import *
+from .src.features.workspace_toggles import *
 
 # For autocomplete
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .PyKrita import *
+    from .src.ext.PyKrita import *
 else:
     from krita import *
 
@@ -70,12 +68,11 @@ class VaporJem(Extension):
     def createActions(self, window):
         ConfigManager.init(os.path.dirname(__file__))
 
-        subItemPath = "VaporJem"
+        subItemPath = "VaporJem_Actions"
 
         for i in range(1, 10):
             hotkeyName = "vjt_action" + str(i)
-            hotkeyAction = window.createAction(hotkeyName, "Custom action: " + str(i), subItemPath + "/Hotkeys")
-            hotkeyAction.setVisible(False)
+            hotkeyAction = window.createAction(hotkeyName, "Custom action: " + str(i), subItemPath)
             ConfigManager.addHotkey(i, hotkeyAction)
    
         self.basic_dockers.createActions(window, subItemPath)  
