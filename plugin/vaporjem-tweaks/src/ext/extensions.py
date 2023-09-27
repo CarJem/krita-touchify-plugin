@@ -7,10 +7,13 @@ class Extensions:
                 setattr(obj, key, value)
 
     def getClassVariables(obj):
-        return [attr for attr in dir(obj) if not callable(getattr(obj, attr)) and not attr.startswith("__")]
+        return [attr for attr in dir(obj) if not callable(getattr(obj, attr)) and not attr.startswith("__") and not attr.startswith("_"  + type(obj).__name__ + "__")]
     
     def getVariable(obj, varName):
         return getattr(obj, varName)
+    
+    def setVariable(obj, varName, data):
+        return setattr(obj, varName, data)
     
     def default_assignment(args, attributeName, defaultValue):
         if attributeName in args:
@@ -18,9 +21,11 @@ class Extensions:
         else:
             return defaultValue
         
-    def list_assignment(array, classSrc, arraySrc):
+    def list_assignment(array, classSrc):
+        arraySrc = []
         for i in array:
             arraySrc.append(classSrc.create(i))
+        return arraySrc
 
 class PyQtExtensions:
     def clearLayout(layout):

@@ -56,6 +56,10 @@ class VaporJem(Extension):
         reloadItemsAction.triggered.connect(self.reloadKnownItems)
         root_menu.menuAction().menu().addAction(reloadItemsAction)
 
+        openSettingsAction = QAction("Open Settings...", root_menu)
+        openSettingsAction.triggered.connect(self.openSettings)
+        root_menu.menuAction().menu().addAction(openSettingsAction)
+
         seperator = QAction("", root_menu)
         seperator.setSeparator(True)
         root_menu.addAction(seperator)
@@ -66,14 +70,14 @@ class VaporJem(Extension):
         self.popup_toggles.buildMenu(root_menu)        
             
     def createActions(self, window):
-        ConfigManager.init(os.path.dirname(__file__))
+        ConfigManager.init_instance(os.path.dirname(__file__))
 
         subItemPath = "VaporJem_Actions"
 
         for i in range(1, 10):
             hotkeyName = "vjt_action" + str(i)
             hotkeyAction = window.createAction(hotkeyName, "Custom action: " + str(i), subItemPath)
-            ConfigManager.addHotkey(i, hotkeyAction)
+            ConfigManager.instance().addHotkey(i, hotkeyAction)
    
         self.basic_dockers.createActions(window, subItemPath)  
         self.docker_groups.createActions(window, subItemPath)     

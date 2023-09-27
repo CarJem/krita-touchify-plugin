@@ -16,6 +16,9 @@ class Config_PopupInfo:
         Extensions.dictToObject(obj, args)
         return obj
 
+    def __str__(self):
+        return self.text.replace("\n", "\\n")
+    
 class Config_Popup:
     id: str = ""
     btnName: str = ""
@@ -30,32 +33,48 @@ class Config_Popup:
     item_height: int = 100
     icon_width: int = 30
     icon_height: int = 30
-    hotkeyNumber: int = -1
+    hotkeyNumber: int = 0
     items: List[Config_PopupInfo] = []
 
     def create(args):
         obj = Config_Popup()
         Extensions.dictToObject(obj, args)
-        obj.items = []
         items = Extensions.default_assignment(args, "items", [])
-        Extensions.list_assignment(items, Config_PopupInfo, obj.items)
+        obj.items = Extensions.list_assignment(items, Config_PopupInfo)
         return obj
+    
+    def __str__(self):
+        return self.btnName.replace("\n", "\\n")
+    
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        restrictions["opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
+        restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
+        return restrictions
 
 class Config_Docker:
     display_name: str = ""
     docker_name: str = ""
-    hotkeyNumber: int = -1
+    hotkeyNumber: int = 0
 
     def create(args):
         obj = Config_Docker()
         Extensions.dictToObject(obj, args)
         return obj
+    
+    def __str__(self):
+        return self.display_name.replace("\n", "\\n")
+
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
+        return restrictions
 
 class Config_DockerGroup:
     display_name: str = ""
     docker_names: List[str] = []
     id: str = ""
-    hotkeyNumber: int = -1
+    hotkeyNumber: int = 0
     tabsMode: bool = True
     groupId: str = ""
 
@@ -63,17 +82,33 @@ class Config_DockerGroup:
         obj = Config_DockerGroup()
         Extensions.dictToObject(obj, args)
         return obj
-
+    
+    def __str__(self):
+        return self.display_name.replace("\n", "\\n")
+    
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
+        return restrictions
+    
 class Config_Workspace:
     display_name: str = ""
     id: str = ""
-    hotkeyNumber: int = -1
+    hotkeyNumber: int = 0
 
     def create(args):
         obj = Config_Workspace()
         Extensions.dictToObject(obj, args)
         return obj
-
+    
+    def __str__(self):
+        return self.display_name.replace("\n", "\\n")
+    
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
+        return restrictions
+    
 class ConfigFile:
     auto_dockers: List[Config_Docker] = []
     custom_dockers: List[Config_DockerGroup] = []
@@ -100,39 +135,35 @@ class ConfigFile:
 
     def __init__(self, base_dir):
         self.__base_dir__ = base_dir
-        Extensions.list_assignment(self.load_chunk("dockers"), Config_Docker, self.auto_dockers)
-        Extensions.list_assignment(self.load_chunk("docker_groups"), Config_DockerGroup, self.custom_dockers)
-        Extensions.list_assignment(self.load_chunk("popups"), Config_Popup, self.popups)
-        Extensions.list_assignment(self.load_chunk("workspaces"), Config_Workspace, self.workspaces)
+        self.auto_dockers = Extensions.list_assignment(self.load_chunk("dockers"), Config_Docker)
+        self.custom_dockers = Extensions.list_assignment(self.load_chunk("docker_groups"), Config_DockerGroup)
+        self.popups = Extensions.list_assignment(self.load_chunk("popups"), Config_Popup)
+        self.workspaces = Extensions.list_assignment(self.load_chunk("workspaces"), Config_Workspace)
 
 class ConfigManager:
-    hotkeys_storage = {}
 
-    def init(path):
-        global base_dir
-        global cfg
-        global hotkeys_storage
+    def instance():
+        return ConfigManager.root
 
-        hotkeys_storage = {}
-        base_dir = path
-        cfg = ConfigFile(base_dir)
+    def init_instance(path):
+        ConfigManager.root = ConfigManager(path)
 
-    def getBaseDirectory():
-        global base_dir
-        return base_dir
+    def __init__(self, path) -> None:
+        self.hotkeys_storage = {}
+        self.base_dir = path
+        self.cfg = ConfigFile(self.base_dir)
 
-    def getResourceFolder():
-        global base_dir
-        return os.path.join(base_dir, "resources")
+    def getBaseDirectory(self):
+        return self.base_dir
 
-    def getHotkeyAction(index):
-        global hotkeys_storage
-        return hotkeys_storage[index]
+    def getResourceFolder(self):
+        return os.path.join(self.base_dir, "resources")
 
-    def addHotkey(index, action):
-        global hotkeys_storage
-        hotkeys_storage[index] = action
+    def getHotkeyAction(self, index):
+        return self.hotkeys_storage[index]
 
-    def getJSON() -> ConfigFile:
-        global cfg
-        return cfg
+    def addHotkey(self, index, action):
+        self.hotkeys_storage[index] = action
+
+    def getJSON(self) -> ConfigFile:
+        return self.cfg

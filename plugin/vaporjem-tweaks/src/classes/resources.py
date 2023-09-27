@@ -9,7 +9,7 @@ else:
 
 class ResourceManager:
     def customIcon(path, iconName):
-        PATH_RESOURCES = os.path.join(ConfigManager.getResourceFolder(), path)
+        PATH_RESOURCES = os.path.join(ConfigManager.instance().getResourceFolder(), path)
 
         filename = '{0}.svg'.format(iconName)
         
@@ -30,4 +30,4 @@ class ResourceManager:
         return Krita.instance().icon(iconName)
     
     def getFallbackIcon():
-        return QtGui.QIcon(os.path.join(ConfigManager.getResourceFolder(), 'builtin', 'default.svg'))
+        return QtGui.QIcon(os.path.join(ConfigManager.instance().getResourceFolder(), 'builtin', 'default.svg'))

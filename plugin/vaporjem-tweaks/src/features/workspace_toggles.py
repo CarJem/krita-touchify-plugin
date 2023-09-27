@@ -29,7 +29,7 @@ class WorkspaceToggles:
                 break
 
     def reloadWorkspaces(self):
-        cfg = ConfigManager.getJSON()
+        cfg = ConfigManager.instance().getJSON()
 
         Workspaces = []
         main_menu = Krita.instance().activeWindow().qwindow().menuBar()
@@ -70,8 +70,8 @@ class WorkspaceToggles:
         icon = ResourceManager.iconLoader(id, 'workspaces', True)
         action.setIcon(icon)
 
-        if not workspace.hotkeyNumber == -1:
-            ConfigManager.getHotkeyAction(workspace.hotkeyNumber).triggered.connect(lambda: self.toggleWorkspace(id))
+        if not workspace.hotkeyNumber == 0:
+            ConfigManager.instance().getHotkeyAction(workspace.hotkeyNumber).triggered.connect(lambda: self.toggleWorkspace(id))
 
         pending_actions.append(action)
         action.triggered.connect(lambda: self.toggleWorkspace(id))
@@ -80,6 +80,6 @@ class WorkspaceToggles:
         sectionName = "VaporJem_Workspaces"
         subItemPath = actionPath + "/" + sectionName
 
-        cfg = ConfigManager.getJSON()
+        cfg = ConfigManager.instance().getJSON()
         for workspace in cfg.workspaces:
             self.createAction(window, workspace, subItemPath)

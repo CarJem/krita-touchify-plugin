@@ -67,8 +67,8 @@ class DockerGroups:
             "tabsMode": docker.tabsMode
         }
 
-        if not docker.hotkeyNumber == -1:
-            ConfigManager.getHotkeyAction(docker.hotkeyNumber).triggered.connect(lambda: self.toggleDockers(setId))
+        if not docker.hotkeyNumber == 0:
+            ConfigManager.instance().getHotkeyAction(docker.hotkeyNumber).triggered.connect(lambda: self.toggleDockers(setId))
 
         pending_actions.append(action)
         action.triggered.connect(lambda: self.toggleDockers(setId))
@@ -78,6 +78,6 @@ class DockerGroups:
         sectionName = "VaporJem_DockerGroups"
         subItemPath = actionPath + "/" + sectionName
 
-        cfg = ConfigManager.getJSON()
+        cfg = ConfigManager.instance().getJSON()
         for docker in cfg.custom_dockers:
             self.createAction(window, docker, subItemPath)

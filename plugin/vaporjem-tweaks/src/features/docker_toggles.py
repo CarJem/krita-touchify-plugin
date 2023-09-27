@@ -23,7 +23,7 @@ class DockerToggles:
                 docker.setVisible(not docker.isVisible())
 
     def reloadDockers(self):
-        cfg = ConfigManager.getJSON()
+        cfg = ConfigManager.instance().getJSON()
         dockersList = Krita.instance().dockers()
         data = []
 
@@ -54,15 +54,15 @@ class DockerToggles:
         action.setIcon(icon)
         pending_actions.append(action)
 
-        if not docker.hotkeyNumber == -1:
-            ConfigManager.getHotkeyAction(docker.hotkeyNumber).triggered.connect(lambda: self.toggleDocker(id))
+        if not docker.hotkeyNumber == 0:
+            ConfigManager.instance().getHotkeyAction(docker.hotkeyNumber).triggered.connect(lambda: self.toggleDocker(id))
 
         action.triggered.connect(lambda: self.toggleDocker(id))
 
     def createActions(self, window, actionPath):
         sectionName = "VaporJem_Dockers"
         subItemPath = actionPath + "/" + sectionName
-        cfg = ConfigManager.getJSON()
+        cfg = ConfigManager.instance().getJSON()
 
         for docker in cfg.auto_dockers:
             self.createAction(window, docker, subItemPath)

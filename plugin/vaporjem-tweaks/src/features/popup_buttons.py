@@ -49,8 +49,8 @@ class PopupButtons:
         action.setIcon(icon)
         action.triggered.connect(partial(self.showPopup, id, popup, "button"))
 
-        if not hotkeyNumber == -1:
-            ConfigManager.getHotkeyAction(hotkeyNumber).triggered.connect(partial(self.showPopup, id, popup, "mouse"))
+        if not hotkeyNumber == 0:
+            ConfigManager.instance().getHotkeyAction(hotkeyNumber).triggered.connect(partial(self.showPopup, id, popup, "mouse"))
 
         pending_actions.append(action)
 
@@ -59,7 +59,7 @@ class PopupButtons:
 
         subItemPath = actionPath + "/" + sectionName
 
-        cfg = ConfigManager.getJSON()
+        cfg = ConfigManager.instance().getJSON()
         for popup in cfg.popups:
             self.createAction(window, popup, subItemPath)
 
