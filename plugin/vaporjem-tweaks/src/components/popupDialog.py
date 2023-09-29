@@ -26,7 +26,7 @@ class PopupDialog(QDialog):
     dockerLocation: Qt.DockWidgetArea = None
     dockerVisibility: bool = False
 
-    def __init__(self, parent: QMainWindow, args: Config_Popup):     
+    def __init__(self, parent: QMainWindow, args: Popup):     
         super().__init__(parent)    
 
         self.parent = parent

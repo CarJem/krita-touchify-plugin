@@ -1,4 +1,9 @@
 import inspect
+from .typedlist import *
+from typing import *
+from PyQt5 import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
 class Extensions:
     def dictToObject(obj, dict):
@@ -22,12 +27,18 @@ class Extensions:
             return defaultValue
         
     def list_assignment(array, classSrc):
-        arraySrc = []
+        arraySrc = TypedList(None, classSrc)
         for i in array:
             arraySrc.append(classSrc.create(i))
         return arraySrc
 
 class PyQtExtensions:
+
+    def quickDialog(parent, text):
+        dlg = QMessageBox(parent)
+        dlg.setText(text)
+        dlg.show()
+
     def clearLayout(layout):
         if layout is not None:
             while layout.count():

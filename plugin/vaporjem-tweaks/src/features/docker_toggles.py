@@ -28,12 +28,12 @@ class DockerToggles:
         data = []
 
         for docker in dockersList:
-            x = Config_Docker()
+            x = Docker()
             x.display_name = docker.windowTitle()
             x.docker_name = docker.objectName()
             data.append(x)
         
-        cfg.auto_dockers = data
+        cfg.dockers = data
         cfg.save()
 
 
@@ -44,7 +44,7 @@ class DockerToggles:
         for action in pending_actions:
             root_menu.addAction(action)
 
-    def createAction(self, window, docker: Config_Docker, actionPath):
+    def createAction(self, window, docker: Docker, actionPath):
         actionName ='DockerToggles_{0}'.format(docker.docker_name)
         id = docker.docker_name
         text ='{0}'.format(docker.display_name)
@@ -64,5 +64,5 @@ class DockerToggles:
         subItemPath = actionPath + "/" + sectionName
         cfg = ConfigManager.instance().getJSON()
 
-        for docker in cfg.auto_dockers:
+        for docker in cfg.dockers:
             self.createAction(window, docker, subItemPath)

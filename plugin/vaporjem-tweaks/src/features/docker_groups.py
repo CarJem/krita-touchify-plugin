@@ -48,7 +48,7 @@ class DockerGroups:
         for action in pending_actions:
             root_menu.addAction(action)
     
-    def createAction(self, window, docker: Config_DockerGroup, actionPath):
+    def createAction(self, window, docker: DockerGroup, actionPath):
         global custom_docker_states
 
         actionName = 'DockerToggles_Custom_{0}'.format(docker.id)
@@ -79,5 +79,5 @@ class DockerGroups:
         subItemPath = actionPath + "/" + sectionName
 
         cfg = ConfigManager.instance().getJSON()
-        for docker in cfg.custom_dockers:
+        for docker in cfg.docker_groups:
             self.createAction(window, docker, subItemPath)

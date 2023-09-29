@@ -1,46 +1,11 @@
-import typing
-from PyQt5 import QtCore, uic
+from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-import os
+from PyQt5 import QtGui
 import sys
-import importlib.util
-import inspect
-
-from PyQt5.QtWidgets import QWidget
-from ..classes.config import *
-from ..classes.resources import *
-from ..ext.extensions import *
 import xml.etree.ElementTree as ET
-import json
+from ..ext.typedlist import *
 
-class ListPropertyFieldTempValue:
-
-    __variable_name: any
-    __variable_source: any
-    __index: any
-    
-    def __init__(self, variable_data, variable_source, variable_name, index):
-        self.value = variable_data
-        self.__variable_name = variable_name
-        self.__variable_source = variable_source
-        self.__index = index
-
-    #TODO: Implement Proper Restriction Handling for Values that are not sub classable
-    def propertygrid_restrictions(self):
-        restrictions = {}
-        return restrictions
-
-    #TODO: This does not actually work at all
-    def updateData(self):
-        new_array = Extensions.getVariable(self.__variable_source, self.__variable_name)
-        self.variable_data = self.value
-        new_array[self.__index] = self.value
-        Extensions.setVariable(self.__variable_source, self.__variable_name, new_array)
-        
-
-
-#region Property Fields
 
 class PropertyField(QWidget):
 
@@ -65,193 +30,313 @@ class PropertyField(QWidget):
     def getPropertyType(varName, variable, item):
         varType = type(variable)
         if varType == str:
-            return StrPropertyField(varName, variable, item)
+            return PropertyField_Str(varName, variable, item)
         elif varType == int:
-            return IntPropertyField(varName, variable, item)
+            return PropertyField_Int(varName, variable, item)
         elif varType == float:
-            return FloatPropertyField(varName, variable, item)            
+            return PropertyField_Float(varName, variable, item)            
         elif varType == bool:
-            return BoolPropertyField(varName, variable, item)
-        elif varType == list:
-            return ListPropertyField(varName, variable, item)
+            return PropertyField_Bool(varName, variable, item)
+        elif varType == TypedList:
+            return PropertyField_TypedList(varName, variable, item)
         else:
             return PropertyField(varName, variable, item)
 
-class StrPropertyField(PropertyField):
-        def __init__(self, variable_name=str, variable_data=str, variable_source=any):
-            super(PropertyField, self).__init__()
-            self.setup(variable_name, variable_data, variable_source)
+class PropertyField_Str(PropertyField):
+    def __init__(self, variable_name=str, variable_data=str, variable_source=any):
+        super(PropertyField, self).__init__()
+        self.setup(variable_name, variable_data, variable_source)
 
-            self.editor = QLineEdit()
-            self.editor.textChanged.connect(self.textChanged)
-            self.editor.setText(self.variable_data.replace("\n", "\\n"))
+        self.editor = QLineEdit()
+        self.editor.textChanged.connect(self.textChanged)
+        self.editor.setText(self.variable_data.replace("\n", "\\n"))
 
-            editorLayout = QHBoxLayout()
-            editorLayout.addWidget(self.editor)
-            self.setLayout(editorLayout)
+        editorLayout = QHBoxLayout()
+        editorLayout.addWidget(self.editor)
+        self.setLayout(editorLayout)
 
-        def textChanged(self):
-            self.variable_data = self.editor.text().replace("\\n", "\n")
-            Extensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
+    def textChanged(self):
+        self.variable_data = self.editor.text().replace("\\n", "\n")
+        PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
 
-class IntPropertyField(PropertyField):
-        def __init__(self, variable_name=str, variable_data=int, variable_source=any):
-            super(PropertyField, self).__init__()
-            self.setup(variable_name, variable_data, variable_source)
-            
-            self.editor = QSpinBox()
-            self.editor.setMaximum(2147483647)
-            self.editor.setMinimum(-2147483648)
-            self.editor.valueChanged.connect(self.updateValue)
-            self.editor.setValue(self.variable_data)
+class PropertyField_Int(PropertyField):
+    def __init__(self, variable_name=str, variable_data=int, variable_source=any):
+        super(PropertyField, self).__init__()
+        self.setup(variable_name, variable_data, variable_source)
+        
+        self.editor = QSpinBox()
+        self.editor.setMaximum(2147483647)
+        self.editor.setMinimum(-2147483648)
+        self.editor.valueChanged.connect(self.updateValue)
+        self.editor.setValue(self.variable_data)
 
-            restric_func = Extensions.getVariable(self.variable_source, "propertygrid_restrictions")
-            if callable(restric_func):
-                restrictions = restric_func()
-                if variable_name in restrictions:
-                    if restrictions[variable_name]["type"] == "range":
-                        self.editor.setMinimum(restrictions[variable_name]["min"])
-                        self.editor.setMaximum(restrictions[variable_name]["max"])
-            
-            editorLayout = QHBoxLayout()
-            editorLayout.addWidget(self.editor)
-            self.setLayout(editorLayout)
+        restric_func = PropertyGridExtensions.getVariable(self.variable_source, "propertygrid_restrictions")
+        if callable(restric_func):
+            restrictions = restric_func()
+            if variable_name in restrictions:
+                if restrictions[variable_name]["type"] == "range":
+                    self.editor.setMinimum(restrictions[variable_name]["min"])
+                    self.editor.setMaximum(restrictions[variable_name]["max"])
+        
+        editorLayout = QHBoxLayout()
+        editorLayout.addWidget(self.editor)
+        self.setLayout(editorLayout)
 
-        def updateValue(self):
-             self.variable_data = self.editor.value()
-             Extensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
+    def updateValue(self):
+            self.variable_data = self.editor.value()
+            PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
 
-class FloatPropertyField(PropertyField):
-        def __init__(self, variable_name=str, variable_data=float, variable_source=any):
-            super(PropertyField, self).__init__()
-            self.setup(variable_name, variable_data, variable_source)
-            
-            self.editor = QDoubleSpinBox()
-            self.editor.setMaximum(sys.float_info.max)
-            self.editor.setMinimum(sys.float_info.min)
-            self.editor.valueChanged.connect(self.updateValue)
-            self.editor.setValue(self.variable_data)
+class PropertyField_Float(PropertyField):
+    def __init__(self, variable_name=str, variable_data=float, variable_source=any):
+        super(PropertyField, self).__init__()
+        self.setup(variable_name, variable_data, variable_source)
+        
+        self.editor = QDoubleSpinBox()
+        self.editor.setMaximum(sys.float_info.max)
+        self.editor.setMinimum(sys.float_info.min)
+        self.editor.valueChanged.connect(self.updateValue)
+        self.editor.setValue(self.variable_data)
 
-            restric_func = Extensions.getVariable(self.variable_source, "propertygrid_restrictions")
-            if callable(restric_func):
-                restrictions = restric_func()
-                if variable_name in restrictions:
-                    if restrictions[variable_name]["type"] == "range":
-                        self.editor.setMinimum(restrictions[variable_name]["min"])
-                        self.editor.setMaximum(restrictions[variable_name]["max"])
-            
-            editorLayout = QHBoxLayout()
-            editorLayout.addWidget(self.editor)
-            self.setLayout(editorLayout)
+        restric_func = PropertyGridExtensions.getVariable(self.variable_source, "propertygrid_restrictions")
+        if callable(restric_func):
+            restrictions = restric_func()
+            if variable_name in restrictions:
+                if restrictions[variable_name]["type"] == "range":
+                    self.editor.setMinimum(restrictions[variable_name]["min"])
+                    self.editor.setMaximum(restrictions[variable_name]["max"])
+        
+        editorLayout = QHBoxLayout()
+        editorLayout.addWidget(self.editor)
+        self.setLayout(editorLayout)
 
-        def updateValue(self):
-             self.variable_data = self.editor.value()
-             Extensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
+    def updateValue(self):
+            self.variable_data = self.editor.value()
+            PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
 
-class BoolPropertyField(PropertyField):
-        def __init__(self, variable_name=str, variable_data=bool, variable_source=any):
-            super(PropertyField, self).__init__()
-            self.setup(variable_name, variable_data, variable_source)
-            
-            self.editor = QCheckBox()
-            self.editor.stateChanged.connect(self.updateChecked)
-            self.editor.setChecked(self.variable_data)
-            
-            editorLayout = QHBoxLayout()
-            editorLayout.addWidget(self.editor)
-            self.setLayout(editorLayout)
+class PropertyField_Bool(PropertyField):
+    def __init__(self, variable_name=str, variable_data=bool, variable_source=any):
+        super(PropertyField, self).__init__()
+        self.setup(variable_name, variable_data, variable_source)
+        
+        self.editor = QCheckBox()
+        self.editor.stateChanged.connect(self.updateChecked)
+        self.editor.setChecked(self.variable_data)
+        
+        editorLayout = QHBoxLayout()
+        editorLayout.addWidget(self.editor)
+        self.setLayout(editorLayout)
 
-        def updateChecked(self):
-             self.variable_data = self.editor.isChecked()
-             Extensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
+    def updateChecked(self):
+        self.variable_data = self.editor.isChecked()
+        PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
 
-class ListPropertyField(PropertyField):
-        def __init__(self, variable_name=str, variable_data=list, variable_source=any):
-            super(PropertyField, self).__init__()
-            self.setup(variable_name, variable_data, variable_source)
-            
-            field = QHBoxLayout()
-            list = QListView()
+class PropertyField_TypedList(PropertyField):
+    def __init__(self, variable_name=str, variable_data=TypedList, variable_source=any):
+        super(PropertyField, self).__init__()
+        self.setup(variable_name, variable_data, variable_source)
+        self.variable_list_type = variable_data.allowedTypes()
 
-            btns = QVBoxLayout()
-            btn_width = 20
+        self.selectedIndex = -1
+        self.selectedItem = None
+        
+        field = QHBoxLayout()
+        listView = QListView()
+        listView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-            model = QtGui.QStandardItemModel()
+        btns = QVBoxLayout()
+        btn_width = 20
 
-            for i in variable_data:
-                item = QtGui.QStandardItem(str(i))
-                model.appendRow(item)
+        self.model = QtGui.QStandardItemModel()
+        self.updateList()
 
-            list.setModel(model)
-            field.addWidget(list)
-            field.addLayout(btns)
+        listView.setModel(self.model)
+        field.addWidget(listView)
+        field.addLayout(btns)
 
-            addButton = QPushButton()
-            addButton.setText("+")
-            addButton.setFixedWidth(btn_width)
-            btns.addWidget(addButton)
+        addButton = QPushButton()
+        addButton.setText("+")
+        addButton.setFixedWidth(btn_width)
+        addButton.clicked.connect(self.itemOptions_add)
+        btns.addWidget(addButton)
 
-            removeButton = QPushButton()
-            removeButton.setText("-")
-            removeButton.setFixedWidth(btn_width)
-            btns.addWidget(removeButton)
+        removeButton = QPushButton()
+        removeButton.setText("-")
+        removeButton.setFixedWidth(btn_width)
+        removeButton.clicked.connect(self.itemOptions_remove)
+        btns.addWidget(removeButton)
 
-            moveUpButton = QPushButton()
-            moveUpButton.setText("↑")
-            moveUpButton.setFixedWidth(btn_width)
-            btns.addWidget(moveUpButton)
+        moveUpButton = QPushButton()
+        moveUpButton.setText("↑")
+        moveUpButton.setFixedWidth(btn_width)
+        moveUpButton.clicked.connect(self.itemOptions_moveup)
+        btns.addWidget(moveUpButton)
 
-            moveDownButton = QPushButton()
-            moveDownButton.setText("↓")
-            moveDownButton.setFixedWidth(btn_width)
-            btns.addWidget(moveDownButton)
+        moveDownButton = QPushButton()
+        moveDownButton.setText("↓")
+        moveDownButton.setFixedWidth(btn_width)
+        moveDownButton.clicked.connect(self.itemOptions_movedown)
+        btns.addWidget(moveDownButton)
 
-            editButton = QPushButton()
-            editButton.setText("...")
-            editButton.setFixedWidth(btn_width)
-            editButton.clicked.connect(self.editItem)
-            btns.addWidget(editButton)
+        editButton = QPushButton()
+        editButton.setText("...")
+        editButton.setFixedWidth(btn_width)
+        editButton.clicked.connect(self.itemOptions_edit)
+        btns.addWidget(editButton)
 
-            selection_model = list.selectionModel()
-            selection_model.currentChanged.connect(lambda x, y: self.updateSelected(x, y))
-    
-            self.setLayout(field)
+        self.selection_model = listView.selectionModel()
+        self.selection_model.currentChanged.connect(lambda x, y: self.updateSelected(x, y))
 
-        def editItem(self):
-            dlg = QDialog()
+        self.setLayout(field)
+
+    def itemOptions_add(self):
+        self.itemOptions("add")
+
+    def itemOptions_remove(self):
+        self.itemOptions("remove")
+
+    def itemOptions_moveup(self):
+        self.itemOptions("moveup")
+
+    def itemOptions_movedown(self):
+        self.itemOptions("movedown")
+
+    def itemOptions_edit(self):
+        self.itemOptions("edit")
+
+    def itemOptions(self, mode):
+        if mode == "edit" or mode == "add":
+            dlg = QDialog(self)
             container = QVBoxLayout()
             dlg.setFixedSize(800,400)
             dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
             dlg.btns.accepted.connect(dlg.accept)
-            dlg.btns.accepted.connect(self.itemEditUpdate)
             dlg.btns.rejected.connect(dlg.reject)
 
             propetryGrid = PropertyGrid()
-            propetryGrid.updateDataObject(self.selectedItem)
             container.addWidget(propetryGrid)
-            
             container.addWidget(dlg.btns)
             dlg.setLayout(container)
-            dlg.exec_()
 
-        def itemEditUpdate(self):
-            if type(self.selectedItem) == type(ListPropertyFieldTempValue):
-                self.selectedItem.updateData()
-             
+            if mode == "edit":
+                if self.selectedIndex != -1:
+                    propetryGrid.updateDataObject(self.selectedItem)
+                    if dlg.exec_():
+                        variableType = type(self.selectedItem)
+                        if variableType == PropertyField_TempValue:
+                            self.selectedItem.updateData()
+                        self.updateList()
 
-        def updateSelected(self, current: QModelIndex, previous: QModelIndex):
-            index = current.row()
-            item = Extensions.getVariable(self.variable_source, self.variable_name)[index]
-            attrCount = len(Extensions.getClassVariables(item))
+            elif mode == "add":
+                editableValue = self.getEditableValue(self.variable_list_type(), -1)
+                propetryGrid.updateDataObject(editableValue)
+                if dlg.exec_():
+                    variableType = type(editableValue)
+                    if variableType == PropertyField_TempValue:
+                        self.variable_data.append(editableValue.value)
+                    else:
+                        self.variable_data.append(propetryGrid.currentData())
+                    self.updateList()
+        
+        elif mode == "remove":
+            if self.selectedIndex != -1:
+                variable = PropertyGridExtensions.getVariable(self.variable_source, self.variable_name)
+                newIndex = self.selectedIndex
+                if not newIndex - 1 < 0:
+                    newIndex -= 1
+                variable.pop(self.selectedIndex)
+                self.updateList()
+                self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
+        
+        elif mode == "moveup" or mode == "movedown":
+            if self.selectedIndex != -1:
+                variable = PropertyGridExtensions.getVariable(self.variable_source, self.variable_name)
+                length = len(variable)
 
-            if attrCount <= 1:
-                 self.selectedItem = ListPropertyFieldTempValue(item, self.variable_source, self.variable_name, index)
-            else:
-                self.selectedItem = item
+                oldIndex = self.selectedIndex
+                newIndex = self.selectedIndex
+                
+                if mode == "moveup":
+                    if not newIndex - 1 < 0:
+                        newIndex -= 1
+                elif mode == "movedown":
+                    if not newIndex + 1 > length - 1:
+                        newIndex += 1
 
-            
+                variable.insert(newIndex, variable.pop(oldIndex))
+                self.updateList()
+                self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
 
-#endregion
+    def updateList(self):
+        self.model.clear()
+        for i in self.variable_data:
+            item = QtGui.QStandardItem(str(i))
+            self.model.appendRow(item)
+        self.selectedIndex = -1
+        self.selectedItem = None
+
+    def updateSelected(self, current: QModelIndex, previous: QModelIndex):
+        self.selectedIndex = current.row()
+        item = PropertyGridExtensions.getVariable(self.variable_source, self.variable_name)[self.selectedIndex]
+        self.selectedItem = self.getEditableValue(item, self.selectedIndex)
+
+    def getEditableValue(self, item, index):
+        attrCount = len(PropertyGridExtensions.getClassVariables(item))
+        if attrCount <= 1:
+                return PropertyField_TempValue(item, self.variable_source, self.variable_name, index)
+        else:
+            return item        
+
+class PropertyField_TempValue:
+    __variable_name: any
+    __variable_source: any
+    __index: any
+    
+    def __init__(self, variable_data, variable_source, variable_name, index):
+        self.value = variable_data
+        self.__variable_name = variable_name
+        self.__variable_source = variable_source
+        self.__index = index
+
+    #TODO: Implement Proper Restriction Handling for Values that are not sub classable
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        return restrictions
+
+    def updateData(self):
+        new_array = PropertyGridExtensions.getVariable(self.__variable_source, self.__variable_name)
+        self.variable_data = self.value
+        new_array[self.__index] = self.value
+        PropertyGridExtensions.setVariable(self.__variable_source, self.__variable_name, new_array)
+
+
+
+
+
+class PropertyGridExtensions:
+    def getVariable(obj, varName):
+        return getattr(obj, varName)
+    
+    def setVariable(obj, varName, data):
+        return setattr(obj, varName, data)
+    
+    def getClassVariables(obj):
+        return [attr for attr in dir(obj) if not callable(getattr(obj, attr)) and 
+                not attr.startswith("__") and 
+                not attr.startswith("_"  + type(obj).__name__ + "__")]
+    
+    def quickDialog(parent, text):
+        dlg = QMessageBox(parent)
+        dlg.setText(text)
+        dlg.show()
+
+    def clearLayout(layout):
+        if layout is not None:
+            while layout.count():
+                child = layout.takeAt(0)
+                if child.widget() is not None:
+                    child.widget().deleteLater()
+                elif child.layout() is not None:
+                    PropertyGridExtensions.clearLayout(child.layout())
 
 class PropertyGrid(QScrollArea):
     fields: list[PropertyField] = []
@@ -272,16 +357,16 @@ class PropertyGrid(QScrollArea):
         newItem = self.item
         for field in self.fields:
             name, data, source = field.getFieldData()
-            Extensions.setVariable(newItem, name, data)
+            PropertyGridExtensions.setVariable(newItem, name, data)
         return newItem
     
     def updateDataObject(self, item):
         self.item = item
         self.fields.clear()
-        PyQtExtensions.clearLayout(self.formLayout)
+        PropertyGridExtensions.clearLayout(self.formLayout)
         
-        for varName in Extensions.getClassVariables(item):
-            variable = Extensions.getVariable(item, varName)
+        for varName in PropertyGridExtensions.getClassVariables(item):
+            variable = PropertyGridExtensions.getVariable(item, varName)
             field = PropertyField.getPropertyType(varName, variable, item)
             if field:
                 self.fields.append(field)

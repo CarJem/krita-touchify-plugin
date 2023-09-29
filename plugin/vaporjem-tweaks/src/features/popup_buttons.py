@@ -22,7 +22,7 @@ pending_actions = []
 
 class PopupButtons:
 
-    def showPopup(self, id, data: Config_Popup, mode: str):
+    def showPopup(self, id, data: Popup, mode: str):
         if not id in popup_dialogs:
             qwin = Krita.instance().activeWindow().qwindow()
             popup_dialogs[id] = PopupDialog(qwin, data)
@@ -36,7 +36,7 @@ class PopupButtons:
         for action in pending_actions:
             root_menu.addAction(action)
 
-    def createAction(self, window, popup: Config_Popup, actionPath):
+    def createAction(self, window, popup: Popup, actionPath):
         actionName = 'VaporJem_Popup_{0}'.format(popup.btnName)
         displayName = popup.btnName + POPUP_BTN_IDENTIFIER
         iconName = popup.icon

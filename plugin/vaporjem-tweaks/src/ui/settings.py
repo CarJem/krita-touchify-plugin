@@ -39,18 +39,16 @@ class SettingsDialog:
         self.dlg.setMinimumSize(400,400)
         self.dlg.setBaseSize(800,800)
         self.dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        self.dlg.btns.accepted.connect(self.save)
+        self.dlg.btns.accepted.connect(self.dlg.accept)
         self.dlg.btns.rejected.connect(self.dlg.reject)
         self.container.addLayout(self.layout)
         self.container.addWidget(self.dlg.btns)
-        self.dlg.setLayout(self.container)
-
-    def save(self):
-        msg = QMessageBox()
-        data = json.dumps(self.cfg.auto_dockers, default=lambda o: o.__dict__, indent=4)
-        msg.setText(data)
-        msg.exec_()
+        self.dlg.setLayout(self.container)     
 
     def show(self):
-        self.dlg.show()
+        if self.dlg.exec_():
+            self.cfg.save()
+            msg = QMessageBox(self.qwin)
+            msg.setText("Changes Saved! You must reload the application to see them.")
+            msg.exec_()
 

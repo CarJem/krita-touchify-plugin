@@ -4,22 +4,23 @@ from PyQt5.QtCore import *
 import json
 import os
 from ..ext.extensions import *
+    
 
-class Config_PopupInfo:
+class PopupInfo:
     text: str = ""
     action: str = ""
     icon: str = ""
     customIcon: bool = False
 
     def create(args):
-        obj = Config_PopupInfo()
+        obj = PopupInfo()
         Extensions.dictToObject(obj, args)
         return obj
 
     def __str__(self):
         return self.text.replace("\n", "\\n")
     
-class Config_Popup:
+class Popup:
     id: str = ""
     btnName: str = ""
     isIconCustom: bool = False
@@ -34,13 +35,13 @@ class Config_Popup:
     icon_width: int = 30
     icon_height: int = 30
     hotkeyNumber: int = 0
-    items: List[Config_PopupInfo] = []
+    items: TypedList[PopupInfo] = []
 
     def create(args):
-        obj = Config_Popup()
+        obj = Popup()
         Extensions.dictToObject(obj, args)
         items = Extensions.default_assignment(args, "items", [])
-        obj.items = Extensions.list_assignment(items, Config_PopupInfo)
+        obj.items = Extensions.list_assignment(items, PopupInfo)
         return obj
     
     def __str__(self):
@@ -52,13 +53,13 @@ class Config_Popup:
         restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
         return restrictions
 
-class Config_Docker:
+class Docker:
     display_name: str = ""
     docker_name: str = ""
     hotkeyNumber: int = 0
 
     def create(args):
-        obj = Config_Docker()
+        obj = Docker()
         Extensions.dictToObject(obj, args)
         return obj
     
@@ -70,17 +71,22 @@ class Config_Docker:
         restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
         return restrictions
 
-class Config_DockerGroup:
+class DockerGroup:
     display_name: str = ""
-    docker_names: List[str] = []
+    docker_names: TypedList[str] = []
     id: str = ""
     hotkeyNumber: int = 0
     tabsMode: bool = True
     groupId: str = ""
 
+
+    def __init__(self):
+        self.docker_names = TypedList(None, str)
+
     def create(args):
-        obj = Config_DockerGroup()
+        obj = DockerGroup()
         Extensions.dictToObject(obj, args)
+        obj.docker_names = TypedList(obj.docker_names, str)
         return obj
     
     def __str__(self):
@@ -91,13 +97,13 @@ class Config_DockerGroup:
         restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
         return restrictions
     
-class Config_Workspace:
+class Workspace:
     display_name: str = ""
     id: str = ""
     hotkeyNumber: int = 0
 
     def create(args):
-        obj = Config_Workspace()
+        obj = Workspace()
         Extensions.dictToObject(obj, args)
         return obj
     
@@ -110,10 +116,10 @@ class Config_Workspace:
         return restrictions
     
 class ConfigFile:
-    auto_dockers: List[Config_Docker] = []
-    custom_dockers: List[Config_DockerGroup] = []
-    popups: List[Config_Popup] = []
-    workspaces: List[Config_Workspace] = []
+    dockers: TypedList[Docker] = []
+    docker_groups: TypedList[DockerGroup] = []
+    popups: TypedList[Popup] = []
+    workspaces: TypedList[Workspace] = []
 
     def load_chunk(self, configName):
         CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
@@ -128,17 +134,17 @@ class ConfigFile:
             json.dump(jsonData, f, default=lambda o: o.__dict__, indent=4)
 
     def save(self):
-        self.save_chunk(self.auto_dockers, "dockers")
-        self.save_chunk(self.custom_dockers, "docker_groups")
+        self.save_chunk(self.dockers, "dockers")
+        self.save_chunk(self.docker_groups, "docker_groups")
         self.save_chunk(self.popups, "popups")
         self.save_chunk(self.workspaces, "workspaces")
 
     def __init__(self, base_dir):
         self.__base_dir__ = base_dir
-        self.auto_dockers = Extensions.list_assignment(self.load_chunk("dockers"), Config_Docker)
-        self.custom_dockers = Extensions.list_assignment(self.load_chunk("docker_groups"), Config_DockerGroup)
-        self.popups = Extensions.list_assignment(self.load_chunk("popups"), Config_Popup)
-        self.workspaces = Extensions.list_assignment(self.load_chunk("workspaces"), Config_Workspace)
+        self.dockers = Extensions.list_assignment(self.load_chunk("dockers"), Docker)
+        self.docker_groups = Extensions.list_assignment(self.load_chunk("docker_groups"), DockerGroup)
+        self.popups = Extensions.list_assignment(self.load_chunk("popups"), Popup)
+        self.workspaces = Extensions.list_assignment(self.load_chunk("workspaces"), Workspace)
 
 class ConfigManager:
 

@@ -42,7 +42,7 @@ class WorkspaceToggles:
                             if workspace.isSeparator():
                                 break
                             else:
-                                action = Config_Workspace()
+                                action = Workspace()
                                 action.display_name = workspace.text()
                                 action.id = workspace.text()
                                 Workspaces.append(action)
@@ -59,7 +59,7 @@ class WorkspaceToggles:
         for action in pending_actions:
             root_menu.addAction(action)
    
-    def createAction(self, window, workspace: Config_Workspace, actionPath):
+    def createAction(self, window, workspace: Workspace, actionPath):
 
         actionName = 'WorkspaceToggles_{0}'.format(workspace.id)
         id = workspace.id
