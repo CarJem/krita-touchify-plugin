@@ -33,6 +33,9 @@ class VaporJem(Extension):
     def reloadKnownItems(self):
         self.basic_dockers.reloadDockers()
         self.workspace_toggles.reloadWorkspaces()
+        msg = QMessageBox(Krita.instance().activeWindow().qwindow())
+        msg.setText("Reloaded Known Workspaces/Dockers. You will need to reload to use them with this extension")
+        msg.exec_()
 
     def openSettings(self):
         SettingsDialog().show()
