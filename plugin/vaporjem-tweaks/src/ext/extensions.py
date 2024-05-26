@@ -5,7 +5,19 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..ext.PyKrita import *
+else:
+    from krita import *
+
 class Extensions:
+    def extend(class_to_extend):
+        def decorator(extending_class):
+            class_to_extend.__dict__.update(extending_class.__dict__)
+            return class_to_extend
+        return decorator
+
     def dictToObject(obj, dict):
         if dict is not None:
             for key, value in dict.items():
@@ -31,6 +43,58 @@ class Extensions:
         for i in array:
             arraySrc.append(classSrc.create(i))
         return arraySrc
+    
+
+class KritaExtensions:
+
+
+    def loadIcon(iconName):
+        return Krita.instance().icon(iconName)
+
+    def getIconList():
+        result = []
+
+        iconFormats = ["*.svg","*.svgz","*.svz","*.png"]
+
+        iconList = QDir(":/pics/").entryList(iconFormats, QDir.Files)
+        iconList += QDir(":/").entryList(iconFormats, QDir.Files)
+
+        for iconName in iconList:
+            name = iconName.split('_',1)
+            if any(iconSize == name[0] for iconSize in [ '16', '22', '24', '32', '48', '64', '128', '256', '512', '1048' ]):
+                iconName = name[1]
+
+            name = iconName.split('_',1)
+            if any(iconSize == name[0] for iconSize in [ 'light', 'dark' ]):
+                iconName = name[1]
+
+            name = iconName.split('.')
+            iconName = name[0]
+            if iconName not in result: 
+                result.insert(0, iconName)
+
+        iconList = QDir(":/icons/").entryList(iconFormats, QDir.Files)
+        #iconList += QDir(":/images/").entryList(iconFormats, QDir.Files)
+
+        for iconName in iconList:
+            name = iconName.split('.')
+            iconName = name[0]
+            if iconName not in result: 
+                result.insert(0, iconName)
+
+        #with open( os.path.dirname(os.path.realpath(__file__)) + '/ThemeIcons.txt' ) as f:
+        #    for iconName in f.readlines():
+        #        result.insert(0, iconName.rstrip())
+             
+        return sorted(result)
+
+    def getDockerNames():
+        result = []
+        dockers = Krita.instance().dockers()
+        for docker in dockers:
+            result.insert(0, docker.objectName())
+        return result
+
 
 class PyQtExtensions:
 

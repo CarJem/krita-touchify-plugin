@@ -5,6 +5,8 @@ from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
 from ..ext.typedlist import *
+from ..classes.resources import *
+from ..ext.extensions import KritaExtensions
 
 
 class PropertyField(QWidget):
@@ -47,13 +49,68 @@ class PropertyField_Str(PropertyField):
         super(PropertyField, self).__init__()
         self.setup(variable_name, variable_data, variable_source)
 
-        self.editor = QLineEdit()
-        self.editor.textChanged.connect(self.textChanged)
-        self.editor.setText(self.variable_data.replace("\n", "\\n"))
 
-        editorLayout = QHBoxLayout()
-        editorLayout.addWidget(self.editor)
-        self.setLayout(editorLayout)
+        self.is_icon_viewer = False
+        self.is_combobox = False
+        self.combobox_items = []
+
+        restric_func = PropertyGridExtensions.getVariable(self.variable_source, "propertygrid_restrictions")
+        if callable(restric_func):
+            restrictions = restric_func()
+            if variable_name in restrictions:
+                if restrictions[variable_name]["type"] == "values":
+                    self.combobox_items = restrictions[variable_name]["entries"]
+                    self.is_combobox = True
+                elif restrictions[variable_name]["type"] == "docker_selection":
+                    self.is_combobox = True
+                    self.combobox_items = KritaExtensions.getDockerNames()
+                elif restrictions[variable_name]["type"] == "icon_selection":
+                    self.is_icon_viewer = True
+                    
+
+        if self.is_icon_viewer:
+            self.editor = QComboBox()
+            self.editor.setEditable(True)
+
+            icons = KritaExtensions.getIconList()
+            for iconName in icons:
+                self.editor.addItem(ResourceManager.iconLoader(iconName), iconName)
+
+            custom_icons = ResourceManager.getCustomIconList()
+            for customIconName in custom_icons:
+                self.editor.addItem(ResourceManager.iconLoader(customIconName), customIconName)
+
+            index = self.editor.findText(self.variable_data, Qt.MatchFlag.MatchFixedString)
+            if index >= 0:
+                self.editor.setCurrentIndex(index)
+            self.editor.currentIndexChanged.connect(self.currentIndexChanged)
+
+            editorLayout = QHBoxLayout()
+            editorLayout.addWidget(self.editor)
+            self.setLayout(editorLayout)
+        elif self.is_combobox:
+            self.editor = QComboBox()
+            self.editor.insertItems(0, self.combobox_items)
+            index = self.editor.findText(self.variable_data, Qt.MatchFlag.MatchFixedString)
+            if index >= 0:
+                self.editor.setCurrentIndex(index)
+            self.editor.currentIndexChanged.connect(self.currentIndexChanged)
+
+            editorLayout = QHBoxLayout()
+            editorLayout.addWidget(self.editor)
+            self.setLayout(editorLayout)
+        else:
+            self.editor = QLineEdit()
+            self.editor.textChanged.connect(self.textChanged)
+            self.editor.setText(self.variable_data.replace("\n", "\\n"))
+
+            editorLayout = QHBoxLayout()
+            editorLayout.addWidget(self.editor)
+            self.setLayout(editorLayout)
+
+    def currentIndexChanged(self):
+        self.variable_data = str(self.editor.currentText()).replace("\\n", "\n")
+        PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
 
     def textChanged(self):
         self.variable_data = self.editor.text().replace("\\n", "\n")
@@ -135,6 +192,7 @@ class PropertyField_TypedList(PropertyField):
         super(PropertyField, self).__init__()
         self.setup(variable_name, variable_data, variable_source)
         self.variable_list_type = variable_data.allowedTypes()
+        print(self.variable_list_type)
 
         self.selectedIndex = -1
         self.selectedItem = None
@@ -207,7 +265,8 @@ class PropertyField_TypedList(PropertyField):
         if mode == "edit" or mode == "add":
             dlg = QDialog(self)
             container = QVBoxLayout()
-            dlg.setFixedSize(800,400)
+            dlg.setMinimumSize(800,450)
+            dlg.setBaseSize(800,800)
             dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
             dlg.btns.accepted.connect(dlg.accept)
             dlg.btns.rejected.connect(dlg.reject)
@@ -280,8 +339,13 @@ class PropertyField_TypedList(PropertyField):
         self.selectedItem = self.getEditableValue(item, self.selectedIndex)
 
     def getEditableValue(self, item, index):
+        if hasattr(item, "forceLoad"):
+            item.forceLoad()
+
         attrCount = len(PropertyGridExtensions.getClassVariables(item))
-        if attrCount <= 1:
+        isClassModel = PropertyGridExtensions.isClassModel(item)
+
+        if attrCount <= 1 and not isClassModel:
                 return PropertyField_TempValue(item, self.variable_source, self.variable_name, index)
         else:
             return item        
@@ -324,6 +388,10 @@ class PropertyGridExtensions:
                 not attr.startswith("__") and 
                 not attr.startswith("_"  + type(obj).__name__ + "__")]
     
+    def isClassModel(obj):
+        return hasattr(obj, "propertygrid_ismodel")
+
+    
     def quickDialog(parent, text):
         dlg = QMessageBox(parent)
         dlg.setText(text)
@@ -346,6 +414,8 @@ class PropertyGrid(QScrollArea):
         
         self.formWidget = QWidget()
         self.formLayout = QFormLayout()
+        self.formLayout.setVerticalSpacing(0)
+        self.formLayout.setContentsMargins(0, 0, 0, 0)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.setWidgetResizable(True)
 

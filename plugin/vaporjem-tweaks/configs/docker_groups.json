@@ -1,41 +1,53 @@
 {
     "items": [
         {
+            "docker_names": [
+                {
+                    "id": "History"
+                },
+                {
+                    "id": "Snapshot"
+                }
+            ],
             "display_name": "History Panel",
             "id": "HistoryDockers",
             "hotkeyNumber": 3,
             "groupId": "GroupA",
-            "docker_names": [
-                "History",
-                "Snapshot"
-            ]
+            "tabsMode": true,
+            "icon": "custom:HistoryDockers"
         },
         {
-            "display_name": "Colors Panel",
-            "id": "ColorDockers",
+            "docker_names": [
+                {
+                    "id": "TimelineDocker"
+                },
+                {
+                    "id": "OnionSkinsDocker"
+                }
+            ],
+            "tabsMode": true,
+            "display_name": "Animation Panel",
+            "value": "",
             "groupId": "GroupA",
-            "docker_names": [
-                "SmallColorSelector",
-                "SpecificColorSelector",
-                "PaletteDocker",
-                "PatternDocker"
-            ]
+            "id": "AnimationPanel",
+            "icon": "addduplicateframe"
         },
         {
-            "display_name": "Layers Panel",
-            "id": "LayerDockers",
-            "groupId": "GroupB",
             "docker_names": [
-                "KisLayerBox"
-            ]
-        },
-        {
-            "display_name": "Brushes Panel",
-            "id": "BrushesCustom",
+                {
+                    "id": "KisLayerBox"
+                },
+                {
+                    "id": "PaletteDocker"
+                },
+                {
+                    "id": "PatternDocker"
+                }
+            ],
             "tabsMode": false,
-            "docker_names": [
-                "PresetDocker"
-            ]
+            "display_name": "Extended Panel",
+            "icon": "custom:LayersCustom",
+            "id": "KisLayerBox"
         }
     ]
 }

@@ -47,10 +47,11 @@ class DockerToggles:
     def createAction(self, window, docker: Docker, actionPath):
         actionName ='DockerToggles_{0}'.format(docker.docker_name)
         id = docker.docker_name
+        iconName = docker.icon
         text ='{0}'.format(docker.display_name)
 
         action = window.createAction(actionName, "Docker: " + text, actionPath)    
-        icon = ResourceManager.iconLoader(id, 'dockers', True)
+        icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
         pending_actions.append(action)
 

@@ -2,8 +2,7 @@
     "items": [
         {
             "display_name": "Animation",
-            "id": "Animation",
-            "hotkeyNumber": 2
+            "id": "Animation"
         },
         {
             "display_name": "Big_Paint_2",
@@ -36,10 +35,6 @@
         {
             "display_name": "VFX_Paint",
             "id": "VFX_Paint"
-        },
-        {
-            "display_name": "Personal",
-            "id": "Personal"
         }
     ]
 }

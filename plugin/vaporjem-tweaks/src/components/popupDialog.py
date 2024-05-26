@@ -33,6 +33,9 @@ class PopupDialog(QDialog):
         self.metadata = args
         self.allowOpacity = False
 
+        #TODO: Popup Mode Definition
+        self.popupMode = self.metadata.popupMode
+
         self.popupType = self.metadata.type
         if self.popupType == "actions":
             self.allowOpacity = True
@@ -73,9 +76,12 @@ class PopupDialog(QDialog):
                 
         self.setFocusPolicy(Qt.ClickFocus)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, True)
-        self.window().setWindowFlags(Qt.WindowType.Popup | Qt.WindowType.FramelessWindowHint)
+        if self.popupMode:
+            self.window().setWindowFlags(Qt.WindowType.Popup | Qt.WindowType.FramelessWindowHint)
+        else:
+            self.window().setWindowFlags(Qt.WindowType.FramelessWindowHint)
 
-        stylesheet = "border: 1px solid white;"
+        stylesheet = "border: 1px solid white; background: palette(window)"
 
         if self.allowOpacity:
             self.setAttribute(Qt.WA_TranslucentBackground, True)
@@ -93,10 +99,10 @@ class PopupDialog(QDialog):
         except:
             pass
 
-    def getActionIcon(self, iconName, isCustomIcon):
-        return ResourceManager.iconLoader(iconName, "actions", isCustomIcon)
+    def getActionIcon(self, iconName):
+        return ResourceManager.iconLoader(iconName)
             
-    def createActionButton(self, layout, text, icon, isCustomIcon, action, x, y):
+    def createActionButton(self, layout, text, icon, action, x, y):
 
         opacityLevel = self.metadata.opacity
         btn_stylesheet = f"""
@@ -123,7 +129,7 @@ class PopupDialog(QDialog):
         btn.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 
         if icon:
-            btn.setIcon(self.getActionIcon(icon, isCustomIcon))
+            btn.setIcon(self.getActionIcon(icon))
             btn.setIconSize(QSize(self.metadata.icon_width, self.metadata.icon_height))
 
         btn.setWindowOpacity(opacityLevel)
@@ -148,7 +154,7 @@ class PopupDialog(QDialog):
                 current_x = 0
             
             btn = self.metadata.items[current_index]
-            self.createActionButton(layout, btn.text, btn.icon, btn.customIcon, btn.action, current_y, current_x)
+            self.createActionButton(layout, btn.text, btn.icon, btn.action, current_y, current_x)
             current_x += 1
             current_index += 1
 
@@ -253,6 +259,8 @@ class PopupDialog(QDialog):
 
         if self.isVisible():
             self.close()
+            if not self.popupMode:
+                return
 
         actual_x = 0
         actual_y = 0

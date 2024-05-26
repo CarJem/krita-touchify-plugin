@@ -40,12 +40,11 @@ class PopupButtons:
         actionName = 'VaporJem_Popup_{0}'.format(popup.btnName)
         displayName = popup.btnName + POPUP_BTN_IDENTIFIER
         iconName = popup.icon
-        isCustomIcon = popup.isIconCustom
         id = popup.id
         hotkeyNumber = popup.hotkeyNumber
 
         action = window.createAction(actionName, displayName, actionPath)
-        icon = ResourceManager.iconLoader(iconName, "buttons", isCustomIcon)        
+        icon = ResourceManager.iconLoader(iconName)        
         action.setIcon(icon)
         action.triggered.connect(partial(self.showPopup, id, popup, "button"))
 

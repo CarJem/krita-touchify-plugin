@@ -10,7 +10,6 @@ class PopupInfo:
     text: str = ""
     action: str = ""
     icon: str = ""
-    customIcon: bool = False
 
     def create(args):
         obj = PopupInfo()
@@ -20,10 +19,17 @@ class PopupInfo:
     def __str__(self):
         return self.text.replace("\n", "\\n")
     
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        restrictions["icon"] = {"type": "icon_selection"}
+        return restrictions
+    
 class Popup:
     id: str = ""
     btnName: str = ""
-    isIconCustom: bool = False
+    groupId: str =""
+    tabsMode: bool = False
+    popupMode: bool = True
     icon: str = ""
     type: str = "actions"
     docker_id: str = ""
@@ -47,8 +53,15 @@ class Popup:
     def __str__(self):
         return self.btnName.replace("\n", "\\n")
     
+    def forceLoad(self):
+        self.items = TypedList(self.items, PopupInfo)
+        pass
+    
     def propertygrid_restrictions(self):
         restrictions = {}
+        restrictions["icon"] = {"type": "icon_selection"}
+        restrictions["docker_id"] = {"type": "docker_selection"}
+        restrictions["type"] = {"type": "values", "entries": ["actions", "docker"]}
         restrictions["opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
         restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
         return restrictions
@@ -56,6 +69,7 @@ class Popup:
 class Docker:
     display_name: str = ""
     docker_name: str = ""
+    icon: str = ""
     hotkeyNumber: int = 0
 
     def create(args):
@@ -63,43 +77,74 @@ class Docker:
         Extensions.dictToObject(obj, args)
         return obj
     
+    def forceLoad(self):
+        pass
+    
     def __str__(self):
         return self.display_name.replace("\n", "\\n")
 
     def propertygrid_restrictions(self):
         restrictions = {}
+        restrictions["docker_name"] = {"type": "docker_selection"}
         restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
+        restrictions["icon"] = {"type": "icon_selection"}
+        return restrictions
+    
+
+class DockerGroupItems:
+    id: str=""
+
+    def create(args):
+        obj = DockerGroupItems()
+        Extensions.dictToObject(obj, args)
+        return obj
+    
+    def __str__(self):
+        return self.id.replace("\n", "\\n")
+    
+    def forceLoad(self):
+        pass
+
+    def propertygrid_ismodel(self):
+        return True
+    
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        restrictions["id"] = {"type": "docker_selection"}
         return restrictions
 
 class DockerGroup:
     display_name: str = ""
-    docker_names: TypedList[str] = []
     id: str = ""
+    icon: str = ""
     hotkeyNumber: int = 0
     tabsMode: bool = True
     groupId: str = ""
-
-
-    def __init__(self):
-        self.docker_names = TypedList(None, str)
+    docker_names: TypedList[DockerGroupItems] = []
 
     def create(args):
         obj = DockerGroup()
         Extensions.dictToObject(obj, args)
-        obj.docker_names = TypedList(obj.docker_names, str)
+        docker_names = Extensions.default_assignment(args, "docker_names", [])
+        obj.docker_names = Extensions.list_assignment(docker_names, DockerGroupItems)
         return obj
     
     def __str__(self):
         return self.display_name.replace("\n", "\\n")
     
+    def forceLoad(self):
+        self.docker_names = TypedList(self.docker_names, DockerGroupItems)
+    
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
+        restrictions["icon"] = {"type": "icon_selection"}
         return restrictions
     
 class Workspace:
     display_name: str = ""
     id: str = ""
+    icon: str = ""
     hotkeyNumber: int = 0
 
     def create(args):
@@ -110,9 +155,13 @@ class Workspace:
     def __str__(self):
         return self.display_name.replace("\n", "\\n")
     
+    def forceLoad(self):
+        pass
+    
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
+        restrictions["icon"] = {"type": "icon_selection"}
         return restrictions
     
 class ConfigFile:
@@ -138,13 +187,17 @@ class ConfigFile:
         self.save_chunk(self.docker_groups, "docker_groups")
         self.save_chunk(self.popups, "popups")
         self.save_chunk(self.workspaces, "workspaces")
+        self.load()
 
-    def __init__(self, base_dir):
-        self.__base_dir__ = base_dir
+    def load(self):
         self.dockers = Extensions.list_assignment(self.load_chunk("dockers"), Docker)
         self.docker_groups = Extensions.list_assignment(self.load_chunk("docker_groups"), DockerGroup)
         self.popups = Extensions.list_assignment(self.load_chunk("popups"), Popup)
         self.workspaces = Extensions.list_assignment(self.load_chunk("workspaces"), Workspace)
+
+    def __init__(self, base_dir):
+        self.__base_dir__ = base_dir
+        self.load()
 
 class ConfigManager:
 

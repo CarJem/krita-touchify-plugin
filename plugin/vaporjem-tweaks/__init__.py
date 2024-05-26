@@ -6,6 +6,7 @@ import sys
 import importlib.util
 from .src.classes.config import *
 from .src.ui.settings import *
+from .src.features.custom_styles import *
 from .src.features.docker_toggles import *
 from .src.features.docker_groups import *
 from .src.features.popup_buttons import *
@@ -42,24 +43,15 @@ class VaporJem(Extension):
 
     def buildMenus(self):
         qwin = Krita.instance().activeWindow().qwindow()
-        main_menu: QMenuBar = qwin.menuBar()
-        tools_section: QMenu = None
-
-        for action in main_menu.actions():
-            if action.objectName() == "tools":
-                tools_section = action.menu()
-
-        if not tools_section:
-            return
+        CustomStyles.applyStyles(qwin)
+        root_menu = qwin.menuBar().addMenu("Touchify")
         
-        root_menu = QMenu("VaporJem", main_menu)
-        tools_section.addMenu(root_menu)
 
         reloadItemsAction = QAction("Reload Known Items...", root_menu)
         reloadItemsAction.triggered.connect(self.reloadKnownItems)
         root_menu.menuAction().menu().addAction(reloadItemsAction)
 
-        openSettingsAction = QAction("Open Settings...", root_menu)
+        openSettingsAction = QAction("Configure Touchify...", root_menu)
         openSettingsAction.triggered.connect(self.openSettings)
         root_menu.menuAction().menu().addAction(openSettingsAction)
 

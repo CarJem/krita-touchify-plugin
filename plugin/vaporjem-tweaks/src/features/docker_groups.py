@@ -52,12 +52,18 @@ class DockerGroups:
         global custom_docker_states
 
         actionName = 'DockerToggles_Custom_{0}'.format(docker.id)
+
+        _p = []
+        for dockerName in docker.docker_names:
+            _p.append(str(dockerName))
+
         setId = docker.id
-        paths = docker.docker_names
+        iconName = docker.icon
+        paths = _p
         text = '{0}'.format(docker.display_name)
 
         action = window.createAction(actionName, text, actionPath) 
-        icon = ResourceManager.iconLoader(setId, 'buttons', True)
+        icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
 
         custom_docker_states[setId] = {

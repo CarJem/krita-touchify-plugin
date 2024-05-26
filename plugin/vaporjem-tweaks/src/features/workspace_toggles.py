@@ -64,10 +64,11 @@ class WorkspaceToggles:
         actionName = 'WorkspaceToggles_{0}'.format(workspace.id)
         id = workspace.id
         text = '{0}'.format(workspace.display_name)
+        iconName = 'custom:' + workspace.id
 
 
         action = window.createAction(actionName, "Workspace: " + text, actionPath)    
-        icon = ResourceManager.iconLoader(id, 'workspaces', True)
+        icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
 
         if not workspace.hotkeyNumber == 0:
