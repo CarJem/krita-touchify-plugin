@@ -90,7 +90,6 @@ class PopupDialog(QDialog):
             
         self.frame.setStyleSheet("QFrame#popupFrame { " + stylesheet  + " }")
             
-
     def runAction(self, actionName):
         try:
             action = Krita.instance().action(actionName)

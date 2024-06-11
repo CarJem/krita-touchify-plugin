@@ -47,6 +47,12 @@ class Extensions:
 
 class KritaExtensions:
 
+    def getDocker(name):
+        dockers = Krita.instance().dockers()
+        for docker in dockers:
+            if docker.objectName() == name:
+                return docker
+        return None
 
     def loadIcon(iconName):
         return Krita.instance().icon(iconName)
@@ -88,11 +94,15 @@ class KritaExtensions:
              
         return sorted(result)
 
-    def getDockerNames():
+    def getDockerData():
         result = []
         dockers = Krita.instance().dockers()
         for docker in dockers:
-            result.insert(0, docker.objectName())
+            result.insert(0, {
+                "id": docker.objectName(),
+                "name": docker.windowTitle(),
+                "icon": docker.windowIcon()
+            })
         return result
 
 

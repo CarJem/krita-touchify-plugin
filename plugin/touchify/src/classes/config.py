@@ -27,8 +27,6 @@ class PopupInfo:
 class Popup:
     id: str = ""
     btnName: str = ""
-    groupId: str =""
-    tabsMode: bool = False
     popupMode: bool = True
     icon: str = ""
     type: str = "actions"
@@ -42,6 +40,27 @@ class Popup:
     icon_height: int = 30
     hotkeyNumber: int = 0
     items: TypedList[PopupInfo] = []
+
+
+    def propertygrid_groups(self):
+        action_mode_settings = [
+            "opacity",
+            "grid_width",
+            "grid_padding",
+            "icon_width", 
+            "icon_height",
+            "items", 
+        ]
+
+        docker_mode_settings = [
+            "docker_id"
+        ]
+
+        groups = {}
+        groups["general"] = {"name": "General Settings", "items": ["id", "icon", "hotkeyNumber"]}
+        groups["actions_mode"] = {"name": "Actions Mode Settings", "items": action_mode_settings}
+        groups["docker_mode"] = {"name": "Docker Mode Settings", "items": docker_mode_settings}
+        return groups
 
     def create(args):
         obj = Popup()
@@ -82,6 +101,11 @@ class Docker:
     
     def __str__(self):
         return self.display_name.replace("\n", "\\n")
+    
+    def propertygrid_groups(self):
+        groups = {}
+        groups["general"] = {"name": "General Settings", "items": ["icon", "hotkeyNumber"]}
+        return groups
 
     def propertygrid_restrictions(self):
         restrictions = {}
@@ -134,6 +158,11 @@ class DockerGroup:
     
     def forceLoad(self):
         self.docker_names = TypedList(self.docker_names, DockerGroupItems)
+
+    def propertygrid_groups(self):
+        groups = {}
+        groups["general"] = {"name": "General Settings", "items": ["id", "icon", "hotkeyNumber"]}
+        return groups
     
     def propertygrid_restrictions(self):
         restrictions = {}
@@ -157,6 +186,11 @@ class Workspace:
     
     def forceLoad(self):
         pass
+
+    def propertygrid_groups(self):
+        groups = {}
+        groups["general"] = {"name": "General Settings", "items": ["id", "icon", "hotkeyNumber"]}
+        return groups
     
     def propertygrid_restrictions(self):
         restrictions = {}
@@ -181,6 +215,15 @@ class ConfigFile:
         jsonData = { "items": cfg }
         with open(CONFIG_FILE, "w") as f:
             json.dump(jsonData, f, default=lambda o: o.__dict__, indent=4)
+
+
+    def propertygrid_groups(self):
+        groups = {}
+        groups["dockers"] = {"name": "Dockers", "items": ["dockers"]}
+        groups["docker_groups"] = {"name": "Docker Groups", "items": ["docker_groups"]}
+        groups["popups"] = {"name": "Popups", "items": ["popups"]}
+        groups["workspaces"] = {"name": "Workspaces", "items": ["workspaces"]}
+        return groups
 
     def save(self):
         self.save_chunk(self.dockers, "dockers")

@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 from ..ext.typedlist import *
 from ..classes.resources import *
 from ..ext.extensions import KritaExtensions
+from .CollapsibleBox import CollapsibleBox
 
 
 class PropertyField(QWidget):
@@ -51,6 +52,7 @@ class PropertyField_Str(PropertyField):
 
 
         self.is_icon_viewer = False
+        self.is_docker_selector = False
         self.is_combobox = False
         self.combobox_items = []
 
@@ -62,31 +64,41 @@ class PropertyField_Str(PropertyField):
                     self.combobox_items = restrictions[variable_name]["entries"]
                     self.is_combobox = True
                 elif restrictions[variable_name]["type"] == "docker_selection":
-                    self.is_combobox = True
-                    self.combobox_items = KritaExtensions.getDockerNames()
+                    self.is_docker_selector = True
                 elif restrictions[variable_name]["type"] == "icon_selection":
                     self.is_icon_viewer = True
                     
 
-        if self.is_icon_viewer:
+        if self.is_icon_viewer or self.is_docker_selector:
             self.editor = QComboBox()
             self.editor.setEditable(True)
 
-            icons = KritaExtensions.getIconList()
-            for iconName in icons:
-                self.editor.addItem(ResourceManager.iconLoader(iconName), iconName)
+            if self.is_icon_viewer:
+                icons = KritaExtensions.getIconList()
+                for iconName in icons:
+                    self.editor.addItem(ResourceManager.iconLoader(iconName), iconName, iconName)
 
-            custom_icons = ResourceManager.getCustomIconList()
-            for customIconName in custom_icons:
-                self.editor.addItem(ResourceManager.iconLoader(customIconName), customIconName)
+                custom_icons = ResourceManager.getCustomIconList()
+                for customIconName in custom_icons:
+                    displayName = str(customIconName)[len("custom:"):] + " (Custom)"
+                    self.editor.addItem(ResourceManager.iconLoader(customIconName), displayName, customIconName)
+            elif self.is_docker_selector:
+                dockers = KritaExtensions.getDockerData()
+                for dockerData in dockers:
+                    displayName = dockerData["name"] + " [{0}]".format(dockerData["id"])
+                    self.editor.addItem(displayName, dockerData["id"])    
 
-            index = self.editor.findText(self.variable_data, Qt.MatchFlag.MatchFixedString)
+            #TODO: Fix Sorting
+            self.editor.model().sort(0, Qt.SortOrder.DescendingOrder)
+
+            index = self.editor.findData(self.variable_data)
             if index >= 0:
                 self.editor.setCurrentIndex(index)
             self.editor.currentIndexChanged.connect(self.currentIndexChanged)
 
             editorLayout = QHBoxLayout()
             editorLayout.addWidget(self.editor)
+            self.setLayout(editorLayout)
             self.setLayout(editorLayout)
         elif self.is_combobox:
             self.editor = QComboBox()
@@ -109,11 +121,17 @@ class PropertyField_Str(PropertyField):
             self.setLayout(editorLayout)
 
     def currentIndexChanged(self):
-        self.variable_data = str(self.editor.currentText()).replace("\\n", "\n")
+        if self.is_icon_viewer or self.is_docker_selector:
+            self.variable_data = str(self.editor.currentData()).replace("\\n", "\n")
+        else:
+            self.variable_data = str(self.editor.currentText()).replace("\\n", "\n")
         PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
 
     def textChanged(self):
-        self.variable_data = self.editor.text().replace("\\n", "\n")
+        if self.is_icon_viewer or self.is_docker_selector:
+            self.variable_data = str(self.editor.currentData()).replace("\\n", "\n")
+        else:
+            self.variable_data = self.editor.text().replace("\\n", "\n")
         PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
 
 class PropertyField_Int(PropertyField):
@@ -377,6 +395,12 @@ class PropertyField_TempValue:
 
 
 class PropertyGridExtensions:
+
+    def tryGetVariable(obj, varName):
+        if hasattr(obj, varName):
+            return getattr(obj, varName)
+        else: return None
+
     def getVariable(obj, varName):
         return getattr(obj, varName)
     
@@ -387,6 +411,11 @@ class PropertyGridExtensions:
         return [attr for attr in dir(obj) if not callable(getattr(obj, attr)) and 
                 not attr.startswith("__") and 
                 not attr.startswith("_"  + type(obj).__name__ + "__")]
+    
+    def getGroups(obj):
+        if hasattr(obj, "propertygrid_groups"):
+            return dict(obj.propertygrid_groups())
+        else: return {}
     
     def isClassModel(obj):
         return hasattr(obj, "propertygrid_ismodel")
@@ -418,7 +447,6 @@ class PropertyGrid(QScrollArea):
         self.formLayout.setContentsMargins(0, 0, 0, 0)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.setWidgetResizable(True)
-
         self.formWidget.setLayout(self.formLayout)
         self.setWidget(self.formWidget)
 
@@ -434,12 +462,38 @@ class PropertyGrid(QScrollArea):
         self.item = item
         self.fields.clear()
         PropertyGridExtensions.clearLayout(self.formLayout)
-        
-        for varName in PropertyGridExtensions.getClassVariables(item):
-            variable = PropertyGridExtensions.getVariable(item, varName)
-            field = PropertyField.getPropertyType(varName, variable, item)
-            if field:
-                self.fields.append(field)
-                field.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
-                self.formLayout.addRow(field.labelText, field)
+        groupData = PropertyGridExtensions.getGroups(item)
+        claimedSections = []
 
+        for groupId in groupData:
+            groupName = groupData[groupId]["name"]
+            groupItems = list(groupData[groupId]["items"])
+            for varName in groupItems:
+                claimedSections.append(varName)
+
+        for varName in PropertyGridExtensions.getClassVariables(item):
+            if varName not in claimedSections:
+                variable = PropertyGridExtensions.getVariable(item, varName)
+                field = PropertyField.getPropertyType(varName, variable, item)
+                if field:
+                    self.fields.append(field)
+                    field.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+                    #self.formLayout.addWidget(field)
+                    self.formLayout.addRow(field.labelText, field)
+        
+        for groupId in groupData:
+            groupName = groupData[groupId]["name"]
+            groupItems = list(groupData[groupId]["items"])
+            section = CollapsibleBox(groupName, self.formWidget)
+            sectionLayout = QFormLayout()
+            section.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+
+            for varName in groupItems:
+                variable = PropertyGridExtensions.getVariable(item, varName)
+                field = PropertyField.getPropertyType(varName, variable, item)
+                if field:
+                    self.fields.append(field)
+                    field.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+                    sectionLayout.addRow(field.labelText, field)
+            section.setContentLayout(sectionLayout)
+            self.formLayout.addRow(section)

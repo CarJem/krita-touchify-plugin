@@ -6,7 +6,7 @@ import sys
 import importlib.util
 from .src.classes.config import *
 from .src.ui.settings import *
-from .src.features.custom_styles import *
+from .src.tweaks.custom_styles import *
 from .src.features.docker_toggles import *
 from .src.features.docker_groups import *
 from .src.features.popup_buttons import *
@@ -30,6 +30,7 @@ class VaporJem(Extension):
     def setup(self):
         appNotifier  = Krita.instance().notifier()
         appNotifier.windowCreated.connect(self.buildMenus)
+        appNotifier.windowCreated.connect(self.buildTweaks)
 
     def reloadKnownItems(self):
         self.basic_dockers.reloadDockers()
@@ -38,12 +39,15 @@ class VaporJem(Extension):
         msg.setText("Reloaded Known Workspaces/Dockers. You will need to reload to use them with this extension")
         msg.exec_()
 
+    def buildTweaks(self):
+        qwin = Krita.instance().activeWindow()
+        CustomStyles.applyStyles(qwin)
+
     def openSettings(self):
         SettingsDialog().show()
 
     def buildMenus(self):
         qwin = Krita.instance().activeWindow().qwindow()
-        CustomStyles.applyStyles(qwin)
         root_menu = qwin.menuBar().addMenu("Touchify")
         
 

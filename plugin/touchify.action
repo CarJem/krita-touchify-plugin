@@ -1,45 +1,45 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <ActionCollection version="2" name="Scripts">
     <Actions category="Scripts">
-        <text>VaporJem Tweaks</text>
+        <text>Touchify</text>
         <Action name="vjt_action1">
-            <text>VaporJem: Action 1</text>
+            <text>Touchify: Action 1</text>
             <shortcut></shortcut>
         </Action>
         <Action name="vjt_action2">
-            <text>VaporJem: Action 2</text>
+            <text>Touchify: Action 2</text>
             <shortcut></shortcut>
         </Action>
         <Action name="vjt_action3">
-            <text>VaporJem: Action 3</text>
+            <text>Touchify: Action 3</text>
             <shortcut></shortcut>
         </Action>
         <Action name="vjt_action4">
-            <text>VaporJem: Action 4</text>
+            <text>Touchify: Action 4</text>
             <shortcut></shortcut>
         </Action>
         <Action name="vjt_action5">
-            <text>VaporJem: Action 5</text>
+            <text>Touchify: Action 5</text>
             <shortcut></shortcut>
         </Action>
         <Action name="vjt_action6">
-            <text>VaporJem: Action 6</text>
+            <text>Touchify: Action 6</text>
             <shortcut></shortcut>
         </Action>
         <Action name="vjt_action7">
-            <text>VaporJem: Action 7</text>
+            <text>Touchify: Action 7</text>
             <shortcut></shortcut>
         </Action>
         <Action name="vjt_action8">
-            <text>VaporJem: Action 8</text>
+            <text>Touchify: Action 8</text>
             <shortcut></shortcut>
         </Action>
         <Action name="vjt_action9">
-            <text>VaporJem: Action 9</text>
+            <text>Touchify: Action 9</text>
             <shortcut></shortcut>
         </Action>
         <Action name="vjt_action10">
-            <text>VaporJem: Action 10</text>
+            <text>Touchify: Action 10</text>
             <shortcut></shortcut>
         </Action>
     </Actions>

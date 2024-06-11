@@ -1,6 +1,6 @@
 #!/bin/bash
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-PLUGIN_NAME="vaporjem-tweaks"
+PLUGIN_NAME="touchify"
 
 
 rm -r ~/.var/app/org.kde.krita/data/krita/pykrita/$PLUGIN_NAME/*

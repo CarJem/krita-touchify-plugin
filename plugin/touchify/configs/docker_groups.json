@@ -1,0 +1,80 @@
+{
+    "items": [
+        {
+            "docker_names": [
+                {
+                    "id": "History"
+                },
+                {
+                    "id": "Snapshot"
+                }
+            ],
+            "display_name": "History Panel",
+            "id": "HistoryDockers",
+            "hotkeyNumber": 3,
+            "groupId": "SidebarGroup",
+            "tabsMode": true,
+            "icon": "custom:HistoryDockers"
+        },
+        {
+            "docker_names": [
+                {
+                    "id": "TimelineDocker"
+                },
+                {
+                    "id": "OnionSkinsDocker"
+                }
+            ],
+            "tabsMode": true,
+            "display_name": "Animation Panel",
+            "value": "",
+            "groupId": "GroupA",
+            "id": "AnimationPanel",
+            "icon": "addduplicateframe"
+        },
+        {
+            "docker_names": [
+                {
+                    "id": "KisLayerBox"
+                }
+            ],
+            "tabsMode": true,
+            "display_name": "Layers Panel",
+            "icon": "custom:LayersCustom",
+            "id": "KisLayerBox",
+            "groupId": "SidebarGroup"
+        },
+        {
+            "docker_names": [
+                {
+                    "id": "pykrita_reference_tabs"
+                },
+                {
+                    "id": "OverviewDocker"
+                }
+            ],
+            "tabsMode": true,
+            "display_name": "Refrences Panel ",
+            "icon": "config-canvas-only",
+            "id": "pykrita_reference_tabs"
+        },
+        {
+            "docker_names": [
+                {
+                    "id": "PaletteDocker"
+                },
+                {
+                    "id": "PatternDocker"
+                },
+                {
+                    "id": "SvgSymbolCollectionDocker"
+                }
+            ],
+            "tabsMode": true,
+            "groupId": "SidebarGroup",
+            "display_name": "Colors and Patterns Panel",
+            "icon": "custom:ColorDockers",
+            "id": "SvgSymbolCollectionDocker"
+        }
+    ]
+}
