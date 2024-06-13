@@ -16,11 +16,11 @@
 # For autocomplete
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..ext.PyKrita import *
+    from .ext.PyKrita import *
 else:
     from krita import *
 from PyQt5.QtWidgets import QWidget
-from .kbpresetchooser import KBPresetChooser
+from .docker.DockerPresetChooser import DockerPresetChooser
 
 class KBBorrowManager():
     _parents = {}
@@ -29,14 +29,12 @@ class KBBorrowManager():
     def __init__(self):
         self._qWin = Krita.instance().activeWindow().qwindow()
 
-
     def widget(self, ID):
         return self._widgets[ID]
 
-
     def borrowDockerWidget(self, ID):
         if ID == 'PresetDocker':
-            return KBPresetChooser()
+            return DockerPresetChooser()
         else:
             self._parents[ID] = self._qWin.findChild(QWidget, ID)
             self._widgets[ID] = self._parents[ID].widget()
@@ -44,17 +42,19 @@ class KBBorrowManager():
             
         return None
 
-
     def returnWidget(self, ID):
         self._parents[ID].setWidget(self._widgets[ID])
         self._parents[ID].widget().setEnabled(True)
-
 
     def returnAll(self):
         for ID in self._parents:
             self.returnWidget(ID)
 
-
     def dockerWindowTitle(self, ID):
         title = self._qWin.findChild(QWidget, ID).windowTitle()
         return title.replace('&', '')
+    
+    def instance():
+        if KBBorrowManager.root == None:
+            KBBorrowManager.root = KBBorrowManager()
+        return KBBorrowManager.root

@@ -23,17 +23,16 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QToolButton, QStyle
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtCore import QSize, Qt
 from ..config import *
-from .kbbutton import KBButton
-from .kbconfigmanager import KBConfigManager
+from .DockerButton import DockerButton
 
-class KBTitleBar(QWidget):
+class DockerTitlebar(QWidget):
     _config = KBConfigManager()
     _btnSize = int(_config.loadConfig('SIZES')['titleButtons'])
     _btnIconSize = _btnSize-3
     _fontSize = _btnSize-1
 
     def __init__(self, parent):
-        super(KBTitleBar, self).__init__(parent)
+        super(DockerTitlebar, self).__init__(parent)
         self.parent = parent
         self.layout = QHBoxLayout()
         self.layout.setContentsMargins(2, 1, 2, 1)
@@ -77,7 +76,7 @@ class KBTitleBar(QWidget):
         self.pressing = False
 
 
-class KBPinnedModeButton(KBButton):
+class KBPinnedModeButton(DockerButton):
 
     def __init__(self, size, iconSize, parent=None):
         super(KBPinnedModeButton, self).__init__(size, parent)
@@ -100,7 +99,7 @@ class KBPinnedModeButton(KBButton):
         KritaSettings.writeSetting("KanvasBuddy", "KBPinnedMode", str(checked).lower())
 
 
-class KBCloseButton(KBButton):
+class KBCloseButton(DockerButton):
 
     def __init__(self, size, iconSize, parent=None):
         super(KBCloseButton, self).__init__(size, parent)

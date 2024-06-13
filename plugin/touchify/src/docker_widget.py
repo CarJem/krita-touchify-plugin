@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 else:
     from krita import *
 from PyQt5.QtWidgets import *
-from .docker.kbpanelstack import *
+from .docker.DockerRoot import *
 
 class TouchifyBuddy(DockWidget):
 
@@ -46,12 +46,12 @@ class TouchifyBuddy(DockWidget):
         Krita.instance().notifier().windowCreated.connect(self.onLoaded)
     
     def onLoaded(self):              
-        self.panelStack = KBPanelStack(self)
+        self.panelStack = DockerRoot(self)
         self.layout.addWidget(self.panelStack)
 
     def canvasChanged(self, canvas):
         pass
 
 # And add the extension to Krita's list of extensions:
-Krita.instance().addDockWidgetFactory(DockWidgetFactory("TouchifyBuddy", DockWidgetFactoryBase.DockRight, TouchifyBuddy))
+Krita.instance().addDockWidgetFactory(DockWidgetFactory("TouchifyBuddy", DockWidgetFactoryBase.DockRight, TouchifyBuddy)) # type: ignore
 

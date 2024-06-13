@@ -18,15 +18,15 @@ if TYPE_CHECKING:
     from ..ext.PyKrita import *
 else:
     from krita import *
-from .kbbutton import KBButton
+from .DockerButton import DockerButton
 
 from PyQt5.QtWidgets import QWidget, QHBoxLayout
 from PyQt5.QtCore import QSize, Qt
 
-class KBButtonBar(QWidget):
+class DockerButtonBar(QWidget):
 
     def __init__(self, btnSize, parent=None):
-        super(KBButtonBar, self).__init__(parent)
+        super(DockerButtonBar, self).__init__(parent)
         self.setLayout(QHBoxLayout())
         self.layout().setContentsMargins(0, 0, 0, 0)
 
@@ -35,8 +35,8 @@ class KBButtonBar(QWidget):
 
 
     def addButton(self, properties, onClick, toolTip="", checkable=False):
-        btn = KBButton(self.btnSize)
-        btn.setIcon(Application.icon(properties['icon']))
+        btn = DockerButton(self.btnSize)
+        btn.setIcon(Krita.instance().icon(properties['icon']))
         btn.clicked.connect(onClick) # collect and disconnect all when closing
         btn.setToolTip(toolTip)
         btn.setCheckable(checkable)

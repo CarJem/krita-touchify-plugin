@@ -16,10 +16,10 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtCore import QSize
 
-class KBPanel(QWidget):
+class DockerPanel(QWidget):
 
     def __init__(self, widget=None):
-        super(KBPanel, self).__init__()
+        super(DockerPanel, self).__init__()
         self.w = widget
         self.size = None
         self.setLayout(QVBoxLayout())

@@ -21,27 +21,25 @@ else:
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtCore import QMargins
+from ..config import *
+from .DockerButtonBar import DockerButtonBar
 
-from .kbbuttonbar import KBButtonBar
-from .kbconfigmanager import KBConfigManager
-
-class KBMainWidget(QWidget):
+class DockerMainPage(QWidget):
     _config = KBConfigManager()
     _dockerButtonSize = int(_config.loadConfig('SIZES')['dockerButtons'])
     _quickActionButtonSize = int(_config.loadConfig('SIZES')['actionButtons'])
     _margins = QMargins(4, 4, 4, 4)
 
     def __init__(self, parent=None):
-        super(KBMainWidget, self).__init__(parent)
+        super(DockerMainPage, self).__init__(parent)
         self._config = KBConfigManager()
-        self.setAutoFillBackground(True)
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(self._margins)
 
-        self.dockerBtns = KBButtonBar(self._dockerButtonSize)
+        self.dockerBtns = DockerButtonBar(self._dockerButtonSize)
         self.layout().addWidget(self.dockerBtns)    
 
-        self.quickActions = KBButtonBar(self._quickActionButtonSize)
+        self.quickActions = DockerButtonBar(self._quickActionButtonSize)
         self.initQuickActions()
         self.layout().addWidget(self.quickActions)
 
@@ -55,7 +53,7 @@ class KBMainWidget(QWidget):
         props = self._config.loadProperties('quickActions')
         for entry in cfg:
             if cfg.getboolean(entry):
-                action = Application.action(props[entry]['id'])
+                action = Krita.instance().action(props[entry]['id'])
                 self.quickActions.addButton(
                     props[entry],
                     action.trigger,

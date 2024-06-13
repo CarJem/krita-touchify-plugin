@@ -6,6 +6,9 @@ import os
 from .ext.extensions import *
 from ..paths import BASE_DIR
     
+from configparser import ConfigParser
+
+import json
 
 class PopupInfo:
     text: str = ""
@@ -273,5 +276,33 @@ class ConfigManager:
 class KritaSettings:
     def readSetting(group:str, name:str, defaultValue:str):
         return Krita.instance().readSetting(group, name, defaultValue)
+
+class KBConfigManager():
+    _fileDir = os.path.join(BASE_DIR, "configs") + '/'
+    _propertiesFile = 'toolbar_buddy.json'
+    _configFile = 'toolbar_buddy.ini'
+
+    def __init__(self):
+        pass
+
+    def loadProperties(self, section=''):
+        data = None
+        with open(self._fileDir + self._propertiesFile) as jsonFile:
+            data = json.load(jsonFile)
+            if section:
+                data = data[section]
+
+        return data
+
+    def loadConfig(self, section=''):
+        cfg = ConfigParser()
+        cfg.optionxform = str # Prevents ConfigParser from turning all entrys lowercase 
+        cfg.read(self._fileDir + self._configFile)
+
+        if section:
+            cfg = cfg[section]
+
+        return cfg
+
 
 ConfigManager.root = ConfigManager(BASE_DIR)

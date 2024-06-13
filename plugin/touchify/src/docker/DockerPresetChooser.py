@@ -18,18 +18,19 @@ if TYPE_CHECKING:
     from ..ext.PyKrita import *
 else:
     from krita import *
+from ...configs import *
 from PyQt5.QtCore import pyqtSignal
 
-class KBPresetChooser(PresetChooser):
+class DockerPresetChooser(PresetChooser):
     presetChanged = pyqtSignal()
 
     def __init__(self, parent=None):
-        super(KBPresetChooser, self).__init__(parent)
+        super(DockerPresetChooser, self).__init__(parent)
         self.presetSelected.connect(self.brushPresetChanged)
         self.presetClicked.connect(self.brushPresetChanged)
 
     def brushPresetChanged(self, preset):
-        Application.activeWindow().activeView().activateResource(
+        Krita.instance().activeWindow().activeView().activateResource(
             self.currentPreset()
             )
         self.presetChanged.emit()

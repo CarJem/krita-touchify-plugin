@@ -22,21 +22,20 @@ else:
 from PyQt5.QtWidgets import QPushButton, QStackedWidget, QSizePolicy
 from PyQt5.QtCore import QSize, QEvent
 from ..config import *
-from .kbpanel import KBPanel
-from .main_widget import KBMainWidget
-from .borrow_manager import KBBorrowManager
-from .kbconfigmanager import KBConfigManager
+from .DockerPanel import DockerPanel
+from .DockerMainPage import DockerMainPage
+from ..borrow_manager import KBBorrowManager
 
-class KBPanelStack(QStackedWidget):
+class DockerRoot(QStackedWidget):
 
     def __init__(self, parent=None):
-        super(KBPanelStack, self).__init__(parent)
+        super(DockerRoot, self).__init__(parent)
         super().currentChanged.connect(self.currentChanged)
         self._panels = {}
         self._borrower = KBBorrowManager()
         self.shortcutConnections = []
         
-        self._mainWidget = KBMainWidget()
+        self._mainWidget = DockerMainPage()
         self.addPanel('MAIN', self._mainWidget)
         self.appendShortcutAction('MAIN')
         self.initPanels()
@@ -48,11 +47,11 @@ class KBPanelStack(QStackedWidget):
         properties = configManager.loadProperties('dockers')
         for entry in panelConfig:
             if panelConfig.getboolean(entry):
-                self.loadPanel(properties[entry])
+                self.initPanel(properties[entry])
 
 
     def addPanel(self, ID, widget):
-        panel = KBPanel(widget)
+        panel = DockerPanel(widget)
 
         if self.count() > 0:
             backButton = KBPanelCloseButton(lambda: self.setCurrentIndex(0))
@@ -62,7 +61,7 @@ class KBPanelStack(QStackedWidget):
         super().addWidget(panel)
 
 
-    def loadPanel(self, properties):
+    def initPanel(self, properties):
         ID = properties['id']        
         widget = self._borrower.borrowDockerWidget(ID)
         title = self._borrower.dockerWindowTitle(ID)
