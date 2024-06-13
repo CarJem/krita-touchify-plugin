@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
-from .redesign.nuTools.nttoolbox import ntToolBox
-from .redesign.nuTools.nttooloptions import ntToolOptions
+from .redesign.nttoolbox import ntToolBox
+from .redesign.nttooloptions import ntToolOptions
 from . import variables
 from PyQt5.QtWidgets import QMessageBox
 

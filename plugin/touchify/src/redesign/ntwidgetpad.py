@@ -22,7 +22,7 @@ from .ntscrollareacontainer import ntScrollAreaContainer
 from .nttogglevisiblebutton import ntToggleVisibleButton
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ...ext.PyKrita import *
+    from ..ext.PyKrita import *
 else:
     from krita import *
 

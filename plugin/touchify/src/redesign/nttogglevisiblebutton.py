@@ -18,7 +18,7 @@
 
 from PyQt5.QtWidgets import QToolButton, QSizePolicy
 from PyQt5.QtCore import Qt, QSize
-from ... import variables
+from .. import variables
 
 class ntToggleVisibleButton(QToolButton):
     def __init__(self, parent = None):

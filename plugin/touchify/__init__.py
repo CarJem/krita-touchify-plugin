@@ -1,2 +1,2 @@
 from .src.touchify import *
-from .src.kanvasbuddy.setup import *
+from .src.docker_widget import *

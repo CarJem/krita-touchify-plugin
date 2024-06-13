@@ -22,11 +22,11 @@ import importlib
 # For autocomplete
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..ext.PyKrita import *
+    from .ext.PyKrita import *
 else:
     from krita import *
 from PyQt5.QtWidgets import *
-from .ui.kbpanelstack import *
+from .kanvasbuddy.ui.kbpanelstack import *
 
 class TouchifyBuddy(DockWidget):
 
