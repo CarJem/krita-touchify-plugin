@@ -13,7 +13,7 @@ import re
 import functools
 import copy
 import json
-from ..components.propertygrid import *
+from ..components.PropertyGrid import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

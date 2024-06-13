@@ -8,7 +8,9 @@ import sys
 import importlib.util
 from ..classes.config import *
 from ..classes.resources import *
-from ..components.popupDialog import *
+from ..components.popups.PopupDialog import *
+from ..components.popups.PopupDialog_Actions import *
+from ..components.popups.PopupDialog_Docker import *
 
 
 from typing import TYPE_CHECKING
@@ -22,10 +24,19 @@ pending_actions = []
 
 class PopupButtons:
 
+
+    def createPopup(self, qwin: QMainWindow, data: Popup):
+        if data.type == "actions":
+            return PopupDialog_Actions(qwin, data)
+        elif data.type == "docker":
+            return PopupDialog_Docker(qwin, data)
+        else:
+            return PopupDialog(qwin, data)
+
     def showPopup(self, id, data: Popup, mode: str):
         if not id in popup_dialogs:
             qwin = Krita.instance().activeWindow().qwindow()
-            popup_dialogs[id] = PopupDialog(qwin, data)
+            popup_dialogs[id] = self.createPopup(qwin, data)
         popup_dialogs[id].triggerPopup(mode)
 
 

@@ -27,7 +27,7 @@ class PopupInfo:
 class Popup:
     id: str = ""
     btnName: str = ""
-    popupMode: bool = True
+    popupType: str = "popup"
     icon: str = ""
     type: str = "actions"
     docker_id: str = ""
@@ -81,6 +81,7 @@ class Popup:
         restrictions["icon"] = {"type": "icon_selection"}
         restrictions["docker_id"] = {"type": "docker_selection"}
         restrictions["type"] = {"type": "values", "entries": ["actions", "docker"]}
+        restrictions["popupType"] = {"type": "values", "entries": ["popup", "window", "toolbox"]}
         restrictions["opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
         restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
         return restrictions

@@ -186,6 +186,23 @@
             "opacity": 1.0,
             "popupMode": true,
             "hotkeyNumber": 2
+        },
+        {
+            "items": [],
+            "item_height": 100,
+            "item_width": 100,
+            "opacity": 1.0,
+            "grid_width": 3,
+            "grid_padding": 2,
+            "icon_width": 30,
+            "icon_height": 30,
+            "btnName": "Reference Popup",
+            "id": "referencePopup",
+            "icon": "config-canvas-only",
+            "type": "docker",
+            "popupType": "toolbox",
+            "docker_id": "pykrita_reference_tabs",
+            "hotkeyNumber": 0
         }
     ]
 }

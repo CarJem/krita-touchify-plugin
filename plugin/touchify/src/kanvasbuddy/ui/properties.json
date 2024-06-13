@@ -1,0 +1,187 @@
+{
+    "dockers": {
+        "presetChooser": {
+            "id": "PresetDocker",
+            "icon": "paintop_settings_01",
+            "size": [260, 235]
+        },
+        "advancedColor": {
+            "id": "ColorSelectorNg",
+            "icon": "extended_color_selector",
+            "size": [290, 290]
+        },
+        "artisticColor": {
+            "id": "ArtisticColorSelector",
+            "icon": "wheel-sectors",
+            "size": []
+        },
+        "digitalColors": {
+            "id": "DigitalMixer",
+            "icon": "krita_tool_gradient",
+            "size": []
+        },
+        "specificColors": {
+            "id": "SpecificColorSelector",
+            "icon": "krita_tool_color_sampler",
+            "size": [290, 100]
+        },
+        "palette": {
+            "id": "PaletteDocker",
+            "icon": "palette-library",
+            "size": []
+        },
+        "layers": {
+            "id": "KisLayerBox",
+            "icon": "duplicatelayer",
+            "size": []
+        },
+        "toolOptions": {
+            "id": "sharedtooldocker",
+            "icon": "paintop_settings_02",
+            "size": [306, 391]
+        },
+        "quickSettings": {
+            "id": "quick_settings_docker",
+            "icon": "gridbrush",
+            "size": [260, 325]
+        },
+        "animation": {
+            "id": "TimelineDocker",
+            "icon": "addblankframe",
+            "size": []
+        },
+        "onionSkins": {
+            "id": "OnionSkinsDocker",
+            "icon": "onion_skin_options",
+            "size": [100, 100]
+        },
+        "arrange": {
+            "id": "ArrangeDocker",
+            "icon": "16_light_align-horizontal-left.svg",
+            "size": [100, 100]
+        },
+        "svgSymbols": {
+            "id": "SvgSymbolCollectionDocker",
+            "icon": "22_light_shape-choose",
+            "size": []
+        },
+        "comicsProject": {
+            "id": "comics_project_manager_docker",
+            "icon": "select-all",
+            "size": []
+        },
+        "lut": {
+            "id": "LutDocker",
+            "icon": "color-to-alpha",
+            "size": []
+        },
+        "history": {
+            "id": "History",
+            "icon": "fileLayer",
+            "size": []
+        },
+        "overview": {
+            "id": "OverviewDocker",
+            "icon": "tool_zoom",
+            "size": [320, 255]
+        }
+    },
+    "quickActions": {
+        "canvasOnly": { 
+            "id": "view_show_canvas_only",
+            "icon": "light_document-new"
+        },
+        "mirrorCanvas": { 
+            "id": "mirror_canvas",
+            "icon": "light_mirror-view"
+        },
+        "resetZoom": {
+            "id": "zoom_to_100pct",
+            "icon": "light_zoom-original"
+        },
+        "wrapAround": {
+            "id": "wrap_around_mode",
+            "icon": "krita_tool_grid"
+        },
+        "instantPreview": {
+            "id": "level_of_detail_mode",
+            "icon": "light_visible"
+        },
+        "softProofing": {
+            "id": "softProof",
+            "icon": "document-print-preview"
+        },
+        "saveFile": {
+            "id": "file_save",
+            "icon": "document-save"
+        },
+        "saveFileAs": {
+            "id": "file_save_as",
+            "icon": "document-save-as"
+        },
+        "undo": {
+            "id": "edit_undo",
+            "icon": "edit-undo"
+        },
+        "redo": {
+            "id": "edit_redo",
+            "icon": "edit-redo"
+        },
+        "resetRotation": {
+            "id": "reset_canvas_rotation",
+            "icon": "rotation-reset"
+        },
+        "eraserMode": {
+            "id": "erase_action",
+            "icon": "draw-eraser" 
+        },
+        "preserveAlpha": {
+            "id": "preserve_alpha",
+            "icon": "transparency-enabled" 
+        },
+        "showGuides": {
+            "id": "view_show_guides",
+            "icon": "geometry"
+        },
+        "zoomIn": {
+            "id": "view_zoom_in",
+            "icon": "zoom-in"
+        },
+        "zoomOut": {
+            "id": "view_zoom_out",
+            "icon": "zoom-out"
+        },
+        "showReferences": {
+            "id": "view_toggle_reference_images",
+            "icon": "krita_tool_reference_images"
+        },
+        "snapToAssistants": {
+            "id": "toggle_assistant",
+            "icon": "krita_tool_assistant"
+        },
+        "reloadPreset": {
+            "id": "reload_preset_action",
+            "icon": "view-refresh"
+        },
+        "showGrid": {
+            "id": "view_grid",
+            "icon": "view-grid"
+        },
+        "penPressure": {
+            "id": "disable_pressure",
+            "icon": "transform_icons_penPressure"
+        },
+        "onionSkin": {
+            "id": "toggle_onion_skin",
+            "icon": "onion_skin_options"
+        },
+        "fullscreen": {
+            "id": "fullscreen",
+            "icon": "view-fullscreen"
+        },
+        "clear": {
+            "id": "clear",
+            "icon": "edit-clear"
+        }
+    }
+}
