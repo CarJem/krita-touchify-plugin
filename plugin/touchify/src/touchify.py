@@ -5,12 +5,12 @@ from .redesign.nttooloptions import ntToolOptions
 from . import variables
 from PyQt5.QtWidgets import QMessageBox
 
-from .core.ui.settings import *
-from .core.tweaks.custom_styles import *
-from .core.features.docker_toggles import *
-from .core.features.docker_groups import *
-from .core.features.popup_buttons import *
-from .core.features.workspace_toggles import *
+from .ui.settings import *
+from .tweaks.custom_styles import *
+from .features.docker_toggles import *
+from .features.docker_groups import *
+from .features.popup_buttons import *
+from .features.workspace_toggles import *
 
 # For autocomplete
 from typing import TYPE_CHECKING

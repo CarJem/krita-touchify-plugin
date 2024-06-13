@@ -3,12 +3,12 @@ from PyQt5 import QtWidgets, QtGui
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ...ext.PyKrita import *
+    from ..ext.PyKrita import *
 else:
     from krita import *
 
 
-from ...ext.extensions import KritaExtensions
+from ..ext.extensions import KritaExtensions
 
 class CustomStyles:
 

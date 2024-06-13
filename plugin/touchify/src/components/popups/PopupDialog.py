@@ -1,17 +1,18 @@
 from PyQt5 import *
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import os
 import json
 from functools import partial
 import sys
 import importlib.util
-from ....config import *
+from ...config import *
 from ....resources import *
 from typing import TYPE_CHECKING
 from .PopupDialog_ToolboxTitlebar import PopupDialog_ToolboxTitlebar
 if TYPE_CHECKING:
-    from ....ext.PyKrita import *
+    from ...ext.PyKrita import *
 else:
     from krita import *
 
@@ -90,7 +91,7 @@ class PopupDialog(QDialog):
     def getGeometry(self, position, width, height, isMouse = False):
         dialog_width, dialog_height = self.generateSize()
 
-        screen = QtGui.QGuiApplication.screenAt(position)
+        screen = QGuiApplication.screenAt(position)
         screen_geometry = screen.geometry()
         screenSize = screen.size()
 
@@ -143,7 +144,7 @@ class PopupDialog(QDialog):
         dialog_height = 0
         
         if mode == "mouse":
-            actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(QtGui.QCursor.pos(), 0, 0, True)
+            actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(QCursor.pos(), 0, 0, True)
         else:
             for qobj in self.parent.findChildren(QToolButton):
                 actions = qobj.actions()

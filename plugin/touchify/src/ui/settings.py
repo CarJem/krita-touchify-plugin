@@ -5,9 +5,9 @@ import os
 import json
 import sys
 import importlib.util
-from ...config import *
+from ..config import *
 from ...resources import *
-from ...ext.extensions import *
+from ..ext.extensions import *
 import xml.etree.ElementTree as ET
 import re
 import functools
@@ -17,7 +17,7 @@ from ..components.PropertyGrid import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ...ext.PyKrita import *
+    from ..ext.PyKrita import *
 else:
     from krita import *
 
