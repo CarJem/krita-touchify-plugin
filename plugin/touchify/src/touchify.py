@@ -5,6 +5,8 @@ from .redesign.nttooloptions import ntToolOptions
 from . import variables
 from PyQt5.QtWidgets import QMessageBox
 
+
+
 from .ui.settings import *
 from .tweaks.custom_styles import *
 from .features.docker_toggles import *
@@ -44,27 +46,26 @@ class Touchify(Extension):
         self.popup_toggles = PopupButtons()
 
     def setup(self):
-        #region Core
         appNotifier  = Krita.instance().notifier()
         appNotifier.windowCreated.connect(self.buildPostLaunchMenus)
         appNotifier.windowCreated.connect(self.buildTweaks)
-        #endregion
-        #region Redesign
-        if Application.readSetting("Redesign", "usesFlatTheme", "true") == "true":
+        self.setupSettings()
+
+    def setupSettings(self):
+        if KritaSettings.readSetting("Touchify", "usesFlatTheme", "true") == "true":
             self.usesFlatTheme = True
 
-        if Application.readSetting("Redesign", "usesBorderlessToolbar", "true") == "true":
+        if KritaSettings.readSetting("Touchify", "usesBorderlessToolbar", "true") == "true":
             self.usesBorderlessToolbar = True
 
-        if Application.readSetting("Redesign", "usesThinDocumentTabs", "true") == "true":
+        if KritaSettings.readSetting("Touchify", "usesThinDocumentTabs", "true") == "true":
             self.usesThinDocumentTabs = True
 
-        if Application.readSetting("Redesign", "usesNuToolbox", "true") == "true":
+        if KritaSettings.readSetting("Touchify", "usesNuToolbox", "true") == "true":
             self.usesNuToolbox = True
         
-        if Application.readSetting("Redesign", "usesNuToolOptions", "true") == "true":
+        if KritaSettings.readSetting("Touchify", "usesNuToolOptions", "true") == "true":
             self.usesNuToolOptions = True
-        #endregion
 
     def buildTweaks(self):
         qwin = Krita.instance().activeWindow().qwindow()
@@ -74,7 +75,6 @@ class Touchify(Extension):
         self.mainMenuBar = window.qwindow().menuBar().addMenu("Touchify")
 
         #region Core
-        ConfigManager.init_instance()
 
         subItemPath = "VaporJem_Actions"
 
@@ -111,7 +111,7 @@ class Touchify(Extension):
         actions.append(window.createAction("nuToolOptions", "NuToolOptions", ""))
         actions[4].setCheckable(True)
 
-        if Application.readSetting("", "ToolOptionsInDocker", "false") == "true":
+        if KritaSettings.readSetting("", "ToolOptionsInDocker", "false") == "true":
             actions[4].setChecked(self.usesNuToolOptions)
 
         for a in actions:
@@ -126,7 +126,7 @@ class Touchify(Extension):
         variables.buildFlatTheme()
 
         if (self.usesNuToolOptions and
-            Application.readSetting("", "ToolOptionsInDocker", "false") == "true"):
+            KritaSettings.readSetting("", "ToolOptionsInDocker", "false") == "true"):
                 self.ntTO = ntToolOptions(window)
 
         if self.usesNuToolbox: 
@@ -155,35 +155,34 @@ class Touchify(Extension):
         self.workspace_toggles.buildMenu(self.mainMenuBar)
         self.popup_toggles.buildMenu(self.mainMenuBar)       
 
-    #region Action Triggers
 
     def toolbarBorderToggled(self, toggled):
-        Application.writeSetting("Touchify", "usesBorderlessToolbar", str(toggled).lower())
+        KritaSettings.writeSetting("Touchify", "usesBorderlessToolbar", str(toggled).lower())
 
         self.usesBorderlessToolbar = toggled
 
-        self.rebuildStyleSheet(Application.activeWindow().qwindow())
+        self.rebuildStyleSheet(Krita.instance().activeWindow().qwindow())
 
     def flatThemeToggled(self, toggled):
-        Application.writeSetting("Touchify", "usesFlatTheme", str(toggled).lower())
+        KritaSettings.writeSetting("Touchify", "usesFlatTheme", str(toggled).lower())
 
         self.usesFlatTheme = toggled
 
-        self.rebuildStyleSheet(Application.activeWindow().qwindow())
+        self.rebuildStyleSheet(Krita.instance().activeWindow().qwindow())
 
     def tabHeightToggled(self, toggled):
-        Application.instance().writeSetting("Touchify", "usesThinDocumentTabs", str(toggled).lower())
+        KritaSettings.writeSetting("Touchify", "usesThinDocumentTabs", str(toggled).lower())
 
         self.usesThinDocumentTabs = toggled
 
-        self.rebuildStyleSheet(Application.activeWindow().qwindow())
+        self.rebuildStyleSheet(Krita.instance().activeWindow().qwindow())
 
     def nuToolboxToggled(self, toggled):
-        Application.writeSetting("Touchify", "usesNuToolbox", str(toggled).lower())
+        KritaSettings.writeSetting("Touchify", "usesNuToolbox", str(toggled).lower())
         self.usesNuToolbox = toggled
 
         if toggled:
-            self.ntTB = ntToolBox(Application.activeWindow())
+            self.ntTB = ntToolBox(Krita.instance().activeWindow())
             self.ntTB.pad.show() 
             self.ntTB.updateStyleSheet()
         elif not toggled and self.ntTB:
@@ -191,12 +190,12 @@ class Touchify(Extension):
             self.ntTB = None
 
     def nuToolOptionsToggled(self, toggled):
-        if Application.readSetting("", "ToolOptionsInDocker", "false") == "true":
-            Application.writeSetting("Touchify", "usesNuToolOptions", str(toggled).lower())
+        if KritaSettings.readSetting("", "ToolOptionsInDocker", "false") == "true":
+            KritaSettings.writeSetting("Touchify", "usesNuToolOptions", str(toggled).lower())
             self.usesNuToolOptions = toggled
 
             if toggled:
-                self.ntTO = ntToolOptions(Application.activeWindow())
+                self.ntTO = ntToolOptions(Krita.instance().activeWindow())
                 self.ntTO.pad.show() 
                 self.ntTO.updateStyleSheet()
             elif not toggled and self.ntTO:
@@ -281,7 +280,5 @@ class Touchify(Extension):
 
     def openSettings(self):
         SettingsDialog().show()
-
-    #endregion
 
 Krita.instance().addExtension(Touchify(Krita.instance()))

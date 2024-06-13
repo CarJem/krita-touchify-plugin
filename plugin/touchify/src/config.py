@@ -116,7 +116,6 @@ class Docker:
         restrictions["icon"] = {"type": "icon_selection"}
         return restrictions
     
-
 class DockerGroupItems:
     id: str=""
 
@@ -200,6 +199,8 @@ class Workspace:
         restrictions["icon"] = {"type": "icon_selection"}
         return restrictions
     
+
+
 class ConfigFile:
     dockers: TypedList[Docker] = []
     docker_groups: TypedList[DockerGroup] = []
@@ -249,9 +250,6 @@ class ConfigManager:
     def instance():
         return ConfigManager.root
 
-    def init_instance():
-        ConfigManager.root = ConfigManager(BASE_DIR)
-
     def __init__(self, path) -> None:
         self.hotkeys_storage = {}
         self.base_dir = path
@@ -271,3 +269,9 @@ class ConfigManager:
 
     def getJSON(self) -> ConfigFile:
         return self.cfg
+
+class KritaSettings:
+    def readSetting(group:str, name:str, defaultValue:str):
+        return Krita.instance().readSetting(group, name, defaultValue)
+
+ConfigManager.root = ConfigManager(BASE_DIR)

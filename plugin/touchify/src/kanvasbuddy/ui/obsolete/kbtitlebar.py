@@ -13,12 +13,16 @@
 # You should have received a copy of the GNU General Public License
 # along with KanvasBuddy. If not, see <https://www.gnu.org/licenses/>.
 
-from krita import Krita
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ....ext.PyKrita import *
+else:
+    from krita import *
 
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QToolButton, QStyle
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtCore import QSize, Qt
-
+from ....config import *
 from ..kbbutton import KBButton
 from ..kbconfigmanager import KBConfigManager
 
@@ -86,14 +90,14 @@ class KBPinnedModeButton(KBButton):
 
 
     def pinnedModeIsChecked(self):
-        if Application.readSetting("KanvasBuddy", "KBPinnedMode", "false") == "true":
+        if KritaSettings.readSetting("KanvasBuddy", "KBPinnedMode", "false") == "true":
             return True
 
         return False
 
 
     def togglePinnedMode(self, checked):        
-        Application.writeSetting("KanvasBuddy", "KBPinnedMode", str(checked).lower())
+        KritaSettings.writeSetting("KanvasBuddy", "KBPinnedMode", str(checked).lower())
 
 
 class KBCloseButton(KBButton):

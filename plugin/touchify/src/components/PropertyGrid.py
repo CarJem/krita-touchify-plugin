@@ -5,7 +5,7 @@ from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
 from ..ext.typedlist import *
-from ...resources import *
+from ..resources import *
 from ..ext.extensions import KritaExtensions
 from .CollapsibleBox import CollapsibleBox
 

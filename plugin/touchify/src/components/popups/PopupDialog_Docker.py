@@ -50,7 +50,7 @@ class PopupDialog_Docker(PopupDialog):
                 self.grid.removeWidget(self.dockerWidget)
                 self.dockerWindow.addDockWidget(self.dockerLocation, self.dockerWidget)
 
-                titlebarSetting = Krita.instance().readSetting("", "showDockerTitleBars", "false")
+                titlebarSetting = KritaSettings.readSetting("", "showDockerTitleBars", "false")
                 showTitlebar = True if titlebarSetting == "true" else False
                 self.dockerWidget.titleBarWidget().setVisible(showTitlebar)
 

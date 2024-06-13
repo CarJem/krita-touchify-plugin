@@ -21,7 +21,7 @@ else:
 
 from PyQt5.QtWidgets import QPushButton, QStackedWidget, QSizePolicy
 from PyQt5.QtCore import QSize, QEvent
-
+from ...config import *
 from .kbpanel import KBPanel
 from .main_widget import KBMainWidget
 from .borrow_manager import KBBorrowManager
@@ -78,7 +78,7 @@ class KBPanelStack(QStackedWidget):
     def appendShortcutAction(self, ID):
         i = str(self.count() - 1)  #account for main panel
         name = "KBPanel" + i
-        action = Application.activeWindow().createAction(name, "KanvasBuddy")
+        action = Krita.instance().activeWindow().createAction(name, "KanvasBuddy")
         self.shortcutConnections.append(
             action.triggered.connect(self.panel(ID).activate)
         )
@@ -105,7 +105,7 @@ class KBPanelStack(QStackedWidget):
 
     def event(self, e):
         r = super().event(e) # Get the return value of the parent class' event method first
-        pinned = Application.readSetting("KanvasBuddy", "KBPinnedMode", "false")
+        pinned = KritaSettings.readSetting("KanvasBuddy", "KBPinnedMode", "false")
 
         if (e.type() == QEvent.WindowDeactivate and pinned == "false"):
             self.setCurrentIndex(0)
