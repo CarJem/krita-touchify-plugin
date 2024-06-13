@@ -18,10 +18,10 @@
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 
-class ntScrollAreaContainer(QWidget):
+class Nt_ScrollAreaContainer(QWidget):
 
     def __init__(self, scrollArea = None, parent=None):
-        super(ntScrollAreaContainer, self).__init__(parent)
+        super(Nt_ScrollAreaContainer, self).__init__(parent)
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(0,0,0,0)
         self.sa = None

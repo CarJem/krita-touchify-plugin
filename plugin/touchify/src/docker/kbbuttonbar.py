@@ -15,7 +15,7 @@
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ...ext.PyKrita import *
+    from ..ext.PyKrita import *
 else:
     from krita import *
 from .kbbutton import KBButton

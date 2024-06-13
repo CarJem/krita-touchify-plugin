@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 else:
     from krita import *
 from PyQt5.QtWidgets import *
-from .kanvasbuddy.ui.kbpanelstack import *
+from .docker.kbpanelstack import *
 
 class TouchifyBuddy(DockWidget):
 

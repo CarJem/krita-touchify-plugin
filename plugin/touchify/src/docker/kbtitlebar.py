@@ -15,16 +15,16 @@
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ....ext.PyKrita import *
+    from ..ext.PyKrita import *
 else:
     from krita import *
 
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QToolButton, QStyle
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtCore import QSize, Qt
-from ....config import *
-from ..kbbutton import KBButton
-from ..kbconfigmanager import KBConfigManager
+from ..config import *
+from .kbbutton import KBButton
+from .kbconfigmanager import KBConfigManager
 
 class KBTitleBar(QWidget):
     _config = KBConfigManager()

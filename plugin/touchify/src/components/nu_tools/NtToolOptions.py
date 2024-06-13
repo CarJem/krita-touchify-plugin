@@ -16,11 +16,11 @@
 """
 
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
-from .ntadjusttosubwindowfilter import ntAdjustToSubwindowFilter
-from .ntwidgetpad import ntWidgetPad
-from .. import variables
+from .nt_logic.Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
+from .NtWidgetPad import NtWidgetPad
+from ... import variables
 
-class ntToolOptions():
+class NtToolOptions():
 
     def __init__(self, window):
         qWin = window.qwindow()
@@ -28,13 +28,13 @@ class ntToolOptions():
         toolOptions = qWin.findChild(QDockWidget, 'TouchifyBuddy')
 
         # Create "pad"
-        self.pad = ntWidgetPad(mdiArea)
+        self.pad = NtWidgetPad(mdiArea)
         self.pad.setObjectName("toolOptionsPad")
         self.pad.setViewAlignment('right')
         self.pad.borrowDocker(toolOptions)
 
         # Create and install event filter
-        self.adjustFilter = ntAdjustToSubwindowFilter(mdiArea)
+        self.adjustFilter = Nt_AdjustToSubwindowFilter(mdiArea)
         self.adjustFilter.setTargetWidget(self.pad)
         mdiArea.subWindowActivated.connect(self.ensureFilterIsInstalled)
         qWin.installEventFilter(self.adjustFilter)

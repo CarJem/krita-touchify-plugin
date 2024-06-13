@@ -18,22 +18,22 @@
 
 from PyQt5.QtWidgets import QWidget, QToolButton, QDockWidget, QVBoxLayout, QSizePolicy, QScrollArea
 from PyQt5.QtCore import Qt, QSize, QPoint
-from .ntscrollareacontainer import ntScrollAreaContainer
-from .nttogglevisiblebutton import ntToggleVisibleButton
-from ..config import *
+from .nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
+from .nt_logic.Nt_ToggleVisibleButton import Nt_ToggleVisibleButton
+from ...config import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..ext.PyKrita import *
+    from ...ext.PyKrita import *
 else:
     from krita import *
 
-class ntWidgetPad(QWidget):
+class NtWidgetPad(QWidget):
     """
     An on-canvas toolbox widget. I'm dubbing widgets that 'float' 
     on top of the canvas '(lily) pads' for the time being :) """
 
     def __init__(self, parent):
-        super(ntWidgetPad, self).__init__(parent)
+        super(NtWidgetPad, self).__init__(parent)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowFlags(
             Qt.WindowStaysOnTopHint | 
@@ -48,7 +48,7 @@ class ntWidgetPad(QWidget):
         self.widgetDocker = None
 
          # Visibility toggle
-        self.btnHide = ntToggleVisibleButton()
+        self.btnHide = Nt_ToggleVisibleButton()
         self.btnHide.clicked.connect(self.toggleWidgetVisible)
         self.layout().addWidget(self.btnHide)
 
@@ -69,7 +69,6 @@ class ntWidgetPad(QWidget):
         
         return None
 
-
     def adjustToView(self):
         """
         Adjust the position and size of the Pad to that of the active View."""
@@ -85,7 +84,6 @@ class ntWidgetPad(QWidget):
 
             self.move(self.parentWidget().mapFromGlobal(globalTargetPos))
 
-
     def borrowDocker(self, docker):
         """
         Borrow a docker widget from Krita's existing list of dockers and 
@@ -99,7 +97,7 @@ class ntWidgetPad(QWidget):
             self.widgetDocker = docker
 
             if isinstance(docker.widget(), QScrollArea):
-                self.widget = ntScrollAreaContainer(docker.widget())
+                self.widget = Nt_ScrollAreaContainer(docker.widget())
             else:
                 self.widget = docker.widget()
 
@@ -111,7 +109,6 @@ class ntWidgetPad(QWidget):
             
         return False
 
-
     def closeEvent(self, e):
         """
         Since the plugins works by borrowing the actual docker 
@@ -119,14 +116,12 @@ class ntWidgetPad(QWidget):
         self.returnDocker()
         return super().closeEvent(e)
 
-
     def paintEvent(self, e):
         """
         Needed to resize the Pad if the user decides to 
         change the icon size of the toolbox"""
         self.adjustToView()
         return super().paintEvent(e)
-
 
     def resizeToView(self):
         """
@@ -136,7 +131,7 @@ class ntWidgetPad(QWidget):
         if view:
             
             ### GOAL: REMOVE THIS IF-STATEMENT
-            if isinstance(self.widget, ntScrollAreaContainer):
+            if isinstance(self.widget, Nt_ScrollAreaContainer):
                 containerSize = self.widget.sizeHint() 
                 
                 if view.height() < containerSize.height() + self.btnHide.height() + 14 + self.scrollBarMargin():
@@ -157,13 +152,12 @@ class ntWidgetPad(QWidget):
             
             self.resize(newSize)
 
-
     def returnDocker(self):
         """
         Return the borrowed docker to it's original QDockWidget"""
         # Ensure there's a widget to return
         if self.widget:
-            if isinstance(self.widget, ntScrollAreaContainer):
+            if isinstance(self.widget, Nt_ScrollAreaContainer):
                 self.widgetDocker.setWidget(self.widget.scrollArea())
             else:
                 self.widgetDocker.setWidget(self.widget)
@@ -172,19 +166,16 @@ class ntWidgetPad(QWidget):
             self.widget = None
             self.widgetDocker = None
 
-
     def rulerMargin(self):
         if KritaSettings.readSetting("", 'showrulers', "true") == "true":
             return 20 # Canvas ruler pixel width on Windows
         return 0
-
 
     def scrollBarMargin(self):
         if KritaSettings.readSetting("", "hideScrollbars", "false") == "true":
             return 0
 
         return 14 # Canvas crollbar pixel width/height on Windows 
-
 
     def setViewAlignment(self, newAlignment):
         """
@@ -201,7 +192,6 @@ class ntWidgetPad(QWidget):
     
         return False
 
-
     def toggleWidgetVisible(self, value=None):
         if not value:
             value = not self.widget.isVisible()
@@ -209,7 +199,6 @@ class ntWidgetPad(QWidget):
         self.widget.setVisible(value)
         self.adjustToView()  
         self.updateHideButtonIcon(value)
-
 
     def updateHideButtonIcon(self, isVisible): 
         """

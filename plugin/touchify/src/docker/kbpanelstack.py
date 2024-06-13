@@ -15,13 +15,13 @@
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ...ext.PyKrita import *
+    from ..ext.PyKrita import *
 else:
     from krita import *
 
 from PyQt5.QtWidgets import QPushButton, QStackedWidget, QSizePolicy
 from PyQt5.QtCore import QSize, QEvent
-from ...config import *
+from ..config import *
 from .kbpanel import KBPanel
 from .main_widget import KBMainWidget
 from .borrow_manager import KBBorrowManager

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ActionCollection version="2" name="Scripts">
     <Actions category="Settings">
-        <text>nuTools</text>
+        <text>Touchify: NuTools</text>
 
         <Action name="showToolbox">
         <icon></icon>

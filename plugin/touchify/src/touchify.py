@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
-from .redesign.nttoolbox import ntToolBox
-from .redesign.nttooloptions import ntToolOptions
+from .components.nu_tools.NtToolbox import NtToolbox
+from .components.nu_tools.NtToolOptions import NtToolOptions
 from . import variables
 from PyQt5.QtWidgets import QMessageBox
 
@@ -127,10 +127,10 @@ class Touchify(Extension):
 
         if (self.usesNuToolOptions and
             KritaSettings.readSetting("", "ToolOptionsInDocker", "false") == "true"):
-                self.ntTO = ntToolOptions(window)
+                self.ntTO = NtToolOptions(window)
 
         if self.usesNuToolbox: 
-            self.ntTB = ntToolBox(window)
+            self.ntTB = NtToolbox(window)
 
         self.rebuildStyleSheet(window.qwindow())
         #endregion
@@ -182,7 +182,7 @@ class Touchify(Extension):
         self.usesNuToolbox = toggled
 
         if toggled:
-            self.ntTB = ntToolBox(Krita.instance().activeWindow())
+            self.ntTB = NtToolbox(Krita.instance().activeWindow())
             self.ntTB.pad.show() 
             self.ntTB.updateStyleSheet()
         elif not toggled and self.ntTB:
@@ -195,7 +195,7 @@ class Touchify(Extension):
             self.usesNuToolOptions = toggled
 
             if toggled:
-                self.ntTO = ntToolOptions(Krita.instance().activeWindow())
+                self.ntTO = NtToolOptions(Krita.instance().activeWindow())
                 self.ntTO.pad.show() 
                 self.ntTO.updateStyleSheet()
             elif not toggled and self.ntTO:
