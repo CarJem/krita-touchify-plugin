@@ -6,12 +6,12 @@ import json
 from functools import partial
 import sys
 import importlib.util
-from ...classes.config import *
-from ...classes.resources import *
+from ....config import *
+from ....resources import *
 from typing import TYPE_CHECKING
 from .PopupDialog_ToolboxTitlebar import PopupDialog_ToolboxTitlebar
 if TYPE_CHECKING:
-    from ...ext.PyKrita import *
+    from ....ext.PyKrita import *
 else:
     from krita import *
 

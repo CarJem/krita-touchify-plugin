@@ -3,7 +3,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import json
 import os
-from ..ext.extensions import *
+from .ext.extensions import *
+from ..paths import BASE_DIR
     
 
 class PopupInfo:
@@ -248,8 +249,8 @@ class ConfigManager:
     def instance():
         return ConfigManager.root
 
-    def init_instance(path):
-        ConfigManager.root = ConfigManager(path)
+    def init_instance():
+        ConfigManager.root = ConfigManager(BASE_DIR)
 
     def __init__(self, path) -> None:
         self.hotkeys_storage = {}

@@ -6,8 +6,8 @@ import json
 from functools import partial
 import sys
 import importlib.util
-from ..classes.config import *
-from ..classes.resources import *
+from ...config import *
+from ...resources import *
 from ..components.popups.PopupDialog import *
 from ..components.popups.PopupDialog_Actions import *
 from ..components.popups.PopupDialog_Docker import *
@@ -15,7 +15,7 @@ from ..components.popups.PopupDialog_Docker import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..ext.PyKrita import *
+    from ...ext.PyKrita import *
 else:
     from krita import *
 

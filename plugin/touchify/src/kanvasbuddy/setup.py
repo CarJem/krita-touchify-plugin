@@ -22,7 +22,7 @@ import importlib
 # For autocomplete
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..core.ext.PyKrita import *
+    from ..ext.PyKrita import *
 else:
     from krita import *
 from PyQt5.QtWidgets import *

@@ -1,32 +1,25 @@
-"""
-    Plugin for Krita UI Redesign, Copyright (C) 2020 Kapyia, Pedro Reis
+from PyQt5 import QtWidgets, QtGui
+from PyQt5.QtWidgets import *
+from .redesign.nuTools.nttoolbox import ntToolBox
+from .redesign.nuTools.nttooloptions import ntToolOptions
+from . import variables
+from PyQt5.QtWidgets import QMessageBox
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""
+from .core.ui.settings import *
+from .core.tweaks.custom_styles import *
+from .core.features.docker_toggles import *
+from .core.features.docker_groups import *
+from .core.features.popup_buttons import *
+from .core.features.workspace_toggles import *
 
 # For autocomplete
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..core.ext.PyKrita import *
+    from .ext.PyKrita import *
 else:
     from krita import *
-from .nuTools.nttoolbox import ntToolBox
-from .nuTools.nttooloptions import ntToolOptions
-from . import variables
-from PyQt5.QtWidgets import QMessageBox
-    
-class TouchifyRedesign(Extension):
+
+class Touchify(Extension):
 
     usesFlatTheme = False
     usesBorderlessToolbar = False
@@ -35,11 +28,28 @@ class TouchifyRedesign(Extension):
     usesNuToolOptions = False
     ntTB = None
     ntTO = None
- 
+
+    mainMenuBar: QMenuBar = None
+
+    basic_dockers: DockerToggles = None
+    docker_groups: DockerGroups = None
+    workspace_toggles: WorkspaceToggles = None
+    popup_toggles: PopupButtons = None
+
     def __init__(self, parent):
         super().__init__(parent)
+        self.basic_dockers = DockerToggles()
+        self.docker_groups = DockerGroups()
+        self.workspace_toggles = WorkspaceToggles()
+        self.popup_toggles = PopupButtons()
 
     def setup(self):
+        #region Core
+        appNotifier  = Krita.instance().notifier()
+        appNotifier.windowCreated.connect(self.buildPostLaunchMenus)
+        appNotifier.windowCreated.connect(self.buildTweaks)
+        #endregion
+        #region Redesign
         if Application.readSetting("Redesign", "usesFlatTheme", "true") == "true":
             self.usesFlatTheme = True
 
@@ -54,8 +64,32 @@ class TouchifyRedesign(Extension):
         
         if Application.readSetting("Redesign", "usesNuToolOptions", "true") == "true":
             self.usesNuToolOptions = True
+        #endregion
+
+    def buildTweaks(self):
+        qwin = Krita.instance().activeWindow().qwindow()
+        CustomStyles.applyStyles(qwin)
 
     def createActions(self, window):
+        self.mainMenuBar = window.qwindow().menuBar().addMenu("Touchify")
+
+        #region Core
+        ConfigManager.init_instance()
+
+        subItemPath = "VaporJem_Actions"
+
+        for i in range(1, 10):
+            hotkeyName = "vjt_action" + str(i)
+            hotkeyAction = window.createAction(hotkeyName, "Custom action: " + str(i), subItemPath)
+            ConfigManager.instance().addHotkey(i, hotkeyAction)
+   
+        self.basic_dockers.createActions(window, subItemPath)  
+        self.docker_groups.createActions(window, subItemPath)     
+        self.workspace_toggles.createActions(window, subItemPath)
+        self.popup_toggles.createActions(window, subItemPath)
+        #endregion
+
+        #region Redesign
         actions = []
 
         actions.append(window.createAction("toolbarBorder", "Borderless Toolbars", ""))
@@ -80,10 +114,8 @@ class TouchifyRedesign(Extension):
         if Application.readSetting("", "ToolOptionsInDocker", "false") == "true":
             actions[4].setChecked(self.usesNuToolOptions)
 
-        menu = window.qwindow().menuBar().addMenu("Redesign")
-
         for a in actions:
-            menu.addAction(a)
+            self.mainMenuBar.addAction(a)
 
         actions[0].toggled.connect(self.toolbarBorderToggled)
         actions[1].toggled.connect(self.tabHeightToggled)
@@ -101,33 +133,53 @@ class TouchifyRedesign(Extension):
             self.ntTB = ntToolBox(window)
 
         self.rebuildStyleSheet(window.qwindow())
+        #endregion
 
-        #self.nuToolOptionsToggled(self.usesNuToolOptions)
-        #self.nuToolOptionsToggled(self.usesNuToolOptions)
+    def buildPostLaunchMenus(self):
+        qwin = Krita.instance().activeWindow().qwindow()
+
+        reloadItemsAction = QAction("Reload Known Items...", self.mainMenuBar)
+        reloadItemsAction.triggered.connect(self.reloadKnownItems)
+        self.mainMenuBar.menuAction().menu().addAction(reloadItemsAction)
+
+        openSettingsAction = QAction("Configure Touchify...", self.mainMenuBar)
+        openSettingsAction.triggered.connect(self.openSettings)
+        self.mainMenuBar.menuAction().menu().addAction(openSettingsAction)
+
+        seperator = QAction("", self.mainMenuBar)
+        seperator.setSeparator(True)
+        self.mainMenuBar.addAction(seperator)
+
+        self.basic_dockers.buildMenu(self.mainMenuBar)  
+        self.docker_groups.buildMenu(self.mainMenuBar)     
+        self.workspace_toggles.buildMenu(self.mainMenuBar)
+        self.popup_toggles.buildMenu(self.mainMenuBar)       
+
+    #region Action Triggers
 
     def toolbarBorderToggled(self, toggled):
-        Application.writeSetting("Redesign", "usesBorderlessToolbar", str(toggled).lower())
+        Application.writeSetting("Touchify", "usesBorderlessToolbar", str(toggled).lower())
 
         self.usesBorderlessToolbar = toggled
 
         self.rebuildStyleSheet(Application.activeWindow().qwindow())
 
     def flatThemeToggled(self, toggled):
-        Application.writeSetting("Redesign", "usesFlatTheme", str(toggled).lower())
+        Application.writeSetting("Touchify", "usesFlatTheme", str(toggled).lower())
 
         self.usesFlatTheme = toggled
 
         self.rebuildStyleSheet(Application.activeWindow().qwindow())
 
     def tabHeightToggled(self, toggled):
-        Application.instance().writeSetting("Redesign", "usesThinDocumentTabs", str(toggled).lower())
+        Application.instance().writeSetting("Touchify", "usesThinDocumentTabs", str(toggled).lower())
 
         self.usesThinDocumentTabs = toggled
 
         self.rebuildStyleSheet(Application.activeWindow().qwindow())
 
     def nuToolboxToggled(self, toggled):
-        Application.writeSetting("Redesign", "usesNuToolbox", str(toggled).lower())
+        Application.writeSetting("Touchify", "usesNuToolbox", str(toggled).lower())
         self.usesNuToolbox = toggled
 
         if toggled:
@@ -140,7 +192,7 @@ class TouchifyRedesign(Extension):
 
     def nuToolOptionsToggled(self, toggled):
         if Application.readSetting("", "ToolOptionsInDocker", "false") == "true":
-            Application.writeSetting("Redesign", "usesNuToolOptions", str(toggled).lower())
+            Application.writeSetting("Touchify", "usesNuToolOptions", str(toggled).lower())
             self.usesNuToolOptions = toggled
 
             if toggled:
@@ -220,4 +272,16 @@ class TouchifyRedesign(Extension):
         if self.usesNuToolbox and self.ntTB:
             self.ntTB.updateStyleSheet()  
 
-Krita.instance().addExtension(TouchifyRedesign(Krita.instance()))
+    def reloadKnownItems(self):
+        self.basic_dockers.reloadDockers()
+        self.workspace_toggles.reloadWorkspaces()
+        msg = QMessageBox(Krita.instance().activeWindow().qwindow())
+        msg.setText("Reloaded Known Workspaces/Dockers. You will need to reload to use them with this extension")
+        msg.exec_()
+
+    def openSettings(self):
+        SettingsDialog().show()
+
+    #endregion
+
+Krita.instance().addExtension(Touchify(Krita.instance()))

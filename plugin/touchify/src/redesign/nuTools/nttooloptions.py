@@ -18,7 +18,7 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 from .ntadjusttosubwindowfilter import ntAdjustToSubwindowFilter
 from .ntwidgetpad import ntWidgetPad
-from .. import variables
+from ... import variables
 
 class ntToolOptions():
 

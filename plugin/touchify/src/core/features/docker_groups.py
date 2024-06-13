@@ -3,11 +3,11 @@ import os
 import json
 import sys
 import importlib.util
-from ..classes.config import *
-from ..classes.resources import *
+from ...config import *
+from ...resources import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..ext.PyKrita import *
+    from ...ext.PyKrita import *
 else:
     from krita import *
 
