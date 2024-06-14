@@ -44,8 +44,20 @@ class TouchifyBuddy(DockWidget):
         self.layout.setSpacing(0)
 
         Krita.instance().notifier().windowCreated.connect(self.onLoaded)
+
+        cfg: ConfigManager = ConfigManager.instance()
+        cfg.notifyConnect(self.onConfigUpdated)
     
     def onLoaded(self):              
+        self.panelStack = DockerRoot(self)
+        self.layout.addWidget(self.panelStack)
+
+    def onConfigUpdated(self):
+        self.panelStack.dismantle()
+        self.layout.removeWidget(self.panelStack)
+        self.panelStack.deleteLater()
+        self.panelStack = None
+
         self.panelStack = DockerRoot(self)
         self.layout.addWidget(self.panelStack)
 

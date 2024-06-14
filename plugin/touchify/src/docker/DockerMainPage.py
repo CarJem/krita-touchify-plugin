@@ -30,12 +30,11 @@ class DockerMainPage(QWidget):
         self.initQuickActions()
         self.layout().addWidget(self.quickActions)
 
-        self.toolSettingsDocker = DockerPanelHost('sharedtooldocker')
-        self.toolSettingsDocker.toolsHack = True
-        self.toolSettingsDocker.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        self.toolSettingsDocker = DockerPanelHost(self, 'sharedtooldocker')
+        self.autoFitScrollArea = True
         self.layout().addWidget(self.toolSettingsDocker)
 
-        self.loadDockers()
+        self.loadDocker()
 
     def addDockerButton(self, properties, onClick, title):
         self.dockerBtns.addButton(properties, onClick, title)
@@ -57,8 +56,8 @@ class DockerMainPage(QWidget):
                     btn = self.quickActions.button(act.id)
                     btn.setChecked(action.isChecked())
 
-    def loadDockers(self):
+    def loadDocker(self):
         self.toolSettingsDocker.loadDocker()
         
-    def unloadDockers(self):
+    def unloadDocker(self):
         self.toolSettingsDocker.unloadDocker()

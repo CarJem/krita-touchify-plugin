@@ -112,9 +112,22 @@ class ConfigManager:
         return ConfigManager.root
 
     def __init__(self, path) -> None:
+
+        self.notify_hooks = []
+
         self.hotkeys_storage = {}
         self.base_dir = path
         self.cfg = ConfigFile(self.base_dir)
+
+    def notifyConnect(self, event):
+        self.notify_hooks.append(event)
+
+    def notifyUpdate(self):
+
+        self.cfg.load()
+
+        for hook in self.notify_hooks:
+            hook()
 
     def getBaseDirectory(self):
         return self.base_dir

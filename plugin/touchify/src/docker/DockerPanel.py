@@ -19,11 +19,11 @@ class DockerPanel(QWidget):
             self.w = widget
         else:
             self.dockerMode = True
-            self.w = DockerPanelHost(self.ID)
+            self.w = DockerPanelHost(self, self.ID)
         self.layout().addWidget(self.w)
 
     def unloadDockers(self):
-        if self.dockerMode: 
+        if self.dockerMode or self.w is DockerMainPage: 
             self.w.unloadDocker()
 
     def loadDockers(self):
@@ -35,6 +35,11 @@ class DockerPanel(QWidget):
 
     def widget(self):
         return self.w
+    
+    def setDockMode(self, mode):
+        if self.w and isinstance(self.w, DockerPanelHost):
+            self.w.setDockMode(mode)
+
 
     def setSizeHint(self, size):
         self.size = QSize(size[0], size[1]+12)

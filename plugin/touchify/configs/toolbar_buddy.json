@@ -13,6 +13,22 @@
             "size_x": 0,
             "size_y": 0,
             "isEnabled": true
+        },
+        {
+            "icon": "config-canvas-only",
+            "id": "OverviewDocker",
+            "isEnabled": true,
+            "nesting_mode": "docking",
+            "size_x": 300,
+            "size_y": 300
+        },
+        {
+            "size_x": 300,
+            "size_y": 300,
+            "id": "pykrita_reference_tabs",
+            "icon": "camera-photo",
+            "isEnabled": true,
+            "nesting_mode": "normal"
         }
     ],
     "kb_actions": [
@@ -36,5 +52,10 @@
             "icon": "config-canvas-only",
             "isEnabled": true
         }
-    ]
+    ],
+    "kb_titleButtonHeight": 10,
+    "kb_dockerButtonHeight": 32,
+    "kb_dockerBackHeight": 16,
+    "kb_sliderHeight": 16,
+    "kb_actionHeight": 16
 }

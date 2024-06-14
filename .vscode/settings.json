@@ -10,5 +10,6 @@
                 "cmd": "${workspaceFolder}/dev-flatpak-install.sh"
             }
         ]
-    }
+    },
+    "python.REPL.enableREPLSmartSend": false
 }

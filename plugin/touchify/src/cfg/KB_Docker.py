@@ -7,6 +7,7 @@ class KB_Docker:
     size_x: int = 0
     size_y: int = 0
     isEnabled: bool = False
+    nesting_mode: str = "normal"
 
     def create(args):
         obj = KB_Docker()
@@ -30,4 +31,5 @@ class KB_Docker:
         restrictions = {}
         restrictions["id"] = {"type": "docker_selection"}
         restrictions["icon"] = {"type": "icon_selection"}
+        restrictions["nesting_mode"] = {"type": "values", "entries": ["normal", "docking"]}
         return restrictions

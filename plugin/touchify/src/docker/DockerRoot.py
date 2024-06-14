@@ -26,14 +26,12 @@ class DockerRoot(QStackedWidget):
         self.appendShortcutAction('MAIN')
         self.initPanels()
 
-
     def initPanels(self):
         configManager: ConfigManager = ConfigManager.instance()
         for entry in configManager.getJSON().kb_dockers:
             cfgDocker: KB_Docker = entry
             if cfgDocker.isEnabled:
                 self.initPanel(cfgDocker)
-
 
     def addPanel(self, ID, widget):
         panel = DockerPanel(ID, widget)
@@ -51,6 +49,8 @@ class DockerRoot(QStackedWidget):
         title = KBBorrowManager.instance().dockerWindowTitle(ID)
 
         self.addPanel(ID, None)
+        if properties.nesting_mode == "docking":
+            self.panel(ID).setDockMode(True)
         if properties.size_x != 0 and properties.size_y != 0:
             size = [properties.size_x, properties.size_y]
             self.panel(ID).setSizeHint(size)
@@ -94,9 +94,14 @@ class DockerRoot(QStackedWidget):
         self.parentWidget().adjustSize()
     
     def dismantle(self):
+        for pnl in self._panels:
+            panel: DockerPanel = self._panels[pnl]
+            panel.unloadDockers()
+
         for c in self.shortcutConnections:
             self.disconnect(c)
 
+        self._mainWidget.unloadDocker()
 
     def panel(self, name):
         return self._panels[name]

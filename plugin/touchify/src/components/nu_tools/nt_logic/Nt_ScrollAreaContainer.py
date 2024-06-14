@@ -29,6 +29,9 @@ class Nt_ScrollAreaContainer(QWidget):
         self.setScrollArea(scrollArea)
 
 
+
+
+
     def sizeHint(self):
         """
         Reimplemented function. If a QScrollArea as been set

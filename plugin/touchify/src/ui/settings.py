@@ -14,6 +14,7 @@ import functools
 import copy
 import json
 from ..components.PropertyGrid import *
+import datetime
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -48,7 +49,8 @@ class SettingsDialog:
     def show(self):
         if self.dlg.exec_():
             self.cfg.save()
-            msg = QMessageBox(self.qwin)
-            msg.setText("Changes Saved! You must reload the application to see them.")
-            msg.exec_()
+            ConfigManager.instance().notifyUpdate()
+            #msg = QMessageBox(self.qwin)
+            #msg.setText("Changes Saved! You must reload the application to see them.")
+            #msg.exec_()
 
