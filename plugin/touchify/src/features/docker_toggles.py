@@ -61,7 +61,7 @@ class DockerToggles:
         action.triggered.connect(lambda: self.toggleDocker(id))
 
     def createActions(self, window, actionPath):
-        sectionName = "VaporJem_Dockers"
+        sectionName = "Touchify_Dockers"
         subItemPath = actionPath + "/" + sectionName
         cfg = ConfigManager.instance().getJSON()
 

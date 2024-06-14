@@ -20,6 +20,7 @@ if TYPE_CHECKING:
 else:
     from krita import *
 from PyQt5.QtWidgets import QWidget
+from .ext.extensions import *
 from .docker.DockerPresetChooser import DockerPresetChooser
 
 class KBBorrowManager():
@@ -43,8 +44,9 @@ class KBBorrowManager():
         return None
 
     def returnWidget(self, ID):
-        self._parents[ID].setWidget(self._widgets[ID])
-        self._parents[ID].widget().setEnabled(True)
+        if ID in self._parents:
+            self._parents[ID].setWidget(self._widgets[ID])
+            self._parents[ID].widget().setEnabled(True)
 
     def returnAll(self):
         for ID in self._parents:
@@ -58,3 +60,5 @@ class KBBorrowManager():
         if KBBorrowManager.root == None:
             KBBorrowManager.root = KBBorrowManager()
         return KBBorrowManager.root
+    
+KBBorrowManager.root = None

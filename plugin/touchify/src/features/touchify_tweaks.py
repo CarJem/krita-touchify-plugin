@@ -10,10 +10,9 @@ else:
 
 from ..ext.extensions import KritaExtensions
 
-class CustomStyles:
+class TouchifyTweaks:
 
-
-    def style_KisLayerView():
+    def style_KisLayerView(self):
         docker = KritaExtensions.getDocker("KisLayerBox")
         if not docker:
             return
@@ -64,10 +63,11 @@ class CustomStyles:
         create_spacer()
         create_dropdown_button(["create_quick_group", "quick_ungroup"], "groupLayer")
         
-
-    def applyStyles(window):
-        CustomStyles.style_KisLayerView()
-
-        full_style_sheet = f"""
-        """
+    def style_CSS(self, window):
+        full_style_sheet = f""""""
         window.setStyleSheet(full_style_sheet)
+
+    def load(self, window):
+        self.style_CSS(window)
+        self.style_KisLayerView()
+

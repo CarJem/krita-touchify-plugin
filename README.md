@@ -1,1 +1,1 @@
-# krita-vaporjem-tweaks
+# Krita: Touchify

@@ -48,7 +48,7 @@ class PopupButtons:
             root_menu.addAction(action)
 
     def createAction(self, window, popup: Popup, actionPath):
-        actionName = 'VaporJem_Popup_{0}'.format(popup.btnName)
+        actionName = 'Touchify_Popup_{0}'.format(popup.btnName)
         displayName = popup.btnName + POPUP_BTN_IDENTIFIER
         iconName = popup.icon
         id = popup.id
@@ -65,7 +65,7 @@ class PopupButtons:
         pending_actions.append(action)
 
     def createActions(self, window, actionPath):
-        sectionName = "VaporJem_Popups"
+        sectionName = "Touchify_Popups"
 
         subItemPath = actionPath + "/" + sectionName
 

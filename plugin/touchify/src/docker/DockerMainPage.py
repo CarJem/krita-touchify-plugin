@@ -19,10 +19,13 @@ if TYPE_CHECKING:
 else:
     from krita import *
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import QMargins
 from ..config import *
 from .DockerButtonBar import DockerButtonBar
+from ..borrow_manager import KBBorrowManager
+from .DockerPanelHost import DockerPanelHost
+from ..components.nu_tools.nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
 
 class DockerMainPage(QWidget):
     _config = KBConfigManager()
@@ -43,10 +46,15 @@ class DockerMainPage(QWidget):
         self.initQuickActions()
         self.layout().addWidget(self.quickActions)
 
+        self.toolSettingsDocker = DockerPanelHost('sharedtooldocker')
+        self.toolSettingsDocker.toolsHack = True
+        self.toolSettingsDocker.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        self.layout().addWidget(self.toolSettingsDocker)
+
+        self.loadDockers()
 
     def addDockerButton(self, properties, onClick, title):
         self.dockerBtns.addButton(properties, onClick, title)
-
 
     def initQuickActions(self):
         cfg = self._config.loadConfig('ACTIONS')
@@ -65,7 +73,8 @@ class DockerMainPage(QWidget):
                     btn = self.quickActions.button(props[entry]['id'])
                     btn.setChecked(action.isChecked())
 
-
-
-    def synchronizeSliders(self):
-        self.propSliders.synchronizeSliders()
+    def loadDockers(self):
+        self.toolSettingsDocker.loadDocker()
+        
+    def unloadDockers(self):
+        self.toolSettingsDocker.unloadDocker()

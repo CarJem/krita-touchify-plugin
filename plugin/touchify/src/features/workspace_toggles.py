@@ -78,7 +78,7 @@ class WorkspaceToggles:
         action.triggered.connect(lambda: self.toggleWorkspace(id))
 
     def createActions(self, window, actionPath):
-        sectionName = "VaporJem_Workspaces"
+        sectionName = "Touchify_Workspaces"
         subItemPath = actionPath + "/" + sectionName
 
         cfg = ConfigManager.instance().getJSON()

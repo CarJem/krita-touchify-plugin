@@ -204,12 +204,82 @@ class Workspace:
     
 
 
+
+class KB_Dockers:
+    id: str = ""
+    icon: str = ""
+    size_x: int = 0
+    size_y: int = 0
+    isEnabled: bool = False
+
+    def create(args):
+        obj = KB_Dockers()
+        Extensions.dictToObject(obj, args)
+        return obj
+    
+    def __str__(self):
+        name = self.id.replace("\n", "\\n")
+        if not self.isEnabled:
+            name = "(Disabled) " + name
+        return name
+    
+    def forceLoad(self):
+        pass
+
+    def propertygrid_groups(self):
+        groups = {}
+        return groups
+    
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        restrictions["id"] = {"type": "docker_selection"}
+        restrictions["icon"] = {"type": "icon_selection"}
+        return restrictions
+    
+class KB_Actions:
+    id: str = ""
+    icon: str = ""
+    isEnabled: bool = False
+
+    def create(args):
+        obj = KB_Actions()
+        Extensions.dictToObject(obj, args)
+        return obj
+    
+    def __str__(self):
+        name = self.id.replace("\n", "\\n")
+        if not self.isEnabled:
+            name = "(Disabled) " + name
+        return name
+    
+    def forceLoad(self):
+        pass
+
+    def propertygrid_groups(self):
+        groups = {}
+        return groups
+    
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        restrictions["icon"] = {"type": "icon_selection"}
+        return restrictions
+
 class ConfigFile:
     dockers: TypedList[Docker] = []
     docker_groups: TypedList[DockerGroup] = []
     popups: TypedList[Popup] = []
     workspaces: TypedList[Workspace] = []
 
+    kb_dockers: TypedList[KB_Dockers] = []
+    kb_actions: TypedList[KB_Actions] = []
+
+
+    def load_chunk_from_mega(self, configName, path):
+        CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
+        with open(CONFIG_FILE) as f:
+            jsonData = json.load(f)
+            return jsonData[path]
+        
     def load_chunk(self, configName):
         CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
         with open(CONFIG_FILE) as f:
@@ -229,6 +299,7 @@ class ConfigFile:
         groups["docker_groups"] = {"name": "Docker Groups", "items": ["docker_groups"]}
         groups["popups"] = {"name": "Popups", "items": ["popups"]}
         groups["workspaces"] = {"name": "Workspaces", "items": ["workspaces"]}
+        groups["toolbar_buddy"] = {"name": "Toolbar Buddy", "items": ["kb_dockers", "kb_actions"]}
         return groups
 
     def save(self):
@@ -236,6 +307,9 @@ class ConfigFile:
         self.save_chunk(self.docker_groups, "docker_groups")
         self.save_chunk(self.popups, "popups")
         self.save_chunk(self.workspaces, "workspaces")
+
+        self.save_chunk(self.kb_dockers, "kb_dockers")
+        self.save_chunk(self.kb_actions, "kb_actions")
         self.load()
 
     def load(self):
@@ -244,11 +318,15 @@ class ConfigFile:
         self.popups = Extensions.list_assignment(self.load_chunk("popups"), Popup)
         self.workspaces = Extensions.list_assignment(self.load_chunk("workspaces"), Workspace)
 
+        self.kb_dockers = Extensions.list_assignment(self.load_chunk("kb_dockers"), KB_Dockers)
+        self.kb_actions = Extensions.list_assignment(self.load_chunk("kb_actions"), KB_Actions)
+
     def __init__(self, base_dir):
         self.__base_dir__ = base_dir
         self.load()
 
 class ConfigManager:
+    
 
     def instance():
         return ConfigManager.root
@@ -276,6 +354,9 @@ class ConfigManager:
 class KritaSettings:
     def readSetting(group:str, name:str, defaultValue:str):
         return Krita.instance().readSetting(group, name, defaultValue)
+    
+    def writeSetting(group:str, name:str, value:str):
+        return Krita.instance().writeSetting(group, name, value)
 
 class KBConfigManager():
     _fileDir = os.path.join(BASE_DIR, "configs") + '/'
@@ -303,6 +384,5 @@ class KBConfigManager():
             cfg = cfg[section]
 
         return cfg
-
 
 ConfigManager.root = ConfigManager(BASE_DIR)

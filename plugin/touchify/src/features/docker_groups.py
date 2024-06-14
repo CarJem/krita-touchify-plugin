@@ -81,7 +81,7 @@ class DockerGroups:
 
     def createActions(self, window, actionPath):
 
-        sectionName = "VaporJem_DockerGroups"
+        sectionName = "Touchify_DockerGroups"
         subItemPath = actionPath + "/" + sectionName
 
         cfg = ConfigManager.instance().getJSON()

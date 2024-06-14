@@ -18,14 +18,14 @@
 
 from PyQt5.QtWidgets import QToolButton, QSizePolicy
 from PyQt5.QtCore import Qt, QSize
-from .... import variables
+from .... import stylesheet
 
 class Nt_ToggleVisibleButton(QToolButton):
     def __init__(self, parent = None):
         super(Nt_ToggleVisibleButton, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.setIconSize(QSize(11, 11))
-        self.setStyleSheet(variables.nu_toggle_button_style)
+        self.setStyleSheet(stylesheet.nu_toggle_button_style)
         
     def setArrow(self, alignment):
         if alignment == "right":

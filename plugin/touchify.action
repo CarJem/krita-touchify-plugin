@@ -2,43 +2,43 @@
 <ActionCollection version="2" name="Scripts">
     <Actions category="Scripts">
         <text>Touchify</text>
-        <Action name="vjt_action1">
+        <Action name="touchify_hotkey1">
             <text>Touchify: Action 1</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="vjt_action2">
+        <Action name="touchify_hotkey2">
             <text>Touchify: Action 2</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="vjt_action3">
+        <Action name="touchify_hotkey3">
             <text>Touchify: Action 3</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="vjt_action4">
+        <Action name="touchify_hotkey4">
             <text>Touchify: Action 4</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="vjt_action5">
+        <Action name="touchify_hotkey5">
             <text>Touchify: Action 5</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="vjt_action6">
+        <Action name="touchify_hotkey6">
             <text>Touchify: Action 6</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="vjt_action7">
+        <Action name="touchify_hotkey7">
             <text>Touchify: Action 7</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="vjt_action8">
+        <Action name="touchify_hotkey8">
             <text>Touchify: Action 8</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="vjt_action9">
+        <Action name="touchify_hotkey9">
             <text>Touchify: Action 9</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="vjt_action10">
+        <Action name="touchify_hotkey10">
             <text>Touchify: Action 10</text>
             <shortcut></shortcut>
         </Action>

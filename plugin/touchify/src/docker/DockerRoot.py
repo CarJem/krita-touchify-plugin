@@ -32,7 +32,6 @@ class DockerRoot(QStackedWidget):
         super(DockerRoot, self).__init__(parent)
         super().currentChanged.connect(self.currentChanged)
         self._panels = {}
-        self._borrower = KBBorrowManager()
         self.shortcutConnections = []
         
         self._mainWidget = DockerMainPage()
@@ -51,7 +50,7 @@ class DockerRoot(QStackedWidget):
 
 
     def addPanel(self, ID, widget):
-        panel = DockerPanel(widget)
+        panel = DockerPanel(ID, widget)
 
         if self.count() > 0:
             backButton = KBPanelCloseButton(lambda: self.setCurrentIndex(0))
@@ -62,11 +61,10 @@ class DockerRoot(QStackedWidget):
 
 
     def initPanel(self, properties):
-        ID = properties['id']        
-        widget = self._borrower.borrowDockerWidget(ID)
-        title = self._borrower.dockerWindowTitle(ID)
+        ID = properties['id']
+        title = KBBorrowManager.instance().dockerWindowTitle(ID)
 
-        self.addPanel(ID, widget)
+        self.addPanel(ID, None)
         if properties['size']:
             self.panel(ID).setSizeHint(properties['size'])
             
@@ -89,18 +87,25 @@ class DockerRoot(QStackedWidget):
     def currentChanged(self, index):
         for i in range(0, self.count()):
             policy = QSizePolicy.Ignored
+            widget = self.widget(i)
             if i == index:
-                policy = QSizePolicy.Expanding
-                self.widget(i).setEnabled(True)
+                policy = QSizePolicy.Policy.Expanding
+                widget.setEnabled(True)
+                if hasattr(widget, "loadDockers"):
+                    widget.loadDockers()
             else:
-                self.widget(i).setDisabled(False)
+                widget.setDisabled(False)
+                if hasattr(widget, "unloadDockers"):
+                    widget.unloadDockers()
 
-            self.widget(i).setSizePolicy(policy, policy)
-            self.widget(i).updateGeometry()
+            widget.setSizePolicy(policy, policy)
+            widget.updateGeometry()
+
+
 
         self.adjustSize()
         self.parentWidget().adjustSize()
-    
+        
 
     def event(self, e):
         r = super().event(e) # Get the return value of the parent class' event method first
@@ -113,7 +118,6 @@ class DockerRoot(QStackedWidget):
     
     
     def dismantle(self):
-        self._borrower.returnAll()
         for c in self.shortcutConnections:
             self.disconnect(c)
 

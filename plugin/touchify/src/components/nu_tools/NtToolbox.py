@@ -18,7 +18,7 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 from .nt_logic.Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
 from .NtWidgetPad import NtWidgetPad
-from ... import variables
+from ... import stylesheet
 
 class NtToolbox():
 
@@ -71,7 +71,7 @@ class NtToolbox():
         return False
 
     def updateStyleSheet(self):
-        self.pad.setStyleSheet(variables.nu_toolbox_style)
+        self.pad.setStyleSheet(stylesheet.nu_toolbox_style)
 
     def close(self):
         self.dockerAction.setEnabled(True)

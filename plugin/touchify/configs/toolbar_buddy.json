@@ -38,7 +38,7 @@
         "toolOptions": {
             "id": "sharedtooldocker",
             "icon": "paintop_settings_02",
-            "size": [306, 391]
+            "size": [306, 420]
         },
         "quickSettings": {
             "id": "quick_settings_docker",
