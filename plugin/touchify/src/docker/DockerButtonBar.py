@@ -1,4 +1,6 @@
 from typing import TYPE_CHECKING
+
+from ..cfg.KB_Actions import KB_Actions
 if TYPE_CHECKING:
     from ..ext.PyKrita import *
 else:

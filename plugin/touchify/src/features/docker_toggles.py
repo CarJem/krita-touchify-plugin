@@ -4,6 +4,8 @@ import os
 import json
 import sys
 import importlib.util
+
+from ..cfg.Docker import Docker
 from ..config import *
 from ..resources import *
 from typing import TYPE_CHECKING

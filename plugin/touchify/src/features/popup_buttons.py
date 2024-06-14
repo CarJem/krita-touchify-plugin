@@ -6,6 +6,8 @@ import json
 from functools import partial
 import sys
 import importlib.util
+
+from ..cfg.Popup import Popup
 from ..config import *
 from ..resources import *
 from ..components.popups.PopupDialog import *

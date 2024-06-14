@@ -29,7 +29,7 @@ class SettingsDialog:
 
         self.dlg = QDialog(self.qwin)
 
-        self.layout = QVBoxLayout()
+        self.layout = QHBoxLayout()
 
         self.propertyGrid = PropertyGrid()
         self.propertyGrid.updateDataObject(self.cfg)

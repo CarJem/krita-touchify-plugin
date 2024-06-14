@@ -3,6 +3,8 @@ import os
 import json
 import sys
 import importlib.util
+
+from ..cfg.DockerGroup import DockerGroup
 from ..config import *
 from ..resources import *
 from typing import TYPE_CHECKING

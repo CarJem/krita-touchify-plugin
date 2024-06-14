@@ -1,4 +1,6 @@
 from typing import TYPE_CHECKING
+
+from ..cfg.KB_Docker import KB_Docker
 if TYPE_CHECKING:
     from ..ext.PyKrita import *
 else:
@@ -101,12 +103,15 @@ class DockerRoot(QStackedWidget):
 
 
 class KBPanelCloseButton(QPushButton):
-    _config = KBConfigManager()
-    _height = int(_config.loadConfig('SIZES')['dockerBack'])
-    _iconSize = _height-2
+
 
     def __init__(self, onClick, parent=None):
         super(KBPanelCloseButton, self).__init__(parent)
+
+        configManager: ConfigManager = ConfigManager.instance()
+        self._height = configManager.getJSON().kb_dockerBackHeight
+        self._iconSize = self._height - 2
+        
         self.setIcon(Krita.instance().action('move_layer_up').icon())
         self.setIconSize(QSize(self._iconSize, self._iconSize))
         self.setFixedHeight(self._height)

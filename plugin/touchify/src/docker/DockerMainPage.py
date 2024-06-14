@@ -1,4 +1,6 @@
 from typing import TYPE_CHECKING
+
+from ..cfg.KB_Actions import KB_Actions
 if TYPE_CHECKING:
     from ..ext.PyKrita import *
 else:
@@ -13,21 +15,18 @@ from .DockerPanelHost import DockerPanelHost
 from ..components.nu_tools.nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
 
 class DockerMainPage(QWidget):
-    _config = KBConfigManager()
-    _dockerButtonSize = int(_config.loadConfig('SIZES')['dockerButtons'])
-    _quickActionButtonSize = int(_config.loadConfig('SIZES')['actionButtons'])
     _margins = QMargins(4, 4, 4, 4)
 
     def __init__(self, parent=None):
         super(DockerMainPage, self).__init__(parent)
-        self._config = KBConfigManager()
+        configManager: ConfigManager = ConfigManager.instance()
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(self._margins)
 
-        self.dockerBtns = DockerButtonBar(self._dockerButtonSize)
+        self.dockerBtns = DockerButtonBar(configManager.getJSON().kb_dockerButtonHeight)
         self.layout().addWidget(self.dockerBtns)    
 
-        self.quickActions = DockerButtonBar(self._quickActionButtonSize)
+        self.quickActions = DockerButtonBar(configManager.getJSON().kb_actionHeight)
         self.initQuickActions()
         self.layout().addWidget(self.quickActions)
 
