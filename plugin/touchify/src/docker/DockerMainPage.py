@@ -1,18 +1,3 @@
-# This file is part of KanvasBuddy.
-
-# KanvasBuddy is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# any later version.
-
-# KanvasBuddy is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with KanvasBuddy. If not, see <https://www.gnu.org/licenses/>.
-
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..ext.PyKrita import *
@@ -57,20 +42,20 @@ class DockerMainPage(QWidget):
         self.dockerBtns.addButton(properties, onClick, title)
 
     def initQuickActions(self):
-        cfg = self._config.loadConfig('ACTIONS')
-        props = self._config.loadProperties('quickActions')
-        for entry in cfg:
-            if cfg.getboolean(entry):
-                action = Krita.instance().action(props[entry]['id'])
+        configManager: ConfigManager = ConfigManager.instance()
+        for entry in configManager.getJSON().kb_actions:
+            act: KB_Actions = entry
+            if act.isEnabled:
+                action = Krita.instance().action(act.id)
                 self.quickActions.addButton(
-                    props[entry],
+                    act,
                     action.trigger,
                     action.toolTip(),
                     action.isCheckable()
                     )
 
                 if action.isCheckable():
-                    btn = self.quickActions.button(props[entry]['id'])
+                    btn = self.quickActions.button(act.id)
                     btn.setChecked(action.isChecked())
 
     def loadDockers(self):

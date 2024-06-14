@@ -202,10 +202,19 @@ class Workspace:
         restrictions["icon"] = {"type": "icon_selection"}
         return restrictions
     
+class KanvasBuddy:
+
+    titleButtons: int = 10
+    dockerButtons: int = 32
+    dockerBack: int = 16
+    sliderHeight: int = 16
+    actionButtons: int = 16
+
+        
+    
 
 
-
-class KB_Dockers:
+class KB_Docker:
     id: str = ""
     icon: str = ""
     size_x: int = 0
@@ -213,7 +222,7 @@ class KB_Dockers:
     isEnabled: bool = False
 
     def create(args):
-        obj = KB_Dockers()
+        obj = KB_Docker()
         Extensions.dictToObject(obj, args)
         return obj
     
@@ -270,7 +279,7 @@ class ConfigFile:
     popups: TypedList[Popup] = []
     workspaces: TypedList[Workspace] = []
 
-    kb_dockers: TypedList[KB_Dockers] = []
+    kb_dockers: TypedList[KB_Docker] = []
     kb_actions: TypedList[KB_Actions] = []
 
 
@@ -318,7 +327,7 @@ class ConfigFile:
         self.popups = Extensions.list_assignment(self.load_chunk("popups"), Popup)
         self.workspaces = Extensions.list_assignment(self.load_chunk("workspaces"), Workspace)
 
-        self.kb_dockers = Extensions.list_assignment(self.load_chunk("kb_dockers"), KB_Dockers)
+        self.kb_dockers = Extensions.list_assignment(self.load_chunk("kb_dockers"), KB_Docker)
         self.kb_actions = Extensions.list_assignment(self.load_chunk("kb_actions"), KB_Actions)
 
     def __init__(self, base_dir):

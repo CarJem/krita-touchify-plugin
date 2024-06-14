@@ -1,93 +1,18 @@
 {
     "items": [
         {
-            "id": "PresetDocker",
-            "icon": "paintop_settings_01",
-            "size_x": 260, "size_y": 235,
-            "isEnabled": true
-        },
-        {
-            "id": "ColorSelectorNg",
-            "icon": "extended_color_selector",
-            "size_x": 290, "size_y": 290,
-            "isEnabled": true
-        },
-        {
-            "id": "ArtisticColorSelector",
-            "icon": "wheel-sectors",
-            "size_x": 0, "size_y": 0
-        },
-        {
-            "id": "DigitalMixer",
-            "icon": "krita_tool_gradient",
-            "size_x": 0, "size_y": 0
-        },
-        {
-            "id": "SpecificColorSelector",
-            "icon": "krita_tool_color_sampler",
-            "size_x": 290, "size_y": 100
-        },
-        {
             "id": "PaletteDocker",
             "icon": "palette-library",
-            "size_x": 0, "size_y": 0,
+            "size_x": 0,
+            "size_y": 0,
             "isEnabled": true
         },
         {
             "id": "KisLayerBox",
             "icon": "duplicatelayer",
-            "size_x": 0, "size_y": 0,
+            "size_x": 0,
+            "size_y": 0,
             "isEnabled": true
-        },
-        {
-            "id": "sharedtooldocker",
-            "icon": "paintop_settings_02",
-            "size_x": 306, "size_y": 420
-        },
-        {
-            "id": "quick_settings_docker",
-            "icon": "gridbrush",
-            "size_x": 260, "size_y": 325
-        },
-        {
-            "id": "TimelineDocker",
-            "icon": "addblankframe",
-            "size_x": 0, "size_y": 0
-        },
-        {
-            "id": "OnionSkinsDocker",
-            "icon": "onion_skin_options",
-            "size_x": 100, "size_y": 100
-        },
-        {
-            "id": "ArrangeDocker",
-            "icon": "16_light_align-horizontal-left.svg",
-            "size_x": 100, "size_y": 100
-        },
-        {
-            "id": "SvgSymbolCollectionDocker",
-            "icon": "22_light_shape-choose",
-            "size_x": 0, "size_y": 0
-        },
-        {
-            "id": "comics_project_manager_docker",
-            "icon": "select-all",
-            "size_x": 0, "size_y": 0
-        },
-        {
-            "id": "LutDocker",
-            "icon": "color-to-alpha",
-            "size_x": 0, "size_y": 0
-        },
-        {
-            "id": "History",
-            "icon": "fileLayer",
-            "size_x": 0, "size_y": 0
-        },
-        {
-            "id": "OverviewDocker",
-            "icon": "tool_zoom",
-            "size_x": 320, "size_y": 255
         }
     ]
 }

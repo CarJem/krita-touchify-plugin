@@ -1,18 +1,3 @@
-# This file is part of KanvasBuddy.
-
-# KanvasBuddy is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# any later version.
-
-# KanvasBuddy is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with KanvasBuddy. If not, see <https://www.gnu.org/licenses/>.
-
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..ext.PyKrita import *
@@ -41,12 +26,11 @@ class DockerRoot(QStackedWidget):
 
 
     def initPanels(self):
-        configManager = KBConfigManager()
-        panelConfig = configManager.loadConfig('DOCKERS')
-        properties = configManager.loadProperties('dockers')
-        for entry in panelConfig:
-            if panelConfig.getboolean(entry):
-                self.initPanel(properties[entry])
+        configManager: ConfigManager = ConfigManager.instance()
+        for entry in configManager.getJSON().kb_dockers:
+            cfgDocker: KB_Docker = entry
+            if cfgDocker.isEnabled:
+                self.initPanel(cfgDocker)
 
 
     def addPanel(self, ID, widget):
@@ -60,13 +44,14 @@ class DockerRoot(QStackedWidget):
         super().addWidget(panel)
 
 
-    def initPanel(self, properties):
-        ID = properties['id']
+    def initPanel(self, properties: KB_Docker):
+        ID = properties.id
         title = KBBorrowManager.instance().dockerWindowTitle(ID)
 
         self.addPanel(ID, None)
-        if properties['size']:
-            self.panel(ID).setSizeHint(properties['size'])
+        if properties.size_x != 0 and properties.size_y != 0:
+            size = [properties.size_x, properties.size_y]
+            self.panel(ID).setSizeHint(size)
             
         self._mainWidget.addDockerButton(properties, self.panel(ID).activate, title)
         self.appendShortcutAction(ID)
@@ -74,8 +59,8 @@ class DockerRoot(QStackedWidget):
 
     def appendShortcutAction(self, ID):
         i = str(self.count() - 1)  #account for main panel
-        name = "KBPanel" + i
-        action = Krita.instance().activeWindow().createAction(name, "KanvasBuddy")
+        name = "TouchifyBuddy" + i
+        action = Krita.instance().activeWindow().createAction(name, "Touchify: ToolbarBuddy")
         self.shortcutConnections.append(
             action.triggered.connect(self.panel(ID).activate)
         )
@@ -105,17 +90,6 @@ class DockerRoot(QStackedWidget):
 
         self.adjustSize()
         self.parentWidget().adjustSize()
-        
-
-    def event(self, e):
-        r = super().event(e) # Get the return value of the parent class' event method first
-        pinned = KritaSettings.readSetting("KanvasBuddy", "KBPinnedMode", "false")
-
-        if (e.type() == QEvent.WindowDeactivate and pinned == "false"):
-            self.setCurrentIndex(0)
-        
-        return r
-    
     
     def dismantle(self):
         for c in self.shortcutConnections:

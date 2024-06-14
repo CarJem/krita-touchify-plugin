@@ -1,24 +1,12 @@
-# This file is part of KanvasBuddy.
-
-# KanvasBuddy is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# any later version.
-
-# KanvasBuddy is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with KanvasBuddy. If not, see <https://www.gnu.org/licenses/>.
-
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..ext.PyKrita import *
 else:
     from krita import *
 from .DockerButton import DockerButton
+
+
+from ..config import *
 
 from PyQt5.QtWidgets import QWidget, QHBoxLayout
 from PyQt5.QtCore import QSize, Qt
@@ -34,14 +22,14 @@ class DockerButtonBar(QWidget):
         self.btnSize = btnSize
 
 
-    def addButton(self, properties, onClick, toolTip="", checkable=False):
+    def addButton(self, properties: KB_Actions, onClick, toolTip="", checkable=False):
         btn = DockerButton(self.btnSize)
-        btn.setIcon(Krita.instance().icon(properties['icon']))
+        btn.setIcon(Krita.instance().icon(properties.icon))
         btn.clicked.connect(onClick) # collect and disconnect all when closing
         btn.setToolTip(toolTip)
         btn.setCheckable(checkable)
 
-        self._buttons[properties['id']] = btn
+        self._buttons[properties.id] = btn
         self.layout().addWidget(btn)
 
 

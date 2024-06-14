@@ -1,94 +1,14 @@
 {
     "items": [
-        { 
+        {
             "id": "view_show_canvas_only",
             "icon": "light_document-new",
             "isEnabled": true
         },
-        { 
+        {
             "id": "mirror_canvas",
             "icon": "light_mirror-view",
             "isEnabled": true
-        },
-        {
-            "id": "zoom_to_100pct",
-            "icon": "light_zoom-original"
-        },
-        {
-            "id": "wrap_around_mode",
-            "icon": "krita_tool_grid"
-        },
-        {
-            "id": "level_of_detail_mode",
-            "icon": "light_visible"
-        },
-        {
-            "id": "softProof",
-            "icon": "document-print-preview"
-        },
-        {
-            "id": "file_save",
-            "icon": "document-save"
-        },
-        {
-            "id": "file_save_as",
-            "icon": "document-save-as"
-        },
-        {
-            "id": "edit_undo",
-            "icon": "edit-undo"
-        },
-        {
-            "id": "edit_redo",
-            "icon": "edit-redo"
-        },
-        {
-            "id": "reset_canvas_rotation",
-            "icon": "rotation-reset"
-        },
-        {
-            "id": "erase_action",
-            "icon": "draw-eraser" 
-        },
-        {
-            "id": "preserve_alpha",
-            "icon": "transparency-enabled" 
-        },
-        {
-            "id": "view_show_guides",
-            "icon": "geometry"
-        },
-        {
-            "id": "view_zoom_in",
-            "icon": "zoom-in"
-        },
-        {
-            "id": "view_zoom_out",
-            "icon": "zoom-out"
-        },
-        {
-            "id": "view_toggle_reference_images",
-            "icon": "krita_tool_reference_images"
-        },
-        {
-            "id": "toggle_assistant",
-            "icon": "krita_tool_assistant"
-        },
-        {
-            "id": "reload_preset_action",
-            "icon": "view-refresh"
-        },
-        {
-            "id": "view_grid",
-            "icon": "view-grid"
-        },
-        {
-            "id": "disable_pressure",
-            "icon": "transform_icons_penPressure"
-        },
-        {
-            "id": "toggle_onion_skin",
-            "icon": "onion_skin_options"
         },
         {
             "id": "fullscreen",
@@ -96,8 +16,9 @@
             "isEnabled": true
         },
         {
-            "id": "clear",
-            "icon": "edit-clear"
+            "id": "DockerToggles_pykrita_reference_tabs",
+            "icon": "config-canvas-only",
+            "isEnabled": true
         }
     ]
 }
