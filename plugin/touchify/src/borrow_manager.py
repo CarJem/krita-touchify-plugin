@@ -21,6 +21,7 @@ else:
     from krita import *
 from PyQt5.QtWidgets import QWidget
 from .ext.extensions import *
+from .config import *
 from .docker.DockerPresetChooser import DockerPresetChooser
 from .components.nu_tools.nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
 
@@ -56,6 +57,7 @@ class KBBorrowManager():
             if dockMode:
                 self._actualDocker[ID] = docker
                 self._actualDocker[ID].show()
+                self._actualDocker[ID].titleBarWidget().setVisible(False)
                 return self._actualDocker[ID]
             else:
                 self._widgetDocker[ID] = docker
@@ -72,6 +74,9 @@ class KBBorrowManager():
             if self._actualDocker[ID]:
                 if self._previousDockerState[ID]["dockMode"]:
                     self._qWin.addDockWidget(self._previousDockerState[ID]["dockWidgetArea"], self._actualDocker[ID])
+                    titlebarSetting = KritaSettings.readSetting("", "showDockerTitleBars", "false")
+                    showTitlebar = True if titlebarSetting == "true" else False
+                    self._actualDocker[ID].titleBarWidget().setVisible(showTitlebar)
                     if self._previousDockerState[ID]["previousVisibility"] == False:
                         self._actualDocker[ID].hide()
                 else:
