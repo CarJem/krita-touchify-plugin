@@ -3,7 +3,7 @@ from PyQt5.QtCore import QSize, QEvent
 
 from ...components.nu_tools.nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
 
-from ...docker_manager import KBBorrowManager
+from ...docker_manager import DockerManager
 
 from krita import *
 
@@ -27,7 +27,7 @@ class DockerPanelHost(QWidget):
         self.dockMode = False
 
     def loadDocker(self):
-        dockerLoaded: QWidget | None = KBBorrowManager.instance().borrowDockerWidget(self.ID, self.dockMode)
+        dockerLoaded: QWidget | None = DockerManager.instance().borrowDockerWidget(self.ID, self.dockMode)
 
         if isinstance(dockerLoaded, QScrollArea):
             self.tookScrollArea = True
@@ -56,7 +56,7 @@ class DockerPanelHost(QWidget):
             else:
                 self.outLayout.removeWidget(self.borrowedDocker)
                 
-            KBBorrowManager.instance().returnWidget(self.ID)
+            DockerManager.instance().returnWidget(self.ID)
 
     def setDockMode(self, value):
         self.dockMode = value

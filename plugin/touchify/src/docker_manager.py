@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QWidget
 from .ext.extensions import *
 from .config import *
 
-class KBBorrowManager():
+class DockerManager():
 
     _widgetDocker = {}
     _actualDocker = {}
@@ -73,8 +73,8 @@ class KBBorrowManager():
         return title.replace('&', '')
     
     def instance():
-        if KBBorrowManager.root == None:
-            KBBorrowManager.root = KBBorrowManager()
-        return KBBorrowManager.root
+        if DockerManager.root == None:
+            DockerManager.root = DockerManager()
+        return DockerManager.root
     
-KBBorrowManager.root = None
+DockerManager.root = None

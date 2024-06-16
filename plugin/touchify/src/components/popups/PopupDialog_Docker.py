@@ -46,10 +46,10 @@ class PopupDialog_Docker(PopupDialog):
     def updateDocker(self, closing = False):
         if closing:
             self.grid.removeWidget(self.dockerWidget)
-            KBBorrowManager.instance().returnWidget(self.dockerID)
+            DockerManager.instance().returnWidget(self.dockerID)
             self.dockerWidget = None
         else:
-            self.dockerWidget = KBBorrowManager.instance().borrowDockerWidget(self.dockerID, True)
+            self.dockerWidget = DockerManager.instance().borrowDockerWidget(self.dockerID, True)
             self.grid.addWidget(self.dockerWidget)
             self.dockerWidget.show()
 

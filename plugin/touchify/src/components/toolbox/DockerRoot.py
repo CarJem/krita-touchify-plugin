@@ -8,7 +8,7 @@ from PyQt5.QtCore import QSize, QEvent
 from ...config import *
 from .ToolboxRoot import DockerPanel
 from .ToolboxMainPage import DockerMainPage
-from ...docker_manager import KBBorrowManager
+from ...docker_manager import DockerManager
 
 class DockerRoot(QStackedWidget):
 
@@ -42,7 +42,7 @@ class DockerRoot(QStackedWidget):
 
     def initPanel(self, properties: KB_Docker):
         ID = properties.id
-        title = KBBorrowManager.instance().dockerWindowTitle(ID)
+        title = DockerManager.instance().dockerWindowTitle(ID)
 
         self.addPanel(ID, None)
         if properties.nesting_mode == "docking":
