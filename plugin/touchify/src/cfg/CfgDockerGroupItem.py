@@ -1,11 +1,11 @@
 from ..ext.extensions import Extensions
 
 
-class DockerGroupItems:
+class CfgDockerGroupItem:
     id: str=""
 
     def create(args):
-        obj = DockerGroupItems()
+        obj = CfgDockerGroupItem()
         Extensions.dictToObject(obj, args)
         return obj
 

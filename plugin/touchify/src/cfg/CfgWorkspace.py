@@ -1,14 +1,14 @@
 from ..ext.extensions import Extensions
 
 
-class Workspace:
+class CfgWorkspace:
     display_name: str = ""
     id: str = ""
     icon: str = ""
     hotkeyNumber: int = 0
 
     def create(args):
-        obj = Workspace()
+        obj = CfgWorkspace()
         Extensions.dictToObject(obj, args)
         return obj
 

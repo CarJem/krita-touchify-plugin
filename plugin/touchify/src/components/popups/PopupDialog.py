@@ -8,7 +8,7 @@ from functools import partial
 import sys
 import importlib.util
 
-from ...cfg.CfgPopup import Popup
+from ...cfg.CfgPopup import CfgPopup
 from ...config import *
 from ....resources import *
 
@@ -22,7 +22,7 @@ class PopupDialog(QDialog):
 
     parent: QMainWindow
     
-    def __init__(self, parent: QMainWindow, args: Popup):     
+    def __init__(self, parent: QMainWindow, args: CfgPopup):     
         super().__init__(parent)    
         self.parent: QMainWindow = parent
         self.metadata = args

@@ -1,13 +1,13 @@
 from ..ext.extensions import Extensions
 
 
-class KB_Actions:
+class CfgToolboxAction:
     id: str = ""
     icon: str = ""
     isEnabled: bool = False
 
     def create(args):
-        obj = KB_Actions()
+        obj = CfgToolboxAction()
         Extensions.dictToObject(obj, args)
         return obj
 

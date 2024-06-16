@@ -24,7 +24,7 @@ class TouchifyToolbox(DockWidget):
         cfg.notifyConnect(self.onConfigUpdated)
     
     def onLoaded(self):              
-        self.panelStack = DockerRoot(self)
+        self.panelStack = ToolboxRoot(self)
         self.layout.addWidget(self.panelStack)
 
     def onConfigUpdated(self):
@@ -33,7 +33,7 @@ class TouchifyToolbox(DockWidget):
         self.panelStack.deleteLater()
         self.panelStack = None
 
-        self.panelStack = DockerRoot(self)
+        self.panelStack = ToolboxRoot(self)
         self.layout.addWidget(self.panelStack)
 
     def canvasChanged(self, canvas):

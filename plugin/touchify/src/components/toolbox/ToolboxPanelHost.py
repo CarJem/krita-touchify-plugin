@@ -7,11 +7,11 @@ from ...docker_manager import DockerManager
 
 from krita import *
 
-class DockerPanelHost(QWidget):
+class ToolboxPanelHost(QWidget):
 
     
     def __init__(self, parent: QWidget | None, ID):
-        super(DockerPanelHost, self).__init__(parent)
+        super(ToolboxPanelHost, self).__init__(parent)
         self.ID = ID
         self.borrowedDocker = None
         self.size = None

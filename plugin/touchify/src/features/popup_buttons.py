@@ -9,7 +9,7 @@ import importlib.util
 
 from ..variables import TOUCHIFY_AID_ACTIONS_POPUP, TOUCHIFY_ID_ACTIONS_POPUP
 
-from ..cfg.CfgPopup import Popup
+from ..cfg.CfgPopup import CfgPopup
 from ..config import *
 from ..resources import *
 from ..components.popups.PopupDialog import *
@@ -26,7 +26,7 @@ pending_actions = []
 class PopupButtons:
 
 
-    def createPopup(self, qwin: QMainWindow, data: Popup):
+    def createPopup(self, qwin: QMainWindow, data: CfgPopup):
         if data.type == "actions":
             return PopupDialog_Actions(qwin, data)
         elif data.type == "docker":
@@ -34,7 +34,7 @@ class PopupButtons:
         else:
             return PopupDialog(qwin, data)
 
-    def showPopup(self, id, data: Popup, mode: str):
+    def showPopup(self, id, data: CfgPopup, mode: str):
         if not id in popup_dialogs:
             qwin = Krita.instance().activeWindow().qwindow()
             popup_dialogs[id] = self.createPopup(qwin, data)
@@ -48,7 +48,7 @@ class PopupButtons:
         for action in pending_actions:
             root_menu.addAction(action)
 
-    def createAction(self, window, popup: Popup, actionPath):
+    def createAction(self, window, popup: CfgPopup, actionPath):
         actionName = '{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_POPUP, popup.id)
         displayName = popup.btnName + POPUP_BTN_IDENTIFIER
         iconName = popup.icon

@@ -1,46 +1,46 @@
 
 
-from ...cfg.CfgToolboxDocker import KB_Docker
+from ...cfg.CfgToolboxDocker import CfgToolboxDocker
 from krita import *
 
 from PyQt5.QtWidgets import QPushButton, QStackedWidget, QSizePolicy
 from PyQt5.QtCore import QSize, QEvent
 from ...config import *
-from .ToolboxPanel import DockerPanel
-from .ToolboxMainPage import DockerMainPage
+from .ToolboxPanel import ToolboxPanel
+from .ToolboxMainPage import ToolboxMainPage
 from ...docker_manager import DockerManager
 
-class DockerRoot(QStackedWidget):
+class ToolboxRoot(QStackedWidget):
 
     def __init__(self, parent=None):
-        super(DockerRoot, self).__init__(parent)
+        super(ToolboxRoot, self).__init__(parent)
         super().currentChanged.connect(self.currentChanged)
         self._panels = {}
         self.shortcutConnections = []
         
-        self._mainWidget = DockerMainPage()
+        self._mainWidget = ToolboxMainPage()
         self.addPanel('MAIN', self._mainWidget)
         self.initPanels()
 
     def initPanels(self):
         configManager: ConfigManager = ConfigManager.instance()
         for entry in configManager.getJSON().kb_dockers:
-            cfgDocker: KB_Docker = entry
+            cfgDocker: CfgToolboxDocker = entry
             if cfgDocker.isEnabled:
                 self.initPanel(cfgDocker)
 
     def addPanel(self, ID, widget):
-        panel = DockerPanel(ID, widget)
+        panel = ToolboxPanel(ID, widget)
 
         if self.count() > 0:
-            backButton = KBPanelCloseButton(lambda: self.setCurrentIndex(0))
+            backButton = ToolboxPanelCloseButton(lambda: self.setCurrentIndex(0))
             panel.layout().addWidget(backButton)
 
         self._panels[ID] = panel
         super().addWidget(panel)
 
 
-    def initPanel(self, properties: KB_Docker):
+    def initPanel(self, properties: CfgToolboxDocker):
         ID = properties.id
         title = DockerManager.instance().dockerWindowTitle(ID)
 
@@ -78,7 +78,7 @@ class DockerRoot(QStackedWidget):
     
     def dismantle(self):
         for pnl in self._panels:
-            panel: DockerPanel = self._panels[pnl]
+            panel: ToolboxPanel = self._panels[pnl]
             panel.unloadDockers()
 
         for c in self.shortcutConnections:
@@ -90,11 +90,11 @@ class DockerRoot(QStackedWidget):
         return self._panels[name]
 
 
-class KBPanelCloseButton(QPushButton):
+class ToolboxPanelCloseButton(QPushButton):
 
 
     def __init__(self, onClick, parent=None):
-        super(KBPanelCloseButton, self).__init__(parent)
+        super(ToolboxPanelCloseButton, self).__init__(parent)
 
         configManager: ConfigManager = ConfigManager.instance()
         self._height = configManager.getJSON().kb_dockerBackHeight

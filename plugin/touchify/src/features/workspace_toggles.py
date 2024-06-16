@@ -4,7 +4,7 @@ import json
 import sys
 import importlib.util
 
-from ..cfg.CfgWorkspace import Workspace
+from ..cfg.CfgWorkspace import CfgWorkspace
 from ..config import *
 from ..resources import *
 
@@ -43,7 +43,7 @@ class WorkspaceToggles:
                             if workspace.isSeparator():
                                 break
                             else:
-                                action = Workspace()
+                                action = CfgWorkspace()
                                 action.display_name = workspace.text()
                                 action.id = workspace.text()
                                 Workspaces.append(action)
@@ -60,7 +60,7 @@ class WorkspaceToggles:
         for action in pending_actions:
             root_menu.addAction(action)
    
-    def createAction(self, window, workspace: Workspace, actionPath):
+    def createAction(self, window, workspace: CfgWorkspace, actionPath):
 
         actionName = '{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_WORKSPACE, workspace.id)
         id = workspace.id

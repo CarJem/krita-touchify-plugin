@@ -2,10 +2,10 @@ from PyQt5.QtWidgets import QToolButton
 from PyQt5.QtGui import QIcon, QPixmap, QImage, QColor, QPalette
 from PyQt5.QtCore import QSize, Qt
 
-class DockerButton(QToolButton):
+class ToolboxButton(QToolButton):
 
     def __init__(self, size = 12, parent = None):
-        super(DockerButton, self).__init__(parent)
+        super(ToolboxButton, self).__init__(parent)
         self.setFixedSize(QSize(size, size))
         self.setFocusPolicy(Qt.NoFocus)
         self.highlightConnection = None

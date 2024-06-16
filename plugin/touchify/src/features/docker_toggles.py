@@ -7,7 +7,7 @@ import importlib.util
 
 from ..variables import TOUCHIFY_AID_ACTIONS_DOCKER, TOUCHIFY_ID_ACTIONS_DOCKER
 
-from ..cfg.CfgDocker import Docker
+from ..cfg.CfgDocker import CfgDocker
 from ..config import *
 from ..resources import *
 
@@ -29,7 +29,7 @@ class DockerToggles:
         data = []
 
         for docker in dockersList:
-            x = Docker()
+            x = CfgDocker()
             x.display_name = docker.windowTitle()
             x.docker_name = docker.objectName()
             data.append(x)
@@ -45,7 +45,7 @@ class DockerToggles:
         for action in pending_actions:
             root_menu.addAction(action)
 
-    def createAction(self, window, docker: Docker, actionPath):
+    def createAction(self, window, docker: CfgDocker, actionPath):
         actionName ='{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_DOCKER, docker.docker_name)
         id = docker.docker_name
         iconName = docker.icon

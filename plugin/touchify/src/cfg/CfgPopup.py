@@ -1,8 +1,8 @@
-from .CfgPopupInfo import PopupInfo
+from .CfgPopupInfo import CfgPopupInfo
 from ..ext.extensions import Extensions, TypedList
 
 
-class Popup:
+class CfgPopup:
     id: str = ""
     btnName: str = ""
     popupType: str = "popup"
@@ -17,7 +17,7 @@ class Popup:
     icon_width: int = 30
     icon_height: int = 30
     hotkeyNumber: int = 0
-    items: TypedList[PopupInfo] = []
+    items: TypedList[CfgPopupInfo] = []
 
 
     def propertygrid_groups(self):
@@ -41,17 +41,17 @@ class Popup:
         return groups
 
     def create(args):
-        obj = Popup()
+        obj = CfgPopup()
         Extensions.dictToObject(obj, args)
         items = Extensions.default_assignment(args, "items", [])
-        obj.items = Extensions.list_assignment(items, PopupInfo)
+        obj.items = Extensions.list_assignment(items, CfgPopupInfo)
         return obj
 
     def __str__(self):
         return self.btnName.replace("\n", "\\n")
 
     def forceLoad(self):
-        self.items = TypedList(self.items, PopupInfo)
+        self.items = TypedList(self.items, CfgPopupInfo)
         pass
 
     def propertygrid_restrictions(self):

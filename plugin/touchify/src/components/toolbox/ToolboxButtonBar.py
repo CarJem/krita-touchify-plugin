@@ -1,8 +1,8 @@
 
 
-from ...cfg.CfgToolboxAction import KB_Actions
+from ...cfg.CfgToolboxAction import CfgToolboxAction
 from krita import *
-from .ToolboxButton import DockerButton
+from .ToolboxButton import ToolboxButton
 
 
 from ...config import *
@@ -10,10 +10,10 @@ from ...config import *
 from PyQt5.QtWidgets import QWidget, QHBoxLayout
 from PyQt5.QtCore import QSize, Qt
 
-class DockerButtonBar(QWidget):
+class ToolboxButtonBar(QWidget):
 
     def __init__(self, btnSize, parent=None):
-        super(DockerButtonBar, self).__init__(parent)
+        super(ToolboxButtonBar, self).__init__(parent)
         self.setLayout(QHBoxLayout())
         self.layout().setContentsMargins(0, 0, 0, 0)
 
@@ -21,8 +21,8 @@ class DockerButtonBar(QWidget):
         self.btnSize = btnSize
 
 
-    def addButton(self, properties: KB_Actions, onClick, toolTip="", checkable=False):
-        btn = DockerButton(self.btnSize)
+    def addButton(self, properties: CfgToolboxAction, onClick, toolTip="", checkable=False):
+        btn = ToolboxButton(self.btnSize)
         btn.setIcon(Krita.instance().icon(properties.icon))
         btn.clicked.connect(onClick) # collect and disconnect all when closing
         btn.setToolTip(toolTip)

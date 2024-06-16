@@ -1,13 +1,13 @@
 from ..ext.extensions import Extensions
 
 
-class PopupInfo:
+class CfgPopupInfo:
     text: str = ""
     action: str = ""
     icon: str = ""
 
     def create(args):
-        obj = PopupInfo()
+        obj = CfgPopupInfo()
         Extensions.dictToObject(obj, args)
         return obj
 

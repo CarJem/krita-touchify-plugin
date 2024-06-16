@@ -1,32 +1,32 @@
 
 
 from ...variables import KRITA_TOOL_OPTIONS_DOCKER_ID
-from ...cfg.CfgToolboxAction import KB_Actions
+from ...cfg.CfgToolboxAction import CfgToolboxAction
 from krita import *
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import QMargins
 from ...config import *
-from .ToolboxButtonBar import DockerButtonBar
-from .ToolboxPanelHost import DockerPanelHost
+from .ToolboxButtonBar import ToolboxButtonBar
+from .ToolboxPanelHost import ToolboxPanelHost
 
-class DockerMainPage(QWidget):
+class ToolboxMainPage(QWidget):
     _margins = QMargins(4, 4, 4, 4)
 
     def __init__(self, parent=None):
-        super(DockerMainPage, self).__init__(parent)
+        super(ToolboxMainPage, self).__init__(parent)
         configManager: ConfigManager = ConfigManager.instance()
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(self._margins)
 
-        self.dockerBtns = DockerButtonBar(configManager.getJSON().kb_dockerButtonHeight)
+        self.dockerBtns = ToolboxButtonBar(configManager.getJSON().kb_dockerButtonHeight)
         self.layout().addWidget(self.dockerBtns)    
 
-        self.quickActions = DockerButtonBar(configManager.getJSON().kb_actionHeight)
+        self.quickActions = ToolboxButtonBar(configManager.getJSON().kb_actionHeight)
         self.initQuickActions()
         self.layout().addWidget(self.quickActions)
 
-        self.toolSettingsDocker = DockerPanelHost(self, KRITA_TOOL_OPTIONS_DOCKER_ID)
+        self.toolSettingsDocker = ToolboxPanelHost(self, KRITA_TOOL_OPTIONS_DOCKER_ID)
         self.autoFitScrollArea = True
         self.layout().addWidget(self.toolSettingsDocker)
 
@@ -38,7 +38,7 @@ class DockerMainPage(QWidget):
     def initQuickActions(self):
         configManager: ConfigManager = ConfigManager.instance()
         for entry in configManager.getJSON().kb_actions:
-            act: KB_Actions = entry
+            act: CfgToolboxAction = entry
             if act.isEnabled:
                 action = Krita.instance().action(act.id)
                 if action:

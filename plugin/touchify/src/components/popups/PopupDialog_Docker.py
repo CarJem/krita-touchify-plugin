@@ -7,7 +7,7 @@ from functools import partial
 import sys
 import importlib.util
 
-from ...cfg.CfgPopup import Popup
+from ...cfg.CfgPopup import CfgPopup
 from ...config import *
 from ...resources import *
 from .PopupDialog import *
@@ -22,7 +22,7 @@ class PopupDialog_Docker(PopupDialog):
     dockerLocation: Qt.DockWidgetArea = None
     dockerVisibility: bool = False
 
-    def __init__(self, parent: QMainWindow, args: Popup):     
+    def __init__(self, parent: QMainWindow, args: CfgPopup):     
         super().__init__(parent, args)
         self.grid = self.generateDockerLayout()
         self.dockerID = args.docker_id

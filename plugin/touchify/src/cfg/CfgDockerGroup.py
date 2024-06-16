@@ -1,28 +1,28 @@
-from .CfgDockerGroupItem import DockerGroupItems
+from .CfgDockerGroupItem import CfgDockerGroupItem
 from ..ext.extensions import Extensions, TypedList
 
 
-class DockerGroup:
+class CfgDockerGroup:
     display_name: str = ""
     id: str = ""
     icon: str = ""
     hotkeyNumber: int = 0
     tabsMode: bool = True
     groupId: str = ""
-    docker_names: TypedList[DockerGroupItems] = []
+    docker_names: TypedList[CfgDockerGroupItem] = []
 
     def create(args):
-        obj = DockerGroup()
+        obj = CfgDockerGroup()
         Extensions.dictToObject(obj, args)
         docker_names = Extensions.default_assignment(args, "docker_names", [])
-        obj.docker_names = Extensions.list_assignment(docker_names, DockerGroupItems)
+        obj.docker_names = Extensions.list_assignment(docker_names, CfgDockerGroupItem)
         return obj
 
     def __str__(self):
         return self.display_name.replace("\n", "\\n")
 
     def forceLoad(self):
-        self.docker_names = TypedList(self.docker_names, DockerGroupItems)
+        self.docker_names = TypedList(self.docker_names, CfgDockerGroupItem)
 
     def propertygrid_groups(self):
         groups = {}

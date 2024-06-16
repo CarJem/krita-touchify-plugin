@@ -1,14 +1,14 @@
 from ..ext.extensions import Extensions
 
 
-class Docker:
+class CfgDocker:
     display_name: str = ""
     docker_name: str = ""
     icon: str = ""
     hotkeyNumber: int = 0
 
     def create(args):
-        obj = Docker()
+        obj = CfgDocker()
         Extensions.dictToObject(obj, args)
         return obj
 

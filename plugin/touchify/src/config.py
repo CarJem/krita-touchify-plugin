@@ -5,12 +5,12 @@ import json
 import os
 
 from .ext.extensions import JsonExtensions
-from .cfg.CfgDocker import Docker
-from .cfg.CfgDockerGroup import DockerGroup
-from .cfg.CfgToolboxDocker import KB_Docker
-from .cfg.CfgPopup import Popup
-from .cfg.CfgWorkspace import Workspace
-from .cfg.CfgToolboxAction import KB_Actions
+from .cfg.CfgDocker import CfgDocker
+from .cfg.CfgDockerGroup import CfgDockerGroup
+from .cfg.CfgToolboxDocker import CfgToolboxDocker
+from .cfg.CfgPopup import CfgPopup
+from .cfg.CfgWorkspace import CfgWorkspace
+from .cfg.CfgToolboxAction import CfgToolboxAction
 from .ext.extensions import *
 from ..paths import BASE_DIR
     
@@ -19,13 +19,13 @@ from configparser import ConfigParser
 import json
 
 class ConfigFile:
-    dockers: TypedList[Docker] = []
-    docker_groups: TypedList[DockerGroup] = []
-    popups: TypedList[Popup] = []
-    workspaces: TypedList[Workspace] = []
+    dockers: TypedList[CfgDocker] = []
+    docker_groups: TypedList[CfgDockerGroup] = []
+    popups: TypedList[CfgPopup] = []
+    workspaces: TypedList[CfgWorkspace] = []
 
-    kb_dockers: TypedList[KB_Docker] = []
-    kb_actions: TypedList[KB_Actions] = []
+    kb_dockers: TypedList[CfgToolboxDocker] = []
+    kb_actions: TypedList[CfgToolboxAction] = []
     kb_titleButtonHeight: int = 10
     kb_dockerButtonHeight: int = 32
     kb_dockerBackHeight: int = 16
@@ -36,8 +36,8 @@ class ConfigFile:
         CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', "toolbar_buddy.json")
         with open(CONFIG_FILE) as f:
             jsonData = json.load(f)
-            self.kb_dockers = Extensions.list_assignment(jsonData["kb_dockers"], KB_Docker)
-            self.kb_actions = Extensions.list_assignment(jsonData["kb_actions"], KB_Actions)
+            self.kb_dockers = Extensions.list_assignment(jsonData["kb_dockers"], CfgToolboxDocker)
+            self.kb_actions = Extensions.list_assignment(jsonData["kb_actions"], CfgToolboxAction)
             self.kb_titleButtonHeight = JsonExtensions.tryGetEntry(jsonData, "kb_titleButtonHeight", int, 10)
             self.kb_dockerButtonHeight = JsonExtensions.tryGetEntry(jsonData, "kb_dockerButtonHeight", int, 32)
             self.kb_dockerBackHeight = JsonExtensions.tryGetEntry(jsonData, "kb_dockerBackHeight", int, 16)
@@ -102,10 +102,10 @@ class ConfigFile:
         self.load()
 
     def load(self):
-        self.dockers = Extensions.list_assignment(self.load_chunk("dockers"), Docker)
-        self.docker_groups = Extensions.list_assignment(self.load_chunk("docker_groups"), DockerGroup)
-        self.popups = Extensions.list_assignment(self.load_chunk("popups"), Popup)
-        self.workspaces = Extensions.list_assignment(self.load_chunk("workspaces"), Workspace)
+        self.dockers = Extensions.list_assignment(self.load_chunk("dockers"), CfgDocker)
+        self.docker_groups = Extensions.list_assignment(self.load_chunk("docker_groups"), CfgDockerGroup)
+        self.popups = Extensions.list_assignment(self.load_chunk("popups"), CfgPopup)
+        self.workspaces = Extensions.list_assignment(self.load_chunk("workspaces"), CfgWorkspace)
         self.load_kb()
         
 

@@ -2,12 +2,12 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtCore import QSize
 
 from ...docker_manager import DockerManager
-from .ToolboxPanelHost import DockerPanelHost
-from .ToolboxMainPage import DockerMainPage
+from .ToolboxPanelHost import ToolboxPanelHost
+from .ToolboxMainPage import ToolboxMainPage
 
-class DockerPanel(QWidget):
+class ToolboxPanel(QWidget):
     def __init__(self, ID=None, widget=None):
-        super(DockerPanel, self).__init__()
+        super(ToolboxPanel, self).__init__()
         self.ID = ID
         self.setAutoFillBackground(True)
         self.size = None
@@ -19,15 +19,15 @@ class DockerPanel(QWidget):
             self.w = widget
         else:
             self.dockerMode = True
-            self.w = DockerPanelHost(self, self.ID)
+            self.w = ToolboxPanelHost(self, self.ID)
         self.layout().addWidget(self.w)
 
     def unloadDockers(self):
-        if self.dockerMode or self.w is DockerMainPage: 
+        if self.dockerMode or self.w is ToolboxMainPage: 
             self.w.unloadDocker()
 
     def loadDockers(self):
-        if self.dockerMode or self.w is DockerMainPage: 
+        if self.dockerMode or self.w is ToolboxMainPage: 
             self.w.loadDocker() 
 
     def activate(self):
@@ -37,7 +37,7 @@ class DockerPanel(QWidget):
         return self.w
     
     def setDockMode(self, mode):
-        if self.w and isinstance(self.w, DockerPanelHost):
+        if self.w and isinstance(self.w, ToolboxPanelHost):
             self.w.setDockMode(mode)
 
 

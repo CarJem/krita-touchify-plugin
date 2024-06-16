@@ -7,7 +7,7 @@ from functools import partial
 import sys
 import importlib.util
 
-from ...cfg.CfgPopup import Popup
+from ...cfg.CfgPopup import CfgPopup
 from ...config import *
 from ...resources import *
 from .PopupDialog import *
@@ -17,7 +17,7 @@ from krita import *
 
 class PopupDialog_Actions(PopupDialog):
 
-    def __init__(self, parent: QMainWindow, args: Popup):     
+    def __init__(self, parent: QMainWindow, args: CfgPopup):     
         super().__init__(parent, args)
         self.grid = self.generateActionsLayout()
         self.allowOpacity = True

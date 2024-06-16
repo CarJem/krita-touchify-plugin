@@ -1,7 +1,7 @@
 from ..ext.extensions import Extensions
 
 
-class KB_Docker:
+class CfgToolboxDocker:
     id: str = ""
     icon: str = ""
     size_x: int = 0
@@ -10,7 +10,7 @@ class KB_Docker:
     nesting_mode: str = "normal"
 
     def create(args):
-        obj = KB_Docker()
+        obj = CfgToolboxDocker()
         Extensions.dictToObject(obj, args)
         return obj
 

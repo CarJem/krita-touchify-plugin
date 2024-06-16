@@ -3,11 +3,11 @@ from krita import *
 from ....configs import *
 from PyQt5.QtCore import pyqtSignal
 
-class DockerPresetChooser(PresetChooser):
+class ToolboxPresetChooser(PresetChooser):
     presetChanged = pyqtSignal()
 
     def __init__(self, parent=None):
-        super(DockerPresetChooser, self).__init__(parent)
+        super(ToolboxPresetChooser, self).__init__(parent)
         self.presetSelected.connect(self.brushPresetChanged)
         self.presetClicked.connect(self.brushPresetChanged)
 
