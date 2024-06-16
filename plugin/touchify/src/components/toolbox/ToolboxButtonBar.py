@@ -1,5 +1,6 @@
 
 
+from ...resources import ResourceManager
 from ...cfg.CfgToolboxAction import CfgToolboxAction
 from krita import *
 from .ToolboxButton import ToolboxButton
@@ -23,7 +24,7 @@ class ToolboxButtonBar(QWidget):
 
     def addButton(self, properties: CfgToolboxAction, onClick, toolTip="", checkable=False):
         btn = ToolboxButton(self.btnSize)
-        btn.setIcon(Krita.instance().icon(properties.icon))
+        btn.setIcon(ResourceManager.iconLoader(properties.icon))
         btn.clicked.connect(onClick) # collect and disconnect all when closing
         btn.setToolTip(toolTip)
         btn.setCheckable(checkable)

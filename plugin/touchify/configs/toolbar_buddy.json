@@ -9,7 +9,7 @@
         },
         {
             "id": "KisLayerBox",
-            "icon": "duplicatelayer",
+            "icon": "all-layers",
             "size_x": 0,
             "size_y": 0,
             "isEnabled": true
