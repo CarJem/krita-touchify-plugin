@@ -4,6 +4,8 @@ from PyQt5.QtCore import *
 from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
+
+from .propertygrid.IconSelector import IconSelector
 from ..ext.typedlist import *
 from ..resources import *
 from ..ext.extensions import KritaExtensions
@@ -70,34 +72,26 @@ class PropertyField_Str(PropertyField):
                     
 
         if self.is_icon_viewer or self.is_docker_selector:
-            self.editor = QComboBox()
-            self.editor.setEditable(True)
+            self.editor = QLineEdit()
+            self.editor.textChanged.connect(self.textChanged)
+            self.editor.setText(self.variable_data.replace("\n", "\\n"))
 
-            if self.is_icon_viewer:
-                icons = KritaExtensions.getIconList()
-                for iconName in icons:
-                    self.editor.addItem(ResourceManager.iconLoader(iconName), iconName, iconName)
+            self.editorHelper = QPushButton()
+            if self.is_icon_viewer: 
+                self.editorHelper.setIcon(ResourceManager.iconLoader(self.variable_data.replace("\n", "\\n")))
+            else:
+                self.editorHelper.setIcon(ResourceManager.iconLoader("properties"))
 
-                custom_icons = ResourceManager.getCustomIconList()
-                for customIconName in custom_icons:
-                    displayName = str(customIconName)[len("custom:"):] + " (Custom)"
-                    self.editor.addItem(ResourceManager.iconLoader(customIconName), displayName, customIconName)
-            elif self.is_docker_selector:
-                dockers = KritaExtensions.getDockerData()
-                for dockerData in dockers:
-                    displayName = dockerData["name"] + " [{0}]".format(dockerData["id"])
-                    self.editor.addItem(displayName, dockerData["id"])    
 
-            #TODO: Fix Sorting
-            self.editor.model().sort(0, Qt.SortOrder.DescendingOrder)
+            editorHelperType = "none"
+            if self.is_icon_viewer: editorHelperType = "icons"
+            elif self.is_docker_selector: editorHelperType = "dockers"
 
-            index = self.editor.findData(self.variable_data)
-            if index >= 0:
-                self.editor.setCurrentIndex(index)
-            self.editor.currentIndexChanged.connect(self.currentIndexChanged)
+            self.editorHelper.clicked.connect(lambda: self.helperRequested(editorHelperType))
 
             editorLayout = QHBoxLayout()
             editorLayout.addWidget(self.editor)
+            editorLayout.addWidget(self.editorHelper)
             self.setLayout(editorLayout)
             self.setLayout(editorLayout)
         elif self.is_combobox:
@@ -120,18 +114,21 @@ class PropertyField_Str(PropertyField):
             editorLayout.addWidget(self.editor)
             self.setLayout(editorLayout)
 
+    def helperRequested(self, mode):
+        dlg = IconSelector(self)
+        dlg.load_list(mode)
+        if dlg.exec_():
+            result = dlg.selectedResult()
+            if self.is_icon_viewer: 
+                self.editorHelper.setIcon(ResourceManager.iconLoader(result))
+            self.editor.setText(result)
+
     def currentIndexChanged(self):
-        if self.is_icon_viewer or self.is_docker_selector:
-            self.variable_data = str(self.editor.currentData()).replace("\\n", "\n")
-        else:
-            self.variable_data = str(self.editor.currentText()).replace("\\n", "\n")
+        self.variable_data = str(self.editor.currentText()).replace("\\n", "\n")
         PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
 
     def textChanged(self):
-        if self.is_icon_viewer or self.is_docker_selector:
-            self.variable_data = str(self.editor.currentData()).replace("\\n", "\n")
-        else:
-            self.variable_data = self.editor.text().replace("\\n", "\n")
+        self.variable_data = self.editor.text().replace("\\n", "\n")
         PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
 
 class PropertyField_Int(PropertyField):

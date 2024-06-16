@@ -9,7 +9,7 @@ from .cfg.CfgDocker import Docker
 from .cfg.CfgDockerGroup import DockerGroup
 from .cfg.CfgToolboxDocker import KB_Docker
 from .cfg.CfgPopup import Popup
-from .cfg.Workspace import Workspace
+from .cfg.CfgWorkspace import Workspace
 from .cfg.CfgToolboxAction import KB_Actions
 from .ext.extensions import *
 from ..paths import BASE_DIR
@@ -78,7 +78,15 @@ class ConfigFile:
         groups["docker_groups"] = {"name": "Docker Groups", "items": ["docker_groups"]}
         groups["popups"] = {"name": "Popups", "items": ["popups"]}
         groups["workspaces"] = {"name": "Workspaces", "items": ["workspaces"]}
-        groups["toolbar_buddy"] = {"name": "Toolbar Buddy", "items": ["kb_dockers", "kb_actions"]}
+        groups["toolbar_buddy"] = {"name": "Toolbar Buddy", "items": [
+            "kb_dockers",
+            "kb_actions",
+            "kb_titleButtonHeight",
+            "kb_dockerButtonHeight",
+            "kb_dockerBackHeight",
+            "kb_sliderHeight",
+            "kb_actionHeight"
+        ]}
         return groups
     
     def propertygrid_restrictions(self):

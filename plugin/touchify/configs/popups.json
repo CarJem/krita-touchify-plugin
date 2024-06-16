@@ -29,7 +29,7 @@
             "btnName": "Brush Options Popup",
             "type": "docker",
             "docker_id": "pykrita_compactbrushtoggler",
-            "id": "",
+            "id": "brushOptionsPopup",
             "icon": "custom:pencil-ruler-outline",
             "hotkeyNumber": 0
         },
