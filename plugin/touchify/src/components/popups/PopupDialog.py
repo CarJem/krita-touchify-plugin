@@ -126,7 +126,7 @@ class PopupDialog(QDialog):
     def expand(self):
         self.frame.show()
     
-    def triggerPopup(self, mode, x=None, y=None):
+    def triggerPopup(self, ourMode):
         if self.isVisible():
             self.close()
             if not self.popupMode == "popup":
@@ -137,10 +137,8 @@ class PopupDialog(QDialog):
         dialog_width = 0
         dialog_height = 0
         
-        if mode == "mouse":
+        if ourMode == "mouse":
             actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(QCursor.pos(), 0, 0, True)
-            actual_x = x
-            actual_y = y
         else:
             for qobj in self.parent.findChildren(QToolButton):
                 actions = qobj.actions()

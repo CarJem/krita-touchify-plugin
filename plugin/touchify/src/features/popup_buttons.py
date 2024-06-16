@@ -53,10 +53,10 @@ class PopupButtons:
         action = window.createAction(actionName, displayName, actionPath)
         icon = ResourceManager.iconLoader(iconName)        
         action.setIcon(icon)
-        action.triggered.connect(partial(self.showPopup, id, "button"))
+        action.triggered.connect(lambda: self.showPopup(id, "button"))
 
         if not hotkeyNumber == 0:
-            ConfigManager.instance().getHotkeyAction(hotkeyNumber).triggered.connect(partial(self.showPopup, id, popup, "mouse"))
+            ConfigManager.instance().getHotkeyAction(hotkeyNumber).triggered.connect(lambda: self.showPopup(id, "mouse"))
 
         pending_actions.append(action)
 
@@ -70,7 +70,7 @@ class PopupButtons:
             popup_data[popup.id] = popup
             self.createAction(window, popup, subItemPath)
 
-    def showPopup(self, id, mode: str, x: int = None, y: int = None):
+    def showPopup(self, id, mode: str):
         needToBuild = True
         if not id in popup_dialogs:
             needToBuild = True
@@ -81,7 +81,7 @@ class PopupButtons:
             qwin = Krita.instance().activeWindow().qwindow()
             popup_dialogs[id] = self.createPopup(qwin, popup_data[id])
 
-        popup_dialogs[id].triggerPopup(mode, x, y)
+        popup_dialogs[id].triggerPopup(mode)
 
     def onConfigUpdated(self):
         cfg: ConfigFile = ConfigManager.instance().getJSON()
@@ -90,5 +90,4 @@ class PopupButtons:
             id = newPopupData.id
             if id in popup_data:
                 popup_data[id] = newPopupData
-                popup_dialogs = None
 

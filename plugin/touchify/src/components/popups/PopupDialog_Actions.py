@@ -87,7 +87,9 @@ class PopupDialog_Actions(PopupDialog):
         btn.setFixedSize(self.metadata.item_width, self.metadata.item_height)
         btn.clicked.connect(lambda: self.runAction(action))
         layout.addWidget(btn, x, y)
-    
+
+    def triggerPopup(self, mode):
+        super().triggerPopup(mode)    
 
     def generateActionsLayout(self):
         layout = QGridLayout()

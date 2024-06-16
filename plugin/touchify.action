@@ -2,43 +2,43 @@
 <ActionCollection version="2" name="Scripts">
     <Actions category="Settings">
         <text>Touchify</text>
-        <Action name="touchify_hotkey1">
+        <Action name="touchify_hotkey_1">
             <text>Touchify: Action 1</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="touchify_hotkey2">
+        <Action name="touchify_hotkey_2">
             <text>Touchify: Action 2</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="touchify_hotkey3">
+        <Action name="touchify_hotkey_3">
             <text>Touchify: Action 3</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="touchify_hotkey4">
+        <Action name="touchify_hotkey_4">
             <text>Touchify: Action 4</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="touchify_hotkey5">
+        <Action name="touchify_hotkey_5">
             <text>Touchify: Action 5</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="touchify_hotkey6">
+        <Action name="touchify_hotkey_6">
             <text>Touchify: Action 6</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="touchify_hotkey7">
+        <Action name="touchify_hotkey_7">
             <text>Touchify: Action 7</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="touchify_hotkey8">
+        <Action name="touchify_hotkey_8">
             <text>Touchify: Action 8</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="touchify_hotkey9">
+        <Action name="touchify_hotkey_9">
             <text>Touchify: Action 9</text>
             <shortcut></shortcut>
         </Action>
-        <Action name="touchify_hotkey10">
+        <Action name="touchify_hotkey_10">
             <text>Touchify: Action 10</text>
             <shortcut></shortcut>
         </Action>
