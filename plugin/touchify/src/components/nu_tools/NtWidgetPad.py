@@ -23,7 +23,7 @@ from .nt_logic.Nt_ToggleVisibleButton import Nt_ToggleVisibleButton
 from ...config import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ...ext.PyKrita import *
+    from ...ext.pykrita import *
 else:
     from krita import *
 

@@ -6,7 +6,7 @@ from ..components.nu_tools.nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaC
 from ..docker_manager import KBBorrowManager
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..ext.PyKrita import *
+    from ..ext.pykrita import *
 else:
     from krita import *
 

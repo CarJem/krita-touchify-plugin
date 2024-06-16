@@ -14,7 +14,7 @@ from ....resources import *
 from typing import TYPE_CHECKING
 from .PopupDialog_ToolboxTitlebar import PopupDialog_ToolboxTitlebar
 if TYPE_CHECKING:
-    from ...ext.PyKrita import *
+    from ...ext.pykrita import *
 else:
     from krita import *
 

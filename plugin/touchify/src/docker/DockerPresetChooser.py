@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..ext.PyKrita import *
+    from ..ext.pykrita import *
 else:
     from krita import *
 from ...configs import *

@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from ..cfg.CfgToolboxAction import KB_Actions
 if TYPE_CHECKING:
-    from ..ext.PyKrita import *
+    from ..ext.pykrita import *
 else:
     from krita import *
 

@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from ..cfg.CfgToolboxDocker import KB_Docker
 if TYPE_CHECKING:
-    from ..ext.PyKrita import *
+    from ..ext.pykrita import *
 else:
     from krita import *
 

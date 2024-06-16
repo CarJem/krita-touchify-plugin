@@ -4,12 +4,12 @@ from PyQt5.QtCore import *
 import json
 import os
 
-from .ext.JsonExtensions import JsonExtensions
+from .ext.extensions import JsonExtensions
 from .cfg.CfgDocker import Docker
 from .cfg.CfgDockerGroup import DockerGroup
 from .cfg.CfgToolboxDocker import KB_Docker
 from .cfg.CfgPopup import Popup
-from .cfg.CfgWorkspace import Workspace
+from .cfg.Workspace import Workspace
 from .cfg.CfgToolboxAction import KB_Actions
 from .ext.extensions import *
 from ..paths import BASE_DIR

@@ -7,7 +7,7 @@ from PyQt5.QtCore import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..ext.PyKrita import *
+    from .pykrita import *
 else:
     from krita import *
 
@@ -121,3 +121,15 @@ class PyQtExtensions:
                     child.widget().deleteLater()
                 elif child.layout() is not None:
                     PyQtExtensions.clearLayout(child.layout())
+
+
+class JsonExtensions:
+
+    def tryGetEntry(jsonData, key, type, defaultValue):
+        if not jsonData:
+            return defaultValue
+        if key in jsonData:
+            result: type = jsonData[key]
+            return result
+        else:
+            return defaultValue
