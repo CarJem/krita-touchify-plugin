@@ -41,7 +41,7 @@ class NtToolOptions():
         qWin.installEventFilter(self.adjustFilter)
 
         # Create visibility toggle action 
-        action = window.createAction(TOUCHIFY_AID_SHOW_TOOL_OPTIONS, "Show Tool Options", "settings")
+        action = window.createAction(TOUCHIFY_AID_SHOW_TOOL_OPTIONS, "Show Tool Options", KRITA_ID_ACTIONS_SETTINGS_ROOT)
         action.toggled.connect(self.pad.toggleWidgetVisible)
         action.setCheckable(True)
         action.setChecked(True)

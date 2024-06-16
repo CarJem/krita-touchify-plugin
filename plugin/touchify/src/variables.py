@@ -22,3 +22,4 @@ TOUCHIFY_TOOLBOX_DOCKER_ID='TouchifyToolbox'
 
 # Krita IDs
 KRITA_TOOL_OPTIONS_DOCKER_ID='sharedtooldocker'
+KRITA_ID_ACTIONS_SETTINGS_ROOT='settings'

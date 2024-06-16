@@ -17,7 +17,7 @@
 
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 
-from ...variables import KRITA_TOOL_OPTIONS_DOCKER_ID
+from ...variables import KRITA_ID_ACTIONS_SETTINGS_ROOT, KRITA_TOOL_OPTIONS_DOCKER_ID, TOUCHIFY_ID_ACTIONS_ROOT
 from .nt_logic.Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
 from .NtWidgetPad import NtWidgetPad
 from ... import stylesheet
@@ -42,7 +42,7 @@ class NtToolbox():
         qWin.installEventFilter(self.adjustFilter)
 
         # Create visibility toggle action
-        action = window.createAction(KRITA_TOOL_OPTIONS_DOCKER_ID, "Show Toolbox", "settings")
+        action = window.createAction(KRITA_TOOL_OPTIONS_DOCKER_ID, "Show Toolbox", KRITA_ID_ACTIONS_SETTINGS_ROOT)
         action.toggled.connect(self.pad.toggleWidgetVisible)
         action.setCheckable(True)
         action.setChecked(True)
