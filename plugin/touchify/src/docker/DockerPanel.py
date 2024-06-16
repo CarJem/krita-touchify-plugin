@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtCore import QSize
 
-from ..borrow_manager import KBBorrowManager
+from ..docker_manager import KBBorrowManager
 from .DockerPanelHost import DockerPanelHost
 from .DockerMainPage import DockerMainPage
 

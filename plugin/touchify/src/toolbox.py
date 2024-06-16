@@ -27,12 +27,13 @@ else:
     from krita import *
 from PyQt5.QtWidgets import *
 from .docker.DockerRoot import *
+from .variables import *
 
-class TouchifyBuddy(DockWidget):
+class TouchifyToolbox(DockWidget):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("TouchifyBuddy")
+        self.setWindowTitle("Touchify Toolbox")
 
         self.mainWidget = QWidget(self)
         self.setWidget(self.mainWidget)
@@ -65,5 +66,5 @@ class TouchifyBuddy(DockWidget):
         pass
 
 # And add the extension to Krita's list of extensions:
-Krita.instance().addDockWidgetFactory(DockWidgetFactory("TouchifyBuddy", DockWidgetFactoryBase.DockRight, TouchifyBuddy)) # type: ignore
+Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_TOOLBOX_DOCKER_ID, DockWidgetFactoryBase.DockRight, TouchifyToolbox)) # type: ignore
 

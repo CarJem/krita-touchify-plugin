@@ -1,6 +1,8 @@
 {
     "files.exclude": {
-        "**/__pycache__": true
+        ".vscode\\PythonImportHelper-v2-Completion.json": true,
+        "**/__pycache__": true,
+        "**/.venv": true
     },
     "emeraldwalk.runonsave": {
         "commands": [
@@ -11,5 +13,7 @@
             }
         ]
     },
-    "python.REPL.enableREPLSmartSend": false
+    "python.REPL.enableREPLSmartSend": false,
+    "python.envFile": "${workspaceFolder}/.venv",
+    "python.analysis.importFormat": "relative"
 }

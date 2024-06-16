@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 else:
     from krita import *
 
+from ..variables import *
+
 
 pending_actions = []
 
@@ -63,7 +65,7 @@ class WorkspaceToggles:
    
     def createAction(self, window, workspace: Workspace, actionPath):
 
-        actionName = 'WorkspaceToggles_{0}'.format(workspace.id)
+        actionName = '{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_WORKSPACE, workspace.id)
         id = workspace.id
         text = '{0}'.format(workspace.display_name)
         iconName = 'custom:' + workspace.id
@@ -80,7 +82,7 @@ class WorkspaceToggles:
         action.triggered.connect(lambda: self.toggleWorkspace(id))
 
     def createActions(self, window, actionPath):
-        sectionName = "Touchify_Workspaces"
+        sectionName = TOUCHIFY_ID_ACTIONS_WORKSPACE
         subItemPath = actionPath + "/" + sectionName
 
         cfg = ConfigManager.instance().getJSON()

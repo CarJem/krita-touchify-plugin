@@ -11,6 +11,7 @@ from ...cfg.Popup import Popup
 from ...config import *
 from ...resources import *
 from .PopupDialog import *
+from ...docker_manager import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ...ext.PyKrita import *
@@ -21,14 +22,13 @@ else:
 class PopupDialog_Docker(PopupDialog):
 
     dockerWidget: QDockWidget = None
-    dockerWindow: QMainWindow = None
     dockerLocation: Qt.DockWidgetArea = None
     dockerVisibility: bool = False
 
     def __init__(self, parent: QMainWindow, args: Popup):     
         super().__init__(parent, args)
         self.grid = self.generateDockerLayout()
-        self.getDockerDetails(True)
+        self.dockerID = args.docker_id
         self.initLayout()
 
     
@@ -48,33 +48,14 @@ class PopupDialog_Docker(PopupDialog):
 
     def updateDocker(self, closing = False):
         if closing:
-            if self.dockerWindow:
-                self.grid.removeWidget(self.dockerWidget)
-                self.dockerWindow.addDockWidget(self.dockerLocation, self.dockerWidget)
-
-                titlebarSetting = KritaSettings.readSetting("", "showDockerTitleBars", "false")
-                showTitlebar = True if titlebarSetting == "true" else False
-                self.dockerWidget.titleBarWidget().setVisible(showTitlebar)
-
-                self.dockerWidget.setVisible(self.dockerVisibility)
+            self.grid.removeWidget(self.dockerWidget)
+            KBBorrowManager.instance().returnWidget(self.dockerID)
+            self.dockerWidget = None
         else:
-            self.getDockerDetails()
-            self.dockerWidget.titleBarWidget().setVisible(False)
+            self.dockerWidget = KBBorrowManager.instance().borrowDockerWidget(self.dockerID, True)
             self.grid.addWidget(self.dockerWidget)
-            self.dockerWidget.setVisible(True)
+            self.dockerWidget.show()
 
     def generateDockerLayout(self):
         grid = QHBoxLayout()
         return grid
-    
-    def getDockerDetails(self, firstLoad = False):
-        if firstLoad:
-            dockersList = Krita.instance().dockers()
-            for docker in dockersList:
-                if (docker.objectName() == self.metadata.docker_id):
-                    self.dockerWidget = docker
-                    self.dockerWindow = Krita.instance().activeWindow().qwindow()
-                    return
-            
-        self.dockerVisibility = self.dockerWidget.isVisible()
-        self.dockerLocation = self.dockerWindow.dockWidgetArea(self.dockerWidget)

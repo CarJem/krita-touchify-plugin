@@ -3,7 +3,7 @@ from PyQt5.QtCore import QSize, QEvent
 
 from ..components.nu_tools.nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
 
-from ..borrow_manager import KBBorrowManager
+from ..docker_manager import KBBorrowManager
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..ext.PyKrita import *
@@ -42,6 +42,8 @@ class DockerPanelHost(QWidget):
             self.borrowedDocker = dockerLoaded
         
         self.outLayout.addWidget(self.borrowedDocker)
+        if self.dockMode:
+            self.borrowedDocker.show()
         
     def updateSize(self):
         if self.dockMode:

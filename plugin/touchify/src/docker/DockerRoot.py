@@ -11,7 +11,7 @@ from PyQt5.QtCore import QSize, QEvent
 from ..config import *
 from .DockerPanel import DockerPanel
 from .DockerMainPage import DockerMainPage
-from ..borrow_manager import KBBorrowManager
+from ..docker_manager import KBBorrowManager
 
 class DockerRoot(QStackedWidget):
 

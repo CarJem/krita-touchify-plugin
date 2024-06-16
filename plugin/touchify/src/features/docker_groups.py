@@ -4,6 +4,8 @@ import json
 import sys
 import importlib.util
 
+from ..variables import TOUCHIFY_AID_ACTIONS_DOCKER_GROUP, TOUCHIFY_ID_ACTIONS_DOCKER_GROUP
+
 from ..cfg.DockerGroup import DockerGroup
 from ..config import *
 from ..resources import *
@@ -53,7 +55,7 @@ class DockerGroups:
     def createAction(self, window, docker: DockerGroup, actionPath):
         global custom_docker_states
 
-        actionName = 'DockerToggles_Custom_{0}'.format(docker.id)
+        actionName = '{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_DOCKER_GROUP, docker.id)
 
         _p = []
         for dockerName in docker.docker_names:
@@ -83,7 +85,7 @@ class DockerGroups:
 
     def createActions(self, window, actionPath):
 
-        sectionName = "Touchify_DockerGroups"
+        sectionName = TOUCHIFY_ID_ACTIONS_DOCKER_GROUP
         subItemPath = actionPath + "/" + sectionName
 
         cfg = ConfigManager.instance().getJSON()

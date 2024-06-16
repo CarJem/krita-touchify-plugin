@@ -19,13 +19,14 @@ from PyQt5.QtWidgets import QMdiArea, QDockWidget
 from .nt_logic.Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
 from .NtWidgetPad import NtWidgetPad
 from ... import stylesheet
+from ...variables import *
 
 class NtToolOptions():
 
     def __init__(self, window):
         qWin = window.qwindow()
         mdiArea = qWin.findChild(QMdiArea)
-        toolOptions = qWin.findChild(QDockWidget, 'TouchifyBuddy')
+        toolOptions = qWin.findChild(QDockWidget, TOUCHIFY_TOOLBOX_DOCKER_ID)
 
         # Create "pad"
         self.pad = NtWidgetPad(mdiArea)
@@ -46,7 +47,7 @@ class NtToolOptions():
         action.setChecked(True)
 
         # Disable the related QDockWidget
-        self.dockerAction = window.qwindow().findChild(QDockWidget, "TouchifyBuddy").toggleViewAction()
+        self.dockerAction = window.qwindow().findChild(QDockWidget, TOUCHIFY_TOOLBOX_DOCKER_ID).toggleViewAction()
         self.dockerAction.setEnabled(False)
 
     def ensureFilterIsInstalled(self, subWin):

@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import QMargins
 from ..config import *
 from .DockerButtonBar import DockerButtonBar
-from ..borrow_manager import KBBorrowManager
+from ..docker_manager import KBBorrowManager
 from .DockerPanelHost import DockerPanelHost
 from ..components.nu_tools.nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
 
@@ -45,16 +45,17 @@ class DockerMainPage(QWidget):
             act: KB_Actions = entry
             if act.isEnabled:
                 action = Krita.instance().action(act.id)
-                self.quickActions.addButton(
-                    act,
-                    action.trigger,
-                    action.toolTip(),
-                    action.isCheckable()
-                    )
+                if action:
+                    self.quickActions.addButton(
+                        act,
+                        action.trigger,
+                        action.toolTip(),
+                        action.isCheckable()
+                        )
 
-                if action.isCheckable():
-                    btn = self.quickActions.button(act.id)
-                    btn.setChecked(action.isChecked())
+                    if action.isCheckable():
+                        btn = self.quickActions.button(act.id)
+                        btn.setChecked(action.isChecked())
 
     def loadDocker(self):
         self.toolSettingsDocker.loadDocker()

@@ -5,6 +5,8 @@ import json
 import sys
 import importlib.util
 
+from ..variables import TOUCHIFY_AID_ACTIONS_DOCKER, TOUCHIFY_ID_ACTIONS_DOCKER
+
 from ..cfg.Docker import Docker
 from ..config import *
 from ..resources import *
@@ -47,7 +49,7 @@ class DockerToggles:
             root_menu.addAction(action)
 
     def createAction(self, window, docker: Docker, actionPath):
-        actionName ='DockerToggles_{0}'.format(docker.docker_name)
+        actionName ='{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_DOCKER, docker.docker_name)
         id = docker.docker_name
         iconName = docker.icon
         text ='{0}'.format(docker.display_name)
@@ -63,7 +65,7 @@ class DockerToggles:
         action.triggered.connect(lambda: self.toggleDocker(id))
 
     def createActions(self, window, actionPath):
-        sectionName = "Touchify_Dockers"
+        sectionName = TOUCHIFY_ID_ACTIONS_DOCKER
         subItemPath = actionPath + "/" + sectionName
         cfg = ConfigManager.instance().getJSON()
 

@@ -56,7 +56,6 @@ class KBBorrowManager():
 
             if dockMode:
                 self._actualDocker[ID] = docker
-                self._actualDocker[ID].show()
                 self._actualDocker[ID].titleBarWidget().setVisible(False)
                 return self._actualDocker[ID]
             else:

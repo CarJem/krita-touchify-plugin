@@ -4,7 +4,7 @@ from .components.nu_tools.NtToolbox import NtToolbox
 from .components.nu_tools.NtToolOptions import NtToolOptions
 from . import stylesheet
 from PyQt5.QtWidgets import QMessageBox
-
+from .variables import *
 
 
 from .ui.settings import *
@@ -54,7 +54,7 @@ class Touchify(Extension):
     def createActions(self, window):
         self.mainMenuBar = window.qwindow().menuBar().addMenu("Touchify")
 
-        subItemPath = "TouchifyKB"
+        subItemPath = TOUCHIFY_ID_ACTIONS_ROOT
 
         self.touchify_hotkeys.createActions(window, subItemPath)
         self.basic_dockers.createActions(window, subItemPath)  

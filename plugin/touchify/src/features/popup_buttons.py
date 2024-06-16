@@ -7,6 +7,8 @@ from functools import partial
 import sys
 import importlib.util
 
+from ..variables import TOUCHIFY_AID_ACTIONS_POPUP, TOUCHIFY_ID_ACTIONS_POPUP
+
 from ..cfg.Popup import Popup
 from ..config import *
 from ..resources import *
@@ -50,7 +52,7 @@ class PopupButtons:
             root_menu.addAction(action)
 
     def createAction(self, window, popup: Popup, actionPath):
-        actionName = 'Touchify_Popup_{0}'.format(popup.btnName)
+        actionName = '{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_POPUP, popup.btnName)
         displayName = popup.btnName + POPUP_BTN_IDENTIFIER
         iconName = popup.icon
         id = popup.id
@@ -67,7 +69,7 @@ class PopupButtons:
         pending_actions.append(action)
 
     def createActions(self, window, actionPath):
-        sectionName = "Touchify_Popups"
+        sectionName = TOUCHIFY_ID_ACTIONS_POPUP
 
         subItemPath = actionPath + "/" + sectionName
 
