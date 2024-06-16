@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from ..cfg.KB_Docker import KB_Docker
+from ..cfg.CfgToolboxDocker import KB_Docker
 if TYPE_CHECKING:
     from ..ext.PyKrita import *
 else:

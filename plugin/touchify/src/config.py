@@ -5,12 +5,12 @@ import json
 import os
 
 from .ext.JsonExtensions import JsonExtensions
-from .cfg.Docker import Docker
-from .cfg.DockerGroup import DockerGroup
-from .cfg.KB_Docker import KB_Docker
-from .cfg.Popup import Popup
-from .cfg.Workspace import Workspace
-from .cfg.KB_Actions import KB_Actions
+from .cfg.CfgDocker import Docker
+from .cfg.CfgDockerGroup import DockerGroup
+from .cfg.CfgToolboxDocker import KB_Docker
+from .cfg.CfgPopup import Popup
+from .cfg.CfgWorkspace import Workspace
+from .cfg.CfgToolboxAction import KB_Actions
 from .ext.extensions import *
 from ..paths import BASE_DIR
     

@@ -1,4 +1,4 @@
-from .DockerGroupItems import DockerGroupItems
+from .CfgDockerGroupItem import DockerGroupItems
 from ..ext.extensions import Extensions, TypedList
 
 

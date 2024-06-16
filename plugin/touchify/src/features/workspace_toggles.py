@@ -4,7 +4,7 @@ import json
 import sys
 import importlib.util
 
-from ..cfg.Workspace import Workspace
+from ..cfg.CfgWorkspace import Workspace
 from ..config import *
 from ..resources import *
 from typing import TYPE_CHECKING

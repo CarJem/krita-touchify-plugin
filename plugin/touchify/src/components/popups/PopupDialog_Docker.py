@@ -7,7 +7,7 @@ from functools import partial
 import sys
 import importlib.util
 
-from ...cfg.Popup import Popup
+from ...cfg.CfgPopup import Popup
 from ...config import *
 from ...resources import *
 from .PopupDialog import *

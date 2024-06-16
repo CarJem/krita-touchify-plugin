@@ -9,7 +9,7 @@ import importlib.util
 
 from ..variables import TOUCHIFY_AID_ACTIONS_POPUP, TOUCHIFY_ID_ACTIONS_POPUP
 
-from ..cfg.Popup import Popup
+from ..cfg.CfgPopup import Popup
 from ..config import *
 from ..resources import *
 from ..components.popups.PopupDialog import *
@@ -52,7 +52,7 @@ class PopupButtons:
             root_menu.addAction(action)
 
     def createAction(self, window, popup: Popup, actionPath):
-        actionName = '{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_POPUP, popup.btnName)
+        actionName = '{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_POPUP, popup.id)
         displayName = popup.btnName + POPUP_BTN_IDENTIFIER
         iconName = popup.icon
         id = popup.id

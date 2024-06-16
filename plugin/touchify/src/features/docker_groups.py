@@ -6,7 +6,7 @@ import importlib.util
 
 from ..variables import TOUCHIFY_AID_ACTIONS_DOCKER_GROUP, TOUCHIFY_ID_ACTIONS_DOCKER_GROUP
 
-from ..cfg.DockerGroup import DockerGroup
+from ..cfg.CfgDockerGroup import DockerGroup
 from ..config import *
 from ..resources import *
 from typing import TYPE_CHECKING

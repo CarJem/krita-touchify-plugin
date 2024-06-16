@@ -1,4 +1,4 @@
-from .PopupInfo import PopupInfo
+from .CfgPopupInfo import PopupInfo
 from ..ext.extensions import Extensions, TypedList
 
 
