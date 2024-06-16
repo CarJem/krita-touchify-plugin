@@ -16,12 +16,9 @@ from .features.workspace_toggles import *
 from .features.redesign_components import *
 from .features.touchify_hotkeys import *
 
-# For autocomplete
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .ext.pykrita import *
-else:
-    from krita import *
+
+
+from krita import *
 
 class Touchify(Extension):
     mainMenuBar: QMenuBar = None

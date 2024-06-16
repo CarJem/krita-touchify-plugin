@@ -12,11 +12,8 @@ from ...config import *
 from ...resources import *
 from .PopupDialog import *
 from ...docker_manager import *
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from ...ext.pykrita import *
-else:
-    from krita import *
+
+from krita import *
 
 
 class PopupDialog_Docker(PopupDialog):

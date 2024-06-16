@@ -17,11 +17,8 @@ from ..components.popups.PopupDialog_Actions import *
 from ..components.popups.PopupDialog_Docker import *
 
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from ..ext.pykrita import *
-else:
-    from krita import *
+
+from krita import *
 
 popup_dialogs = {}
 pending_actions = []

@@ -7,11 +7,8 @@ import importlib.util
 from ..cfg.Workspace import Workspace
 from ..config import *
 from ..resources import *
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from ..ext.pykrita import *
-else:
-    from krita import *
+
+from krita import *
 
 from ..variables import *
 

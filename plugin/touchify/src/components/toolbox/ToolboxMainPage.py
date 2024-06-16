@@ -1,18 +1,14 @@
-from typing import TYPE_CHECKING
 
-from ..cfg.CfgToolboxAction import KB_Actions
-if TYPE_CHECKING:
-    from ..ext.pykrita import *
-else:
-    from krita import *
+
+from ...variables import KRITA_TOOL_OPTIONS_DOCKER_ID
+from ...cfg.CfgToolboxAction import KB_Actions
+from krita import *
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import QMargins
-from ..config import *
-from .DockerButtonBar import DockerButtonBar
-from ..docker_manager import KBBorrowManager
-from .DockerPanelHost import DockerPanelHost
-from ..components.nu_tools.nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
+from ...config import *
+from .ToolboxButtonBar import DockerButtonBar
+from .ToolboxPanelHost import DockerPanelHost
 
 class DockerMainPage(QWidget):
     _margins = QMargins(4, 4, 4, 4)
@@ -30,7 +26,7 @@ class DockerMainPage(QWidget):
         self.initQuickActions()
         self.layout().addWidget(self.quickActions)
 
-        self.toolSettingsDocker = DockerPanelHost(self, 'sharedtooldocker')
+        self.toolSettingsDocker = DockerPanelHost(self, KRITA_TOOL_OPTIONS_DOCKER_ID)
         self.autoFitScrollArea = True
         self.layout().addWidget(self.toolSettingsDocker)
 

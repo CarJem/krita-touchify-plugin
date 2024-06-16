@@ -5,11 +5,8 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .pykrita import *
-else:
-    from krita import *
+
+from krita import *
 
 class Extensions:
     def extend(class_to_extend):

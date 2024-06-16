@@ -1,14 +1,11 @@
-from typing import TYPE_CHECKING
-
-from ..cfg.CfgToolboxAction import KB_Actions
-if TYPE_CHECKING:
-    from ..ext.pykrita import *
-else:
-    from krita import *
-from .DockerButton import DockerButton
 
 
-from ..config import *
+from ...cfg.CfgToolboxAction import KB_Actions
+from krita import *
+from .ToolboxButton import DockerButton
+
+
+from ...config import *
 
 from PyQt5.QtWidgets import QWidget, QHBoxLayout
 from PyQt5.QtCore import QSize, Qt

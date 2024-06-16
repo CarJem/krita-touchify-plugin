@@ -1,9 +1,6 @@
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from ..ext.pykrita import *
-else:
-    from krita import *
-from ...configs import *
+
+from krita import *
+from ....configs import *
 from PyQt5.QtCore import pyqtSignal
 
 class DockerPresetChooser(PresetChooser):

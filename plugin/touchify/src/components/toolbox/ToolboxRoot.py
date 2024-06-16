@@ -1,17 +1,14 @@
-from typing import TYPE_CHECKING
 
-from ..cfg.CfgToolboxDocker import KB_Docker
-if TYPE_CHECKING:
-    from ..ext.pykrita import *
-else:
-    from krita import *
+
+from ...cfg.CfgToolboxDocker import KB_Docker
+from krita import *
 
 from PyQt5.QtWidgets import QPushButton, QStackedWidget, QSizePolicy
 from PyQt5.QtCore import QSize, QEvent
-from ..config import *
-from .DockerPanel import DockerPanel
-from .DockerMainPage import DockerMainPage
-from ..docker_manager import KBBorrowManager
+from ...config import *
+from .ToolboxPanel import DockerPanel
+from .ToolboxMainPage import DockerMainPage
+from ...docker_manager import KBBorrowManager
 
 class DockerRoot(QStackedWidget):
 
@@ -23,7 +20,6 @@ class DockerRoot(QStackedWidget):
         
         self._mainWidget = DockerMainPage()
         self.addPanel('MAIN', self._mainWidget)
-        self.appendShortcutAction('MAIN')
         self.initPanels()
 
     def initPanels(self):
@@ -56,19 +52,6 @@ class DockerRoot(QStackedWidget):
             self.panel(ID).setSizeHint(size)
             
         self._mainWidget.addDockerButton(properties, self.panel(ID).activate, title)
-        self.appendShortcutAction(ID)
-
-
-    def appendShortcutAction(self, ID):
-        i = str(self.count() - 1)  #account for main panel
-        name = "TouchifyBuddy" + i
-        action = Krita.instance().activeWindow().createAction(name, "Touchify: ToolbarBuddy")
-        self.shortcutConnections.append(
-            action.triggered.connect(self.panel(ID).activate)
-        )
-        self.shortcutConnections.append(
-            action.triggered.connect(lambda: self.activateWindow())
-        )
 
 
     def currentChanged(self, index):

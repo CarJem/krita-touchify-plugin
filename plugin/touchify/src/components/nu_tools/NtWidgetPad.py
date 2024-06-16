@@ -21,11 +21,8 @@ from PyQt5.QtCore import Qt, QSize, QPoint
 from .nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
 from .nt_logic.Nt_ToggleVisibleButton import Nt_ToggleVisibleButton
 from ...config import *
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from ...ext.pykrita import *
-else:
-    from krita import *
+
+from krita import *
 
 class NtWidgetPad(QWidget):
     """

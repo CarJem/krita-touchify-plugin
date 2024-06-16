@@ -8,12 +8,9 @@ from ..components.nu_tools.NtToolOptions import NtToolOptions
 from .. import stylesheet
 from PyQt5.QtWidgets import QMessageBox
 
-# For autocomplete
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from ..ext.pykrita import *
-else:
-    from krita import *
+
+
+from krita import *
     
 class TouchifyHotkeys:
 

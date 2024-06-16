@@ -9,11 +9,8 @@ from ..variables import TOUCHIFY_AID_ACTIONS_DOCKER_GROUP, TOUCHIFY_ID_ACTIONS_D
 from ..cfg.CfgDockerGroup import DockerGroup
 from ..config import *
 from ..resources import *
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from ..ext.pykrita import *
-else:
-    from krita import *
+
+from krita import *
 
 custom_docker_states = {}
 pending_actions = []

@@ -15,11 +15,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from ....ext.pykrita import *
-else:
-    from krita import *
+
+from krita import *
 from PyQt5.QtCore import QObject, QEvent, QPoint
 
 class Nt_AdjustToSubwindowFilter(QObject):

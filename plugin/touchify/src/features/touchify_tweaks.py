@@ -1,11 +1,8 @@
-# For autocomplete
+
 from PyQt5 import QtWidgets, QtGui
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from ..ext.pykrita import *
-else:
-    from krita import *
+
+from krita import *
 
 
 from ..ext.extensions import KritaExtensions

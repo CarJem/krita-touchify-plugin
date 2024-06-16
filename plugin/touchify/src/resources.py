@@ -1,11 +1,8 @@
 from PyQt5 import QtWidgets, QtGui
 import os
 from .config import *
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .ext.pykrita import *
-else:
-    from krita import *
+
+from krita import *
 
 class ResourceManager:
 

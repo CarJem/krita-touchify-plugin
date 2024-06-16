@@ -11,11 +11,8 @@ from ...cfg.CfgPopup import Popup
 from ...config import *
 from ...resources import *
 from .PopupDialog import *
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from ...ext.pykrita import *
-else:
-    from krita import *
+
+from krita import *
 
 
 class PopupDialog_Actions(PopupDialog):

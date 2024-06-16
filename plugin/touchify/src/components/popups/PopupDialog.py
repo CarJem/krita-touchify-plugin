@@ -11,12 +11,9 @@ import importlib.util
 from ...cfg.CfgPopup import Popup
 from ...config import *
 from ....resources import *
-from typing import TYPE_CHECKING
+
 from .PopupDialog_ToolboxTitlebar import PopupDialog_ToolboxTitlebar
-if TYPE_CHECKING:
-    from ...ext.pykrita import *
-else:
-    from krita import *
+from krita import *
 
 POPUP_BTN_IDENTIFIER = "⠀"
 

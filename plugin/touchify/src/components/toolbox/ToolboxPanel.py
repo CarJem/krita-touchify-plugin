@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtCore import QSize
 
-from ..docker_manager import KBBorrowManager
-from .DockerPanelHost import DockerPanelHost
-from .DockerMainPage import DockerMainPage
+from ...docker_manager import KBBorrowManager
+from .ToolboxPanelHost import DockerPanelHost
+from .ToolboxMainPage import DockerMainPage
 
 class DockerPanel(QWidget):
     def __init__(self, ID=None, widget=None):

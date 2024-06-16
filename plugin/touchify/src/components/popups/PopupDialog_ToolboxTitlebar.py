@@ -1,11 +1,8 @@
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from ...ext.pykrita import *
-else:
-    from krita import *
+
+from krita import *
 
 
 TITLEBAR_SIZE = 20
