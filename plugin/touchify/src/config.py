@@ -78,7 +78,7 @@ class ConfigFile:
         groups["docker_groups"] = {"name": "Docker Groups", "items": ["docker_groups"]}
         groups["popups"] = {"name": "Popups", "items": ["popups"]}
         groups["workspaces"] = {"name": "Workspaces", "items": ["workspaces"]}
-        groups["toolbar_buddy"] = {"name": "Toolbar Buddy", "items": [
+        groups["touchify_toolbox"] = {"name": "Touchify Toolbox", "items": [
             "kb_dockers",
             "kb_actions",
             "kb_titleButtonHeight",
