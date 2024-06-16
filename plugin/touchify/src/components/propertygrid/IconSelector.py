@@ -1,6 +1,8 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from krita import *
+
 from ...resources import ResourceManager
 
 from ...ext.extensions import KritaExtensions
@@ -9,7 +11,7 @@ class IconSelector(QDialog):
 
     selected_item: str
 
-    def __init__(self, parent):
+    def __init__(self, parent: QStackedWidget):
         super().__init__(parent)
 
         self.listView = QListWidget()
@@ -22,20 +24,12 @@ class IconSelector(QDialog):
         self.selected_item = "null"
 
         self.filterBar = QLineEdit()
+        self.filterBar.setPlaceholderText("Filter...")
         self.filterBar.textChanged.connect(self.onFilterUpdate)
 
         self.dlgLayout = QVBoxLayout()
-
-        self.setMinimumSize(400,400)
-        self.setBaseSize(800,800)
-
-        self.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        self.btns.accepted.connect(self.accept)
-        self.btns.rejected.connect(self.reject)
-
         self.dlgLayout.addWidget(self.listView)
         self.dlgLayout.addWidget(self.filterBar)
-        self.dlgLayout.addWidget(self.btns)
 
         self.setLayout(self.dlgLayout)
 
@@ -91,6 +85,15 @@ class IconSelector(QDialog):
                 listItem = QListWidgetItem()
                 listItem.setText(displayName)
                 listItem.setData(0, dockerData["id"])
+                self.listView.addItem(listItem)
+        elif mode == "actions":
+            actions = Krita.instance().actions()
+            for actionData in actions:
+                displayName = actionData.text() + " [{0}]".format(actionData.objectName())
+                listItem = QListWidgetItem()
+                listItem.setText(displayName)
+                listItem.setIcon(actionData.icon())
+                listItem.setData(0, actionData.objectName())
                 self.listView.addItem(listItem)
         
         self.listView.model().sort(0, Qt.SortOrder.DescendingOrder)

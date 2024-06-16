@@ -27,6 +27,17 @@ class CfgDockerGroup:
     def propertygrid_groups(self):
         groups = {}
         return groups
+    
+    def propertygrid_labels(self):
+        labels = {}
+        labels["display_name"] = "Display Name"
+        labels["id"] = "Group ID (should be unique)"
+        labels["icon"] = "Preview Icon"
+        labels["tabsMode"] = "Tab Mode"
+        labels["groupId"] = "Tab Mode Group ID"
+        labels["docker_names"] = "Dockers"
+        labels["hotkeyNumber"] = "Activation Hotkey"
+        return labels
 
     def propertygrid_restrictions(self):
         restrictions = {}

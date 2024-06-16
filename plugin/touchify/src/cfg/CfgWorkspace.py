@@ -18,6 +18,14 @@ class CfgWorkspace:
     def forceLoad(self):
         pass
 
+    def propertygrid_labels(self):
+        labels = {}
+        labels["id"] = "Workspace ID"
+        labels["display_name"] = "Display Name"
+        labels["icon"] = "Preview Icon"
+        labels["hotkeyNumber"] = "Activation Hotkey"
+        return labels
+
     def propertygrid_groups(self):
         groups = {}
         return groups

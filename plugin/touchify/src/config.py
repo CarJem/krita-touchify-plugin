@@ -72,6 +72,21 @@ class ConfigFile:
             json.dump(jsonData, f, default=lambda o: o.__dict__, indent=4)
 
 
+    def propertygrid_labels(self):
+        labels = {}
+        labels["dockers"] = None
+        labels["docker_groups"] = None
+        labels["popups"] = None
+        labels["workspaces"] = None
+        labels["kb_dockers"] = "Toolbox Dockers"
+        labels["kb_actions"] = "Toolbox Actions"
+        labels["kb_titleButtonHeight"] = "Title Button Height"
+        labels["kb_dockerButtonHeight"] = "Docker Button Height"
+        labels["kb_dockerBackHeight"] = "Back Button Height"
+        labels["kb_sliderHeight"] = "Slider Height"
+        labels["kb_actionHeight"] = "Action Button Height"
+        return labels
+
     def propertygrid_groups(self):
         groups = {}
         groups["dockers"] = {"name": "Dockers", "items": ["dockers"]}

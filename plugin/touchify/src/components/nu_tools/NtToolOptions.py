@@ -26,7 +26,7 @@ class NtToolOptions():
     def __init__(self, window):
         qWin = window.qwindow()
         mdiArea = qWin.findChild(QMdiArea)
-        toolOptions = qWin.findChild(QDockWidget, TOUCHIFY_TOOLBOX_DOCKER_ID)
+        toolOptions = qWin.findChild(QDockWidget, TOUCHIFY_ID_DOCKER_TOOLBOX)
 
         # Create "pad"
         self.pad = NtWidgetPad(mdiArea)
@@ -41,13 +41,13 @@ class NtToolOptions():
         qWin.installEventFilter(self.adjustFilter)
 
         # Create visibility toggle action 
-        action = window.createAction(TOUCHIFY_AID_SHOW_TOOL_OPTIONS, "Show Tool Options", KRITA_ID_ACTIONS_SETTINGS_ROOT)
+        action = window.createAction(TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS, "Show Tool Options", KRITA_ID_MENU_SETTINGS)
         action.toggled.connect(self.pad.toggleWidgetVisible)
         action.setCheckable(True)
         action.setChecked(True)
 
         # Disable the related QDockWidget
-        self.dockerAction = window.qwindow().findChild(QDockWidget, TOUCHIFY_TOOLBOX_DOCKER_ID).toggleViewAction()
+        self.dockerAction = window.qwindow().findChild(QDockWidget, TOUCHIFY_ID_DOCKER_TOOLBOX).toggleViewAction()
         self.dockerAction.setEnabled(False)
 
     def ensureFilterIsInstalled(self, subWin):

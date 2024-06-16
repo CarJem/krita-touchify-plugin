@@ -50,16 +50,20 @@ class SettingsDialog:
         self.notice.setMinimumWidth(150)
         self.notice.setStyleSheet('''font-size: 10px''')
 
-        self.propertyGrid = PropertyGrid()
+        self.propertyGridFrame = PropertyGridHost()
+        self.propertyGrid = PropertyGrid(self.propertyGridFrame)
         self.propertyGrid.updateDataObject(self.cfg)
+        self.propertyGridFrame.insertWidget(0, self.propertyGrid)
+        self.layout.addWidget(self.propertyGridFrame, 0, 0)
 
-        self.layout.addWidget(self.propertyGrid, 0, 0)
+
+
         self.layout.addWidget(self.notice, 0, 1)
 
         self.container = QVBoxLayout()
         self.dlg.setMinimumSize(600,400)
         self.dlg.setBaseSize(800,800)
-        self.dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.dlg.btns = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Close)
         self.dlg.btns.accepted.connect(self.dlg.accept)
         self.dlg.btns.rejected.connect(self.dlg.reject)
         self.container.addLayout(self.layout)

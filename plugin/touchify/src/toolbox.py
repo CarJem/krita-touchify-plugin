@@ -40,5 +40,5 @@ class TouchifyToolbox(DockWidget):
         pass
 
 # And add the extension to Krita's list of extensions:
-Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_TOOLBOX_DOCKER_ID, DockWidgetFactoryBase.DockRight, TouchifyToolbox)) # type: ignore
+Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_TOOLBOX, DockWidgetFactoryBase.DockRight, TouchifyToolbox)) # type: ignore
 

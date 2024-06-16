@@ -23,6 +23,16 @@ class CfgToolboxDocker:
     def forceLoad(self):
         pass
 
+    def propertygrid_labels(self):
+        labels = {}
+        labels["id"] = "Docker ID"
+        labels["icon"] = "Display Icon"
+        labels["size_x"] = "Docker Width (leave unset for auto)"
+        labels["size_x"] = "Docker Height (leave unset for auto)"
+        labels["isEnabled"] = "Active"
+        labels["nesting_mode"] = "Nesting Mode"
+        return labels
+
     def propertygrid_groups(self):
         groups = {}
         return groups

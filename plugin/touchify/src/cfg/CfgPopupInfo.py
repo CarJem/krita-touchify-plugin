@@ -6,6 +6,14 @@ class CfgPopupInfo:
     action: str = ""
     icon: str = ""
 
+
+    def propertygrid_labels(self):
+        labels = {}
+        labels["action"] = "Action ID"
+        labels["icon"] = "Display Icon"
+        labels["text"] = "Display Text"
+        return labels
+
     def create(args):
         obj = CfgPopupInfo()
         Extensions.dictToObject(obj, args)
@@ -17,4 +25,5 @@ class CfgPopupInfo:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["icon"] = {"type": "icon_selection"}
+        restrictions["action"] = {"type": "action_selection"}
         return restrictions

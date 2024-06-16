@@ -46,6 +46,11 @@
             "id": "fullscreen",
             "icon": "view-fullscreen",
             "isEnabled": true
+        },
+        {
+            "icon": "custom:SelectionTool",
+            "id": "touchify_hotkey_2",
+            "isEnabled": true
         }
     ],
     "kb_titleButtonHeight": 10,

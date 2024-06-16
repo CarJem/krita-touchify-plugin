@@ -18,6 +18,8 @@
 
 from PyQt5.QtWidgets import QWidget, QToolButton, QDockWidget, QVBoxLayout, QSizePolicy, QScrollArea
 from PyQt5.QtCore import Qt, QSize, QPoint
+
+from ...variables import KRITA_ID_OPTIONSROOT_MAIN
 from .nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
 from .nt_logic.Nt_ToggleVisibleButton import Nt_ToggleVisibleButton
 from ...config import *
@@ -164,12 +166,12 @@ class NtWidgetPad(QWidget):
             self.widgetDocker = None
 
     def rulerMargin(self):
-        if KritaSettings.readSetting("", 'showrulers', "true") == "true":
+        if KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, 'showrulers', "true") == "true":
             return 20 # Canvas ruler pixel width on Windows
         return 0
 
     def scrollBarMargin(self):
-        if KritaSettings.readSetting("", "hideScrollbars", "false") == "true":
+        if KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, "hideScrollbars", "false") == "true":
             return 0
 
         return 14 # Canvas crollbar pixel width/height on Windows 

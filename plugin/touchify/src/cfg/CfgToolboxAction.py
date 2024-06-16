@@ -20,6 +20,13 @@ class CfgToolboxAction:
     def forceLoad(self):
         pass
 
+    def propertygrid_labels(self):
+        labels = {}
+        labels["id"] = "Action ID"
+        labels["icon"] = "Display Icon"
+        labels["isEnabled"] = "Active"
+        return labels
+
     def propertygrid_groups(self):
         groups = {}
         return groups
@@ -27,4 +34,5 @@ class CfgToolboxAction:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["icon"] = {"type": "icon_selection"}
+        restrictions["id"] = {"type": "action_selection"}
         return restrictions

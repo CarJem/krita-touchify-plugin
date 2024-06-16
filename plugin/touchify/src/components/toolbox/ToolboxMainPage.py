@@ -1,6 +1,6 @@
 
 
-from ...variables import KRITA_TOOL_OPTIONS_DOCKER_ID
+from ...variables import *
 from ...cfg.CfgToolboxAction import CfgToolboxAction
 from krita import *
 
@@ -26,7 +26,7 @@ class ToolboxMainPage(QWidget):
         self.initQuickActions()
         self.layout().addWidget(self.quickActions)
 
-        self.toolSettingsDocker = ToolboxPanelHost(self, KRITA_TOOL_OPTIONS_DOCKER_ID)
+        self.toolSettingsDocker = ToolboxPanelHost(self, KRITA_ID_DOCKER_SHAREDTOOLDOCKER)
         self.autoFitScrollArea = True
         self.layout().addWidget(self.toolSettingsDocker)
 

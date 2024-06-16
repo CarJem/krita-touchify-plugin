@@ -1,26 +1,44 @@
 # Action Groups
-TOUCHIFY_ID_ACTIONS_ROOT="Touchify"
-
+TOUCHIFY_ID_MENU_ROOT="Touchify"
+KRITA_ID_MENU_SETTINGS='settings'
+#-----------------#
 # Action Subgroups
-TOUCHIFY_ID_ACTIONS_HOTKEY="hotkey"
 TOUCHIFY_ID_ACTIONS_WORKSPACE="workspace"
 TOUCHIFY_ID_ACTIONS_DOCKER="docker"
 TOUCHIFY_ID_ACTIONS_POPUP="popup"
 TOUCHIFY_ID_ACTIONS_DOCKER_GROUP="docker_group"
-
+#-----------------#
+# Action Prefix IDs
+TOUCHIFY_ID_ACTION_PREFIX_HOTKEY="touchify_hotkey"
+TOUCHIFY_ID_ACTION_PREFIX_WORKSPACE="touchify_workspace"
+TOUCHIFY_ID_ACTION_PREFIX_DOCKER="touchify_docker"
+TOUCHIFY_ID_ACTION_PREFIX_POPUP="touchify_popup"
+TOUCHIFY_ID_ACTION_PREFIX_DOCKER_GROUP="touchify_group"
+#-----------------#
 # Action IDs
-TOUCHIFY_AID_ACTIONS_WORKSPACE="workspace"
-TOUCHIFY_AID_ACTIONS_DOCKER="docker"
-TOUCHIFY_AID_ACTIONS_POPUP="popup"
-TOUCHIFY_AID_ACTIONS_DOCKER_GROUP="group"
-
-TOUCHIFY_AID_SHOW_TOOLBOX="touchify_showToolbox"
-TOUCHIFY_AID_SHOW_TOOL_OPTIONS="touchify_showToolOptions"
-TOUCHIFY_AID_LOCK_FLOATING_DOCKERS="touchify_lockFloatingDockers"
-
-# Other IDs
-TOUCHIFY_TOOLBOX_DOCKER_ID='TouchifyToolbox'
-
-# Krita IDs
-KRITA_TOOL_OPTIONS_DOCKER_ID='sharedtooldocker'
-KRITA_ID_ACTIONS_SETTINGS_ROOT='settings'
+TOUCHIFY_ID_ACTION_SHOW_TOOLBOX="touchify_showToolbox"
+TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS="touchify_showToolOptions"
+TOUCHIFY_ID_ACTION_LOCK_FLOATING_DOCKERS="touchify_lockFloatingDockers"
+TOUCHIFY_ID_ACTION_TOOLBAR_BORDER="touchify_toolbarBorder"
+TOUCHIFY_ID_ACTION_TAB_HEIGHT="tabHeight"
+TOUCHIFY_ID_ACTION_FLAT_THEME="flatTheme"
+TOUCHIFY_ID_ACTION_NU_TOOLBOX="nuToolbox"
+TOUCHIFY_ID_ACTION_NU_TOOL_OPTIONS="nuToolOptions"
+#-----------------#
+# Option Root IDs
+TOUCHIFY_ID_OPTIONSROOT_MAIN="Touchify"
+KRITA_ID_OPTIONSROOT_MAIN=""
+#-----------------#
+# Option IDs
+TOUCHIFY_ID_OPTIONS_NU_TOOL_OPTIONS="usesNuToolOptions"
+TOUCHIFY_ID_OPTIONS_NU_TOOLBOX="usesNuToolbox"
+TOUCHIFY_ID_OPTIONS_THIN_DOC_TABS="usesThinDocumentTabs"
+TOUCHIFY_ID_OPTIONS_FLAT_THEME="usesFlatTheme"
+TOUCHIFY_ID_OPTIONS_BORDERLESS_TOOLBAR="usesBorderlessToolbar"
+KRITA_ID_OPTIONS_TOOLOPTIONS_IN_DOCKER="ToolOptionsInDocker"
+#-----------------#
+# Docker IDs
+TOUCHIFY_ID_DOCKER_TOOLBOX='TouchifyToolbox'
+KRITA_ID_DOCKER_SHAREDTOOLDOCKER='sharedtooldocker'
+KRITA_ID_DOCKER_OVERVIEW='OverviewDocker'
+#-----------------#

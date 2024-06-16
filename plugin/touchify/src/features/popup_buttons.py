@@ -7,7 +7,7 @@ from functools import partial
 import sys
 import importlib.util
 
-from ..variables import TOUCHIFY_AID_ACTIONS_POPUP, TOUCHIFY_ID_ACTIONS_POPUP
+from ..variables import *
 
 from ..cfg.CfgPopup import CfgPopup
 from ..config import *
@@ -44,7 +44,7 @@ class PopupButtons:
             root_menu.addAction(action)
 
     def createAction(self, window, popup: CfgPopup, actionPath):
-        actionName = '{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_POPUP, popup.id)
+        actionName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_POPUP, popup.id)
         displayName = popup.btnName + POPUP_BTN_IDENTIFIER
         iconName = popup.icon
         id = popup.id
@@ -70,7 +70,7 @@ class PopupButtons:
             popup_data[popup.id] = popup
             self.createAction(window, popup, subItemPath)
 
-    def showPopup(self, id, mode: str):
+    def showPopup(self, id, mode: str, x: int = None, y: int = None):
         needToBuild = True
         if not id in popup_dialogs:
             needToBuild = True
@@ -81,7 +81,7 @@ class PopupButtons:
             qwin = Krita.instance().activeWindow().qwindow()
             popup_dialogs[id] = self.createPopup(qwin, popup_data[id])
 
-        popup_dialogs[id].triggerPopup(mode)
+        popup_dialogs[id].triggerPopup(mode, x, y)
 
     def onConfigUpdated(self):
         cfg: ConfigFile = ConfigManager.instance().getJSON()

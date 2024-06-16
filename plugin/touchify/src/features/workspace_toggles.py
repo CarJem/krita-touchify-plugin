@@ -62,7 +62,7 @@ class WorkspaceToggles:
    
     def createAction(self, window, workspace: CfgWorkspace, actionPath):
 
-        actionName = '{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_WORKSPACE, workspace.id)
+        actionName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_WORKSPACE, workspace.id)
         id = workspace.id
         text = '{0}'.format(workspace.display_name)
         iconName = 'custom:' + workspace.id

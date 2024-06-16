@@ -53,12 +53,31 @@ class CfgPopup:
         self.items = TypedList(self.items, CfgPopupInfo)
         pass
 
+    def propertygrid_labels(self):
+        labels = {}
+        labels["id"] = "Popup ID (must be unique)"
+        labels["btnName"] = "Display Name"
+        labels["popupType"] = "Window Type"
+        labels["icon"] = "Preview Icon"
+        labels["type"] = "Popup Type"
+        labels["docker_id"] = "Docker ID"
+        labels["opacity"] = "Popup Opacity"
+        labels["grid_width"] = "Action Grid Width"
+        labels["grid_padding"] = "Action Grid Padding"
+        labels["item_width"] = "Docker / Action Item Width"
+        labels["item_height"] = "Docker / Action Item Height"
+        labels["icon_width"] = "Action Icon Width"
+        labels["icon_height"] = "Action Icon Height"
+        labels["hotkeyNumber"] = "Activation Hotkey"
+        labels["items"] = "Actions"
+        return labels
+
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["icon"] = {"type": "icon_selection"}
         restrictions["docker_id"] = {"type": "docker_selection"}
         restrictions["type"] = {"type": "values", "entries": ["actions", "docker"]}
-        restrictions["popupType"] = {"type": "values", "entries": ["popup", "window", "toolbox"]}
+        restrictions["popupType"] = {"type": "values", "entries": ["popup", "window"]}
         restrictions["opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
         restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
         return restrictions

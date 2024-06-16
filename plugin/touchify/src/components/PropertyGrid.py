@@ -5,11 +5,22 @@ from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
 
+from .PropertyGridHost import *
+
+from .extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
+
 from .propertygrid.IconSelector import IconSelector
 from ..ext.typedlist import *
 from ..resources import *
 from ..ext.extensions import KritaExtensions
 from .CollapsibleBox import CollapsibleBox
+
+
+ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
+ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
+
+GROUP_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
+GROUP_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
 
 class PropertyField(QWidget):
@@ -30,7 +41,11 @@ class PropertyField(QWidget):
         self.variable_source = variable_source
 
         self.labelText = self.variable_name
-        self.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Minimum)
+        self.setContentsMargins(0, 0, 0, 0)
+        self.setSizePolicy(ROW_SIZE_POLICY_X, ROW_SIZE_POLICY_Y)
+
+    def setStackHost(self, host: PropertyGridHost):
+        self.stackHost = host
 
     def getPropertyType(varName, variable, item):
         varType = type(variable)
@@ -55,6 +70,7 @@ class PropertyField_Str(PropertyField):
 
         self.is_icon_viewer = False
         self.is_docker_selector = False
+        self.is_action_selection = False
         self.is_combobox = False
         self.combobox_items = []
 
@@ -65,13 +81,15 @@ class PropertyField_Str(PropertyField):
                 if restrictions[variable_name]["type"] == "values":
                     self.combobox_items = restrictions[variable_name]["entries"]
                     self.is_combobox = True
+                elif restrictions[variable_name]["type"] == "action_selection":
+                    self.is_action_selection = True
                 elif restrictions[variable_name]["type"] == "docker_selection":
                     self.is_docker_selector = True
                 elif restrictions[variable_name]["type"] == "icon_selection":
                     self.is_icon_viewer = True
                     
 
-        if self.is_icon_viewer or self.is_docker_selector:
+        if self.is_icon_viewer or self.is_docker_selector or self.is_action_selection:
             self.editor = QLineEdit()
             self.editor.textChanged.connect(self.textChanged)
             self.editor.setText(self.variable_data.replace("\n", "\\n"))
@@ -86,16 +104,21 @@ class PropertyField_Str(PropertyField):
             editorHelperType = "none"
             if self.is_icon_viewer: editorHelperType = "icons"
             elif self.is_docker_selector: editorHelperType = "dockers"
+            elif self.is_action_selection: editorHelperType = "actions"
 
             self.editorHelper.clicked.connect(lambda: self.helperRequested(editorHelperType))
 
             editorLayout = QHBoxLayout()
+            editorLayout.setSpacing(0)
+            editorLayout.setContentsMargins(0,0,0,0)
             editorLayout.addWidget(self.editor)
             editorLayout.addWidget(self.editorHelper)
             self.setLayout(editorLayout)
             self.setLayout(editorLayout)
         elif self.is_combobox:
             self.editor = QComboBox()
+            self.editor.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+            self.editor.installEventFilter(MouseWheelWidgetAdjustmentGuard(self))
             self.editor.insertItems(0, self.combobox_items)
             index = self.editor.findText(self.variable_data, Qt.MatchFlag.MatchFixedString)
             if index >= 0:
@@ -103,6 +126,8 @@ class PropertyField_Str(PropertyField):
             self.editor.currentIndexChanged.connect(self.currentIndexChanged)
 
             editorLayout = QHBoxLayout()
+            editorLayout.setSpacing(0)
+            editorLayout.setContentsMargins(0,0,0,0)
             editorLayout.addWidget(self.editor)
             self.setLayout(editorLayout)
         else:
@@ -111,14 +136,32 @@ class PropertyField_Str(PropertyField):
             self.editor.setText(self.variable_data.replace("\n", "\\n"))
 
             editorLayout = QHBoxLayout()
+            editorLayout.setSpacing(0)
+            editorLayout.setContentsMargins(0,0,0,0)
             editorLayout.addWidget(self.editor)
             self.setLayout(editorLayout)
 
+
+    def dlg_accept(self):
+        self.stackHost.goBack()
+        self.dlg.accept()
+    
+    def dlg_reject(self):
+        self.stackHost.goBack()
+        self.dlg.reject()
+
     def helperRequested(self, mode):
-        dlg = IconSelector(self)
-        dlg.load_list(mode)
-        if dlg.exec_():
-            result = dlg.selectedResult()
+        self.dlg = IconSelector(self.stackHost)
+        self.dlg.setWindowFlags(Qt.WindowType.Widget)
+        self.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.btns.accepted.connect(lambda: self.dlg_accept())
+        self.btns.rejected.connect(lambda: self.dlg_reject())
+        self.dlg.dlgLayout.addWidget(self.btns)
+
+        self.dlg.load_list(mode)
+        self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.dlg))
+        if self.dlg.exec_():
+            result = self.dlg.selectedResult()
             if self.is_icon_viewer: 
                 self.editorHelper.setIcon(ResourceManager.iconLoader(result))
             self.editor.setText(result)
@@ -137,6 +180,8 @@ class PropertyField_Int(PropertyField):
         self.setup(variable_name, variable_data, variable_source)
         
         self.editor = QSpinBox()
+        self.editor.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.editor.installEventFilter(MouseWheelWidgetAdjustmentGuard(self))
         self.editor.setMaximum(2147483647)
         self.editor.setMinimum(-2147483648)
         self.editor.valueChanged.connect(self.updateValue)
@@ -151,6 +196,8 @@ class PropertyField_Int(PropertyField):
                     self.editor.setMaximum(restrictions[variable_name]["max"])
         
         editorLayout = QHBoxLayout()
+        editorLayout.setSpacing(0)
+        editorLayout.setContentsMargins(0,0,0,0)
         editorLayout.addWidget(self.editor)
         self.setLayout(editorLayout)
 
@@ -164,6 +211,8 @@ class PropertyField_Float(PropertyField):
         self.setup(variable_name, variable_data, variable_source)
         
         self.editor = QDoubleSpinBox()
+        self.editor.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.editor.installEventFilter(MouseWheelWidgetAdjustmentGuard(self))
         self.editor.setMaximum(sys.float_info.max)
         self.editor.setMinimum(sys.float_info.min)
         self.editor.valueChanged.connect(self.updateValue)
@@ -178,6 +227,8 @@ class PropertyField_Float(PropertyField):
                     self.editor.setMaximum(restrictions[variable_name]["max"])
         
         editorLayout = QHBoxLayout()
+        editorLayout.setSpacing(0)
+        editorLayout.setContentsMargins(0,0,0,0)
         editorLayout.addWidget(self.editor)
         self.setLayout(editorLayout)
 
@@ -195,6 +246,8 @@ class PropertyField_Bool(PropertyField):
         self.editor.setChecked(self.variable_data)
         
         editorLayout = QHBoxLayout()
+        editorLayout.setSpacing(0)
+        editorLayout.setContentsMargins(0,0,0,0)
         editorLayout.addWidget(self.editor)
         self.setLayout(editorLayout)
 
@@ -213,10 +266,13 @@ class PropertyField_TypedList(PropertyField):
         self.selectedItem = None
         
         field = QHBoxLayout()
+        field.setSpacing(0)
+        field.setContentsMargins(0,0,0,0)
         listView = QListView()
         listView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         btns = QVBoxLayout()
+        btns.setAlignment(Qt.AlignmentFlag.AlignTop)
         btn_width = 20
 
         self.model = QtGui.QStandardItemModel()
@@ -276,40 +332,61 @@ class PropertyField_TypedList(PropertyField):
     def itemOptions_edit(self):
         self.itemOptions("edit")
 
+    def dlg_dispose(self):
+        self.subwindowEditable = None
+        self.subwindowPropGrid.deleteLater()
+        self.subwindowMode = ""
+
+    def dlg_accept(self):
+        if (self.subwindowMode == "edit"):
+            variableType = type(self.selectedItem)
+            if variableType == PropertyField_TempValue:
+                self.selectedItem.updateData()
+            self.updateList()
+        elif (self.subwindowMode == "add"):
+            variableType = type(self.subwindowEditable)
+            if variableType == PropertyField_TempValue:
+                self.variable_data.append(self.subwindowEditable.value)
+            else:
+                self.variable_data.append(self.subwindowPropGrid.currentData())
+            self.updateList()
+        self.dlg.accept()
+        self.stackHost.goBack()
+        self.dlg_dispose()
+    
+    def dlg_reject(self):
+        self.dlg.reject()
+        self.stackHost.goBack()
+        self.dlg_dispose()
+
     def itemOptions(self, mode):
         if mode == "edit" or mode == "add":
-            dlg = QDialog(self)
-            container = QVBoxLayout()
-            dlg.setMinimumSize(800,450)
-            dlg.setBaseSize(800,800)
-            dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-            dlg.btns.accepted.connect(dlg.accept)
-            dlg.btns.rejected.connect(dlg.reject)
+            self.dlg = QDialog(self)
+            self.dlg.setWindowFlags(Qt.WindowType.Widget)
+            self.container = QVBoxLayout()
+            self.dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+            self.dlg.btns.accepted.connect(lambda: self.dlg_accept())
+            self.dlg.btns.rejected.connect(lambda: self.dlg_reject())
 
-            propetryGrid = PropertyGrid()
-            container.addWidget(propetryGrid)
-            container.addWidget(dlg.btns)
-            dlg.setLayout(container)
+            self.subwindowPropGrid = PropertyGrid(self.stackHost)
+            self.container.addWidget(self.subwindowPropGrid)
+            self.container.addWidget(self.dlg.btns)
+            self.dlg.setLayout(self.container)
 
             if mode == "edit":
                 if self.selectedIndex != -1:
-                    propetryGrid.updateDataObject(self.selectedItem)
-                    if dlg.exec_():
-                        variableType = type(self.selectedItem)
-                        if variableType == PropertyField_TempValue:
-                            self.selectedItem.updateData()
-                        self.updateList()
-
+                    self.subwindowMode = "edit"
+                    self.subwindowPropGrid.updateDataObject(self.selectedItem)
+                    self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.dlg))
+                    self.dlg.show()
             elif mode == "add":
                 editableValue = self.getEditableValue(self.variable_list_type(), -1)
-                propetryGrid.updateDataObject(editableValue)
-                if dlg.exec_():
-                    variableType = type(editableValue)
-                    if variableType == PropertyField_TempValue:
-                        self.variable_data.append(editableValue.value)
-                    else:
-                        self.variable_data.append(propetryGrid.currentData())
-                    self.updateList()
+                self.subwindowMode = "add"
+                self.subwindowEditable = editableValue
+                self.subwindowPropGrid.updateDataObject(self.subwindowEditable)
+                self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.dlg))
+                self.dlg.show()
+
         
         elif mode == "remove":
             if self.selectedIndex != -1:
@@ -413,6 +490,11 @@ class PropertyGridExtensions:
         if hasattr(obj, "propertygrid_groups"):
             return dict(obj.propertygrid_groups())
         else: return {}
+
+    def getLabels(obj):
+        if hasattr(obj, "propertygrid_labels"):
+            return dict(obj.propertygrid_labels())
+        else: return {}
     
     def isClassModel(obj):
         return hasattr(obj, "propertygrid_ismodel")
@@ -435,12 +517,16 @@ class PropertyGridExtensions:
 class PropertyGrid(QScrollArea):
     fields: list[PropertyField] = []
 
-    def __init__(self):
+    def __init__(self, parentStack: PropertyGridHost):
         super().__init__()
         
+
+        self.stackHost = parentStack
         self.formWidget = QWidget()
-        self.formLayout = QFormLayout()
-        self.formLayout.setVerticalSpacing(0)
+        self.formWidget.setContentsMargins(0,0,0,0)
+        self.formLayout = QVBoxLayout()
+        self.formLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.formLayout.setSpacing(0)
         self.formLayout.setContentsMargins(0, 0, 0, 0)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.setWidgetResizable(True)
@@ -455,11 +541,41 @@ class PropertyGrid(QScrollArea):
             PropertyGridExtensions.setVariable(newItem, name, data)
         return newItem
     
+
+    def createDataRow(self, item, varName):
+        variable = PropertyGridExtensions.getVariable(item, varName)
+        field = PropertyField.getPropertyType(varName, variable, item)
+        field.setStackHost(self.stackHost)
+        if field:
+            self.fields.append(field)
+            field.setSizePolicy(ROW_SIZE_POLICY_X, ROW_SIZE_POLICY_Y)
+            return field
+        return None
+    
+    def createLabelRow(self, layout: QLayout, field: PropertyField, labelData: dict):
+
+        resultText = field.labelText
+
+
+        if field.labelText in labelData:
+            propData = labelData[field.labelText]
+            if propData == None:
+                return
+            resultText = propData
+
+        header = QLabel()
+        header.setText(resultText)
+        header.setMargin(0)
+        header.setContentsMargins(0,0,0,0)
+        layout.addWidget(header)
+    
+    
     def updateDataObject(self, item):
         self.item = item
         self.fields.clear()
         PropertyGridExtensions.clearLayout(self.formLayout)
         groupData = PropertyGridExtensions.getGroups(item)
+        labelData = PropertyGridExtensions.getLabels(item)
         claimedSections = []
 
         for groupId in groupData:
@@ -470,27 +586,27 @@ class PropertyGrid(QScrollArea):
 
         for varName in PropertyGridExtensions.getClassVariables(item):
             if varName not in claimedSections:
-                variable = PropertyGridExtensions.getVariable(item, varName)
-                field = PropertyField.getPropertyType(varName, variable, item)
+                field = self.createDataRow(item, varName)
                 if field:
-                    self.fields.append(field)
-                    field.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
-                    #self.formLayout.addWidget(field)
-                    self.formLayout.addRow(field.labelText, field)
+                    self.createLabelRow(self.formLayout, field, labelData)
+                    self.formLayout.addWidget(field)
+
         
         for groupId in groupData:
             groupName = groupData[groupId]["name"]
             groupItems = list(groupData[groupId]["items"])
             section = CollapsibleBox(groupName, self.formWidget)
-            sectionLayout = QFormLayout()
-            section.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+            sectionLayout = QVBoxLayout()
+            sectionLayout.setSpacing(0)
+            sectionLayout.setContentsMargins(0,0,0,0)
+            section.setSizePolicy(GROUP_SIZE_POLICY_X, GROUP_SIZE_POLICY_Y)
 
             for varName in groupItems:
-                variable = PropertyGridExtensions.getVariable(item, varName)
-                field = PropertyField.getPropertyType(varName, variable, item)
+                field = self.createDataRow(item, varName)
                 if field:
-                    self.fields.append(field)
-                    field.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
-                    sectionLayout.addRow(field.labelText, field)
+                    self.createLabelRow(sectionLayout, field, labelData)
+                    sectionLayout.addWidget(field)
+
             section.setContentLayout(sectionLayout)
-            self.formLayout.addRow(section)
+
+            self.formLayout.addWidget(section)

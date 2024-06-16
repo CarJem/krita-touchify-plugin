@@ -8,9 +8,13 @@ class CollapsibleBox(QtWidgets.QWidget):
         self.toggle_button = QtWidgets.QToolButton(
             text=title, checkable=True, checked=False
         )
-        self.toggle_button.setStyleSheet("QToolButton { border: none; }")
+        self.toggle_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed
+        )
+        self.toggle_button.setContentsMargins(0,0,0,0)
+        #self.toggle_button.setStyleSheet("QToolButton { border: none; }")
         self.toggle_button.setToolButtonStyle(
-            QtCore.Qt.ToolButtonTextBesideIcon
+            QtCore.Qt.ToolButtonStyle.ToolButtonTextBesideIcon
         )
         self.toggle_button.setArrowType(QtCore.Qt.RightArrow)
         self.toggle_button.pressed.connect(self.on_pressed)
@@ -30,6 +34,8 @@ class CollapsibleBox(QtWidgets.QWidget):
         lay.setContentsMargins(0, 0, 0, 0)
         lay.addWidget(self.toggle_button)
         lay.addWidget(self.content_area)
+
+        self.setContentsMargins(0,0,0,0)
 
         self.toggle_animation.addAnimation(
             QtCore.QPropertyAnimation(self, b"minimumHeight")

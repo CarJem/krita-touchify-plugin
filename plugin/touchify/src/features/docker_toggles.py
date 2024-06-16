@@ -5,7 +5,7 @@ import json
 import sys
 import importlib.util
 
-from ..variables import TOUCHIFY_AID_ACTIONS_DOCKER, TOUCHIFY_ID_ACTIONS_DOCKER
+from ..variables import *
 
 from ..cfg.CfgDocker import CfgDocker
 from ..config import *
@@ -46,7 +46,7 @@ class DockerToggles:
             root_menu.addAction(action)
 
     def createAction(self, window, docker: CfgDocker, actionPath):
-        actionName ='{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_DOCKER, docker.docker_name)
+        actionName ='{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_DOCKER, docker.docker_name)
         id = docker.docker_name
         iconName = docker.icon
         text ='{0}'.format(docker.display_name)

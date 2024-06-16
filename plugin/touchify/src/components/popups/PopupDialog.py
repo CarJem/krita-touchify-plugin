@@ -12,7 +12,6 @@ from ...cfg.CfgPopup import CfgPopup
 from ...config import *
 from ....resources import *
 
-from .PopupDialog_ToolboxTitlebar import PopupDialog_ToolboxTitlebar
 from krita import *
 
 POPUP_BTN_IDENTIFIER = "⠀"
@@ -54,10 +53,6 @@ class PopupDialog(QDialog):
             self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, True)
         elif self.popupMode == "window":
             pass
-        elif self.popupMode == "toolbox":
-            self.setWindowFlags(Qt.WindowType.Tool)
-            self.setWindowTitle(self.metadata.btnName)
-            self._layout.insertWidget(0, PopupDialog_ToolboxTitlebar(self))
         else:
             pass
 
@@ -131,7 +126,7 @@ class PopupDialog(QDialog):
     def expand(self):
         self.frame.show()
     
-    def triggerPopup(self, mode):
+    def triggerPopup(self, mode, x=None, y=None):
         if self.isVisible():
             self.close()
             if not self.popupMode == "popup":
@@ -144,6 +139,8 @@ class PopupDialog(QDialog):
         
         if mode == "mouse":
             actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(QCursor.pos(), 0, 0, True)
+            actual_x = x
+            actual_y = y
         else:
             for qobj in self.parent.findChildren(QToolButton):
                 actions = qobj.actions()

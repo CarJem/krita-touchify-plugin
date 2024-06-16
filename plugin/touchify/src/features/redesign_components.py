@@ -1,5 +1,7 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
+
+from ..variables import *
 from ..config import *
 from ..components.nu_tools.NtToolbox import NtToolbox
 from ..components.nu_tools.NtToolOptions import NtToolOptions
@@ -23,29 +25,29 @@ class RedesignComponents:
     def createActions(self, window, mainMenuBar):
         actions = []
 
-        actions.append(window.createAction("toolbarBorder", "Borderless Toolbars", ""))
+        actions.append(window.createAction(TOUCHIFY_ID_ACTION_TOOLBAR_BORDER, "Borderless Toolbars", ""))
         actions[0].setCheckable(True)
         actions[0].setChecked(self.usesBorderlessToolbar) 
         actions[0].toggled.connect(self.toolbarBorderToggled)
 
-        actions.append(window.createAction("tabHeight", "Thin Document Tabs", ""))
+        actions.append(window.createAction(TOUCHIFY_ID_ACTION_TAB_HEIGHT, "Thin Document Tabs", ""))
         actions[1].setCheckable(True)
         actions[1].setChecked(self.usesThinDocumentTabs)
         actions[1].toggled.connect(self.tabHeightToggled)
 
-        #actions.append(window.createAction("flatTheme", "Use flat theme", ""))
+        #actions.append(window.createAction(TOUCHIFY_ID_ACTION_NU_TOOL_OPTIONS, "Use flat theme", ""))
         #actions[2].setCheckable(True)
         #actions[2].setChecked(self.usesFlatTheme)
         #actions[2].toggled.connect(self.flatThemeToggled)
 
-        actions.append(window.createAction("nuToolbox", "NuToolbox", ""))
+        actions.append(window.createAction(TOUCHIFY_ID_ACTION_NU_TOOLBOX, "NuToolbox", ""))
         actions[2].setCheckable(True)
         actions[2].setChecked(self.usesNuToolbox)
         actions[2].toggled.connect(self.nuToolboxToggled)
 
-        actions.append(window.createAction("nuToolOptions", "NuToolOptions", ""))
+        actions.append(window.createAction(TOUCHIFY_ID_ACTION_NU_TOOL_OPTIONS, "NuToolOptions", ""))
         actions[3].setCheckable(True)
-        if KritaSettings.readSetting("", "ToolOptionsInDocker", "false") == "true":
+        if KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, KRITA_ID_OPTIONS_TOOLOPTIONS_IN_DOCKER, "false") == "true":
             actions[3].setChecked(self.usesNuToolOptions)
         actions[3].toggled.connect(self.nuToolOptionsToggled)
 
@@ -55,7 +57,7 @@ class RedesignComponents:
         stylesheet.buildFlatTheme()
         
         if (self.usesNuToolOptions 
-            and KritaSettings.readSetting("", "ToolOptionsInDocker", "false") == "true"):
+            and KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, KRITA_ID_OPTIONS_TOOLOPTIONS_IN_DOCKER, "false") == "true"):
                 self.ntTO = NtToolOptions(window)
 
         if self.usesNuToolbox: 
@@ -64,46 +66,46 @@ class RedesignComponents:
         self.rebuildStyleSheet(window.qwindow())
 
     def setup(self):
-        #if KritaSettings.readSetting("Touchify", "usesFlatTheme", "true") == "true":
+        #if KritaSettings.readSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_FLAT_THEME, "true") == "true":
             #self.usesFlatTheme = True
         self.usesFlatTheme = False
 
-        if KritaSettings.readSetting("Touchify", "usesBorderlessToolbar", "true") == "true":
+        if KritaSettings.readSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_BORDERLESS_TOOLBAR, "true") == "true":
             self.usesBorderlessToolbar = True
 
-        if KritaSettings.readSetting("Touchify", "usesThinDocumentTabs", "true") == "true":
+        if KritaSettings.readSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_THIN_DOC_TABS, "true") == "true":
             self.usesThinDocumentTabs = True
 
-        if KritaSettings.readSetting("Touchify", "usesNuToolbox", "true") == "true":
+        if KritaSettings.readSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_NU_TOOLBOX, "true") == "true":
             self.usesNuToolbox = True
         
-        if KritaSettings.readSetting("Touchify", "usesNuToolOptions", "true") == "true":
+        if KritaSettings.readSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_NU_TOOL_OPTIONS, "true") == "true":
             self.usesNuToolOptions = True
 
 
     def toolbarBorderToggled(self, toggled):
-        KritaSettings.writeSetting("Touchify", "usesBorderlessToolbar", str(toggled).lower())
+        KritaSettings.writeSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_BORDERLESS_TOOLBAR, str(toggled).lower())
 
         self.usesBorderlessToolbar = toggled
 
         self.rebuildStyleSheet(Krita.instance().activeWindow().qwindow())
 
     def flatThemeToggled(self, toggled):
-        KritaSettings.writeSetting("Touchify", "usesFlatTheme", str(toggled).lower())
+        KritaSettings.writeSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_FLAT_THEME, str(toggled).lower())
 
         self.usesFlatTheme = toggled
 
         self.rebuildStyleSheet(Krita.instance().activeWindow().qwindow())
 
     def tabHeightToggled(self, toggled):
-        KritaSettings.writeSetting("Touchify", "usesThinDocumentTabs", str(toggled).lower())
+        KritaSettings.writeSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_THIN_DOC_TABS, str(toggled).lower())
 
         self.usesThinDocumentTabs = toggled
 
         self.rebuildStyleSheet(Krita.instance().activeWindow().qwindow())
 
     def nuToolboxToggled(self, toggled):
-        KritaSettings.writeSetting("Touchify", "usesNuToolbox", str(toggled).lower())
+        KritaSettings.writeSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_NU_TOOLBOX, str(toggled).lower())
         self.usesNuToolbox = toggled
 
         if toggled:
@@ -115,8 +117,8 @@ class RedesignComponents:
             self.ntTB = None
 
     def nuToolOptionsToggled(self, toggled):
-        if KritaSettings.readSetting("", "ToolOptionsInDocker", "false") == "true":
-            KritaSettings.writeSetting("Touchify", "usesNuToolOptions", str(toggled).lower())
+        if KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, KRITA_ID_OPTIONS_TOOLOPTIONS_IN_DOCKER, "false") == "true":
+            KritaSettings.writeSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_NU_TOOL_OPTIONS, str(toggled).lower())
             self.usesNuToolOptions = toggled
 
             if toggled:
@@ -161,7 +163,7 @@ class RedesignComponents:
         #print("\n\n")
 
         # Overview
-        overview = window.findChild(QWidget, 'OverviewDocker')
+        overview = window.findChild(QWidget, KRITA_ID_DOCKER_OVERVIEW)
         overview_style = ""
 
         if self.usesFlatTheme:

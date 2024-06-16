@@ -17,6 +17,11 @@ class CfgDockerGroupItem:
 
     def propertygrid_ismodel(self):
         return True
+    
+    def propertygrid_labels(self):
+        labels = {}
+        labels["id"] = "Docker ID"
+        return labels
 
     def propertygrid_restrictions(self):
         restrictions = {}

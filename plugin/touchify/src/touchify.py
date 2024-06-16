@@ -57,9 +57,9 @@ class Touchify(Extension):
 
 
     def createActions(self, window):
-        self.mainMenuBar = window.qwindow().menuBar().addMenu("Touchify")
+        self.mainMenuBar = window.qwindow().menuBar().addMenu(TOUCHIFY_ID_MENU_ROOT)
 
-        subItemPath = TOUCHIFY_ID_ACTIONS_ROOT
+        subItemPath = TOUCHIFY_ID_MENU_ROOT
 
         self.touchify_hotkeys.createActions(window, subItemPath)
         self.basic_dockers.createActions(window, subItemPath)  
@@ -67,15 +67,19 @@ class Touchify(Extension):
         self.workspace_toggles.createActions(window, subItemPath)
         self.popup_toggles.createActions(window, subItemPath)
 
-        reloadItemsAction = QAction("Reload Known Items...", self.mainMenuBar)
-        reloadItemsAction.triggered.connect(self.reloadKnownItems)
-        self.mainMenuBar.addAction(reloadItemsAction)
-
         openSettingsAction = QAction("Configure Touchify...", self.mainMenuBar)
         openSettingsAction.triggered.connect(self.openSettings)
         self.mainMenuBar.addAction(openSettingsAction)
 
         self.redesign_components.createActions(window, self.mainMenuBar)
+
+        seperator = QAction("Actions", self.mainMenuBar)
+        seperator.setSeparator(True)
+        self.mainMenuBar.addAction(seperator)
+
+        reloadItemsAction = QAction("Refresh Known Items...", self.mainMenuBar)
+        reloadItemsAction.triggered.connect(self.reloadKnownItems)
+        self.mainMenuBar.addAction(reloadItemsAction)
 
     def finishActions(self):
         seperator = QAction("", self.mainMenuBar)

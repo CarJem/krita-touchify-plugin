@@ -1,6 +1,8 @@
 from krita import *
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import *
+
+from .variables import KRITA_ID_OPTIONSROOT_MAIN
 from .ext.extensions import *
 from .config import *
 
@@ -77,7 +79,7 @@ class DockerManager():
             if self.borrowing_actualDocker[ID]:
                 if self.borrowing_previousDockerState[ID]["dockMode"]:
                     self._qWin.addDockWidget(self.borrowing_previousDockerState[ID]["dockWidgetArea"], self.borrowing_actualDocker[ID])
-                    titlebarSetting = KritaSettings.readSetting("", "showDockerTitleBars", "false")
+                    titlebarSetting = KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, "showDockerTitleBars", "false")
                     showTitlebar = True if titlebarSetting == "true" else False
                     self.borrowing_actualDocker[ID].titleBarWidget().setVisible(showTitlebar)
                     if self.borrowing_previousDockerState[ID]["previousVisibility"] == False:

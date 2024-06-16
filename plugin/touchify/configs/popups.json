@@ -13,14 +13,12 @@
             "icon_width": 30,
             "icon_height": 30,
             "items": [],
-            "opacity": 1.0,
-            "popupMode": true
+            "opacity": 1.0
         },
         {
             "items": [],
             "item_width": 200,
             "item_height": 300,
-            "popupMode": true,
             "opacity": 1.0,
             "grid_width": 3,
             "grid_padding": 2,
@@ -47,8 +45,7 @@
             "icon_width": 30,
             "icon_height": 30,
             "hotkeyNumber": 0,
-            "items": [],
-            "popupMode": true
+            "items": []
         },
         {
             "items": [],
@@ -59,15 +56,12 @@
             "item_height": 150,
             "item_width": 300,
             "opacity": 1.0,
-            "popupMode": true,
             "btnName": "Colors Popup",
             "docker_id": "ColorSelectorNg",
             "icon": "docker_collapse_a",
             "type": "docker",
-            "groupId": "",
             "hotkeyNumber": 0,
-            "id": "ColorOptionsPopup",
-            "tabsMode": false
+            "id": "ColorOptionsPopup"
         },
         {
             "id": "selection-tool",
@@ -184,7 +178,6 @@
                 }
             ],
             "opacity": 1.0,
-            "popupMode": true,
             "hotkeyNumber": 2
         }
     ]

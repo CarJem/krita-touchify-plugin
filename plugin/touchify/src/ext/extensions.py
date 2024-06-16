@@ -18,7 +18,8 @@ class Extensions:
     def dictToObject(obj, dict):
         if dict is not None:
             for key, value in dict.items():
-                setattr(obj, key, value)
+                if hasattr(obj, key):
+                    setattr(obj, key, value)
 
     def getClassVariables(obj):
         return [attr for attr in dir(obj) if not callable(getattr(obj, attr)) and not attr.startswith("__") and not attr.startswith("_"  + type(obj).__name__ + "__")]
