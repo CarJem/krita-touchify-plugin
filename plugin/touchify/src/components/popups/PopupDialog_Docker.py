@@ -44,14 +44,15 @@ class PopupDialog_Docker(PopupDialog):
         super().triggerPopup(mode)
 
     def updateDocker(self, closing = False):
-        if closing:
+        if closing and self.dockerWidget:
             self.grid.removeWidget(self.dockerWidget)
             DockerManager.instance().returnWidget(self.dockerID)
             self.dockerWidget = None
         else:
             self.dockerWidget = DockerManager.instance().borrowDockerWidget(self.dockerID, True)
-            self.grid.addWidget(self.dockerWidget)
-            self.dockerWidget.show()
+            if self.dockerWidget:
+                self.grid.addWidget(self.dockerWidget)
+                self.dockerWidget.show()
 
     def generateDockerLayout(self):
         grid = QHBoxLayout()

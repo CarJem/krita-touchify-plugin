@@ -16,6 +16,7 @@ TOUCHIFY_AID_ACTIONS_DOCKER_GROUP="group"
 
 TOUCHIFY_AID_SHOW_TOOLBOX="touchify_showToolbox"
 TOUCHIFY_AID_SHOW_TOOL_OPTIONS="touchify_showToolOptions"
+TOUCHIFY_AID_LOCK_FLOATING_DOCKERS="touchify_lockFloatingDockers"
 
 # Other IDs
 TOUCHIFY_TOOLBOX_DOCKER_ID='TouchifyToolbox'

@@ -65,6 +65,18 @@
             <shortcut>n</shortcut>
             <isCheckable>true</isCheckable>
             <statusTip></statusTip>
-            </Action>
+        </Action>
+        <Action name="touchify_lockFloatingDockers">
+            <icon></icon>
+            <text>Lock Floating Dockers</text>
+            <whatsThis>Lock Floating Dockers</whatsThis>
+            <toolTip>Lock Floating Dockers</toolTip>
+            <iconText>nT</iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>true</isCheckable>
+            <statusTip></statusTip>
+        </Action>
     </Actions>
 </ActionCollection>
