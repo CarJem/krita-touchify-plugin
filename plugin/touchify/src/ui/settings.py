@@ -19,7 +19,20 @@ import datetime
 
 from krita import *
 
+
+NOTICE_MESSAGE = """
+
+"""
+
 class SettingsDialog:
+
+
+    def getNoticeMessage(self):
+        filePath = os.path.join(os.path.dirname(__file__), 'notice_message.txt')
+        result = ""
+        with open(filePath) as f:
+            result = f.read()
+        return result
 
     def __init__(self):
         self.qwin = Krita.instance().activeWindow().qwindow()
@@ -27,14 +40,24 @@ class SettingsDialog:
 
         self.dlg = QDialog(self.qwin)
 
-        self.layout = QHBoxLayout()
+        self.layout = QGridLayout()
+
+
+        self.notice = QLabel()
+        self.notice.setWordWrap(True)
+        self.notice.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.notice.setText(self.getNoticeMessage())
+        self.notice.setMinimumWidth(150)
+        self.notice.setStyleSheet('''font-size: 10px''')
 
         self.propertyGrid = PropertyGrid()
         self.propertyGrid.updateDataObject(self.cfg)
-        self.layout.addWidget(self.propertyGrid)
+
+        self.layout.addWidget(self.propertyGrid, 0, 0)
+        self.layout.addWidget(self.notice, 0, 1)
 
         self.container = QVBoxLayout()
-        self.dlg.setMinimumSize(400,400)
+        self.dlg.setMinimumSize(600,400)
         self.dlg.setBaseSize(800,800)
         self.dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         self.dlg.btns.accepted.connect(self.dlg.accept)

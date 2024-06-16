@@ -41,41 +41,45 @@ class DockerGroups:
                 if (docker.objectName() == path):
                     docker.setVisible(isVisible)
 
-
     def buildMenu(self, menu: QMenu):
         root_menu = QtWidgets.QMenu("Docker Groups", menu)
         menu.addMenu(root_menu)
 
         for action in pending_actions:
             root_menu.addAction(action)
+
+    def setState(self, cfg: CfgDockerGroup):
+        paths = []
+        for dockerName in cfg.docker_names:
+            paths.append(str(dockerName))
+
+        custom_docker_states[cfg.id] = {
+            "enabled": False,
+            "paths": paths,
+            "groupId": cfg.groupId,
+            "tabsMode": cfg.tabsMode
+        }
     
-    def createAction(self, window, docker: CfgDockerGroup, actionPath):
+    def createAction(self, window, cfg: CfgDockerGroup, actionPath):
         global custom_docker_states
 
-        actionName = '{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_DOCKER_GROUP, docker.id)
+        actionName = '{0}_{1}'.format(TOUCHIFY_AID_ACTIONS_DOCKER_GROUP, cfg.id)
 
-        _p = []
-        for dockerName in docker.docker_names:
-            _p.append(str(dockerName))
 
-        setId = docker.id
-        iconName = docker.icon
-        paths = _p
-        text = '{0}'.format(docker.display_name)
+
+        setId = cfg.id
+        iconName = cfg.icon
+
+        text = '{0}'.format(cfg.display_name)
 
         action = window.createAction(actionName, text, actionPath) 
         icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
 
-        custom_docker_states[setId] = {
-            "enabled": False,
-            "paths": paths,
-            "groupId": docker.groupId,
-            "tabsMode": docker.tabsMode
-        }
+        self.setState(cfg)
 
-        if not docker.hotkeyNumber == 0:
-            ConfigManager.instance().getHotkeyAction(docker.hotkeyNumber).triggered.connect(lambda: self.toggleDockers(setId))
+        if not cfg.hotkeyNumber == 0:
+            ConfigManager.instance().getHotkeyAction(cfg.hotkeyNumber).triggered.connect(lambda: self.toggleDockers(setId))
 
         pending_actions.append(action)
         action.triggered.connect(lambda: self.toggleDockers(setId))
@@ -88,3 +92,10 @@ class DockerGroups:
         cfg = ConfigManager.instance().getJSON()
         for docker in cfg.docker_groups:
             self.createAction(window, docker, subItemPath)
+
+    def onConfigUpdated(self):
+        cfg: ConfigFile = ConfigManager.instance().getJSON()
+        for item in cfg.docker_groups:
+            newDockerGroupData: CfgDockerGroup = item
+            if newDockerGroupData.id in custom_docker_states:
+                self.setState(newDockerGroupData)

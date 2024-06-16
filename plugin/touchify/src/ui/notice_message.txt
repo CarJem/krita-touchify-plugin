@@ -1,0 +1,4 @@
+- "Docker" and "Workspace" Edits REQUIRE A RELOAD to take effect
+- "Popups" and "Docker Groups" edits to existing entries take effect IMMEDIATELY
+- Adding or removing "Popups" or "Docker Groups" REQUIRE A RELOAD to take effect
+- Changes to the "Touchify Toolbox" take effect IMMEDIATELY

@@ -46,11 +46,6 @@
             "id": "fullscreen",
             "icon": "view-fullscreen",
             "isEnabled": true
-        },
-        {
-            "id": "DockerToggles_pykrita_reference_tabs",
-            "icon": "config-canvas-only",
-            "isEnabled": true
         }
     ],
     "kb_titleButtonHeight": 10,

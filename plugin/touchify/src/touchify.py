@@ -47,6 +47,14 @@ class Touchify(Extension):
         appNotifier.windowCreated.connect(self.finishActions)
         self.redesign_components.setup()
 
+        cfg: ConfigManager = ConfigManager.instance()
+        cfg.notifyConnect(self.onConfigUpdated)
+
+
+    def onConfigUpdated(self):
+        self.popup_toggles.onConfigUpdated()
+        self.docker_groups.onConfigUpdated()
+
 
     def createActions(self, window):
         self.mainMenuBar = window.qwindow().menuBar().addMenu("Touchify")

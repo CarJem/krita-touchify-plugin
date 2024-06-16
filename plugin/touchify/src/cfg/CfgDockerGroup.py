@@ -26,7 +26,6 @@ class CfgDockerGroup:
 
     def propertygrid_groups(self):
         groups = {}
-        groups["general"] = {"name": "General Settings", "items": ["id", "icon", "hotkeyNumber"]}
         return groups
 
     def propertygrid_restrictions(self):

@@ -35,7 +35,6 @@ class CfgPopup:
         ]
 
         groups = {}
-        groups["general"] = {"name": "General Settings", "items": ["id", "icon", "hotkeyNumber"]}
         groups["actions_mode"] = {"name": "Actions Mode Settings", "items": action_mode_settings}
         groups["docker_mode"] = {"name": "Docker Mode Settings", "items": docker_mode_settings}
         return groups

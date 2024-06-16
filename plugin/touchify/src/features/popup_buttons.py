@@ -22,6 +22,7 @@ from krita import *
 
 popup_dialogs = {}
 pending_actions = []
+popup_data = {}
 
 class PopupButtons:
 
@@ -33,12 +34,6 @@ class PopupButtons:
             return PopupDialog_Docker(qwin, data)
         else:
             return PopupDialog(qwin, data)
-
-    def showPopup(self, id, data: CfgPopup, mode: str):
-        if not id in popup_dialogs:
-            qwin = Krita.instance().activeWindow().qwindow()
-            popup_dialogs[id] = self.createPopup(qwin, data)
-        popup_dialogs[id].triggerPopup(mode)
 
 
     def buildMenu(self, menu: QMenu):
@@ -58,7 +53,7 @@ class PopupButtons:
         action = window.createAction(actionName, displayName, actionPath)
         icon = ResourceManager.iconLoader(iconName)        
         action.setIcon(icon)
-        action.triggered.connect(partial(self.showPopup, id, popup, "button"))
+        action.triggered.connect(partial(self.showPopup, id, "button"))
 
         if not hotkeyNumber == 0:
             ConfigManager.instance().getHotkeyAction(hotkeyNumber).triggered.connect(partial(self.showPopup, id, popup, "mouse"))
@@ -72,6 +67,28 @@ class PopupButtons:
 
         cfg = ConfigManager.instance().getJSON()
         for popup in cfg.popups:
+            popup_data[popup.id] = popup
             self.createAction(window, popup, subItemPath)
 
+    def showPopup(self, id, mode: str):
+        needToBuild = True
+        if not id in popup_dialogs:
+            needToBuild = True
+        elif popup_dialogs[id] == None:
+            needToBuild =  True
+
+        if needToBuild:
+            qwin = Krita.instance().activeWindow().qwindow()
+            popup_dialogs[id] = self.createPopup(qwin, popup_data[id])
+
+        popup_dialogs[id].triggerPopup(mode)
+
+    def onConfigUpdated(self):
+        cfg: ConfigFile = ConfigManager.instance().getJSON()
+        for item in cfg.popups:
+            newPopupData: CfgPopup = item
+            id = newPopupData.id
+            if id in popup_data:
+                popup_data[id] = newPopupData
+                popup_dialogs = None
 
