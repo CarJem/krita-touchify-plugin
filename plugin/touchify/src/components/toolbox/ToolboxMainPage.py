@@ -13,8 +13,12 @@ from .ToolboxPanelHost import ToolboxPanelHost
 class ToolboxMainPage(QWidget):
     _margins = QMargins(4, 4, 4, 4)
 
+
+    _lastSharedToolOptionsState = False
+
     def __init__(self, parent=None):
         super(ToolboxMainPage, self).__init__(parent)
+        self._lastSharedToolOptionsState = self.getSharedToolOptionState()
         configManager: ConfigManager = ConfigManager.instance()
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(self._margins)
@@ -30,7 +34,26 @@ class ToolboxMainPage(QWidget):
         self.autoFitScrollArea = True
         self.layout().addWidget(self.toolSettingsDocker)
 
-        self.loadDocker()
+
+        if self._lastSharedToolOptionsState:
+            self.loadDocker()
+
+
+    def getSharedToolOptionState(self):
+        if KritaSettings.readSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_TOOLBOX_USE_SHAREDTOOLDOCKER, "true") == "true":
+            return True
+        else: return False
+
+
+    def onKritaConfigUpdate(self):
+        _sharedToolOptionsState = self.getSharedToolOptionState()
+        if self._lastSharedToolOptionsState != _sharedToolOptionsState:
+            if _sharedToolOptionsState:
+                self.loadDocker()
+            else:
+                self.unloadDocker()
+            self._lastSharedToolOptionsState = _sharedToolOptionsState
+        
 
     def addDockerButton(self, properties, onClick, title):
         self.dockerBtns.addButton(properties, onClick, title)

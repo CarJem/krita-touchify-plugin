@@ -56,7 +56,7 @@ class Touchify(Extension):
         self.docker_groups.onConfigUpdated()
 
 
-    def createActions(self, window):
+    def createActions(self, window: Window):
         self.mainMenuBar = window.qwindow().menuBar().addMenu(TOUCHIFY_ID_MENU_ROOT)
 
         subItemPath = TOUCHIFY_ID_MENU_ROOT

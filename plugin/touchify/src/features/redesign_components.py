@@ -19,6 +19,7 @@ class RedesignComponents:
     usesThinDocumentTabs = False
     usesNuToolbox = False
     usesNuToolOptions = False
+    usesSharedToolDocker = False
     ntTB = None
     ntTO = None
 
@@ -51,6 +52,11 @@ class RedesignComponents:
             actions[3].setChecked(self.usesNuToolOptions)
         actions[3].toggled.connect(self.nuToolOptionsToggled)
 
+        actions.append(window.createAction(TOUCHIFY_ID_OPTIONS_TOOLBOX_USE_SHAREDTOOLDOCKER, "ToolboxToolOptions", ""))
+        actions[4].setCheckable(True)
+        actions[4].setChecked(self.usesSharedToolDocker)
+        actions[4].toggled.connect(self.toolboxUsesSharedToolDockerToggled)
+
         for a in actions:
             mainMenuBar.addAction(a)
 
@@ -78,6 +84,9 @@ class RedesignComponents:
 
         if KritaSettings.readSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_NU_TOOLBOX, "true") == "true":
             self.usesNuToolbox = True
+
+        if KritaSettings.readSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_TOOLBOX_USE_SHAREDTOOLDOCKER, "true") == "true":
+            self.usesSharedToolDocker = True
         
         if KritaSettings.readSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_NU_TOOL_OPTIONS, "true") == "true":
             self.usesNuToolOptions = True
@@ -103,6 +112,10 @@ class RedesignComponents:
         self.usesThinDocumentTabs = toggled
 
         self.rebuildStyleSheet(Krita.instance().activeWindow().qwindow())
+
+    def toolboxUsesSharedToolDockerToggled(self, toggled):
+        KritaSettings.writeSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_TOOLBOX_USE_SHAREDTOOLDOCKER, str(toggled).lower())
+        self.usesSharedToolDocker = toggled
 
     def nuToolboxToggled(self, toggled):
         KritaSettings.writeSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_NU_TOOLBOX, str(toggled).lower())

@@ -23,9 +23,9 @@ class TouchifyHotkeys:
             ConfigManager.instance().addHotkey(i, hotkeyAction)
 
         dockerFloatLockAction = window.createAction(TOUCHIFY_ID_ACTION_LOCK_FLOATING_DOCKERS, "Lock Floating Dockers", KRITA_ID_MENU_SETTINGS)
-        dockerFloatLockAction.toggled.connect(self.toggleAction)
+        dockerFloatLockAction.toggled.connect(self.toggleFloatLock)
         dockerFloatLockAction.setCheckable(True)
         dockerFloatLockAction.setChecked(False)
 
-    def toggleAction(self, value=None):
+    def toggleFloatLock(self, value=None):
         DockerManager.instance().toggleLockFloatingDockers(value)

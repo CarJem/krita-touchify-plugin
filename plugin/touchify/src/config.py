@@ -146,7 +146,6 @@ class ConfigManager:
         self.notify_hooks.append(event)
 
     def notifyUpdate(self):
-
         self.cfg.load()
 
         for hook in self.notify_hooks:
@@ -168,10 +167,24 @@ class ConfigManager:
         return self.cfg
 
 class KritaSettings:
+
+    def init():
+        KritaSettings.notify_hooks = []
+
+    def notifyConnect(event):
+        KritaSettings.notify_hooks.append(event)
+
+    def notifyUpdate():
+        for hook in KritaSettings.notify_hooks:
+            hook()
+
     def readSetting(group:str, name:str, defaultValue:str):
         return Krita.instance().readSetting(group, name, defaultValue)
     
     def writeSetting(group:str, name:str, value:str):
-        return Krita.instance().writeSetting(group, name, value)
+        result = Krita.instance().writeSetting(group, name, value)
+        KritaSettings.notifyUpdate()
+        return result
 
+KritaSettings.init()
 ConfigManager.root = ConfigManager(BASE_DIR)

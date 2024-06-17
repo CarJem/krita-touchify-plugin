@@ -22,6 +22,13 @@ class TouchifyToolbox(DockWidget):
 
         cfg: ConfigManager = ConfigManager.instance()
         cfg.notifyConnect(self.onConfigUpdated)
+
+        KritaSettings.notifyConnect(self.onKritaConfigUpdate)
+        
+
+    def onKritaConfigUpdate(self):
+        if self.panelStack:
+            self.panelStack._mainWidget.onKritaConfigUpdate()
     
     def onLoaded(self):              
         self.panelStack = ToolboxRoot(self)
