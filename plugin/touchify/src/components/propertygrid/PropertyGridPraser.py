@@ -17,7 +17,7 @@ class PropertyGridPraser:
             return PropertyField_Float(varName, variable, item)            
         elif varType == bool:
             return PropertyField_Bool(varName, variable, item)
-        #elif varType == TypedList:
-            #return PropertyField_TypedList(varName, variable, item)
+        elif varType == TypedList:
+            return PropertyField_TypedList(varName, variable, item)
         else:
             return PropertyField(varName, variable, item)

@@ -6,7 +6,7 @@ import json
 import sys
 import importlib.util
 
-from ..components.propertygrid.PropertyGridBuilder import PropertyGridBuilder
+from ..components.propertygrid.PropertyGridFactory import PropertyGridFactory
 
 from ..components.propertygrid.PropertyGridHost import PropertyGridHost
 from ..config import *
@@ -54,9 +54,9 @@ class SettingsDialog:
         self.notice.setMinimumWidth(150)
         self.notice.setStyleSheet('''font-size: 10px''')
 
-        self.propertyGridFrame = PropertyGridBuilder.buildHost()
-        PropertyGridBuilder.updateHostDataObject(self.propertyGridFrame, self.cfg)
-        self.layout.addWidget(self.propertyGridFrame, 0, 0)
+        self.propGridFactory = PropertyGridFactory()
+        self.propGridFactory.updateDataObject(self.cfg)
+        self.layout.addWidget(self.propGridFactory.gridHost, 0, 0)
 
 
 

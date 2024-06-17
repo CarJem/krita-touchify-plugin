@@ -1,14 +1,23 @@
-from PyQt5.QtWidgets import QStackedWidget, QWidget
+from PyQt5.QtWidgets import QStackedWidget, QWidget, QScrollArea
 
 
 class PropertyGridHost(QStackedWidget):
 
-    def init(self, obj: QWidget):
-        self.propertyGrid = obj
-        self.insertWidget(0, self.propertyGrid)
 
-    def getGridObject(self):
-        return self.propertyGrid
+    def __init__(self, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.rootPropertyGrid = None
+
+    def setGrid(self, obj: QWidget):
+        if self.rootPropertyGrid == None:
+            self.rootPropertyGrid = obj
+            self.insertWidget(0, self.rootPropertyGrid)
+
+    def getGrid(self) -> QScrollArea:
+        return self.rootPropertyGrid
+    
+    def updateDataObject(self, data: any):
+        self.rootPropertyGrid.updateDataObject(data)
 
     def goForward(self, newPage):
         pass

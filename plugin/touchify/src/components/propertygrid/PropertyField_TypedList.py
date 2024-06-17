@@ -129,6 +129,7 @@ class PropertyField_TypedList(PropertyField):
         self.stackHost.goBack()
         self.dlg_dispose()
 
+
     def itemOptions(self, mode):
         if mode == "edit" or mode == "add":
             self.dlg = QDialog(self)
@@ -138,7 +139,8 @@ class PropertyField_TypedList(PropertyField):
             self.dlg.btns.accepted.connect(lambda: self.dlg_accept())
             self.dlg.btns.rejected.connect(lambda: self.dlg_reject())
 
-            self.subwindowPropGrid = PropertyGrid(self.stackHost)
+            from .PropertyGrid import PropertyGrid
+            self.subwindowPropGrid = PropertyGrid()
             self.container.addWidget(self.subwindowPropGrid)
             self.container.addWidget(self.dlg.btns)
             self.dlg.setLayout(self.container)
