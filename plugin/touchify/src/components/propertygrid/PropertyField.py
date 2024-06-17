@@ -6,7 +6,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 from .PropertyGridExtensions import *
-from .PropertyGridHost import *
+from .PropertyGrid import *
 
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 from .IconSelector import IconSelector
@@ -44,5 +44,5 @@ class PropertyField(QWidget):
         self.setContentsMargins(0, 0, 0, 0)
         self.setSizePolicy(ROW_SIZE_POLICY_X, ROW_SIZE_POLICY_Y)
 
-    def setStackHost(self, host: PropertyGridHost):
+    def setStackHost(self, host: PropertyGrid):
         self.stackHost = host

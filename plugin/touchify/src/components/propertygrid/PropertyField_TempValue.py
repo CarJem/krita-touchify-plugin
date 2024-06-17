@@ -6,7 +6,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 from .PropertyGridExtensions import *
-from .PropertyGridHost import *
+from .PropertyGrid import *
 
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 

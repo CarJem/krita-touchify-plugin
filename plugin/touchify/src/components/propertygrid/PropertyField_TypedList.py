@@ -139,8 +139,8 @@ class PropertyField_TypedList(PropertyField):
             self.dlg.btns.accepted.connect(lambda: self.dlg_accept())
             self.dlg.btns.rejected.connect(lambda: self.dlg_reject())
 
-            from .PropertyGrid import PropertyGrid
-            self.subwindowPropGrid = PropertyGrid()
+            from .PropertyGridPanel import PropertyGridPanel
+            self.subwindowPropGrid = PropertyGridPanel(self.stackHost)
             self.container.addWidget(self.subwindowPropGrid)
             self.container.addWidget(self.dlg.btns)
             self.dlg.setLayout(self.container)

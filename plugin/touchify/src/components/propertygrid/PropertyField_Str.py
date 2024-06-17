@@ -12,7 +12,7 @@ from ...ext.extensions import KritaExtensions
 from ..CollapsibleBox import CollapsibleBox
 
 from .PropertyGridExtensions import *
-from .PropertyGridHost import *
+from .PropertyGrid import *
 from .IconSelector import IconSelector
 from .PropertyField import *
 
