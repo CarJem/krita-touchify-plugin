@@ -144,7 +144,7 @@ class NtWidgetPad(QWidget):
 
             newSize = self.sizeHint()
             if view.height() < newSize.height():
-                newSize.setHeight(view.height())
+                newSize.setHeight(view.height() - 10)
 
             if view.width() < newSize.width():
                 newSize.setWidth(view.width())

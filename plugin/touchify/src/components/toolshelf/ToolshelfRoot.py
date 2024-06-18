@@ -7,14 +7,14 @@ from krita import *
 from PyQt5.QtWidgets import QPushButton, QStackedWidget, QSizePolicy
 from PyQt5.QtCore import QSize, QEvent
 from ...config import *
-from .ToolboxPanelHost import ToolboxPanelHost
-from .ToolboxMainPage import ToolboxMainPage
+from .ToolshelfPanelHost import ToolshelfPanelHost
+from .ToolshelfMainPage import ToolshelfMainPage
 from ...docker_manager import DockerManager
 
-class ToolboxRoot(QStackedWidget):
+class ToolshelfRoot(QStackedWidget):
 
     def __init__(self, parent=None):
-        super(ToolboxRoot, self).__init__(parent)
+        super(ToolshelfRoot, self).__init__(parent)
         self._panels = {}
         self.shortcutConnections = []
         self.current_panel_id = 'MAIN'
@@ -22,7 +22,7 @@ class ToolboxRoot(QStackedWidget):
         configManager: ConfigManager = ConfigManager.instance()
         super().currentChanged.connect(self.currentChanged)
         
-        self._mainWidget = ToolboxMainPage()
+        self._mainWidget = ToolshelfMainPage(self)
         self.addPanel('MAIN', True, self._mainWidget)
         for entry in configManager.getJSON().kb_dockers:
             properties: CfgToolboxPanel = entry
@@ -31,9 +31,10 @@ class ToolboxRoot(QStackedWidget):
                 panel_title = properties.id
                 self.addPanel(PANEL_ID, False, properties)    
                 self._mainWidget.addDockerButton(properties, self.panel(PANEL_ID).activate, panel_title)
+        self.changePanel('MAIN')
 
     def addPanel(self, ID, isPanelMode, data):
-        panel = ToolboxPanelHost(self, ID, isPanelMode, data)
+        panel = ToolshelfPanelHost(self, ID, isPanelMode, data)
         if self.count() > 0:
             backButton = ToolboxPanelCloseButton(self.goHome)
             panel.layout().addWidget(backButton)
@@ -73,14 +74,16 @@ class ToolboxRoot(QStackedWidget):
         self.parentWidget().adjustSize()
     
     def dismantle(self):
+        self.changePanel('MAIN')
+
         for pnl in self._panels:
-            panel: ToolboxPanelHost = self._panels[pnl]
+            panel: ToolshelfPanelHost = self._panels[pnl]
             panel.unloadDockers()
 
         for c in self.shortcutConnections:
             self.disconnect(c)
 
-    def panel(self, name) -> ToolboxPanelHost:
+    def panel(self, name) -> ToolshelfPanelHost:
         return self._panels[name]
 
 

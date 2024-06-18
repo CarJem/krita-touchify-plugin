@@ -1,5 +1,7 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
+
+from .toolshelf_docker import TouchifyToolshelf, getTouchifyToolboxInstance
 from .components.nu_tools.NtToolbox import NtToolbox
 from .components.nu_tools.NtToolOptions import NtToolOptions
 from . import stylesheet
@@ -52,6 +54,10 @@ class Touchify(Extension):
 
 
     def onConfigUpdated(self):
+        touchifyToolbox = getTouchifyToolboxInstance()
+        if touchifyToolbox:
+            touchifyToolbox.onConfigUpdated()
+
         self.popup_toggles.onConfigUpdated()
         self.docker_groups.onConfigUpdated()
 

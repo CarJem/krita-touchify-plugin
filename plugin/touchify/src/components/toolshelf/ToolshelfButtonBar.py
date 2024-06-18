@@ -3,7 +3,7 @@
 from ...resources import ResourceManager
 from ...cfg.CfgToolboxAction import CfgToolboxAction
 from krita import *
-from .ToolboxButton import ToolboxButton
+from .ToolshelfButton import ToolshelfButton
 
 
 from ...config import *
@@ -11,10 +11,10 @@ from ...config import *
 from PyQt5.QtWidgets import QWidget, QHBoxLayout
 from PyQt5.QtCore import QSize, Qt
 
-class ToolboxButtonBar(QWidget):
+class ToolshelfButtonBar(QWidget):
 
     def __init__(self, btnSize, parent=None):
-        super(ToolboxButtonBar, self).__init__(parent)
+        super(ToolshelfButtonBar, self).__init__(parent)
         self.setLayout(QHBoxLayout())
         self.layout().setContentsMargins(0, 0, 0, 0)
 
@@ -23,7 +23,7 @@ class ToolboxButtonBar(QWidget):
 
 
     def addButton(self, properties: CfgToolboxAction, onClick, toolTip="", checkable=False):
-        btn = ToolboxButton(self.btnSize)
+        btn = ToolshelfButton(self.btnSize)
         btn.setIcon(ResourceManager.iconLoader(properties.icon))
         btn.clicked.connect(onClick) # collect and disconnect all when closing
         btn.setToolTip(toolTip)

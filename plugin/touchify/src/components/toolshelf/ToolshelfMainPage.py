@@ -1,5 +1,6 @@
 
 
+
 from ...variables import *
 from ...cfg.CfgToolboxAction import CfgToolboxAction
 from krita import *
@@ -7,36 +8,35 @@ from krita import *
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import QMargins
 from ...config import *
-from .ToolboxButtonBar import ToolboxButtonBar
-from .ToolboxPanelDocker import ToolboxPanelDocker
+from .ToolshelfButtonBar import ToolshelfButtonBar
+from .ToolshelfPanelDocker import ToolshelfPanelDocker
 
-class ToolboxMainPage(QWidget):
+class ToolshelfMainPage(QWidget):
     _margins = QMargins(4, 4, 4, 4)
 
 
     _lastSharedToolOptionsState = False
 
-    def __init__(self, parent=None):
-        super(ToolboxMainPage, self).__init__(parent)
+    def __init__(self, parent: QStackedWidget=None):
+        self.isUnloading = False
+
+        self.toolshelfRoot: QStackedWidget = parent
+        super(ToolshelfMainPage, self).__init__(parent)
         self._lastSharedToolOptionsState = self.getSharedToolOptionState()
         configManager: ConfigManager = ConfigManager.instance()
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(self._margins)
 
-        self.dockerBtns = ToolboxButtonBar(configManager.getJSON().kb_dockerButtonHeight)
+        self.dockerBtns = ToolshelfButtonBar(configManager.getJSON().kb_dockerButtonHeight)
         self.layout().addWidget(self.dockerBtns)    
 
-        self.quickActions = ToolboxButtonBar(configManager.getJSON().kb_actionHeight)
+        self.quickActions = ToolshelfButtonBar(configManager.getJSON().kb_actionHeight)
         self.initQuickActions()
         self.layout().addWidget(self.quickActions)
 
-        self.toolSettingsDocker = ToolboxPanelDocker(self, KRITA_ID_DOCKER_SHAREDTOOLDOCKER)
+        self.toolSettingsDocker = ToolshelfPanelDocker(self, KRITA_ID_DOCKER_SHAREDTOOLDOCKER)
         self.autoFitScrollArea = True
         self.layout().addWidget(self.toolSettingsDocker)
-
-
-        if self._lastSharedToolOptionsState:
-            self.loadDocker()
 
 
     def getSharedToolOptionState(self):
@@ -45,14 +45,15 @@ class ToolboxMainPage(QWidget):
         else: return False
 
 
-    def onKritaConfigUpdate(self):
+    def onKritaConfigUpdate(self):       
         _sharedToolOptionsState = self.getSharedToolOptionState()
         if self._lastSharedToolOptionsState != _sharedToolOptionsState:
-            if _sharedToolOptionsState:
-                self.loadDocker()
-            else:
-                self.unloadDocker()
             self._lastSharedToolOptionsState = _sharedToolOptionsState
+            if self.toolshelfRoot.currentIndex() == 0:
+                if _sharedToolOptionsState:
+                    self.loadDocker()
+                else:
+                    self.unloadDocker()
         
 
     def addDockerButton(self, properties, onClick, title):
@@ -77,7 +78,8 @@ class ToolboxMainPage(QWidget):
                         btn.setChecked(action.isChecked())
 
     def loadDocker(self):
-        self.toolSettingsDocker.loadDocker()
+        if self._lastSharedToolOptionsState:
+            self.toolSettingsDocker.loadDocker()
         
     def unloadDocker(self):
         self.toolSettingsDocker.unloadDocker()

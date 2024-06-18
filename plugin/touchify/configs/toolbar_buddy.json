@@ -10,6 +10,20 @@
                     "nesting_mode": "normal",
                     "size_x": 0,
                     "size_y": 0
+                },
+                {
+                    "id": "PatternDocker",
+                    "nesting_mode": "normal",
+                    "panel_y": 0,
+                    "size_x": 0,
+                    "size_y": 0
+                },
+                {
+                    "id": "SvgSymbolCollectionDocker",
+                    "nesting_mode": "normal",
+                    "panel_y": 0,
+                    "size_x": 0,
+                    "size_y": 0
                 }
             ]
         },
@@ -23,6 +37,20 @@
                     "nesting_mode": "normal",
                     "size_x": 0,
                     "size_y": 0
+                },
+                {
+                    "panel_y": 1,
+                    "id": "PaletteDocker",
+                    "nesting_mode": "normal",
+                    "size_x": 200,
+                    "size_y": 200
+                },
+                {
+                    "panel_y": 1,
+                    "id": "pykrita_reference_tabs",
+                    "nesting_mode": "normal",
+                    "size_x": 200,
+                    "size_y": 200
                 }
             ]
         },
@@ -35,7 +63,7 @@
                     "id": "OverviewDocker",
                     "size_x": 300,
                     "size_y": 200,
-                    "nesting_mode": "normal"
+                    "nesting_mode": "docking"
                 },
                 {
                     "id": "pykrita_reference_tabs",
@@ -44,6 +72,29 @@
                     "size_y": 200
                 }
             ]
+        },
+        {
+            "icon": "custom:HistoryDockers",
+            "id": "History",
+            "isEnabled": true,
+            "additional_dockers": [
+                {
+                    "id": "History",
+                    "nesting_mode": "normal",
+                    "panel_y": 0,
+                    "size_x": 0,
+                    "size_y": 0
+                },
+                {
+                    "id": "Snapshot",
+                    "panel_y": 1,
+                    "nesting_mode": "normal",
+                    "size_x": 100,
+                    "size_y": 100
+                }
+            ],
+            "size_x": 0,
+            "size_y": 0
         }
     ],
     "kb_actions": [

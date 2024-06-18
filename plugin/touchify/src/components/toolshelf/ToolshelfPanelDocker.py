@@ -7,11 +7,11 @@ from ...docker_manager import DockerManager
 
 from krita import *
 
-class ToolboxPanelDocker(QWidget):
+class ToolshelfPanelDocker(QWidget):
 
     
     def __init__(self, parent: QWidget | None, ID):
-        super(ToolboxPanelDocker, self).__init__(parent)
+        super(ToolshelfPanelDocker, self).__init__(parent)
         self.ID = ID
         self.borrowedDocker = None
         self.size = None
@@ -61,7 +61,7 @@ class ToolboxPanelDocker(QWidget):
         self.dockMode = value
 
     def setSizeHint(self, size):
-        self.size = QSize(size[0], size[1]+12)
+        self.size = QSize(size[0], size[1])
 
     def sizeHint(self):
         if self.size:
