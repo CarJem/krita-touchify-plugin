@@ -7,7 +7,7 @@ import os
 from .ext.extensions import JsonExtensions
 from .cfg.CfgDocker import CfgDocker
 from .cfg.CfgDockerGroup import CfgDockerGroup
-from .cfg.CfgToolboxDocker import CfgToolboxDocker
+from .cfg.CfgToolboxPanel import CfgToolboxPanel
 from .cfg.CfgPopup import CfgPopup
 from .cfg.CfgWorkspace import CfgWorkspace
 from .cfg.CfgToolboxAction import CfgToolboxAction
@@ -24,7 +24,7 @@ class ConfigFile:
     popups: TypedList[CfgPopup] = []
     workspaces: TypedList[CfgWorkspace] = []
 
-    kb_dockers: TypedList[CfgToolboxDocker] = []
+    kb_dockers: TypedList[CfgToolboxPanel] = []
     kb_actions: TypedList[CfgToolboxAction] = []
     kb_titleButtonHeight: int = 10
     kb_dockerButtonHeight: int = 32
@@ -36,7 +36,7 @@ class ConfigFile:
         CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', "toolbar_buddy.json")
         with open(CONFIG_FILE) as f:
             jsonData = json.load(f)
-            self.kb_dockers = Extensions.list_assignment(jsonData["kb_dockers"], CfgToolboxDocker)
+            self.kb_dockers = Extensions.list_assignment(jsonData["kb_dockers"], CfgToolboxPanel)
             self.kb_actions = Extensions.list_assignment(jsonData["kb_actions"], CfgToolboxAction)
             self.kb_titleButtonHeight = JsonExtensions.tryGetEntry(jsonData, "kb_titleButtonHeight", int, 10)
             self.kb_dockerButtonHeight = JsonExtensions.tryGetEntry(jsonData, "kb_dockerButtonHeight", int, 32)

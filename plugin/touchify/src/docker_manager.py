@@ -40,9 +40,6 @@ class DockerManager():
                         docker.setAllowedAreas(self.floatingLock_previousState[docker_id])
                         self.floatingLock_previousState[docker_id] = None
 
-    def borrowDockerWidget(self, ID):
-        return self.borrowDockerWidget(self, ID, False)
-
     def borrowDockerWidget(self, ID, dockMode=False):
 
         # Already in Use, don't borrow twice
@@ -76,7 +73,7 @@ class DockerManager():
         Return the borrowed docker to it's original QDockWidget"""
         # Ensure there's a widget to return
         if ID in self.borrowing_actualDocker:
-            if self.borrowing_actualDocker[ID]:
+            if self.borrowing_actualDocker[ID] != None:
                 if self.borrowing_previousDockerState[ID]["dockMode"]:
                     self._qWin.addDockWidget(self.borrowing_previousDockerState[ID]["dockWidgetArea"], self.borrowing_actualDocker[ID])
                     titlebarSetting = KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, "showDockerTitleBars", "false")

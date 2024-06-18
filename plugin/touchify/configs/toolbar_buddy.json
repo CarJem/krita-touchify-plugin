@@ -1,34 +1,49 @@
 {
     "kb_dockers": [
         {
-            "id": "PaletteDocker",
+            "id": "Palette",
             "icon": "palette-library",
-            "size_x": 0,
-            "size_y": 0,
-            "isEnabled": true
-        },
-        {
-            "id": "KisLayerBox",
-            "icon": "all-layers",
-            "size_x": 0,
-            "size_y": 0,
-            "isEnabled": true
-        },
-        {
-            "icon": "config-canvas-only",
-            "id": "OverviewDocker",
             "isEnabled": true,
-            "nesting_mode": "docking",
-            "size_x": 300,
-            "size_y": 300
+            "additional_dockers": [
+                {
+                    "id": "PaletteDocker",
+                    "nesting_mode": "normal",
+                    "size_x": 0,
+                    "size_y": 0
+                }
+            ]
         },
         {
-            "size_x": 300,
-            "size_y": 300,
-            "id": "pykrita_reference_tabs",
+            "id": "Layers",
+            "icon": "all-layers",
+            "isEnabled": true,
+            "additional_dockers": [
+                {
+                    "id": "KisLayerBox",
+                    "nesting_mode": "normal",
+                    "size_x": 0,
+                    "size_y": 0
+                }
+            ]
+        },
+        {
+            "id": "Overview",
             "icon": "camera-photo",
             "isEnabled": true,
-            "nesting_mode": "normal"
+            "additional_dockers": [
+                {
+                    "id": "OverviewDocker",
+                    "size_x": 300,
+                    "size_y": 200,
+                    "nesting_mode": "normal"
+                },
+                {
+                    "id": "pykrita_reference_tabs",
+                    "nesting_mode": "normal",
+                    "size_x": 300,
+                    "size_y": 200
+                }
+            ]
         }
     ],
     "kb_actions": [

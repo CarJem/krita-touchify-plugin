@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import QMargins
 from ...config import *
 from .ToolboxButtonBar import ToolboxButtonBar
-from .ToolboxPanelHost import ToolboxPanelHost
+from .ToolboxPanelDocker import ToolboxPanelDocker
 
 class ToolboxMainPage(QWidget):
     _margins = QMargins(4, 4, 4, 4)
@@ -30,7 +30,7 @@ class ToolboxMainPage(QWidget):
         self.initQuickActions()
         self.layout().addWidget(self.quickActions)
 
-        self.toolSettingsDocker = ToolboxPanelHost(self, KRITA_ID_DOCKER_SHAREDTOOLDOCKER)
+        self.toolSettingsDocker = ToolboxPanelDocker(self, KRITA_ID_DOCKER_SHAREDTOOLDOCKER)
         self.autoFitScrollArea = True
         self.layout().addWidget(self.toolSettingsDocker)
 
