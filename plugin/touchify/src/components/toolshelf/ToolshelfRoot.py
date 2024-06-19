@@ -69,6 +69,7 @@ class ToolshelfRoot(QStackedWidget):
                 policy = QSizePolicy.Policy.Expanding
                 widget.setEnabled(True)
             else:
+                policy = QSizePolicy.Policy.Ignored
                 widget.setDisabled(False)
 
             widget.setSizePolicy(policy, policy)
