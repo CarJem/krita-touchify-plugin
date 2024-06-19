@@ -7,7 +7,7 @@ from ...resources import ResourceManager
 
 from ...ext.extensions import KritaExtensions
 
-class IconSelector(QDialog):
+class PropertyGrid_SelectorDialog(QDialog):
 
     selected_item: str
 

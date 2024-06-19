@@ -1,7 +1,9 @@
 
 
 import uuid
-from ...cfg.CfgToolboxPanel import CfgToolboxPanel
+
+from ...cfg.CfgToolshelf import CfgToolboxPanel
+from ...cfg.CfgToolshelf import CfgToolboxPanel
 from krita import *
 
 from PyQt5.QtWidgets import QPushButton, QStackedWidget, QSizePolicy

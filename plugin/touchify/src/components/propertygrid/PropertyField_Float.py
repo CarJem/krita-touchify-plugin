@@ -13,7 +13,7 @@ from ..CollapsibleBox import CollapsibleBox
 
 from .PropertyGridExtensions import *
 from .PropertyGrid import *
-from .IconSelector import IconSelector
+from .PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from .PropertyField import *
 
 

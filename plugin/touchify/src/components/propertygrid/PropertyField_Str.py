@@ -13,7 +13,7 @@ from ..CollapsibleBox import CollapsibleBox
 
 from .PropertyGridExtensions import *
 from .PropertyGrid import *
-from .IconSelector import IconSelector
+from .PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from .PropertyField import *
 
 
@@ -113,7 +113,7 @@ class PropertyField_Str(PropertyField):
         self.dlg.reject()
 
     def helperRequested(self, mode):
-        self.dlg = IconSelector(self.stackHost)
+        self.dlg = PropertyGrid_SelectorDialog(self.stackHost)
         self.dlg.setWindowFlags(Qt.WindowType.Widget)
         self.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         self.btns.accepted.connect(lambda: self.dlg_accept())

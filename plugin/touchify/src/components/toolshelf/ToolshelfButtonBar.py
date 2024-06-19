@@ -1,7 +1,8 @@
 
 
+from ...cfg.CfgToolshelf import CfgToolboxAction
 from ...resources import ResourceManager
-from ...cfg.CfgToolboxAction import CfgToolboxAction
+from ...cfg.CfgToolshelf import CfgToolboxAction
 from krita import *
 from .ToolshelfButton import ToolshelfButton
 

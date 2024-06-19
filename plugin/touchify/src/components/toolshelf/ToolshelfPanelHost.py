@@ -2,8 +2,8 @@ from typing import Dict
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from ...cfg.CfgToolboxPanel import CfgToolboxPanel
-from ...cfg.CfgToolboxPanelDocker import CfgToolboxPanelDocker
+from ...cfg.CfgToolshelf import CfgToolboxPanel
+from ...cfg.CfgToolshelf import CfgToolboxPanelDocker
 
 from ...docker_manager import DockerManager
 from .ToolshelfPanelDocker import ToolshelfPanelDocker

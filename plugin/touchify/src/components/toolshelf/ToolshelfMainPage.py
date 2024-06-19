@@ -1,8 +1,9 @@
 
 
 
+from ...cfg.CfgToolshelf import CfgToolboxAction
 from ...variables import *
-from ...cfg.CfgToolboxAction import CfgToolboxAction
+from ...cfg.CfgToolshelf import CfgToolboxAction
 from krita import *
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea

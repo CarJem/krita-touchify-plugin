@@ -10,10 +10,10 @@ from .variables import *
 from .ext.extensions import JsonExtensions
 from .cfg.CfgDocker import CfgDocker
 from .cfg.CfgDockerGroup import CfgDockerGroup
-from .cfg.CfgToolboxPanel import CfgToolboxPanel
+from .cfg.CfgToolshelf import CfgToolboxPanel
 from .cfg.CfgPopup import CfgPopup
 from .cfg.CfgWorkspace import CfgWorkspace
-from .cfg.CfgToolboxAction import CfgToolboxAction
+from .cfg.CfgToolshelf import CfgToolboxAction
 from .ext.extensions import *
 from ..paths import BASE_DIR
     

@@ -9,7 +9,7 @@ from .PropertyGridExtensions import *
 from .PropertyGrid import *
 
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
-from .IconSelector import IconSelector
+from .PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from ...ext.typedlist import *
 from ...resources import *
 from ...ext.extensions import KritaExtensions

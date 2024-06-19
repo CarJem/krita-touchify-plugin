@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 from .PropertyGrid import PropertyGrid
 from .PropertyGridExtensions import *
 from .PropertyGridPraser import *
-from .IconSelector import *
+from .PropertyGrid_SelectorDialog import *
 
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
