@@ -19,15 +19,15 @@ class ToolshelfRoot(QStackedWidget):
         self.shortcutConnections = []
         self.current_panel_id = 'MAIN'
         
-        cfg = ConfigManager.instance().getJSON()
+        self.cfg = self.getCfg(enableToolOptions)
         super().currentChanged.connect(self.currentChanged)
         
         self._mainWidget = ToolshelfMainPage(self, enableToolOptions)
         self.addPanel('MAIN', True, self._mainWidget)
 
-        dockers = cfg.kb_dockers if enableToolOptions else cfg.kb_toolbox_dockers
+        panels = self.cfg.panels
 
-        for entry in dockers:
+        for entry in panels:
             properties: CfgToolboxPanel = entry
             if properties.isEnabled:
                 PANEL_ID = str(uuid.uuid4())
@@ -37,10 +37,15 @@ class ToolshelfRoot(QStackedWidget):
         self.changePanel('MAIN')
         self.currentChanged(self.currentIndex())
 
+    def getCfg(self, enableToolOptions: bool = False):
+        cfg = ConfigManager.instance().getJSON()
+        if enableToolOptions: return cfg.toolshelf_main
+        else: return cfg.toolshelf_alt
+
     def addPanel(self, ID, isPanelMode, data):
         panel = ToolshelfPanelHost(self, ID, isPanelMode, data)
         if self.count() > 0:
-            backButton = ToolboxPanelCloseButton(self.goHome)
+            backButton = ToolboxPanelCloseButton(self.goHome, self.cfg)
             panel.layout().addWidget(backButton)
         self._panels[ID] = panel
         super().addWidget(panel)
@@ -49,10 +54,6 @@ class ToolshelfRoot(QStackedWidget):
         self.changePanel('MAIN')
 
     def changePanel(self, panel_id: any):
-        #dev_msg = "Old Panel ID: {0} \n New Panel ID: {1}".format(panel_id, self.current_panel_id)
-        #msg = QMessageBox(self)
-        #msg.setText(dev_msg)
-        #msg.show()
         new_panel = self.panel(panel_id)
         old_panel = self.panel(self.current_panel_id)
 
@@ -95,11 +96,11 @@ class ToolshelfRoot(QStackedWidget):
 class ToolboxPanelCloseButton(QPushButton):
 
 
-    def __init__(self, onClick, parent=None):
+    def __init__(self, onClick, cfg: CfgToolshelf, parent=None):
         super(ToolboxPanelCloseButton, self).__init__(parent)
 
         configManager: ConfigManager = ConfigManager.instance()
-        self._height = configManager.getJSON().kb_dockerBackHeight
+        self._height = cfg.dockerBackHeight
         self._iconSize = self._height - 2
         
         self.setIcon(Krita.instance().action('move_layer_up').icon())

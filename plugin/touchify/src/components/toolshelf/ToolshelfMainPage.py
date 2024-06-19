@@ -12,7 +12,7 @@ from .ToolshelfButtonBar import ToolshelfButtonBar
 from .ToolshelfPanelDocker import ToolshelfPanelDocker
 
 class ToolshelfMainPage(QWidget):
-    _margins = QMargins(4, 4, 4, 4)
+    _margins = QMargins(1, 1, 1, 1)
 
 
     _lastSharedToolOptionsState = False
@@ -21,16 +21,18 @@ class ToolshelfMainPage(QWidget):
         self.isUnloading = False
         self.enableToolOptions = enableToolOptions
         self.toolshelfRoot: QStackedWidget = parent
+        self.cfg = self.getCfg(enableToolOptions)
+
         super(ToolshelfMainPage, self).__init__(parent)
         self._lastSharedToolOptionsState = self.getSharedToolOptionState()
-        configManager: ConfigManager = ConfigManager.instance()
+
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(self._margins)
 
-        self.dockerBtns = ToolshelfButtonBar(configManager.getJSON().kb_dockerButtonHeight)
+        self.dockerBtns = ToolshelfButtonBar(self.cfg.dockerButtonHeight)
         self.layout().addWidget(self.dockerBtns)    
 
-        self.quickActions = ToolshelfButtonBar(configManager.getJSON().kb_actionHeight)
+        self.quickActions = ToolshelfButtonBar(self.cfg.actionHeight)
         self.initQuickActions()
         self.layout().addWidget(self.quickActions)
 
@@ -38,6 +40,10 @@ class ToolshelfMainPage(QWidget):
         self.autoFitScrollArea = True
         self.layout().addWidget(self.toolSettingsDocker)
 
+    def getCfg(self, enableToolOptions: bool = False):
+        cfg = ConfigManager.instance().getJSON()
+        if enableToolOptions: return cfg.toolshelf_main
+        else: return cfg.toolshelf_alt
 
     def getSharedToolOptionState(self):
         if InternalConfig.instance().nuOptions_SharedToolDocker and self.enableToolOptions:
@@ -60,8 +66,7 @@ class ToolshelfMainPage(QWidget):
         self.dockerBtns.addButton(properties, onClick, title)
 
     def initQuickActions(self):
-        cfg = ConfigManager.instance().getJSON()
-        actions = cfg.kb_actions if self.enableToolOptions else cfg.kb_toolbox_actions
+        actions = self.cfg.actions
         for entry in actions:
             act: CfgToolboxAction = entry
             if act.isEnabled:

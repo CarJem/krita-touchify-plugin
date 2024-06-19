@@ -81,8 +81,7 @@ class NtDockers():
 
 
     def updateStyleSheet(self):
-        #variables.setColors()
-        #self.pad.setStyleSheet(variables.nu_tool_options_style)
+        self.pad.setStyleSheet(stylesheet.nu_tool_options_style)
         return
     
     def close(self):

@@ -16,6 +16,7 @@ class ToolshelfButtonBar(QWidget):
     def __init__(self, btnSize, parent=None):
         super(ToolshelfButtonBar, self).__init__(parent)
         self.setLayout(QHBoxLayout())
+        self.layout().setSpacing(1)
         self.layout().setContentsMargins(0, 0, 0, 0)
 
         self._buttons = {}

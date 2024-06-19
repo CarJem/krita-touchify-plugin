@@ -77,8 +77,6 @@ class RedesignComponents:
         self.build(window)
 
     def build(self, window):
-        stylesheet.buildFlatTheme()
-        
         if (InternalConfig.instance().usesNuToolOptions 
             and KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, KRITA_ID_OPTIONS_TOOLOPTIONS_IN_DOCKER, "false") == "true"):
                 self.ntToolOptions = NtToolOptions(window)

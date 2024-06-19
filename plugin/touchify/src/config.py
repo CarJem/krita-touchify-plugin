@@ -3,6 +3,8 @@ from PyQt5.QtCore import *
 import json
 import os
 
+from .cfg.CfgToolshelf import CfgToolshelf
+
 from .variables import *
 
 from .ext.extensions import JsonExtensions
@@ -25,48 +27,19 @@ class ConfigFile:
     popups: TypedList[CfgPopup] = []
     workspaces: TypedList[CfgWorkspace] = []
 
-    kb_dockers: TypedList[CfgToolboxPanel] = []
-    kb_actions: TypedList[CfgToolboxAction] = []
+    toolshelf_main: CfgToolshelf = CfgToolshelf()
+    toolshelf_alt: CfgToolshelf = CfgToolshelf()
 
-    kb_toolbox_dockers: TypedList[CfgToolboxPanel] = []
-    kb_toolbox_actions: TypedList[CfgToolboxAction] = []
-    
-    kb_titleButtonHeight: int = 10
-    kb_dockerButtonHeight: int = 32
-    kb_dockerBackHeight: int = 16
-    kb_sliderHeight: int = 16
-    kb_actionHeight: int = 16
-
-    def load_kb(self):
-        CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', "toolbar_buddy.json")
+    def loadClass(self, configName, type):
+        CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
         with open(CONFIG_FILE) as f:
             jsonData = json.load(f)
-            self.kb_dockers = JsonExtensions.tryGetListAssignment(jsonData, "kb_dockers", CfgToolboxPanel, [])
-            self.kb_actions = JsonExtensions.tryGetListAssignment(jsonData, "kb_actions", CfgToolboxAction, [])
-            self.kb_toolbox_dockers = JsonExtensions.tryGetListAssignment(jsonData, "kb_toolbox_dockers", CfgToolboxPanel, [])
-            self.kb_toolbox_actions = JsonExtensions.tryGetListAssignment(jsonData, "kb_toolbox_actions", CfgToolboxAction, [])
-            self.kb_titleButtonHeight = JsonExtensions.tryGetEntry(jsonData, "kb_titleButtonHeight", int, 10)
-            self.kb_dockerButtonHeight = JsonExtensions.tryGetEntry(jsonData, "kb_dockerButtonHeight", int, 32)
-            self.kb_dockerBackHeight = JsonExtensions.tryGetEntry(jsonData, "kb_dockerBackHeight", int, 16)
-            self.kb_sliderHeight = JsonExtensions.tryGetEntry(jsonData, "kb_sliderHeight", int, 16)
-            self.kb_actionHeight = JsonExtensions.tryGetEntry(jsonData, "kb_actionHeight", int, 16)
+            return type.create(jsonData)
 
-
-    def save_kb(self):
-        CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', "toolbar_buddy.json")
-        jsonData = { 
-            "kb_dockers": self.kb_dockers,
-            "kb_actions": self.kb_actions,
-            "kb_toolbox_dockers": self.kb_toolbox_dockers,
-            "kb_toolbox_actions": self.kb_toolbox_actions,
-            "kb_titleButtonHeight": self.kb_titleButtonHeight,
-            "kb_dockerButtonHeight": self.kb_dockerButtonHeight,
-            "kb_dockerBackHeight": self.kb_dockerBackHeight,
-            "kb_sliderHeight": self.kb_sliderHeight,
-            "kb_actionHeight": self.kb_actionHeight
-        }
+    def saveClass(self, cfg, configName):
+        CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
         with open(CONFIG_FILE, "w") as f:
-            json.dump(jsonData, f, default=lambda o: o.__dict__, indent=4)
+            json.dump(cfg, f, default=lambda o: o.__dict__, indent=4)
         
     def load_chunk(self, configName, type):
         CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
@@ -87,15 +60,8 @@ class ConfigFile:
         labels["docker_groups"] = None
         labels["popups"] = None
         labels["workspaces"] = None
-        labels["kb_dockers"] = "Tool Options Dockers"
-        labels["kb_actions"] = "Tool Options Actions"
-        labels["kb_toolbox_dockers"] = "Toolbox Dockers"
-        labels["kb_toolbox_actions"] = "Toolbox Actions"
-        labels["kb_titleButtonHeight"] = "Title Button Height"
-        labels["kb_dockerButtonHeight"] = "Docker Button Height"
-        labels["kb_dockerBackHeight"] = "Back Button Height"
-        labels["kb_sliderHeight"] = "Slider Height"
-        labels["kb_actionHeight"] = "Action Button Height"
+        labels["toolshelf_main"] = "Tool Options Shelf"
+        labels["toolshelf_alt"] = "Toolbox Shelf"
         return labels
 
     def propertygrid_groups(self):
@@ -104,21 +70,13 @@ class ConfigFile:
         groups["docker_groups"] = {"name": "Docker Groups", "items": ["docker_groups"]}
         groups["popups"] = {"name": "Popups", "items": ["popups"]}
         groups["workspaces"] = {"name": "Workspaces", "items": ["workspaces"]}
-        groups["touchify_toolbox"] = {"name": "Touchify Toolbox", "items": [
-            "kb_dockers",
-            "kb_actions",
-            "kb_toolbox_dockers",
-            "kb_toolbox_actions",
-            "kb_titleButtonHeight",
-            "kb_dockerButtonHeight",
-            "kb_dockerBackHeight",
-            "kb_sliderHeight",
-            "kb_actionHeight"
-        ]}
+        groups["toolshelfs"] = {"name": "Toolshelfs", "items": ["toolshelf_alt", "toolshelf_main"]}
         return groups
     
     def propertygrid_restrictions(self):
         restrictions = {}
+        restrictions["toolshelf_main"] = {"type": "expandable"}
+        restrictions["toolshelf_alt"] = {"type": "expandable"}
         return restrictions
     
     def save(self):
@@ -126,7 +84,8 @@ class ConfigFile:
         self.save_chunk(self.docker_groups, "docker_groups")
         self.save_chunk(self.popups, "popups")
         self.save_chunk(self.workspaces, "workspaces")
-        self.save_kb()
+        self.saveClass(self.toolshelf_main, "toolshelf_main")
+        self.saveClass(self.toolshelf_alt, "toolshelf_alt")
         self.load()
 
     def load(self):
@@ -134,7 +93,8 @@ class ConfigFile:
         self.docker_groups = self.load_chunk("docker_groups", CfgDockerGroup)
         self.popups = self.load_chunk("popups", CfgPopup)
         self.workspaces = self.load_chunk("workspaces", CfgWorkspace)
-        self.load_kb()
+        self.toolshelf_main = self.loadClass("toolshelf_main", CfgToolshelf)
+        self.toolshelf_alt = self.loadClass("toolshelf_alt", CfgToolshelf)
         
 
     def __init__(self, base_dir):

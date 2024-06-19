@@ -14,6 +14,7 @@ class ToolshelfPanelDocker(QWidget):
         super(ToolshelfPanelDocker, self).__init__(parent)
         self.ID = ID
         self.borrowedDocker = None
+        self.setAutoFillBackground(True)
         self.size = None
         self.outLayout = QVBoxLayout()
         self.setLayout(self.outLayout)

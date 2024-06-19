@@ -31,6 +31,7 @@ class PropertyField(QWidget):
     def __init__(self, variable_name=str, variable_data=any, variable_source=any):
         super().__init__()
         self.setup(variable_name, variable_data, variable_source)
+        self.testExpandability()
 
     def getFieldData(self):
          return [self.variable_name, self.variable_data, self.variable_source]
@@ -46,3 +47,54 @@ class PropertyField(QWidget):
 
     def setStackHost(self, host: PropertyGrid):
         self.stackHost = host
+
+    #region Nestables
+
+    def testExpandability(self):
+        restric_func = PropertyGridExtensions.getVariable(self.variable_source, "propertygrid_restrictions")
+        if callable(restric_func):
+            restrictions = restric_func()
+            if self.variable_name in restrictions:
+                if restrictions[self.variable_name]["type"] == "expandable":
+                    self.setupExpandable()
+
+    def setupExpandable(self):
+        self.editor = QPushButton()
+        self.editor.clicked.connect(self.nested_edit)
+        self.editor.setText("Edit...")
+        
+        editorLayout = QHBoxLayout()
+        editorLayout.setSpacing(0)
+        editorLayout.setContentsMargins(0,0,0,0)
+        editorLayout.addWidget(self.editor)
+        self.setLayout(editorLayout)
+
+    def nested_edit(self):
+        self.nested_dlg = QDialog(self)
+        self.nested_dlg.setWindowFlags(Qt.WindowType.Widget)
+        self.nested_container = QVBoxLayout()
+        self.nested_dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.nested_dlg.btns.accepted.connect(lambda: self.nested_dlg_accept())
+        self.nested_dlg.btns.rejected.connect(lambda: self.nested_dlg_reject())
+
+        from .PropertyGridPanel import PropertyGridPanel
+        self.nested_subwindowPropGrid = PropertyGridPanel(self.stackHost)
+        self.nested_container.addWidget(self.nested_subwindowPropGrid)
+        self.nested_container.addWidget(self.nested_dlg.btns)
+        self.nested_dlg.setLayout(self.nested_container)
+
+        self.nested_subwindowPropGrid.updateDataObject(self.variable_data)
+        self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.nested_dlg))
+        self.nested_dlg.show()
+
+    def nested_dlg_accept(self):
+        self.nested_dlg.accept()
+        self.stackHost.goBack()
+        self.nested_subwindowPropGrid.deleteLater()
+    
+    def nested_dlg_reject(self):
+        self.nested_dlg.reject()
+        self.stackHost.goBack()
+        self.nested_subwindowPropGrid.deleteLater()
+
+    #endregion

@@ -52,5 +52,5 @@ class PropertyField_Int(PropertyField):
         self.setLayout(editorLayout)
 
     def updateValue(self):
-            self.variable_data = self.editor.value()
-            PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
+        self.variable_data = self.editor.value()
+        PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)

@@ -88,19 +88,19 @@ class PropertyField_TypedList(PropertyField):
         self.setLayout(field)
 
     def itemOptions_add(self):
-        self.itemOptions("add")
+        self.list_modify("add")
 
     def itemOptions_remove(self):
-        self.itemOptions("remove")
+        self.list_remove()
 
     def itemOptions_moveup(self):
-        self.itemOptions("moveup")
+        self.list_move('up')
 
     def itemOptions_movedown(self):
-        self.itemOptions("movedown")
+        self.list_move('down')
 
     def itemOptions_edit(self):
-        self.itemOptions("edit")
+        self.list_modify("edit")
 
     def dlg_dispose(self):
         self.subwindowEditable = None
@@ -129,65 +129,63 @@ class PropertyField_TypedList(PropertyField):
         self.stackHost.goBack()
         self.dlg_dispose()
 
+    def list_move(self, direction: Literal['up', 'down'] = 'up'):
+        if self.selectedIndex != -1:
+            variable = PropertyGridExtensions.getVariable(self.variable_source, self.variable_name)
+            length = len(variable)
 
-    def itemOptions(self, mode):
-        if mode == "edit" or mode == "add":
-            self.dlg = QDialog(self)
-            self.dlg.setWindowFlags(Qt.WindowType.Widget)
-            self.container = QVBoxLayout()
-            self.dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-            self.dlg.btns.accepted.connect(lambda: self.dlg_accept())
-            self.dlg.btns.rejected.connect(lambda: self.dlg_reject())
-
-            from .PropertyGridPanel import PropertyGridPanel
-            self.subwindowPropGrid = PropertyGridPanel(self.stackHost)
-            self.container.addWidget(self.subwindowPropGrid)
-            self.container.addWidget(self.dlg.btns)
-            self.dlg.setLayout(self.container)
-
-            if mode == "edit":
-                if self.selectedIndex != -1:
-                    self.subwindowMode = "edit"
-                    self.subwindowPropGrid.updateDataObject(self.selectedItem)
-                    self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.dlg))
-                    self.dlg.show()
-            elif mode == "add":
-                editableValue = self.getEditableValue(self.variable_list_type(), -1)
-                self.subwindowMode = "add"
-                self.subwindowEditable = editableValue
-                self.subwindowPropGrid.updateDataObject(self.subwindowEditable)
-                self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.dlg))
-                self.dlg.show()
-
-        
-        elif mode == "remove":
-            if self.selectedIndex != -1:
-                variable = PropertyGridExtensions.getVariable(self.variable_source, self.variable_name)
-                newIndex = self.selectedIndex
+            oldIndex = self.selectedIndex
+            newIndex = self.selectedIndex
+            
+            if direction == 'up':
                 if not newIndex - 1 < 0:
                     newIndex -= 1
-                variable.pop(self.selectedIndex)
-                self.updateList()
-                self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
-        
-        elif mode == "moveup" or mode == "movedown":
+            elif direction == 'down':
+                if not newIndex + 1 > length - 1:
+                    newIndex += 1
+
+            variable.insert(newIndex, variable.pop(oldIndex))
+            self.updateList()
+            self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
+
+    def list_modify(self, mode: Literal['edit', 'add'] = 'add'):
+        self.dlg = QDialog(self)
+        self.dlg.setWindowFlags(Qt.WindowType.Widget)
+        self.container = QVBoxLayout()
+        self.dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.dlg.btns.accepted.connect(lambda: self.dlg_accept())
+        self.dlg.btns.rejected.connect(lambda: self.dlg_reject())
+
+        from .PropertyGridPanel import PropertyGridPanel
+        self.subwindowPropGrid = PropertyGridPanel(self.stackHost)
+        self.container.addWidget(self.subwindowPropGrid)
+        self.container.addWidget(self.dlg.btns)
+        self.dlg.setLayout(self.container)
+
+        if mode == 'edit':
             if self.selectedIndex != -1:
-                variable = PropertyGridExtensions.getVariable(self.variable_source, self.variable_name)
-                length = len(variable)
+                self.subwindowMode = "edit"
+                self.subwindowPropGrid.updateDataObject(self.selectedItem)
+                self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.dlg))
+                self.dlg.show()
+        elif mode == 'add':
+            editableValue = self.getEditableValue(self.variable_list_type(), -1)
+            self.subwindowMode = "add"
+            self.subwindowEditable = editableValue
+            self.subwindowPropGrid.updateDataObject(self.subwindowEditable)
+            self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.dlg))
+            self.dlg.show()
 
-                oldIndex = self.selectedIndex
-                newIndex = self.selectedIndex
-                
-                if mode == "moveup":
-                    if not newIndex - 1 < 0:
-                        newIndex -= 1
-                elif mode == "movedown":
-                    if not newIndex + 1 > length - 1:
-                        newIndex += 1
+    def list_remove(self):
+        if self.selectedIndex != -1:
+            variable = PropertyGridExtensions.getVariable(self.variable_source, self.variable_name)
+            newIndex = self.selectedIndex
+            if not newIndex - 1 < 0:
+                newIndex -= 1
+            variable.pop(self.selectedIndex)
+            self.updateList()
+            self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
 
-                variable.insert(newIndex, variable.pop(oldIndex))
-                self.updateList()
-                self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
 
     def updateList(self):
         self.model.clear()

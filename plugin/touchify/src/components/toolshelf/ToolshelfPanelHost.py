@@ -19,7 +19,6 @@ class ToolshelfPanelHost(QWidget):
         self.dockerWidgets = {}
         self.dockerMode = False
 
-        self.setAutoFillBackground(True)
         self.size = None
         
         self.setLayout(QVBoxLayout())

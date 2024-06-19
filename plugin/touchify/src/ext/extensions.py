@@ -123,6 +123,13 @@ class PyQtExtensions:
 
 class JsonExtensions:
 
+    def tryCast(jsonData, type, defaultValue):
+        if not jsonData:
+            return defaultValue
+        else:
+            result: type = jsonData
+            return result
+
 
     def tryGetListAssignment(jsonData, key, type, defaultValue):
         if not jsonData:
