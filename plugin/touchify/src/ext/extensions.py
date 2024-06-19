@@ -123,6 +123,16 @@ class PyQtExtensions:
 
 class JsonExtensions:
 
+
+    def tryGetListAssignment(jsonData, key, type, defaultValue):
+        if not jsonData:
+            return Extensions.list_assignment(defaultValue, type)
+        if key in jsonData:
+            result: type = jsonData[key]
+            return Extensions.list_assignment(result, type)
+        else:
+            return Extensions.list_assignment(defaultValue, type)
+
     def tryGetEntry(jsonData, key, type, defaultValue):
         if not jsonData:
             return defaultValue

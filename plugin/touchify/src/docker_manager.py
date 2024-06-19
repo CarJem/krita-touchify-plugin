@@ -2,15 +2,12 @@ from krita import *
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import *
 
-from .ext.singleton import Singleton
-
 from .variables import KRITA_ID_OPTIONSROOT_MAIN
 from .ext.extensions import *
 from .config import *
 
 IS_DEV_MODE = False
 
-@Singleton
 class DockerManager():
 
     _dockerParents = {}
@@ -21,9 +18,15 @@ class DockerManager():
     floatingLock_previousState = {}
     floatingLock_isEnabled = False
 
+    def instance():
+        try:
+            return DockerManager.__instance
+        except AttributeError:
+            DockerManager.__instance = DockerManager()
+            return DockerManager.__instance
+
     def __init__(self):
         self._qWin = Krita.instance().activeWindow().qwindow()
-
 
     def msg(self, text):
         if IS_DEV_MODE:

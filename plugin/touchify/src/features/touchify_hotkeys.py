@@ -5,8 +5,8 @@ from ..docker_manager import DockerManager
 
 from ..variables import *
 from ..config import *
-from ..components.nu_tools.NtToolbox import NtToolbox
-from ..components.nu_tools.NtToolOptions import NtToolOptions
+from ..components.nu_tools.NtToolbox import NtToolboxContainer
+from ..components.nu_tools.NtDockers import NtDockers
 from .. import stylesheet
 from PyQt5.QtWidgets import QMessageBox
 

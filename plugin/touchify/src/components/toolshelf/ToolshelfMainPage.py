@@ -17,9 +17,9 @@ class ToolshelfMainPage(QWidget):
 
     _lastSharedToolOptionsState = False
 
-    def __init__(self, parent: QStackedWidget=None):
+    def __init__(self, parent: QStackedWidget=None, enableToolOptions: bool = False):
         self.isUnloading = False
-
+        self.enableToolOptions = enableToolOptions
         self.toolshelfRoot: QStackedWidget = parent
         super(ToolshelfMainPage, self).__init__(parent)
         self._lastSharedToolOptionsState = self.getSharedToolOptionState()
@@ -40,7 +40,7 @@ class ToolshelfMainPage(QWidget):
 
 
     def getSharedToolOptionState(self):
-        if KritaSettings.readSetting(TOUCHIFY_ID_OPTIONSROOT_MAIN, TOUCHIFY_ID_OPTIONS_TOOLBOX_USE_SHAREDTOOLDOCKER, "true") == "true":
+        if InternalConfig.instance().nuOptions_SharedToolDocker and self.enableToolOptions:
             return True
         else: return False
 
@@ -60,8 +60,9 @@ class ToolshelfMainPage(QWidget):
         self.dockerBtns.addButton(properties, onClick, title)
 
     def initQuickActions(self):
-        configManager: ConfigManager = ConfigManager.instance()
-        for entry in configManager.getJSON().kb_actions:
+        cfg = ConfigManager.instance().getJSON()
+        actions = cfg.kb_dockers if self.enableToolOptions else cfg.kb_toolbox_dockers
+        for entry in actions:
             act: CfgToolboxAction = entry
             if act.isEnabled:
                 action = Krita.instance().action(act.id)

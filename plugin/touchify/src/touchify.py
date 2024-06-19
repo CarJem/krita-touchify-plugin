@@ -1,9 +1,6 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
 
-from .toolshelf_docker import TouchifyToolshelf, getTouchifyToolboxInstance
-from .components.nu_tools.NtToolbox import NtToolbox
-from .components.nu_tools.NtToolOptions import NtToolOptions
 from . import stylesheet
 from PyQt5.QtWidgets import QMessageBox
 from .variables import *
@@ -47,17 +44,19 @@ class Touchify(Extension):
         appNotifier  = Krita.instance().notifier()
         appNotifier.windowCreated.connect(self.windowCreated)
         appNotifier.windowCreated.connect(self.finishActions)
-        self.redesign_components.setup()
 
         cfg: ConfigManager = ConfigManager.instance()
         cfg.notifyConnect(self.onConfigUpdated)
 
+        KritaSettings.notifyConnect(self.onKritaConfigUpdated)
+
+
+
+    def onKritaConfigUpdated(self):
+        self.redesign_components.onKritaConfigUpdated()
 
     def onConfigUpdated(self):
-        touchifyToolbox = getTouchifyToolboxInstance()
-        if touchifyToolbox:
-            touchifyToolbox.onConfigUpdated()
-
+        self.redesign_components.onConfigUpdated()
         self.popup_toggles.onConfigUpdated()
         self.docker_groups.onConfigUpdated()
 

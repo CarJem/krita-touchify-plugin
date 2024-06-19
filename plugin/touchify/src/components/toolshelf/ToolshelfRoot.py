@@ -13,18 +13,21 @@ from ...docker_manager import DockerManager
 
 class ToolshelfRoot(QStackedWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, enableToolOptions: bool = False):
         super(ToolshelfRoot, self).__init__(parent)
         self._panels = {}
         self.shortcutConnections = []
         self.current_panel_id = 'MAIN'
         
-        configManager: ConfigManager = ConfigManager.instance()
+        cfg = ConfigManager.instance().getJSON()
         super().currentChanged.connect(self.currentChanged)
         
-        self._mainWidget = ToolshelfMainPage(self)
+        self._mainWidget = ToolshelfMainPage(self, enableToolOptions)
         self.addPanel('MAIN', True, self._mainWidget)
-        for entry in configManager.getJSON().kb_dockers:
+
+        dockers = cfg.kb_dockers if enableToolOptions else cfg.kb_toolbox_dockers
+
+        for entry in dockers:
             properties: CfgToolboxPanel = entry
             if properties.isEnabled:
                 PANEL_ID = str(uuid.uuid4())

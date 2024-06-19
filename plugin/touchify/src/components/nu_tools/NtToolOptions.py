@@ -1,83 +1,54 @@
-"""
-    Plugin for Krita UI Redesign, Copyright (C) 2020 Kapyia, Pedro Reis
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""
-
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
-from .nt_logic.Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
-from .NtWidgetPad import NtWidgetPad
+
+from ...config import InternalConfig, KritaSettings
+
 from ... import stylesheet
-from ...variables import *
+from ...variables import KRITA_ID_DOCKER_SHAREDTOOLDOCKER, KRITA_ID_MENU_SETTINGS, TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, TOUCHIFY_ID_OPTIONSROOT_MAIN
+from .NtWidgetPad import NtWidgetPad
+from .nt_logic.Nt_AdjustToSubwindowFilter import NtToolboxWithShelfEventFilter
 
-class NtToolOptions():
+from .NtDockers import NtDockers
+from krita import *
+from PyQt5.QtCore import QObject, QEvent, QPoint
 
+
+
+class NtToolOptions(QObject):
     def __init__(self, window):
-        qWin = window.qwindow()
-        mdiArea = qWin.findChild(QMdiArea)
-        toolOptions = qWin.findChild(QDockWidget, TOUCHIFY_ID_DOCKER_TOOLBOX)
+        super(NtToolOptions, self).__init__(window.qwindow())
+        self.qWin: QWindow = window.qwindow()
 
-        # Create "pad"
-        self.pad = NtWidgetPad(mdiArea)
-        self.pad.setObjectName("toolOptionsPad")
-        self.pad.setViewAlignment('right')
-        self.pad.borrowDocker(toolOptions)
+        if InternalConfig.instance().nuOptions_ToolboxOnRight: 
+            self.alignment = 'left'
+        else: 
+            self.alignment= 'right'
 
-        # Create and install event filter
-        self.adjustFilter = Nt_AdjustToSubwindowFilter(mdiArea)
-        self.adjustFilter.setTargetWidget(self.pad)
-        mdiArea.subWindowActivated.connect(self.ensureFilterIsInstalled)
-        qWin.installEventFilter(self.adjustFilter)
+        self.tooloptions = NtDockers(window, self.alignment, True)
+        self.setViewAlignment(self.alignment)
 
-        # Create visibility toggle action 
-        action = window.createAction(TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS, "Show Tool Options", KRITA_ID_MENU_SETTINGS)
-        action.toggled.connect(self.pad.toggleWidgetVisible)
-        action.setCheckable(True)
-        action.setChecked(True)
 
-        # Disable the related QDockWidget
-        self.dockerAction = window.qwindow().findChild(QDockWidget, TOUCHIFY_ID_DOCKER_TOOLBOX).toggleViewAction()
-        self.dockerAction.setEnabled(False)
+    def onConfigUpdate(self):
+        if self.tooloptions:
+            self.tooloptions.toolshelf.onConfigUpdated()
 
-    def ensureFilterIsInstalled(self, subWin):
-        """Ensure that the current SubWindow has the filter installed,
-        and immediately move the Toolbox to current View."""
-        if subWin:
-            subWin.installEventFilter(self.adjustFilter)
-            self.pad.adjustToView()
-            self.updateStyleSheet()
-    
+    def setViewAlignment(self, alignment):
+        self.alignment = alignment
+        self.tooloptions.pad.setViewAlignment(self.alignment)
 
-    def findDockerAction(self, window, text):
-        dockerMenu = None
-        
-        for m in window.qwindow().actions():
-            if m.objectName() == "settings_dockers_menu":
-                dockerMenu = m
+    def onKritaConfigUpdate(self):
+        if self.tooloptions:
+            self.tooloptions.toolshelf.onKritaConfigUpdate()
 
-                for a in dockerMenu.menu().actions():
-                    if a.text().replace('&', '') == text:
-                        return a
-                
-        return False
-
+        if self.alignment == 'right' and InternalConfig.instance().nuOptions_ToolboxOnRight:
+            self.setViewAlignment('left')
+        elif self.alignment == 'left' and not InternalConfig.instance().nuOptions_ToolboxOnRight:
+            self.setViewAlignment('right')
 
     def updateStyleSheet(self):
-        #variables.setColors()
-        #self.pad.setStyleSheet(variables.nu_tool_options_style)
-        return
-    
+        self.tooloptions.updateStyleSheet()
+
+    def show(self):
+        self.tooloptions.pad.show()
+
     def close(self):
-        self.dockerAction.setEnabled(True)
-        return self.pad.close()
+        self.tooloptions.close()
