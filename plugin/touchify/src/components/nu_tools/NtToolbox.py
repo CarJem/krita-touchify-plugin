@@ -1,11 +1,13 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 
+from ...ext.extensions import KritaExtensions
+
 from ...config import InternalConfig, KritaSettings
 
 from ... import stylesheet
 from ...variables import KRITA_ID_DOCKER_SHAREDTOOLDOCKER, KRITA_ID_MENU_SETTINGS, TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, TOUCHIFY_ID_OPTIONSROOT_MAIN
 from .NtWidgetPad import NtWidgetPad
-from .nt_logic.Nt_AdjustToSubwindowFilter import NtToolboxWithShelfEventFilter
+from .nt_logic.Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
 
 from .NtDockers import NtDockers
 from krita import *
@@ -26,7 +28,7 @@ class NtToolboxContainer():
         self.pad.setViewAlignment('left')
 
         # Create and install event filter
-        self.adjustFilter = NtToolboxWithShelfEventFilter(mdiArea)
+        self.adjustFilter = Nt_AdjustToSubwindowFilter(mdiArea)
         self.adjustFilter.setTargetWidget(self.pad)
         mdiArea.subWindowActivated.connect(self.ensureFilterIsInstalled)
         qWin.installEventFilter(self.adjustFilter)
@@ -148,8 +150,8 @@ class NtToolbox(QObject):
         self.tooloptions.pad.setViewAlignment(self.alignment)
 
     def show(self):
-        self.tooloptions.close()
-        self.toolbox.close()
+        self.tooloptions.pad.show()
+        self.toolbox.pad.show()
 
     def onKritaConfigUpdate(self):
         if self.tooloptions:
@@ -174,5 +176,14 @@ class NtToolbox(QObject):
         self.tooloptions.updateStyleSheet()
 
     def close(self):
+        self.toolbox.pad.btnHide.clicked.disconnect(self.adjustToPad)
+        self.tooloptions.pad.btnHide.clicked.disconnect(self.adjustToPad)
+
+        self.tooloptions.pad.removeEventFilter(self)
+        self.toolbox.pad.removeEventFilter(self)
+        self.qWin.removeEventFilter(self)
+
         self.tooloptions.close()
         self.toolbox.close()
+        self.toolbox = None
+        self.tooloptions = None

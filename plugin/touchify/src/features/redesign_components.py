@@ -124,9 +124,10 @@ class RedesignComponents:
             self.ntToolbox = NtToolbox(Krita.instance().activeWindow())
             self.ntToolbox.show() 
             self.ntToolbox.updateStyleSheet()
-        elif not toggled and self.ntToolbox:
-            self.ntToolbox.close()
-            self.ntToolbox = None
+        elif not toggled:
+            if self.ntToolbox:
+                self.ntToolbox.close()
+                self.ntToolbox = None
 
     def nuToolOptionsToggled(self, toggled):
         InternalConfig.instance().usesNuToolOptions = toggled

@@ -35,6 +35,7 @@ class ToolshelfRoot(QStackedWidget):
                 self.addPanel(PANEL_ID, False, properties)    
                 self._mainWidget.addDockerButton(properties, self.panel(PANEL_ID).activate, panel_title)
         self.changePanel('MAIN')
+        self.currentChanged(self.currentIndex())
 
     def addPanel(self, ID, isPanelMode, data):
         panel = ToolshelfPanelHost(self, ID, isPanelMode, data)

@@ -61,7 +61,7 @@ class ToolshelfMainPage(QWidget):
 
     def initQuickActions(self):
         cfg = ConfigManager.instance().getJSON()
-        actions = cfg.kb_dockers if self.enableToolOptions else cfg.kb_toolbox_dockers
+        actions = cfg.kb_actions if self.enableToolOptions else cfg.kb_toolbox_actions
         for entry in actions:
             act: CfgToolboxAction = entry
             if act.isEnabled:

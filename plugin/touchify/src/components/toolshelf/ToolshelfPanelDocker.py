@@ -28,6 +28,9 @@ class ToolshelfPanelDocker(QWidget):
     def loadDocker(self):
         dockerLoaded: QWidget | None = DockerManager.instance().borrowDockerWidget(self.ID, self.dockMode)
 
+        if not dockerLoaded:
+            return
+
         if isinstance(dockerLoaded, QScrollArea):
             self.tookScrollArea = True
             scrollArea: QScrollArea = dockerLoaded

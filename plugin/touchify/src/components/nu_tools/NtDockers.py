@@ -20,7 +20,7 @@ from PyQt5.QtWidgets import QMdiArea, QDockWidget
 from ..toolshelf.ToolshelfCore import ToolshelfCore
 
 from ..toolshelf.ToolshelfRoot import ToolshelfRoot
-from .nt_logic.Nt_AdjustToSubwindowFilter import NtToolboxWithShelfEventFilter
+from .nt_logic.Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
 from .NtWidgetPad import NtWidgetPad
 from ... import stylesheet
 from ...variables import *
@@ -40,7 +40,7 @@ class NtDockers():
         self.pad.borrowDocker(self.toolshelf)
 
         # Create and install event filter
-        self.adjustFilter = NtToolboxWithShelfEventFilter(mdiArea)
+        self.adjustFilter = Nt_AdjustToSubwindowFilter(mdiArea)
         self.adjustFilter.setTargetWidget(self.pad)
         mdiArea.subWindowActivated.connect(self.ensureFilterIsInstalled)
         qWin.installEventFilter(self.adjustFilter)
