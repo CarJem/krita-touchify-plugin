@@ -19,20 +19,24 @@ class ToolshelfCore(QDockWidget):
 
         self.enableToolOptions = enableToolOptions
 
-        self.mainWidget = QWidget(self)
-        self.setWidget(self.mainWidget)
-
+        self.actualWidget = QWidget(self)
+        self.setWidget(self.actualWidget)
         self.layout = QVBoxLayout()
-        self.mainWidget.setLayout(self.layout)
-
-        self.layout.setContentsMargins(0,0,0,0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
+        self.actualWidget.setLayout(self.layout)
 
         if HAS_KRITA_FULLY_LOADED:
             self.onLoaded()
         else:
             Krita.instance().notifier().windowCreated.connect(self.onLoaded)
-        
+    
+
+
+    def updateStyleSheet(self):
+        if hasattr(self, "panelStack"):
+            if self.panelStack:
+                self.panelStack.updateStyleSheet()
 
     def onKritaConfigUpdate(self):
         if self.panelStack:
@@ -40,6 +44,7 @@ class ToolshelfCore(QDockWidget):
     
     def onLoaded(self):              
         self.panelStack = ToolshelfRoot(self, self.enableToolOptions)
+        self.panelStack.updateStyleSheet()
         self.layout.addWidget(self.panelStack)
 
     def onUnload(self):

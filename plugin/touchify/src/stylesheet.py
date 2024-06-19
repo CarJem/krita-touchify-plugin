@@ -79,6 +79,22 @@ nu_toggle_button_style = f"""
         }}
         """
 
+nu_tool_options_back_button_style = f"""
+        QPushButton {{
+            background-color: #aa{background};
+            border: none;
+            border-radius: 4px;
+        }}
+        
+        QPushButton:hover {{
+            background-color: #{highlight};
+        }}
+        
+        QPushButton:pressed {{
+            background-color: #{alternate};
+        }}
+        """
+
 nu_tool_options_style = f"""
         QToolButton {{
             background-color: #aa{background};
@@ -94,6 +110,12 @@ nu_tool_options_style = f"""
             background-color: #{alternate};
         }}
         """
+
+nu_tool_options_scroll_area_style = f"""
+QScrollArea {{ background: transparent; }}
+QScrollArea > QWidget > QWidget {{ background: transparent; }}
+QScrollArea > QWidget > QScrollBar {{ background: palette(base); }}
+"""
 
 nu_scroll_area_style = f"""
         QScrollArea {{ 

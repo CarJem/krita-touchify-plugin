@@ -1,3 +1,4 @@
+from re import A
 from ..ext.typedlist import TypedList
 from ..ext.extensions import Extensions
 
@@ -44,6 +45,7 @@ class CfgToolboxPanel:
     size_x: int = 0
     size_y: int = 0
     isEnabled: bool = False
+    row: int = 0
     additional_dockers: TypedList[CfgToolboxPanelDocker] = []
 
     def create(args):
@@ -69,6 +71,7 @@ class CfgToolboxPanel:
         labels["isEnabled"] = "Active"
         labels["size_x"] = "Panel Width"
         labels["size_y"] = "Panel Height"
+        labels["row"] = "Tab Row"
         labels["additional_dockers"] = "Dockers"
         return labels
 
@@ -84,6 +87,7 @@ class CfgToolboxPanel:
 class CfgToolboxAction:
     id: str = ""
     icon: str = ""
+    row: int = 0
     isEnabled: bool = False
 
     def create(args):
@@ -105,6 +109,7 @@ class CfgToolboxAction:
         labels["id"] = "Action ID"
         labels["icon"] = "Display Icon"
         labels["isEnabled"] = "Active"
+        labels["row"] = "Tab Row"
         return labels
 
     def propertygrid_groups(self):

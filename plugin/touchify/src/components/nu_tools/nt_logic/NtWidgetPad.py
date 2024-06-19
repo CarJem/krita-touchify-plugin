@@ -19,10 +19,10 @@
 from PyQt5.QtWidgets import QWidget, QToolButton, QDockWidget, QVBoxLayout, QSizePolicy, QScrollArea
 from PyQt5.QtCore import Qt, QSize, QPoint
 
-from ...variables import KRITA_ID_OPTIONSROOT_MAIN
-from .nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
-from .nt_logic.Nt_ToggleVisibleButton import Nt_ToggleVisibleButton
-from ...config import *
+from ....variables import KRITA_ID_OPTIONSROOT_MAIN
+from .Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
+from .Nt_ToggleVisibleButton import Nt_ToggleVisibleButton
+from ....config import *
 
 from krita import *
 

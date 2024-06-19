@@ -23,7 +23,7 @@ class ToolshelfPanelHost(QWidget):
         
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(0, 0, 0, 0)
-        self.layout().setSpacing(0)
+        
 
         if isPanelMode:
             self.dockerMode = False
@@ -38,6 +38,7 @@ class ToolshelfPanelHost(QWidget):
 
     def generateDockerPanelLayout(self):
         self.splitter = QSplitter(Qt.Orientation.Vertical)
+        self.splitter.setAutoFillBackground(True)
         self.layout().addWidget(self.splitter)
 
         data = self.panelProperties
@@ -107,7 +108,7 @@ class ToolshelfPanelHost(QWidget):
 
     def sizeHint(self):
         if not self.dockerMode:
-            return self.mainPage.sizeHint()
+            return super().sizeHint()
         else:
             if self.size:
                 return self.size

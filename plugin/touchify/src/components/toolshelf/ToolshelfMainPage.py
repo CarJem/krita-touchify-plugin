@@ -11,6 +11,7 @@ from PyQt5.QtCore import QMargins
 from ...config import *
 from .ToolshelfButtonBar import ToolshelfButtonBar
 from .ToolshelfPanelDocker import ToolshelfPanelDocker
+from ... import stylesheet
 
 class ToolshelfMainPage(QWidget):
     _margins = QMargins(1, 1, 1, 1)
@@ -24,22 +25,32 @@ class ToolshelfMainPage(QWidget):
         self.toolshelfRoot: QStackedWidget = parent
         self.cfg = self.getCfg(enableToolOptions)
 
+
         super(ToolshelfMainPage, self).__init__(parent)
+        self.setContentsMargins(0,0,0,0)
         self._lastSharedToolOptionsState = self.getSharedToolOptionState()
 
-        self.setLayout(QVBoxLayout())
-        self.layout().setContentsMargins(self._margins)
+        self.ourLayout = QVBoxLayout()
+
+        self.ourLayout.setContentsMargins(self._margins)
+        self.ourLayout.setSpacing(1)
 
         self.dockerBtns = ToolshelfButtonBar(self.cfg.dockerButtonHeight)
-        self.layout().addWidget(self.dockerBtns)    
+        self.ourLayout.addWidget(self.dockerBtns)    
 
         self.quickActions = ToolshelfButtonBar(self.cfg.actionHeight)
         self.initQuickActions()
-        self.layout().addWidget(self.quickActions)
+        self.ourLayout.addWidget(self.quickActions)
+
+
+        self.emptySpace = QWidget()
+        self.emptySpace.setFixedHeight(4)
+        self.ourLayout.addWidget(self.emptySpace)
 
         self.toolSettingsDocker = ToolshelfPanelDocker(self, KRITA_ID_DOCKER_SHAREDTOOLDOCKER)
         self.autoFitScrollArea = True
-        self.layout().addWidget(self.toolSettingsDocker)
+        self.ourLayout.addWidget(self.toolSettingsDocker)
+        self.setLayout(self.ourLayout)
 
     def getCfg(self, enableToolOptions: bool = False):
         cfg = ConfigManager.instance().getJSON()
@@ -61,6 +72,11 @@ class ToolshelfMainPage(QWidget):
                     self.loadDocker()
                 else:
                     self.unloadDocker()
+
+    def updateStyleSheet(self):
+        self.dockerBtns.setStyleSheet(stylesheet.nu_tool_options_style)
+        self.quickActions.setStyleSheet(stylesheet.nu_tool_options_style)
+
         
 
     def addDockerButton(self, properties, onClick, title):

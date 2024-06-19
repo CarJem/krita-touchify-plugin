@@ -12,6 +12,7 @@ from ...config import *
 from .ToolshelfPanelHost import ToolshelfPanelHost
 from .ToolshelfMainPage import ToolshelfMainPage
 from ...docker_manager import DockerManager
+from ... import stylesheet
 
 class ToolshelfRoot(QStackedWidget):
 
@@ -20,6 +21,7 @@ class ToolshelfRoot(QStackedWidget):
         self._panels = {}
         self.shortcutConnections = []
         self.current_panel_id = 'MAIN'
+        self._backButtons: List[ToolboxPanelCloseButton] = []
         
         self.cfg = self.getCfg(enableToolOptions)
         super().currentChanged.connect(self.currentChanged)
@@ -49,6 +51,7 @@ class ToolshelfRoot(QStackedWidget):
         if self.count() > 0:
             backButton = ToolboxPanelCloseButton(self.goHome, self.cfg)
             panel.layout().addWidget(backButton)
+            self._backButtons.append(backButton)
         self._panels[ID] = panel
         super().addWidget(panel)
 
@@ -93,6 +96,14 @@ class ToolshelfRoot(QStackedWidget):
 
     def panel(self, name) -> ToolshelfPanelHost:
         return self._panels[name]
+    
+
+    def updateStyleSheet(self):
+        if self._mainWidget:
+            self._mainWidget.updateStyleSheet()
+        for button in self._backButtons:
+            button.updateStyleSheet()
+        return
 
 
 class ToolboxPanelCloseButton(QPushButton):
@@ -109,3 +120,7 @@ class ToolboxPanelCloseButton(QPushButton):
         self.setIconSize(QSize(self._iconSize, self._iconSize))
         self.setFixedHeight(self._height)
         self.clicked.connect(onClick)
+
+    def updateStyleSheet(self):
+        self.setStyleSheet(stylesheet.nu_tool_options_back_button_style)
+        return

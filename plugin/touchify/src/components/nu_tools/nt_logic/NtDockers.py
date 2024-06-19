@@ -17,13 +17,13 @@
 
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 
-from ..toolshelf.ToolshelfCore import ToolshelfCore
+from ...toolshelf.ToolshelfCore import ToolshelfCore
 
-from ..toolshelf.ToolshelfRoot import ToolshelfRoot
-from .nt_logic.Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
+from ...toolshelf.ToolshelfRoot import ToolshelfRoot
+from .Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
 from .NtWidgetPad import NtWidgetPad
-from ... import stylesheet
-from ...variables import *
+from .... import stylesheet
+from ....variables import *
 
 class NtDockers():
 
@@ -35,7 +35,7 @@ class NtDockers():
 
         # Create "pad"
         self.pad = NtWidgetPad(mdiArea)
-        self.pad.setObjectName("toolOptionsPadRight")
+        self.pad.setObjectName("toolOptionsPad")
         self.pad.setViewAlignment(alignment)
         self.pad.borrowDocker(self.toolshelf)
 
@@ -46,7 +46,9 @@ class NtDockers():
         qWin.installEventFilter(self.adjustFilter)
 
         # Create visibility toggle action 
-        action = window.createAction(TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS, "Show Tool Options", KRITA_ID_MENU_SETTINGS)
+        action_id = TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS if enableToolOptions else TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS_ALT
+        action_name = "Show Tool Options Shelf" if enableToolOptions else "Show Toolbox Shelf"
+        action = window.createAction(action_id, action_name, KRITA_ID_MENU_SETTINGS)
         action.toggled.connect(self.pad.toggleWidgetVisible)
         action.setCheckable(True)
         action.setChecked(True)
@@ -81,7 +83,7 @@ class NtDockers():
 
 
     def updateStyleSheet(self):
-        self.pad.setStyleSheet(stylesheet.nu_tool_options_style)
+        self.toolshelf.updateStyleSheet()
         return
     
     def close(self):
