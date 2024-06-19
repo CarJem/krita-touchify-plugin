@@ -20,16 +20,12 @@ class CfgToolboxPanel:
     
     def forceLoad(self):
         self.additional_dockers = TypedList(self.additional_dockers, CfgToolboxPanelDocker)
-        pass
 
     def __str__(self):
         name = self.id.replace("\n", "\\n")
         if not self.isEnabled:
             name = "(Disabled) " + name
         return name
-
-    def forceLoad(self):
-        pass
 
     def propertygrid_labels(self):
         labels = {}
