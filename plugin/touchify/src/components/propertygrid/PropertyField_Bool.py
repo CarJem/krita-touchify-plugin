@@ -11,7 +11,7 @@ from ...resources import *
 from ...ext.extensions import KritaExtensions
 from ..CollapsibleBox import CollapsibleBox
 
-from .PropertyGridExtensions import *
+from .PropertyUtils_Extensions import *
 from .PropertyGrid import *
 from .PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from .PropertyField import *
@@ -40,4 +40,4 @@ class PropertyField_Bool(PropertyField):
 
     def updateChecked(self):
         self.variable_data = self.editor.isChecked()
-        PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
+        PropertyUtils_Extensions.setVariable(self.variable_source, self.variable_name, self.variable_data)

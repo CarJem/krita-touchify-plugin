@@ -6,7 +6,7 @@ from .PropertyField_Str import *
 from .PropertyField_TypedList import *
 from .PropertyField_TempValue import *
 
-class PropertyGridPraser:
+class PropertyUtils_Praser:
     def getPropertyType(varName, variable, item):
         varType = type(variable)
         if varType == str:

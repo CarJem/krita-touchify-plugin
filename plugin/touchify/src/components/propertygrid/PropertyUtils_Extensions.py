@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMessageBox
 
 
-class PropertyGridExtensions:
+class PropertyUtils_Extensions:
 
     def tryGetVariable(obj, varName):
         if hasattr(obj, varName):
@@ -45,4 +45,4 @@ class PropertyGridExtensions:
                 if child.widget() is not None:
                     child.widget().deleteLater()
                 elif child.layout() is not None:
-                    PropertyGridExtensions.clearLayout(child.layout())
+                    PropertyUtils_Extensions.clearLayout(child.layout())

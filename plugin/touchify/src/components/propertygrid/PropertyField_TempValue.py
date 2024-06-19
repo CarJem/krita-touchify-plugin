@@ -5,7 +5,7 @@ from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
 
-from .PropertyGridExtensions import *
+from .PropertyUtils_Extensions import *
 from .PropertyGrid import *
 
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
@@ -40,10 +40,10 @@ class PropertyField_TempValue:
         return restrictions
 
     def updateData(self):
-        new_array = PropertyGridExtensions.getVariable(self.__variable_source, self.__variable_name)
+        new_array = PropertyUtils_Extensions.getVariable(self.__variable_source, self.__variable_name)
         self.variable_data = self.value
         new_array[self.__index] = self.value
-        PropertyGridExtensions.setVariable(self.__variable_source, self.__variable_name, new_array)
+        PropertyUtils_Extensions.setVariable(self.__variable_source, self.__variable_name, new_array)
 
 
 

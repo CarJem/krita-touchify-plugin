@@ -5,7 +5,7 @@ from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
 
-from .PropertyGridExtensions import *
+from .PropertyUtils_Extensions import *
 from .PropertyGrid import *
 
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
@@ -51,7 +51,7 @@ class PropertyField(QWidget):
     #region Nestables
 
     def testExpandability(self):
-        restric_func = PropertyGridExtensions.getVariable(self.variable_source, "propertygrid_restrictions")
+        restric_func = PropertyUtils_Extensions.getVariable(self.variable_source, "propertygrid_restrictions")
         if callable(restric_func):
             restrictions = restric_func()
             if self.variable_name in restrictions:

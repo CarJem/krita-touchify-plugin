@@ -11,7 +11,7 @@ from ...resources import *
 from ...ext.extensions import KritaExtensions
 from ..CollapsibleBox import CollapsibleBox
 
-from .PropertyGridExtensions import *
+from .PropertyUtils_Extensions import *
 from .PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from .PropertyField import *
 from .PropertyField_TempValue import *
@@ -131,7 +131,7 @@ class PropertyField_TypedList(PropertyField):
 
     def list_move(self, direction: Literal['up', 'down'] = 'up'):
         if self.selectedIndex != -1:
-            variable = PropertyGridExtensions.getVariable(self.variable_source, self.variable_name)
+            variable = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
             length = len(variable)
 
             oldIndex = self.selectedIndex
@@ -178,7 +178,7 @@ class PropertyField_TypedList(PropertyField):
 
     def list_remove(self):
         if self.selectedIndex != -1:
-            variable = PropertyGridExtensions.getVariable(self.variable_source, self.variable_name)
+            variable = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
             newIndex = self.selectedIndex
             if not newIndex - 1 < 0:
                 newIndex -= 1
@@ -197,15 +197,15 @@ class PropertyField_TypedList(PropertyField):
 
     def updateSelected(self, current: QModelIndex, previous: QModelIndex):
         self.selectedIndex = current.row()
-        item = PropertyGridExtensions.getVariable(self.variable_source, self.variable_name)[self.selectedIndex]
+        item = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)[self.selectedIndex]
         self.selectedItem = self.getEditableValue(item, self.selectedIndex)
 
     def getEditableValue(self, item, index):
         if hasattr(item, "forceLoad"):
             item.forceLoad()
 
-        attrCount = len(PropertyGridExtensions.getClassVariables(item))
-        isClassModel = PropertyGridExtensions.isClassModel(item)
+        attrCount = len(PropertyUtils_Extensions.getClassVariables(item))
+        isClassModel = PropertyUtils_Extensions.isClassModel(item)
 
         if attrCount <= 1 and not isClassModel:
                 return PropertyField_TempValue(item, self.variable_source, self.variable_name, index)

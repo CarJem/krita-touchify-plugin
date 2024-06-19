@@ -11,7 +11,7 @@ from ...resources import *
 from ...ext.extensions import KritaExtensions
 from ..CollapsibleBox import CollapsibleBox
 
-from .PropertyGridExtensions import *
+from .PropertyUtils_Extensions import *
 from .PropertyGrid import *
 from .PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from .PropertyField import *
@@ -37,7 +37,7 @@ class PropertyField_Int(PropertyField):
         self.editor.valueChanged.connect(self.updateValue)
         self.editor.setValue(self.variable_data)
 
-        restric_func = PropertyGridExtensions.getVariable(self.variable_source, "propertygrid_restrictions")
+        restric_func = PropertyUtils_Extensions.getVariable(self.variable_source, "propertygrid_restrictions")
         if callable(restric_func):
             restrictions = restric_func()
             if variable_name in restrictions:
@@ -53,4 +53,4 @@ class PropertyField_Int(PropertyField):
 
     def updateValue(self):
         self.variable_data = self.editor.value()
-        PropertyGridExtensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
+        PropertyUtils_Extensions.setVariable(self.variable_source, self.variable_name, self.variable_data)

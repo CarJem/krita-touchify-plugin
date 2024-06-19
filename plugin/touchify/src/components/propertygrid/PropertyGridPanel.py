@@ -6,8 +6,8 @@ import sys
 import xml.etree.ElementTree as ET
 
 from .PropertyGrid import PropertyGrid
-from .PropertyGridExtensions import *
-from .PropertyGridPraser import *
+from .PropertyUtils_Extensions import *
+from .PropertyUtils_Praser import *
 from .PropertyGrid_SelectorDialog import *
 
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
@@ -49,13 +49,13 @@ class PropertyGridPanel(QScrollArea):
         newItem = self.item
         for field in self.fields:
             name, data, source = field.getFieldData()
-            PropertyGridExtensions.setVariable(newItem, name, data)
+            PropertyUtils_Extensions.setVariable(newItem, name, data)
         return newItem
     
 
     def createDataRow(self, item, varName):
-        variable = PropertyGridExtensions.getVariable(item, varName)
-        field = PropertyGridPraser.getPropertyType(varName, variable, item)
+        variable = PropertyUtils_Extensions.getVariable(item, varName)
+        field = PropertyUtils_Praser.getPropertyType(varName, variable, item)
         field.setStackHost(self.stackHost)
         if field:
             self.fields.append(field)
@@ -84,9 +84,9 @@ class PropertyGridPanel(QScrollArea):
     def updateDataObject(self, item):
         self.item = item
         self.fields.clear()
-        PropertyGridExtensions.clearLayout(self.formLayout)
-        groupData = PropertyGridExtensions.getGroups(item)
-        labelData = PropertyGridExtensions.getLabels(item)
+        PropertyUtils_Extensions.clearLayout(self.formLayout)
+        groupData = PropertyUtils_Extensions.getGroups(item)
+        labelData = PropertyUtils_Extensions.getLabels(item)
         claimedSections = []
 
         for groupId in groupData:
@@ -95,7 +95,7 @@ class PropertyGridPanel(QScrollArea):
             for varName in groupItems:
                 claimedSections.append(varName)
 
-        for varName in PropertyGridExtensions.getClassVariables(item):
+        for varName in PropertyUtils_Extensions.getClassVariables(item):
             if varName not in claimedSections:
                 field = self.createDataRow(item, varName)
                 if field:
