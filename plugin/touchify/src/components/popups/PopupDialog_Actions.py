@@ -88,8 +88,8 @@ class PopupDialog_Actions(PopupDialog):
         btn.clicked.connect(lambda: self.runAction(action))
         layout.addWidget(btn, x, y)
 
-    def triggerPopup(self, mode):
-        super().triggerPopup(mode)    
+    def triggerPopup(self, mode:str, parent: QWidget | None):
+        super().triggerPopup(mode, parent)    
 
     def generateActionsLayout(self):
         layout = QGridLayout()

@@ -125,8 +125,21 @@ class PopupDialog(QDialog):
 
     def expand(self):
         self.frame.show()
-    
-    def triggerPopup(self, ourMode):
+
+
+    def getActionSource(self, parent: QWidget | None):
+        if parent != None:
+            return self.getGeometry(parent.mapToGlobal(QPoint(0,0)), parent.width(), parent.height())
+        else:
+            for qobj in self.parent.findChildren(QToolButton):
+                actions = qobj.actions()
+                if actions:
+                    for action in actions:
+                        if action.text() == self.metadata.btnName + POPUP_BTN_IDENTIFIER:
+                            return self.getGeometry(qobj.mapToGlobal(QPoint(0,0)), qobj.width(), qobj.height())
+            return 0, 0, 0, 0
+
+    def triggerPopup(self, ourMode: str, parent: QWidget | None):
         if self.isVisible():
             self.close()
             if not self.popupMode == "popup":
@@ -140,12 +153,7 @@ class PopupDialog(QDialog):
         if ourMode == "mouse":
             actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(QCursor.pos(), 0, 0, True)
         else:
-            for qobj in self.parent.findChildren(QToolButton):
-                actions = qobj.actions()
-                if actions:
-                    for action in actions:
-                        if action.text() == self.metadata.btnName + POPUP_BTN_IDENTIFIER:
-                            actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(qobj.mapToGlobal(QPoint(0,0)), qobj.width(), qobj.height())
+            actual_x, actual_y, dialog_width, dialog_height = self.getActionSource(parent)
         
         self.setGeometry(actual_x, actual_y, dialog_width, dialog_height)
         self.show()
