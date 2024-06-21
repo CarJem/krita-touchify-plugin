@@ -7,11 +7,11 @@ from ...docker_manager import DockerManager
 
 from krita import *
 
-class ToolshelfPanelDocker(QWidget):
+class ToolshelfDockerHost(QWidget):
 
     
     def __init__(self, parent: QWidget | None, ID):
-        super(ToolshelfPanelDocker, self).__init__(parent)
+        super(ToolshelfDockerHost, self).__init__(parent)
         self.ID = ID
         self.borrowedDocker = None
         self.setAutoFillBackground(True)
@@ -65,11 +65,13 @@ class ToolshelfPanelDocker(QWidget):
         self.dockMode = value
 
     def setSizeHint(self, size):
-        self.size = QSize(size[0], size[1])
+        self.size = QSize(size[0] + 20, size[1] + 20)
 
     def sizeHint(self):
         if self.size:
             return self.size
+        elif self.borrowedDocker:
+            return self.borrowedDocker.sizeHint()
         else:
             return super().sizeHint()
 

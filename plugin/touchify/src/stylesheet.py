@@ -111,12 +111,6 @@ nu_tool_options_style = f"""
         }}
         """
 
-nu_tool_options_scroll_area_style = f"""
-QScrollArea {{ background: transparent; }}
-QScrollArea > QWidget > QWidget {{ background: transparent; }}
-QScrollArea > QWidget > QScrollBar {{ background: palette(base); }}
-"""
-
 nu_scroll_area_style = f"""
         QScrollArea {{ 
             background-color: red;

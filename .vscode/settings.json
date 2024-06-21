@@ -14,7 +14,8 @@
         ]
     },
     "python.analysis.extraPaths": [
-        "${workspaceFolder}/krita_env"
+        "${workspaceFolder}/krita_env",
+        "./plugin"
     ],
     "python.REPL.enableREPLSmartSend": false,
     "python.envFile": "${workspaceFolder}/.venv",

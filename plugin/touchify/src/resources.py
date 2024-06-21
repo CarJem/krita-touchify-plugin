@@ -24,7 +24,6 @@ class ResourceManager:
         
         return result
         
-
     def customIcon(iconName):
         PATH_RESOURCES = os.path.join(ConfigManager.instance().getResourceFolder(), "custom")
 

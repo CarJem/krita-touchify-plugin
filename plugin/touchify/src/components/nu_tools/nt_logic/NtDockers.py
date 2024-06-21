@@ -17,9 +17,11 @@
 
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 
-from ...toolshelf.ToolshelfCore import ToolshelfCore
+from krita import Window
 
-from ...toolshelf.ToolshelfRoot import ToolshelfRoot
+from ...toolshelf.ToolshelfWidget import ToolshelfWidget
+
+from ...toolshelf.ToolshelfWidget import ToolshelfContainer
 from .Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
 from .NtWidgetPad import NtWidgetPad
 from .... import stylesheet
@@ -27,23 +29,23 @@ from ....variables import *
 
 class NtDockers():
 
-    def __init__(self, window, alignment: str, enableToolOptions: bool = False):
-        qWin = window.qwindow()
-        mdiArea = qWin.findChild(QMdiArea)
+    def __init__(self, window: Window, alignment: str, enableToolOptions: bool = False):
+        self.qWin = window.qwindow()
+        self.mdiArea = self.qWin.findChild(QMdiArea)
 
-        self.toolshelf = ToolshelfCore(enableToolOptions)
+        self.toolshelf = ToolshelfWidget(enableToolOptions)
 
         # Create "pad"
-        self.pad = NtWidgetPad(mdiArea)
+        self.pad = NtWidgetPad(self.mdiArea)
         self.pad.setObjectName("toolOptionsPad")
         self.pad.setViewAlignment(alignment)
         self.pad.borrowDocker(self.toolshelf)
 
         # Create and install event filter
-        self.adjustFilter = Nt_AdjustToSubwindowFilter(mdiArea)
+        self.adjustFilter = Nt_AdjustToSubwindowFilter(self.mdiArea)
         self.adjustFilter.setTargetWidget(self.pad)
-        mdiArea.subWindowActivated.connect(self.ensureFilterIsInstalled)
-        qWin.installEventFilter(self.adjustFilter)
+        self.mdiArea.subWindowActivated.connect(self.onSubWindowActivated)
+        self.qWin.installEventFilter(self.adjustFilter)
 
         # Create visibility toggle action 
         action_id = TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS if enableToolOptions else TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS_ALT
@@ -53,11 +55,8 @@ class NtDockers():
         action.setCheckable(True)
         action.setChecked(True)
 
-    def ensureFilterIsInstalled(self, subWin):
-        """Ensure that the current SubWindow has the filter installed,
-        and immediately move the Toolbox to current View."""
+    def onSubWindowActivated(self, subWin):
         if subWin:
-            subWin.installEventFilter(self.adjustFilter)
             self.pad.adjustToView()
             self.updateStyleSheet()
     
@@ -87,6 +86,8 @@ class NtDockers():
         return
     
     def close(self):
+        self.mdiArea.subWindowActivated.disconnect(self.onSubWindowActivated)
+        self.qWin.removeEventFilter(self.adjustFilter)
         self.toolshelf.onUnload()
         self.pad.widget = None
         self.pad.widgetDocker = None

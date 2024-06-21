@@ -103,7 +103,6 @@ class ConfigFile:
 
 class ConfigManager:
     
-
     def instance():
         try:
             return ConfigManager.__instance

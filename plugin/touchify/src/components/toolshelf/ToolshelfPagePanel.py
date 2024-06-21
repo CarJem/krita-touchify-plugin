@@ -2,44 +2,30 @@ from typing import Dict
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from .ToolshelfPageHost import ToolshelfPageHost
+
 from ...cfg.CfgToolshelf import CfgToolboxPanel
 from ...cfg.CfgToolshelf import CfgToolboxPanelDocker
 
 from ...docker_manager import DockerManager
-from .ToolshelfPanelDocker import ToolshelfPanelDocker
+from .ToolshelfDockerHost import ToolshelfDockerHost
 
-class ToolshelfPanelHost(QWidget):
+class ToolshelfPagePanel(ToolshelfPageHost):
 
     dockerWidgets: dict = {}
 
-    def __init__(self, parent: QWidget, ID: any, isPanelMode: bool, data: QWidget | CfgToolboxPanel):
-        super(ToolshelfPanelHost, self).__init__(parent)
+    def __init__(self, parent: QWidget, ID: any, data: CfgToolboxPanel):
+        super(ToolshelfPagePanel, self).__init__(parent, ID)
 
         self.ID = ID
         self.dockerWidgets = {}
-        self.dockerMode = False
-
         self.size = None
+        self.panelProperties = data
         
-        self.setLayout(QVBoxLayout())
-        self.layout().setContentsMargins(0, 0, 0, 0)
-        
-
-        if isPanelMode:
-            self.dockerMode = False
-            self.mainPage = data
-            self.layout().addWidget(self.mainPage)
-        else:
-            if isinstance(data, CfgToolboxPanel):
-                self.dockerMode = True
-                self.panelProperties = data
-
-                self.generateDockerPanelLayout()
-
-    def generateDockerPanelLayout(self):
+        #region Generation
         self.splitter = QSplitter(Qt.Orientation.Vertical)
         self.splitter.setAutoFillBackground(True)
-        self.layout().addWidget(self.splitter)
+        self.shelfLayout.addWidget(self.splitter)
 
         data = self.panelProperties
         
@@ -48,11 +34,11 @@ class ToolshelfPanelHost(QWidget):
             self.setSizeHint(size)
 
 
-        widget_groups: Dict[int, list[ToolshelfPanelDocker]] = {}
+        widget_groups: Dict[int, list[ToolshelfDockerHost]] = {}
 
         for dockerData in self.panelProperties.additional_dockers:     
             dockerInfo: CfgToolboxPanelDocker = dockerData
-            dockerWidget = ToolshelfPanelDocker(self, dockerInfo.id)
+            dockerWidget = ToolshelfDockerHost(self, dockerInfo.id)
 
             if dockerInfo.size_x != 0 and dockerInfo.size_y != 0:
                 size = [dockerInfo.size_x, dockerInfo.size_y]
@@ -81,39 +67,35 @@ class ToolshelfPanelHost(QWidget):
                     tabBar.addTab(item, title)
 
                 self.splitter.addWidget(tabBar)
-            
-
-            
-
+        #endregion
 
     def unloadDockers(self):
-        if self.dockerMode == True:
-            for host_id in self.dockerWidgets:
-                self.dockerWidgets[host_id].unloadDocker()
-        else:
-            self.mainPage.unloadDocker()
+        for host_id in self.dockerWidgets:
+            self.dockerWidgets[host_id].unloadDocker()
 
     def loadDockers(self):
-        if self.dockerMode == True:
-            for host_id in self.dockerWidgets:
-                self.dockerWidgets[host_id].loadDocker()
-        else:
-            self.mainPage.loadDocker()
-
-    def activate(self):
-        self.parentWidget().changePanel(self.ID)
+        for host_id in self.dockerWidgets:
+            self.dockerWidgets[host_id].loadDocker()
 
     def setSizeHint(self, size):
         self.size = QSize(size[0], size[1])
 
+    def getDefaultSizeHint(self):
+        width_padding = 20
+        height_padding = 20
+
+        sizeHint = super().sizeHint()
+
+        container_width = sizeHint.width() + width_padding
+        container_height = sizeHint.height() + height_padding
+
+        return QSize(container_width, container_height)
+
     def sizeHint(self):
-        if not self.dockerMode:
-            return super().sizeHint()
+        if self.size:
+            return self.size
         else:
-            if self.size:
-                return self.size
-            else:
-                return super().sizeHint()
+            return self.getDefaultSizeHint()
     
 
     

@@ -16,22 +16,22 @@ from PyQt5.QtCore import QObject, QEvent, QPoint
 
 class NtToolboxContainer():
 
-    def __init__(self, window):
-        qWin = window.qwindow()
-        mdiArea = qWin.findChild(QMdiArea)
-        toolbox = qWin.findChild(QDockWidget, 'ToolBox')
+    def __init__(self, window: Window):
+        self.qWin = window.qwindow()
+        self.mdiArea = self.qWin.findChild(QMdiArea)
+        toolbox = self.qWin.findChild(QDockWidget, 'ToolBox')
 
         # Create "pad"
-        self.pad = NtWidgetPad(mdiArea)
+        self.pad = NtWidgetPad(self.mdiArea)
         self.pad.setObjectName("toolBoxPad")
         self.pad.borrowDocker(toolbox)
         self.pad.setViewAlignment('left')
 
         # Create and install event filter
-        self.adjustFilter = Nt_AdjustToSubwindowFilter(mdiArea)
+        self.adjustFilter = Nt_AdjustToSubwindowFilter(self.mdiArea)
         self.adjustFilter.setTargetWidget(self.pad)
-        mdiArea.subWindowActivated.connect(self.ensureFilterIsInstalled)
-        qWin.installEventFilter(self.adjustFilter)
+        self.mdiArea.subWindowActivated.connect(self.onSubWindowActivated)
+        self.qWin.installEventFilter(self.adjustFilter)
 
         # Create visibility toggle action
         action = window.createAction(KRITA_ID_DOCKER_SHAREDTOOLDOCKER, "Show Toolbox", KRITA_ID_MENU_SETTINGS)
@@ -43,15 +43,10 @@ class NtToolboxContainer():
         self.dockerAction = window.qwindow().findChild(QDockWidget, "ToolBox").toggleViewAction()
         self.dockerAction.setEnabled(False)
 
-    def ensureFilterIsInstalled(self, subWin):
-        """Ensure that the current SubWindow has the filter installed,
-        and immediately move the Toolbox to current View."""
+    def onSubWindowActivated(self, subWin):
         if subWin:
-            subWin.installEventFilter(self.adjustFilter)
             self.pad.adjustToView()
             self.updateStyleSheet()
-
-
 
     def findDockerAction(self, window, text):
         dockerMenu = None
@@ -70,6 +65,8 @@ class NtToolboxContainer():
         self.pad.setStyleSheet(stylesheet.nu_toolbox_style)
 
     def close(self):
+        self.mdiArea.subWindowActivated.disconnect(self.ensureFilterIsInstalled)
+        self.qWin.removeEventFilter(self.adjustFilter)
         self.dockerAction.setEnabled(True)
         return self.pad.close()
 
@@ -95,14 +92,12 @@ class NtToolbox(QObject):
         self.toolbox.pad.installEventFilter(self)
         self.qWin.installEventFilter(self)
 
-
     def eventFilter(self, obj, e):
 
         if (e.type() == QEvent.Type.Move or e.type() == QEvent.Type.Resize):
             self.adjustToPad()
         
-        return False
-        
+        return False 
 
     def adjustToPad(self):
         if self.tooloptions == None:

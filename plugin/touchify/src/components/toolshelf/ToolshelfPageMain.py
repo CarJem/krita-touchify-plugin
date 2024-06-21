@@ -1,6 +1,7 @@
 
 
 
+from .ToolshelfPageHost import ToolshelfPageHost
 from ...cfg.CfgToolshelf import CfgToolboxAction
 from ...variables import *
 from ...cfg.CfgToolshelf import CfgToolboxAction
@@ -10,58 +11,53 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import QMargins
 from ...config import *
 from .ToolshelfButtonBar import ToolshelfButtonBar
-from .ToolshelfPanelDocker import ToolshelfPanelDocker
+from .ToolshelfDockerHost import ToolshelfDockerHost
 from ... import stylesheet
 
-class ToolshelfMainPage(QWidget):
-    _margins = QMargins(1, 1, 1, 1)
-
-
+class ToolshelfPageMain(ToolshelfPageHost):
     _lastSharedToolOptionsState = False
 
     def __init__(self, parent: QStackedWidget=None, enableToolOptions: bool = False):
+        super(ToolshelfPageMain, self).__init__(parent, 'MAIN')
+        
         self.isUnloading = False
         self.enableToolOptions = enableToolOptions
-        self.toolshelfRoot: QStackedWidget = parent
-        self.cfg = self.getCfg(enableToolOptions)
-
-
-        super(ToolshelfMainPage, self).__init__(parent)
-        self.setContentsMargins(0,0,0,0)
         self._lastSharedToolOptionsState = self.getSharedToolOptionState()
 
-        self.ourLayout = QVBoxLayout()
+        if self.enableToolOptions: 
+            self.cfg = ConfigManager.instance().getJSON().toolshelf_main
+        else: 
+            self.cfg = ConfigManager.instance().getJSON().toolshelf_alt
 
-        self.ourLayout.setContentsMargins(self._margins)
-        self.ourLayout.setSpacing(1)
 
-        self.dockerBtns = ToolshelfButtonBar(self.cfg.dockerButtonHeight)
-        self.ourLayout.addWidget(self.dockerBtns)    
+        self.dockerBtns = ToolshelfButtonBar(self.cfg.dockerButtonHeight, self)
+        self.shelfLayout.addWidget(self.dockerBtns)    
 
-        self.quickActions = ToolshelfButtonBar(self.cfg.actionHeight)
+        self.quickActions = ToolshelfButtonBar(self.cfg.actionHeight, self)
         self.initQuickActions()
-        self.ourLayout.addWidget(self.quickActions)
+        self.shelfLayout.addWidget(self.quickActions)
 
+        self.toolSettingsDocker = ToolshelfDockerHost(self, KRITA_ID_DOCKER_SHAREDTOOLDOCKER)
+        self.toolSettingsDocker.dockMode = False
+        self.shelfLayout.addWidget(self.toolSettingsDocker)
 
-        self.emptySpace = QWidget()
-        self.emptySpace.setFixedHeight(4)
-        self.ourLayout.addWidget(self.emptySpace)
+    def sizeHint(self):
+        size_qa = self.quickActions.sizeHint()
+        size_db = self.dockerBtns.sizeHint()
+        size_tsd = self.toolSettingsDocker.sizeHint()
 
-        self.toolSettingsDocker = ToolshelfPanelDocker(self, KRITA_ID_DOCKER_SHAREDTOOLDOCKER)
-        self.autoFitScrollArea = True
-        self.ourLayout.addWidget(self.toolSettingsDocker)
-        self.setLayout(self.ourLayout)
+        width_padding = 20
+        height_padding = 20
 
-    def getCfg(self, enableToolOptions: bool = False):
-        cfg = ConfigManager.instance().getJSON()
-        if enableToolOptions: return cfg.toolshelf_main
-        else: return cfg.toolshelf_alt
+        container_width = max([size_qa.width(), size_db.width(), size_tsd.width()]) + width_padding
+        container_height = size_qa.height() + size_db.height() + size_tsd.height() + height_padding
+
+        return QSize(container_width, container_height)
 
     def getSharedToolOptionState(self):
         if InternalConfig.instance().nuOptions_SharedToolDocker and self.enableToolOptions:
             return True
         else: return False
-
 
     def onKritaConfigUpdate(self):       
         _sharedToolOptionsState = self.getSharedToolOptionState()
@@ -76,8 +72,6 @@ class ToolshelfMainPage(QWidget):
     def updateStyleSheet(self):
         self.dockerBtns.setStyleSheet(stylesheet.nu_tool_options_style)
         self.quickActions.setStyleSheet(stylesheet.nu_tool_options_style)
-
-        
 
     def addDockerButton(self, properties, onClick, title):
         self.dockerBtns.addButton(properties, onClick, title)
@@ -100,9 +94,11 @@ class ToolshelfMainPage(QWidget):
                         btn = self.quickActions.button(act.id)
                         btn.setChecked(action.isChecked())
 
-    def loadDocker(self):
+    def loadDockers(self):
         if self._lastSharedToolOptionsState:
             self.toolSettingsDocker.loadDocker()
+            self.toolSettingsDocker.setHidden(False)
         
-    def unloadDocker(self):
+    def unloadDockers(self):
         self.toolSettingsDocker.unloadDocker()
+        self.toolSettingsDocker.setHidden(True)
