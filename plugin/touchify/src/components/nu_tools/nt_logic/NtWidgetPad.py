@@ -19,12 +19,16 @@
 from PyQt5.QtWidgets import QWidget, QToolButton, QDockWidget, QVBoxLayout, QSizePolicy, QScrollArea
 from PyQt5.QtCore import Qt, QSize, QPoint
 
-from ...variables import KRITA_ID_OPTIONSROOT_MAIN
-from .nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
-from .nt_logic.Nt_ToggleVisibleButton import Nt_ToggleVisibleButton
-from ...config import *
+from ....variables import KRITA_ID_OPTIONSROOT_MAIN
+from .Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
+from .Nt_ToggleVisibleButton import Nt_ToggleVisibleButton
+from ....config import *
 
 from krita import *
+
+
+
+    
 
 class NtWidgetPad(QWidget):
     """
@@ -41,6 +45,9 @@ class NtWidgetPad(QWidget):
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(4,4,4,4)
         self.alignment = 'left'
+
+        self.offset_x_left = 0
+        self.offset_x_right = 0
 
         # Members to hold a borrowed widget and it's original parent docker for returning
         self.widget = None
@@ -72,16 +79,17 @@ class NtWidgetPad(QWidget):
         """
         Adjust the position and size of the Pad to that of the active View."""
         view = self.activeView()
-        if view:            
+        if view:          
             self.resizeToView()
 
             globalTargetPos = QPoint()
             if self.alignment == 'left':
-                globalTargetPos = view.mapToGlobal(QPoint(self.rulerMargin(), 0))
+                globalTargetPos = view.mapToGlobal(QPoint(self.rulerMargin() + self.offset_x_left, 0))
             elif self.alignment == 'right':
-                globalTargetPos = view.mapToGlobal(QPoint(view.width() - self.width() - self.scrollBarMargin(), 0))
+                globalTargetPos = view.mapToGlobal(QPoint(view.width() - self.width() - self.scrollBarMargin() - self.offset_x_right, 0))
 
             self.move(self.parentWidget().mapFromGlobal(globalTargetPos))
+
 
     def borrowDocker(self, docker):
         """
@@ -155,7 +163,7 @@ class NtWidgetPad(QWidget):
         """
         Return the borrowed docker to it's original QDockWidget"""
         # Ensure there's a widget to return
-        if self.widget:
+        if self.widgetDocker and self.widget:
             if isinstance(self.widget, Nt_ScrollAreaContainer):
                 self.widgetDocker.setWidget(self.widget.scrollArea())
             else:
@@ -169,6 +177,11 @@ class NtWidgetPad(QWidget):
         if KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, 'showrulers', "true") == "true":
             return 20 # Canvas ruler pixel width on Windows
         return 0
+
+    def setWidget(self, e):
+        self.widget = e
+        self.layout().addWidget(self.widget) 
+        self.adjustToView()        
 
     def scrollBarMargin(self):
         if KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, "hideScrollbars", "false") == "true":
@@ -215,3 +228,4 @@ class NtWidgetPad(QWidget):
 
     def getViewAlignment(self):
         return self.alignment
+

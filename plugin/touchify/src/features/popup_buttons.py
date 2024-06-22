@@ -43,7 +43,7 @@ class PopupButtons:
         for action in pending_actions:
             root_menu.addAction(action)
 
-    def createAction(self, window, popup: CfgPopup, actionPath):
+    def createAction(self, window: Window, popup: CfgPopup, actionPath):
         actionName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_POPUP, popup.id)
         displayName = popup.btnName + POPUP_BTN_IDENTIFIER
         iconName = popup.icon
@@ -53,10 +53,10 @@ class PopupButtons:
         action = window.createAction(actionName, displayName, actionPath)
         icon = ResourceManager.iconLoader(iconName)        
         action.setIcon(icon)
-        action.triggered.connect(lambda: self.showPopup(id, "button"))
+        action.triggered.connect(lambda: self.showPopup(action, id, "button"))
 
         if not hotkeyNumber == 0:
-            ConfigManager.instance().getHotkeyAction(hotkeyNumber).triggered.connect(lambda: self.showPopup(id, "mouse"))
+            ConfigManager.instance().getHotkeyAction(hotkeyNumber).triggered.connect(lambda: self.showPopup(action, id, "mouse"))
 
         pending_actions.append(action)
 
@@ -70,7 +70,13 @@ class PopupButtons:
             popup_data[popup.id] = popup
             self.createAction(window, popup, subItemPath)
 
-    def showPopup(self, id, mode: str):
+    def showPopup(self, action: QAction, id, mode: str):
+
+        _sender = action.sender()
+        _parent = None
+        if isinstance(_sender, QWidget):
+            _parent: QWidget = _sender
+
         needToBuild = True
         if not id in popup_dialogs:
             needToBuild = True
@@ -81,7 +87,7 @@ class PopupButtons:
             qwin = Krita.instance().activeWindow().qwindow()
             popup_dialogs[id] = self.createPopup(qwin, popup_data[id])
 
-        popup_dialogs[id].triggerPopup(mode)
+        popup_dialogs[id].triggerPopup(mode, _parent)
 
     def onConfigUpdated(self):
         cfg: ConfigFile = ConfigManager.instance().getJSON()

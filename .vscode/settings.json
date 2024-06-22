@@ -14,9 +14,13 @@
         ]
     },
     "python.analysis.extraPaths": [
-        "${workspaceFolder}/krita_env"
+        "${workspaceFolder}/krita_env",
+        "./plugin"
     ],
     "python.REPL.enableREPLSmartSend": false,
     "python.envFile": "${workspaceFolder}/.venv",
-    "python.analysis.importFormat": "relative"
+    "python.analysis.importFormat": "relative",
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.typeCheckingMode": "off",
+    "python.languageServer": "Default"
 }

@@ -2,12 +2,13 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from krita import *
+from .PropertyGrid_Dialog import PropertyGrid_Dialog
 
 from ...resources import ResourceManager
 
 from ...ext.extensions import KritaExtensions
 
-class IconSelector(QDialog):
+class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
 
     selected_item: str
 
@@ -39,7 +40,7 @@ class IconSelector(QDialog):
             currentItem = self.listView.item(i)
             if currentItem:
 
-                filterAllows = currentFilter in currentItem.text() or currentFilter in str(currentItem.data(0))
+                filterAllows = currentFilter.lower() in currentItem.text().lower() or currentFilter.lower() in str(currentItem.data(0)).lower()
 
                 if filterAllows or currentFilter == "":
                     currentItem.setHidden(False)

@@ -5,6 +5,7 @@ import os
 import json
 import sys
 import importlib.util
+from ..components.propertygrid.PropertyGrid import PropertyGrid
 from ..config import *
 from ...resources import *
 from ..ext.extensions import *
@@ -13,7 +14,7 @@ import re
 import functools
 import copy
 import json
-from ..components.PropertyGrid import *
+from ..components.propertygrid.PropertyGridPanel import *
 import datetime
 
 
@@ -50,11 +51,9 @@ class SettingsDialog:
         self.notice.setMinimumWidth(150)
         self.notice.setStyleSheet('''font-size: 10px''')
 
-        self.propertyGridFrame = PropertyGridHost()
-        self.propertyGrid = PropertyGrid(self.propertyGridFrame)
+        self.propertyGrid = PropertyGrid()
         self.propertyGrid.updateDataObject(self.cfg)
-        self.propertyGridFrame.insertWidget(0, self.propertyGrid)
-        self.layout.addWidget(self.propertyGridFrame, 0, 0)
+        self.layout.addWidget(self.propertyGrid, 0, 0)
 
 
 

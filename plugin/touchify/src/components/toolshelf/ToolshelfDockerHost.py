@@ -1,22 +1,22 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy, QFrame
 from PyQt5.QtCore import QSize, QEvent
 
-from ...components.nu_tools.nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
+from ..nu_tools.nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
 
 from ...docker_manager import DockerManager
 
 from krita import *
 
-class ToolboxPanelHost(QWidget):
+class ToolshelfDockerHost(QWidget):
 
     
     def __init__(self, parent: QWidget | None, ID):
-        super(ToolboxPanelHost, self).__init__(parent)
+        super(ToolshelfDockerHost, self).__init__(parent)
         self.ID = ID
         self.borrowedDocker = None
+        self.setAutoFillBackground(True)
         self.size = None
         self.outLayout = QVBoxLayout()
-        #self.outLayout.addStretch()
         self.setLayout(self.outLayout)
         self.outLayout.setContentsMargins(0, 0, 0, 0)
         self.outLayout.setSpacing(0)
@@ -28,6 +28,9 @@ class ToolboxPanelHost(QWidget):
 
     def loadDocker(self):
         dockerLoaded: QWidget | None = DockerManager.instance().borrowDockerWidget(self.ID, self.dockMode)
+
+        if not dockerLoaded:
+            return
 
         if isinstance(dockerLoaded, QScrollArea):
             self.tookScrollArea = True
@@ -61,12 +64,16 @@ class ToolboxPanelHost(QWidget):
     def setDockMode(self, value):
         self.dockMode = value
 
+    def setSizeHint(self, size):
+        self.size = QSize(size[0] + 20, size[1] + 20)
+
     def sizeHint(self):
-        #if self.borrowedDocker:
-            #if self.tookScrollArea:
-            #    return self.borrowedDocker.minimumSize()    
-            #return self.borrowedDocker.sizeHint()
-        return super().sizeHint()
+        if self.size:
+            return self.size
+        elif self.borrowedDocker:
+            return self.borrowedDocker.sizeHint()
+        else:
+            return super().sizeHint()
 
     def widget(self):
         return self.borrowedDocker

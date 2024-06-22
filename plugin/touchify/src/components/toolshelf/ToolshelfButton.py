@@ -1,12 +1,14 @@
-from PyQt5.QtWidgets import QToolButton
+from PyQt5.QtWidgets import QToolButton, QSizePolicy
 from PyQt5.QtGui import QIcon, QPixmap, QImage, QColor, QPalette
 from PyQt5.QtCore import QSize, Qt
 
-class ToolboxButton(QToolButton):
+class ToolshelfButton(QToolButton):
 
     def __init__(self, size = 12, parent = None):
-        super(ToolboxButton, self).__init__(parent)
-        self.setFixedSize(QSize(size, size))
+        super(ToolshelfButton, self).__init__(parent)
+        self.setFixedHeight(size)
+        self.setMinimumWidth(size)
+        self.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
         self.setFocusPolicy(Qt.NoFocus)
         self.highlightConnection = None
     
