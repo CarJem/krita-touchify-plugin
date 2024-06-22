@@ -4,6 +4,8 @@ from PyQt5.QtCore import *
 from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
+
+from .PropertyGrid_Dialog import PropertyGrid_Dialog
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
 from ...ext.typedlist import *
@@ -149,7 +151,7 @@ class PropertyField_TypedList(PropertyField):
             self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
 
     def list_modify(self, mode: Literal['edit', 'add'] = 'add'):
-        self.dlg = QDialog(self)
+        self.dlg = PropertyGrid_Dialog(self)
         self.dlg.setWindowFlags(Qt.WindowType.Widget)
         self.container = QVBoxLayout()
         self.dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
@@ -166,14 +168,14 @@ class PropertyField_TypedList(PropertyField):
             if self.selectedIndex != -1:
                 self.subwindowMode = "edit"
                 self.subwindowPropGrid.updateDataObject(self.selectedItem)
-                self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.dlg))
+                self.stackHost.goForward(self.dlg)
                 self.dlg.show()
         elif mode == 'add':
             editableValue = self.getEditableValue(self.variable_list_type(), -1)
             self.subwindowMode = "add"
             self.subwindowEditable = editableValue
             self.subwindowPropGrid.updateDataObject(self.subwindowEditable)
-            self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.dlg))
+            self.stackHost.goForward(self.dlg)
             self.dlg.show()
 
     def list_remove(self):

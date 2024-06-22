@@ -5,6 +5,8 @@ from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
 
+from .PropertyGrid_Dialog import PropertyGrid_Dialog
+
 from .PropertyUtils_Extensions import *
 from .PropertyGrid import *
 
@@ -70,7 +72,7 @@ class PropertyField(QWidget):
         self.setLayout(editorLayout)
 
     def nested_edit(self):
-        self.nested_dlg = QDialog(self)
+        self.nested_dlg = PropertyGrid_Dialog(self)
         self.nested_dlg.setWindowFlags(Qt.WindowType.Widget)
         self.nested_container = QVBoxLayout()
         self.nested_dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)

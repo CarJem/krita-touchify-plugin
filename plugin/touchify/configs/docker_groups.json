@@ -14,7 +14,7 @@
             "hotkeyNumber": 3,
             "groupId": "SidebarGroup",
             "tabsMode": true,
-            "icon": "custom:HistoryDockers"
+            "icon": "material:history"
         },
         {
             "docker_names": [
@@ -39,7 +39,7 @@
             ],
             "tabsMode": true,
             "display_name": "Layers Panel",
-            "icon": "custom:LayersCustom",
+            "icon": "material:layers",
             "id": "KisLayerBox",
             "groupId": "SidebarGroup"
         },

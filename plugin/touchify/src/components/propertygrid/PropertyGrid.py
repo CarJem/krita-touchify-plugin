@@ -14,7 +14,7 @@ class PropertyGrid(QStackedWidget):
         self.rootPropertyGrid.updateDataObject(data)
 
     def goForward(self, newPage):
-        pass
+        self.setCurrentIndex(self.addWidget(newPage))
 
     def goBack(self):
         lastIndex = self.currentIndex() - 1
