@@ -99,6 +99,18 @@
     ],
     "actions": [
         {
+            "icon": "material:undo",
+            "id": "edit_undo",
+            "row": -1,
+            "isEnabled": true
+        },
+        {
+            "icon": "material:redo",
+            "id": "edit_redo",
+            "isEnabled": true,
+            "row": -1
+        },
+        {
             "icon": "custom:SelectionTool",
             "id": "touchify_popup_selection-tool",
             "isEnabled": true
@@ -117,6 +129,18 @@
             "icon": "config-popup-palette",
             "id": "touchify_popup_quick-settings",
             "isEnabled": true
+        },
+        {
+            "icon": "paintop_settings_02",
+            "id": "show_brush_editor",
+            "isEnabled": true,
+            "row": 1
+        },
+        {
+            "icon": "extended_color_selector",
+            "id": "touchify_popup_ColorOptionsPopup",
+            "isEnabled": true,
+            "row": 1
         }
     ],
     "titleButtonHeight": 10,

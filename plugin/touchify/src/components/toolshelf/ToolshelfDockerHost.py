@@ -20,7 +20,7 @@ class ToolshelfDockerHost(QWidget):
         self.setLayout(self.outLayout)
         self.outLayout.setContentsMargins(0, 0, 0, 0)
         self.outLayout.setSpacing(0)
-
+        
         self.autoFitScrollArea = False
         self.tookScrollArea = False
         self.originalScrollArea: QScrollArea | None = None

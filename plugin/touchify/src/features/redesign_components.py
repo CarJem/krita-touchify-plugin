@@ -19,28 +19,28 @@ class RedesignComponents:
     ntToolbox = None
     ntToolOptions = None
 
-    def createActions(self, window, mainMenuBar: QMenuBar):
+    def createActions(self, window: Window, mainMenuBar: QMenuBar):
 
         config = InternalConfig.instance()
 
         actions = []
 
-        actions.append(window.createAction(TOUCHIFY_ID_ACTION_TOOLBAR_BORDER, "Borderless Toolbars", ""))
+        actions.append(window.createAction(TOUCHIFY_ID_ACTION_TOOLBAR_BORDER, "Borderless Toolbars", TOUCHIFY_ID_MENU_ROOT))
         actions[0].setCheckable(True)
         actions[0].setChecked(config.usesBorderlessToolbar) 
         actions[0].toggled.connect(self.toolbarBorderToggled)
 
-        actions.append(window.createAction(TOUCHIFY_ID_ACTION_TAB_HEIGHT, "Thin Document Tabs", ""))
+        actions.append(window.createAction(TOUCHIFY_ID_ACTION_TAB_HEIGHT, "Thin Document Tabs", TOUCHIFY_ID_MENU_ROOT))
         actions[1].setCheckable(True)
         actions[1].setChecked(config.usesThinDocumentTabs)
         actions[1].toggled.connect(self.tabHeightToggled)
 
-        actions.append(window.createAction(TOUCHIFY_ID_ACTION_NU_TOOLBOX, "Show NuToolbox", ""))
+        actions.append(window.createAction(TOUCHIFY_ID_ACTION_NU_TOOLBOX, "Show NuToolbox", TOUCHIFY_ID_MENU_ROOT))
         actions[2].setCheckable(True)
         actions[2].setChecked(config.usesNuToolbox)
         actions[2].toggled.connect(self.nuToolboxToggled)
 
-        actions.append(window.createAction(TOUCHIFY_ID_ACTION_NU_TOOL_OPTIONS, "Show NuToolOptions", ""))
+        actions.append(window.createAction(TOUCHIFY_ID_ACTION_NU_TOOL_OPTIONS, "Show NuToolOptions", TOUCHIFY_ID_MENU_ROOT))
         actions[3].setCheckable(True)
         if KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, KRITA_ID_OPTIONS_TOOLOPTIONS_IN_DOCKER, "false") == "true":
             actions[3].setChecked(config.usesNuToolOptions)
@@ -49,22 +49,26 @@ class RedesignComponents:
         for a in actions:
             mainMenuBar.addAction(a)
 
-        nu_options_menu = QtWidgets.QMenu("NuOptions", mainMenuBar)
+        sublocation_name = "NuOptions"
+        sublocation_path = TOUCHIFY_ID_MENU_ROOT + "/" + sublocation_name
+
+        nu_options_menu = QtWidgets.QMenu(sublocation_name, mainMenuBar)
         mainMenuBar.addMenu(nu_options_menu)
         nu_options_actions = []
         
 
-        nu_options_actions.append(window.createAction(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_SHAREDTOOLDOCKER, "Show Tool Options"))
+
+        nu_options_actions.append(window.createAction(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_SHAREDTOOLDOCKER, "Show Tool Options", sublocation_path))
         nu_options_actions[0].setCheckable(True)
         nu_options_actions[0].setChecked(config.nuOptions_SharedToolDocker)
         nu_options_actions[0].toggled.connect(self.nuOptionsSharedToolDockerToggled)
 
-        nu_options_actions.append(window.createAction(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_RIGHT_HAND_TOOLBOX, "Right Hand Toolbox"))
+        nu_options_actions.append(window.createAction(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_RIGHT_HAND_TOOLBOX, "Right Hand Toolbox", sublocation_path))
         nu_options_actions[1].setCheckable(True)
         nu_options_actions[1].setChecked(config.nuOptions_ToolboxOnRight)
         nu_options_actions[1].toggled.connect(self.nuOptionsRightHandToolboxToggled)
 
-        nu_options_actions.append(window.createAction(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, "Alternative Toolbox Position"))
+        nu_options_actions.append(window.createAction(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, "Alternative Toolbox Position", sublocation_path))
         nu_options_actions[2].setCheckable(True)
         nu_options_actions[2].setChecked(config.nuOptions_AlternativeToolboxPosition)
         nu_options_actions[2].toggled.connect(self.nuOptionsAltToolboxPosToggled)

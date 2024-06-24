@@ -79,7 +79,7 @@ nu_toggle_button_style = f"""
         }}
         """
 
-nu_tool_options_back_button_style = f"""
+nu_toolshelf_header_style = f"""
         QPushButton {{
             background-color: #aa{background};
             border: none;
@@ -89,9 +89,19 @@ nu_tool_options_back_button_style = f"""
         QPushButton:hover {{
             background-color: #{highlight};
         }}
+
+        QPushButton:checked {{
+            background-color: #cc{highlight};
+        }}
         
         QPushButton:pressed {{
             background-color: #{alternate};
+        }}
+
+        QWidget#filler-widget {{
+            background-color: #aa{background};
+            border: none;
+            border-radius: 4px;
         }}
         """
 

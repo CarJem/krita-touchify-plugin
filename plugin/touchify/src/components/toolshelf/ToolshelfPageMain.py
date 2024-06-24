@@ -1,6 +1,7 @@
 
 
 
+from .ToolshelfQuickActions import ToolshelfQuickActions
 from .ToolshelfPageHost import ToolshelfPageHost
 from ...cfg.CfgToolshelf import CfgToolboxAction
 from ...variables import *
@@ -33,8 +34,7 @@ class ToolshelfPageMain(ToolshelfPageHost):
         self.dockerBtns = ToolshelfButtonBar(self.cfg.dockerButtonHeight, self)
         self.shelfLayout.addWidget(self.dockerBtns)    
 
-        self.quickActions = ToolshelfButtonBar(self.cfg.actionHeight, self)
-        self.initQuickActions()
+        self.quickActions = ToolshelfQuickActions(self.cfg.actions, self.cfg.actionHeight, self)
         self.shelfLayout.addWidget(self.quickActions)
 
         self.toolSettingsDocker = ToolshelfDockerHost(self, KRITA_ID_DOCKER_SHAREDTOOLDOCKER)
@@ -42,15 +42,13 @@ class ToolshelfPageMain(ToolshelfPageHost):
         self.shelfLayout.addWidget(self.toolSettingsDocker)
 
     def sizeHint(self):
-        size_qa = self.quickActions.sizeHint()
-        size_db = self.dockerBtns.sizeHint()
-        size_tsd = self.toolSettingsDocker.sizeHint()
+        size_qa = super().sizeHint()
 
         width_padding = 20
         height_padding = 20
 
-        container_width = max([size_qa.width(), size_db.width(), size_tsd.width()]) + width_padding
-        container_height = size_qa.height() + size_db.height() + size_tsd.height() + height_padding
+        container_width = size_qa.width() + width_padding
+        container_height = size_qa.height() + height_padding
 
         return QSize(container_width, container_height)
 

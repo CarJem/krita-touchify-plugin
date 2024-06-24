@@ -21,8 +21,9 @@ class ToolshelfButtonBar(QWidget):
         super(ToolshelfButtonBar, self).__init__(parent)
         self.rows: dict[int, QWidget] = {}
         self.setLayout(QVBoxLayout())
-        self.layout().setSpacing(0)
+        self.layout().setSpacing(1)
         self.layout().setContentsMargins(0, 0, 0, 0)
+        self.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
 
         self._buttons = {}
         self.btnSize = btnSize
@@ -40,6 +41,7 @@ class ToolshelfButtonBar(QWidget):
             rowWid.setLayout(QHBoxLayout())
             rowWid.layout().setSpacing(1)
             rowWid.layout().setContentsMargins(0, 0, 0, 0)
+            rowWid.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
             self.rows[properties.row] = rowWid
             self.layout().addWidget(rowWid)
 

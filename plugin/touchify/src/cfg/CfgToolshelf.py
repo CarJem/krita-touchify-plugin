@@ -39,51 +39,6 @@ class CfgToolboxPanelDocker:
         restrictions["panel_y"] = {"type": "range", "min": 0, "max": 10}
         return restrictions
 
-class CfgToolboxPanel:
-    id: str = ""
-    icon: str = ""
-    size_x: int = 0
-    size_y: int = 0
-    isEnabled: bool = False
-    row: int = 0
-    additional_dockers: TypedList[CfgToolboxPanelDocker] = []
-
-    def create(args):
-        obj = CfgToolboxPanel()
-        Extensions.dictToObject(obj, args)
-        additional_dockers = Extensions.default_assignment(args, "additional_dockers", [])
-        obj.additional_dockers = Extensions.list_assignment(additional_dockers, CfgToolboxPanelDocker)
-        return obj
-
-    def forceLoad(self):
-        self.additional_dockers = TypedList(self.additional_dockers, CfgToolboxPanelDocker)
-
-    def __str__(self):
-        name = self.id.replace("\n", "\\n")
-        if not self.isEnabled:
-            name = "(Disabled) " + name
-        return name
-
-    def propertygrid_labels(self):
-        labels = {}
-        labels["id"] = "Panel ID (must be unique)"
-        labels["icon"] = "Display Icon"
-        labels["isEnabled"] = "Active"
-        labels["size_x"] = "Panel Width"
-        labels["size_y"] = "Panel Height"
-        labels["row"] = "Tab Row"
-        labels["additional_dockers"] = "Dockers"
-        return labels
-
-    def propertygrid_groups(self):
-        groups = {}
-        return groups
-
-    def propertygrid_restrictions(self):
-        restrictions = {}
-        restrictions["icon"] = {"type": "icon_selection"}
-        return restrictions
-
 class CfgToolboxAction:
     id: str = ""
     icon: str = ""
@@ -120,6 +75,58 @@ class CfgToolboxAction:
         restrictions = {}
         restrictions["icon"] = {"type": "icon_selection"}
         restrictions["id"] = {"type": "action_selection"}
+        return restrictions
+
+class CfgToolboxPanel:
+    id: str = ""
+    icon: str = ""
+    size_x: int = 0
+    size_y: int = 0
+    isEnabled: bool = False
+    row: int = 0
+    quick_actions: TypedList[CfgToolboxAction] = []
+    additional_dockers: TypedList[CfgToolboxPanelDocker] = []
+    actionHeight: int = 10
+
+    def create(args):
+        obj = CfgToolboxPanel()
+        Extensions.dictToObject(obj, args)
+        additional_dockers = Extensions.default_assignment(args, "additional_dockers", [])
+        quick_actions = Extensions.default_assignment(args, "quick_actions", [])
+        obj.additional_dockers = Extensions.list_assignment(additional_dockers, CfgToolboxPanelDocker)
+        obj.quick_actions = Extensions.list_assignment(quick_actions, CfgToolboxAction)
+        return obj
+
+    def forceLoad(self):
+        self.additional_dockers = TypedList(self.additional_dockers, CfgToolboxPanelDocker)
+        self.quick_actions = TypedList(self.quick_actions, CfgToolboxAction)
+
+    def __str__(self):
+        name = self.id.replace("\n", "\\n")
+        if not self.isEnabled:
+            name = "(Disabled) " + name
+        return name
+
+    def propertygrid_labels(self):
+        labels = {}
+        labels["id"] = "Panel ID (must be unique)"
+        labels["icon"] = "Display Icon"
+        labels["isEnabled"] = "Active"
+        labels["size_x"] = "Panel Width"
+        labels["size_y"] = "Panel Height"
+        labels["row"] = "Tab Row"
+        labels["additional_dockers"] = "Dockers"
+        labels["quick_actions"] = "Actions"
+        labels["actionHeight"] = "Action Button Height"
+        return labels
+
+    def propertygrid_groups(self):
+        groups = {}
+        return groups
+
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        restrictions["icon"] = {"type": "icon_selection"}
         return restrictions
 
 class CfgToolshelf:

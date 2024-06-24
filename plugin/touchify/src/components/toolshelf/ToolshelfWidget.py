@@ -1,16 +1,16 @@
-from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QPushButton, QSizePolicy, QStackedWidget
+from PyQt5.QtWidgets import QSizePolicy, QStackedWidget
 import uuid
 from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
+from touchify.src.components.toolshelf.ToolboxPanelHeader import ToolboxPanelHeader
+from .ToolshelfQuickActions import ToolshelfQuickActions
 from .ToolshelfPagePanel import ToolshelfPagePanel
 
 from ...config import *
 from ...variables import *
 from ...docker_manager import *
-from ... import stylesheet
 
 from ...cfg.CfgToolshelf import CfgToolboxPanel
 from .ToolshelfPageMain import ToolshelfPageMain
@@ -23,37 +23,22 @@ def ON_KRITA_WINDOW_CREATED():
     global HAS_KRITA_FULLY_LOADED
     HAS_KRITA_FULLY_LOADED = True
 
-class ToolboxPanelCloseButton(QPushButton):
-    def __init__(self, onClick, cfg: CfgToolshelf, parent=None):
-        super(ToolboxPanelCloseButton, self).__init__(parent)
-
-        configManager: ConfigManager = ConfigManager.instance()
-        self._height = cfg.dockerBackHeight
-        self._iconSize = self._height - 2
-
-        self.setIcon(Krita.instance().action('move_layer_up').icon())
-        self.setIconSize(QSize(self._iconSize, self._iconSize))
-        self.setFixedHeight(self._height)
-        self.clicked.connect(onClick)
-
-    def updateStyleSheet(self):
-        self.setStyleSheet(stylesheet.nu_tool_options_back_button_style)
-        return
-
 class ToolshelfContainer(QStackedWidget):
 
     def __init__(self, parent=None, enableToolOptions: bool = False):
         super(ToolshelfContainer, self).__init__(parent)
         self._panels = {}
-        self.shortcutConnections = []
+        self.pinned = False
         self.current_panel_id = 'MAIN'
-        self._backButtons: List[ToolboxPanelCloseButton] = []
+        self._headers: List[ToolboxPanelHeader] = []
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        qApp.focusObjectChanged.connect(self.handleFocusChange)
 
-        self.cfg = self.getCfg(enableToolOptions)
+        self.enableToolOptions = enableToolOptions
+        self.cfg = self.getCfg()
         super().currentChanged.connect(self.currentChanged)
 
-        self.addMainPanel(enableToolOptions)
+        self.addMainPanel()
         panels = self.cfg.panels
         for entry in panels:
             properties: CfgToolboxPanel = entry
@@ -64,26 +49,39 @@ class ToolshelfContainer(QStackedWidget):
                 self._mainWidget.addDockerButton(properties, self.panel(PANEL_ID).activate, panel_title)
         self.changePanel('MAIN')
 
-    def getCfg(self, enableToolOptions: bool = False):
+    def getCfg(self):
         cfg = ConfigManager.instance().getJSON()
-        if enableToolOptions: return cfg.toolshelf_main
+        if self.enableToolOptions: return cfg.toolshelf_main
         else: return cfg.toolshelf_alt
 
-    def addMainPanel(self, enableToolOptions: bool = False):
-        self._mainWidget = ToolshelfPageMain(self, enableToolOptions)
+    def addMainPanel(self):
+        self._mainWidget = ToolshelfPageMain(self, self.enableToolOptions)
         self._panels['MAIN'] = self._mainWidget
+        header = ToolboxPanelHeader(self.goHome, self.togglePinned, self.cfg, True, self)
+        self._headers.append(header)
+        self._mainWidget.shelfLayout.insertWidget(0, header)
         super().addWidget(self._mainWidget)
 
     def addPanel(self, ID, data):
         panel = ToolshelfPagePanel(self, ID, data)
-        backButton = ToolboxPanelCloseButton(self.goHome, self.cfg)
-        panel.layout().addWidget(backButton)
-        self._backButtons.append(backButton)
+        header = ToolboxPanelHeader(self.goHome, self.togglePinned, self.cfg, False, self)
+
+        panel.shelfLayout.insertWidget(0, header)
+        self._headers.append(header)
+        
         self._panels[ID] = panel
         super().addWidget(panel)
 
     def goHome(self):
         self.changePanel('MAIN')
+
+    def isPinned(self):
+        return self.pinned
+
+    def togglePinned(self):
+        self.pinned = not self.pinned
+        for header in self._headers:
+            header.pinButton.setChecked(self.pinned)
 
     def changePanel(self, panel_id: any):
         new_panel = self.panel(panel_id)
@@ -115,25 +113,38 @@ class ToolshelfContainer(QStackedWidget):
         self.adjustSize()
 
     def dismantle(self):
+        qApp.focusObjectChanged.disconnect(self.handleFocusChange)
         self.changePanel('MAIN')
 
         for pnl in self._panels:
             panel: ToolshelfPageHost = self._panels[pnl]
             panel.unloadDockers()
 
-        for c in self.shortcutConnections:
-            self.disconnect(c)
-
     def panel(self, name) -> ToolshelfPageHost:
         return self._panels[name]
 
+    def doesCanvasHaveFocus(self, source):
+        if not isinstance(source, QOpenGLWidget): return False
+
+        if source.metaObject().className() == "KisOpenGLCanvas2":
+            return True
+                
+        return False
+
+    def handleFocusChange(self, source):
+        if self.isPinned() == False and self.doesCanvasHaveFocus(source):
+            self.goHome()
 
     def updateStyleSheet(self):
         if self._mainWidget:
             self._mainWidget.updateStyleSheet()
-        for button in self._backButtons:
+        for panel in self._panels:
+            self._panels[panel].updateStyleSheet()
+        for button in self._headers:
             button.updateStyleSheet()
         return
+    
+
 
 class ToolshelfWidget(QDockWidget):
 
@@ -148,6 +159,7 @@ class ToolshelfWidget(QDockWidget):
         """
 
         self.scrollArea = QScrollArea(self)
+        self.scrollArea.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)

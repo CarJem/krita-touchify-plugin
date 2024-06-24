@@ -2,6 +2,8 @@ from typing import Dict
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from .ToolshelfQuickActions import ToolshelfQuickActions
+
 from .ToolshelfPageHost import ToolshelfPageHost
 
 from ...cfg.CfgToolshelf import CfgToolboxPanel
@@ -9,6 +11,7 @@ from ...cfg.CfgToolshelf import CfgToolboxPanelDocker
 
 from ...docker_manager import DockerManager
 from .ToolshelfDockerHost import ToolshelfDockerHost
+from ... import stylesheet
 
 class ToolshelfPagePanel(ToolshelfPageHost):
 
@@ -21,6 +24,9 @@ class ToolshelfPagePanel(ToolshelfPageHost):
         self.dockerWidgets = {}
         self.size = None
         self.panelProperties = data
+
+        self.quickActions = ToolshelfQuickActions(self.panelProperties.quick_actions, self.panelProperties.actionHeight, self)
+        self.shelfLayout.addWidget(self.quickActions)
         
         #region Generation
         self.splitter = QSplitter(Qt.Orientation.Vertical)
@@ -90,6 +96,9 @@ class ToolshelfPagePanel(ToolshelfPageHost):
         container_height = sizeHint.height() + height_padding
 
         return QSize(container_width, container_height)
+    
+    def updateStyleSheet(self):
+        self.quickActions.setStyleSheet(stylesheet.nu_tool_options_style)
 
     def sizeHint(self):
         if self.size:

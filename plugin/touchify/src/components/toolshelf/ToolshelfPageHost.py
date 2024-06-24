@@ -17,7 +17,9 @@ class ToolshelfPageHost(QWidget):
         self.ID = ID
 
         self.shelfLayout = QVBoxLayout()
+        self.shelfLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.shelfLayout.setContentsMargins(0, 0, 0, 0)
+        self.shelfLayout.setSpacing(1)
         self.setLayout(self.shelfLayout)
 
     def unloadDockers(self):
