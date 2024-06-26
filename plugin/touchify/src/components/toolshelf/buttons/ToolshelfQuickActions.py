@@ -1,18 +1,16 @@
 
 
 
-from .ToolshelfPageHost import ToolshelfPageHost
-from ...cfg.CfgToolshelf import CfgToolboxAction
-from ...variables import *
-from ...cfg.CfgToolshelf import CfgToolboxAction
+from ....cfg.CfgToolshelf import CfgToolboxAction
+from ....variables import *
+from ....cfg.CfgToolshelf import CfgToolboxAction
 from krita import *
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import QMargins
-from ...config import *
+from ....config import *
 from .ToolshelfButtonBar import ToolshelfButtonBar
-from .ToolshelfDockerHost import ToolshelfDockerHost
-from ... import stylesheet
+from .... import stylesheet
 
 class ToolshelfQuickActions(QWidget):
     _lastSharedToolOptionsState = False

@@ -70,6 +70,9 @@ class Extensions:
     
 class KritaExtensions:
 
+    def getMainWindow():
+        return Krita.instance().activeWindow().qwindow()
+
     def getDocker(name):
         dockers = Krita.instance().dockers()
         for docker in dockers:

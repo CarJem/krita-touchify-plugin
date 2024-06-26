@@ -1,13 +1,13 @@
 
 
-from ...cfg.CfgToolshelf import CfgToolboxAction
-from ...resources import ResourceManager
-from ...cfg.CfgToolshelf import CfgToolboxAction
+from ....cfg.CfgToolshelf import CfgToolboxAction
+from ....resources import ResourceManager
+from ....cfg.CfgToolshelf import CfgToolboxAction
 from krita import *
 from .ToolshelfButton import ToolshelfButton
 
 
-from ...config import *
+from ....config import *
 
 from PyQt5.QtWidgets import QWidget, QHBoxLayout
 from PyQt5.QtCore import QSize, Qt

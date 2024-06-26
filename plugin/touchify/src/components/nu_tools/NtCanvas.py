@@ -1,18 +1,14 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
-
 from ...ext.extensions import KritaExtensions
-
 from ...config import InternalConfig, KritaSettings
-
 from ... import stylesheet
 from ...variables import KRITA_ID_DOCKER_SHAREDTOOLDOCKER, KRITA_ID_MENU_SETTINGS, TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, TOUCHIFY_ID_OPTIONSROOT_MAIN
-from .nt_logic.NtWidgetPad import NtWidgetPad
-from .nt_logic.Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
-
-from .nt_logic.NtDockers import NtDockers
+from .NtWidgetPad import NtWidgetPad
 from krita import *
 from PyQt5.QtCore import QObject, QEvent, QPoint
-
+from PyQt5.QtWidgets import QMdiArea, QDockWidget
+from ...variables import *
+from ..toolshelf.ToolshelfWidget import ToolshelfWidget
 
 class NtToolboxContainer():
 
@@ -69,6 +65,46 @@ class NtToolboxContainer():
         self.qWin.removeEventFilter(self.adjustFilter)
         self.dockerAction.setEnabled(True)
         return self.pad.close()
+
+class NtToolOptions(QObject):
+    def __init__(self, window):
+        super(NtToolOptions, self).__init__(window.qwindow())
+        self.qWin: QWindow = window.qwindow()
+
+        if InternalConfig.instance().nuOptions_ToolboxOnRight: 
+            self.alignment = 'left'
+        else: 
+            self.alignment= 'right'
+
+        self.tooloptions = NtDockers(window, self.alignment, True)
+        self.setViewAlignment(self.alignment)
+
+
+    def onConfigUpdate(self):
+        if self.tooloptions:
+            self.tooloptions.toolshelf.onConfigUpdated()
+
+    def setViewAlignment(self, alignment):
+        self.alignment = alignment
+        self.tooloptions.pad.setViewAlignment(self.alignment)
+
+    def onKritaConfigUpdate(self):
+        if self.tooloptions:
+            self.tooloptions.toolshelf.onKritaConfigUpdate()
+
+        if self.alignment == 'right' and InternalConfig.instance().nuOptions_ToolboxOnRight:
+            self.setViewAlignment('left')
+        elif self.alignment == 'left' and not InternalConfig.instance().nuOptions_ToolboxOnRight:
+            self.setViewAlignment('right')
+
+    def updateStyleSheet(self):
+        self.tooloptions.updateStyleSheet()
+
+    def show(self):
+        self.tooloptions.pad.show()
+
+    def close(self):
+        self.tooloptions.close()
 
 class NtToolbox(QObject):
     def __init__(self, window):
@@ -182,3 +218,77 @@ class NtToolbox(QObject):
         self.toolbox.close()
         self.toolbox = None
         self.tooloptions = None
+
+class NtDockers():
+
+    def __init__(self, window: Window, alignment: str, isPrimaryPanel: bool = False):
+        self.qWin = window.qwindow()
+        self.mdiArea = self.qWin.findChild(QMdiArea)
+
+        self.toolshelf = ToolshelfWidget(isPrimaryPanel)
+
+        # Create "pad"
+        self.pad = NtWidgetPad(self.mdiArea)
+        self.pad.setObjectName("toolOptionsPad")
+        self.pad.setViewAlignment(alignment)
+        self.pad.borrowDocker(self.toolshelf)
+
+        # Create and install event filter
+        self.adjustFilter = Nt_AdjustToSubwindowFilter(self.mdiArea)
+        self.adjustFilter.setTargetWidget(self.pad)
+        self.mdiArea.subWindowActivated.connect(self.onSubWindowActivated)
+        self.qWin.installEventFilter(self.adjustFilter)
+
+        # Create visibility toggle action 
+        action_id = TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS if isPrimaryPanel else TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS_ALT
+        action_name = "Show Tool Options Shelf" if isPrimaryPanel else "Show Toolbox Shelf"
+        action = window.createAction(action_id, action_name, KRITA_ID_MENU_SETTINGS)
+        action.toggled.connect(self.pad.toggleWidgetVisible)
+        action.setCheckable(True)
+        action.setChecked(True)
+
+    def onSubWindowActivated(self, subWin):
+        if subWin:
+            self.pad.adjustToView()
+            self.updateStyleSheet()
+    
+    def onConfigUpdate(self):
+        pass
+
+    def onKritaConfigUpdate(self):
+        pass
+
+    def updateStyleSheet(self):
+        self.toolshelf.updateStyleSheet()
+        return
+    
+    def close(self):
+        self.mdiArea.subWindowActivated.disconnect(self.onSubWindowActivated)
+        self.qWin.removeEventFilter(self.adjustFilter)
+        self.toolshelf.onUnload()
+        self.pad.widget = None
+        self.pad.widgetDocker = None
+        return self.pad.close()
+    
+class Nt_AdjustToSubwindowFilter(QObject):
+    """Event Filter object. Ensure that a target widget is moved
+    to a desired position (corner of the view) when the subwindow area updates."""
+    
+    def __init__(self, parent=None):
+        super(Nt_AdjustToSubwindowFilter, self).__init__(parent)
+        self.target = None
+
+    def eventFilter(self, obj, e):
+        """Event filter: Update the Target's position to match to the current view 
+        if the (sub-)window has moved, changed in size or been activated."""
+        if (self.target and
+            (e.type() == QEvent.Move or
+            e.type() == QEvent.Resize or
+            e.type() == QEvent.WindowActivate)):
+            self.target.adjustToView()
+            
+        return False
+
+    def setTargetWidget(self, wdgt):
+        """Set which QWidget to adjust the position of."""
+        self.target = wdgt

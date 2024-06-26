@@ -19,16 +19,11 @@
 from PyQt5.QtWidgets import QWidget, QToolButton, QDockWidget, QVBoxLayout, QSizePolicy, QScrollArea
 from PyQt5.QtCore import Qt, QSize, QPoint
 
-from ....variables import KRITA_ID_OPTIONSROOT_MAIN
-from .Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
-from .Nt_ToggleVisibleButton import Nt_ToggleVisibleButton
-from ....config import *
+from ...variables import KRITA_ID_OPTIONSROOT_MAIN
+from ...config import *
+from ... import stylesheet
 
 from krita import *
-
-
-
-    
 
 class NtWidgetPad(QWidget):
     """
@@ -229,3 +224,67 @@ class NtWidgetPad(QWidget):
     def getViewAlignment(self):
         return self.alignment
 
+class Nt_ToggleVisibleButton(QToolButton):
+    def __init__(self, parent = None):
+        super(Nt_ToggleVisibleButton, self).__init__(parent)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+        self.setIconSize(QSize(11, 11))
+        self.setStyleSheet(stylesheet.nu_toggle_button_style)
+        
+    def setArrow(self, alignment):
+        if alignment == "right":
+            self.setArrowType(Qt.ArrowType.RightArrow)
+        else:
+            self.setArrowType(Qt.ArrowType.LeftArrow)
+
+class Nt_ScrollAreaContainer(QWidget):
+
+    def __init__(self, scrollArea = None, parent=None):
+        super(Nt_ScrollAreaContainer, self).__init__(parent)
+        self.setLayout(QVBoxLayout())
+        self.layout().setContentsMargins(0,0,0,0)
+        self.sa = None
+        
+        self.setScrollArea(scrollArea)
+
+
+
+
+
+    def sizeHint(self):
+        """
+        Reimplemented function. If a QScrollArea as been set
+        the size hint of it's widget will be returned."""
+        if self.sa and self.sa.widget():
+            return self.sa.widget().sizeHint()
+
+        return super().sizeHint()
+
+
+    def setScrollArea(self, scrollArea):
+        """
+        Set the QScrollArea for the container to hold.
+
+        True will be returned upon success and if no prior QScrollArea was set. 
+        If another QScrollArea was already set it will be returned so that 
+        it can be disposed of properly.
+        
+        If an invalid arguement (i.e. not a QScrollArea) or the same QScrollArea
+        as the currently set one is passed, nothing happens and False is returned."""
+        if (isinstance(scrollArea, QScrollArea) and
+            scrollArea is not self.sa):
+            ret = True
+
+            if not self.sa:
+                self.layout().addWidget(scrollArea)
+            else:
+                self.layout().replaceWidget(self.sa, scrollArea)
+                ret = self.sa # set the old QScrollArea to be returned
+            
+            self.sa = scrollArea
+            return ret
+        
+        return False
+
+    def scrollArea(self):
+        return self.sa

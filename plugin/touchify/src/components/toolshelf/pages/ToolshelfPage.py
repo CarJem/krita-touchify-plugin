@@ -2,16 +2,16 @@ from typing import Dict
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from ...cfg.CfgToolshelf import CfgToolboxPanel
-from ...cfg.CfgToolshelf import CfgToolboxPanelDocker
+from ....cfg.CfgToolshelf import CfgToolboxPanel
+from ....cfg.CfgToolshelf import CfgToolboxPanelDocker
 
-from ...docker_manager import DockerManager
+from ....docker_manager import DockerManager
 
-class ToolshelfPageHost(QWidget):
+class ToolshelfPage(QWidget):
 
 
     def __init__(self, parent: QStackedWidget, ID: any):
-        super(ToolshelfPageHost, self).__init__(parent)
+        super(ToolshelfPage, self).__init__(parent)
 
         self.toolshelfRoot: QStackedWidget = parent
         self.ID = ID
@@ -22,10 +22,13 @@ class ToolshelfPageHost(QWidget):
         self.shelfLayout.setSpacing(1)
         self.setLayout(self.shelfLayout)
 
-    def unloadDockers(self):
+    def unloadPage(self):
         pass
 
-    def loadDockers(self):
+    def loadPage(self):
+        pass
+
+    def onDispose(self):
         pass
 
     def activate(self):

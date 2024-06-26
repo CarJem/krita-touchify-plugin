@@ -25,7 +25,8 @@
                     "size_x": 0,
                     "size_y": 0
                 }
-            ]
+            ],
+            "quick_actions": []
         },
         {
             "id": "Layers",
@@ -52,7 +53,8 @@
                     "size_x": 200,
                     "size_y": 200
                 }
-            ]
+            ],
+            "quick_actions": []
         },
         {
             "id": "Overview",
@@ -71,7 +73,8 @@
                     "size_x": 300,
                     "size_y": 200
                 }
-            ]
+            ],
+            "quick_actions": []
         },
         {
             "icon": "custom:HistoryDockers",
@@ -93,6 +96,28 @@
                     "size_y": 100
                 }
             ],
+            "size_x": 0,
+            "size_y": 0,
+            "quick_actions": []
+        },
+        {
+            "additional_dockers": [
+                {
+                    "id": "sharedtooldocker",
+                    "nesting_mode": "normal",
+                    "panel_y": 0,
+                    "size_x": 0,
+                    "size_y": 0
+                }
+            ],
+            "quick_actions": [],
+            "actionHeight": 10,
+            "icon": "custom:ToolsCustom",
+            "id": "sharedtooldocker",
+            "isEnabled": true,
+            "row": 1,
+            "nesting_mode": "normal",
+            "panel_y": 0,
             "size_x": 0,
             "size_y": 0
         }

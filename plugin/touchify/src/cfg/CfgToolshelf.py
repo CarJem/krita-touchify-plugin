@@ -7,6 +7,7 @@ class CfgToolboxPanelDocker:
     size_x: int = 0
     size_y: int = 0
     nesting_mode: str = "normal"
+    unloaded_visibility: str = "normal"
     panel_y: int = 0
 
     def create(args):
@@ -25,6 +26,7 @@ class CfgToolboxPanelDocker:
         labels["size_y"] = "Docker Height (leave unset for auto)"
         labels["panel_y"] = "Panel Row"
         labels["nesting_mode"] = "Nesting Mode"
+        labels["unloaded_visibility"] = "Unloaded Visibility"
         return labels
 
     def propertygrid_groups(self):
@@ -35,6 +37,7 @@ class CfgToolboxPanelDocker:
         restrictions = {}
         restrictions["id"] = {"type": "docker_selection"}
         restrictions["nesting_mode"] = {"type": "values", "entries": ["normal", "docking"]}
+        restrictions["unloaded_visibility"] = {"type": "values", "entries": ["normal", "hidden"]}
         restrictions["panel_x"] = {"type": "range", "min": 0, "max": 10}
         restrictions["panel_y"] = {"type": "range", "min": 0, "max": 10}
         return restrictions

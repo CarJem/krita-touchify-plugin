@@ -5,7 +5,6 @@ from ..docker_manager import DockerManager
 
 from ..variables import *
 from ..config import *
-from ..components.nu_tools.NtToolbox import NtToolboxContainer
 from .. import stylesheet
 from PyQt5.QtWidgets import QMessageBox
 
@@ -20,11 +19,3 @@ class TouchifyHotkeys:
             hotkeyName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_HOTKEY, str(i))
             hotkeyAction = window.createAction(hotkeyName, "Custom action: " + str(i), subItemPath)
             ConfigManager.instance().addHotkey(i, hotkeyAction)
-
-        dockerFloatLockAction = window.createAction(TOUCHIFY_ID_ACTION_LOCK_FLOATING_DOCKERS, "Lock Floating Dockers", KRITA_ID_MENU_SETTINGS)
-        dockerFloatLockAction.toggled.connect(self.toggleFloatLock)
-        dockerFloatLockAction.setCheckable(True)
-        dockerFloatLockAction.setChecked(False)
-
-    def toggleFloatLock(self, value=None):
-        DockerManager.instance().toggleLockFloatingDockers(value)

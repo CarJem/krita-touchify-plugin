@@ -5,10 +5,10 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
-from ...config import *
-from ...variables import *
-from ...docker_manager import *
-from ... import stylesheet
+from ....config import *
+from ....variables import *
+from ....docker_manager import *
+from .... import stylesheet
 
 
 class ToolboxPanelHeader(QWidget):
