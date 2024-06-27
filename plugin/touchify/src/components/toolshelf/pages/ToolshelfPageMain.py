@@ -46,12 +46,18 @@ class ToolshelfPageMain(ToolshelfPagePanel):
             pageCfg.additional_dockers.append(toolOptionsDocker)
 
         super(ToolshelfPageMain, self).__init__(parent, 'MAIN', pageCfg)
+        
+        self.splitter.setAutoFillBackground(False)
 
         self.dockerBtns = ToolshelfButtonBar(self.rootCfg.dockerButtonHeight, self)
         self.shelfLayout.insertWidget(0, self.dockerBtns)    
     
     def addDockerButton(self, properties, onClick, title):
         self.dockerBtns.addButton(properties, onClick, title)
+
+    def loadPage(self):
+        for host_id in self.dockerWidgets:
+            self.dockerWidgets[host_id].loadWidget(True)
 
     def updateStyleSheet(self):
         self.dockerBtns.setStyleSheet(stylesheet.nu_tool_options_style)

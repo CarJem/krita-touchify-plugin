@@ -83,9 +83,8 @@ nu_toolshelf_header_style = f"""
         QPushButton {{
             background-color: #aa{background};
             border: none;
-            border-radius: 4px;
         }}
-        
+
         QPushButton:hover {{
             background-color: #{highlight};
         }}
@@ -98,10 +97,21 @@ nu_toolshelf_header_style = f"""
             background-color: #{alternate};
         }}
 
+        QPushButton#back-widget {{
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }}
+
+        QPushButton#pin-widget {{
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }}
+
         QWidget#filler-widget {{
             background-color: #aa{background};
             border: none;
-            border-radius: 4px;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
         }}
         """
 

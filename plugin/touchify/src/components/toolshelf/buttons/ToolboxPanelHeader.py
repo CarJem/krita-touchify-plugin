@@ -40,6 +40,7 @@ class ToolboxPanelHeader(QWidget):
             self.backButton.setIconSize(QSize(self._iconSize, self._iconSize))
             self.backButton.setFixedHeight(self._height)
             self.backButton.clicked.connect(self.goBack)
+            self.backButton.setObjectName("back-widget")
             self.ourLayout.addWidget(self.backButton)
         else:
             self.fillerWidget = QWidget(self)
@@ -48,12 +49,17 @@ class ToolboxPanelHeader(QWidget):
 
         self.pinButton = QPushButton(self)
         self.pinButton.setIcon(Krita.instance().icon('krita_tool_reference_images'))
+        self.pinButton.setObjectName("pin-widget")
         self.pinButton.setIconSize(QSize(self._iconSize, self._iconSize))
         self.pinButton.setFixedHeight(self._height)
         self.pinButton.setFixedWidth(self._height)
         self.pinButton.setCheckable(True)
         self.pinButton.clicked.connect(self.pinToolshelf)
         self.ourLayout.addWidget(self.pinButton)
+
+    def setPinState(self, value: bool):
+        if self.pinButton:
+            self.pinButton.setChecked(True if value else False)
 
     def goBack(self):
         if self.rootContainer:
@@ -68,4 +74,5 @@ class ToolboxPanelHeader(QWidget):
             self.backButton.setStyleSheet(stylesheet.nu_toolshelf_header_style)
         if self.fillerWidget:
             self.fillerWidget.setStyleSheet(stylesheet.nu_toolshelf_header_style)
-        self.pinButton.setStyleSheet(stylesheet.nu_toolshelf_header_style)
+        if self.pinButton:
+            self.pinButton.setStyleSheet(stylesheet.nu_toolshelf_header_style)

@@ -81,12 +81,14 @@ class DockerContainer(QWidget):
             self.outLayout.addWidget(self.unloadedButton)
             if self.hide_when_unloaded:
                 self.setVisible(False)
+                self.setAutoFillBackground(False)
         else:
             self.outLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
             self.outLayout.removeWidget(self.unloadedLabel)
             self.outLayout.removeWidget(self.unloadedButton)
             if self.hide_when_unloaded:
                 self.setVisible(True)
+                self.setAutoFillBackground(True)
 
         self.docker_busy = state
         self.unloadedButton.setVisible(state)

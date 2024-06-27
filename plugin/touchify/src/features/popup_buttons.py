@@ -77,7 +77,7 @@ class PopupButtons:
         if isinstance(_sender, QWidget):
             _parent: QWidget = _sender
 
-        needToBuild = True
+        needToBuild = False
         if not id in popup_dialogs:
             needToBuild = True
         elif popup_dialogs[id] == None:
@@ -94,6 +94,7 @@ class PopupButtons:
             popup: PopupDialog = popup_dialogs[popupKeys]
             if isinstance(popup, PopupDialog_Docker):
                 popup.docker_panel.shutdownWidget()
+                popup_dialogs[popupKeys] = None
 
 
         cfg: ConfigFile = ConfigManager.instance().getJSON()

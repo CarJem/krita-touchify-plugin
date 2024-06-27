@@ -114,13 +114,17 @@ class ToolshelfContainer(QStackedWidget):
     
     def shutdownWidget(self):
         qApp.focusObjectChanged.disconnect(self.handleFocusChange)
-
-        #for header in self._headers:
-            #header.disconnect()
+        super().currentChanged.disconnect(self.currentChanged)
 
         children = self.findChildren(DockerContainer)
         for child in children:
             child.shutdownWidget()
+
+        for header in self._headers:
+            header.close()
+
+        for panel_id in self._panels:
+            self._panels[panel_id].close()
 
     def doesCanvasHaveFocus(self, source):
         if not isinstance(source, QOpenGLWidget): return False
