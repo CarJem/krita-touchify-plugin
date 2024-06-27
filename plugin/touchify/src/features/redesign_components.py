@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
-from ..components.nu_tools.NtCanvas import NtToolbox, NtToolOptions
+from ..components.nu_tools.NtCanvas import NtCanvas
 
 from ..variables import *
 from ..config import *
@@ -13,8 +13,7 @@ from krita import *
     
 class RedesignComponents:
 
-    ntToolbox = None
-    ntToolOptions = None
+    ntCanvas = None
 
     def createActions(self, window: Window, mainMenuBar: QMenuBar):
 
@@ -74,32 +73,18 @@ class RedesignComponents:
             nu_options_menu.addAction(a)
 
 
-        self.build(window)
-
-    def build(self, window):
-        if (InternalConfig.instance().usesNuToolOptions 
-            and KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, KRITA_ID_OPTIONS_TOOLOPTIONS_IN_DOCKER, "false") == "true"):
-                self.ntToolOptions = NtToolOptions(window)
-
-        if InternalConfig.instance().usesNuToolbox: 
-            self.ntToolbox = NtToolbox(window)
-            
         self.rebuildStyleSheet(window.qwindow())
 
+    def windowCreated(self, window: Window):
+        self.ntCanvas = NtCanvas(window)    
 
     def onKritaConfigUpdated(self):
-        if self.ntToolOptions:
-            self.ntToolOptions.onKritaConfigUpdate()
-        if self.ntToolbox:
-            self.ntToolbox.onKritaConfigUpdate()
+        if self.ntCanvas:
+            self.ntCanvas.onKritaConfigUpdate()
 
     def onConfigUpdated(self):
-        if self.ntToolOptions:
-            self.ntToolOptions.onConfigUpdate()
-        if self.ntToolbox:
-            self.ntToolbox.onConfigUpdate()
-
-
+        if self.ntCanvas:
+            self.ntCanvas.onConfigUpdate()
 
     #region Theming Actions
     def toolbarBorderToggled(self, toggled):
@@ -118,30 +103,10 @@ class RedesignComponents:
         InternalConfig.instance().usesNuToolbox = toggled
         InternalConfig.instance().saveSettings()
 
-        if toggled:
-            self.ntToolbox = NtToolbox(Krita.instance().activeWindow())
-            self.ntToolbox.show() 
-            self.ntToolbox.updateStyleSheet()
-        elif not toggled:
-            if self.ntToolbox:
-                self.ntToolbox.close()
-                self.ntToolbox = None
-
     def nuToolOptionsToggled(self, toggled):
         InternalConfig.instance().usesNuToolOptions = toggled
         InternalConfig.instance().saveSettings()
-
-        if toggled:
-
-            self.ntToolOptions = NtToolOptions(Krita.instance().activeWindow())
-            self.ntToolOptions.show() 
-            self.ntToolOptions.updateStyleSheet()
-
-        elif not toggled:
-
-            if self.ntToolOptions:
-                self.ntToolOptions.close()
-                self.ntToolOptions = None
+        pass
     #endregion
 
     #region NuOptions Actions
@@ -224,10 +189,6 @@ class RedesignComponents:
         # update it's size (for now)
         canvas.resize(canvas.sizeHint())
 
-        # Update Tool Options stylesheet
-        if config.usesNuToolOptions and self.ntToolOptions:
-            self.ntToolOptions.updateStyleSheet()
-
         # Update Toolbox stylesheet
-        if config.usesNuToolbox and self.ntToolbox:
-            self.ntToolbox.updateStyleSheet()  
+        if config.usesNuToolbox and self.ntCanvas:
+            self.ntCanvas.updateStyleSheet()  

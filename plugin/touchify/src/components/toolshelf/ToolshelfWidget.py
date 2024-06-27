@@ -54,11 +54,6 @@ class ToolshelfWidget(QDockWidget):
             if self.panelStack:
                 return True
         return False
-    
-    #def sizeHint(self):
-        #if self.hasPanelStack():
-            #return self.panelStack.sizeHint()
-        #else: return super().sizeHint() 
 
     def updateStyleSheet(self):
         if self.hasPanelStack():
@@ -66,7 +61,7 @@ class ToolshelfWidget(QDockWidget):
 
     def onKritaConfigUpdate(self):
         if self.hasPanelStack():
-            self.panelStack._mainWidget.onKritaConfigUpdate()
+            self.panelStack.onKritaConfigUpdate()
     
     def onLoaded(self):              
         self.panelStack = ToolshelfContainer(self, self.isPrimaryPanel)
@@ -74,7 +69,7 @@ class ToolshelfWidget(QDockWidget):
         self.scrollArea.setWidget(self.panelStack)
 
     def onUnload(self):
-        self.panelStack.dismantle()
+        self.panelStack.shutdownWidget()
         self.scrollArea.takeWidget()
         self.panelStack.deleteLater()
         self.panelStack = None

@@ -45,12 +45,8 @@ class Touchify(Extension):
         appNotifier.windowCreated.connect(self.windowCreated)
         appNotifier.windowCreated.connect(self.finishActions)
 
-        cfg: ConfigManager = ConfigManager.instance()
-        cfg.notifyConnect(self.onConfigUpdated)
-
+        ConfigManager.instance().notifyConnect(self.onConfigUpdated)
         KritaSettings.notifyConnect(self.onKritaConfigUpdated)
-
-
 
     def onKritaConfigUpdated(self):
         self.redesign_components.onKritaConfigUpdated()
@@ -97,8 +93,9 @@ class Touchify(Extension):
         self.popup_toggles.buildMenu(self.mainMenuBar)
 
     def windowCreated(self):
-        window = Krita.instance().activeWindow().qwindow()
-        self.touchify_tweaks.load(window)
+        window = Krita.instance().activeWindow()
+        self.touchify_tweaks.load(window.qwindow())
+        self.redesign_components.windowCreated(window)
 
     def reloadKnownItems(self):
         self.basic_dockers.reloadDockers()

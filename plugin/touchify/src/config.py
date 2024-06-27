@@ -191,8 +191,7 @@ class InternalConfig:
         self.usesThinDocumentTabs = False
         self.usesNuToolbox = False
         self.usesNuToolOptions = False
-        self.ntToolbox = None
-        self.ntToolOptions = None
+
         self.nuOptions_ToolboxOnRight = False
         self.nuOptions_SharedToolDocker = False
         self.nuOptions_AlternativeToolboxPosition = False

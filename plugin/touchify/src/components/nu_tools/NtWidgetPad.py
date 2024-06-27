@@ -189,13 +189,14 @@ class NtWidgetPad(QWidget):
         Set the Pad's alignment to the view to either 'left' or 'right'. 
         Returns False if the argument is an invalid value."""
         if isinstance(newAlignment, str):
-            if (newAlignment.lower() == 'left' or
-                newAlignment.lower() == 'right'):
-                self.alignment = newAlignment.lower()
+                if (newAlignment.lower() == 'left' or
+                    newAlignment.lower() == 'right'):
+                    if self.alignment != newAlignment.lower():
+                        self.alignment = newAlignment.lower()
 
-                self.btnHide.setArrow(self.alignment)
+                        self.btnHide.setArrow(self.alignment)
 
-                return True
+                        return True
     
         return False
 

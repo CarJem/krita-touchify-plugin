@@ -2,6 +2,8 @@ from typing import Dict
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from ....ext.extensions import KritaExtensions
+
 from ..buttons.ToolshelfQuickActions import ToolshelfQuickActions
 
 from .ToolshelfPage import ToolshelfPage
@@ -10,7 +12,7 @@ from ....cfg.CfgToolshelf import CfgToolboxPanel
 from ....cfg.CfgToolshelf import CfgToolboxPanelDocker
 
 from ....docker_manager import DockerManager
-from ..ToolshelfDockerHost import ToolshelfDockerHost
+from ...DockerContainer import DockerContainer
 from .... import stylesheet
 
 class ToolshelfPagePanel(ToolshelfPage):
@@ -21,7 +23,7 @@ class ToolshelfPagePanel(ToolshelfPage):
         super(ToolshelfPagePanel, self).__init__(parent, ID)
 
         self.ID = ID
-        self.dockerWidgets: dict[any, ToolshelfDockerHost] = {}
+        self.dockerWidgets: dict[any, DockerContainer] = {}
         self.size = None
         self.panelProperties = data
 
@@ -40,11 +42,11 @@ class ToolshelfPagePanel(ToolshelfPage):
             self.setSizeHint(size)
 
 
-        widget_groups: Dict[int, list[ToolshelfDockerHost]] = {}
+        widget_groups: Dict[int, list[DockerContainer]] = {}
 
         for dockerData in self.panelProperties.additional_dockers:     
             dockerInfo: CfgToolboxPanelDocker = dockerData
-            dockerWidget = ToolshelfDockerHost(self, dockerInfo.id)
+            dockerWidget = DockerContainer(self, dockerInfo.id)
 
             if dockerInfo.size_x != 0 and dockerInfo.size_y != 0:
                 size = [dockerInfo.size_x, dockerInfo.size_y]
@@ -72,15 +74,11 @@ class ToolshelfPagePanel(ToolshelfPage):
                 tabBar = QTabWidget()
 
                 for item in widget_groups[panel_y]:
-                    title = DockerManager.instance().dockerWindowTitle(item.ID)
+                    title = DockerManager.instance().dockerWindowTitle(item.docker_id)
                     tabBar.addTab(item, title)
 
                 self.splitter.addWidget(tabBar)
         #endregion
-
-    def onDispose(self):
-        for host_id in self.dockerWidgets:
-            self.dockerWidgets[host_id].onDispose()
 
     def unloadPage(self):
         for host_id in self.dockerWidgets:

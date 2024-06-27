@@ -7,6 +7,7 @@ from krita import *
 from touchify.src.components.toolshelf.buttons.ToolboxPanelHeader import ToolboxPanelHeader
 from .buttons.ToolshelfQuickActions import ToolshelfQuickActions
 from .pages.ToolshelfPagePanel import ToolshelfPagePanel
+from ..DockerContainer import DockerContainer
 
 from ...config import *
 from ...variables import *
@@ -53,14 +54,14 @@ class ToolshelfContainer(QStackedWidget):
     def addMainPanel(self):
         self._mainWidget = ToolshelfPageMain(self, self.isPrimaryPanel)
         self._panels['MAIN'] = self._mainWidget
-        header = ToolboxPanelHeader(self.goHome, self.togglePinned, self.cfg, True, self)
+        header = ToolboxPanelHeader(self.cfg, True, self)
         self._headers.append(header)
         self._mainWidget.shelfLayout.insertWidget(0, header)
         super().addWidget(self._mainWidget)
 
     def addPanel(self, ID, data):
         panel = ToolshelfPagePanel(self, ID, data)
-        header = ToolboxPanelHeader(self.goHome, self.togglePinned, self.cfg, False, self)
+        header = ToolboxPanelHeader(self.cfg, False, self)
 
         panel.shelfLayout.insertWidget(0, header)
         self._headers.append(header)
@@ -108,16 +109,18 @@ class ToolshelfContainer(QStackedWidget):
 
         self.adjustSize()
 
-    def dismantle(self):
-        qApp.focusObjectChanged.disconnect(self.handleFocusChange)
-        self.changePanel('MAIN')
-
-        for pnl in self._panels:
-            panel: ToolshelfPage = self._panels[pnl]
-            panel.onDispose()
-
     def panel(self, name) -> ToolshelfPage:
         return self._panels[name]
+    
+    def shutdownWidget(self):
+        qApp.focusObjectChanged.disconnect(self.handleFocusChange)
+
+        #for header in self._headers:
+            #header.disconnect()
+
+        children = self.findChildren(DockerContainer)
+        for child in children:
+            child.shutdownWidget()
 
     def doesCanvasHaveFocus(self, source):
         if not isinstance(source, QOpenGLWidget): return False
@@ -126,6 +129,9 @@ class ToolshelfContainer(QStackedWidget):
             return True
                 
         return False
+    
+    def onKritaConfigUpdate(self):
+        pass
 
     def handleFocusChange(self, source):
         if self.isPinned() == False and self.doesCanvasHaveFocus(source):

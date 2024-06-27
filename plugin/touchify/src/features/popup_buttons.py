@@ -20,7 +20,7 @@ from ..components.popups.PopupDialog_Docker import *
 
 from krita import *
 
-popup_dialogs = {}
+popup_dialogs: dict[str, PopupDialog] = {}
 pending_actions = []
 popup_data = {}
 
@@ -90,6 +90,12 @@ class PopupButtons:
         popup_dialogs[id].triggerPopup(mode, _parent)
 
     def onConfigUpdated(self):
+        for popupKeys in popup_dialogs:
+            popup: PopupDialog = popup_dialogs[popupKeys]
+            if isinstance(popup, PopupDialog_Docker):
+                popup.docker_panel.shutdownWidget()
+
+
         cfg: ConfigFile = ConfigManager.instance().getJSON()
         for item in cfg.popups:
             newPopupData: CfgPopup = item

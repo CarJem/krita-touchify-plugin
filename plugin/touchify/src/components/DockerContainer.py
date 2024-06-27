@@ -1,14 +1,14 @@
 from typing import Callable
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy, QFrame
 from PyQt5.QtCore import QSize, QEvent
-from ...docker_manager import *
+from ..docker_manager import *
 from krita import *
 
-class ToolshelfDockerHost(QWidget):
+class DockerContainer(QWidget):
   
-    def __init__(self, parent: QWidget | None, ID):
-        super(ToolshelfDockerHost, self).__init__(parent)
-        self.ID = ID
+    def __init__(self, parent: QWidget | None, docker_id: str):
+        super(DockerContainer, self).__init__(parent)
+        self.docker_id = docker_id
         self.borrowedDocker = None
         self.setAutoFillBackground(True)
         self.size = None
@@ -25,61 +25,48 @@ class ToolshelfDockerHost(QWidget):
         DockerManager.instance().registerListener(DM_ListenerType.OnReleaseDocker, self.onDockerReleased)
         DockerManager.instance().registerListener(DM_ListenerType.OnStealDocker, self.onDockerStolen)
 
-        self.autoFitScrollArea = False
-        self.tookScrollArea = False
-        self.originalScrollArea: QScrollArea | None = None
         self.dockMode = False
         self.dockerShouldBeActive = False
-        self.wasJustStolen = False
 
     def unloadWidget(self):
         self.dockerShouldBeActive = False
         self._unloadDocker()
 
-    def loadWidget(self):
+    def loadWidget(self, force: bool = False):
         self.dockerShouldBeActive = True
-        self._loadDocker()
+        if force:
+            DockerManager.instance().unloadDocker(self.docker_id, False)
+            self._loadDocker()
+        else:
+            self._loadDocker()
+
+    def shutdownWidget(self):
+        DockerManager.instance().removeListener(DM_ListenerType.OnReleaseDocker, self.onDockerReleased)
+        DockerManager.instance().removeListener(DM_ListenerType.OnStealDocker, self.onDockerStolen)
+        DockerManager.instance().unloadDocker(self.docker_id, False)
 
     #region Private Functions
     def _stealDocker(self):
         if self.dockerShouldBeActive:
-            DockerManager.instance().stealDocker(self.ID)
+            DockerManager.instance().unloadDocker(self.docker_id, False)
             self._loadDocker()
 
     def _loadDocker(self):
         shareArgs = DockerShareLoadArgs(self.dockMode)
-        dockerLoaded: QWidget | None = DockerManager.instance().loadDocker(self.ID, self, shareArgs)
-        if not dockerLoaded:
+        dockerLoaded: QWidget | None = DockerManager.instance().loadDocker(self.docker_id, shareArgs)
+        if not dockerLoaded: 
+            self._updateEmptySpace(True)
             return
-        
-        
-        if isinstance(dockerLoaded, QScrollArea):
-            self.tookScrollArea = True
-            scrollArea: QScrollArea = dockerLoaded
-            if scrollArea:
-                self.originalScrollArea = scrollArea
-                self.borrowedDocker = scrollArea.takeWidget()
-        else:
-            self.borrowedDocker = dockerLoaded
-        
+        self.borrowedDocker = dockerLoaded
         self.outLayout.addWidget(self.borrowedDocker)
         self._updateEmptySpace(False)
-        if self.dockMode:
-            self.borrowedDocker.show()
+        if self.dockMode: self.borrowedDocker.show()
 
     def _unloadDocker(self, invokeRelease: bool = True):
-        if self.borrowedDocker:
-            if self.tookScrollArea:
-                self.originalScrollArea.setWidget(self.borrowedDocker)
-                self.tookScrollArea = False
-            else:
-                self.outLayout.removeWidget(self.borrowedDocker)
-        
-            DockerManager.instance().unloadDocker(self.ID, invokeRelease)
-            self._updateEmptySpace(True)
+        if self.borrowedDocker: self._updateEmptySpace(True)
+        DockerManager.instance().unloadDocker(self.docker_id, invokeRelease)
 
     def _updateEmptySpace(self, state: bool):
-
         if self.unloadedLabel == None and self.unloadedButton == None:
             self.unloadedLabel = QLabel()
             self.unloadedLabel.setText("Docker is currently in use elsewhere, click here to move it here")
@@ -109,18 +96,13 @@ class ToolshelfDockerHost(QWidget):
     #endregion
 
     #region Event Functions
-    def onDockerReleased(self, ID: any):
-        if self.dockerShouldBeActive and self.ID == ID:
-            self._loadDocker()
-
     def onDockerStolen(self, ID: any):
-        if self.ID == ID and self.dockerShouldBeActive:
-            self._unloadDocker(False)
+        if self.docker_id == ID:
+            self._updateEmptySpace(True)
 
-    def onDispose(self):
-        DockerManager.instance().removeListener(DM_ListenerType.OnReleaseDocker, self.onDockerReleased)
-        DockerManager.instance().removeListener(DM_ListenerType.OnStealDocker, self.onDockerStolen)
-        self._unloadDocker()
+    def onDockerReleased(self, ID: any):
+        if self.dockerShouldBeActive and self.docker_id == ID:
+            self._loadDocker()
     #endregion
 
     #region Setters

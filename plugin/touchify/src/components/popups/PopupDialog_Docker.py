@@ -7,6 +7,8 @@ from functools import partial
 import sys
 import importlib.util
 
+from ..DockerContainer import DockerContainer
+
 from ...cfg.CfgPopup import CfgPopup
 from ...config import *
 from ...resources import *
@@ -25,8 +27,13 @@ class PopupDialog_Docker(PopupDialog):
     def __init__(self, parent: QMainWindow, args: CfgPopup):     
         super().__init__(parent, args)
         self.grid = self.generateDockerLayout()
-        self.dockerID = args.docker_id
+        self.docker_id = args.docker_id
         self.initLayout()
+
+        self.docker_panel = DockerContainer(self, self.docker_id)
+        self.docker_panel.setDockMode(True)
+        self.docker_panel.setHideWhenUnloaded(True)
+        self.grid.addWidget(self.docker_panel)
 
     
     def closeEvent(self, event):
@@ -44,15 +51,10 @@ class PopupDialog_Docker(PopupDialog):
         super().triggerPopup(mode, parent)
 
     def updateDocker(self, closing = False):
-        if closing and self.dockerWidget:
-            self.grid.removeWidget(self.dockerWidget)
-            DockerManager.instance().unloadDocker(self.dockerID, self)
-            self.dockerWidget = None
+        if closing:
+            self.docker_panel.unloadWidget()
         else:
-            self.dockerWidget = DockerManager.instance().loadDocker(self.dockerID, self, DockerShareLoadArgs(True))
-            if self.dockerWidget:
-                self.grid.addWidget(self.dockerWidget)
-                self.dockerWidget.show()
+            self.docker_panel.loadWidget(True)
 
     def generateDockerLayout(self):
         grid = QHBoxLayout()

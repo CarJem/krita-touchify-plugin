@@ -28,9 +28,6 @@ class ToolshelfPage(QWidget):
     def loadPage(self):
         pass
 
-    def onDispose(self):
-        pass
-
     def activate(self):
         self.parentWidget().changePanel(self.ID)
 

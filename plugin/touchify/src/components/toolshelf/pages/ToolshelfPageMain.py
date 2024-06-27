@@ -16,7 +16,7 @@ from ....cfg.CfgToolshelf import CfgToolboxPanel
 from ....cfg.CfgToolshelf import CfgToolboxPanelDocker
 
 from ....docker_manager import DockerManager
-from ..ToolshelfDockerHost import ToolshelfDockerHost
+from ...DockerContainer import DockerContainer
 from .... import stylesheet
 from ....variables import KRITA_ID_DOCKER_SHAREDTOOLDOCKER
 
@@ -34,17 +34,18 @@ class ToolshelfPageMain(ToolshelfPagePanel):
             self.rootCfg = ConfigManager.instance().getJSON().toolshelf_alt
 
 
-        self.cfg = CfgToolboxPanel()
-        self.cfg.actionHeight = self.rootCfg.actionHeight
-        self.cfg.quick_actions = self.rootCfg.actions
+        pageCfg = CfgToolboxPanel()
+        pageCfg.actionHeight = self.rootCfg.actionHeight
+        pageCfg.quick_actions = self.rootCfg.actions
+        pageCfg.additional_dockers = []
         
         if self.isPrimaryPanel:
             toolOptionsDocker = CfgToolboxPanelDocker()
-            toolOptionsDocker.id = KRITA_ID_DOCKER_SHAREDTOOLDOCKER
+            toolOptionsDocker.id = str(KRITA_ID_DOCKER_SHAREDTOOLDOCKER)
             toolOptionsDocker.unloaded_visibility = "hidden"
-            self.cfg.additional_dockers.append(toolOptionsDocker)
+            pageCfg.additional_dockers.append(toolOptionsDocker)
 
-        super(ToolshelfPageMain, self).__init__(parent, 'MAIN', self.cfg)
+        super(ToolshelfPageMain, self).__init__(parent, 'MAIN', pageCfg)
 
         self.dockerBtns = ToolshelfButtonBar(self.rootCfg.dockerButtonHeight, self)
         self.shelfLayout.insertWidget(0, self.dockerBtns)    
