@@ -10,7 +10,7 @@ from krita import *
 from ...variables import *
 from ..toolshelf.ToolshelfWidget import ToolshelfWidget
 
-class NtToolOptions():
+class NtToolshelf():
 
     def __init__(self, window: Window, alignment: str, isPrimaryPanel: bool = False):
         self.qWin = window.qwindow()
@@ -20,7 +20,7 @@ class NtToolOptions():
 
         # Create "pad"
         self.pad = NtWidgetPad(self.mdiArea)
-        self.pad.setObjectName("toolOptionsPad")
+        self.pad.setObjectName("toolshelfPad")
         self.pad.setViewAlignment(alignment)
         self.pad.borrowDocker(self.toolshelf)
 

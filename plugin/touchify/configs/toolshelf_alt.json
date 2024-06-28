@@ -130,7 +130,7 @@
             "isEnabled": true
         },
         {
-            "icon": "config-popup-palette",
+            "icon": "material:palette-swatch-variant",
             "id": "touchify_popup_quick-settings",
             "isEnabled": true
         },
@@ -145,6 +145,12 @@
             "id": "touchify_popup_ColorOptionsPopup",
             "isEnabled": true,
             "row": 1
+        },
+        {
+            "row": 4,
+            "isEnabled": true,
+            "id": "touchify_showPopupPalette",
+            "icon": "config-popup-palette"
         }
     ],
     "dockers": [

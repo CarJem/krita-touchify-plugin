@@ -124,15 +124,6 @@ class RedesignComponents:
         #print(full_style_sheet)
         #print("\n\n")
 
-        # Overview
-        overview = window.findChild(QWidget, KRITA_ID_DOCKER_OVERVIEW)
-        overview_style = ""
-
-        if config.usesFlatTheme:
-            overview_style += f"\n {stylesheet.flat_overview_docker_style} \n"
-
-        overview.setStyleSheet(overview_style)
-
         # For document tab
         canvas_style_sheet = ""
 

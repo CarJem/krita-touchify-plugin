@@ -3,7 +3,7 @@
         {
             "id": "quick-settings",
             "btnName": "Quick Settings Popup",
-            "icon": "config-popup-palette",
+            "icon": "material:palette-swatch-variant",
             "type": "docker",
             "docker_id": "quick_settings_docker",
             "grid_width": 3,

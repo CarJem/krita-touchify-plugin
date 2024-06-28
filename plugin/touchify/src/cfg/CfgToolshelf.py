@@ -49,7 +49,6 @@ class CfgToolboxAction:
     id: str = ""
     icon: str = ""
     row: int = 0
-    isEnabled: bool = False
 
     def create(args):
         obj = CfgToolboxAction()
@@ -58,8 +57,6 @@ class CfgToolboxAction:
 
     def __str__(self):
         name = self.id.replace("\n", "\\n")
-        if not self.isEnabled:
-            name = "(Disabled) " + name
         return name
 
     def forceLoad(self):
@@ -69,7 +66,6 @@ class CfgToolboxAction:
         labels = {}
         labels["id"] = "Action ID"
         labels["icon"] = "Display Icon"
-        labels["isEnabled"] = "Active"
         labels["row"] = "Tab Row"
         return labels
 
@@ -88,7 +84,6 @@ class CfgToolboxPanel:
     icon: str = ""
     size_x: int = 0
     size_y: int = 0
-    isEnabled: bool = False
     row: int = 0
     quick_actions: TypedList[CfgToolboxAction] = []
     additional_dockers: TypedList[CfgToolboxPanelDocker] = []
@@ -109,15 +104,12 @@ class CfgToolboxPanel:
 
     def __str__(self):
         name = self.id.replace("\n", "\\n")
-        if not self.isEnabled:
-            name = "(Disabled) " + name
         return name
 
     def propertygrid_labels(self):
         labels = {}
         labels["id"] = "Panel ID (must be unique)"
         labels["icon"] = "Display Icon"
-        labels["isEnabled"] = "Active"
         labels["size_x"] = "Panel Width"
         labels["size_y"] = "Panel Height"
         labels["row"] = "Tab Row"

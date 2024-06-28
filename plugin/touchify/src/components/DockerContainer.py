@@ -36,12 +36,11 @@ class DockerContainer(QWidget):
 
     def loadWidget(self, force: bool = False):
         self.dockerShouldBeActive = True
-        if not self.passiveMode:
-            if force:
-                DockerManager.instance().unloadDocker(self.docker_id, False)
-                self._loadDocker()
-            else:
-                self._loadDocker()
+        if force:
+            if not self.passiveMode: DockerManager.instance().unloadDocker(self.docker_id, False)
+            self._loadDocker()
+        else:
+            self._loadDocker()
 
     def shutdownWidget(self):
         DockerManager.instance().removeListener(DM_ListenerType.OnReleaseDocker, self.onDockerReleased)

@@ -18,7 +18,6 @@ from ....cfg.CfgToolshelf import CfgToolboxPanelDocker
 from ....docker_manager import DockerManager
 from ...DockerContainer import DockerContainer
 from .... import stylesheet
-from ....variables import KRITA_ID_DOCKER_SHAREDTOOLDOCKER
 
 class ToolshelfPageMain(ToolshelfPagePanel):
 

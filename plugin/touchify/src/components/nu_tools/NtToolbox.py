@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 from .NtAdjustToSubwindowFilter import NtAdjustToSubwindowFilter
 from ... import stylesheet
-from ...variables import KRITA_ID_DOCKER_SHAREDTOOLDOCKER, KRITA_ID_MENU_SETTINGS, TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, TOUCHIFY_ID_OPTIONSROOT_MAIN
 from .NtWidgetPad import NtWidgetPad
 from krita import *
 from PyQt5.QtWidgets import QMdiArea, QDockWidget

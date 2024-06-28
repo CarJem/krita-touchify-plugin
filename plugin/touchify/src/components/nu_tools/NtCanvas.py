@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 from .NtToolbox import NtToolbox
-from .NtToolOptions import NtToolOptions
+from .NtToolshelf import NtToolshelf
 from ...config import InternalConfig
 from krita import *
 from PyQt5.QtCore import QObject, QEvent, QPoint
@@ -118,7 +118,7 @@ class NtCanvas():
             self.toolbox = None
 
         if self.toolboxOptions == None and usesNuToolOptionsAlt:
-            self.toolboxOptions = NtToolOptions(self.window, self.toolboxAlignment)
+            self.toolboxOptions = NtToolshelf(self.window, self.toolboxAlignment)
             self.toolboxOptions.updateStyleSheet()
             self.installEventFilters(self.toolboxOptions)
             self.toolboxOptions.pad.show()
@@ -128,7 +128,7 @@ class NtCanvas():
             self.toolboxOptions = None
 
         if self.toolOptions == None and usesNuToolOptions:
-            self.toolOptions = NtToolOptions(self.window, self.toolOptionsAlignment, True)
+            self.toolOptions = NtToolshelf(self.window, self.toolOptionsAlignment, True)
             self.toolOptions.updateStyleSheet()
             self.installEventFilters(self.toolOptions)
             self.toolOptions.pad.show()
@@ -185,12 +185,12 @@ class NtCanvas():
 
     #region Connect/Disconnect Functions
 
-    def installEventFilters(self, widget: NtToolOptions | NtToolbox):
+    def installEventFilters(self, widget: NtToolshelf | NtToolbox):
         widget.pad.btnHide.clicked.connect(self.updateCanvas)
         #widget.pad.installEventFilter(self)
         #self.qWin.installEventFilter(self)
 
-    def removeEventFilters(self, widget: NtToolOptions | NtToolbox):
+    def removeEventFilters(self, widget: NtToolshelf | NtToolbox):
         widget.pad.btnHide.clicked.disconnect(self.updateCanvas)
         #widget.pad.removeEventFilter(self)
         #self.qWin.removeEventFilter(self)

@@ -35,16 +35,15 @@ class ToolshelfQuickActions(QWidget):
         actions = self.cfg
         for entry in actions:
             act: CfgToolboxAction = entry
-            if act.isEnabled:
-                action = Krita.instance().action(act.id)
-                if action:
-                    self.quickActions.addButton(
-                        act,
-                        action.trigger,
-                        action.toolTip(),
-                        action.isCheckable()
-                        )
+            action = Krita.instance().action(act.id)
+            if action:
+                self.quickActions.addButton(
+                    act,
+                    action.trigger,
+                    action.toolTip(),
+                    action.isCheckable()
+                    )
 
-                    if action.isCheckable():
-                        btn = self.quickActions.button(act.id)
-                        btn.setChecked(action.isChecked())
+                if action.isCheckable():
+                    btn = self.quickActions.button(act.id)
+                    btn.setChecked(action.isChecked())

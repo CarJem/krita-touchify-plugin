@@ -39,11 +39,10 @@ class ToolshelfContainer(QStackedWidget):
         panels = self.cfg.panels
         for entry in panels:
             properties: CfgToolboxPanel = entry
-            if properties.isEnabled:
-                PANEL_ID = str(uuid.uuid4())
-                panel_title = properties.id
-                self.addPanel(PANEL_ID, properties)
-                self._mainWidget.addDockerButton(properties, self.panel(PANEL_ID).activate, panel_title)
+            PANEL_ID = str(uuid.uuid4())
+            panel_title = properties.id
+            self.addPanel(PANEL_ID, properties)
+            self._mainWidget.addDockerButton(properties, self.panel(PANEL_ID).activate, panel_title)
         self.changePanel('MAIN')
 
     def getCfg(self):
