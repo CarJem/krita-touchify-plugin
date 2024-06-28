@@ -99,27 +99,6 @@
             "size_x": 0,
             "size_y": 0,
             "quick_actions": []
-        },
-        {
-            "additional_dockers": [
-                {
-                    "id": "sharedtooldocker",
-                    "nesting_mode": "normal",
-                    "panel_y": 0,
-                    "size_x": 0,
-                    "size_y": 0
-                }
-            ],
-            "quick_actions": [],
-            "actionHeight": 10,
-            "icon": "custom:ToolsCustom",
-            "id": "sharedtooldocker",
-            "isEnabled": true,
-            "row": 1,
-            "nesting_mode": "normal",
-            "panel_y": 0,
-            "size_x": 0,
-            "size_y": 0
         }
     ],
     "actions": [
@@ -166,6 +145,16 @@
             "id": "touchify_popup_ColorOptionsPopup",
             "isEnabled": true,
             "row": 1
+        }
+    ],
+    "dockers": [
+        {
+            "id": "sharedtooldocker",
+            "unloaded_visibility": "hidden",
+            "panel_y": 0,
+            "size_x": 0,
+            "size_y": 0,
+            "loading_priority": "passive"
         }
     ],
     "titleButtonHeight": 10,

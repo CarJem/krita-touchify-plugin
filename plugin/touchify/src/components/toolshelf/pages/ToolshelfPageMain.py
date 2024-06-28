@@ -37,13 +37,7 @@ class ToolshelfPageMain(ToolshelfPagePanel):
         pageCfg = CfgToolboxPanel()
         pageCfg.actionHeight = self.rootCfg.actionHeight
         pageCfg.quick_actions = self.rootCfg.actions
-        pageCfg.additional_dockers = []
-        
-        if self.isPrimaryPanel:
-            toolOptionsDocker = CfgToolboxPanelDocker()
-            toolOptionsDocker.id = str(KRITA_ID_DOCKER_SHAREDTOOLDOCKER)
-            toolOptionsDocker.unloaded_visibility = "hidden"
-            pageCfg.additional_dockers.append(toolOptionsDocker)
+        pageCfg.additional_dockers = self.rootCfg.dockers
 
         super(ToolshelfPageMain, self).__init__(parent, 'MAIN', pageCfg)
         

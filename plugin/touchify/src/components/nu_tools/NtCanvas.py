@@ -8,7 +8,6 @@ from ...variables import *
 
 class NtCanvas():
     def __init__(self, window: Window):
-        #super(NtCanvas, self).__init__(window.qwindow())
         self.window = window
 
         self.toolboxAlignment = self.getToolboxAlignment()
@@ -21,6 +20,38 @@ class NtCanvas():
 
         self.updateElements()
         self.updatePadAlignments()
+        self.updateCanvas()
+
+    def updateWindow(self, window: Window):
+        self.window = window
+
+
+    def createActions(self, window: Window, menu: QMenu, path: str):
+
+        menu.addSection("Widget Visibility")
+
+        tlb_action = window.createAction(TOUCHIFY_ID_ACTION_SHOW_TOOLBOX, "Show Toolbox", path)
+        tlb_action.toggled.connect(lambda: self.togglePadVisibility("toolbox"))
+        tlb_action.setCheckable(True)
+        tlb_action.setChecked(True)
+        menu.addAction(tlb_action)
+
+        tlshlf_action = window.createAction(TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS, "Show Toolshelf", path)
+        tlshlf_action.toggled.connect(lambda: self.togglePadVisibility("toolshelf"))
+        tlshlf_action.setCheckable(True)
+        tlshlf_action.setChecked(True)
+        menu.addAction(tlshlf_action)
+
+        tlshlf_alt_action = window.createAction(TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS_ALT, "Show Toolshelf (Alt.)", path)
+        tlshlf_alt_action.toggled.connect(lambda: self.togglePadVisibility("toolshelf_alt"))
+        tlshlf_alt_action.setCheckable(True)
+        tlshlf_alt_action.setChecked(True)
+        menu.addAction(tlshlf_alt_action)
+
+    def togglePadVisibility(self, pad: str):
+        if pad == "toolbox" and self.toolbox: self.toolbox.pad.toggleWidgetVisible()
+        elif pad == "toolshelf" and self.toolbox: self.toolOptions.pad.toggleWidgetVisible()
+        elif pad == "toolshelf_alt" and self.toolbox: self.toolboxOptions.pad.toggleWidgetVisible()
         self.updateCanvas()
 
 
@@ -73,7 +104,7 @@ class NtCanvas():
 
     def updateElements(self):
         usesNuToolbox = InternalConfig.instance().usesNuToolbox
-        usesNuToolboxOptions = InternalConfig.instance().usesNuToolbox
+        usesNuToolOptionsAlt = InternalConfig.instance().usesNuToolOptionsAlt
         usesNuToolOptions = InternalConfig.instance().usesNuToolOptions
 
         if self.toolbox == None and usesNuToolbox:
@@ -86,12 +117,12 @@ class NtCanvas():
             self.toolbox.close()
             self.toolbox = None
 
-        if self.toolboxOptions == None and usesNuToolboxOptions:
+        if self.toolboxOptions == None and usesNuToolOptionsAlt:
             self.toolboxOptions = NtToolOptions(self.window, self.toolboxAlignment)
             self.toolboxOptions.updateStyleSheet()
             self.installEventFilters(self.toolboxOptions)
             self.toolboxOptions.pad.show()
-        elif self.toolboxOptions and not usesNuToolboxOptions:
+        elif self.toolboxOptions and not usesNuToolOptionsAlt:
             self.removeEventFilters(self.toolboxOptions)
             self.toolboxOptions.close()
             self.toolboxOptions = None

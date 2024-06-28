@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 from PyQt5.QtCore import QObject, QEvent, QPoint
 
-from .Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
+from .NtAdjustToSubwindowFilter import NtAdjustToSubwindowFilter
 from ...ext.extensions import KritaExtensions
 from ...config import InternalConfig, KritaSettings
 from ... import stylesheet
@@ -25,18 +25,10 @@ class NtToolOptions():
         self.pad.borrowDocker(self.toolshelf)
 
         # Create and install event filter
-        self.adjustFilter = Nt_AdjustToSubwindowFilter(self.mdiArea)
+        self.adjustFilter = NtAdjustToSubwindowFilter(self.mdiArea)
         self.adjustFilter.setTargetWidget(self.pad)
         self.mdiArea.subWindowActivated.connect(self.onSubWindowActivated)
         self.qWin.installEventFilter(self.adjustFilter)
-
-        # Create visibility toggle action 
-        action_id = TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS if isPrimaryPanel else TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS_ALT
-        action_name = "Show Tool Options Shelf" if isPrimaryPanel else "Show Toolbox Shelf"
-        action = window.createAction(action_id, action_name, KRITA_ID_MENU_SETTINGS)
-        action.toggled.connect(self.pad.toggleWidgetVisible)
-        action.setCheckable(True)
-        action.setChecked(True)
 
     def onSubWindowActivated(self, subWin):
         if subWin:

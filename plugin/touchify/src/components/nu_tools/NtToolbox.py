@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
-from .Nt_AdjustToSubwindowFilter import Nt_AdjustToSubwindowFilter
+from .NtAdjustToSubwindowFilter import NtAdjustToSubwindowFilter
 from ... import stylesheet
 from ...variables import KRITA_ID_DOCKER_SHAREDTOOLDOCKER, KRITA_ID_MENU_SETTINGS, TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, TOUCHIFY_ID_OPTIONSROOT_MAIN
 from .NtWidgetPad import NtWidgetPad
@@ -21,16 +21,10 @@ class NtToolbox():
         self.pad.setViewAlignment('left')
 
         # Create and install event filter
-        self.adjustFilter = Nt_AdjustToSubwindowFilter(self.mdiArea)
+        self.adjustFilter = NtAdjustToSubwindowFilter(self.mdiArea)
         self.adjustFilter.setTargetWidget(self.pad)
         self.mdiArea.subWindowActivated.connect(self.onSubWindowActivated)
         self.qWin.installEventFilter(self.adjustFilter)
-
-        # Create visibility toggle action
-        action = window.createAction(KRITA_ID_DOCKER_SHAREDTOOLDOCKER, "Show Toolbox", KRITA_ID_MENU_SETTINGS)
-        action.toggled.connect(self.pad.toggleWidgetVisible)
-        action.setCheckable(True)
-        action.setChecked(True)
 
         # Disable the related QDockWidget
         self.dockerAction = window.qwindow().findChild(QDockWidget, "ToolBox").toggleViewAction()
@@ -40,19 +34,6 @@ class NtToolbox():
         if subWin:
             self.pad.adjustToView()
             self.updateStyleSheet()
-
-    def findDockerAction(self, window, text):
-        dockerMenu = None
-
-        for m in window.qwindow().actions():
-            if m.objectName() == "settings_dockers_menu":
-                dockerMenu = m
-
-                for a in dockerMenu.menu().actions():
-                    if a.text().replace('&', '') == text:
-                        return a
-
-        return False
 
     def updateStyleSheet(self):
         self.pad.setStyleSheet(stylesheet.nu_toolbox_style)

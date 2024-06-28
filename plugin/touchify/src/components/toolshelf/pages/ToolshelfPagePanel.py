@@ -56,7 +56,11 @@ class ToolshelfPagePanel(ToolshelfPage):
                 dockerWidget.setDockMode(True)
 
             if dockerInfo.unloaded_visibility == "hidden":
-                dockerWidget.setHideWhenUnloaded(True)
+                dockerWidget.setHiddenMode(True)
+            
+            if dockerInfo.loading_priority == "passive":
+                dockerWidget.setPassiveMode(True)
+                
 
             self.dockerWidgets[dockerInfo.id] = dockerWidget
             

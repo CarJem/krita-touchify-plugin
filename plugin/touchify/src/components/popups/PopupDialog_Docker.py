@@ -32,7 +32,7 @@ class PopupDialog_Docker(PopupDialog):
 
         self.docker_panel = DockerContainer(self, self.docker_id)
         self.docker_panel.setDockMode(True)
-        self.docker_panel.setHideWhenUnloaded(True)
+        self.docker_panel.setHiddenMode(True)
         self.grid.addWidget(self.docker_panel)
 
     

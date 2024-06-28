@@ -9,6 +9,20 @@ from ..ext.extensions import KritaExtensions
 
 class TouchifyTweaks:
 
+    def action_fn_ShowPopupPalette(self):
+        qwin = Krita.instance().activeWindow().qwindow()
+        viewIndex = Krita.instance().activeWindow().views().index(Krita.instance().activeWindow().activeView())
+        pobj = qwin.findChild(QWidget,'view_' + str(viewIndex))
+        mobj = next((w for w in pobj.findChildren(QWidget) if w.metaObject().className() == 'KisPopupPalette'), None)
+        parentWidget = mobj.parentWidget()
+        center_x = int(parentWidget.width() / 2) - int(mobj.width() / 2)
+        center_y = int(parentWidget.height() / 2) - int(mobj.height() / 2)
+        mobj.move(center_x, center_y)
+        mobj.show()
+
+    def action_ShowPopupPalette(self, window: Window):
+        pass
+
     def style_KisLayerView(self):
         docker = KritaExtensions.getDocker("KisLayerBox")
         if not docker:
@@ -64,7 +78,8 @@ class TouchifyTweaks:
         full_style_sheet = f""""""
         window.setStyleSheet(full_style_sheet)
 
-    def load(self, window):
+    def load(self, window: Window):
+        self.action_ShowPopupPalette(window)
         self.style_CSS(window)
         self.style_KisLayerView()
 

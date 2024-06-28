@@ -41,8 +41,10 @@ class PropertyField_Float(PropertyField):
             restrictions = restric_func()
             if variable_name in restrictions:
                 if restrictions[variable_name]["type"] == "range":
-                    self.editor.setMinimum(restrictions[variable_name]["min"])
-                    self.editor.setMaximum(restrictions[variable_name]["max"])
+                    if "min" in restrictions[variable_name]:
+                        self.editor.setMinimum(restrictions[variable_name]["min"])
+                    if "max" in restrictions[variable_name]:
+                        self.editor.setMaximum(restrictions[variable_name]["max"])
         
         editorLayout = QHBoxLayout()
         editorLayout.setSpacing(0)

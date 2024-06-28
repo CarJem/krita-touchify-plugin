@@ -118,6 +118,16 @@
             "isEnabled": true
         }
     ],
+    "dockers": [
+        {
+            "id": "sharedtooldocker",
+            "unloaded_visibility": "hidden",
+            "panel_y": 0,
+            "size_x": 0,
+            "size_y": 0,
+            "loading_priority": "normal"
+        }
+    ],
     "titleButtonHeight": 10,
     "dockerButtonHeight": 32,
     "dockerBackHeight": 16,

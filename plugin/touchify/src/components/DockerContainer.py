@@ -17,7 +17,10 @@ class DockerContainer(QWidget):
         self.outLayout.setContentsMargins(0, 0, 0, 0)
         self.outLayout.setSpacing(0)
 
-        self.hide_when_unloaded = False
+        self.hiddenMode = False
+        self.dockMode = False
+        self.passiveMode = False
+        
         self.unloadedLabel = None
         self.unloadedButton = None
         self._updateEmptySpace(True)
@@ -25,7 +28,6 @@ class DockerContainer(QWidget):
         DockerManager.instance().registerListener(DM_ListenerType.OnReleaseDocker, self.onDockerReleased)
         DockerManager.instance().registerListener(DM_ListenerType.OnStealDocker, self.onDockerStolen)
 
-        self.dockMode = False
         self.dockerShouldBeActive = False
 
     def unloadWidget(self):
@@ -34,11 +36,12 @@ class DockerContainer(QWidget):
 
     def loadWidget(self, force: bool = False):
         self.dockerShouldBeActive = True
-        if force:
-            DockerManager.instance().unloadDocker(self.docker_id, False)
-            self._loadDocker()
-        else:
-            self._loadDocker()
+        if not self.passiveMode:
+            if force:
+                DockerManager.instance().unloadDocker(self.docker_id, False)
+                self._loadDocker()
+            else:
+                self._loadDocker()
 
     def shutdownWidget(self):
         DockerManager.instance().removeListener(DM_ListenerType.OnReleaseDocker, self.onDockerReleased)
@@ -70,6 +73,8 @@ class DockerContainer(QWidget):
         if self.unloadedLabel == None and self.unloadedButton == None:
             self.unloadedLabel = QLabel()
             self.unloadedLabel.setText("Docker is currently in use elsewhere, click here to move it here")
+            self.unloadedLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            self.unloadedLabel.setWordWrap(True)
 
             self.unloadedButton = QPushButton()
             self.unloadedButton.setText("Load Docker")
@@ -79,14 +84,14 @@ class DockerContainer(QWidget):
             self.outLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.outLayout.addWidget(self.unloadedLabel)
             self.outLayout.addWidget(self.unloadedButton)
-            if self.hide_when_unloaded:
+            if self.hiddenMode:
                 self.setVisible(False)
                 self.setAutoFillBackground(False)
         else:
             self.outLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
             self.outLayout.removeWidget(self.unloadedLabel)
             self.outLayout.removeWidget(self.unloadedButton)
-            if self.hide_when_unloaded:
+            if self.hiddenMode:
                 self.setVisible(True)
                 self.setAutoFillBackground(True)
 
@@ -108,8 +113,11 @@ class DockerContainer(QWidget):
     #endregion
 
     #region Setters
-    def setHideWhenUnloaded(self, value: bool):
-        self.hide_when_unloaded = value
+    def setHiddenMode(self, value: bool):
+        self.hiddenMode = value
+
+    def setPassiveMode(self, value: bool):
+        self.passiveMode = value
 
     def setDockMode(self, value):
         self.dockMode = value

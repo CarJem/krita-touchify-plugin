@@ -15,68 +15,41 @@ class RedesignComponents:
 
     ntCanvas = None
 
+
+    def createAction(self, window: Window, id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
+        result = window.createAction(id, text, menuLocation)
+        result.setCheckable(setCheckable)
+        result.setChecked(setChecked)
+        result.toggled.connect(onToggled)
+        return result
+
     def createActions(self, window: Window, mainMenuBar: QMenuBar):
 
         config = InternalConfig.instance()
+        
+        mainMenuBar.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_TOOLBAR_BORDER, "Borderless Toolbars", TOUCHIFY_ID_MENU_ROOT, True, config.usesBorderlessToolbar, self.toolbarBorderToggled))
+        mainMenuBar.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_TAB_HEIGHT, "Thin Document Tabs", TOUCHIFY_ID_MENU_ROOT, True, config.usesThinDocumentTabs, self.tabHeightToggled))
 
-        actions = []
-
-        actions.append(window.createAction(TOUCHIFY_ID_ACTION_TOOLBAR_BORDER, "Borderless Toolbars", TOUCHIFY_ID_MENU_ROOT))
-        actions[0].setCheckable(True)
-        actions[0].setChecked(config.usesBorderlessToolbar) 
-        actions[0].toggled.connect(self.toolbarBorderToggled)
-
-        actions.append(window.createAction(TOUCHIFY_ID_ACTION_TAB_HEIGHT, "Thin Document Tabs", TOUCHIFY_ID_MENU_ROOT))
-        actions[1].setCheckable(True)
-        actions[1].setChecked(config.usesThinDocumentTabs)
-        actions[1].toggled.connect(self.tabHeightToggled)
-
-        actions.append(window.createAction(TOUCHIFY_ID_ACTION_NU_TOOLBOX, "Show NuToolbox", TOUCHIFY_ID_MENU_ROOT))
-        actions[2].setCheckable(True)
-        actions[2].setChecked(config.usesNuToolbox)
-        actions[2].toggled.connect(self.nuToolboxToggled)
-
-        actions.append(window.createAction(TOUCHIFY_ID_ACTION_NU_TOOL_OPTIONS, "Show NuToolOptions", TOUCHIFY_ID_MENU_ROOT))
-        actions[3].setCheckable(True)
-        if KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, KRITA_ID_OPTIONS_TOOLOPTIONS_IN_DOCKER, "false") == "true":
-            actions[3].setChecked(config.usesNuToolOptions)
-        actions[3].toggled.connect(self.nuToolOptionsToggled)
-
-        for a in actions:
-            mainMenuBar.addAction(a)
-
-        sublocation_name = "NuOptions"
+        sublocation_name = "On-Canvas Widgets"
         sublocation_path = TOUCHIFY_ID_MENU_ROOT + "/" + sublocation_name
 
         nu_options_menu = QtWidgets.QMenu(sublocation_name, mainMenuBar)
         mainMenuBar.addMenu(nu_options_menu)
-        nu_options_actions = []
+
+        nu_options_menu.addSection("Widgets")
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_NU_TOOLBOX, "Enable Toolbox", sublocation_path, True, config.usesNuToolbox, self.nuToolboxToggled))
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_NU_TOOL_OPTIONS, "Enable Toolshelf", sublocation_path, True, config.usesNuToolOptions, self.nuToolOptionsToggled))
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_NU_TOOL_OPTIONS_ALT, "Enable Toolshelf (Alt.)", sublocation_path, True, config.usesNuToolOptionsAlt, self.nuToolOptionsAltToggled))
         
+        nu_options_menu.addSection("Widget Options")
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_OPTIONS_NU_OPTIONS_RIGHT_HAND_TOOLBOX, "Right Hand Toolbox", sublocation_path, True, config.nuOptions_ToolboxOnRight, self.nuOptionsRightHandToolboxToggled))
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, "Alternative Toolbox Position", sublocation_path, True, config.nuOptions_AlternativeToolboxPosition, self.nuOptionsAltToolboxPosToggled))
 
-
-        nu_options_actions.append(window.createAction(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_SHAREDTOOLDOCKER, "Show Tool Options", sublocation_path))
-        nu_options_actions[0].setCheckable(True)
-        nu_options_actions[0].setChecked(config.nuOptions_SharedToolDocker)
-        nu_options_actions[0].toggled.connect(self.nuOptionsSharedToolDockerToggled)
-
-        nu_options_actions.append(window.createAction(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_RIGHT_HAND_TOOLBOX, "Right Hand Toolbox", sublocation_path))
-        nu_options_actions[1].setCheckable(True)
-        nu_options_actions[1].setChecked(config.nuOptions_ToolboxOnRight)
-        nu_options_actions[1].toggled.connect(self.nuOptionsRightHandToolboxToggled)
-
-        nu_options_actions.append(window.createAction(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, "Alternative Toolbox Position", sublocation_path))
-        nu_options_actions[2].setCheckable(True)
-        nu_options_actions[2].setChecked(config.nuOptions_AlternativeToolboxPosition)
-        nu_options_actions[2].toggled.connect(self.nuOptionsAltToolboxPosToggled)
-
-        for a in nu_options_actions:
-            nu_options_menu.addAction(a)
-
-
-        self.rebuildStyleSheet(window.qwindow())
+        self.ntCanvas = NtCanvas(window)
+        self.ntCanvas.createActions(window, nu_options_menu, sublocation_path)
 
     def windowCreated(self, window: Window):
-        self.ntCanvas = NtCanvas(window)    
+        self.ntCanvas.updateWindow(window)
 
     def onKritaConfigUpdated(self):
         if self.ntCanvas:
@@ -106,20 +79,10 @@ class RedesignComponents:
     def nuToolOptionsToggled(self, toggled):
         InternalConfig.instance().usesNuToolOptions = toggled
         InternalConfig.instance().saveSettings()
-        pass
-    #endregion
-
-    #region NuOptions Actions
-    def nuOptionsSharedToolDockerToggled(self, toggled):
-        if KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, KRITA_ID_OPTIONS_TOOLOPTIONS_IN_DOCKER, "false") == "true":
-            InternalConfig.instance().nuOptions_SharedToolDocker = toggled
-            InternalConfig.instance().saveSettings()
-        else:
-            msg = QMessageBox()
-            msg.setText("This setting requires the Tool Options Location to be set to 'In Docker'. \n\n" +
-                        "This setting can be found at Settings -> Configure Krita... -> General -> Tools -> Tool Options Location." +
-                        "Once the setting has been changed, please restart Krita.")
-            msg.exec_()
+    
+    def nuToolOptionsAltToggled(self, toggled):
+        InternalConfig.instance().usesNuToolOptionsAlt = toggled
+        InternalConfig.instance().saveSettings()
 
     def nuOptionsAltToolboxPosToggled(self, toggled):
         InternalConfig.instance().nuOptions_AlternativeToolboxPosition = toggled

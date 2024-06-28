@@ -8,6 +8,7 @@ class CfgToolboxPanelDocker:
     size_y: int = 0
     nesting_mode: str = "normal"
     unloaded_visibility: str = "normal"
+    loading_priority: str = "normal"
     panel_y: int = 0
 
     def create(args):
@@ -27,6 +28,7 @@ class CfgToolboxPanelDocker:
         labels["panel_y"] = "Panel Row"
         labels["nesting_mode"] = "Nesting Mode"
         labels["unloaded_visibility"] = "Unloaded Visibility"
+        labels["loading_priority"] = "Loading Priority"
         return labels
 
     def propertygrid_groups(self):
@@ -38,6 +40,7 @@ class CfgToolboxPanelDocker:
         restrictions["id"] = {"type": "docker_selection"}
         restrictions["nesting_mode"] = {"type": "values", "entries": ["normal", "docking"]}
         restrictions["unloaded_visibility"] = {"type": "values", "entries": ["normal", "hidden"]}
+        restrictions["loading_priority"] = {"type": "values", "entries": ["normal", "passive"]}
         restrictions["panel_x"] = {"type": "range", "min": 0, "max": 10}
         restrictions["panel_y"] = {"type": "range", "min": 0, "max": 10}
         return restrictions
@@ -136,6 +139,7 @@ class CfgToolshelf:
 
     panels: TypedList[CfgToolboxPanel] = []
     actions: TypedList[CfgToolboxAction] = []
+    dockers: TypedList[CfgToolboxPanelDocker] = []
     
     titleButtonHeight: int = 10
     dockerButtonHeight: int = 32
@@ -150,11 +154,14 @@ class CfgToolshelf:
         obj.panels = Extensions.list_assignment(panels, CfgToolboxPanel)
         actions = Extensions.default_assignment(args, "actions", [])
         obj.actions = Extensions.list_assignment(actions, CfgToolboxAction)
+        dockers = Extensions.default_assignment(args, "dockers", [])
+        obj.dockers = Extensions.list_assignment(dockers, CfgToolboxPanelDocker)
         return obj
     
     def forceLoad(self):
         self.panels = TypedList(self.panels, CfgToolboxPanel)
         self.actions = TypedList(self.actions, CfgToolboxAction)
+        self.dockers = TypedList(self.dockers, CfgToolboxAction)
 
     def propertygrid_labels(self):
         labels = {}
@@ -165,6 +172,7 @@ class CfgToolshelf:
         labels["dockerBackHeight"] = "Back Button Height"
         labels["sliderHeight"] = "Slider Height"
         labels["actionHeight"] = "Action Button Height"
+        labels["dockers"] = "Dockers"
         return labels
 
     def propertygrid_groups(self):

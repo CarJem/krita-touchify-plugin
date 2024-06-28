@@ -191,6 +191,7 @@ class InternalConfig:
         self.usesThinDocumentTabs = False
         self.usesNuToolbox = False
         self.usesNuToolOptions = False
+        self.usesNuToolOptionsAlt = False
 
         self.nuOptions_ToolboxOnRight = False
         self.nuOptions_SharedToolDocker = False
@@ -212,9 +213,9 @@ class InternalConfig:
         self.usesThinDocumentTabs = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_THIN_DOC_TABS, False)
         self.usesNuToolbox = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_NU_TOOLBOX, False)
         self.usesNuToolOptions = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_NU_TOOL_OPTIONS, False)
-
+        self.usesNuToolOptionsAlt = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_NU_TOOL_OPTIONS_ALT, False)
+        
         self.nuOptions_ToolboxOnRight = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_RIGHT_HAND_TOOLBOX, False)
-        self.nuOptions_SharedToolDocker = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_SHAREDTOOLDOCKER, False)
         self.nuOptions_AlternativeToolboxPosition = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, False)
 
     def saveSettings(self):
@@ -222,9 +223,9 @@ class InternalConfig:
         self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_THIN_DOC_TABS, self.usesThinDocumentTabs, False)
         self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_NU_TOOLBOX, self.usesNuToolbox, False)
         self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_NU_TOOL_OPTIONS, self.usesNuToolOptions, False)
+        self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_NU_TOOL_OPTIONS_ALT, self.usesNuToolOptionsAlt, False)
 
         self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_RIGHT_HAND_TOOLBOX, self.nuOptions_ToolboxOnRight, False)
-        self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_SHAREDTOOLDOCKER, self.nuOptions_SharedToolDocker, False)
         self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, self.nuOptions_AlternativeToolboxPosition, False)
 
 KritaSettings.init()

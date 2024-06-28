@@ -2,12 +2,12 @@ from PyQt5.QtCore import QObject, QEvent, QPoint
 
 
 
-class Nt_AdjustToSubwindowFilter(QObject):
+class NtAdjustToSubwindowFilter(QObject):
     """Event Filter object. Ensure that a target widget is moved
     to a desired position (corner of the view) when the subwindow area updates."""
 
     def __init__(self, parent=None):
-        super(Nt_AdjustToSubwindowFilter, self).__init__(parent)
+        super(NtAdjustToSubwindowFilter, self).__init__(parent)
         self.target = None
 
     def eventFilter(self, obj, e):
