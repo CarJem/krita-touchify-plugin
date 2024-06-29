@@ -49,9 +49,9 @@ class DockerToggles:
         actionName ='{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_DOCKER, docker.docker_name)
         id = docker.docker_name
         iconName = docker.icon
-        text ='{0}'.format(docker.display_name)
+        text ='{0} [Docker]'.format(docker.display_name)
 
-        action = window.createAction(actionName, "Docker: " + text, actionPath)    
+        action = window.createAction(actionName, text, actionPath)    
         icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
         pending_actions.append(action)

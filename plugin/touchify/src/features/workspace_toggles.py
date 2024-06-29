@@ -64,11 +64,11 @@ class WorkspaceToggles:
 
         actionName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_WORKSPACE, workspace.id)
         id = workspace.id
-        text = '{0}'.format(workspace.display_name)
+        text = '{0} [Workspace]'.format(workspace.display_name)
         iconName = 'custom:' + workspace.id
 
 
-        action = window.createAction(actionName, "Workspace: " + text, actionPath)    
+        action = window.createAction(actionName, text, actionPath)    
         icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
 

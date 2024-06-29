@@ -87,6 +87,7 @@ class Touchify(Extension):
         seperator.setSeparator(True)
         self.mainMenuBar.addAction(seperator)
 
+        self.touchify_hotkeys.buildMenu(self.mainMenuBar)
         self.basic_dockers.buildMenu(self.mainMenuBar)  
         self.docker_groups.buildMenu(self.mainMenuBar)     
         self.workspace_toggles.buildMenu(self.mainMenuBar)

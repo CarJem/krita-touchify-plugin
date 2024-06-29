@@ -70,7 +70,7 @@ class DockerGroups:
         setId = cfg.id
         iconName = cfg.icon
 
-        text = '{0}'.format(cfg.display_name)
+        text = '{0} [Docker Group]'.format(cfg.display_name)
 
         action = window.createAction(actionName, text, actionPath) 
         icon = ResourceManager.iconLoader(iconName)

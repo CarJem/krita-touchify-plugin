@@ -4,7 +4,6 @@ from krita import *
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import *
 
-from .variables import KRITA_ID_OPTIONSROOT_MAIN
 from .ext.extensions import *
 from .config import *
 
@@ -59,8 +58,7 @@ class DockerShareData:
 
         if self.dockMode == True:
             KritaExtensions.getMainWindow().addDockWidget(self.dockWidgetArea, self.dockerWidget)
-            titlebarSetting = KritaSettings.readSetting(KRITA_ID_OPTIONSROOT_MAIN, "showDockerTitleBars", "false")
-            showTitlebar = True if titlebarSetting == "true" else False
+            showTitlebar = KritaSettings.showDockerTitlebars()
             self.dockerWidget.titleBarWidget().setVisible(showTitlebar)
             if self.previousVisibility == False:
                 self.dockerWidget.hide()
@@ -79,6 +77,7 @@ class DM_ListenerType(Enum):
 class DockerManager():
     _shareData: dict[any, DockerShareData] = {}
     _listeners: dict[DM_ListenerType, list] = {}
+    _hiddenDockers: dict[Qt.DockWidgetArea, list[str]] = {}
 
     def instance():
         try:
@@ -88,7 +87,10 @@ class DockerManager():
             return DockerManager.__instance
 
     def __init__(self):
-        pass
+        self._hiddenDockers[1] = InternalConfig.instance().DockerUtils_HiddenDockersLeft.split(",")
+        self._hiddenDockers[2] = InternalConfig.instance().DockerUtils_HiddenDockersRight.split(",")
+        self._hiddenDockers[4] = InternalConfig.instance().DockerUtils_HiddenDockersUp.split(",")
+        self._hiddenDockers[8] = InternalConfig.instance().DockerUtils_HiddenDockersDown.split(",")
 
     def registerListener(self, type: DM_ListenerType, source: Callable):
         if type not in self._listeners:
@@ -127,6 +129,36 @@ class DockerManager():
             del self._shareData[docker_id]
             if invokeRelease: self.invokeListeners(docker_id, DM_ListenerType.OnReleaseDocker)
             else: self.invokeListeners(docker_id, DM_ListenerType.OnStealDocker)
+
+    def toggleDockersPerArea(self, area: int):
+        dockers = Krita.instance().dockers()
+        mainWindow = Krita.instance().activeWindow().qwindow()
+
+        if len(self._hiddenDockers[area]) > 0: # show
+            for dockerId in self._hiddenDockers[area]:
+                docker = next((w for w in Krita.instance().dockers() if w.objectName() == dockerId), None)
+                if docker:
+                    docker.setVisible(True)
+            self._hiddenDockers[area] = []
+        else: # hide
+            for docker in dockers:
+                if docker.isHidden() or docker.isFloating():
+                    continue
+
+                if mainWindow.dockWidgetArea(docker) == area:
+                    self._hiddenDockers[area].append(docker.objectName())
+                    docker.setVisible(False)
+
+        match area:
+            case 1:
+                InternalConfig.instance().DockerUtils_HiddenDockersLeft = ",".join(self._hiddenDockers[area])
+            case 2:
+                InternalConfig.instance().DockerUtils_HiddenDockersRight = ",".join(self._hiddenDockers[area])
+            case 4:
+                InternalConfig.instance().DockerUtils_HiddenDockersUp = ",".join(self._hiddenDockers[area])
+            case 8:
+                InternalConfig.instance().DockerUtils_HiddenDockersDown = ",".join(self._hiddenDockers[area])
+        InternalConfig.instance().saveSettings()
 
     def dockerWindowTitle(self, ID):
         docker = KritaExtensions.getDocker(ID)

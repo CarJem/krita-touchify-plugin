@@ -143,7 +143,7 @@ class ConfigManager:
         return self.cfg
 
 class KritaSettings:
-
+    
     def init():
         KritaSettings.notify_hooks = []
 
@@ -174,6 +174,21 @@ class KritaSettings:
         KritaSettings.notifyUpdate()
         return result
     
+    def showDockerTitlebars():
+        settingStr = KritaSettings.readSetting("", "showDockerTitleBars", "false")
+        result = True if settingStr == "true" else False
+        return result
+    
+    def showRulers():
+        settingStr = KritaSettings.readSetting("", "showrulers", "true")
+        result = True if settingStr == "true" else False
+        return result
+    
+    def hideScrollbars():
+        settingStr = KritaSettings.readSetting("", "hideScrollbars", "false")
+        result = True if settingStr == "true" else False
+        return result
+
 class InternalConfig:
 
     def instance():
@@ -186,46 +201,67 @@ class InternalConfig:
     def __init__(self) -> None:
         self.__has_preloaded = False
 
-        self.usesFlatTheme = False
-        self.usesBorderlessToolbar = False
-        self.usesThinDocumentTabs = False
-        self.usesNuToolbox = False
-        self.usesNuToolOptions = False
-        self.usesNuToolOptionsAlt = False
+        self.Styles_FlatTheme = False
+        self.Styles_BorderlessToolbar = False
+        self.Styles_ThinDocumentTabs = False
 
-        self.nuOptions_ToolboxOnRight = False
-        self.nuOptions_SharedToolDocker = False
-        self.nuOptions_AlternativeToolboxPosition = False
+        self.CanvasWidgets_EnableToolbox = False
+        self.CanvasWidgets_EnableToolshelf = False
+        self.CanvasWidgets_EnableAltToolshelf = False
+        self.CanvasWidgets_ToolboxOnRight = False
+        self.CanvasWidgets_AlternativeToolboxPosition = False
+
+        self.DockerUtils_HiddenDockersLeft: str = ""
+        self.DockerUtils_HiddenDockersRight: str = ""
+        self.DockerUtils_HiddenDockersUp: str = ""
+        self.DockerUtils_HiddenDockersDown: str = ""
 
         self.loadSettings()
 
-    def private_readSettingsBool(self, name: str, defaultValue: bool) -> bool:
-        return KritaSettings.readSettingBool(TOUCHIFY_ID_OPTIONSROOT_MAIN, name, defaultValue)
+    def private_readSetting(self, name: str, defaultValue: str) -> str:
+        return KritaSettings.readSetting("Touchify", name, defaultValue)
     
-    def private_writeSettingsBool(self, name: str, value: bool, defaultValue: bool) -> bool:
-        if self.private_readSettingsBool(name, defaultValue) != value:
-            KritaSettings.writeSettingBool(TOUCHIFY_ID_OPTIONSROOT_MAIN, name, value)
+    def private_writeSetting(self, name: str, value: str, defaultValue: str) -> None:
+        if self.private_readSetting(name, defaultValue) != value:
+            KritaSettings.writeSetting("Touchify", name, value)
+
+    def private_readSettingBool(self, name: str, defaultValue: bool) -> bool:
+        return KritaSettings.readSettingBool("Touchify", name, defaultValue)
+    
+    def private_writeSettingBool(self, name: str, value: bool, defaultValue: bool) -> None:
+        if self.private_readSettingBool(name, defaultValue) != value:
+            KritaSettings.writeSettingBool("Touchify", name, value)
     
     def loadSettings(self):
-        self.usesFlatTheme = False
+        self.Styles_FlatTheme = False
 
-        self.usesBorderlessToolbar = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_BORDERLESS_TOOLBAR, False)
-        self.usesThinDocumentTabs = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_THIN_DOC_TABS, False)
-        self.usesNuToolbox = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_NU_TOOLBOX, False)
-        self.usesNuToolOptions = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_NU_TOOL_OPTIONS, False)
-        self.usesNuToolOptionsAlt = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_NU_TOOL_OPTIONS_ALT, False)
+        self.Styles_BorderlessToolbar = self.private_readSettingBool("usesBorderlessToolbar", False)
+        self.Styles_ThinDocumentTabs = self.private_readSettingBool("usesThinDocumentTabs", False)
+        self.CanvasWidgets_EnableToolbox = self.private_readSettingBool("usesNuToolbox", False)
+        self.CanvasWidgets_EnableToolshelf = self.private_readSettingBool("usesNuToolOptions", False)
+        self.CanvasWidgets_EnableAltToolshelf = self.private_readSettingBool("usesNuToolOptionsAlt", False)
         
-        self.nuOptions_ToolboxOnRight = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_RIGHT_HAND_TOOLBOX, False)
-        self.nuOptions_AlternativeToolboxPosition = self.private_readSettingsBool(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, False)
+        self.CanvasWidgets_ToolboxOnRight = self.private_readSettingBool("nuOptions_ToolboxOnRight", False)
+        self.CanvasWidgets_AlternativeToolboxPosition = self.private_readSettingBool("nuOptions_alternativeToolboxPosition", False)
+
+        self.DockerUtils_HiddenDockersLeft = self.private_readSetting("DockerUtils_HiddenLeft", "")
+        self.DockerUtils_HiddenDockersRight = self.private_readSetting("DockerUtils_HiddenRight", "")
+        self.DockerUtils_HiddenDockersUp = self.private_readSetting("DockerUtils_HiddenUp", "")
+        self.DockerUtils_HiddenDockersDown = self.private_readSetting("DockerUtils_HiddenDown", "")
 
     def saveSettings(self):
-        self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_BORDERLESS_TOOLBAR, self.usesBorderlessToolbar, False)
-        self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_THIN_DOC_TABS, self.usesThinDocumentTabs, False)
-        self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_NU_TOOLBOX, self.usesNuToolbox, False)
-        self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_NU_TOOL_OPTIONS, self.usesNuToolOptions, False)
-        self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_NU_TOOL_OPTIONS_ALT, self.usesNuToolOptionsAlt, False)
+        self.private_writeSettingBool("usesBorderlessToolbar", self.Styles_BorderlessToolbar, False)
+        self.private_writeSettingBool("usesThinDocumentTabs", self.Styles_ThinDocumentTabs, False)
+        self.private_writeSettingBool("usesNuToolbox", self.CanvasWidgets_EnableToolbox, False)
+        self.private_writeSettingBool("usesNuToolOptions", self.CanvasWidgets_EnableToolshelf, False)
+        self.private_writeSettingBool("usesNuToolOptionsAlt", self.CanvasWidgets_EnableAltToolshelf, False)
 
-        self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_RIGHT_HAND_TOOLBOX, self.nuOptions_ToolboxOnRight, False)
-        self.private_writeSettingsBool(TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, self.nuOptions_AlternativeToolboxPosition, False)
+        self.private_writeSettingBool("nuOptions_ToolboxOnRight", self.CanvasWidgets_ToolboxOnRight, False)
+        self.private_writeSettingBool("nuOptions_alternativeToolboxPosition", self.CanvasWidgets_AlternativeToolboxPosition, False)
+
+        self.private_writeSetting("DockerUtils_HiddenLeft", self.DockerUtils_HiddenDockersLeft, "")
+        self.private_writeSetting("DockerUtils_HiddenRight", self.DockerUtils_HiddenDockersRight, "")
+        self.private_writeSetting("DockerUtils_HiddenUp", self.DockerUtils_HiddenDockersUp, "")
+        self.private_writeSetting("DockerUtils_HiddenDown", self.DockerUtils_HiddenDockersDown, "")
 
 KritaSettings.init()

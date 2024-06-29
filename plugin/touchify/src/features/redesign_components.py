@@ -27,8 +27,8 @@ class RedesignComponents:
 
         config = InternalConfig.instance()
         
-        mainMenuBar.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_TOOLBAR_BORDER, "Borderless Toolbars", TOUCHIFY_ID_MENU_ROOT, True, config.usesBorderlessToolbar, self.toolbarBorderToggled))
-        mainMenuBar.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_TAB_HEIGHT, "Thin Document Tabs", TOUCHIFY_ID_MENU_ROOT, True, config.usesThinDocumentTabs, self.tabHeightToggled))
+        mainMenuBar.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_BORDERLESSTOOLBARS, "Borderless Toolbars", TOUCHIFY_ID_MENU_ROOT, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))
+        mainMenuBar.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_TABHEIGHT, "Thin Document Tabs", TOUCHIFY_ID_MENU_ROOT, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
 
         sublocation_name = "On-Canvas Widgets"
         sublocation_path = TOUCHIFY_ID_MENU_ROOT + "/" + sublocation_name
@@ -37,13 +37,13 @@ class RedesignComponents:
         mainMenuBar.addMenu(nu_options_menu)
 
         nu_options_menu.addSection("Widgets")
-        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_NU_TOOLBOX, "Enable Toolbox", sublocation_path, True, config.usesNuToolbox, self.nuToolboxToggled))
-        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_NU_TOOL_OPTIONS, "Enable Toolshelf", sublocation_path, True, config.usesNuToolOptions, self.nuToolOptionsToggled))
-        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_NU_TOOL_OPTIONS_ALT, "Enable Toolshelf (Alt.)", sublocation_path, True, config.usesNuToolOptionsAlt, self.nuToolOptionsAltToggled))
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_ENABLETOOLBOX, "Enable Toolbox", sublocation_path, True, config.CanvasWidgets_EnableToolbox, self.nuToolboxToggled))
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_ENABLETOOLSHELF, "Enable Toolshelf", sublocation_path, True, config.CanvasWidgets_EnableToolshelf, self.nuToolOptionsToggled))
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_ENABLETOOLSHELF_ALT, "Enable Toolshelf (Alt.)", sublocation_path, True, config.CanvasWidgets_EnableAltToolshelf, self.nuToolOptionsAltToggled))
         
         nu_options_menu.addSection("Widget Options")
-        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_OPTIONS_NU_OPTIONS_RIGHT_HAND_TOOLBOX, "Right Hand Toolbox", sublocation_path, True, config.nuOptions_ToolboxOnRight, self.nuOptionsRightHandToolboxToggled))
-        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_OPTIONS_NU_OPTIONS_ALTERNATIVE_TOOLBOX_POSITION, "Alternative Toolbox Position", sublocation_path, True, config.nuOptions_AlternativeToolboxPosition, self.nuOptionsAltToolboxPosToggled))
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_RIGHTHANDTOOLBOX, "Right Hand Toolbox", sublocation_path, True, config.CanvasWidgets_ToolboxOnRight, self.nuOptionsRightHandToolboxToggled))
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_ALTTOOLBOXPOSITION, "Alternative Toolbox Position", sublocation_path, True, config.CanvasWidgets_AlternativeToolboxPosition, self.nuOptionsAltToolboxPosToggled))
 
         self.ntCanvas = NtCanvas(window)
         self.ntCanvas.createActions(window, nu_options_menu, sublocation_path)
@@ -61,35 +61,35 @@ class RedesignComponents:
 
     #region Theming Actions
     def toolbarBorderToggled(self, toggled):
-        InternalConfig.instance().usesBorderlessToolbar = toggled
+        InternalConfig.instance().Styles_BorderlessToolbar = toggled
         InternalConfig.instance().saveSettings()
         self.rebuildStyleSheet(Krita.instance().activeWindow().qwindow())
 
     def tabHeightToggled(self, toggled):
-        InternalConfig.instance().usesThinDocumentTabs = toggled
+        InternalConfig.instance().Styles_ThinDocumentTabs = toggled
         InternalConfig.instance().saveSettings()
         self.rebuildStyleSheet(Krita.instance().activeWindow().qwindow())
     #endregion
 
     #region NuWidgetPad Actions
     def nuToolboxToggled(self, toggled):
-        InternalConfig.instance().usesNuToolbox = toggled
+        InternalConfig.instance().CanvasWidgets_EnableToolbox = toggled
         InternalConfig.instance().saveSettings()
 
     def nuToolOptionsToggled(self, toggled):
-        InternalConfig.instance().usesNuToolOptions = toggled
+        InternalConfig.instance().CanvasWidgets_EnableToolshelf = toggled
         InternalConfig.instance().saveSettings()
     
     def nuToolOptionsAltToggled(self, toggled):
-        InternalConfig.instance().usesNuToolOptionsAlt = toggled
+        InternalConfig.instance().CanvasWidgets_EnableAltToolshelf = toggled
         InternalConfig.instance().saveSettings()
 
     def nuOptionsAltToolboxPosToggled(self, toggled):
-        InternalConfig.instance().nuOptions_AlternativeToolboxPosition = toggled
+        InternalConfig.instance().CanvasWidgets_AlternativeToolboxPosition = toggled
         InternalConfig.instance().saveSettings()
 
     def nuOptionsRightHandToolboxToggled(self, toggled):
-        InternalConfig.instance().nuOptions_ToolboxOnRight = toggled
+        InternalConfig.instance().CanvasWidgets_ToolboxOnRight = toggled
         InternalConfig.instance().saveSettings()
     #endregion
 
@@ -101,7 +101,7 @@ class RedesignComponents:
         full_style_sheet = ""
         
         # Dockers
-        if config.usesFlatTheme:
+        if config.Styles_FlatTheme:
             full_style_sheet += f"\n {stylesheet.flat_dock_style} \n"
             full_style_sheet += f"\n {stylesheet.flat_button_style} \n"
             full_style_sheet += f"\n {stylesheet.flat_main_window_style} \n"
@@ -113,9 +113,9 @@ class RedesignComponents:
             full_style_sheet += f"\n {stylesheet.flat_tab_base_style} \n"
 
         # Toolbar
-        if config.usesFlatTheme:
+        if config.Styles_FlatTheme:
             full_style_sheet += f"\n {stylesheet.flat_toolbar_style} \n"
-        elif config.usesBorderlessToolbar:
+        elif config.Styles_BorderlessToolbar:
             full_style_sheet += f"\n {stylesheet.no_borders_style} \n"    
         
         window.setStyleSheet(full_style_sheet)
@@ -127,13 +127,13 @@ class RedesignComponents:
         # For document tab
         canvas_style_sheet = ""
 
-        if config.usesFlatTheme:
-            if config.usesThinDocumentTabs:
+        if config.Styles_FlatTheme:
+            if config.Styles_ThinDocumentTabs:
                 canvas_style_sheet += f"\n {stylesheet.flat_tab_small_style} \n"
             else: 
                 canvas_style_sheet += f"\n {stylesheet.flat_tab_big_style} \n"
         else: 
-            if config.usesThinDocumentTabs:
+            if config.Styles_ThinDocumentTabs:
                 canvas_style_sheet += f"\n {stylesheet.small_tab_style} \n"
 
         canvas = window.centralWidget()
@@ -144,5 +144,5 @@ class RedesignComponents:
         canvas.resize(canvas.sizeHint())
 
         # Update Toolbox stylesheet
-        if config.usesNuToolbox and self.ntCanvas:
+        if config.CanvasWidgets_EnableToolbox and self.ntCanvas:
             self.ntCanvas.updateStyleSheet()  

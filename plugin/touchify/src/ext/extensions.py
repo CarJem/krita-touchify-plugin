@@ -123,17 +123,6 @@ class KritaExtensions:
              
         return sorted(result)
 
-    def getDockerData():
-        result = []
-        dockers = Krita.instance().dockers()
-        for docker in dockers:
-            result.insert(0, {
-                "id": docker.objectName(),
-                "name": docker.windowTitle(),
-                "icon": docker.windowIcon()
-            })
-        return result
-
 class PyQtExtensions:
 
     def quickDialog(parent, text):

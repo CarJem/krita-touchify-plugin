@@ -45,7 +45,7 @@ class PopupButtons:
 
     def createAction(self, window: Window, popup: CfgPopup, actionPath):
         actionName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_POPUP, popup.id)
-        displayName = popup.btnName + POPUP_BTN_IDENTIFIER
+        displayName = popup.btnName + POPUP_BTN_IDENTIFIER + " [Popup]"
         iconName = popup.icon
         id = popup.id
         hotkeyNumber = popup.hotkeyNumber

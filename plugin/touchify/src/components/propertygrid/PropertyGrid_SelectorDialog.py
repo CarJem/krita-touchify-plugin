@@ -80,12 +80,12 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 self.listView.addItem(listItem)
 
         elif mode == "dockers":
-            dockers = KritaExtensions.getDockerData()
+            dockers = Krita.instance().dockers()
             for dockerData in dockers:
-                displayName = dockerData["name"] + " [{0}]".format(dockerData["id"])
+                displayName = dockerData.windowTitle() + " [{0}]".format(dockerData.objectName())
                 listItem = QListWidgetItem()
                 listItem.setText(displayName)
-                listItem.setData(0, dockerData["id"])
+                listItem.setData(0, dockerData.objectName())
                 self.listView.addItem(listItem)
         elif mode == "actions":
             actions = Krita.instance().actions()

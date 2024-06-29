@@ -30,19 +30,19 @@ class NtCanvas():
 
         menu.addSection("Widget Visibility")
 
-        tlb_action = window.createAction(TOUCHIFY_ID_ACTION_SHOW_TOOLBOX, "Show Toolbox", path)
+        tlb_action = window.createAction(TOUCHIFY_ID_ACTION_CANVAS_SHOWTOOLBOX, "Show Toolbox", path)
         tlb_action.toggled.connect(lambda: self.togglePadVisibility("toolbox"))
         tlb_action.setCheckable(True)
         tlb_action.setChecked(True)
         menu.addAction(tlb_action)
 
-        tlshlf_action = window.createAction(TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS, "Show Toolshelf", path)
+        tlshlf_action = window.createAction(TOUCHIFY_ID_ACTION_CANVAS_SHOWTOOLSHELF, "Show Toolshelf", path)
         tlshlf_action.toggled.connect(lambda: self.togglePadVisibility("toolshelf"))
         tlshlf_action.setCheckable(True)
         tlshlf_action.setChecked(True)
         menu.addAction(tlshlf_action)
 
-        tlshlf_alt_action = window.createAction(TOUCHIFY_ID_ACTION_SHOW_TOOL_OPTIONS_ALT, "Show Toolshelf (Alt.)", path)
+        tlshlf_alt_action = window.createAction(TOUCHIFY_ID_ACTION_CANVAS_SHOWTOOLSHELF_ALT, "Show Toolshelf (Alt.)", path)
         tlshlf_alt_action.toggled.connect(lambda: self.togglePadVisibility("toolshelf_alt"))
         tlshlf_alt_action.setCheckable(True)
         tlshlf_alt_action.setChecked(True)
@@ -89,23 +89,23 @@ class NtCanvas():
 
     #region Get / Set Functions
     def getToolOptionsAlignment(self):
-        isToolboxOnRight = InternalConfig.instance().nuOptions_ToolboxOnRight
+        isToolboxOnRight = InternalConfig.instance().CanvasWidgets_ToolboxOnRight
         return 'left' if isToolboxOnRight else 'right'
 
     def getToolboxAlignment(self):
-        isToolboxOnRight = InternalConfig.instance().nuOptions_ToolboxOnRight
+        isToolboxOnRight = InternalConfig.instance().CanvasWidgets_ToolboxOnRight
         return 'right' if isToolboxOnRight else 'left'
     
     def getToolboxAltPositionState(self):
-        return InternalConfig.instance().nuOptions_AlternativeToolboxPosition
+        return InternalConfig.instance().CanvasWidgets_AlternativeToolboxPosition
     #endregion
 
     #region Update Functions
 
     def updateElements(self):
-        usesNuToolbox = InternalConfig.instance().usesNuToolbox
-        usesNuToolOptionsAlt = InternalConfig.instance().usesNuToolOptionsAlt
-        usesNuToolOptions = InternalConfig.instance().usesNuToolOptions
+        usesNuToolbox = InternalConfig.instance().CanvasWidgets_EnableToolbox
+        usesNuToolOptionsAlt = InternalConfig.instance().CanvasWidgets_EnableAltToolshelf
+        usesNuToolOptions = InternalConfig.instance().CanvasWidgets_EnableToolshelf
 
         if self.toolbox == None and usesNuToolbox:
             self.toolbox = NtToolbox(self.window)
