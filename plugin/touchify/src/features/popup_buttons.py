@@ -20,12 +20,13 @@ from ..components.popups.PopupDialog_Docker import *
 
 from krita import *
 
-popup_dialogs: dict[str, PopupDialog] = {}
-pending_actions = []
-popup_data = {}
+
 
 class PopupButtons:
 
+    popup_dialogs: dict[str, PopupDialog] = {}
+    pending_actions = []
+    popup_data = {}
 
     def createPopup(self, qwin: QMainWindow, data: CfgPopup):
         if data.type == "actions":
@@ -40,12 +41,12 @@ class PopupButtons:
         root_menu = QtWidgets.QMenu("Popups", menu)
         menu.addMenu(root_menu)
 
-        for action in pending_actions:
+        for action in self.pending_actions:
             root_menu.addAction(action)
 
     def createAction(self, window: Window, popup: CfgPopup, actionPath):
         actionName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_POPUP, popup.id)
-        displayName = popup.btnName + POPUP_BTN_IDENTIFIER + " [Popup]"
+        displayName = popup.btnName + POPUP_BTN_IDENTIFIER
         iconName = popup.icon
         id = popup.id
         hotkeyNumber = popup.hotkeyNumber
@@ -58,7 +59,7 @@ class PopupButtons:
         if not hotkeyNumber == 0:
             ConfigManager.instance().getHotkeyAction(hotkeyNumber).triggered.connect(lambda: self.showPopup(action, id, "mouse"))
 
-        pending_actions.append(action)
+        self.pending_actions.append(action)
 
     def createActions(self, window, actionPath):
         sectionName = TOUCHIFY_ID_ACTIONS_POPUP
@@ -67,7 +68,7 @@ class PopupButtons:
 
         cfg = ConfigManager.instance().getJSON()
         for popup in cfg.popups:
-            popup_data[popup.id] = popup
+            self.popup_data[popup.id] = popup
             self.createAction(window, popup, subItemPath)
 
     def showPopup(self, action: QAction, id, mode: str):
@@ -78,29 +79,28 @@ class PopupButtons:
             _parent: QWidget = _sender
 
         needToBuild = False
-        if not id in popup_dialogs:
+        if not id in self.popup_dialogs:
             needToBuild = True
-        elif popup_dialogs[id] == None:
+        elif self.popup_dialogs[id] == None:
             needToBuild =  True
 
         if needToBuild:
             qwin = Krita.instance().activeWindow().qwindow()
-            popup_dialogs[id] = self.createPopup(qwin, popup_data[id])
+            self.popup_dialogs[id] = self.createPopup(qwin, self.popup_data[id])
 
-        popup_dialogs[id].triggerPopup(mode, _parent)
+        self.popup_dialogs[id].triggerPopup(mode, _parent)
 
     def onConfigUpdated(self):
-        for popupKeys in popup_dialogs:
-            popup: PopupDialog = popup_dialogs[popupKeys]
-            if isinstance(popup, PopupDialog_Docker):
-                popup.docker_panel.shutdownWidget()
-                popup_dialogs[popupKeys] = None
+        for popupKeys in self.popup_dialogs:
+            popup: PopupDialog = self.popup_dialogs[popupKeys]
+            popup.shutdownWidget()
+            self.popup_dialogs[popupKeys] = None
 
 
         cfg: ConfigFile = ConfigManager.instance().getJSON()
         for item in cfg.popups:
             newPopupData: CfgPopup = item
             id = newPopupData.id
-            if id in popup_data:
-                popup_data[id] = newPopupData
+            if id in self.popup_data:
+                self.popup_data[id] = newPopupData
 

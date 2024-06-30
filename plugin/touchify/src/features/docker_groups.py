@@ -12,22 +12,22 @@ from ..resources import *
 
 from krita import *
 
-custom_docker_states = {}
-pending_actions = []
 
 class DockerGroups:
 
+    custom_docker_states = {}
+    pending_actions = []
+
     def toggleDockers(self, id):
-        global custom_docker_states
         dockersList = Krita.instance().dockers()
-        dockerGroup = custom_docker_states[id]
+        dockerGroup = self.self.custom_docker_states[id]
 
         isVisible = not dockerGroup["enabled"]
         dockerGroup["enabled"] = isVisible
 
         if dockerGroup["tabsMode"]:
-            for index, key in enumerate(custom_docker_states):
-                entry = custom_docker_states[key]
+            for index, key in enumerate(self.custom_docker_states):
+                entry = self.custom_docker_states[key]
                 if key is not id and dockerGroup["groupId"] == entry["groupId"] and entry["tabsMode"]:
                     sub_visibility = False
                     entry["enabled"] = sub_visibility
@@ -36,7 +36,7 @@ class DockerGroups:
                             if (docker.objectName() == path):
                                 docker.setVisible(sub_visibility)
 
-        for path in custom_docker_states[id]["paths"]:
+        for path in self.custom_docker_states[id]["paths"]:
             for docker in dockersList:
                 if (docker.objectName() == path):
                     docker.setVisible(isVisible)
@@ -45,7 +45,7 @@ class DockerGroups:
         root_menu = QtWidgets.QMenu("Docker Groups", menu)
         menu.addMenu(root_menu)
 
-        for action in pending_actions:
+        for action in self.pending_actions:
             root_menu.addAction(action)
 
     def setState(self, cfg: CfgDockerGroup):
@@ -53,7 +53,7 @@ class DockerGroups:
         for dockerName in cfg.docker_names:
             paths.append(str(dockerName))
 
-        custom_docker_states[cfg.id] = {
+        self.custom_docker_states[cfg.id] = {
             "enabled": False,
             "paths": paths,
             "groupId": cfg.groupId,
@@ -61,8 +61,6 @@ class DockerGroups:
         }
     
     def createAction(self, window, cfg: CfgDockerGroup, actionPath):
-        global custom_docker_states
-
         actionName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_DOCKER_GROUP, cfg.id)
 
 
@@ -81,7 +79,7 @@ class DockerGroups:
         if not cfg.hotkeyNumber == 0:
             ConfigManager.instance().getHotkeyAction(cfg.hotkeyNumber).triggered.connect(lambda: self.toggleDockers(setId))
 
-        pending_actions.append(action)
+        self.pending_actions.append(action)
         action.triggered.connect(lambda: self.toggleDockers(setId))
 
     def createActions(self, window, actionPath):
@@ -97,5 +95,5 @@ class DockerGroups:
         cfg: ConfigFile = ConfigManager.instance().getJSON()
         for item in cfg.docker_groups:
             newDockerGroupData: CfgDockerGroup = item
-            if newDockerGroupData.id in custom_docker_states:
+            if newDockerGroupData.id in self.custom_docker_states:
                 self.setState(newDockerGroupData)

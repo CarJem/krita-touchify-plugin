@@ -8,7 +8,7 @@ from .ext.extensions import *
 from .config import *
 
 IS_DEV_MODE = False
-
+DEV_DISABLE = True
 
 
     
@@ -51,21 +51,24 @@ class DockerShareData:
         self.dockerWidget: QDockWidget
 
 
-        if self.detachedScrollArea:
-            self.dockerScrollArea.setWidget(self.dockerWidget)
-            self.dockerWidget = self.dockerScrollArea
+        try:
+            if self.detachedScrollArea:
+                self.dockerScrollArea.setWidget(self.dockerWidget)
+                self.dockerWidget = self.dockerScrollArea
 
 
-        if self.dockMode == True:
-            KritaExtensions.getMainWindow().addDockWidget(self.dockWidgetArea, self.dockerWidget)
-            showTitlebar = KritaSettings.showDockerTitlebars()
-            self.dockerWidget.titleBarWidget().setVisible(showTitlebar)
-            if self.previousVisibility == False:
-                self.dockerWidget.hide()
-        else:
-            self.dockerParent.setWidget(self.dockerWidget)
-            if self.previousVisibility == True:
-                self.dockerParent.show()
+            if self.dockMode == True:
+                KritaExtensions.getMainWindow().addDockWidget(self.dockWidgetArea, self.dockerWidget)
+                showTitlebar = KritaSettings.showDockerTitlebars()
+                self.dockerWidget.titleBarWidget().setVisible(showTitlebar)
+                if self.previousVisibility == False:
+                    self.dockerWidget.hide()
+            else:
+                self.dockerParent.setWidget(self.dockerWidget)
+                if self.previousVisibility == True:
+                    self.dockerParent.show()
+        except RuntimeError:
+            pass
         
         self.isDead = True
 
@@ -78,6 +81,7 @@ class DockerManager():
     _shareData: dict[any, DockerShareData] = {}
     _listeners: dict[DM_ListenerType, list] = {}
     _hiddenDockers: dict[Qt.DockWidgetArea, list[str]] = {}
+    _devDisable: bool = True
 
     def instance():
         try:
@@ -93,12 +97,16 @@ class DockerManager():
         self._hiddenDockers[8] = InternalConfig.instance().DockerUtils_HiddenDockersDown.split(",")
 
     def registerListener(self, type: DM_ListenerType, source: Callable):
+        if DEV_DISABLE:
+            return
         if type not in self._listeners:
             self._listeners[type] = list()
     
         self._listeners[type].append(source)
 
     def removeListener(self, type: DM_ListenerType, source: Callable):
+        if DEV_DISABLE:
+            return
         if type in self._listeners:
             self._listeners[type].remove(source)
 
@@ -108,6 +116,9 @@ class DockerManager():
                 hook(docker_id)
 
     def loadDocker(self, docker_id: str, args: DockerShareLoadArgs):
+        if DEV_DISABLE:
+            return None
+        
         # Already in Use, don't borrow twice
         if docker_id in self._shareData:
             if self._shareData[docker_id].isDead == False:
@@ -123,6 +134,8 @@ class DockerManager():
         return None
          
     def unloadDocker(self, docker_id: str, invokeRelease: bool = True):
+        if DEV_DISABLE:
+            return
         # Ensure there's a widget to return
         if docker_id in self._shareData:
             self._shareData[docker_id].clearWidgetData()
@@ -159,6 +172,15 @@ class DockerManager():
             case 8:
                 InternalConfig.instance().DockerUtils_HiddenDockersDown = ",".join(self._hiddenDockers[area])
         InternalConfig.instance().saveSettings()
+
+    def dispose(self):
+        for docker_id in self._shareData:
+            self.unloadDocker(self._shareData[docker_id], False)
+            self._shareData[docker_id] = None
+        
+        for listenerType in self._listeners:
+            for listener in self._listeners[listenerType]:
+                self._listeners[listenerType].remove(listener)
 
     def dockerWindowTitle(self, ID):
         docker = KritaExtensions.getDocker(ID)

@@ -14,6 +14,8 @@ class NtCanvas():
         self.toolOptionsAlignment = self.getToolOptionsAlignment()
         self.alternativeToolboxPos = self.getToolboxAltPositionState()
 
+        self.inShutdown = False
+
         self.toolbox = None
         self.toolboxOptions = None
         self.toolOptions = None
@@ -21,6 +23,10 @@ class NtCanvas():
         self.updateElements()
         self.updatePadAlignments()
         self.updateCanvas()
+
+    def dispose(self):
+        self.inShutdown = True
+        self.updateElements()
 
     def updateWindow(self, window: Window):
         self.window = window
@@ -107,7 +113,12 @@ class NtCanvas():
         usesNuToolOptionsAlt = InternalConfig.instance().CanvasWidgets_EnableAltToolshelf
         usesNuToolOptions = InternalConfig.instance().CanvasWidgets_EnableToolshelf
 
-        if self.toolbox == None and usesNuToolbox:
+        if self.inShutdown:
+            usesNuToolbox = False
+            usesNuToolOptions = False
+            usesNuToolOptionsAlt = False
+
+        if self.toolbox == None and usesNuToolbox and not self.inShutdown:
             self.toolbox = NtToolbox(self.window)
             self.toolbox.updateStyleSheet()
             self.installEventFilters(self.toolbox)

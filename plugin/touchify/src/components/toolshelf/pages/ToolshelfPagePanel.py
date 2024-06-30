@@ -107,7 +107,7 @@ class ToolshelfPagePanel(ToolshelfPage):
         return QSize(container_width, container_height)
     
     def updateStyleSheet(self):
-        self.quickActions.setStyleSheet(stylesheet.nu_tool_options_style)
+        self.quickActions.setStyleSheet(stylesheet.nu_toolshelf_button_style)
 
     def sizeHint(self):
         if self.size:

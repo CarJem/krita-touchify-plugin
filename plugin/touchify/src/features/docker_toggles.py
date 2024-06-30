@@ -13,10 +13,10 @@ from ..resources import *
 
 from krita import *
 
-
-pending_actions = []
-
 class DockerToggles:
+
+    pending_actions = []
+    
     def toggleDocker(self, path):
         dockersList = Krita.instance().dockers()
         for docker in dockersList:
@@ -37,12 +37,11 @@ class DockerToggles:
         cfg.dockers = data
         cfg.save()
 
-
     def buildMenu(self, menu: QMenu):
         root_menu = QtWidgets.QMenu("Dockers", menu)
         menu.addMenu(root_menu)
 
-        for action in pending_actions:
+        for action in self.pending_actions:
             root_menu.addAction(action)
 
     def createAction(self, window, docker: CfgDocker, actionPath):
@@ -54,7 +53,7 @@ class DockerToggles:
         action = window.createAction(actionName, text, actionPath)    
         icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
-        pending_actions.append(action)
+        self.pending_actions.append(action)
 
         if not docker.hotkeyNumber == 0:
             ConfigManager.instance().getHotkeyAction(docker.hotkeyNumber).triggered.connect(lambda: self.toggleDocker(id))

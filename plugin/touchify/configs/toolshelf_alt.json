@@ -3,7 +3,6 @@
         {
             "id": "Palette",
             "icon": "palette-library",
-            "isEnabled": true,
             "additional_dockers": [
                 {
                     "id": "PaletteDocker",
@@ -31,7 +30,6 @@
         {
             "id": "Layers",
             "icon": "all-layers",
-            "isEnabled": true,
             "additional_dockers": [
                 {
                     "id": "KisLayerBox",
@@ -59,7 +57,6 @@
         {
             "id": "Overview",
             "icon": "camera-photo",
-            "isEnabled": true,
             "additional_dockers": [
                 {
                     "id": "OverviewDocker",
@@ -79,7 +76,6 @@
         {
             "icon": "custom:HistoryDockers",
             "id": "History",
-            "isEnabled": true,
             "additional_dockers": [
                 {
                     "id": "History",
@@ -105,50 +101,41 @@
         {
             "icon": "material:undo",
             "id": "edit_undo",
-            "row": -1,
-            "isEnabled": true
+            "row": -1
         },
         {
             "icon": "material:redo",
             "id": "edit_redo",
-            "isEnabled": true,
             "row": -1
         },
         {
             "icon": "custom:SelectionTool",
-            "id": "touchify_popup_selection-tool",
-            "isEnabled": true
+            "id": "touchify_popup_selection-tool"
         },
         {
             "icon": "custom:pencil-ruler-outline",
-            "id": "touchify_popup_brushOptionsPopup",
-            "isEnabled": true
+            "id": "touchify_popup_brushOptionsPopup"
         },
         {
             "id": "touchify_popup_GridDockerPopup",
-            "icon": "gridbrush",
-            "isEnabled": true
+            "icon": "gridbrush"
         },
         {
             "icon": "material:palette-swatch-variant",
-            "id": "touchify_popup_quick-settings",
-            "isEnabled": true
+            "id": "touchify_popup_quick-settings"
         },
         {
             "icon": "paintop_settings_02",
             "id": "show_brush_editor",
-            "isEnabled": true,
             "row": 1
         },
         {
             "icon": "extended_color_selector",
             "id": "touchify_popup_ColorOptionsPopup",
-            "isEnabled": true,
             "row": 1
         },
         {
             "row": 4,
-            "isEnabled": true,
             "id": "touchify_showPopupPalette",
             "icon": "config-popup-palette"
         }

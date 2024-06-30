@@ -8,6 +8,12 @@ from ...resources import ResourceManager
 
 from ...ext.extensions import KritaExtensions
 
+DATA_INDEX = 3
+
+class PropertyGrid_SelectorDialogItem(QListWidgetItem):
+    def __init_subclass__(cls) -> None:
+        return super().__init_subclass__()
+
 class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
 
     selected_item: str
@@ -17,7 +23,6 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
 
         self.listView = QListWidget()
         self.listView.setResizeMode(QListView.ResizeMode.Adjust)
-        self.listView.setUniformItemSizes(True)
         self.listView.setMovement(QListView.Movement.Static)
         self.listView.setSelectionMode(QListView.SelectionMode.SingleSelection)
         self.listView.itemSelectionChanged.connect(self.updateSelected)
@@ -40,7 +45,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             currentItem = self.listView.item(i)
             if currentItem:
 
-                filterAllows = currentFilter.lower() in currentItem.text().lower() or currentFilter.lower() in str(currentItem.data(0)).lower()
+                filterAllows = currentFilter.lower() in currentItem.text().lower() or currentFilter.lower() in str(currentItem.data(DATA_INDEX)).lower()
 
                 if filterAllows or currentFilter == "":
                     currentItem.setHidden(False)
@@ -51,7 +56,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
     def updateSelected(self):
         currentItem = self.listView.currentItem()
         if currentItem:
-            self.selected_item = str(currentItem.data(0))
+            self.selected_item = str(currentItem.data(DATA_INDEX))
         else: 
             self.selected_item = "null"
 
@@ -62,39 +67,43 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
     def load_list(self, mode):
         if mode == "icons":
             self.listView.setViewMode(QListView.ViewMode.IconMode)
+            self.listView.setUniformItemSizes(True)
             icons = KritaExtensions.getIconList()
             for iconName in icons:
                 listItem = QListWidgetItem()
                 listItem.setIcon(ResourceManager.iconLoader(iconName))
-                listItem.setText(iconName)
-                listItem.setData(0, iconName)
+                listItem.setData(DATA_INDEX, iconName)
                 self.listView.addItem(listItem)
 
             custom_icons = ResourceManager.getCustomIconList()
             for customIconName in custom_icons:
-                displayName = str(customIconName)[len("custom:"):] + " (Custom)"
                 listItem = QListWidgetItem()
                 listItem.setIcon(ResourceManager.iconLoader(customIconName))
-                listItem.setText(displayName)
-                listItem.setData(0, customIconName)
+                listItem.setData(DATA_INDEX, customIconName)
                 self.listView.addItem(listItem)
-
         elif mode == "dockers":
+            self.listView.setViewMode(QListView.ViewMode.ListMode)
+            self.listView.setUniformItemSizes(True)
             dockers = Krita.instance().dockers()
             for dockerData in dockers:
-                displayName = dockerData.windowTitle() + " [{0}]".format(dockerData.objectName())
+                displayName = f"{dockerData.windowTitle()}\n---[{dockerData.objectName()}]---"
                 listItem = QListWidgetItem()
                 listItem.setText(displayName)
-                listItem.setData(0, dockerData.objectName())
+                listItem.setData(DATA_INDEX, dockerData.objectName())
                 self.listView.addItem(listItem)
         elif mode == "actions":
+            self.listView.setViewMode(QListView.ViewMode.ListMode)
+            self.listView.setUniformItemSizes(True)
             actions = Krita.instance().actions()
             for actionData in actions:
-                displayName = actionData.text() + " [{0}]".format(actionData.objectName())
+                displayName = f"{actionData.toolTip()}\n---[{actionData.objectName()}]---"
+                icon = actionData.icon()
+                if icon.isNull():
+                    icon = ResourceManager.getFallbackIcon()
                 listItem = QListWidgetItem()
                 listItem.setText(displayName)
-                listItem.setIcon(actionData.icon())
-                listItem.setData(0, actionData.objectName())
+                listItem.setIcon(icon)
+                listItem.setData(DATA_INDEX, actionData.objectName())
                 self.listView.addItem(listItem)
         
         self.listView.model().sort(0, Qt.SortOrder.DescendingOrder)

@@ -21,6 +21,8 @@ class PopupDialog_Actions(PopupDialog):
         super().__init__(parent, args)
         self.grid = self.generateActionsLayout()
         self.allowOpacity = True
+        if self.isSizeGripEnabled():
+            self.setSizeGripEnabled(False)
         self.initLayout()
 
 

@@ -45,7 +45,8 @@
             "icon_width": 30,
             "icon_height": 30,
             "hotkeyNumber": 0,
-            "items": []
+            "items": [],
+            "popupType": "popup"
         },
         {
             "items": [],

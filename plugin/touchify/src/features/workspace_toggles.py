@@ -13,9 +13,11 @@ from krita import *
 from ..variables import *
 
 
-pending_actions = []
+
 
 class WorkspaceToggles:
+
+    pending_actions = []
 
     def toggleWorkspace(self, path):
         main_menu = Krita.instance().activeWindow().qwindow().menuBar()
@@ -57,7 +59,7 @@ class WorkspaceToggles:
         root_menu = QtWidgets.QMenu("Workspaces", menu)
         menu.addMenu(root_menu)
 
-        for action in pending_actions:
+        for action in self.pending_actions:
             root_menu.addAction(action)
    
     def createAction(self, window, workspace: CfgWorkspace, actionPath):
@@ -75,7 +77,7 @@ class WorkspaceToggles:
         if not workspace.hotkeyNumber == 0:
             ConfigManager.instance().getHotkeyAction(workspace.hotkeyNumber).triggered.connect(lambda: self.toggleWorkspace(id))
 
-        pending_actions.append(action)
+        self.pending_actions.append(action)
         action.triggered.connect(lambda: self.toggleWorkspace(id))
 
     def createActions(self, window, actionPath):

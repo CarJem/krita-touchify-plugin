@@ -53,7 +53,7 @@ class ToolshelfPageMain(ToolshelfPagePanel):
             self.dockerWidgets[host_id].loadWidget(True)
 
     def updateStyleSheet(self):
-        self.dockerBtns.setStyleSheet(stylesheet.nu_tool_options_style)
+        self.dockerBtns.setStyleSheet(stylesheet.nu_toolshelf_button_style)
         super().updateStyleSheet()
     
 

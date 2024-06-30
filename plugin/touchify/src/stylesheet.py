@@ -27,6 +27,7 @@ active_text_color = qApp.palette().color(QPalette.WindowText).name().split("#")[
 small_tab_size = 20
 
 no_borders_style = " QToolBar { border: none; } "
+
 nu_toolbox_style = f"""
             QWidget {{ 
                 background-color: #01{alternate};
@@ -77,6 +78,21 @@ nu_toggle_button_style = f"""
         QToolButton:pressed {{
             background-color: #{alternate};
         }}
+
+
+        QPushButton {{
+            background-color: #aa{background};
+            border: none;
+            border-radius: 4px;
+        }}
+        
+        QPushButton:hover {{
+            background-color: #{highlight};
+        }}
+        
+        QPushButton:pressed {{
+            background-color: #{alternate};
+        }}
         """
 
 nu_toolshelf_header_style = f"""
@@ -115,7 +131,7 @@ nu_toolshelf_header_style = f"""
         }}
         """
 
-nu_tool_options_style = f"""
+nu_toolshelf_button_style = f"""
         QToolButton {{
             background-color: #aa{background};
             border: none;
@@ -131,11 +147,18 @@ nu_tool_options_style = f"""
         }}
         """
 
-nu_scroll_area_style = f"""
-        QScrollArea {{ 
-            background-color: red;
-            color: red;
-        }}
-            
-        """
 small_tab_style = f"QTabBar::tab {{ height: {small_tab_size}px; }}"
+
+def touchify_popup_frame(opacityAllowed: bool, opacityValue: float) -> str:
+    if opacityAllowed:
+        styleData = f"""opacity: {opacityValue};"""
+    else:
+        styleData = "opacity: 1"
+    return f"""QFrame#popupFrame {styleData}"""
+
+def touchify_popup_titlebar(opacityAllowed: bool, opacityValue: float) -> str:
+    if opacityAllowed:
+        styleData = f"""opacity: {opacityValue};"""
+    else:
+        styleData = "opacity: 1"
+    return f"""QWidget#popupFrameTitlebar {styleData}"""

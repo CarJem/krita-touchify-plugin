@@ -69,6 +69,7 @@ class CfgPopup:
         labels["icon_width"] = "Action Icon Width"
         labels["icon_height"] = "Action Icon Height"
         labels["hotkeyNumber"] = "Activation Hotkey"
+        labels["autoConceal"] = "Auto Conceal"
         labels["items"] = "Actions"
         return labels
 

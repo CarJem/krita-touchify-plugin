@@ -3,7 +3,6 @@
         {
             "id": "Palette",
             "icon": "palette-library",
-            "isEnabled": true,
             "additional_dockers": [
                 {
                     "id": "PaletteDocker",
@@ -31,7 +30,6 @@
         {
             "id": "Layers",
             "icon": "all-layers",
-            "isEnabled": true,
             "additional_dockers": [
                 {
                     "id": "KisLayerBox",
@@ -59,7 +57,6 @@
         {
             "id": "Overview",
             "icon": "camera-photo",
-            "isEnabled": true,
             "additional_dockers": [
                 {
                     "id": "OverviewDocker",
@@ -79,7 +76,6 @@
         {
             "icon": "custom:HistoryDockers",
             "id": "History",
-            "isEnabled": true,
             "additional_dockers": [
                 {
                     "id": "History",
@@ -104,18 +100,15 @@
     "actions": [
         {
             "id": "view_show_canvas_only",
-            "icon": "light_document-new",
-            "isEnabled": true
+            "icon": "light_document-new"
         },
         {
             "id": "mirror_canvas",
-            "icon": "light_mirror-view",
-            "isEnabled": true
+            "icon": "light_mirror-view"
         },
         {
             "id": "fullscreen",
-            "icon": "view-fullscreen",
-            "isEnabled": true
+            "icon": "view-fullscreen"
         }
     ],
     "dockers": [

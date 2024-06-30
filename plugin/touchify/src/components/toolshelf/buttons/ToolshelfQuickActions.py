@@ -29,7 +29,7 @@ class ToolshelfQuickActions(QWidget):
         self.ourLayout.addWidget(self.quickActions)
 
     def updateStyleSheet(self):
-        self.quickActions.setStyleSheet(stylesheet.nu_tool_options_style)
+        self.quickActions.setStyleSheet(stylesheet.nu_toolshelf_button_style)
 
     def initQuickActions(self):
         actions = self.cfg

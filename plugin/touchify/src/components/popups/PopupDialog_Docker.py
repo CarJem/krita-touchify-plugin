@@ -35,6 +35,11 @@ class PopupDialog_Docker(PopupDialog):
         self.docker_panel.setHiddenMode(True)
         self.grid.addWidget(self.docker_panel)
 
+
+    def shutdownWidget(self):
+        self.docker_panel.shutdownWidget()
+        super().shutdownWidget()
+
     
     def closeEvent(self, event):
         super().closeEvent(event)

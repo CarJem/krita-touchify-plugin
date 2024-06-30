@@ -32,7 +32,6 @@ class TouchifyHotkeys:
     def toggleDirectionalDockers(self, area: int):
         DockerManager.instance().toggleDockersPerArea(area)
 
-
     def buildMenu(self, menu: QMenu):
         menu.addMenu(self.hotkey_menu)
         menu.addMenu(self.other_menu)
