@@ -17,13 +17,16 @@ from ...cfg.CfgToolshelf import CfgToolboxPanel
 from .pages.ToolshelfPageMain import ToolshelfPageMain
 from .pages.ToolshelfPage import ToolshelfPage
 
-
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .ToolshelfWidget import ToolshelfWidget
 
 
 class ToolshelfContainer(QStackedWidget):
 
-    def __init__(self, parent, isPrimaryPanel: bool):
+    def __init__(self, parent: "ToolshelfWidget", isPrimaryPanel: bool):
         super(ToolshelfContainer, self).__init__(parent)
+        self.dockWidget = parent
         self._panels = {}
         self._pinned = False
         self._current_panel_id = 'MAIN'

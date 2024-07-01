@@ -10,35 +10,24 @@ import sys, os
 sys.path.append('C:/Users/demo/Documents/Apps/Scripts/KritaDev/modules')
 
 
-
-
-# For autocomplete
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .PyKrita import *
-else:
-    from krita import *
-
-
-from touchify.src.components.nu_tools.nt_logic.Nt_ScrollAreaContainer import Nt_ScrollAreaContainer
 from touchify.src.components.toolshelf.ToolshelfWidget import ToolshelfContainer
 from krita import *
 qwin = Krita.instance().activeWindow().qwindow()
 wobj = qwin.findChild(QMdiArea)
 toolOptionsPad = wobj.findChildren(QWidget, 'toolOptionsPad')
 for item in toolOptionsPad:
-    scrollContainer: QWidget = item.findChild(Nt_ScrollAreaContainer)
-    scrollArea: QScrollArea = scrollContainer.findChild(QScrollArea)
+    #scrollContainer: QWidget = item.findChild(Nt_ScrollAreaContainer)
+    #scrollArea: QScrollArea = scrollContainer.findChild(QScrollArea)
 
 
     #region Stylesheets
 
-    stylesheet_data = f"""
-    QScrollArea {{ background: transparent; }}
-    QScrollArea > QWidget > ToolshelfContainer {{ background: transparent; }}
-    """
+    #stylesheet_data = f"""
+    #QScrollArea {{ background: transparent; }}
+    #QScrollArea > QWidget > ToolshelfContainer {{ background: transparent; }}
+    #"""
 
-    scrollArea.setStyleSheet(stylesheet_data)
+    #scrollArea.setStyleSheet(stylesheet_data)
 
     #endregion
 
@@ -67,3 +56,4 @@ for item in toolOptionsPad:
             #scrollArea.viewport().adjustSize()
             #scrollArea.viewport().setFixedSize(scrollArea.viewport().sizeHint())
     #endregion
+    pass

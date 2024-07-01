@@ -14,11 +14,11 @@ from ..toolshelf.ToolshelfWidget import ToolshelfWidget
 
 class NtToolshelf():
 
-    def __init__(self, window: Window, alignment: str, isPrimaryPanel: bool):
+    def __init__(self, window: Window, alignment: str, isPrimaryPanel: bool, docker_manager: DockerManager):
         self.qWin = window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
 
-        self.toolshelf = ToolshelfWidget(isPrimaryPanel)
+        self.toolshelf = ToolshelfWidget(isPrimaryPanel, docker_manager)
 
         # Create "pad"
         self.pad = NtWidgetPad(self.mdiArea)

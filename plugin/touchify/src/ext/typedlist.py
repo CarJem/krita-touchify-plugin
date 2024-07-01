@@ -186,20 +186,6 @@ class IntList( TypedList ):
     """
     TypedList.__init__( self, iterable, allowedTypes = int )
 
-class LongList( TypedList ):
-  """
-  .. class:: LongList
-
-  A list holding only long type items.
-  """
-  def __init__( self, iterable = None ):
-    """ c'tor
-
-    :param self: self reference
-    :param mixed iterable: initial values
-    """
-    TypedList.__init__( self, iterable, allowedTypes = long )
-
 class FloatList( TypedList ):
   """
   .. class:: FloatList
@@ -227,7 +213,7 @@ class NumericList( TypedList ):
     :param mixed iterable: initial values
     """
 
-    TypedList.__init__( self, iterable, allowedTypes = ( int, long, float ) )
+    TypedList.__init__( self, iterable, allowedTypes = ( int, float ) )
 
 class StrList( TypedList ):
   """
@@ -255,5 +241,5 @@ class StringsList( TypedList ):
     :param self: self reference
     :param mixed iterable: initial values
     """
-    TypedList.__init__( self, iterable, allowedTypes = ( str, unicode ) )
+    TypedList.__init__( self, iterable, allowedTypes = ( str ) )
     

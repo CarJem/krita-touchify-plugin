@@ -29,8 +29,8 @@ class DockerContainer(QWidget):
         self.unloadedButton = None
         self._updateEmptySpace(True)
 
-        self.docker_manager.registerListener(DM_ListenerType.OnReleaseDocker, self.onDockerReleased)
-        self.docker_manager.registerListener(DM_ListenerType.OnStealDocker, self.onDockerStolen)
+        self.docker_manager.registerListener(DockerManager.SignalType.OnReleaseDocker, self.onDockerReleased)
+        self.docker_manager.registerListener(DockerManager.SignalType.OnStealDocker, self.onDockerStolen)
 
         self.dockerShouldBeActive = False
         self.isLoaded = True
@@ -48,8 +48,8 @@ class DockerContainer(QWidget):
             self._loadDocker()
 
     def shutdownWidget(self):
-        self.docker_manager.removeListener(DM_ListenerType.OnReleaseDocker, self.onDockerReleased)
-        self.docker_manager.removeListener(DM_ListenerType.OnStealDocker, self.onDockerStolen)
+        self.docker_manager.removeListener(DockerManager.SignalType.OnReleaseDocker, self.onDockerReleased)
+        self.docker_manager.removeListener(DockerManager.SignalType.OnStealDocker, self.onDockerStolen)
         self.docker_manager.unloadDocker(self.docker_id, False)
 
     #region Private Functions
@@ -59,7 +59,7 @@ class DockerContainer(QWidget):
             self._loadDocker()
 
     def _loadDocker(self):
-        shareArgs = DockerShareLoadArgs(self.dockMode)
+        shareArgs = DockerManager.LoadArguments(self.dockMode)
         dockerLoaded: QWidget | None = self.docker_manager.loadDocker(self.docker_id, shareArgs)
         if not dockerLoaded: 
             self._updateEmptySpace(True)

@@ -68,9 +68,9 @@ class TouchifyInstance(object):
         self.mainMenuBar.addAction(seperator)
         
         self.touchify_hotkeys.windowCreated()
-        self.workspace_toggles.windowCreated()
-        self.redesign_components.windowCreated()
         self.touchify_tweaks.windowCreated()
+        self.redesign_components.windowCreated()
+        self.workspace_toggles.windowCreated()
 
         self.touchify_hotkeys.buildMenu(self.mainMenuBar)
         self.basic_dockers.buildMenu(self.mainMenuBar)  

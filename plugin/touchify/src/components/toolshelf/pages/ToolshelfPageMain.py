@@ -1,28 +1,21 @@
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
 from ..buttons.ToolshelfButtonBar import ToolshelfButtonBar
-
 from ....config import ConfigManager
-
 from .ToolshelfPagePanel import ToolshelfPagePanel
-
-from ..buttons.ToolshelfQuickActions import ToolshelfQuickActions
-
-from .ToolshelfPage import ToolshelfPage
-
 from ....cfg.CfgToolshelf import CfgToolboxPanel
-from ....cfg.CfgToolshelf import CfgToolboxPanelDocker
-
-from ...DockerContainer import DockerContainer
 from .... import stylesheet
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..ToolshelfContainer import ToolshelfContainer
 
 class ToolshelfPageMain(ToolshelfPagePanel):
 
 
 
-    def __init__(self, parent: QStackedWidget, isPrimaryPanel: bool):
+    def __init__(self, parent: "ToolshelfContainer", isPrimaryPanel: bool):
 
         self.dockerWidgets: dict = {}
         

@@ -20,10 +20,11 @@ from .pages.ToolshelfPage import ToolshelfPage
  
 class ToolshelfWidget(QDockWidget):
 
-    def __init__(self, isPrimaryPanel: bool):
+    def __init__(self, isPrimaryPanel: bool, docker_manager: DockerManager):
         super().__init__()
         self.setWindowTitle("Touchify Toolshelf")
         self.isPrimaryPanel = isPrimaryPanel
+        self.docker_manager = docker_manager
 
         stylesheet = f"""QScrollArea {{ background: transparent; }}
         QScrollArea > QWidget > ToolshelfContainer {{ background: transparent; }}

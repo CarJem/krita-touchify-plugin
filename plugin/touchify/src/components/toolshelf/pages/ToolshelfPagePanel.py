@@ -13,16 +13,16 @@ from krita import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ....touchify import Touchify
+    from ..ToolshelfContainer import ToolshelfContainer
 
 class ToolshelfPagePanel(ToolshelfPage):
 
     dockerWidgets: dict = {}
 
-    def __init__(self, parent: QWidget, ID: any, data: CfgToolboxPanel):
+    def __init__(self, parent: "ToolshelfContainer", ID: any, data: CfgToolboxPanel):
         super(ToolshelfPagePanel, self).__init__(parent, ID)
 
-        self.docker_manager = DockerManager.instance(self)
+        self.docker_manager = self.toolshelf.dockWidget.docker_manager
 
         self.ID = ID
         self.dockerWidgets: dict[any, DockerContainer] = {}

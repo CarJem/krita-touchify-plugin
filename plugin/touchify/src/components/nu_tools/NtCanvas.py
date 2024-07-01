@@ -12,6 +12,7 @@ class NtCanvas():
     def __init__(self, window: Window):
         self.window = window
         self.windowLoaded = False
+        self.dockerManager = None
 
         self.toolboxAlignment = self.getToolboxAlignment()
         self.toolOptionsAlignment = self.getToolOptionsAlignment()
@@ -25,6 +26,8 @@ class NtCanvas():
         self.updatePadAlignments()
         self.updateCanvas()
 
+    def setDockerManager(self, manager: DockerManager):
+        self.dockerManager = manager
 
     def windowCreated(self, window: Window):
         self.window = window
@@ -130,7 +133,7 @@ class NtCanvas():
             self.toolbox = None
 
         if self.toolboxOptions == None and usesNuToolOptionsAlt:
-            self.toolboxOptions = NtToolshelf(self.window, self.toolboxAlignment, False)
+            self.toolboxOptions = NtToolshelf(self.window, self.toolboxAlignment, False, self.dockerManager)
             self.toolboxOptions.updateStyleSheet()
             self.installEventFilters(self.toolboxOptions)
             self.toolboxOptions.pad.show()
@@ -140,7 +143,7 @@ class NtCanvas():
             self.toolboxOptions = None
 
         if self.toolOptions == None and usesNuToolOptions:
-            self.toolOptions = NtToolshelf(self.window, self.toolOptionsAlignment, True)
+            self.toolOptions = NtToolshelf(self.window, self.toolOptionsAlignment, True, self.dockerManager)
             self.toolOptions.updateStyleSheet()
             self.installEventFilters(self.toolOptions)
             self.toolOptions.pad.show()

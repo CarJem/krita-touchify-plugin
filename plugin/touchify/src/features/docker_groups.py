@@ -63,7 +63,7 @@ class DockerGroups(object):
         action = window.createAction(actionName, text, actionPath) 
         icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
-        action.triggered.connect(lambda: self.toggleDockers(actionName, setId))
+        action.triggered.connect(lambda: self.toggleDockers(setId))
 
         self.setState(cfg)
 

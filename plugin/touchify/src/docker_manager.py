@@ -8,78 +8,71 @@ from PyQt5.QtCore import *
 from .ext.extensions import *
 from .config import *
 
-
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .touchify import Touchify
-
-class DockerShareLoadArgs:
-    def __init__(self, dockMode: bool = False) -> None:
-        self.dockMode = dockMode
-
-class DockerShareData:
-
-    def __init__(self, dockMode: bool, previousVisibility: bool, mainWindow: QMainWindow, dockWidgetArea: Qt.DockWidgetArea) -> None:
-        self.dockerParent = None
-        self.dockerWidget = None
-        self.dockerScrollArea: QScrollArea | None = None
-
-        self.dockMode = dockMode
-        self.previousVisibility = previousVisibility
-        self.dockWidgetArea = dockWidgetArea
-        self.detachedScrollArea = False
-
-
-        self.mainWindow = mainWindow
-
-        self.isDead = False
-    
-    def setWidgetData(self, docker: QDockWidget):
-        if self.dockMode:
-            self.dockerWidget: QDockWidget = docker
-            self.dockerWidget.titleBarWidget().setVisible(False)
-        else:
-            self.dockerParent: QDockWidget = docker
-            self.dockerWidget: QWidget = docker.widget()
-            self.dockerParent.hide()
-
-        if isinstance(self.dockerWidget, QScrollArea):
-            self.detachedScrollArea = True
-            self.dockerScrollArea: QScrollArea = self.dockerWidget
-            self.dockerWidget = self.dockerScrollArea.takeWidget()
-    
-    def clearWidgetData(self):
-        self.dockerWidget: QDockWidget
-        
-        if self.detachedScrollArea:
-            self.dockerScrollArea.setWidget(self.dockerWidget)
-            self.dockerWidget = self.dockerScrollArea
-
-
-        if self.dockMode == True:
-            self.mainWindow.addDockWidget(self.dockWidgetArea, self.dockerWidget)
-            showTitlebar = KritaSettings.showDockerTitlebars()
-            self.dockerWidget.titleBarWidget().setVisible(showTitlebar)
-            if self.previousVisibility == False:
-                self.dockerWidget.hide()
-        else:
-            self.dockerParent.setWidget(self.dockerWidget)
-            if self.previousVisibility == True:
-                self.dockerParent.show()
-        
-        self.isDead = True
-
-class DM_ListenerType(Enum):
-    OnReleaseDocker = 1,
-    OnStealDocker = 2,
-    OnLoadDocker = 3
-    
 class DockerManager(object):
+    class BorrowData:
+        def __init__(self, dockMode: bool, previousVisibility: bool, mainWindow: QMainWindow, dockWidgetArea: Qt.DockWidgetArea) -> None:
+            self.dockerParent = None
+            self.dockerWidget = None
+            self.dockerScrollArea: QScrollArea | None = None
+
+            self.dockMode = dockMode
+            self.previousVisibility = previousVisibility
+            self.dockWidgetArea = dockWidgetArea
+            self.detachedScrollArea = False
+
+
+            self.mainWindow = mainWindow
+
+            self.isDead = False
+        
+        def setWidgetData(self, docker: QDockWidget):
+            if self.dockMode:
+                self.dockerWidget: QDockWidget = docker
+                self.dockerWidget.titleBarWidget().setVisible(False)
+            else:
+                self.dockerParent: QDockWidget = docker
+                self.dockerWidget: QWidget = docker.widget()
+                self.dockerParent.hide()
+
+            if isinstance(self.dockerWidget, QScrollArea):
+                self.detachedScrollArea = True
+                self.dockerScrollArea: QScrollArea = self.dockerWidget
+                self.dockerWidget = self.dockerScrollArea.takeWidget()
+        
+        def clearWidgetData(self):
+            self.dockerWidget: QDockWidget
+            
+            if self.detachedScrollArea:
+                self.dockerScrollArea.setWidget(self.dockerWidget)
+                self.dockerWidget = self.dockerScrollArea
+
+
+            if self.dockMode == True:
+                self.mainWindow.addDockWidget(self.dockWidgetArea, self.dockerWidget)
+                showTitlebar = KritaSettings.showDockerTitlebars()
+                self.dockerWidget.titleBarWidget().setVisible(showTitlebar)
+                if self.previousVisibility == False:
+                    self.dockerWidget.hide()
+            else:
+                self.dockerParent.setWidget(self.dockerWidget)
+                if self.previousVisibility == True:
+                    self.dockerParent.show()
+            
+            self.isDead = True
+
+    class SignalType(Enum):
+        OnReleaseDocker = 1,
+        OnStealDocker = 2,
+        OnLoadDocker = 3
+
+    class LoadArguments:
+        def __init__(self, dockMode: bool = False) -> None:
+            self.dockMode = dockMode
 
     def __init__(self, window: Window):
 
-        self._shareData: dict[any, DockerShareData] = {}
-        self._listeners: dict[DM_ListenerType, list] = {}
+        self._shareData: dict[any, DockerManager.BorrowData] = {}
+        self._listeners: dict[DockerManager.SignalType, list] = {}
         self._hiddenDockers: dict[Qt.DockWidgetArea, list[str]] = {}
 
         self._hiddenDockers[1] = InternalConfig.instance().DockerUtils_HiddenDockersLeft.split(",")
@@ -89,28 +82,17 @@ class DockerManager(object):
         self.mainWindow = window
         self.qWin = window.qwindow()
 
-
-    def instance(source: QWidget):
-        for ext in Krita.instance().extensions():
-            if ext.objectName() == "touchify_extension":
-                touchify: Touchify = ext
-                window_hash = str(source.windowHandle().__hash__())
-                if window_hash in touchify.instances:
-                    return touchify.instances[window_hash].docker_management
-                return None
-        return None
-
-    def registerListener(self, type: DM_ListenerType, source: Callable):
+    def registerListener(self, type: SignalType, source: Callable):
         if type not in self._listeners:
             self._listeners[type] = list()
     
         self._listeners[type].append(source)
 
-    def removeListener(self, type: DM_ListenerType, source: Callable):
+    def removeListener(self, type: SignalType, source: Callable):
         if type in self._listeners:
             self._listeners[type].remove(source)
 
-    def invokeListeners(self, docker_id: str, type: DM_ListenerType):
+    def invokeListeners(self, docker_id: str, type: SignalType):
         if type in self._listeners:
             for hook in self._listeners[type]:
                 hook(docker_id)
@@ -118,7 +100,7 @@ class DockerManager(object):
     def findDocker(self, docker_id: str):
         return self.qWin.findChild(QDockWidget, docker_id)
 
-    def loadDocker(self, docker_id: str, args: DockerShareLoadArgs):
+    def loadDocker(self, docker_id: str, args: LoadArguments):
         # Already in Use, don't borrow twice
         if docker_id in self._shareData:
             if self._shareData[docker_id].isDead == False:
@@ -127,9 +109,9 @@ class DockerManager(object):
         docker = self.findDocker(docker_id)
         # Does requested widget exist?
         if isinstance(docker, QDockWidget) and docker.widget():
-            self._shareData[docker_id] = DockerShareData(args.dockMode, docker.isVisible(), self.qWin, self.qWin.dockWidgetArea(docker))
+            self._shareData[docker_id] = DockerManager.BorrowData(args.dockMode, docker.isVisible(), self.qWin, self.qWin.dockWidgetArea(docker))
             self._shareData[docker_id].setWidgetData(docker)
-            self.invokeListeners(docker_id, DM_ListenerType.OnLoadDocker)
+            self.invokeListeners(docker_id, DockerManager.SignalType.OnLoadDocker)
             return self._shareData[docker_id].dockerWidget
         return None
          
@@ -138,8 +120,8 @@ class DockerManager(object):
         if docker_id in self._shareData:
             self._shareData[docker_id].clearWidgetData()
             del self._shareData[docker_id]
-            if invokeRelease: self.invokeListeners(docker_id, DM_ListenerType.OnReleaseDocker)
-            else: self.invokeListeners(docker_id, DM_ListenerType.OnStealDocker)
+            if invokeRelease: self.invokeListeners(docker_id, DockerManager.SignalType.OnReleaseDocker)
+            else: self.invokeListeners(docker_id, DockerManager.SignalType.OnStealDocker)
 
     def toggleDockersPerArea(self, area: int):
         dockers = Krita.instance().dockers()

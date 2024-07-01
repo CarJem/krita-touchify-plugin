@@ -22,14 +22,6 @@
                 "revealProblems": "onProblem",
                 "close": true
             }
-        },
-        {
-            "label": "Start Krita.COM",
-            "type": "shell",
-            "command": "& 'C:\\Program Files\\Krita (x64)\\bin\\krita.com'",
-            "presentation": {
-                "close": false
-            }
         }
     ]
 }

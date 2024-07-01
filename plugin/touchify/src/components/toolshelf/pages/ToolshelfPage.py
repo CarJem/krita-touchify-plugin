@@ -4,14 +4,17 @@ from PyQt5.QtCore import *
 
 from ....cfg.CfgToolshelf import CfgToolboxPanel
 from ....cfg.CfgToolshelf import CfgToolboxPanelDocker
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..ToolshelfContainer import ToolshelfContainer
 
 class ToolshelfPage(QWidget):
 
 
-    def __init__(self, parent: QStackedWidget, ID: any):
+    def __init__(self, parent: "ToolshelfContainer", ID: any):
         super(ToolshelfPage, self).__init__(parent)
 
-        self.toolshelfRoot: QStackedWidget = parent
+        self.toolshelf: "ToolshelfContainer" = parent
         self.ID = ID
 
         self.shelfLayout = QVBoxLayout()

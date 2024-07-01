@@ -12,8 +12,12 @@ from ....config import *
 from .ToolshelfButtonBar import ToolshelfButtonBar
 from .... import stylesheet
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..ToolshelfContainer import ToolshelfContainer
+
 class ToolshelfQuickActions(QWidget):
-    def __init__(self, cfg: List[CfgToolboxAction], actionHeight: int, parent: QStackedWidget=None,):
+    def __init__(self, cfg: List[CfgToolboxAction], actionHeight: int, parent: "ToolshelfContainer"=None,):
         super(ToolshelfQuickActions, self).__init__(parent)
 
         self.cfg = cfg

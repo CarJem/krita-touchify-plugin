@@ -30,7 +30,6 @@ class Touchify(Extension):
 
     def __init__(self, parent):
         super().__init__(parent)
-        self.setObjectName("touchify_extension")
 
     def setup(self):
         Krita.instance().notifier().windowCreated.connect(self.onWindowCreated)
@@ -49,7 +48,6 @@ class Touchify(Extension):
         window = Krita.instance().activeWindow()
         window_hash = str(window.qwindow().windowHandle().__hash__())
         if window_hash not in self.instances:
-            print(f"New Window Hash: {window_hash}")
             return window
     
     def onWindowDestroyed(self, windowId: str):
