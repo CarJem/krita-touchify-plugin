@@ -1,11 +1,9 @@
-from typing import Dict
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from ....cfg.CfgToolshelf import CfgToolboxPanel
 from ....cfg.CfgToolshelf import CfgToolboxPanelDocker
-
-from ....docker_manager import DockerManager
 
 class ToolshelfPage(QWidget):
 

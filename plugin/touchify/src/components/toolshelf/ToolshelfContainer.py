@@ -22,9 +22,8 @@ from .pages.ToolshelfPage import ToolshelfPage
 
 class ToolshelfContainer(QStackedWidget):
 
-    def __init__(self, parent, isPrimaryPanel: bool, docker_manager: DockerManager):
+    def __init__(self, parent, isPrimaryPanel: bool):
         super(ToolshelfContainer, self).__init__(parent)
-        self.docker_manager = docker_manager
         self._panels = {}
         self._pinned = False
         self._current_panel_id = 'MAIN'
@@ -52,7 +51,7 @@ class ToolshelfContainer(QStackedWidget):
         else: return cfg.toolshelf_alt
 
     def addMainPanel(self):
-        self._mainWidget = ToolshelfPageMain(self, self.isPrimaryPanel, self.docker_manager)
+        self._mainWidget = ToolshelfPageMain(self, self.isPrimaryPanel)
         self._panels['MAIN'] = self._mainWidget
         header = ToolboxPanelHeader(self.cfg, True, self)
         self._headers.append(header)
@@ -60,7 +59,7 @@ class ToolshelfContainer(QStackedWidget):
         super().addWidget(self._mainWidget)
 
     def addPanel(self, ID, data):
-        panel = ToolshelfPagePanel(self, ID, data, self.docker_manager)
+        panel = ToolshelfPagePanel(self, ID, data)
         header = ToolboxPanelHeader(self.cfg, False, self)
 
         panel.shelfLayout.insertWidget(0, header)

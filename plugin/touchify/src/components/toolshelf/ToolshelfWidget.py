@@ -20,11 +20,9 @@ from .pages.ToolshelfPage import ToolshelfPage
  
 class ToolshelfWidget(QDockWidget):
 
-    def __init__(self, isPrimaryPanel: bool, docker_manager: DockerManager):
+    def __init__(self, isPrimaryPanel: bool):
         super().__init__()
         self.setWindowTitle("Touchify Toolshelf")
-
-        self.docker_manager = docker_manager
         self.isPrimaryPanel = isPrimaryPanel
 
         stylesheet = f"""QScrollArea {{ background: transparent; }}
@@ -55,7 +53,7 @@ class ToolshelfWidget(QDockWidget):
             self.panelStack.onKritaConfigUpdate()
     
     def onLoaded(self):              
-        self.panelStack = ToolshelfContainer(self, self.isPrimaryPanel, self.docker_manager)
+        self.panelStack = ToolshelfContainer(self, self.isPrimaryPanel)
         self.panelStack.updateStyleSheet()
         self.scrollArea.setWidget(self.panelStack)
 

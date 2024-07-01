@@ -8,7 +8,7 @@ from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentG
 
 from ...ext.typedlist import *
 from ...resources import *
-from ...ext.extensions import KritaExtensions
+from ...ext.extensions_krita import KritaExtensions
 from ..CollapsibleBox import CollapsibleBox
 
 from .PropertyUtils_Extensions import *

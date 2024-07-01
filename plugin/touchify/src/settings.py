@@ -5,16 +5,16 @@ import os
 import json
 import sys
 import importlib.util
-from ..components.propertygrid.PropertyGrid import PropertyGrid
-from ..config import *
-from ...resources import *
-from ..ext.extensions import *
+from .components.propertygrid.PropertyGrid import PropertyGrid
+from .config import *
+from ..resources import *
+from .ext.extensions import *
 import xml.etree.ElementTree as ET
 import re
 import functools
 import copy
 import json
-from ..components.propertygrid.PropertyGridPanel import *
+from .components.propertygrid.PropertyGridPanel import *
 import datetime
 
 
@@ -29,7 +29,7 @@ class SettingsDialog:
 
 
     def getNoticeMessage(self):
-        filePath = os.path.join(os.path.dirname(__file__), 'notice_message.txt')
+        filePath = os.path.join(os.path.dirname(__file__), 'data', 'settings_message.txt')
         result = ""
         with open(filePath) as f:
             result = f.read()

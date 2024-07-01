@@ -1,4 +1,4 @@
-from typing import Dict
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
@@ -15,7 +15,6 @@ from .ToolshelfPage import ToolshelfPage
 from ....cfg.CfgToolshelf import CfgToolboxPanel
 from ....cfg.CfgToolshelf import CfgToolboxPanelDocker
 
-from ....docker_manager import DockerManager
 from ...DockerContainer import DockerContainer
 from .... import stylesheet
 
@@ -23,7 +22,7 @@ class ToolshelfPageMain(ToolshelfPagePanel):
 
 
 
-    def __init__(self, parent: QStackedWidget, isPrimaryPanel: bool, docker_manager: DockerManager):
+    def __init__(self, parent: QStackedWidget, isPrimaryPanel: bool):
 
         self.dockerWidgets: dict = {}
         
@@ -40,7 +39,7 @@ class ToolshelfPageMain(ToolshelfPagePanel):
         pageCfg.quick_actions = self.rootCfg.actions
         pageCfg.additional_dockers = self.rootCfg.dockers
 
-        super(ToolshelfPageMain, self).__init__(parent, 'MAIN', pageCfg, docker_manager)
+        super(ToolshelfPageMain, self).__init__(parent, 'MAIN', pageCfg)
         
         self.splitter.setAutoFillBackground(False)
 

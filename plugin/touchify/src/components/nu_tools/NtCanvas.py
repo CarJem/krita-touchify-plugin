@@ -11,12 +11,11 @@ from ...variables import *
 class NtCanvas():
     def __init__(self, window: Window):
         self.window = window
+        self.windowLoaded = False
 
         self.toolboxAlignment = self.getToolboxAlignment()
         self.toolOptionsAlignment = self.getToolOptionsAlignment()
         self.alternativeToolboxPos = self.getToolboxAltPositionState()
-
-        self.docker_manager = None
 
         self.toolbox = None
         self.toolboxOptions = None
@@ -27,9 +26,9 @@ class NtCanvas():
         self.updateCanvas()
 
 
-    def windowCreated(self, window: Window, docker_manager: DockerManager):
+    def windowCreated(self, window: Window):
         self.window = window
-        self.docker_manager = docker_manager
+        self.windowLoaded = True
 
         self.updateElements()
         self.updatePadAlignments()
@@ -113,7 +112,7 @@ class NtCanvas():
     #region Update Functions
 
     def updateElements(self):
-        if self.docker_manager == None:
+        if self.windowLoaded == False:
             return
         
         usesNuToolbox = InternalConfig.instance().CanvasWidgets_EnableToolbox
@@ -131,7 +130,7 @@ class NtCanvas():
             self.toolbox = None
 
         if self.toolboxOptions == None and usesNuToolOptionsAlt:
-            self.toolboxOptions = NtToolshelf(self.window, self.toolboxAlignment, False, self.docker_manager)
+            self.toolboxOptions = NtToolshelf(self.window, self.toolboxAlignment, False)
             self.toolboxOptions.updateStyleSheet()
             self.installEventFilters(self.toolboxOptions)
             self.toolboxOptions.pad.show()
@@ -141,7 +140,7 @@ class NtCanvas():
             self.toolboxOptions = None
 
         if self.toolOptions == None and usesNuToolOptions:
-            self.toolOptions = NtToolshelf(self.window, self.toolOptionsAlignment, True, self.docker_manager)
+            self.toolOptions = NtToolshelf(self.window, self.toolOptionsAlignment, True)
             self.toolOptions.updateStyleSheet()
             self.installEventFilters(self.toolOptions)
             self.toolOptions.pad.show()

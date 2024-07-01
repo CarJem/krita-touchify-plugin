@@ -4,7 +4,7 @@ from PyQt5.QtCore import QObject, QEvent, QPoint
 from ...docker_manager import DockerManager
 
 from .NtAdjustToSubwindowFilter import NtAdjustToSubwindowFilter
-from ...ext.extensions import KritaExtensions
+from ...ext.extensions_krita import KritaExtensions
 from ...config import InternalConfig, KritaSettings
 from ... import stylesheet
 from .NtWidgetPad import NtWidgetPad
@@ -14,11 +14,11 @@ from ..toolshelf.ToolshelfWidget import ToolshelfWidget
 
 class NtToolshelf():
 
-    def __init__(self, window: Window, alignment: str, isPrimaryPanel: bool, docker_manager: DockerManager):
+    def __init__(self, window: Window, alignment: str, isPrimaryPanel: bool):
         self.qWin = window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
 
-        self.toolshelf = ToolshelfWidget(isPrimaryPanel, docker_manager)
+        self.toolshelf = ToolshelfWidget(isPrimaryPanel)
 
         # Create "pad"
         self.pad = NtWidgetPad(self.mdiArea)

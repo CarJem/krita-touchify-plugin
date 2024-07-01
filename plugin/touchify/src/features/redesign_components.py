@@ -1,7 +1,5 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
-
-from ..docker_manager import DockerManager
 from ..components.nu_tools.NtCanvas import NtCanvas
 
 from ..variables import *
@@ -23,7 +21,7 @@ class RedesignComponents(object):
 
     def windowCreated(self):
         self.qWin = self.appEngine.instanceWindow.qwindow()
-        self.ntCanvas.windowCreated(self.appEngine.instanceWindow, self.appEngine.docker_management)
+        self.ntCanvas.windowCreated(self.appEngine.instanceWindow)
 
     def createAction(self, window: Window, id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
         result = window.createAction(id, text, menuLocation)

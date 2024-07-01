@@ -1,30 +1,28 @@
-from typing import Dict
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from ....ext.extensions import KritaExtensions
-
+from ....docker_manager import DockerManager
 from ..buttons.ToolshelfQuickActions import ToolshelfQuickActions
-
 from .ToolshelfPage import ToolshelfPage
-
 from ....cfg.CfgToolshelf import CfgToolboxPanel
 from ....cfg.CfgToolshelf import CfgToolboxPanelDocker
-
-from ....docker_manager import DockerManager
 from ...DockerContainer import DockerContainer
 from .... import stylesheet
 
 from krita import *
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ....touchify import Touchify
+
 class ToolshelfPagePanel(ToolshelfPage):
 
     dockerWidgets: dict = {}
 
-    def __init__(self, parent: QWidget, ID: any, data: CfgToolboxPanel, docker_manager: DockerManager):
+    def __init__(self, parent: QWidget, ID: any, data: CfgToolboxPanel):
         super(ToolshelfPagePanel, self).__init__(parent, ID)
 
-        self.docker_manager = docker_manager
+        self.docker_manager = DockerManager.instance(self)
 
         self.ID = ID
         self.dockerWidgets: dict[any, DockerContainer] = {}
@@ -46,11 +44,11 @@ class ToolshelfPagePanel(ToolshelfPage):
             self.setSizeHint(size)
 
 
-        widget_groups: Dict[int, list[DockerContainer]] = {}
+        widget_groups: dict[int, list[DockerContainer]] = {}
 
         for dockerData in self.panelProperties.additional_dockers:     
             dockerInfo: CfgToolboxPanelDocker = dockerData
-            dockerWidget = DockerContainer(self, dockerInfo.id, docker_manager)
+            dockerWidget = DockerContainer(self, dockerInfo.id, self.docker_manager)
 
             if dockerInfo.size_x != 0 and dockerInfo.size_y != 0:
                 size = [dockerInfo.size_x, dockerInfo.size_y]

@@ -8,6 +8,11 @@ from PyQt5.QtCore import *
 from .ext.extensions import *
 from .config import *
 
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .touchify import Touchify
+
 class DockerShareLoadArgs:
     def __init__(self, dockMode: bool = False) -> None:
         self.dockMode = dockMode
@@ -84,6 +89,17 @@ class DockerManager(object):
         self.mainWindow = window
         self.qWin = window.qwindow()
 
+
+    def instance(source: QWidget):
+        for ext in Krita.instance().extensions():
+            if ext.objectName() == "touchify_extension":
+                touchify: Touchify = ext
+                window_hash = str(source.windowHandle().__hash__())
+                if window_hash in touchify.instances:
+                    return touchify.instances[window_hash].docker_management
+                return None
+        return None
+
     def registerListener(self, type: DM_ListenerType, source: Callable):
         if type not in self._listeners:
             self._listeners[type] = list()
@@ -155,20 +171,13 @@ class DockerManager(object):
                 InternalConfig.instance().DockerUtils_HiddenDockersDown = ",".join(self._hiddenDockers[area])
         InternalConfig.instance().saveSettings()
 
-    #def dispose(self):
-    #    for docker_id in list(self._shareData.keys()):
-    #        self._shareData[docker_id].clearWidgetData()
-    #        del self._shareData[docker_id]
-    #    
-    #    self._listeners = {}
-
-    def dockerWindowTitle(self, ID):
-        docker = KritaExtensions.getDocker(ID)
+    def dockerWindowTitle(self, docker_id: str):
+        docker = self.findDocker(docker_id)
         if docker:
             title = docker.windowTitle()
             return title.replace('&', '')
         else:
-            return ID
+            return docker_id
         
 
 

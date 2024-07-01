@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets, QtGui
 from krita import *
 
 
-from ..ext.extensions import KritaExtensions
+from ..ext.extensions_krita import KritaExtensions
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..touchify import TouchifyInstance

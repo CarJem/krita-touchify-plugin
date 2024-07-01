@@ -6,7 +6,7 @@ from .PropertyGrid_Dialog import PropertyGrid_Dialog
 
 from ...resources import ResourceManager
 
-from ...ext.extensions import KritaExtensions
+from ...ext.extensions_krita import KritaExtensions
 
 DATA_INDEX = 3
 
@@ -65,7 +65,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         if mode == "icons":
             self.listView.setViewMode(QListView.ViewMode.IconMode)
             self.listView.setUniformItemSizes(True)
-            icons = KritaExtensions.getIconList()
+            icons = ResourceManager.getIconList()
             for iconName in icons:
                 listItem = QListWidgetItem()
                 listItem.setIcon(ResourceManager.iconLoader(iconName))

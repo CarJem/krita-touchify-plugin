@@ -1,4 +1,4 @@
-from ..ext.extensions import Extensions
+from ..ext.extensions_json import JsonExtensions as Extensions
 
 
 class CfgDockerGroupItem:

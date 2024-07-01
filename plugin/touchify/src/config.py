@@ -3,11 +3,13 @@ from PyQt5.QtCore import *
 import json
 import os
 
+from .ext.extensions_json import JsonExtensions
+
 from .cfg.CfgToolshelf import CfgToolshelf
 
 from .variables import *
 
-from .ext.extensions import JsonExtensions
+from .ext.extensions_json import JsonExtensions
 from .cfg.CfgDocker import CfgDocker
 from .cfg.CfgDockerGroup import CfgDockerGroup
 from .cfg.CfgToolshelf import CfgToolboxPanel
