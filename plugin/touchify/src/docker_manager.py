@@ -8,7 +8,7 @@ from .ext.extensions import *
 from .config import *
 
 IS_DEV_MODE = False
-DEV_DISABLE = True
+DEV_DISABLE = False
 
 
     
