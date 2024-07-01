@@ -12,11 +12,14 @@ from ..config import *
 from ..resources import *
 
 from krita import *
-
-class DockerToggles:
-
-    pending_actions = []
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..touchify import TouchifyInstance
     
+class DockerToggles(object):
+    def __init__(self, instance: "TouchifyInstance"):
+        self.appEngine = instance
+
     def toggleDocker(self, path):
         dockersList = Krita.instance().dockers()
         for docker in dockersList:
@@ -38,13 +41,9 @@ class DockerToggles:
         cfg.save()
 
     def buildMenu(self, menu: QMenu):
-        root_menu = QtWidgets.QMenu("Dockers", menu)
-        menu.addMenu(root_menu)
+        menu.addMenu(self.root_menu)
 
-        for action in self.pending_actions:
-            root_menu.addAction(action)
-
-    def createAction(self, window, docker: CfgDocker, actionPath):
+    def createAction(self, window: Window, docker: CfgDocker, actionPath: str):
         actionName ='{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_DOCKER, docker.docker_name)
         id = docker.docker_name
         iconName = docker.icon
@@ -53,17 +52,19 @@ class DockerToggles:
         action = window.createAction(actionName, text, actionPath)    
         icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
-        self.pending_actions.append(action)
+
 
         if not docker.hotkeyNumber == 0:
-            ConfigManager.instance().getHotkeyAction(docker.hotkeyNumber).triggered.connect(lambda: self.toggleDocker(id))
+            self.appEngine.touchify_hotkeys.getHotkeyAction(docker.hotkeyNumber).triggered.connect(lambda: self.toggleDocker(id))
 
         action.triggered.connect(lambda: self.toggleDocker(id))
+        self.root_menu.addAction(action)
 
-    def createActions(self, window, actionPath):
+    def createActions(self, window: Window, actionPath: str):
         sectionName = TOUCHIFY_ID_ACTIONS_DOCKER
         subItemPath = actionPath + "/" + sectionName
         cfg = ConfigManager.instance().getJSON()
+        self.root_menu = QtWidgets.QMenu("Dockers")
 
         for docker in cfg.dockers:
             self.createAction(window, docker, subItemPath)

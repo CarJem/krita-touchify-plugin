@@ -27,8 +27,7 @@ GROUP_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
 class PropertyField(QWidget):
 
-    labelText: str
-    variable_data: any
+
 
     def __init__(self, variable_name=str, variable_data=any, variable_source=any):
         super().__init__()

@@ -8,15 +8,7 @@ from PyQt5.QtCore import *
 from .ext.extensions import *
 from .config import *
 
-IS_DEV_MODE = False
-DEV_DISABLE = False
-
-
-    
-
 class DockerShareLoadArgs:
-    dockMode: bool = False
-
     def __init__(self, dockMode: bool = False) -> None:
         self.dockMode = dockMode
 
@@ -77,31 +69,28 @@ class DM_ListenerType(Enum):
     OnStealDocker = 2,
     OnLoadDocker = 3
     
-class DockerManager():
-    _shareData: dict[any, DockerShareData] = {}
-    _listeners: dict[DM_ListenerType, list] = {}
-    _hiddenDockers: dict[Qt.DockWidgetArea, list[str]] = {}
+class DockerManager(object):
 
     def __init__(self, window: Window):
+
+        self._shareData: dict[any, DockerShareData] = {}
+        self._listeners: dict[DM_ListenerType, list] = {}
+        self._hiddenDockers: dict[Qt.DockWidgetArea, list[str]] = {}
+
         self._hiddenDockers[1] = InternalConfig.instance().DockerUtils_HiddenDockersLeft.split(",")
         self._hiddenDockers[2] = InternalConfig.instance().DockerUtils_HiddenDockersRight.split(",")
         self._hiddenDockers[4] = InternalConfig.instance().DockerUtils_HiddenDockersUp.split(",")
         self._hiddenDockers[8] = InternalConfig.instance().DockerUtils_HiddenDockersDown.split(",")
         self.mainWindow = window
-        self.qWin = self.mainWindow.qwindow()
-        self.mainWindow.windowClosed.connect(self.dispose)
+        self.qWin = window.qwindow()
 
     def registerListener(self, type: DM_ListenerType, source: Callable):
-        if DEV_DISABLE:
-            return
         if type not in self._listeners:
             self._listeners[type] = list()
     
         self._listeners[type].append(source)
 
     def removeListener(self, type: DM_ListenerType, source: Callable):
-        if DEV_DISABLE:
-            return
         if type in self._listeners:
             self._listeners[type].remove(source)
 
@@ -114,9 +103,6 @@ class DockerManager():
         return self.qWin.findChild(QDockWidget, docker_id)
 
     def loadDocker(self, docker_id: str, args: DockerShareLoadArgs):
-        if DEV_DISABLE:
-            return None
-        
         # Already in Use, don't borrow twice
         if docker_id in self._shareData:
             if self._shareData[docker_id].isDead == False:
@@ -132,8 +118,6 @@ class DockerManager():
         return None
          
     def unloadDocker(self, docker_id: str, invokeRelease: bool = True):
-        if DEV_DISABLE:
-            return
         # Ensure there's a widget to return
         if docker_id in self._shareData:
             self._shareData[docker_id].clearWidgetData()
@@ -171,12 +155,12 @@ class DockerManager():
                 InternalConfig.instance().DockerUtils_HiddenDockersDown = ",".join(self._hiddenDockers[area])
         InternalConfig.instance().saveSettings()
 
-    def dispose(self):
-        for docker_id in list(self._shareData.keys()):
-            self._shareData[docker_id].clearWidgetData()
-            del self._shareData[docker_id]
-        
-        self._listeners = {}
+    #def dispose(self):
+    #    for docker_id in list(self._shareData.keys()):
+    #        self._shareData[docker_id].clearWidgetData()
+    #        del self._shareData[docker_id]
+    #    
+    #    self._listeners = {}
 
     def dockerWindowTitle(self, ID):
         docker = KritaExtensions.getDocker(ID)

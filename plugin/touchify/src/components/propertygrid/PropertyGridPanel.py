@@ -26,10 +26,12 @@ GROUP_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
 
 class PropertyGridPanel(QScrollArea):
-    fields: list[PropertyField] = []
+
 
     def __init__(self, parentStack: PropertyGrid):
         super().__init__()
+
+        self.fields: list[PropertyField] = []
         
 
         self.stackHost = parentStack

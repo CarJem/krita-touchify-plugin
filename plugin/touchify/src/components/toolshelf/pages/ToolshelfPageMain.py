@@ -21,9 +21,11 @@ from .... import stylesheet
 
 class ToolshelfPageMain(ToolshelfPagePanel):
 
-    dockerWidgets: dict = {}
+
 
     def __init__(self, parent: QStackedWidget, isPrimaryPanel: bool, docker_manager: DockerManager):
+
+        self.dockerWidgets: dict = {}
         
         self.isPrimaryPanel = isPrimaryPanel
 

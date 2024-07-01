@@ -13,8 +13,6 @@ from .ToolshelfButtonBar import ToolshelfButtonBar
 from .... import stylesheet
 
 class ToolshelfQuickActions(QWidget):
-    _lastSharedToolOptionsState = False
-
     def __init__(self, cfg: List[CfgToolboxAction], actionHeight: int, parent: QStackedWidget=None,):
         super(ToolshelfQuickActions, self).__init__(parent)
 

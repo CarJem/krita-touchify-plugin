@@ -15,9 +15,6 @@ class PropertyGrid_SelectorDialogItem(QListWidgetItem):
         return super().__init_subclass__()
 
 class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
-
-    selected_item: str
-
     def __init__(self, parent: QStackedWidget):
         super().__init__(parent)
 

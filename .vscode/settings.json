@@ -22,5 +22,9 @@
     "python.analysis.importFormat": "relative",
     "python.analysis.diagnosticMode": "workspace",
     "python.analysis.typeCheckingMode": "off",
-    "python.languageServer": "Default"
+    "python.languageServer": "Default",
+    "search.exclude": {
+        "**/krita_env/krita": true,
+        "**/testscripts": true
+    }
 }

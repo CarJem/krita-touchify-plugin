@@ -35,8 +35,8 @@ class SettingsDialog:
             result = f.read()
         return result
 
-    def __init__(self):
-        self.qwin = Krita.instance().activeWindow().qwindow()
+    def __init__(self, qwin: Window):
+        self.qwin = qwin.qwindow()
         self.cfg = copy.deepcopy(ConfigManager.instance().cfg)
 
         self.dlg = QDialog(self.qwin)

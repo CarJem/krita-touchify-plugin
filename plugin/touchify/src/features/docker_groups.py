@@ -1,22 +1,18 @@
 from PyQt5 import QtWidgets, QtGui
-import os
-import json
-import sys
-import importlib.util
-
 from ..variables import *
-
 from ..cfg.CfgDockerGroup import CfgDockerGroup
 from ..config import *
 from ..resources import *
-
 from krita import *
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..touchify import TouchifyInstance
 
+class DockerGroups(object):
 
-class DockerGroups:
-
-    custom_docker_states = {}
-    pending_actions = []
+    def __init__(self, instance: "TouchifyInstance"):
+        self.appEngine = instance
+        self.custom_docker_states = {}
 
     def toggleDockers(self, id):
         dockersList = Krita.instance().dockers()
@@ -42,11 +38,7 @@ class DockerGroups:
                     docker.setVisible(isVisible)
 
     def buildMenu(self, menu: QMenu):
-        root_menu = QtWidgets.QMenu("Docker Groups", menu)
-        menu.addMenu(root_menu)
-
-        for action in self.pending_actions:
-            root_menu.addAction(action)
+        menu.addMenu(self.root_menu)
 
     def setState(self, cfg: CfgDockerGroup):
         paths = []
@@ -60,10 +52,8 @@ class DockerGroups:
             "tabsMode": cfg.tabsMode
         }
     
-    def createAction(self, window, cfg: CfgDockerGroup, actionPath):
+    def createAction(self, window: Window, cfg: CfgDockerGroup, actionPath: str):
         actionName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_DOCKER_GROUP, cfg.id)
-
-
 
         setId = cfg.id
         iconName = cfg.icon
@@ -73,17 +63,17 @@ class DockerGroups:
         action = window.createAction(actionName, text, actionPath) 
         icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
+        action.triggered.connect(lambda: self.toggleDockers(actionName, setId))
 
         self.setState(cfg)
 
         if not cfg.hotkeyNumber == 0:
-            ConfigManager.instance().getHotkeyAction(cfg.hotkeyNumber).triggered.connect(lambda: self.toggleDockers(setId))
+            self.appEngine.touchify_hotkeys.getHotkeyAction(cfg.hotkeyNumber).triggered.connect(lambda: self.toggleDockers(setId))
 
-        self.pending_actions.append(action)
-        action.triggered.connect(lambda: self.toggleDockers(setId))
+        self.root_menu.addAction(action)
 
-    def createActions(self, window, actionPath):
-
+    def createActions(self, window: Window, actionPath):
+        self.root_menu = QtWidgets.QMenu("Docker Groups")
         sectionName = TOUCHIFY_ID_ACTIONS_DOCKER_GROUP
         subItemPath = actionPath + "/" + sectionName
 

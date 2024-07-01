@@ -8,15 +8,22 @@ from ..variables import *
 from ..config import *
 from .. import stylesheet
 from PyQt5.QtWidgets import QMessageBox
-
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..touchify import TouchifyInstance
 
 
 from krita import *
     
-class RedesignComponents:
+class RedesignComponents(object):
 
-    ntCanvas = None
+    def __init__(self, instance: "TouchifyInstance"):
+        self.appEngine = instance
+        self.ntCanvas: NtCanvas | None = None
 
+    def windowCreated(self):
+        self.qWin = self.appEngine.instanceWindow.qwindow()
+        self.ntCanvas.windowCreated(self.appEngine.instanceWindow, self.appEngine.docker_management)
 
     def createAction(self, window: Window, id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
         result = window.createAction(id, text, menuLocation)
@@ -50,9 +57,6 @@ class RedesignComponents:
         self.ntCanvas = NtCanvas(window)
         self.ntCanvas.createActions(window, nu_options_menu, sublocation_path)
 
-    def windowCreated(self, window: Window, docker_management: DockerManager):
-        self.ntCanvas.windowCreated(window, docker_management)
-
     def onKritaConfigUpdated(self):
         if self.ntCanvas:
             self.ntCanvas.onKritaConfigUpdate()
@@ -65,12 +69,12 @@ class RedesignComponents:
     def toolbarBorderToggled(self, toggled):
         InternalConfig.instance().Styles_BorderlessToolbar = toggled
         InternalConfig.instance().saveSettings()
-        self.rebuildStyleSheet(Krita.instance().activeWindow().qwindow())
+        self.rebuildStyleSheet(self.qWin)
 
     def tabHeightToggled(self, toggled):
         InternalConfig.instance().Styles_ThinDocumentTabs = toggled
         InternalConfig.instance().saveSettings()
-        self.rebuildStyleSheet(Krita.instance().activeWindow().qwindow())
+        self.rebuildStyleSheet(self.qWin)
     #endregion
 
     #region NuWidgetPad Actions

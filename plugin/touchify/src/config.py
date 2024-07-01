@@ -114,7 +114,6 @@ class ConfigManager:
 
         self.notify_hooks = []
 
-        self.hotkeys_storage = {}
         self.base_dir = path
         self.cfg = ConfigFile(self.base_dir)
 
@@ -132,12 +131,6 @@ class ConfigManager:
 
     def getResourceFolder(self):
         return os.path.join(self.base_dir, "resources")
-
-    def getHotkeyAction(self, index):
-        return self.hotkeys_storage[index]
-
-    def addHotkey(self, index, action):
-        self.hotkeys_storage[index] = action
 
     def getJSON(self) -> ConfigFile:
         return self.cfg

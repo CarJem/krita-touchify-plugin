@@ -20,12 +20,15 @@ from krita import *
 
 class PopupDialog_Docker(PopupDialog):
 
-    dockerWidget: QDockWidget = None
-    dockerLocation: Qt.DockWidgetArea = None
-    dockerVisibility: bool = False
+
 
     def __init__(self, parent: QMainWindow, args: CfgPopup, docker_manager: DockerManager):     
         super().__init__(parent, args)
+
+        self.dockerWidget: QDockWidget = None
+        self.dockerLocation: Qt.DockWidgetArea = None
+        self.dockerVisibility: bool = False
+
         self.grid = self.generateDockerLayout()
         self.docker_id = args.docker_id
         self.initLayout()
