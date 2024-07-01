@@ -1,5 +1,7 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
+
+from ..docker_manager import DockerManager
 from ..components.nu_tools.NtCanvas import NtCanvas
 
 from ..variables import *
@@ -48,8 +50,8 @@ class RedesignComponents:
         self.ntCanvas = NtCanvas(window)
         self.ntCanvas.createActions(window, nu_options_menu, sublocation_path)
 
-    def windowCreated(self, window: Window):
-        self.ntCanvas.updateWindow(window)
+    def windowCreated(self, window: Window, docker_management: DockerManager):
+        self.ntCanvas.windowCreated(window, docker_management)
 
     def onKritaConfigUpdated(self):
         if self.ntCanvas:

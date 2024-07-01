@@ -73,9 +73,6 @@ class KritaExtensions:
     def showQuickMessage(message):
         Krita.instance().activeWindow().activeView().showFloatingMessage(message, Krita.instance().icon('move_layer_up'), 1000, 0)
 
-    def getMainWindow():
-        return Krita.instance().activeWindow().qwindow()
-
     def getDocker(name):
         dockers = Krita.instance().dockers()
         for docker in dockers:

@@ -1,4 +1,6 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
+
+from ...docker_manager import DockerManager
 from .NtToolbox import NtToolbox
 from .NtToolshelf import NtToolshelf
 from ...config import InternalConfig
@@ -14,7 +16,7 @@ class NtCanvas():
         self.toolOptionsAlignment = self.getToolOptionsAlignment()
         self.alternativeToolboxPos = self.getToolboxAltPositionState()
 
-        self.inShutdown = False
+        self.docker_manager = None
 
         self.toolbox = None
         self.toolboxOptions = None
@@ -24,12 +26,14 @@ class NtCanvas():
         self.updatePadAlignments()
         self.updateCanvas()
 
-    def dispose(self):
-        self.inShutdown = True
-        self.updateElements()
 
-    def updateWindow(self, window: Window):
+    def windowCreated(self, window: Window, docker_manager: DockerManager):
         self.window = window
+        self.docker_manager = docker_manager
+
+        self.updateElements()
+        self.updatePadAlignments()
+        self.updateCanvas()
 
 
     def createActions(self, window: Window, menu: QMenu, path: str):
@@ -109,16 +113,14 @@ class NtCanvas():
     #region Update Functions
 
     def updateElements(self):
+        if self.docker_manager == None:
+            return
+        
         usesNuToolbox = InternalConfig.instance().CanvasWidgets_EnableToolbox
         usesNuToolOptionsAlt = InternalConfig.instance().CanvasWidgets_EnableAltToolshelf
         usesNuToolOptions = InternalConfig.instance().CanvasWidgets_EnableToolshelf
 
-        if self.inShutdown:
-            usesNuToolbox = False
-            usesNuToolOptions = False
-            usesNuToolOptionsAlt = False
-
-        if self.toolbox == None and usesNuToolbox and not self.inShutdown:
+        if self.toolbox == None and usesNuToolbox:
             self.toolbox = NtToolbox(self.window)
             self.toolbox.updateStyleSheet()
             self.installEventFilters(self.toolbox)
@@ -129,7 +131,7 @@ class NtCanvas():
             self.toolbox = None
 
         if self.toolboxOptions == None and usesNuToolOptionsAlt:
-            self.toolboxOptions = NtToolshelf(self.window, self.toolboxAlignment)
+            self.toolboxOptions = NtToolshelf(self.window, self.toolboxAlignment, False, self.docker_manager)
             self.toolboxOptions.updateStyleSheet()
             self.installEventFilters(self.toolboxOptions)
             self.toolboxOptions.pad.show()
@@ -139,7 +141,7 @@ class NtCanvas():
             self.toolboxOptions = None
 
         if self.toolOptions == None and usesNuToolOptions:
-            self.toolOptions = NtToolshelf(self.window, self.toolOptionsAlignment, True)
+            self.toolOptions = NtToolshelf(self.window, self.toolOptionsAlignment, True, self.docker_manager)
             self.toolOptions.updateStyleSheet()
             self.installEventFilters(self.toolOptions)
             self.toolOptions.pad.show()

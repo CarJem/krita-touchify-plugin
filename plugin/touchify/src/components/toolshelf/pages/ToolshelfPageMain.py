@@ -23,7 +23,7 @@ class ToolshelfPageMain(ToolshelfPagePanel):
 
     dockerWidgets: dict = {}
 
-    def __init__(self, parent: QStackedWidget=None, isPrimaryPanel: bool = False):
+    def __init__(self, parent: QStackedWidget, isPrimaryPanel: bool, docker_manager: DockerManager):
         
         self.isPrimaryPanel = isPrimaryPanel
 
@@ -38,7 +38,7 @@ class ToolshelfPageMain(ToolshelfPagePanel):
         pageCfg.quick_actions = self.rootCfg.actions
         pageCfg.additional_dockers = self.rootCfg.dockers
 
-        super(ToolshelfPageMain, self).__init__(parent, 'MAIN', pageCfg)
+        super(ToolshelfPageMain, self).__init__(parent, 'MAIN', pageCfg, docker_manager)
         
         self.splitter.setAutoFillBackground(False)
 

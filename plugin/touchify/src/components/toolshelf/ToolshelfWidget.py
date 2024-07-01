@@ -17,19 +17,14 @@ from ...cfg.CfgToolshelf import CfgToolboxPanel
 from .pages.ToolshelfPageMain import ToolshelfPageMain
 from .pages.ToolshelfPage import ToolshelfPage
 
-
-HAS_KRITA_FULLY_LOADED = False
-
-def ON_KRITA_WINDOW_CREATED():
-    global HAS_KRITA_FULLY_LOADED
-    HAS_KRITA_FULLY_LOADED = True
  
 class ToolshelfWidget(QDockWidget):
 
-    def __init__(self, isPrimaryPanel: bool = False):
+    def __init__(self, isPrimaryPanel: bool, docker_manager: DockerManager):
         super().__init__()
         self.setWindowTitle("Touchify Toolshelf")
 
+        self.docker_manager = docker_manager
         self.isPrimaryPanel = isPrimaryPanel
 
         stylesheet = f"""QScrollArea {{ background: transparent; }}
@@ -43,11 +38,7 @@ class ToolshelfWidget(QDockWidget):
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.scrollArea.setStyleSheet(stylesheet)
         self.setWidget(self.scrollArea)
-
-        if HAS_KRITA_FULLY_LOADED:
-            self.onLoaded()
-        else:
-            Krita.instance().notifier().windowCreated.connect(self.onLoaded)
+        self.onLoaded()
 
     def hasPanelStack(self):
         if hasattr(self, "panelStack"):
@@ -64,7 +55,7 @@ class ToolshelfWidget(QDockWidget):
             self.panelStack.onKritaConfigUpdate()
     
     def onLoaded(self):              
-        self.panelStack = ToolshelfContainer(self, self.isPrimaryPanel)
+        self.panelStack = ToolshelfContainer(self, self.isPrimaryPanel, self.docker_manager)
         self.panelStack.updateStyleSheet()
         self.scrollArea.setWidget(self.panelStack)
 
@@ -77,5 +68,3 @@ class ToolshelfWidget(QDockWidget):
     def onConfigUpdated(self):
         self.onUnload()
         self.onLoaded()
-
-Krita.instance().notifier().windowCreated.connect(ON_KRITA_WINDOW_CREATED)

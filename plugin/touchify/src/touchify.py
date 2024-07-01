@@ -42,8 +42,8 @@ class Touchify(Extension):
 
     def setup(self):
         appNotifier  = Krita.instance().notifier()
-        appNotifier.windowCreated.connect(self.windowCreated)
-        appNotifier.windowCreated.connect(self.finishActions)
+        Krita.instance().notifier().windowCreated.connect(self.windowCreated)
+        Krita.instance().notifier().windowCreated.connect(self.finishActions)
 
         ConfigManager.instance().notifyConnect(self.onConfigUpdated)
         KritaSettings.notifyConnect(self.onKritaConfigUpdated)
@@ -83,6 +83,7 @@ class Touchify(Extension):
         self.mainMenuBar.addAction(reloadItemsAction)
 
     def finishActions(self):
+        #Krita.instance().notifier().windowCreated.disconnect(self.finishActions)
         seperator = QAction("", self.mainMenuBar)
         seperator.setSeparator(True)
         self.mainMenuBar.addAction(seperator)
@@ -94,9 +95,15 @@ class Touchify(Extension):
         self.popup_toggles.buildMenu(self.mainMenuBar)
 
     def windowCreated(self):
+        #Krita.instance().notifier().windowCreated.disconnect(self.windowCreated)
         window = Krita.instance().activeWindow()
-        self.touchify_tweaks.load(window.qwindow())
-        self.redesign_components.windowCreated(window)
+        self.docker_management = DockerManager(window)
+
+        self.touchify_hotkeys.windowCreated(self.docker_management)
+        self.popup_toggles.windowCreated(self.docker_management)
+        self.redesign_components.windowCreated(window, self.docker_management)
+        self.touchify_tweaks.windowCreated(window.qwindow())
+
 
     def reloadKnownItems(self):
         self.basic_dockers.reloadDockers()

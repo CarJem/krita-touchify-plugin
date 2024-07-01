@@ -68,7 +68,7 @@ class TouchifyTweaks:
         full_style_sheet = f""""""
         window.setStyleSheet(full_style_sheet)
 
-    def load(self, window: Window):
+    def windowCreated(self, window: Window):
         self.style_CSS(window)
         self.style_KisLayerView()
 

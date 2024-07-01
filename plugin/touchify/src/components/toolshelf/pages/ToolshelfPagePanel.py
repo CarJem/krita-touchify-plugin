@@ -15,12 +15,16 @@ from ....docker_manager import DockerManager
 from ...DockerContainer import DockerContainer
 from .... import stylesheet
 
+from krita import *
+
 class ToolshelfPagePanel(ToolshelfPage):
 
     dockerWidgets: dict = {}
 
-    def __init__(self, parent: QWidget, ID: any, data: CfgToolboxPanel):
+    def __init__(self, parent: QWidget, ID: any, data: CfgToolboxPanel, docker_manager: DockerManager):
         super(ToolshelfPagePanel, self).__init__(parent, ID)
+
+        self.docker_manager = docker_manager
 
         self.ID = ID
         self.dockerWidgets: dict[any, DockerContainer] = {}
@@ -46,7 +50,7 @@ class ToolshelfPagePanel(ToolshelfPage):
 
         for dockerData in self.panelProperties.additional_dockers:     
             dockerInfo: CfgToolboxPanelDocker = dockerData
-            dockerWidget = DockerContainer(self, dockerInfo.id)
+            dockerWidget = DockerContainer(self, dockerInfo.id, docker_manager)
 
             if dockerInfo.size_x != 0 and dockerInfo.size_y != 0:
                 size = [dockerInfo.size_x, dockerInfo.size_y]
@@ -78,7 +82,7 @@ class ToolshelfPagePanel(ToolshelfPage):
                 tabBar = QTabWidget()
 
                 for item in widget_groups[panel_y]:
-                    title = DockerManager.instance().dockerWindowTitle(item.docker_id)
+                    title = self.docker_manager.dockerWindowTitle(item.docker_id)
                     tabBar.addTab(item, title)
 
                 self.splitter.addWidget(tabBar)

@@ -32,7 +32,7 @@ class PopupButtons:
         if data.type == "actions":
             return PopupDialog_Actions(qwin, data)
         elif data.type == "docker":
-            return PopupDialog_Docker(qwin, data)
+            return PopupDialog_Docker(qwin, data, self.docker_manager)
         else:
             return PopupDialog(qwin, data)
 
@@ -43,6 +43,9 @@ class PopupButtons:
 
         for action in self.pending_actions:
             root_menu.addAction(action)
+
+    def windowCreated(self, docker_manager: DockerManager):
+        self.docker_manager = docker_manager
 
     def createAction(self, window: Window, popup: CfgPopup, actionPath):
         actionName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_POPUP, popup.id)

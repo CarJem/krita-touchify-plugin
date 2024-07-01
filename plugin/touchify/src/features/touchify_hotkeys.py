@@ -30,12 +30,15 @@ class TouchifyHotkeys:
             mobj.hide()
 
     def toggleDirectionalDockers(self, area: int):
-        DockerManager.instance().toggleDockersPerArea(area)
+        self.docker_manager.toggleDockersPerArea(area)
 
     def buildMenu(self, menu: QMenu):
         menu.addMenu(self.hotkey_menu)
         menu.addMenu(self.other_menu)
         menu.addMenu(self.docker_utils_menu)
+
+    def windowCreated(self, docker_manager: DockerManager):
+        self.docker_manager = docker_manager
 
     def createActions(self, window: Window, subItemPath: str):
 

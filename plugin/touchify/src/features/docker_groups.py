@@ -20,7 +20,7 @@ class DockerGroups:
 
     def toggleDockers(self, id):
         dockersList = Krita.instance().dockers()
-        dockerGroup = self.self.custom_docker_states[id]
+        dockerGroup = self.custom_docker_states[id]
 
         isVisible = not dockerGroup["enabled"]
         dockerGroup["enabled"] = isVisible
