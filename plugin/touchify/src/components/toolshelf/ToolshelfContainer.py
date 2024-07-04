@@ -36,7 +36,7 @@ class ToolshelfContainer(QStackedWidget):
 
         self.isPrimaryPanel = isPrimaryPanel
         self.cfg = self.getCfg()
-        super().currentChanged.connect(self.currentChanged)
+        super().currentChanged.connect(self.onCurrentChanged)
 
         self.addMainPanel()
         panels = self.cfg.panels
@@ -71,6 +71,11 @@ class ToolshelfContainer(QStackedWidget):
         self._panels[ID] = panel
         super().addWidget(panel)
 
+
+    def resizeEvent(self, event: QResizeEvent):
+        self.dockWidget.onSizeChanged()
+        super().resizeEvent(event)
+
     def goHome(self):
         self.changePanel('MAIN')
 
@@ -90,9 +95,9 @@ class ToolshelfContainer(QStackedWidget):
         self._current_panel_id = panel_id
         new_panel.loadPage()
         self.setCurrentWidget(new_panel)
-        self.currentChanged(self.currentIndex())
+        self.onCurrentChanged(self.currentIndex())
 
-    def currentChanged(self, index):
+    def onCurrentChanged(self, index):
         for i in range(0, self.count()):
 
             widget = self.widget(i)
@@ -116,7 +121,7 @@ class ToolshelfContainer(QStackedWidget):
     
     def shutdownWidget(self):
         qApp.focusObjectChanged.disconnect(self.handleFocusChange)
-        super().currentChanged.disconnect(self.currentChanged)
+        super().currentChanged.disconnect(self.onCurrentChanged)
 
         children = self.findChildren(DockerContainer)
         for child in children:

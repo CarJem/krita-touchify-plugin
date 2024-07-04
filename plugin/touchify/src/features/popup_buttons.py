@@ -96,7 +96,8 @@ class PopupButtons(object):
     def onConfigUpdated(self):
         for popupKeys in self.popup_dialogs:
             popup: PopupDialog = self.popup_dialogs[popupKeys]
-            popup.shutdownWidget()
+            if popup != None:
+                popup.shutdownWidget()
             self.popup_dialogs[popupKeys] = None
 
 

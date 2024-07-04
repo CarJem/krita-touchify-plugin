@@ -8,7 +8,7 @@ from krita import *
 from PyQt5.QtCore import QObject, QEvent, QPoint
 from ...variables import *
 
-class NtCanvas():
+class NtCanvas(object):
     def __init__(self, window: Window):
         self.window = window
         self.windowLoaded = False
@@ -23,7 +23,6 @@ class NtCanvas():
         self.toolOptions = None
 
         self.updateElements()
-        self.updatePadAlignments()
         self.updateCanvas()
 
     def setDockerManager(self, manager: DockerManager):
@@ -34,7 +33,6 @@ class NtCanvas():
         self.windowLoaded = True
 
         self.updateElements()
-        self.updatePadAlignments()
         self.updateCanvas()
 
 
@@ -62,19 +60,12 @@ class NtCanvas():
 
     def togglePadVisibility(self, pad: str):
         if pad == "toolbox" and self.toolbox: self.toolbox.pad.toggleWidgetVisible()
-        elif pad == "toolshelf" and self.toolbox: self.toolOptions.pad.toggleWidgetVisible()
-        elif pad == "toolshelf_alt" and self.toolbox: self.toolboxOptions.pad.toggleWidgetVisible()
+        elif pad == "toolshelf" and self.toolOptions: self.toolOptions.pad.toggleWidgetVisible()
+        elif pad == "toolshelf_alt" and self.toolboxOptions: self.toolboxOptions.pad.toggleWidgetVisible()
         self.updateCanvas()
 
 
     #region Event Functions
-    def eventFilter(self, obj, e: QEvent):
-
-        if (e.type() == QEvent.Type.Move or e.type() == QEvent.Type.Resize):
-            self.updateCanvas()
-        
-        return False 
-    
     def onConfigUpdate(self):
         self.updateStyleSheet()
 
@@ -89,7 +80,6 @@ class NtCanvas():
         self.toolOptionsAlignment = self.getToolOptionsAlignment()
 
         self.updateElements()
-        self.updatePadAlignments()
         self.updateCanvas()
 
         if self.toolboxOptions:
@@ -123,7 +113,7 @@ class NtCanvas():
         usesNuToolOptions = InternalConfig.instance().CanvasWidgets_EnableToolshelf
 
         if self.toolbox == None and usesNuToolbox:
-            self.toolbox = NtToolbox(self.window)
+            self.toolbox = NtToolbox(self, self.toolboxAlignment, self.window)
             self.toolbox.updateStyleSheet()
             self.installEventFilters(self.toolbox)
             self.toolbox.pad.show()
@@ -133,7 +123,7 @@ class NtCanvas():
             self.toolbox = None
 
         if self.toolboxOptions == None and usesNuToolOptionsAlt:
-            self.toolboxOptions = NtToolshelf(self.window, self.toolboxAlignment, False, self.dockerManager)
+            self.toolboxOptions = NtToolshelf(self, self.window, self.toolboxAlignment, False, self.dockerManager)
             self.toolboxOptions.updateStyleSheet()
             self.installEventFilters(self.toolboxOptions)
             self.toolboxOptions.pad.show()
@@ -143,7 +133,7 @@ class NtCanvas():
             self.toolboxOptions = None
 
         if self.toolOptions == None and usesNuToolOptions:
-            self.toolOptions = NtToolshelf(self.window, self.toolOptionsAlignment, True, self.dockerManager)
+            self.toolOptions = NtToolshelf(self, self.window, self.toolOptionsAlignment, True, self.dockerManager)
             self.toolOptions.updateStyleSheet()
             self.installEventFilters(self.toolOptions)
             self.toolOptions.pad.show()
@@ -152,7 +142,6 @@ class NtCanvas():
             self.toolOptions.close()
             self.toolOptions = None
 
-    def updatePadAlignments(self):
         if self.toolbox != None:
             self.toolbox.pad.setViewAlignment(self.toolboxAlignment)
         if self.toolboxOptions != None:
@@ -165,13 +154,11 @@ class NtCanvas():
             if self.toolbox:
                 self.toolbox.pad.offset_x_left = 0
                 self.toolbox.pad.offset_x_right = 0
-                self.toolbox.pad.adjustToView()
             return
         elif self.toolbox == None:
             if self.toolboxOptions:
                 self.toolboxOptions.pad.offset_x_left = 0
                 self.toolboxOptions.pad.offset_x_right = 0
-                self.toolboxOptions.pad.adjustToView()
             return
         else:
             if self.alternativeToolboxPos:
@@ -194,7 +181,10 @@ class NtCanvas():
 
                 self.toolbox.pad.offset_x_right = 0
                 self.toolbox.pad.offset_x_left = 0
-            self.toolboxOptions.pad.adjustToView()
+
+        if self.toolbox: self.toolbox.pad.adjustToView()
+        if self.toolboxOptions: self.toolboxOptions.pad.adjustToView()
+        if self.toolOptions: self.toolOptions.pad.adjustToView()
 
     #endregion
 

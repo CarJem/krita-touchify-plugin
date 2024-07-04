@@ -19,12 +19,18 @@ class CfgToolboxPanelDocker:
     def __str__(self):
         name = self.id.replace("\n", "\\n")
         return name
+    
+    def propertygrid_hints(self):
+        hints = {}
+        hints["size_x"] = "leave set to 0 for automatic sizing"
+        hints["size_y"] = "leave set to 0 for automatic sizing"
+        return hints
 
     def propertygrid_labels(self):
         labels = {}
         labels["id"] = "Docker ID"
-        labels["size_x"] = "Docker Width (leave unset for auto)"
-        labels["size_y"] = "Docker Height (leave unset for auto)"
+        labels["size_x"] = "Docker Width"
+        labels["size_y"] = "Docker Height"
         labels["panel_y"] = "Panel Row"
         labels["nesting_mode"] = "Nesting Mode"
         labels["unloaded_visibility"] = "Unloaded Visibility"
@@ -41,8 +47,9 @@ class CfgToolboxPanelDocker:
         restrictions["nesting_mode"] = {"type": "values", "entries": ["normal", "docking"]}
         restrictions["unloaded_visibility"] = {"type": "values", "entries": ["normal", "hidden"]}
         restrictions["loading_priority"] = {"type": "values", "entries": ["normal", "passive"]}
-        restrictions["panel_x"] = {"type": "range", "min": 0, "max": 10}
-        restrictions["panel_y"] = {"type": "range", "min": 0, "max": 10}
+        restrictions["panel_y"] = {"type": "range", "min": 0}
+        restrictions["size_x"] = {"type": "range", "min": 0}
+        restrictions["size_y"] = {"type": "range", "min": 0}
         return restrictions
 
 class CfgToolboxAction:

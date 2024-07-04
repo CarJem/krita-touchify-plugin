@@ -86,6 +86,11 @@ class ToolshelfPagePanel(ToolshelfPage):
                 self.splitter.addWidget(tabBar)
         #endregion
 
+
+    def resizeEvent(self, event: QResizeEvent):
+        self.toolshelf.dockWidget.onSizeChanged()
+        super().resizeEvent(event)
+
     def unloadPage(self):
         for host_id in self.dockerWidgets:
             self.dockerWidgets[host_id].unloadWidget()

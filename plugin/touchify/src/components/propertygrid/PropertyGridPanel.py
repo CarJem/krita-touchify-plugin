@@ -24,6 +24,8 @@ ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 GROUP_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
 GROUP_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
+LABEL_ALIGNMENT = Qt.AlignmentFlag.AlignLeft
+
 
 class PropertyGridPanel(QScrollArea):
 
@@ -37,9 +39,10 @@ class PropertyGridPanel(QScrollArea):
         self.stackHost = parentStack
         self.formWidget = QWidget()
         self.formWidget.setContentsMargins(0,0,0,0)
-        self.formLayout = QVBoxLayout()
+        self.formLayout = QFormLayout()
         self.formLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.formLayout.setSpacing(0)
+        self.formLayout.setLabelAlignment(LABEL_ALIGNMENT)
         self.formLayout.setContentsMargins(0, 0, 0, 0)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.setWidgetResizable(True)
@@ -55,33 +58,38 @@ class PropertyGridPanel(QScrollArea):
         return newItem
     
 
-    def createDataRow(self, item, varName):
-        variable = PropertyUtils_Extensions.getVariable(item, varName)
-        field = PropertyUtils_Praser.getPropertyType(varName, variable, item)
-        field.setStackHost(self.stackHost)
+
+    def createRow(self, item: any, varName: str, layout: QFormLayout, labelData: dict):
+
+        def createDataRow(item, varName):
+            variable = PropertyUtils_Extensions.getVariable(item, varName)
+            field = PropertyUtils_Praser.getPropertyType(varName, variable, item)
+            field.setStackHost(self.stackHost)
+            if field:
+                self.fields.append(field)
+                field.setSizePolicy(ROW_SIZE_POLICY_X, ROW_SIZE_POLICY_Y)
+                return field
+            return None
+        
+        def createLabelRow(field: PropertyField, labelData: dict):
+            resultText = field.labelText
+            if field.labelText in labelData:
+                propData = labelData[field.labelText]
+                if propData == None:
+                    return
+                resultText = propData
+
+            header = QLabel()
+            header.setText(resultText)
+            header.setMargin(0)
+            header.setContentsMargins(5,0,5,0)
+            return header
+        
+
+        field = createDataRow(item, varName)
         if field:
-            self.fields.append(field)
-            field.setSizePolicy(ROW_SIZE_POLICY_X, ROW_SIZE_POLICY_Y)
-            return field
-        return None
-    
-    def createLabelRow(self, layout: QLayout, field: PropertyField, labelData: dict):
-
-        resultText = field.labelText
-
-
-        if field.labelText in labelData:
-            propData = labelData[field.labelText]
-            if propData == None:
-                return
-            resultText = propData
-
-        header = QLabel()
-        header.setText(resultText)
-        header.setMargin(0)
-        header.setContentsMargins(0,0,0,0)
-        layout.addWidget(header)
-    
+            header = createLabelRow(field, labelData)
+            layout.addRow(header, field)
     
     def updateDataObject(self, item):
         self.item = item
@@ -99,26 +107,21 @@ class PropertyGridPanel(QScrollArea):
 
         for varName in PropertyUtils_Extensions.getClassVariables(item):
             if varName not in claimedSections:
-                field = self.createDataRow(item, varName)
-                if field:
-                    self.createLabelRow(self.formLayout, field, labelData)
-                    self.formLayout.addWidget(field)
+                self.createRow(item, varName, self.formLayout, labelData)
 
         
         for groupId in groupData:
             groupName = groupData[groupId]["name"]
             groupItems = list(groupData[groupId]["items"])
             section = CollapsibleBox(groupName, self.formWidget)
-            sectionLayout = QVBoxLayout()
+            sectionLayout = QFormLayout()
             sectionLayout.setSpacing(0)
+            sectionLayout.setLabelAlignment(LABEL_ALIGNMENT)
             sectionLayout.setContentsMargins(0,0,0,0)
             section.setSizePolicy(GROUP_SIZE_POLICY_X, GROUP_SIZE_POLICY_Y)
 
             for varName in groupItems:
-                field = self.createDataRow(item, varName)
-                if field:
-                    self.createLabelRow(sectionLayout, field, labelData)
-                    sectionLayout.addWidget(field)
+                self.createRow(item, varName, sectionLayout, labelData)
 
             section.setContentLayout(sectionLayout)
 
