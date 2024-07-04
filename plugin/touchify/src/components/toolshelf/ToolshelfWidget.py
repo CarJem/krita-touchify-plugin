@@ -5,16 +5,16 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from touchify.src.components.toolshelf.buttons.ToolboxPanelHeader import ToolboxPanelHeader
+from touchify.src.components.toolshelf.buttons.ToolshelfPanelHeader import ToolshelfPanelHeader
 from .buttons.ToolshelfQuickActions import ToolshelfQuickActions
-from .pages.ToolshelfPagePanel import ToolshelfPagePanel
+from .pages.ToolshelfPage import ToolshelfPage
 
 from ...config import *
 from ...variables import *
 from ...docker_manager import *
 from .ToolshelfContainer import *
 
-from ...cfg.CfgToolshelf import CfgToolboxPanel
+from ...cfg.CfgToolshelf import CfgToolshelfPanel
 from .pages.ToolshelfPageMain import ToolshelfPageMain
 from .pages.ToolshelfPage import ToolshelfPage
 

@@ -1,3 +1,4 @@
+from re import L
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
 
@@ -39,6 +40,24 @@ class TouchifyHotkeys(object):
         else:
             mobj.hide()
 
+    def showMenubarPopup(self):
+        def iterateActions(destination: QMenu, menu: QMenu | QMenuBar):
+            for action in menu.actions():
+                if action.menu():
+                    sourceMenu = action.menu()
+                    subMenu = QMenu(destination)
+                    subMenu.setTitle(sourceMenu.title())
+                    iterateActions(subMenu, sourceMenu)
+                    destination.addMenu(subMenu)
+                else:
+                    destination.addAction(action)
+
+        activeWindow = self.appEngine.instanceWindow.qwindow()
+        popupMenu = QMenu(activeWindow)
+        menuBar = activeWindow.menuBar()
+        iterateActions(popupMenu, menuBar)
+        popupMenu.exec(QCursor.pos())
+
     def toggleDirectionalDockers(self, area: int):
         self.appEngine.docker_management.toggleDockersPerArea(area)
 
@@ -75,6 +94,11 @@ class TouchifyHotkeys(object):
         popupPaletteToggle.triggered.connect(self.showPopupPalette)
         self.other_menu.addAction(popupPaletteToggle)
 
+        # Show Popup Menu
+        popupMenuToggle = window.createAction(TOUCHIFY_ID_ACTION_OTHER_SHOWMENUBARPOPUP, "Show Popup Menu", subItemPath + "/" + other_subpath)
+        popupMenuToggle.setCheckable(False)
+        popupMenuToggle.triggered.connect(self.showMenubarPopup)
+        self.other_menu.addAction(popupMenuToggle)
 
         self.docker_utils_menu = QtWidgets.QMenu("Docker Utils...")
         docker_utils_subpath = "docker_utils"

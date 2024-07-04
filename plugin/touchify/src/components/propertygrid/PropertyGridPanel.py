@@ -125,4 +125,4 @@ class PropertyGridPanel(QScrollArea):
 
             section.setContentLayout(sectionLayout)
 
-            self.formLayout.addWidget(section)
+            self.formLayout.addRow(section)

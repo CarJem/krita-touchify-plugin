@@ -4,16 +4,16 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from touchify.src.components.toolshelf.buttons.ToolboxPanelHeader import ToolboxPanelHeader
+from touchify.src.components.toolshelf.buttons.ToolshelfPanelHeader import ToolshelfPanelHeader
 from .buttons.ToolshelfQuickActions import ToolshelfQuickActions
-from .pages.ToolshelfPagePanel import ToolshelfPagePanel
+from .pages.ToolshelfPage import ToolshelfPage
 from ..DockerContainer import DockerContainer
 
 from ...config import *
 from ...variables import *
 from ...docker_manager import *
 
-from ...cfg.CfgToolshelf import CfgToolboxPanel
+from ...cfg.CfgToolshelf import CfgToolshelfPanel
 from .pages.ToolshelfPageMain import ToolshelfPageMain
 from .pages.ToolshelfPage import ToolshelfPage
 
@@ -30,7 +30,7 @@ class ToolshelfContainer(QStackedWidget):
         self._panels = {}
         self._pinned = False
         self._current_panel_id = 'MAIN'
-        self._headers: List[ToolboxPanelHeader] = []
+        self._headers: List[ToolshelfPanelHeader] = []
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         qApp.focusObjectChanged.connect(self.handleFocusChange)
 
@@ -41,7 +41,7 @@ class ToolshelfContainer(QStackedWidget):
         self.addMainPanel()
         panels = self.cfg.panels
         for entry in panels:
-            properties: CfgToolboxPanel = entry
+            properties: CfgToolshelfPanel = entry
             PANEL_ID = str(uuid.uuid4())
             panel_title = properties.id
             self.addPanel(PANEL_ID, properties)
@@ -56,14 +56,14 @@ class ToolshelfContainer(QStackedWidget):
     def addMainPanel(self):
         self._mainWidget = ToolshelfPageMain(self, self.isPrimaryPanel)
         self._panels['MAIN'] = self._mainWidget
-        header = ToolboxPanelHeader(self.cfg, True, self)
+        header = ToolshelfPanelHeader(self.cfg, True, self)
         self._headers.append(header)
         self._mainWidget.shelfLayout.insertWidget(0, header)
         super().addWidget(self._mainWidget)
 
     def addPanel(self, ID, data):
-        panel = ToolshelfPagePanel(self, ID, data)
-        header = ToolboxPanelHeader(self.cfg, False, self)
+        panel = ToolshelfPage(self, ID, data)
+        header = ToolshelfPanelHeader(self.cfg, False, self)
 
         panel.shelfLayout.insertWidget(0, header)
         self._headers.append(header)
