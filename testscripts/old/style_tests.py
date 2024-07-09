@@ -9,51 +9,18 @@ import sys, os
 
 sys.path.append('C:/Users/demo/Documents/Apps/Scripts/KritaDev/modules')
 
+highlight = qApp.palette().color(QPalette.Highlight).name().split("#")[1]
 
-from touchify.src.components.toolshelf.ToolshelfWidget import ToolshelfContainer
+
+from touchify.src.dockers.BrushOptionsDocker import SliderSpinBox
 from krita import *
 qwin = Krita.instance().activeWindow().qwindow()
 wobj = qwin.findChild(QMdiArea)
-toolOptionsPad = wobj.findChildren(QWidget, 'toolOptionsPad')
-for item in toolOptionsPad:
-    #scrollContainer: QWidget = item.findChild(Nt_ScrollAreaContainer)
-    #scrollArea: QScrollArea = scrollContainer.findChild(QScrollArea)
+objective = wobj.findChildren(SliderSpinBox)
+for item in objective:
+    delta = (item.spinbox.value() / item.spinbox.maximum())**(1./item.scaling)
+    value = int(delta * item.progbar.maximum())
 
-
-    #region Stylesheets
-
-    #stylesheet_data = f"""
-    #QScrollArea {{ background: transparent; }}
-    #QScrollArea > QWidget > ToolshelfContainer {{ background: transparent; }}
-    #"""
-
-    #scrollArea.setStyleSheet(stylesheet_data)
-
-    #endregion
-
-    #region Viewport Stuff
-    #stackArea: ToolshelfContainer = scrollArea.findChild(ToolshelfContainer)
-    #for i in range(0, stackArea.count()):
-        #panel = stackArea.widget(i)
-        #if panel.isVisible():
-            #viewport_size = scrollArea.viewport().size()
-            #viewport_sizeHint = scrollArea.viewportSizeHint()
-            #actual_size = scrollArea.size()
-            #actual_sizeHint = scrollArea.sizeHint()
-
-            #print("Viewport Size: " + str(viewport_size.width()) + "," + str(viewport_size.height()))
-            #print("Viewport Size Hint: " + str(viewport_sizeHint.width()) + "," + str(viewport_sizeHint.height()))
-            #print("Actual Size: " + str(actual_size.width()) + "," + str(actual_size.height()))
-            #print("Actual Size Hint: " + str(actual_sizeHint.width()) + "," + str(actual_sizeHint.height()))
-            #print("---")
-
-            #panel.adjustSize()
-            #stackArea.adjustSize()
-            #stackArea.parentWidget().adjustSize()
-
-            #scrollArea.viewport().setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-            #scrollArea.viewport().resize(panel.minimumSize())
-            #scrollArea.viewport().adjustSize()
-            #scrollArea.viewport().setFixedSize(scrollArea.viewport().sizeHint())
-    #endregion
-    pass
+    buttonStyle = f"""background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                stop:0 #{highlight}, stop:{delta} #{highlight}, stop:{delta + 0.01} black, stop:1 black)"""
+    item.spinbox.lineEdit().setStyleSheet(buttonStyle)

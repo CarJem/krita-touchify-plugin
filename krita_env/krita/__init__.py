@@ -4,6 +4,13 @@ from PyQt5.QtWidgets import *
 from typing import List, Dict, Union
 KisPresetChooser = QObject
 KoDockFactoryBase = QObject
+
+
+class i18nc:
+	def __init__(input: str, input2: str) -> str:
+		##type: (str, str) -> str:'
+		"""converts"""
+
 class Window(QObject):
 	"""* Window represents one Krita mainwindow. A window can have any number of views open on any number of documents. """
 
@@ -118,6 +125,13 @@ components[2] = 0.7
 color.setComponents(components)
 Application.activeWindow().activeView().setForeGroundColor(color)
 @endcode """
+
+	def backgroundColor(self) -> 'ManagedColor':
+		## type: () -> ManagedColor:
+		"""@access public Q_SLOTS
+ @brief backgroundColor allows access to the currently inactive color. This is nominally per canvas/view, but in practice per mainwindow.
+"""
+
 
 	def showFloatingMessage(self, message: str, icon: QIcon, timeout: int, priority: int) -> None:
 		## type: (message, icon, timeout, priority) -> None:

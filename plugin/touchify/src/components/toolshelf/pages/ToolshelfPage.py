@@ -51,9 +51,17 @@ class ToolshelfPage(QWidget):
         self.shelfLayout.addWidget(self.quickActions)
         
         #region Generation
+
+        self.bgWidget = QWidget(self)
+        self.bgWidget.setLayout(QVBoxLayout())
+        self.bgWidget.layout().setSpacing(0)
+        self.bgWidget.layout().setContentsMargins(0,0,0,0)
+        self.bgWidget.setAutoFillBackground(True)
+        self.shelfLayout.addWidget(self.bgWidget)
+
         self.splitter = QSplitter(Qt.Orientation.Vertical)
         self.splitter.setAutoFillBackground(True)
-        self.shelfLayout.addWidget(self.splitter)
+        self.bgWidget.layout().addWidget(self.splitter)
 
         data = self.panelProperties
         
