@@ -36,6 +36,7 @@ TOUCHIFY_ID_ACTION_DOCKERUTILS_TOGGLELEFT="touchify_dockerutils_toggleleft"
 TOUCHIFY_ID_ACTION_DOCKERUTILS_TOGGLERIGHT="touchify_dockerutils_toggleright"
 
 TOUCHIFY_ID_ACTION_OTHER_SHOWPOPUPPALETTE="touchify_showPopupPalette"
+TOUCHIFY_ID_ACTION_OTHER_SHOWMENUBARPOPUP="touchify_showPopupMenu"
 
 
 

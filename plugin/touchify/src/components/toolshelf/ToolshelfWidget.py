@@ -1,36 +1,33 @@
+from ast import Call
 from PyQt5.QtWidgets import QSizePolicy, QStackedWidget
 import uuid
 from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from touchify.src.components.toolshelf.buttons.ToolboxPanelHeader import ToolboxPanelHeader
+from touchify.src.components.toolshelf.buttons.ToolshelfPanelHeader import ToolshelfPanelHeader
 from .buttons.ToolshelfQuickActions import ToolshelfQuickActions
-from .pages.ToolshelfPagePanel import ToolshelfPagePanel
+from .pages.ToolshelfPage import ToolshelfPage
 
 from ...config import *
 from ...variables import *
 from ...docker_manager import *
 from .ToolshelfContainer import *
 
-from ...cfg.CfgToolshelf import CfgToolboxPanel
+from ...cfg.CfgToolshelf import CfgToolshelfPanel
 from .pages.ToolshelfPageMain import ToolshelfPageMain
 from .pages.ToolshelfPage import ToolshelfPage
 
-
-HAS_KRITA_FULLY_LOADED = False
-
-def ON_KRITA_WINDOW_CREATED():
-    global HAS_KRITA_FULLY_LOADED
-    HAS_KRITA_FULLY_LOADED = True
  
 class ToolshelfWidget(QDockWidget):
 
-    def __init__(self, isPrimaryPanel: bool = False):
+    sizeChanged = pyqtSignal()
+
+    def __init__(self, isPrimaryPanel: bool, docker_manager: DockerManager):
         super().__init__()
         self.setWindowTitle("Touchify Toolshelf")
-
         self.isPrimaryPanel = isPrimaryPanel
+        self.docker_manager = docker_manager
 
         stylesheet = f"""QScrollArea {{ background: transparent; }}
         QScrollArea > QWidget > ToolshelfContainer {{ background: transparent; }}
@@ -43,11 +40,8 @@ class ToolshelfWidget(QDockWidget):
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.scrollArea.setStyleSheet(stylesheet)
         self.setWidget(self.scrollArea)
+        self.onLoaded()
 
-        if HAS_KRITA_FULLY_LOADED:
-            self.onLoaded()
-        else:
-            Krita.instance().notifier().windowCreated.connect(self.onLoaded)
 
     def hasPanelStack(self):
         if hasattr(self, "panelStack"):
@@ -62,6 +56,9 @@ class ToolshelfWidget(QDockWidget):
     def onKritaConfigUpdate(self):
         if self.hasPanelStack():
             self.panelStack.onKritaConfigUpdate()
+
+    def onSizeChanged(self):
+        self.sizeChanged.emit()
     
     def onLoaded(self):              
         self.panelStack = ToolshelfContainer(self, self.isPrimaryPanel)
@@ -77,5 +74,3 @@ class ToolshelfWidget(QDockWidget):
     def onConfigUpdated(self):
         self.onUnload()
         self.onLoaded()
-
-Krita.instance().notifier().windowCreated.connect(ON_KRITA_WINDOW_CREATED)

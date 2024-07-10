@@ -23,12 +23,11 @@ POPUP_BTN_IDENTIFIER = " [Popup]"
 
 class PopupDialog(QDialog):
 
-    parent: QMainWindow
-    grid: QLayout
-    moveMode: bool
+
     
     def __init__(self, parent: QMainWindow, args: CfgPopup):     
-        super().__init__(parent)    
+        super().__init__(parent)  
+        self.grid: QLayout = None
         self.parent: QMainWindow = parent
         self.metadata = args
         self.allowOpacity = False
@@ -116,7 +115,7 @@ class PopupDialog(QDialog):
             self.autoConceal = False
 
         if self.allowOpacity:
-            self.setAttribute(Qt.WA_TranslucentBackground, True)
+            self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
             self.setWindowOpacity(self.metadata.opacity)
 
         self.rootLayout = QVBoxLayout(self)

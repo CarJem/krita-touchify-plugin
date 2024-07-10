@@ -6,13 +6,17 @@ from krita import *
 
 class DockerContainer(QWidget):
   
-    def __init__(self, parent: QWidget | None, docker_id: str):
+    def __init__(self, parent: QWidget | None, docker_id: str, docker_manager: DockerManager):
         super(DockerContainer, self).__init__(parent)
+
+        self.docker_manager = docker_manager
+
+        self.isLoaded = False
         self.docker_id = docker_id
         self.borrowedDocker = None
         self.setAutoFillBackground(True)
         self.size = None
-        self.outLayout = QVBoxLayout()
+        self.outLayout = QVBoxLayout(self)
         self.setLayout(self.outLayout)
         self.outLayout.setContentsMargins(0, 0, 0, 0)
         self.outLayout.setSpacing(0)
@@ -25,10 +29,11 @@ class DockerContainer(QWidget):
         self.unloadedButton = None
         self._updateEmptySpace(True)
 
-        DockerManager.instance().registerListener(DM_ListenerType.OnReleaseDocker, self.onDockerReleased)
-        DockerManager.instance().registerListener(DM_ListenerType.OnStealDocker, self.onDockerStolen)
+        self.docker_manager.registerListener(DockerManager.SignalType.OnReleaseDocker, self.onDockerReleased)
+        self.docker_manager.registerListener(DockerManager.SignalType.OnStealDocker, self.onDockerStolen)
 
         self.dockerShouldBeActive = False
+        self.isLoaded = True
 
     def unloadWidget(self):
         self.dockerShouldBeActive = False
@@ -37,25 +42,25 @@ class DockerContainer(QWidget):
     def loadWidget(self, force: bool = False):
         self.dockerShouldBeActive = True
         if force:
-            if not self.passiveMode: DockerManager.instance().unloadDocker(self.docker_id, False)
+            if not self.passiveMode: self.docker_manager.unloadDocker(self.docker_id, False)
             self._loadDocker()
         else:
             self._loadDocker()
 
     def shutdownWidget(self):
-        DockerManager.instance().removeListener(DM_ListenerType.OnReleaseDocker, self.onDockerReleased)
-        DockerManager.instance().removeListener(DM_ListenerType.OnStealDocker, self.onDockerStolen)
-        DockerManager.instance().unloadDocker(self.docker_id, False)
+        self.docker_manager.removeListener(DockerManager.SignalType.OnReleaseDocker, self.onDockerReleased)
+        self.docker_manager.removeListener(DockerManager.SignalType.OnStealDocker, self.onDockerStolen)
+        self.docker_manager.unloadDocker(self.docker_id, False)
 
     #region Private Functions
     def _stealDocker(self):
         if self.dockerShouldBeActive:
-            DockerManager.instance().unloadDocker(self.docker_id, False)
+            self.docker_manager.unloadDocker(self.docker_id, False)
             self._loadDocker()
 
     def _loadDocker(self):
-        shareArgs = DockerShareLoadArgs(self.dockMode)
-        dockerLoaded: QWidget | None = DockerManager.instance().loadDocker(self.docker_id, shareArgs)
+        shareArgs = DockerManager.LoadArguments(self.dockMode)
+        dockerLoaded: QWidget | None = self.docker_manager.loadDocker(self.docker_id, shareArgs)
         if not dockerLoaded: 
             self._updateEmptySpace(True)
             return
@@ -66,7 +71,7 @@ class DockerContainer(QWidget):
 
     def _unloadDocker(self, invokeRelease: bool = True):
         if self.borrowedDocker: self._updateEmptySpace(True)
-        DockerManager.instance().unloadDocker(self.docker_id, invokeRelease)
+        self.docker_manager.unloadDocker(self.docker_id, invokeRelease)
 
     def _updateEmptySpace(self, state: bool):
         if self.unloadedLabel == None and self.unloadedButton == None:

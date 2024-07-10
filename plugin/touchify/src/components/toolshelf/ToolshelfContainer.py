@@ -4,41 +4,44 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from touchify.src.components.toolshelf.buttons.ToolboxPanelHeader import ToolboxPanelHeader
+from touchify.src.components.toolshelf.buttons.ToolshelfPanelHeader import ToolshelfPanelHeader
 from .buttons.ToolshelfQuickActions import ToolshelfQuickActions
-from .pages.ToolshelfPagePanel import ToolshelfPagePanel
+from .pages.ToolshelfPage import ToolshelfPage
 from ..DockerContainer import DockerContainer
 
 from ...config import *
 from ...variables import *
 from ...docker_manager import *
 
-from ...cfg.CfgToolshelf import CfgToolboxPanel
+from ...cfg.CfgToolshelf import CfgToolshelfPanel
 from .pages.ToolshelfPageMain import ToolshelfPageMain
 from .pages.ToolshelfPage import ToolshelfPage
 
-
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .ToolshelfWidget import ToolshelfWidget
 
 
 class ToolshelfContainer(QStackedWidget):
 
-    def __init__(self, parent=None, isPrimaryPanel: bool = False):
+    def __init__(self, parent: "ToolshelfWidget", isPrimaryPanel: bool):
         super(ToolshelfContainer, self).__init__(parent)
+        self.dockWidget = parent
         self._panels = {}
         self._pinned = False
         self._current_panel_id = 'MAIN'
-        self._headers: List[ToolboxPanelHeader] = []
+        self._headers: List[ToolshelfPanelHeader] = []
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         qApp.focusObjectChanged.connect(self.handleFocusChange)
 
         self.isPrimaryPanel = isPrimaryPanel
         self.cfg = self.getCfg()
-        super().currentChanged.connect(self.currentChanged)
+        super().currentChanged.connect(self.onCurrentChanged)
 
         self.addMainPanel()
         panels = self.cfg.panels
         for entry in panels:
-            properties: CfgToolboxPanel = entry
+            properties: CfgToolshelfPanel = entry
             PANEL_ID = str(uuid.uuid4())
             panel_title = properties.id
             self.addPanel(PANEL_ID, properties)
@@ -53,20 +56,25 @@ class ToolshelfContainer(QStackedWidget):
     def addMainPanel(self):
         self._mainWidget = ToolshelfPageMain(self, self.isPrimaryPanel)
         self._panels['MAIN'] = self._mainWidget
-        header = ToolboxPanelHeader(self.cfg, True, self)
+        header = ToolshelfPanelHeader(self.cfg, True, self)
         self._headers.append(header)
         self._mainWidget.shelfLayout.insertWidget(0, header)
         super().addWidget(self._mainWidget)
 
     def addPanel(self, ID, data):
-        panel = ToolshelfPagePanel(self, ID, data)
-        header = ToolboxPanelHeader(self.cfg, False, self)
+        panel = ToolshelfPage(self, ID, data)
+        header = ToolshelfPanelHeader(self.cfg, False, self)
 
         panel.shelfLayout.insertWidget(0, header)
         self._headers.append(header)
         
         self._panels[ID] = panel
         super().addWidget(panel)
+
+
+    def resizeEvent(self, event: QResizeEvent):
+        self.dockWidget.onSizeChanged()
+        super().resizeEvent(event)
 
     def goHome(self):
         self.changePanel('MAIN')
@@ -87,9 +95,9 @@ class ToolshelfContainer(QStackedWidget):
         self._current_panel_id = panel_id
         new_panel.loadPage()
         self.setCurrentWidget(new_panel)
-        self.currentChanged(self.currentIndex())
+        self.onCurrentChanged(self.currentIndex())
 
-    def currentChanged(self, index):
+    def onCurrentChanged(self, index):
         for i in range(0, self.count()):
 
             widget = self.widget(i)
@@ -113,7 +121,7 @@ class ToolshelfContainer(QStackedWidget):
     
     def shutdownWidget(self):
         qApp.focusObjectChanged.disconnect(self.handleFocusChange)
-        super().currentChanged.disconnect(self.currentChanged)
+        super().currentChanged.disconnect(self.onCurrentChanged)
 
         children = self.findChildren(DockerContainer)
         for child in children:

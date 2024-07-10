@@ -1,3 +1,5 @@
+from uuid import UUID, uuid4
+import uuid
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
 
@@ -6,7 +8,7 @@ from PyQt5.QtWidgets import QMessageBox
 from .variables import *
 
 
-from .ui.settings import *
+from .settings import *
 from .features.touchify_tweaks import *
 from .features.docker_toggles import *
 from .features.docker_groups import *
@@ -14,98 +16,56 @@ from .features.popup_buttons import *
 from .features.workspace_toggles import *
 from .features.redesign_components import *
 from .features.touchify_hotkeys import *
+from .instance import *
 
 
 
 from krita import *
 
 class Touchify(Extension):
-    mainMenuBar: QMenuBar = None
 
-    basic_dockers: DockerToggles = None
-    docker_groups: DockerGroups = None
-    workspace_toggles: WorkspaceToggles = None
-    popup_toggles: PopupButtons = None
-    redesign_components: RedesignComponents = None
-    touchify_hotkeys: TouchifyHotkeys = None
-    touchify_tweaks: TouchifyTweaks = None
+    instances: dict[str, TouchifyInstance] = {}
+    instance_generate: bool = False
+    instance_generated: TouchifyInstance = None
 
     def __init__(self, parent):
         super().__init__(parent)
-        self.basic_dockers = DockerToggles()
-        self.docker_groups = DockerGroups()
-        self.workspace_toggles = WorkspaceToggles()
-        self.popup_toggles = PopupButtons()
-        self.redesign_components = RedesignComponents()
-        self.touchify_hotkeys = TouchifyHotkeys()
-        self.touchify_tweaks = TouchifyTweaks()
 
     def setup(self):
-        appNotifier  = Krita.instance().notifier()
-        appNotifier.windowCreated.connect(self.windowCreated)
-        appNotifier.windowCreated.connect(self.finishActions)
-
+        Krita.instance().notifier().windowCreated.connect(self.onWindowCreated)
         ConfigManager.instance().notifyConnect(self.onConfigUpdated)
         KritaSettings.notifyConnect(self.onKritaConfigUpdated)
 
     def onKritaConfigUpdated(self):
-        self.redesign_components.onKritaConfigUpdated()
+        for id in self.instances:
+            self.instances[id].onKritaConfigUpdated()
 
     def onConfigUpdated(self):
-        self.redesign_components.onConfigUpdated()
-        self.popup_toggles.onConfigUpdated()
-        self.docker_groups.onConfigUpdated()
+        for id in self.instances:
+            self.instances[id].onConfigUpdated()
+
+    def getNewWindow(self):
+        window = Krita.instance().activeWindow()
+        window_hash = str(window.qwindow().windowHandle().__hash__())
+        if window_hash not in self.instances:
+            return window
+    
+    def onWindowDestroyed(self, windowId: str):
+        del self.instances[windowId]
+
+    def onWindowCreated(self):
+        if self.instance_generate:
+            new_window = self.getNewWindow()
+            new_window_id = str(new_window.qwindow().windowHandle().__hash__())
+            new_window.windowClosed.connect(lambda: self.onWindowDestroyed(new_window_id))
+            self.instances[new_window_id] = self.instance_generated
+            self.instances[new_window_id].onWindowCreated(new_window)
+            self.instance_generate = False
 
 
     def createActions(self, window: Window):
-        self.mainMenuBar = window.qwindow().menuBar().addMenu(TOUCHIFY_ID_MENU_ROOT)
-
-        subItemPath = TOUCHIFY_ID_MENU_ROOT
-
-        self.touchify_hotkeys.createActions(window, subItemPath)
-        self.basic_dockers.createActions(window, subItemPath)  
-        self.docker_groups.createActions(window, subItemPath)     
-        self.workspace_toggles.createActions(window, subItemPath)
-        self.popup_toggles.createActions(window, subItemPath)
-
-        openSettingsAction = QAction("Configure Touchify...", self.mainMenuBar)
-        openSettingsAction.triggered.connect(self.openSettings)
-        self.mainMenuBar.addAction(openSettingsAction)
-
-        self.redesign_components.createActions(window, self.mainMenuBar)
-
-        seperator = QAction("Actions", self.mainMenuBar)
-        seperator.setSeparator(True)
-        self.mainMenuBar.addAction(seperator)
-
-        reloadItemsAction = QAction("Refresh Known Items...", self.mainMenuBar)
-        reloadItemsAction.triggered.connect(self.reloadKnownItems)
-        self.mainMenuBar.addAction(reloadItemsAction)
-
-    def finishActions(self):
-        seperator = QAction("", self.mainMenuBar)
-        seperator.setSeparator(True)
-        self.mainMenuBar.addAction(seperator)
-
-        self.touchify_hotkeys.buildMenu(self.mainMenuBar)
-        self.basic_dockers.buildMenu(self.mainMenuBar)  
-        self.docker_groups.buildMenu(self.mainMenuBar)     
-        self.workspace_toggles.buildMenu(self.mainMenuBar)
-        self.popup_toggles.buildMenu(self.mainMenuBar)
-
-    def windowCreated(self):
-        window = Krita.instance().activeWindow()
-        self.touchify_tweaks.load(window.qwindow())
-        self.redesign_components.windowCreated(window)
-
-    def reloadKnownItems(self):
-        self.basic_dockers.reloadDockers()
-        self.workspace_toggles.reloadWorkspaces()
-        msg = QMessageBox(Krita.instance().activeWindow().qwindow())
-        msg.setText("Reloaded Known Workspaces/Dockers. You will need to reload to use them with this extension")
-        msg.exec_()
-
-    def openSettings(self):
-        SettingsDialog().show()
+        self.instance_generate = True
+        self.instance_generated = TouchifyInstance()
+        self.instance_generated.createActions(window)
 
 Krita.instance().addExtension(Touchify(Krita.instance()))

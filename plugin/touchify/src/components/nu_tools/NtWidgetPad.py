@@ -190,11 +190,9 @@ class NtWidgetPad(QWidget):
         if isinstance(newAlignment, str):
                 if (newAlignment.lower() == 'left' or
                     newAlignment.lower() == 'right'):
+                    self.btnHide.setArrow(self.alignment)
                     if self.alignment != newAlignment.lower():
                         self.alignment = newAlignment.lower()
-
-                        self.btnHide.setArrow(self.alignment)
-
                         return True
     
         return False

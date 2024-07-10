@@ -11,16 +11,22 @@ from ..resources import *
 from krita import *
 
 from ..variables import *
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..touchify import TouchifyInstance
 
 
 
+class WorkspaceToggles(object):
 
-class WorkspaceToggles:
+    def __init__(self, instance: "TouchifyInstance"):
+        self.appEngine = instance
 
-    pending_actions = []
+    def windowCreated(self):
+        self.qWin = self.appEngine.instanceWindow.qwindow()
 
     def toggleWorkspace(self, path):
-        main_menu = Krita.instance().activeWindow().qwindow().menuBar()
+        main_menu = self.qWin.menuBar()
         for root_items in main_menu.actions():
             if root_items.objectName() == 'window':
                 for sub_item in root_items.menu().actions():
@@ -35,7 +41,7 @@ class WorkspaceToggles:
         cfg = ConfigManager.instance().getJSON()
 
         Workspaces = []
-        main_menu = Krita.instance().activeWindow().qwindow().menuBar()
+        main_menu = self.qWin.menuBar()
 
         for root_items in main_menu.actions():
             if root_items.objectName() == 'window':
@@ -56,13 +62,9 @@ class WorkspaceToggles:
 
 
     def buildMenu(self, menu: QMenu):
-        root_menu = QtWidgets.QMenu("Workspaces", menu)
-        menu.addMenu(root_menu)
-
-        for action in self.pending_actions:
-            root_menu.addAction(action)
+        menu.addMenu(self.root_menu)
    
-    def createAction(self, window, workspace: CfgWorkspace, actionPath):
+    def createAction(self, window: Window, workspace: CfgWorkspace, actionPath):
 
         actionName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_WORKSPACE, workspace.id)
         id = workspace.id
@@ -75,12 +77,14 @@ class WorkspaceToggles:
         action.setIcon(icon)
 
         if not workspace.hotkeyNumber == 0:
-            ConfigManager.instance().getHotkeyAction(workspace.hotkeyNumber).triggered.connect(lambda: self.toggleWorkspace(id))
+            self.appEngine.touchify_hotkeys.getHotkeyAction(workspace.hotkeyNumber).triggered.connect(lambda: self.toggleWorkspace(id))
 
-        self.pending_actions.append(action)
+        self.root_menu.addAction(action)
         action.triggered.connect(lambda: self.toggleWorkspace(id))
 
     def createActions(self, window, actionPath):
+        self.root_menu = QtWidgets.QMenu("Workspaces")
+
         sectionName = TOUCHIFY_ID_ACTIONS_WORKSPACE
         subItemPath = actionPath + "/" + sectionName
 

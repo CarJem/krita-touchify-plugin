@@ -3,17 +3,19 @@ from PyQt5.QtCore import *
 import json
 import os
 
+from .ext.extensions_json import JsonExtensions
+
 from .cfg.CfgToolshelf import CfgToolshelf
 
 from .variables import *
 
-from .ext.extensions import JsonExtensions
+from .ext.extensions_json import JsonExtensions
 from .cfg.CfgDocker import CfgDocker
 from .cfg.CfgDockerGroup import CfgDockerGroup
-from .cfg.CfgToolshelf import CfgToolboxPanel
+from .cfg.CfgToolshelf import CfgToolshelfPanel
 from .cfg.CfgPopup import CfgPopup
 from .cfg.CfgWorkspace import CfgWorkspace
-from .cfg.CfgToolshelf import CfgToolboxAction
+from .cfg.CfgToolshelf import CfgToolshelfAction
 from .ext.extensions import *
 from ..paths import BASE_DIR
     
@@ -114,7 +116,6 @@ class ConfigManager:
 
         self.notify_hooks = []
 
-        self.hotkeys_storage = {}
         self.base_dir = path
         self.cfg = ConfigFile(self.base_dir)
 
@@ -132,12 +133,6 @@ class ConfigManager:
 
     def getResourceFolder(self):
         return os.path.join(self.base_dir, "resources")
-
-    def getHotkeyAction(self, index):
-        return self.hotkeys_storage[index]
-
-    def addHotkey(self, index, action):
-        self.hotkeys_storage[index] = action
 
     def getJSON(self) -> ConfigFile:
         return self.cfg

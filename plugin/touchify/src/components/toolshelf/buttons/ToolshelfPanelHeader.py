@@ -14,9 +14,9 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..ToolshelfContainer import ToolshelfContainer
 
-class ToolboxPanelHeader(QWidget):
+class ToolshelfPanelHeader(QWidget):
     def __init__(self, cfg: CfgToolshelf, isRootHeader: bool = True, parent: "ToolshelfContainer" = None):
-        super(ToolboxPanelHeader, self).__init__(parent)
+        super(ToolshelfPanelHeader, self).__init__(parent)
 
         self.rootContainer = parent
 

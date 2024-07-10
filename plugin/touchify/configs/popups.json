@@ -54,7 +54,7 @@
             "grid_width": 3,
             "icon_height": 30,
             "icon_width": 30,
-            "item_height": 150,
+            "item_height": 300,
             "item_width": 300,
             "opacity": 1.0,
             "btnName": "Colors Popup",
@@ -180,6 +180,23 @@
             ],
             "opacity": 1.0,
             "hotkeyNumber": 2
+        },
+        {
+            "items": [],
+            "item_height": 400,
+            "item_width": 200,
+            "opacity": 1.0,
+            "grid_width": 3,
+            "grid_padding": 2,
+            "icon_width": 30,
+            "icon_height": 30,
+            "btnName": "Layers Popup",
+            "icon": "all-layers",
+            "type": "docker",
+            "docker_id": "KisLayerBox",
+            "id": "LayerPopup",
+            "hotkeyNumber": 0,
+            "popupType": "window"
         }
     ]
 }

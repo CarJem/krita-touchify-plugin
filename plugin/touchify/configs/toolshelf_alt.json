@@ -1,158 +1,41 @@
 {
-    "panels": [
-        {
-            "id": "Palette",
-            "icon": "palette-library",
-            "additional_dockers": [
-                {
-                    "id": "PaletteDocker",
-                    "nesting_mode": "normal",
-                    "size_x": 0,
-                    "size_y": 0
-                },
-                {
-                    "id": "PatternDocker",
-                    "nesting_mode": "normal",
-                    "panel_y": 0,
-                    "size_x": 0,
-                    "size_y": 0
-                },
-                {
-                    "id": "SvgSymbolCollectionDocker",
-                    "nesting_mode": "normal",
-                    "panel_y": 0,
-                    "size_x": 0,
-                    "size_y": 0
-                }
-            ],
-            "quick_actions": []
-        },
-        {
-            "id": "Layers",
-            "icon": "all-layers",
-            "additional_dockers": [
-                {
-                    "id": "KisLayerBox",
-                    "nesting_mode": "normal",
-                    "size_x": 0,
-                    "size_y": 0
-                },
-                {
-                    "panel_y": 1,
-                    "id": "PaletteDocker",
-                    "nesting_mode": "normal",
-                    "size_x": 200,
-                    "size_y": 200
-                },
-                {
-                    "panel_y": 1,
-                    "id": "pykrita_reference_tabs",
-                    "nesting_mode": "normal",
-                    "size_x": 200,
-                    "size_y": 200
-                }
-            ],
-            "quick_actions": []
-        },
-        {
-            "id": "Overview",
-            "icon": "camera-photo",
-            "additional_dockers": [
-                {
-                    "id": "OverviewDocker",
-                    "size_x": 300,
-                    "size_y": 200,
-                    "nesting_mode": "docking"
-                },
-                {
-                    "id": "pykrita_reference_tabs",
-                    "nesting_mode": "normal",
-                    "size_x": 300,
-                    "size_y": 200
-                }
-            ],
-            "quick_actions": []
-        },
-        {
-            "icon": "custom:HistoryDockers",
-            "id": "History",
-            "additional_dockers": [
-                {
-                    "id": "History",
-                    "nesting_mode": "normal",
-                    "panel_y": 0,
-                    "size_x": 0,
-                    "size_y": 0
-                },
-                {
-                    "id": "Snapshot",
-                    "panel_y": 1,
-                    "nesting_mode": "normal",
-                    "size_x": 100,
-                    "size_y": 100
-                }
-            ],
-            "size_x": 0,
-            "size_y": 0,
-            "quick_actions": []
-        }
-    ],
+    "panels": [],
     "actions": [
         {
-            "icon": "material:undo",
-            "id": "edit_undo",
-            "row": -1
+            "icon": "document-new",
+            "id": "view_show_canvas_only",
+            "row": 0
         },
         {
-            "icon": "material:redo",
-            "id": "edit_redo",
-            "row": -1
+            "icon": "mirror-view-16",
+            "id": "mirror_canvas",
+            "row": 0
         },
         {
-            "icon": "custom:SelectionTool",
-            "id": "touchify_popup_selection-tool"
-        },
-        {
-            "icon": "custom:pencil-ruler-outline",
-            "id": "touchify_popup_brushOptionsPopup"
-        },
-        {
-            "id": "touchify_popup_GridDockerPopup",
-            "icon": "gridbrush"
-        },
-        {
-            "icon": "material:palette-swatch-variant",
-            "id": "touchify_popup_quick-settings"
-        },
-        {
-            "icon": "paintop_settings_02",
-            "id": "show_brush_editor",
-            "row": 1
-        },
-        {
-            "icon": "extended_color_selector",
-            "id": "touchify_popup_ColorOptionsPopup",
-            "row": 1
-        },
-        {
-            "row": 4,
-            "id": "touchify_showPopupPalette",
-            "icon": "config-popup-palette"
+            "icon": "view-fullscreen",
+            "id": "fullscreen",
+            "row": 0
         }
     ],
     "dockers": [
         {
-            "id": "sharedtooldocker",
-            "unloaded_visibility": "hidden",
-            "panel_y": 0,
-            "size_x": 0,
-            "size_y": 0,
-            "loading_priority": "passive"
+            "id": "OverviewDocker",
+            "size_x": 300,
+            "size_y": 200,
+            "nesting_mode": "docking",
+            "action_section_contents": []
+        },
+        {
+            "id": "pykrita_reference_tabs",
+            "nesting_mode": "normal",
+            "size_x": 300,
+            "size_y": 200,
+            "action_section_contents": []
         }
     ],
     "titleButtonHeight": 10,
     "dockerButtonHeight": 32,
     "dockerBackHeight": 16,
     "sliderHeight": 16,
-    "actionHeight": 32
+    "actionHeight": 20
 }

@@ -14,10 +14,10 @@ class NtAdjustToSubwindowFilter(QObject):
         """Event filter: Update the Target's position to match to the current view 
         if the (sub-)window has moved, changed in size or been activated."""
         if (self.target and
-            (e.type() == QEvent.Move or
-            e.type() == QEvent.Resize or
-            e.type() == QEvent.WindowActivate)):
-            self.target.adjustToView()
+            (e.type() == QEvent.Type.Move or
+            e.type() == QEvent.Type.Resize or
+            e.type() == QEvent.Type.WindowActivate)):
+            self.target.canvas.updateCanvas()
 
         return False
 

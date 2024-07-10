@@ -1,29 +1,23 @@
-from typing import Dict
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
 from ..buttons.ToolshelfButtonBar import ToolshelfButtonBar
-
 from ....config import ConfigManager
-
-from .ToolshelfPagePanel import ToolshelfPagePanel
-
-from ..buttons.ToolshelfQuickActions import ToolshelfQuickActions
-
 from .ToolshelfPage import ToolshelfPage
-
-from ....cfg.CfgToolshelf import CfgToolboxPanel
-from ....cfg.CfgToolshelf import CfgToolboxPanelDocker
-
-from ....docker_manager import DockerManager
-from ...DockerContainer import DockerContainer
+from ....cfg.CfgToolshelf import CfgToolshelfPanel
 from .... import stylesheet
 
-class ToolshelfPageMain(ToolshelfPagePanel):
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..ToolshelfContainer import ToolshelfContainer
 
-    dockerWidgets: dict = {}
+class ToolshelfPageMain(ToolshelfPage):
 
-    def __init__(self, parent: QStackedWidget=None, isPrimaryPanel: bool = False):
+
+
+    def __init__(self, parent: "ToolshelfContainer", isPrimaryPanel: bool):
+
+        self.dockerWidgets: dict = {}
         
         self.isPrimaryPanel = isPrimaryPanel
 
@@ -33,7 +27,7 @@ class ToolshelfPageMain(ToolshelfPagePanel):
             self.rootCfg = ConfigManager.instance().getJSON().toolshelf_alt
 
 
-        pageCfg = CfgToolboxPanel()
+        pageCfg = CfgToolshelfPanel()
         pageCfg.actionHeight = self.rootCfg.actionHeight
         pageCfg.quick_actions = self.rootCfg.actions
         pageCfg.additional_dockers = self.rootCfg.dockers
@@ -42,11 +36,16 @@ class ToolshelfPageMain(ToolshelfPagePanel):
         
         self.splitter.setAutoFillBackground(False)
 
-        self.dockerBtns = ToolshelfButtonBar(self.rootCfg.dockerButtonHeight, self)
+        self.dockerBtns = ToolshelfButtonBar(self)
+        self.dockerBtns.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.shelfLayout.insertWidget(0, self.dockerBtns)    
     
     def addDockerButton(self, properties, onClick, title):
-        self.dockerBtns.addButton(properties, onClick, title)
+        self.dockerBtns.addCfgButton(properties, onClick, title)
+        self.dockerBtns.button(properties.id).setFixedHeight(self.rootCfg.dockerButtonHeight)
+        self.dockerBtns.button(properties.id).setMinimumWidth(self.rootCfg.dockerButtonHeight)
+        self.dockerBtns.button(properties.id).setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
+           
 
     def loadPage(self):
         for host_id in self.dockerWidgets:

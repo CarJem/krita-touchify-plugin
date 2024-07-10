@@ -1,5 +1,6 @@
 from .CfgPopupInfo import CfgPopupInfo
-from ..ext.extensions import Extensions, TypedList
+from ..ext.extensions_json import JsonExtensions as Extensions
+from ..ext.extensions import TypedList
 
 
 class CfgPopup:

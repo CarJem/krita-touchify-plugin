@@ -6,7 +6,7 @@ from .PropertyGrid_Dialog import PropertyGrid_Dialog
 
 from ...resources import ResourceManager
 
-from ...ext.extensions import KritaExtensions
+from ...ext.extensions_krita import KritaExtensions
 
 DATA_INDEX = 3
 
@@ -15,9 +15,6 @@ class PropertyGrid_SelectorDialogItem(QListWidgetItem):
         return super().__init_subclass__()
 
 class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
-
-    selected_item: str
-
     def __init__(self, parent: QStackedWidget):
         super().__init__(parent)
 
@@ -68,7 +65,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         if mode == "icons":
             self.listView.setViewMode(QListView.ViewMode.IconMode)
             self.listView.setUniformItemSizes(True)
-            icons = KritaExtensions.getIconList()
+            icons = ResourceManager.getIconList()
             for iconName in icons:
                 listItem = QListWidgetItem()
                 listItem.setIcon(ResourceManager.iconLoader(iconName))

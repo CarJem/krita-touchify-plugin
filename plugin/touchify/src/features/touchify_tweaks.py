@@ -5,16 +5,24 @@ from PyQt5 import QtWidgets, QtGui
 from krita import *
 
 
-from ..ext.extensions import KritaExtensions
+from ..ext.extensions_krita import KritaExtensions
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..touchify import TouchifyInstance
 
-class TouchifyTweaks:
+class TouchifyTweaks(object):
 
+    def __init__(self, instance: "TouchifyInstance"):
+        self.appEngine = instance
 
-
-
+    def windowCreated(self):
+        self.qWin = self.appEngine.instanceWindow.qwindow()
+        
+        self.style_CSS()
+        self.style_KisLayerView()
 
     def style_KisLayerView(self):
-        docker = KritaExtensions.getDocker("KisLayerBox")
+        docker = self.qWin.findChild(QDockWidget, "KisLayerBox")
         if not docker:
             return
 
@@ -64,11 +72,7 @@ class TouchifyTweaks:
         create_spacer()
         create_dropdown_button(["create_quick_group", "quick_ungroup"], "groupLayer")
         
-    def style_CSS(self, window):
+    def style_CSS(self):
         full_style_sheet = f""""""
-        window.setStyleSheet(full_style_sheet)
-
-    def load(self, window: Window):
-        self.style_CSS(window)
-        self.style_KisLayerView()
+        self.qWin.setStyleSheet(full_style_sheet)
 
