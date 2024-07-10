@@ -41,6 +41,7 @@ class PropertyField_TypedList(PropertyField):
         field.setSpacing(0)
         field.setContentsMargins(0,0,0,0)
         listView = QListView()
+        listView.doubleClicked.connect(self.itemOptions_edit)
         listView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         btns = QVBoxLayout()

@@ -1,11 +1,13 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 from PyQt5.QtCore import QObject, QEvent, QPoint
 
+from ...ext.KritaSettings import KritaSettings
+
 from ...docker_manager import DockerManager
 
 from .NtAdjustToSubwindowFilter import NtAdjustToSubwindowFilter
 from ...ext.extensions_krita import KritaExtensions
-from ...config import InternalConfig, KritaSettings
+from ...config import InternalConfig
 from ... import stylesheet
 from .NtWidgetPad import NtWidgetPad
 from krita import *

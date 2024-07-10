@@ -5,6 +5,8 @@ from krita import *
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import *
 
+from .ext.KritaSettings import KritaSettings
+
 from .ext.extensions import *
 from .config import *
 

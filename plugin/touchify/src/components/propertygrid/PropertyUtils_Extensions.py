@@ -24,6 +24,11 @@ class PropertyUtils_Extensions:
             return dict(obj.propertygrid_groups())
         else: return {}
 
+    def getSisters(obj):
+        if hasattr(obj, "propertygrid_sisters"):
+            return dict(obj.propertygrid_sisters())
+        else: return {}
+
     def getLabels(obj):
         if hasattr(obj, "propertygrid_labels"):
             return dict(obj.propertygrid_labels())

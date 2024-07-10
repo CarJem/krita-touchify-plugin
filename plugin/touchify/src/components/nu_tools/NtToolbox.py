@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .NtCanvas import NtCanvas
 
+#Other Toolbox: pyKrita_CoolBox
+
 class NtToolboxInteractFilter(QObject):
     def __init__(self, parent=None):
         super(NtToolboxInteractFilter, self).__init__(parent)

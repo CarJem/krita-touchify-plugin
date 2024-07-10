@@ -5,7 +5,7 @@ from krita import *
 from PyQt5.QtCore import *
 from ..components.krita_ext.KisSliderSpinBox import KisSliderSpinBox
 from ..components.krita_ext.KisAngleSelector import KisAngleSelector
-from ..config import KritaSettings
+from ..ext.KritaSettings import KritaSettings
 
 DOCKER_TITLE = 'Brush Options'
 

@@ -145,6 +145,20 @@ nu_toolshelf_button_style = f"""
         QToolButton:pressed {{
             background-color: #{alternate};
         }}
+
+        QPushButton {{
+            background-color: #aa{background};
+            border: none;
+            border-radius: 4px;
+        }}
+        
+        QPushButton:hover {{
+            background-color: #{highlight};
+        }}
+        
+        QPushButton:pressed {{
+            background-color: #{alternate};
+        }}
         """
 
 small_tab_style = f"QTabBar::tab {{ height: {small_tab_size}px; }}"

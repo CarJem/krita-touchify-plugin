@@ -3,6 +3,8 @@ from PyQt5.QtCore import *
 import json
 import os
 
+from touchify.src.ext.KritaSettings import KritaSettings
+
 from .ext.extensions_json import JsonExtensions
 
 from .cfg.CfgToolshelf import CfgToolshelf
@@ -18,19 +20,21 @@ from .cfg.CfgWorkspace import CfgWorkspace
 from .cfg.CfgToolshelf import CfgToolshelfAction
 from .ext.extensions import *
 from ..paths import BASE_DIR
-    
+import copy
 from configparser import ConfigParser
 
 import json
 
-class ConfigFile:
-    dockers: TypedList[CfgDocker] = []
-    docker_groups: TypedList[CfgDockerGroup] = []
-    popups: TypedList[CfgPopup] = []
-    workspaces: TypedList[CfgWorkspace] = []
+class ConfigFile(object):
 
-    toolshelf_main: CfgToolshelf = CfgToolshelf()
-    toolshelf_alt: CfgToolshelf = CfgToolshelf()
+    def __init__(self):
+        self.dockers: TypedList[CfgDocker] = []
+        self.docker_groups: TypedList[CfgDockerGroup] = []
+        self.popups: TypedList[CfgPopup] = []
+        self.workspaces: TypedList[CfgWorkspace] = []
+
+        self.toolshelf_main: CfgToolshelf = CfgToolshelf()
+        self.toolshelf_alt: CfgToolshelf = CfgToolshelf()
 
     def loadClass(self, configName, type):
         CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
@@ -87,7 +91,6 @@ class ConfigFile:
         self.save_chunk(self.workspaces, "workspaces")
         self.saveClass(self.toolshelf_main, "toolshelf_main")
         self.saveClass(self.toolshelf_alt, "toolshelf_alt")
-        self.load()
 
     def load(self):
         self.dockers = self.load_chunk("dockers", CfgDocker)
@@ -118,6 +121,9 @@ class ConfigManager:
         self.base_dir = path
         self.cfg = ConfigFile(self.base_dir)
 
+    def getEditableCfg(self):
+        return copy.copy(self.cfg)
+
     def notifyConnect(self, event):
         self.notify_hooks.append(event)
 
@@ -135,53 +141,6 @@ class ConfigManager:
 
     def getJSON(self) -> ConfigFile:
         return self.cfg
-
-class KritaSettings:
-    
-    def init():
-        KritaSettings.notify_hooks = []
-
-    def notifyConnect(event):
-        KritaSettings.notify_hooks.append(event)
-
-    def notifyUpdate():
-        for hook in KritaSettings.notify_hooks:
-            hook()
-
-    def readSetting(group:str, name:str, defaultValue:str):
-        return Krita.instance().readSetting(group, name, defaultValue)
-    
-    def readSettingBool(group:str, name:str, defaultValue:bool):
-        defaultVal = "true" if defaultValue == True else "false"
-
-        result = KritaSettings.readSetting(group, name, defaultVal)
-        if result == "true": return True
-        elif result == "false": return False
-        else: return None
-    
-    def writeSettingBool(group:str, name:str, value:bool):
-        defaultVal = "true" if value == True else "false"
-        return KritaSettings.writeSetting(group, name, defaultVal)
-
-    def writeSetting(group:str, name:str, value:str):
-        result = Krita.instance().writeSetting(group, name, value)
-        KritaSettings.notifyUpdate()
-        return result
-    
-    def showDockerTitlebars():
-        settingStr = KritaSettings.readSetting("", "showDockerTitleBars", "false")
-        result = True if settingStr == "true" else False
-        return result
-    
-    def showRulers():
-        settingStr = KritaSettings.readSetting("", "showrulers", "true")
-        result = True if settingStr == "true" else False
-        return result
-    
-    def hideScrollbars():
-        settingStr = KritaSettings.readSetting("", "hideScrollbars", "false")
-        result = True if settingStr == "true" else False
-        return result
 
 class InternalConfig:
 
@@ -258,4 +217,3 @@ class InternalConfig:
         self.private_writeSetting("DockerUtils_HiddenUp", self.DockerUtils_HiddenDockersUp, "")
         self.private_writeSetting("DockerUtils_HiddenDown", self.DockerUtils_HiddenDockersDown, "")
 
-KritaSettings.init()

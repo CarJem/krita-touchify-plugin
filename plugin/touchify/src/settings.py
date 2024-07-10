@@ -12,7 +12,7 @@ from .ext.extensions import *
 import xml.etree.ElementTree as ET
 import re
 import functools
-import copy
+
 import json
 from .components.propertygrid.PropertyGridPanel import *
 import datetime
@@ -25,7 +25,7 @@ NOTICE_MESSAGE = """
 
 """
 
-class SettingsDialog:
+class SettingsDialog(QDialog):
 
 
     def getNoticeMessage(self):
@@ -36,13 +36,10 @@ class SettingsDialog:
         return result
 
     def __init__(self, qwin: Window):
+        super().__init__(qwin.qwindow())
         self.qwin = qwin.qwindow()
-        self.cfg = copy.deepcopy(ConfigManager.instance().cfg)
-
-        self.dlg = QDialog(self.qwin)
-
-        self.layout = QGridLayout()
-
+        self.editableConfig = ConfigManager.instance().getEditableCfg()
+        self.gridLayout = QGridLayout()
 
         self.notice = QLabel()
         self.notice.setWordWrap(True)
@@ -52,28 +49,40 @@ class SettingsDialog:
         self.notice.setStyleSheet('''font-size: 10px''')
 
         self.propertyGrid = PropertyGrid()
-        self.propertyGrid.updateDataObject(self.cfg)
-        self.layout.addWidget(self.propertyGrid, 0, 0)
+        self.propertyGrid.updateDataObject(self.editableConfig)
+        self.gridLayout.addWidget(self.propertyGrid, 0, 0)
 
 
 
-        self.layout.addWidget(self.notice, 0, 1)
+        self.gridLayout.addWidget(self.notice, 0, 1)
 
         self.container = QVBoxLayout()
-        self.dlg.setMinimumSize(600,400)
-        self.dlg.setBaseSize(800,800)
-        self.dlg.btns = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Close)
-        self.dlg.btns.accepted.connect(self.dlg.accept)
-        self.dlg.btns.rejected.connect(self.dlg.reject)
-        self.container.addLayout(self.layout)
-        self.container.addWidget(self.dlg.btns)
-        self.dlg.setLayout(self.container)     
+        self.setMinimumSize(600,400)
+        self.setBaseSize(800,800)
+        self.btns = self.createButtons()
+        self.container.addLayout(self.gridLayout)
+        self.container.addWidget(self.btns)
+        self.setLayout(self.container)     
 
-    def show(self):
-        if self.dlg.exec_():
-            self.cfg.save()
-            ConfigManager.instance().notifyUpdate()
-            #msg = QMessageBox(self.qwin)
-            #msg.setText("Changes Saved! You must reload the application to see them.")
-            #msg.exec_()
+    def createButtons(self):
+        buttonBox = QDialogButtonBox(self)
+        buttonBox.addButton(QDialogButtonBox.StandardButton.Save).clicked.connect(self.onSave)
+        buttonBox.addButton(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.onApply)
+        buttonBox.addButton(QDialogButtonBox.StandardButton.Close).clicked.connect(self.onClose)
+        return buttonBox
+    
+    def _saveFile(self):
+        self.editableConfig.save()
+        ConfigManager.instance().notifyUpdate()
+
+    def onSave(self):
+        self._saveFile()
+        self.accept()
+
+    def onApply(self):
+        self._saveFile()
+
+    def onClose(self):
+        self.close()
+        self.reject()
 

@@ -86,4 +86,5 @@ class TouchifyInstance(object):
         msg.exec_()
 
     def openSettings(self):
-        SettingsDialog(self.instanceWindow).show()
+        dlg = SettingsDialog(self.instanceWindow)
+        dlg.show()

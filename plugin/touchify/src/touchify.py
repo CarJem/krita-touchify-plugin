@@ -3,6 +3,8 @@ import uuid
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
 
+from .ext.KritaSettings import KritaSettings
+
 from . import stylesheet
 from PyQt5.QtWidgets import QMessageBox
 from .variables import *

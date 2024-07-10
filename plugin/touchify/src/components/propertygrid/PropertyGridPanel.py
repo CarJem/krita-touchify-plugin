@@ -59,11 +59,19 @@ class PropertyGridPanel(QScrollArea):
     
 
 
-    def createRow(self, item: any, varName: str, layout: QFormLayout, labelData: dict):
+    def createRow(self, item: any, varName: str, layout: QFormLayout, labelData: dict, sisterData: dict):
 
-        def createDataRow(item, varName):
-            variable = PropertyUtils_Extensions.getVariable(item, varName)
-            field = PropertyUtils_Praser.getPropertyType(varName, variable, item)
+        def getFieldText(field: PropertyField):
+            resultText = field.labelText
+            if field.labelText in labelData:
+                propData = labelData[field.labelText]
+                if propData != None:
+                    resultText = propData
+            return resultText
+
+        def createDataRow(_varName: str):
+            variable = PropertyUtils_Extensions.getVariable(item, _varName)
+            field = PropertyUtils_Praser.getPropertyType(_varName, variable, item)
             field.setStackHost(self.stackHost)
             if field:
                 self.fields.append(field)
@@ -71,57 +79,105 @@ class PropertyGridPanel(QScrollArea):
                 return field
             return None
         
-        def createLabelRow(field: PropertyField, labelData: dict):
-            resultText = field.labelText
-            if field.labelText in labelData:
-                propData = labelData[field.labelText]
-                if propData == None:
-                    return
-                resultText = propData
-
+        def createSisDataRow(field: PropertyField, sister_fields: list[PropertyField]):
+            row_fields = QWidget(self)
+            row_fields.setContentsMargins(0,0,0,0)
+            
+            fields_layout = QHBoxLayout()
+            fields_layout.setContentsMargins(0,0,0,0)
+            fields_layout.setSpacing(0)
+            fields_layout.addWidget(field)
+            for sis_field in sister_fields:
+                fields_layout.addWidget(sis_field)
+            row_fields.setLayout(fields_layout)
+            return row_fields
+        
+        def createLabelRow(resultText: str):
             header = QLabel()
             header.setText(resultText)
             header.setMargin(0)
             header.setContentsMargins(5,0,5,0)
             return header
         
+        def createSisLabelRow(field: PropertyField, _sisters: list):
+            headerText = getFieldText(field)
+            if varName in sisterData:
+                headerText = sisterData[varName]["name"]
+            
+            return createLabelRow(headerText)
 
-        field = createDataRow(item, varName)
+        def populateSisDataRows():
+            sister_fields = []
+            if varName in sisterData:
+                data = sisterData[varName]
+                for sisterName in list[str](data["items"]):
+                    sisterField = createDataRow(sisterName)
+                    if sisterField:
+                        sister_fields.append(sisterField)
+            return sister_fields
+
+        field = createDataRow(varName)
         if field:
-            header = createLabelRow(field, labelData)
-            layout.addRow(header, field)
+            sisters = populateSisDataRows()
+            if len(sisters) == 0:
+                header = createLabelRow(getFieldText(field))
+                layout.addRow(header, field)
+            else:
+                header = createSisLabelRow(field, sisters)
+                sister_field = createSisDataRow(field, sisters)
+                layout.addRow(header, sister_field)
+                
     
     def updateDataObject(self, item):
         self.item = item
         self.fields.clear()
         PropertyUtils_Extensions.clearLayout(self.formLayout)
+        sisterData = PropertyUtils_Extensions.getSisters(item)
         groupData = PropertyUtils_Extensions.getGroups(item)
         labelData = PropertyUtils_Extensions.getLabels(item)
-        claimedSections = []
 
+        claimedSections = []
+        claimedSisters = []
+        sisterParentData = {}
+
+        for sisterId in sisterData:
+            sisterName = sisterData[sisterId]["name"]
+            sisterItems = list[str](sisterData[sisterId]["items"])
+            
+            if len(sisterItems) >= 2:
+                firstItem = sisterItems.pop(0)
+                sisterParentData[firstItem] = {
+                    "name": sisterName,
+                    "items": sisterItems
+                }
+
+                for varName in sisterItems:
+                    claimedSisters.append(varName)
+    
         for groupId in groupData:
-            groupName = groupData[groupId]["name"]
-            groupItems = list(groupData[groupId]["items"])
-            for varName in groupItems:
+            sisterName = groupData[groupId]["name"]
+            sisterItems = list(groupData[groupId]["items"])
+            for varName in sisterItems:
                 claimedSections.append(varName)
 
         for varName in PropertyUtils_Extensions.getClassVariables(item):
-            if varName not in claimedSections:
-                self.createRow(item, varName, self.formLayout, labelData)
+            if varName not in claimedSections and varName not in claimedSisters:
+                self.createRow(item, varName, self.formLayout, labelData, sisterParentData)
 
         
         for groupId in groupData:
-            groupName = groupData[groupId]["name"]
-            groupItems = list(groupData[groupId]["items"])
-            section = CollapsibleBox(groupName, self.formWidget)
+            sisterName = groupData[groupId]["name"]
+            sisterItems = list(groupData[groupId]["items"])
+            section = CollapsibleBox(sisterName, self.formWidget)
             sectionLayout = QFormLayout()
             sectionLayout.setSpacing(0)
             sectionLayout.setLabelAlignment(LABEL_ALIGNMENT)
             sectionLayout.setContentsMargins(0,0,0,0)
             section.setSizePolicy(GROUP_SIZE_POLICY_X, GROUP_SIZE_POLICY_Y)
 
-            for varName in groupItems:
-                self.createRow(item, varName, sectionLayout, labelData)
+            for varName in sisterItems:
+                if varName not in claimedSisters:
+                    self.createRow(item, varName, sectionLayout, labelData, sisterParentData)
 
             section.setContentLayout(sectionLayout)
 

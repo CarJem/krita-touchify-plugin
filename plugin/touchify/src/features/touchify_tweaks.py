@@ -19,7 +19,7 @@ class TouchifyTweaks(object):
         self.qWin = self.appEngine.instanceWindow.qwindow()
         
         self.style_CSS()
-        self.style_KisLayerView()
+        #self.style_KisLayerView()
 
     def style_KisLayerView(self):
         docker = self.qWin.findChild(QDockWidget, "KisLayerBox")

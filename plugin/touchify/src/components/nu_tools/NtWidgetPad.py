@@ -19,6 +19,8 @@
 from PyQt5.QtWidgets import QWidget, QToolButton, QDockWidget, QVBoxLayout, QSizePolicy, QScrollArea
 from PyQt5.QtCore import Qt, QSize, QPoint
 
+from ...ext.KritaSettings import KritaSettings
+
 from ...config import *
 from ... import stylesheet
 

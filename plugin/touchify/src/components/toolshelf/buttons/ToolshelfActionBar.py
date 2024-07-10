@@ -1,7 +1,9 @@
 
 
 
-from ....cfg.CfgToolshelf import CfgToolshelfAction
+from multiprocessing import context
+import uuid
+from ....cfg.CfgToolshelf import CfgToolshelfAction, CfgToolshelfActionSubItem
 from ....variables import *
 from ....cfg.CfgToolshelf import CfgToolshelfAction
 from krita import *
@@ -16,9 +18,14 @@ KNOWN_UNCHECKABLES = [
     "show_brush_editor"
 ]
 
-class ToolshelfQuickActions(QWidget):
+EXPANDING_SPACERS = [
+    "expanding_spacer1",
+    "expanding_spacer2"
+]
+
+class ToolshelfActionBar(QWidget):
     def __init__(self, cfg: List[CfgToolshelfAction], parent: QWidget=None,):
-        super(ToolshelfQuickActions, self).__init__(parent)
+        super(ToolshelfActionBar, self).__init__(parent)
 
         self.cfg = cfg
 
@@ -63,26 +70,42 @@ class ToolshelfQuickActions(QWidget):
         actions = self.cfg
         for entry in actions:
             act: CfgToolshelfAction = entry
-            action = Krita.instance().action(act.id)
+            if act.has_context_menu:
+                id = str(uuid.uuid4())
+                self.bar.addButton(id, act.icon, act.row, None, act.context_menu_name, False, True)
+                btn = self.bar.button(id)
 
-            checkable = action.isCheckable()
-            if act.id in KNOWN_UNCHECKABLES:
-                checkable = False
+                contextMenu = QMenu(btn)
                 
+                for entry in act.context_menu_actions:
+                    action_cfg: CfgToolshelfActionSubItem = entry
+                    actual_action = Krita.instance().action(action_cfg.id)
+                    if actual_action:
+                        contextMenu.addAction(actual_action)
 
-            if action:
-                self.bar.addCfgButton(
-                    act,
-                    action.trigger,
-                    action.toolTip(),
-                    checkable
-                    )
-                
-                if act.useActionIcon:
-                    btn = self.bar.button(act.id)
-                    btn.setIcon(action.icon())
 
-                if checkable:
-                    btn = self.bar.button(act.id)
-                    btn.setChecked(action.isChecked())
-                    self.registerAction(btn, action, act.useActionIcon)
+                btn.setMenu(contextMenu)
+                btn.clicked.connect(btn.showMenu)
+
+            else:
+                action = Krita.instance().action(act.id)
+                if action:
+                    checkable = action.isCheckable()
+                    if act.id in KNOWN_UNCHECKABLES:
+                        checkable = False
+
+                    self.bar.addCfgButton(
+                        act,
+                        action.trigger,
+                        action.toolTip(),
+                        checkable
+                        )
+                    
+                    if act.useActionIcon:
+                        btn = self.bar.button(act.id)
+                        btn.setIcon(action.icon())
+
+                    if checkable:
+                        btn = self.bar.button(act.id)
+                        btn.setChecked(action.isChecked())
+                        self.registerAction(btn, action, act.useActionIcon)

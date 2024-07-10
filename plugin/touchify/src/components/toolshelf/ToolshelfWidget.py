@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 from touchify.src.components.toolshelf.buttons.ToolshelfPanelHeader import ToolshelfPanelHeader
-from .buttons.ToolshelfQuickActions import ToolshelfQuickActions
+from .buttons.ToolshelfActionBar import ToolshelfActionBar
 from .pages.ToolshelfPage import ToolshelfPage
 
 from ...config import *
@@ -32,7 +32,8 @@ class ToolshelfWidget(QDockWidget):
         stylesheet = f"""QScrollArea {{ background: transparent; }}
         QScrollArea > QWidget > ToolshelfContainer {{ background: transparent; }}
         """
-
+        self._last_panel_id: str | None = None
+        self._last_pinned: bool = False
         self.scrollArea = QScrollArea(self)
         self.scrollArea.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.scrollArea.setWidgetResizable(True)
@@ -65,7 +66,15 @@ class ToolshelfWidget(QDockWidget):
         self.panelStack.updateStyleSheet()
         self.scrollArea.setWidget(self.panelStack)
 
+        if self._last_pinned:
+            self.panelStack.setPinned(self._last_pinned)
+
+        if self.panelStack.panel(self._last_panel_id) != None:
+            self.panelStack.changePanel(self._last_panel_id)
+
     def onUnload(self):
+        self._last_panel_id = self.panelStack._current_panel_id
+        self._last_pinned = self.panelStack._pinned
         self.panelStack.shutdownWidget()
         self.scrollArea.takeWidget()
         self.panelStack.deleteLater()

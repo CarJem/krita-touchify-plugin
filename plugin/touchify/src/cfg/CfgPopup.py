@@ -20,6 +20,12 @@ class CfgPopup:
     hotkeyNumber: int = 0
     items: TypedList[CfgPopupInfo] = []
 
+    def propertygrid_sisters(self):
+        row: dict[str, list[str]] = {}
+        row["item_size"] = {"name": "Item Size", "items": ["item_width","item_height"]}
+        row["icon_size"] = {"name": "Icon Size", "items": ["icon_width","icon_height"]}
+        return row
+
 
     def propertygrid_groups(self):
         action_mode_settings = [

@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 from touchify.src.components.toolshelf.buttons.ToolshelfPanelHeader import ToolshelfPanelHeader
-from .buttons.ToolshelfQuickActions import ToolshelfQuickActions
+from .buttons.ToolshelfActionBar import ToolshelfActionBar
 from .pages.ToolshelfPage import ToolshelfPage
 from ..DockerContainer import DockerContainer
 
@@ -42,7 +42,7 @@ class ToolshelfContainer(QStackedWidget):
         panels = self.cfg.panels
         for entry in panels:
             properties: CfgToolshelfPanel = entry
-            PANEL_ID = str(uuid.uuid4())
+            PANEL_ID = properties.id
             panel_title = properties.id
             self.addPanel(PANEL_ID, properties)
             self._mainWidget.addDockerButton(properties, self.panel(PANEL_ID).activate, panel_title)
@@ -82,12 +82,17 @@ class ToolshelfContainer(QStackedWidget):
     def isPinned(self):
         return self._pinned
 
+    def setPinned(self, value):
+        self._pinned = not self._pinned
+        for header in self._headers:
+            header.pinButton.setChecked(self._pinned)
+
     def togglePinned(self):
         self._pinned = not self._pinned
         for header in self._headers:
             header.pinButton.setChecked(self._pinned)
 
-    def changePanel(self, panel_id: any):
+    def changePanel(self, panel_id: str):
         new_panel = self.panel(panel_id)
         old_panel = self.panel(self._current_panel_id)
 
@@ -117,7 +122,10 @@ class ToolshelfContainer(QStackedWidget):
         self.adjustSize()
 
     def panel(self, name) -> ToolshelfPage:
-        return self._panels[name]
+        if name in self._panels:
+            return self._panels[name]
+        else:
+            return None
     
     def shutdownWidget(self):
         qApp.focusObjectChanged.disconnect(self.handleFocusChange)
@@ -127,7 +135,7 @@ class ToolshelfContainer(QStackedWidget):
         for child in children:
             child.shutdownWidget()
 
-        children = self.findChildren(ToolshelfQuickActions)
+        children = self.findChildren(ToolshelfActionBar)
         for child in children:
             child.unregisterActions()
 

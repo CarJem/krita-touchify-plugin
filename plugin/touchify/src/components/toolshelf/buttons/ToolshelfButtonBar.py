@@ -9,17 +9,18 @@ from krita import *
 
 from ....config import *
 
-from PyQt5.QtWidgets import QSizePolicy, QToolButton, QWidget, QHBoxLayout
+from PyQt5.QtWidgets import QSizePolicy, QPushButton, QWidget, QHBoxLayout
 from PyQt5.QtCore import QSize, Qt
 
 
-class ToolshelfButton(QToolButton):
+class ToolshelfButton(QPushButton):
 
     def __init__(self, parent = None):
         super(ToolshelfButton, self).__init__(parent)
 
         self.setFocusPolicy(Qt.NoFocus)
         self.highlightConnection = None
+        self._resizing = False
 
     def setIcon(self, icon):
         if isinstance(icon, QIcon):
@@ -30,6 +31,7 @@ class ToolshelfButton(QToolButton):
             super().setIcon(QIcon(QPixmap.fromImage(icon)))
         else:
             raise TypeError(f"Unable to set icon of invalid type {type(icon)}")
+
 
 
     def setColor(self, color): # In case the Krita API opens up for a "color changed" signal, this could be useful...
@@ -69,13 +71,14 @@ class ToolshelfButtonBar(QWidget):
 
     def addButton(self, id: any, displayData: str, row: int, onClick: any, toolTip: str, checkable: bool, hasIcon: bool):
         btn = ToolshelfButton()
-        
         if hasIcon:
             btn.setIcon(ResourceManager.iconLoader(displayData))
         else: 
             btn.setText(displayData)
-        btn.clicked.connect(onClick) # collect and disconnect all when closing
+        if onClick:
+            btn.clicked.connect(onClick) # collect and disconnect all when closing
         btn.setToolTip(toolTip)
+        btn.setContentsMargins(0,0,0,0)
         btn.setCheckable(checkable)
         self._buttons[id] = btn
 
