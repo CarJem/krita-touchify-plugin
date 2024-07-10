@@ -35,8 +35,7 @@ class ConfigFile:
     def loadClass(self, configName, type):
         CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
         with open(CONFIG_FILE) as f:
-            jsonData = json.load(f)
-            return type.create(jsonData)
+            return type(**json.load(f))
 
     def saveClass(self, cfg, configName):
         CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")

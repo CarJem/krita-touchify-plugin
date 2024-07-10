@@ -12,9 +12,6 @@ if TYPE_CHECKING:
     from ..ToolshelfContainer import ToolshelfContainer
 
 class ToolshelfPageMain(ToolshelfPage):
-
-
-
     def __init__(self, parent: "ToolshelfContainer", isPrimaryPanel: bool):
 
         self.dockerWidgets: dict = {}
@@ -40,7 +37,7 @@ class ToolshelfPageMain(ToolshelfPage):
         self.dockerBtns.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.shelfLayout.insertWidget(0, self.dockerBtns)    
     
-    def addDockerButton(self, properties, onClick, title):
+    def addDockerButton(self, properties: CfgToolshelfPanel, onClick, title):
         self.dockerBtns.addCfgButton(properties, onClick, title)
         self.dockerBtns.button(properties.id).setFixedHeight(self.rootCfg.dockerButtonHeight)
         self.dockerBtns.button(properties.id).setMinimumWidth(self.rootCfg.dockerButtonHeight)

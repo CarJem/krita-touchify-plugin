@@ -40,12 +40,10 @@ class CfgPopup:
         groups["docker_mode"] = {"name": "Docker Mode Settings", "items": docker_mode_settings}
         return groups
 
-    def create(args):
-        obj = CfgPopup()
-        Extensions.dictToObject(obj, args)
+    def __init__(self, **args) -> None:
+        Extensions.dictToObject(self, args)
         items = Extensions.default_assignment(args, "items", [])
-        obj.items = Extensions.list_assignment(items, CfgPopupInfo)
-        return obj
+        self.items = Extensions.list_assignment(items, CfgPopupInfo)
 
     def __str__(self):
         return self.btnName.replace("\n", "\\n")

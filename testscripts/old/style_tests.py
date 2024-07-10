@@ -12,15 +12,12 @@ sys.path.append('C:/Users/demo/Documents/Apps/Scripts/KritaDev/modules')
 highlight = qApp.palette().color(QPalette.Highlight).name().split("#")[1]
 
 
-from touchify.src.dockers.BrushOptionsDocker import SliderSpinBox
+from touchify.src.components.krita_ext.KisSliderSpinBox import KisSliderSpinBox
 from krita import *
 qwin = Krita.instance().activeWindow().qwindow()
 wobj = qwin.findChild(QMdiArea)
-objective = wobj.findChildren(SliderSpinBox)
+objective = wobj.findChildren(KisSliderSpinBox)
 for item in objective:
-    delta = (item.spinbox.value() / item.spinbox.maximum())**(1./item.scaling)
-    value = int(delta * item.progbar.maximum())
-
-    buttonStyle = f"""background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                stop:0 #{highlight}, stop:{delta} #{highlight}, stop:{delta + 0.01} black, stop:1 black)"""
-    item.spinbox.lineEdit().setStyleSheet(buttonStyle)
+    #item.lineEdit().setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
+    #item.lineEdit().setMinimumSize(0, 0)
+    item.lineEdit().adjustSize()

@@ -12,12 +12,10 @@ class CfgDockerGroup:
     groupId: str = ""
     docker_names: TypedList[CfgDockerGroupItem] = []
 
-    def create(args):
-        obj = CfgDockerGroup()
-        Extensions.dictToObject(obj, args)
+    def __init__(self, **args) -> None:
+        Extensions.dictToObject(self, args)
         docker_names = Extensions.default_assignment(args, "docker_names", [])
-        obj.docker_names = Extensions.list_assignment(docker_names, CfgDockerGroupItem)
-        return obj
+        self.docker_names = Extensions.list_assignment(docker_names, CfgDockerGroupItem)
 
     def __str__(self):
         return self.display_name.replace("\n", "\\n")

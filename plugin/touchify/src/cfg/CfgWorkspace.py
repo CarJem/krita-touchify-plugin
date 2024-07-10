@@ -7,10 +7,8 @@ class CfgWorkspace:
     icon: str = ""
     hotkeyNumber: int = 0
 
-    def create(args):
-        obj = CfgWorkspace()
-        Extensions.dictToObject(obj, args)
-        return obj
+    def __init__(self, **args) -> None:
+        Extensions.dictToObject(self, args)
 
     def __str__(self):
         return self.display_name.replace("\n", "\\n")

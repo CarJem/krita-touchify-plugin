@@ -2,6 +2,8 @@
 from krita import *
 from PyQt5.QtCore import *
 
+from ..resources import ResourceManager
+
 DOCKER_TITLE = 'Color Options'
 
 
@@ -9,6 +11,7 @@ class ColorSourceToggle(QWidget):
     def __init__(self, parent: QWidget | None = None, cubeSize: int = 25):
         super(ColorSourceToggle, self).__init__(parent)
         self.canvas: Canvas = None
+        self.setContentsMargins(2,2,2,2)
 
         self.cubeSize = cubeSize
 
@@ -30,27 +33,27 @@ class ColorSourceToggle(QWidget):
         self.setFgBtn.setFixedHeight(self.cubeSize)
         self.gridLayout.addWidget(self.setFgBtn)
 
-        self.setBgBtn = QPushButton(self)
-        self.setBgBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.setBgBtn.clicked.connect(self.setBackgroundColor)
-        self.setBgBtn.setFixedHeight(self.cubeSize)
-        self.gridLayout.addWidget(self.setBgBtn)
-
         self.toggleBtn = QPushButton(self)
+        self.toggleBtn.setIcon(ResourceManager.materialIcon("swap-horizontal"))
         self.toggleBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.toggleBtn.clicked.connect(self.toggleColors)
         self.toggleBtn.setFixedSize(self.cubeSize, self.cubeSize)
         self.toggleBtn.setStyleSheet("border-radius: 0px;")
         self.gridLayout.addWidget(self.toggleBtn)
 
+        self.setBgBtn = QPushButton(self)
+        self.setBgBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.setBgBtn.clicked.connect(self.setBackgroundColor)
+        self.setBgBtn.setFixedHeight(self.cubeSize)
+        self.gridLayout.addWidget(self.setBgBtn)
+
         self.resetBtn = QPushButton(self)
+        self.resetBtn.setIcon(ResourceManager.kritaIcon("color-to-alpha"))
         self.resetBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.resetBtn.clicked.connect(self.resetColors)
         self.resetBtn.setFixedSize(self.cubeSize, self.cubeSize)
         self.resetBtn.setStyleSheet("border-radius: 0px;")
         self.gridLayout.addWidget(self.resetBtn)
-
-        self.initBitmaps()
 
     def setForegroundColor(self):
         Krita.instance().action("chooseForegroundColor").trigger()
@@ -74,51 +77,6 @@ class ColorSourceToggle(QWidget):
         self.timer_pulse.stop()
         super().closeEvent(event)
 
-    def initBitmaps(self):
-
-        bitmap_size = 12
-
-        arrowBitmap = QPixmap(bitmap_size,bitmap_size)
-        arrowBitmap.fill(Qt.GlobalColor.transparent)
-        
-        p = QPainter(arrowBitmap)
-        p.setPen(qApp.palette().windowText().color())
-
-        #arrow pointing left
-        p.drawLine(0, 3, 7, 3)
-        p.drawLine(1, 2, 1, 4)
-        p.drawLine(2, 1, 2, 5)
-        p.drawLine(3, 0, 3, 6)
-
-        #arrow pointing down
-        p.drawLine(8, 4, 8, 11)
-        p.drawLine(5, 8, 11, 8)
-        p.drawLine(6, 9, 10, 9)
-        p.drawLine(7, 10, 9, 10)
-        p.end()
-        
-        resetBitmap = QPixmap(["12 12 4 1",
-                 " 	c None",
-                 ".	c #808080",
-                 "+	c #000000",
-                 "@	c #FFFFFF",
-                 "........    ", 
-                 ".++++++.    ", 
-                 ".++++++.    ", 
-                 ".++++++.    ", 
-                 ".++++++.....", 
-                 ".++++++.@@@.", 
-                 ".++++++.@@@.", 
-                 "........@@@.", 
-                 "    .@@@@@@.", 
-                 "    .@@@@@@.", 
-                 "    .@@@@@@.", 
-                 "    ........"
-                ])
-        
-        self.resetBtn.setIcon(QIcon(resetBitmap))
-        self.toggleBtn.setIcon(QIcon(arrowBitmap))
-
     def krita_to_qcolor(self, source: ManagedColor):
         if self.canvas == None or source == None: return QColor()
         return source.colorForCanvas(self.canvas)
@@ -132,8 +90,8 @@ class ColorSourceToggle(QWidget):
         fg_color = self.krita_to_qcolor(activeView.foregroundColor())
         bg_color = self.krita_to_qcolor(activeView.backgroundColor())
 
-        self.setFgBtn.setStyleSheet("border-radius: 0px; background-color: {0}".format(fg_color.name()))
-        self.setBgBtn.setStyleSheet("border-radius: 0px; background-color: {0}".format(bg_color.name()))
+        self.setFgBtn.setStyleSheet("background-color: {0}".format(fg_color.name()))
+        self.setBgBtn.setStyleSheet("background-color: {0}".format(bg_color.name()))
 
     def onCanvasChanged(self, canvas: Canvas):
         self.canvas = canvas

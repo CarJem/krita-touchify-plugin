@@ -53,5 +53,5 @@ class JsonExtensions:
     def list_assignment(array, classSrc):
         arraySrc = TypedList(None, classSrc)
         for i in array:
-            arraySrc.append(classSrc.create(i))
+            arraySrc.append(classSrc(**i))
         return arraySrc

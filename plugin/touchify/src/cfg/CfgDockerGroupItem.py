@@ -4,10 +4,8 @@ from ..ext.extensions_json import JsonExtensions as Extensions
 class CfgDockerGroupItem:
     id: str=""
 
-    def create(args):
-        obj = CfgDockerGroupItem()
-        Extensions.dictToObject(obj, args)
-        return obj
+    def __init__(self, **args) -> None:
+        Extensions.dictToObject(self, args)
 
     def __str__(self):
         return self.id.replace("\n", "\\n")

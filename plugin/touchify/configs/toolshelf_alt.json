@@ -22,12 +22,12 @@
             "id": "OverviewDocker",
             "size_x": 300,
             "size_y": 200,
-            "nesting_mode": "docking",
+            "docker_nesting_mode": "docking",
             "action_section_contents": []
         },
         {
             "id": "pykrita_reference_tabs",
-            "nesting_mode": "normal",
+            "docker_nesting_mode": "normal",
             "size_x": 300,
             "size_y": 200,
             "action_section_contents": []

@@ -7,10 +7,8 @@ class CfgDocker:
     icon: str = ""
     hotkeyNumber: int = 0
 
-    def create(args):
-        obj = CfgDocker()
-        Extensions.dictToObject(obj, args)
-        return obj
+    def __init__(self, **args) -> None:
+        Extensions.dictToObject(self, args)
 
     def forceLoad(self):
         pass

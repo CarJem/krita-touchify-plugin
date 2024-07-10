@@ -27,7 +27,7 @@ class Unsortable( list ):
   def sort( self, *args, **kwargs ):
     return
 
-class TypedList( list ):
+class TypedList(list):
   """
   .. class:: TypedList
 

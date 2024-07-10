@@ -127,7 +127,7 @@ class DockerContainer(QWidget):
         self.dockMode = value
 
     def setSizeHint(self, size):
-        self.size = QSize(size[0] + 20, size[1] + 20)
+        self.size = QSize(size[0], size[1])
     #endregion
 
     #region Overrides

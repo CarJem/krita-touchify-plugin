@@ -1,16 +1,16 @@
 from ..ext.typedlist import TypedList
 from ..ext.extensions_json import JsonExtensions as Extensions
+from ..ext.extensions import nameof
 
 class CfgToolshelfAction:
     id: str = ""
     icon: str = ""
     row: int = 0
     column: int = 0
+    useActionIcon: bool = False
 
-    def create(args):
-        obj = CfgToolshelfAction()
-        Extensions.dictToObject(obj, args)
-        return obj
+    def __init__(self, **args) -> None:
+        Extensions.dictToObject(self, args)
 
     def __str__(self):
         name = self.id.replace("\n", "\\n")
@@ -25,6 +25,7 @@ class CfgToolshelfAction:
         labels["icon"] = "Display Icon"
         labels["row"] = "Tab Row"
         labels["row"] = "Tab Column"
+        labels["useActionIcon"] = "Use Default Icon"
         return labels
 
     def propertygrid_groups(self):
@@ -42,15 +43,21 @@ class CfgToolshelfDocker:
 
     size_x: int = 0
     size_y: int = 0
+
+    min_size_x: int = 0
+    min_size_y: int = 0
+
+    max_size_x: int = 0
+    max_size_y: int = 0
+
     panel_y: int = 0
     panel_x: int = 0
 
-    nesting_mode: str = "normal"
-    unloaded_visibility: str = "normal"
-    loading_priority: str = "normal"
-
     section_type: str = "docker"
-    
+
+    docker_nesting_mode: str = "normal"
+    docker_unloaded_visibility: str = "normal"
+    docker_loading_priority: str = "normal"
 
     action_section_name: str = "Panel"
     action_section_contents: TypedList[CfgToolshelfAction] = []
@@ -59,12 +66,10 @@ class CfgToolshelfDocker:
     action_section_btn_width: int = 0
     action_section_btn_height: int = 0
 
-    def create(args):
-        obj = CfgToolshelfDocker()
-        Extensions.dictToObject(obj, args)
+    def __init__(self, **args) -> None:
+        Extensions.dictToObject(self, args)
         action_section_contents = Extensions.default_assignment(args, "action_section_contents", [])
-        obj.action_section_contents = Extensions.list_assignment(action_section_contents, CfgToolshelfAction)
-        return obj
+        self.action_section_contents = Extensions.list_assignment(action_section_contents, CfgToolshelfAction)
 
     def forceLoad(self):
         self.action_section_contents = TypedList(self.action_section_contents, CfgToolshelfAction)
@@ -85,13 +90,17 @@ class CfgToolshelfDocker:
     def propertygrid_labels(self):
         labels = {}
         labels["id"] = "Docker ID"
-        labels["size_x"] = "Docker Width"
-        labels["size_y"] = "Docker Height"
+        labels["size_x"] = "Base Width"
+        labels["size_y"] = "Base Height"
+        labels["max_size_x"] = "Max Width"
+        labels["max_size_y"] = "Max Height"
+        labels["min_size_x"] = "Min Width"
+        labels["min_size_y"] = "Min Height"
         labels["panel_y"] = "Panel Row"
         labels["panel_x"] = "Panel Column"
-        labels["nesting_mode"] = "Nesting Mode"
-        labels["unloaded_visibility"] = "Unloaded Visibility"
-        labels["loading_priority"] = "Loading Priority"
+        labels["docker_nesting_mode"] = "Nesting Mode"
+        labels["docker_unloaded_visibility"] = "Unloaded Visibility"
+        labels["docker_loading_priority"] = "Loading Priority"
         labels["section_type"] = "Section Type"
 
         labels["action_section_name"] = "Section Name"
@@ -115,9 +124,9 @@ class CfgToolshelfDocker:
 
         docker_groups = [
             "id", 
-            "nesting_mode", 
-            "unloaded_visibility", 
-            "loading_priority"
+            "docker_nesting_mode", 
+            "docker_unloaded_visibility", 
+            "docker_loading_priority"
         ]
 
         groups = {}
@@ -128,13 +137,17 @@ class CfgToolshelfDocker:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["id"] = {"type": "docker_selection"}
-        restrictions["nesting_mode"] = {"type": "values", "entries": ["normal", "docking"]}
-        restrictions["unloaded_visibility"] = {"type": "values", "entries": ["normal", "hidden"]}
-        restrictions["loading_priority"] = {"type": "values", "entries": ["normal", "passive"]}
+        restrictions["docker_nesting_mode"] = {"type": "values", "entries": ["normal", "docking"]}
+        restrictions["docker_unloaded_visibility"] = {"type": "values", "entries": ["normal", "hidden"]}
+        restrictions["docker_loading_priority"] = {"type": "values", "entries": ["normal", "passive"]}
         restrictions["panel_x"] = {"type": "range", "min": 0}
         restrictions["panel_y"] = {"type": "range", "min": 0}
         restrictions["size_x"] = {"type": "range", "min": 0}
         restrictions["size_y"] = {"type": "range", "min": 0}
+        restrictions["min_size_x"] = {"type": "range", "min": 0}
+        restrictions["min_size_y"] = {"type": "range", "min": 0}
+        restrictions["max_size_x"] = {"type": "range", "min": 0}
+        restrictions["max_size_y"] = {"type": "range", "min": 0}
         restrictions["section_type"] = {"type": "values", "entries": ["docker", "actions"]}
         restrictions["action_section_btn_width"] = {"type": "range", "min": 0}
         restrictions["action_section_btn_height"] = {"type": "range", "min": 0}
@@ -152,14 +165,12 @@ class CfgToolshelfPanel:
     additional_dockers: TypedList[CfgToolshelfDocker] = []
     actionHeight: int = 10
 
-    def create(args):
-        obj = CfgToolshelfPanel()
-        Extensions.dictToObject(obj, args)
+    def __init__(self, **args) -> None:
+        Extensions.dictToObject(self, args)
         additional_dockers = Extensions.default_assignment(args, "additional_dockers", [])
         quick_actions = Extensions.default_assignment(args, "quick_actions", [])
-        obj.additional_dockers = Extensions.list_assignment(additional_dockers, CfgToolshelfDocker)
-        obj.quick_actions = Extensions.list_assignment(quick_actions, CfgToolshelfAction)
-        return obj
+        self.additional_dockers = Extensions.list_assignment(additional_dockers, CfgToolshelfDocker)
+        self.quick_actions = Extensions.list_assignment(quick_actions, CfgToolshelfAction)
 
     def forceLoad(self):
         self.additional_dockers = TypedList(self.additional_dockers, CfgToolshelfDocker)
@@ -177,7 +188,6 @@ class CfgToolshelfPanel:
         labels["size_y"] = "Panel Height"
         labels["row"] = "Tab Row"
         labels["additional_dockers"] = "Dockers"
-        labels["additional_action_areas"] = "Action Dockers"
         labels["quick_actions"] = "Actions"
         labels["actionHeight"] = "Action Button Height"
         return labels
@@ -203,16 +213,14 @@ class CfgToolshelf:
     sliderHeight: int = 16
     actionHeight: int = 16
 
-    def create(args):
-        obj = CfgToolshelf()
-        Extensions.dictToObject(obj, args)
+    def __init__(self, **args) -> None:
+        Extensions.dictToObject(self, args)
         panels = Extensions.default_assignment(args, "panels", [])
-        obj.panels = Extensions.list_assignment(panels, CfgToolshelfPanel)
+        self.panels = Extensions.list_assignment(panels, CfgToolshelfPanel)
         actions = Extensions.default_assignment(args, "actions", [])
-        obj.actions = Extensions.list_assignment(actions, CfgToolshelfAction)
+        self.actions = Extensions.list_assignment(actions, CfgToolshelfAction)
         dockers = Extensions.default_assignment(args, "dockers", [])
-        obj.dockers = Extensions.list_assignment(dockers, CfgToolshelfDocker)
-        return obj
+        self.dockers = Extensions.list_assignment(dockers, CfgToolshelfDocker)
     
     def forceLoad(self):
         self.panels = TypedList(self.panels, CfgToolshelfPanel)
@@ -229,7 +237,6 @@ class CfgToolshelf:
         labels["sliderHeight"] = "Slider Height"
         labels["actionHeight"] = "Action Button Height"
         labels["dockers"] = "Dockers"
-        labels["action_dockers"] = "Action Dockers"
         return labels
 
     def propertygrid_groups(self):

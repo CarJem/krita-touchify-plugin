@@ -127,6 +127,10 @@ class ToolshelfContainer(QStackedWidget):
         for child in children:
             child.shutdownWidget()
 
+        children = self.findChildren(ToolshelfQuickActions)
+        for child in children:
+            child.unregisterActions()
+
         for header in self._headers:
             header.close()
 

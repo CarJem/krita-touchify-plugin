@@ -14,10 +14,8 @@ class CfgPopupInfo:
         labels["text"] = "Display Text"
         return labels
 
-    def create(args):
-        obj = CfgPopupInfo()
-        Extensions.dictToObject(obj, args)
-        return obj
+    def __init__(self, **args) -> None:
+        Extensions.dictToObject(self, args)
 
     def __str__(self):
         return self.text.replace("\n", "\\n")
