@@ -28,8 +28,7 @@
             "type": "docker",
             "docker_id": "pykrita_compactbrushtoggler",
             "id": "brushOptionsPopup",
-            "icon": "custom:pencil-ruler-outline",
-            "hotkeyNumber": 0
+            "icon": "custom:pencil-ruler-outline"
         },
         {
             "id": "GridDockerPopup",
@@ -44,7 +43,6 @@
             "item_height": 400,
             "icon_width": 30,
             "icon_height": 30,
-            "hotkeyNumber": 0,
             "items": [],
             "popupType": "popup"
         },
@@ -61,7 +59,6 @@
             "docker_id": "ColorSelectorNg",
             "icon": "docker_collapse_a",
             "type": "docker",
-            "hotkeyNumber": 0,
             "id": "ColorOptionsPopup"
         },
         {
@@ -178,8 +175,7 @@
                     "icon": ""
                 }
             ],
-            "opacity": 1.0,
-            "hotkeyNumber": 2
+            "opacity": 1.0
         },
         {
             "items": [],
@@ -195,7 +191,6 @@
             "type": "docker",
             "docker_id": "KisLayerBox",
             "id": "LayerPopup",
-            "hotkeyNumber": 0,
             "popupType": "window"
         }
     ]

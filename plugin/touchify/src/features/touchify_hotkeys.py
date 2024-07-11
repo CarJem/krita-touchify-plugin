@@ -19,6 +19,7 @@ class TouchifyHotkeys(object):
     def __init__(self, instance: "TouchifyInstance"):
         self.appEngine = instance
         self.hotkeys_storage = {}
+        self.hotkey_options_storage = {}
 
     def onAppEngineStart(self, instance: "TouchifyInstance"):
         self.appEngine = instance
@@ -65,13 +66,34 @@ class TouchifyHotkeys(object):
         menu.addMenu(self.hotkey_menu)
         menu.addMenu(self.other_menu)
         menu.addMenu(self.docker_utils_menu)
-
-
-    def getHotkeyAction(self, index):
-        return self.hotkeys_storage[index]
-
-    def addHotkey(self, index, action):
-        self.hotkeys_storage[index] = action
+        
+    
+    def triggerHotkey(self, index: int):
+        actionRequest = "none"
+        cfg = TouchifyConfig.instance().getJSON().hotkeys
+        match index:
+            case  1: 
+                actionRequest = cfg.hotkey1
+            case  2: 
+                actionRequest = cfg.hotkey2
+            case  3: 
+                actionRequest = cfg.hotkey3
+            case  4: 
+                actionRequest = cfg.hotkey4
+            case  5: 
+                actionRequest = cfg.hotkey5
+            case  6: 
+                actionRequest = cfg.hotkey6
+            case  7: 
+                actionRequest = cfg.hotkey7
+            case  8: 
+                actionRequest = cfg.hotkey8
+            case  9: 
+                actionRequest = cfg.hotkey9
+            case 10: 
+                actionRequest = cfg.hotkey10
+                
+        TouchifyConfig.instance().runHotkeyOption(actionRequest)
 
     def createActions(self, window: Window, subItemPath: str):
 
@@ -82,7 +104,8 @@ class TouchifyHotkeys(object):
         for i in range(1, 10):
             hotkeyName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_HOTKEY, str(i))
             hotkeyAction = window.createAction(hotkeyName, "Touchify - Action " + str(i), subItemPath + "/" + hotkey_subpath)
-            self.addHotkey(i, hotkeyAction)
+            hotkeyAction.triggered.connect(lambda: self.triggerHotkey(1))
+            self.hotkeys_storage[i] = hotkeyAction
             self.hotkey_menu.addAction(hotkeyAction)
 
         self.other_menu = QtWidgets.QMenu("Other...")

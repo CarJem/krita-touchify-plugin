@@ -76,9 +76,8 @@ class WorkspaceToggles(object):
         icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
 
-        if not workspace.hotkeyNumber == 0:
-            self.appEngine.touchify_hotkeys.getHotkeyAction(workspace.hotkeyNumber).triggered.connect(lambda: self.toggleWorkspace(id))
-
+        TouchifyConfig.instance().addHotkeyOption(actionName, text, self.toggleWorkspace, {'path': id})
+        
         self.root_menu.addAction(action)
         action.triggered.connect(lambda: self.toggleWorkspace(id))
 

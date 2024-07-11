@@ -19,6 +19,7 @@ class TouchifyLooks(object):
 
     def windowCreated(self):
         self.qWin = self.appEngine.instanceWindow.qwindow()
+        self.rebuildStyleSheet(self.qWin)
 
     def createAction(self, window: Window, id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
         result = window.createAction(id, text, menuLocation)

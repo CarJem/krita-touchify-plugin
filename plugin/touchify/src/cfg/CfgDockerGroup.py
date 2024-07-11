@@ -31,7 +31,6 @@ class CfgDockerGroup:
     display_name: str = ""
     id: str = ""
     icon: str = ""
-    hotkeyNumber: int = 0
     tabsMode: bool = True
     groupId: str = ""
     docker_names: TypedList[CfgDockerGroupItem] = []
@@ -59,11 +58,9 @@ class CfgDockerGroup:
         labels["tabsMode"] = "Tab Mode"
         labels["groupId"] = "Tab Mode Group ID"
         labels["docker_names"] = "Dockers"
-        labels["hotkeyNumber"] = "Activation Hotkey"
         return labels
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
         restrictions["icon"] = {"type": "icon_selection"}
         return restrictions

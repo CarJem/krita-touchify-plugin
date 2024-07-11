@@ -50,15 +50,13 @@ class PopupButtons(object):
         displayName = popup.btnName + POPUP_BTN_IDENTIFIER
         iconName = popup.icon
         id = popup.id
-        hotkeyNumber = popup.hotkeyNumber
 
         action = window.createAction(actionName, displayName, actionPath)
         icon = ResourceManager.iconLoader(iconName)        
         action.setIcon(icon)
         action.triggered.connect(lambda: self.showPopup(actionName, id, "button"))
-
-        if not hotkeyNumber == 0:
-            self.appEngine.touchify_hotkeys.getHotkeyAction(hotkeyNumber).triggered.connect(lambda: self.showPopup(action, id, "mouse"))
+        
+        TouchifyConfig.instance().addHotkeyOption(actionName, displayName, self.showPopup, {'actionName': actionName, 'id': id, 'mode': "mouse"})
 
         self.actions[actionName] = action
         self.root_menu.addAction(action)

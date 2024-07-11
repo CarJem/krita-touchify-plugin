@@ -4,6 +4,8 @@ from PyQt5.QtCore import *
 from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
+
+from ...features.touchify_hotkeys import TouchifyHotkeys
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
 from ...ext.TypedList import *
@@ -33,15 +35,21 @@ class PropertyField_Str(PropertyField):
         self.is_icon_viewer = False
         self.is_docker_selector = False
         self.is_action_selection = False
+        self.is_hotkey_selector = False
         self.is_combobox = False
-        self.combobox_items = []
+        self.combobox_items: list[tuple[str, str]] = []
 
         restric_func = PropertyUtils_Extensions.getVariable(self.variable_source, "propertygrid_restrictions")
         if callable(restric_func):
             restrictions = restric_func()
             if variable_name in restrictions:
                 if restrictions[variable_name]["type"] == "values":
-                    self.combobox_items = restrictions[variable_name]["entries"]
+                    combobox_items =  list[tuple[str, str]]()
+                    avaliableItems = list[str](restrictions[variable_name]["entries"])
+                    for item in avaliableItems:
+                        input = (item, item)
+                        combobox_items.append(input)                         
+                    self.combobox_items = combobox_items
                     self.is_combobox = True
                 elif restrictions[variable_name]["type"] == "action_selection":
                     self.is_action_selection = True
@@ -49,6 +57,15 @@ class PropertyField_Str(PropertyField):
                     self.is_docker_selector = True
                 elif restrictions[variable_name]["type"] == "icon_selection":
                     self.is_icon_viewer = True
+                elif restrictions[variable_name]["type"] == "hotkey_selection":
+                    combobox_items = list[tuple[str, str]]()
+                    avaliableItems = TouchifyConfig.instance().hotkey_options_storage
+                    combobox_items.append(("None", "none"))
+                    for item in avaliableItems:
+                        input = (avaliableItems[item]["displayName"], item)
+                        combobox_items.append(input)
+                    self.combobox_items = combobox_items
+                    self.is_combobox = True
                     
 
         if self.is_icon_viewer or self.is_docker_selector or self.is_action_selection:
@@ -81,8 +98,10 @@ class PropertyField_Str(PropertyField):
             self.editor = QComboBox()
             self.editor.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
             self.editor.installEventFilter(MouseWheelWidgetAdjustmentGuard(self))
-            self.editor.insertItems(0, self.combobox_items)
-            index = self.editor.findText(self.variable_data, Qt.MatchFlag.MatchFixedString)
+            for item in self.combobox_items:
+                self.editor.insertItem(0, item[0])
+                self.editor.setItemData(0, item[1], 1)
+            index = self.editor.findData(self.variable_data, 1, Qt.MatchFlag.MatchFixedString)
             if index >= 0:
                 self.editor.setCurrentIndex(index)
             self.editor.currentIndexChanged.connect(self.currentIndexChanged)
@@ -127,9 +146,10 @@ class PropertyField_Str(PropertyField):
             if self.is_icon_viewer: 
                 self.editorHelper.setIcon(ResourceManager.iconLoader(result))
             self.editor.setText(result)
+            
 
     def currentIndexChanged(self):
-        self.variable_data = str(self.editor.currentText()).replace("\\n", "\n")
+        self.variable_data = str(self.editor.currentData(1)).replace("\\n", "\n")
         super().setVariable(self.variable_source, self.variable_name, self.variable_data)
 
     def textChanged(self):

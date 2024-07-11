@@ -6,6 +6,8 @@
 ## Additions:
 - **Massive Refactoring** 
     > Lots of code consoldiation again, to make the code easier to follow for myself
+- **Improved Hotkey Assignment**
+    > Hotkeys now have their own dedicated configuration section with nice dropdowns of actions for you to choose from
 - **Better Docker Sharing**
     > The Entire Concept of Borrowing Dockers has been overhauled, so you can now forcefully load dockers in places they were unloaded due to being loaded elsewhere
 - **Compatibility with Multiple Instances of Krita**

@@ -53,10 +53,8 @@ class DockerToggles(object):
         icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
 
-
-        if not docker.hotkeyNumber == 0:
-            self.appEngine.touchify_hotkeys.getHotkeyAction(docker.hotkeyNumber).triggered.connect(lambda: self.toggleDocker(id))
-
+        TouchifyConfig.instance().addHotkeyOption(actionName, text, self.toggleDocker, {'path': id})
+        
         action.triggered.connect(lambda: self.toggleDocker(id))
         self.root_menu.addAction(action)
 

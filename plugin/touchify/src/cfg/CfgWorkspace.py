@@ -5,7 +5,6 @@ class CfgWorkspace:
     display_name: str = ""
     id: str = ""
     icon: str = ""
-    hotkeyNumber: int = 0
 
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
@@ -21,7 +20,6 @@ class CfgWorkspace:
         labels["id"] = "Workspace ID"
         labels["display_name"] = "Display Name"
         labels["icon"] = "Preview Icon"
-        labels["hotkeyNumber"] = "Activation Hotkey"
         return labels
 
     def propertygrid_groups(self):
@@ -30,6 +28,5 @@ class CfgWorkspace:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
         restrictions["icon"] = {"type": "icon_selection"}
         return restrictions

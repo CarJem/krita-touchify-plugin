@@ -65,11 +65,9 @@ class DockerGroups(object):
         action.setIcon(icon)
         action.triggered.connect(lambda: self.toggleDockers(setId))
 
+        TouchifyConfig.instance().addHotkeyOption(actionName, text, self.toggleDockers, {'id': setId})
+
         self.setState(cfg)
-
-        if not cfg.hotkeyNumber == 0:
-            self.appEngine.touchify_hotkeys.getHotkeyAction(cfg.hotkeyNumber).triggered.connect(lambda: self.toggleDockers(setId))
-
         self.root_menu.addAction(action)
 
     def createActions(self, window: Window, actionPath):

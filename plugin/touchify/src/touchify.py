@@ -18,7 +18,7 @@ from .features.popup_buttons import *
 from .features.workspace_toggles import *
 from .features.touchify_canvas import *
 from .features.touchify_hotkeys import *
-from .instance import *
+from .touchify_instance import *
 
 
 

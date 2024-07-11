@@ -41,7 +41,6 @@ class CfgPopup:
     item_height: int = 100
     icon_width: int = 30
     icon_height: int = 30
-    hotkeyNumber: int = 0
     items: TypedList[CfgPopupInfo] = []
 
     def propertygrid_sisters(self):
@@ -106,7 +105,6 @@ class CfgPopup:
         labels["item_height"] = "Docker / Action Item Height"
         labels["icon_width"] = "Action Icon Width"
         labels["icon_height"] = "Action Icon Height"
-        labels["hotkeyNumber"] = "Activation Hotkey"
         labels["autoConceal"] = "Auto Conceal"
         labels["items"] = "Actions"
         return labels
@@ -118,5 +116,4 @@ class CfgPopup:
         restrictions["type"] = {"type": "values", "entries": ["actions", "docker"]}
         restrictions["popupType"] = {"type": "values", "entries": ["popup", "window"]}
         restrictions["opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
-        restrictions["hotkeyNumber"] = {"type": "range", "min": 0, "max": 10}
         return restrictions

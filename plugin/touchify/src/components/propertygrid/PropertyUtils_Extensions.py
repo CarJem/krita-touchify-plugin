@@ -15,9 +15,25 @@ class PropertyUtils_Extensions:
         return setattr(obj, varName, data)
 
     def getClassVariables(obj):
-        return [attr for attr in dir(obj) if not callable(getattr(obj, attr)) and
+        sorted_results = []
+        if hasattr(obj, "propertygrid_sorted"):
+            sorted_results = list[str](obj.propertygrid_sorted())
+        else:
+            sorted_results = []
+            
+        found_results = [attr for attr in dir(obj) if not callable(getattr(obj, attr)) and
                 not attr.startswith("__") and
                 not attr.startswith("_"  + type(obj).__name__ + "__")]
+        
+        for item in sorted_results:
+            if item not in found_results:
+                sorted_results.remove(item)
+        
+        for item in found_results:
+            if item not in sorted_results:
+                sorted_results.append(item)
+        return sorted_results
+                
 
     def getGroups(obj):
         if hasattr(obj, "propertygrid_groups"):

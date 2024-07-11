@@ -184,7 +184,6 @@ class PropertyGridPanel(QScrollArea):
             if varName not in claimedSections and varName not in claimedSisters:
                 self.createRow(item, varName, self.formLayout, labelData, sisterParentData)
 
-        
         for groupId in groupData:
             sisterName = groupData[groupId]["name"]
             sisterItems = list(groupData[groupId]["items"])

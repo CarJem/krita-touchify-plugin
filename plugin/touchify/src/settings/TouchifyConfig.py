@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 import json
 import os
 
-
+from ..cfg.CfgHotkeys import CfgHotkeys
 from ..ext.extensions_json import JsonExtensions
 from ..cfg.CfgToolshelf import CfgToolshelf
 from ..variables import *
@@ -27,14 +27,19 @@ class TouchifyConfig:
             self.docker_groups: TypedList[CfgDockerGroup] = []
             self.popups: TypedList[CfgPopup] = []
             self.workspaces: TypedList[CfgWorkspace] = []
-
+            
+            self.hotkeys: CfgHotkeys = CfgHotkeys()
             self.toolshelf_main: CfgToolshelf = CfgToolshelf()
             self.toolshelf_alt: CfgToolshelf = CfgToolshelf()
 
         def loadClass(self, configName, type):
-            CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
-            with open(CONFIG_FILE) as f:
-                return type(**json.load(f))
+            try:
+                CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
+                with open(CONFIG_FILE) as f:
+                    return type(**json.load(f))
+            except:
+                return type()
+                
 
         def saveClass(self, cfg, configName):
             CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
@@ -42,10 +47,13 @@ class TouchifyConfig:
                 json.dump(cfg, f, default=lambda o: o.__dict__, indent=4)
             
         def load_chunk(self, configName, type):
-            CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
-            with open(CONFIG_FILE) as f:
-                jsonData = json.load(f)
-                return JsonExtensions.tryGetListAssignment(jsonData, "items", type, [])
+            try:
+                CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
+                with open(CONFIG_FILE) as f:
+                    jsonData = json.load(f)
+                    return JsonExtensions.tryGetListAssignment(jsonData, "items", type, [])
+            except:
+                return type()
 
         def save_chunk(self, cfg, configName):
             CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
@@ -55,25 +63,25 @@ class TouchifyConfig:
 
         def propertygrid_labels(self):
             labels = {}
-            labels["dockers"] = None
-            labels["docker_groups"] = None
-            labels["popups"] = None
-            labels["workspaces"] = None
+            labels["dockers"] = "Dockers"
+            labels["docker_groups"] = "Docker Groups"
+            labels["popups"] = "Popups"
+            labels["workspaces"] = "Workspaces"
             labels["toolshelf_main"] = "Tool Options Shelf"
             labels["toolshelf_alt"] = "Toolbox Shelf"
+            labels["hotkeys"] = "Hotkeys"
             return labels
 
         def propertygrid_groups(self):
             groups = {}
-            groups["dockers"] = {"name": "Dockers", "items": ["dockers"]}
-            groups["docker_groups"] = {"name": "Docker Groups", "items": ["docker_groups"]}
-            groups["popups"] = {"name": "Popups", "items": ["popups"]}
-            groups["workspaces"] = {"name": "Workspaces", "items": ["workspaces"]}
-            groups["toolshelfs"] = {"name": "Toolshelfs", "items": ["toolshelf_alt", "toolshelf_main"]}
+            groups["core"] = {"name": "Core Features", "items": ["dockers", "docker_groups", "popups", "workspaces"]}
+            groups["canvas"] = {"name": "Canvas Widgets", "items": ["toolshelf_alt", "toolshelf_main"]}
+            groups["miscellaneous"] = {"name": "Miscellaneous", "items": ["hotkeys"]}
             return groups
         
         def propertygrid_restrictions(self):
             restrictions = {}
+            restrictions["hotkeys"] = {"type": "expandable"}
             restrictions["toolshelf_main"] = {"type": "expandable"}
             restrictions["toolshelf_alt"] = {"type": "expandable"}
             return restrictions
@@ -83,6 +91,7 @@ class TouchifyConfig:
             self.save_chunk(self.docker_groups, "docker_groups")
             self.save_chunk(self.popups, "popups")
             self.save_chunk(self.workspaces, "workspaces")
+            self.saveClass(self.hotkeys, "hotkeys")
             self.saveClass(self.toolshelf_main, "toolshelf_main")
             self.saveClass(self.toolshelf_alt, "toolshelf_alt")
 
@@ -91,6 +100,7 @@ class TouchifyConfig:
             self.docker_groups = self.load_chunk("docker_groups", CfgDockerGroup)
             self.popups = self.load_chunk("popups", CfgPopup)
             self.workspaces = self.load_chunk("workspaces", CfgWorkspace)
+            self.hotkeys = self.loadClass("hotkeys", CfgHotkeys)
             self.toolshelf_main = self.loadClass("toolshelf_main", CfgToolshelf)
             self.toolshelf_alt = self.loadClass("toolshelf_alt", CfgToolshelf)
             
@@ -108,12 +118,33 @@ class TouchifyConfig:
     def __init__(self, path) -> None:
 
         self.notify_hooks = []
-
+        self.hotkey_options_storage = {}
+        
         self.base_dir = path
         self.cfg = TouchifyConfig.ConfigFile(self.base_dir)
 
     def getEditableCfg(self):
         return copy.copy(self.cfg)
+
+    def addHotkeyOption(self, actionName, displayName, action, parameters):
+        self.hotkey_options_storage[actionName] = {
+            "displayName": displayName,
+            "action": action,
+            "params": parameters
+        }
+    
+    def runHotkeyOption(self, actionName: str):
+        if actionName == "none":
+            return
+        
+        if actionName not in TouchifyConfig.instance().hotkey_options_storage:
+            return
+        
+        actionObj = TouchifyConfig.instance().hotkey_options_storage[actionName]
+        params = actionObj["params"]
+        action = actionObj["action"]
+        
+        action(**params)
 
     def notifyConnect(self, event):
         self.notify_hooks.append(event)
