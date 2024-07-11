@@ -80,9 +80,9 @@ class NtWidgetPad(QWidget):
 
             globalTargetPos = QPoint()
             if self.alignment == 'left':
-                globalTargetPos = view.mapToGlobal(QPoint(self.rulerMargin() + self.offset_x_left, 0))
+                globalTargetPos = view.mapToGlobal(QPoint(self.rulerMargin() + self.offset_x_left, self.rulerMargin()))
             elif self.alignment == 'right':
-                globalTargetPos = view.mapToGlobal(QPoint(view.width() - self.width() - self.scrollBarMargin() - self.offset_x_right, 0))
+                globalTargetPos = view.mapToGlobal(QPoint(view.width() - self.width() - self.scrollBarMargin() - self.offset_x_right, self.rulerMargin()))
 
             self.move(self.parentWidget().mapFromGlobal(globalTargetPos))
 
