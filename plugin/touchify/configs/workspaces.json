@@ -35,6 +35,10 @@
         {
             "display_name": "VFX_Paint",
             "id": "VFX_Paint"
+        },
+        {
+            "display_name": "Defaults",
+            "id": "Defaults"
         }
     ]
 }

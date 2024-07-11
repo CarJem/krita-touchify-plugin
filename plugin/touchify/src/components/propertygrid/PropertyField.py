@@ -12,7 +12,7 @@ from .PropertyGrid import *
 
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 from .PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
-from ...ext.typedlist import *
+from ...ext.TypedList import *
 from ...resources import *
 from ...ext.extensions_krita import KritaExtensions
 from ..CollapsibleBox import CollapsibleBox
@@ -27,7 +27,7 @@ GROUP_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
 class PropertyField(QWidget):
 
-
+    propertyChanged = pyqtSignal(bool)
 
     def __init__(self, variable_name=str, variable_data=any, variable_source=any):
         super().__init__()
@@ -48,6 +48,10 @@ class PropertyField(QWidget):
 
     def setStackHost(self, host: PropertyGrid):
         self.stackHost = host
+
+    def setVariable(self, source, name, data):
+        self.propertyChanged.emit(True)
+        PropertyUtils_Extensions.setVariable(source, name, data)
 
     #region Nestables
 

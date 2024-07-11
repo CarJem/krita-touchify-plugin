@@ -6,7 +6,7 @@ import sys
 import xml.etree.ElementTree as ET
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from ...ext.typedlist import *
+from ...ext.TypedList import *
 from ...resources import *
 from ...ext.extensions_krita import KritaExtensions
 from ..CollapsibleBox import CollapsibleBox
@@ -53,5 +53,5 @@ class PropertyField_Float(PropertyField):
         self.setLayout(editorLayout)
 
     def updateValue(self):
-            self.variable_data = self.editor.value()
-            PropertyUtils_Extensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
+        self.variable_data = self.editor.value()
+        super().setVariable(self.variable_source, self.variable_name, self.variable_data)

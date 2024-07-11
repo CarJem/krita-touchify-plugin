@@ -13,8 +13,16 @@
             "docker_name": "ArtisticColorSelector"
         },
         {
+            "display_name": "Brush Options",
+            "docker_name": "BrushOptionsDocker"
+        },
+        {
             "display_name": "Channels",
             "docker_name": "ChannelDocker"
+        },
+        {
+            "display_name": "Color Options",
+            "docker_name": "ColorOptionsDocker"
         },
         {
             "display_name": "Advanced Color Selector",
@@ -121,10 +129,6 @@
             "docker_name": "TouchDocker"
         },
         {
-            "display_name": "TouchifyBuddy",
-            "docker_name": "TouchifyBuddy"
-        },
-        {
             "display_name": "Wide Gamut Color Selector",
             "docker_name": "WideGamutColorSelector"
         },
@@ -133,16 +137,16 @@
             "docker_name": "comics_project_manager_docker"
         },
         {
-            "display_name": "",
-            "docker_name": "henriks_buttons"
-        },
-        {
             "display_name": "Last Documents Docker",
             "docker_name": "lastdocumentsdocker"
         },
         {
             "display_name": "Plugin Developer Tools",
             "docker_name": "pluginDevToolsDocker"
+        },
+        {
+            "display_name": "CoolBox",
+            "docker_name": "pyKrita_CoolBox"
         },
         {
             "display_name": "Compact Brush Toggler",

@@ -8,7 +8,7 @@ import sys
 import importlib.util
 
 from ...cfg.CfgPopup import CfgPopup
-from ...config import *
+from ...settings.TouchifyConfig import *
 from ...resources import *
 from .PopupDialog import *
 
@@ -58,28 +58,11 @@ class PopupDialog_Actions(PopupDialog):
     def createActionButton(self, layout, text, icon, action, x, y):
 
         opacityLevel = self.metadata.opacity
-        btn_stylesheet = f"""
-            QToolButton {{
-                border-radius: 0px; 
-                background-color: rgba(0,0,0,{opacityLevel}); 
-                padding: 5px 5px;
-                border: 0px solid transparent; 
-                font-size: 12px
-            }}
-            
-            QToolButton:hover {{
-                background-color: rgba(155,155,155,{opacityLevel}); 
-            }}
-                          
-            QToolButton:pressed {{
-                background-color: rgba(128,128,128,{opacityLevel}); 
-            }}
-        """
 
         btn = QToolButton()
-        btn.setStyleSheet(btn_stylesheet)
+        btn.setStyleSheet(stylesheet.touchify_popup_action_btn(opacityLevel))
         btn.setText(text)
-        btn.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
 
         if icon:
             btn.setIcon(self.getActionIcon(icon))

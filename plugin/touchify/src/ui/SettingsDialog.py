@@ -1,22 +1,13 @@
-from PyQt5 import uic
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import os
-import json
-import sys
-import importlib.util
-from .components.propertygrid.PropertyGrid import PropertyGrid
-from .config import *
+from ..components.propertygrid.PropertyGrid import PropertyGrid
+from ..settings.TouchifyConfig import *
 from ..resources import *
-from .ext.extensions import *
-import xml.etree.ElementTree as ET
-import re
-import functools
-
-import json
-from .components.propertygrid.PropertyGridPanel import *
-import datetime
-
+from ..ext.extensions import *
+from ..components.propertygrid.PropertyGridPanel import *
+from ...paths import BASE_DIR
 
 from krita import *
 
@@ -29,7 +20,7 @@ class SettingsDialog(QDialog):
 
 
     def getNoticeMessage(self):
-        filePath = os.path.join(os.path.dirname(__file__), 'data', 'settings_message.txt')
+        filePath = os.path.join(BASE_DIR, 'src', 'data', 'settings_message.txt')
         result = ""
         with open(filePath) as f:
             result = f.read()
@@ -38,7 +29,7 @@ class SettingsDialog(QDialog):
     def __init__(self, qwin: Window):
         super().__init__(qwin.qwindow())
         self.qwin = qwin.qwindow()
-        self.editableConfig = ConfigManager.instance().getEditableCfg()
+        self.editableConfig = TouchifyConfig.instance().getEditableCfg()
         self.gridLayout = QGridLayout()
 
         self.notice = QLabel()
@@ -73,7 +64,7 @@ class SettingsDialog(QDialog):
     
     def _saveFile(self):
         self.editableConfig.save()
-        ConfigManager.instance().notifyUpdate()
+        TouchifyConfig.instance().notifyUpdate()
 
     def onSave(self):
         self._saveFile()

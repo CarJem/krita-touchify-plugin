@@ -8,7 +8,7 @@ import importlib.util
 from ..variables import *
 
 from ..cfg.CfgDocker import CfgDocker
-from ..config import *
+from ..settings.TouchifyConfig import *
 from ..resources import *
 
 from krita import *
@@ -27,7 +27,7 @@ class DockerToggles(object):
                 docker.setVisible(not docker.isVisible())
 
     def reloadDockers(self):
-        cfg = ConfigManager.instance().getJSON()
+        cfg = TouchifyConfig.instance().getJSON()
         dockersList = Krita.instance().dockers()
         data = []
 
@@ -63,7 +63,7 @@ class DockerToggles(object):
     def createActions(self, window: Window, actionPath: str):
         sectionName = TOUCHIFY_ID_ACTIONS_DOCKER
         subItemPath = actionPath + "/" + sectionName
-        cfg = ConfigManager.instance().getJSON()
+        cfg = TouchifyConfig.instance().getJSON()
         self.root_menu = QtWidgets.QMenu("Dockers")
 
         for docker in cfg.dockers:

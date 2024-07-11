@@ -1,13 +1,12 @@
 
 
 from PyQt5.QtGui import QColor, QIcon, QImage, QPalette, QPixmap
-from ....cfg.CfgToolshelf import CfgToolshelfAction
+from ....cfg.CfgToolshelf import CfgToolshelfAction, CfgToolshelfPanel
 from ....resources import ResourceManager
-from ....cfg.CfgToolshelf import CfgToolshelfAction
 from krita import *
 
 
-from ....config import *
+from ....settings.TouchifyConfig import *
 
 from PyQt5.QtWidgets import QSizePolicy, QPushButton, QWidget, QHBoxLayout
 from PyQt5.QtCore import QSize, Qt
@@ -32,8 +31,6 @@ class ToolshelfButton(QPushButton):
         else:
             raise TypeError(f"Unable to set icon of invalid type {type(icon)}")
 
-
-
     def setColor(self, color): # In case the Krita API opens up for a "color changed" signal, this could be useful...
         if isinstance(color, QColor):
             pxmap = QPixmap(self.iconSize())
@@ -41,7 +38,6 @@ class ToolshelfButton(QPushButton):
             self.setIcon(pxmap)
         else:
             raise TypeError(f"Unable to set color of invalid type {type(color)}")
-
 
     def setCheckable(self, checkable):
         if checkable:
@@ -51,7 +47,6 @@ class ToolshelfButton(QPushButton):
                 self.disconnect(self.highlightConnection)
                 self.highlightConnection = None
         return super().setCheckable(checkable)
-
 
     def highlight(self, toggled):
         p = self.window().palette()

@@ -12,7 +12,7 @@ import importlib.util
 from ..variables import *
 
 from ..cfg.CfgPopup import CfgPopup
-from ..config import *
+from ..settings.TouchifyConfig import *
 from ..resources import *
 from ..components.popups.PopupDialog import *
 from ..components.popups.PopupDialog_Actions import *
@@ -69,7 +69,7 @@ class PopupButtons(object):
 
         self.root_menu = QtWidgets.QMenu("Popups")
 
-        cfg = ConfigManager.instance().getJSON()
+        cfg = TouchifyConfig.instance().getJSON()
         for popup in cfg.popups:
             self.popup_data[popup.id] = popup
             self.createAction(window, popup, subItemPath)
@@ -101,7 +101,7 @@ class PopupButtons(object):
             self.popup_dialogs[popupKeys] = None
 
 
-        cfg: ConfigFile = ConfigManager.instance().getJSON()
+        cfg: TouchifyConfig.ConfigFile = TouchifyConfig.instance().getJSON()
         for item in cfg.popups:
             newPopupData: CfgPopup = item
             id = newPopupData.id

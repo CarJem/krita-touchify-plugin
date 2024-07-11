@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 from .PropertyGrid_Dialog import PropertyGrid_Dialog
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from ...ext.typedlist import *
+from ...ext.TypedList import *
 from ...resources import *
 from ...ext.extensions_krita import KritaExtensions
 from ..CollapsibleBox import CollapsibleBox

@@ -4,12 +4,12 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from touchify.src.components.toolshelf.buttons.ToolshelfPanelHeader import ToolshelfPanelHeader
+from .buttons.ToolshelfPanelHeader import ToolshelfPanelHeader
 from .buttons.ToolshelfActionBar import ToolshelfActionBar
 from .pages.ToolshelfPage import ToolshelfPage
 from ..DockerContainer import DockerContainer
 
-from ...config import *
+from ...settings.TouchifyConfig import *
 from ...variables import *
 from ...docker_manager import *
 
@@ -49,7 +49,7 @@ class ToolshelfContainer(QStackedWidget):
         self.changePanel('MAIN')
 
     def getCfg(self):
-        cfg = ConfigManager.instance().getJSON()
+        cfg = TouchifyConfig.instance().getJSON()
         if self.isPrimaryPanel: return cfg.toolshelf_main
         else: return cfg.toolshelf_alt
 

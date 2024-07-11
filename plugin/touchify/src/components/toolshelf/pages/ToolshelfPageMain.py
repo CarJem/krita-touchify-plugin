@@ -2,7 +2,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from ..buttons.ToolshelfButtonBar import ToolshelfButtonBar
-from ....config import ConfigManager
+from ....settings.TouchifyConfig import TouchifyConfig
 from .ToolshelfPage import ToolshelfPage
 from ....cfg.CfgToolshelf import CfgToolshelfPanel
 from .... import stylesheet
@@ -19,9 +19,9 @@ class ToolshelfPageMain(ToolshelfPage):
         self.isPrimaryPanel = isPrimaryPanel
 
         if self.isPrimaryPanel: 
-            self.rootCfg = ConfigManager.instance().getJSON().toolshelf_main
+            self.rootCfg = TouchifyConfig.instance().getJSON().toolshelf_main
         else: 
-            self.rootCfg = ConfigManager.instance().getJSON().toolshelf_alt
+            self.rootCfg = TouchifyConfig.instance().getJSON().toolshelf_alt
 
 
         pageCfg = CfgToolshelfPanel()
@@ -49,7 +49,7 @@ class ToolshelfPageMain(ToolshelfPage):
             self.dockerWidgets[host_id].loadWidget(True)
 
     def updateStyleSheet(self):
-        self.dockerBtns.setStyleSheet(stylesheet.nu_toolshelf_button_style)
+        self.dockerBtns.setStyleSheet(stylesheet.touchify_toolshelf_header_button)
         super().updateStyleSheet()
     
 

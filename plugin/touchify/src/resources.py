@@ -3,10 +3,10 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 import os
 
 
-from touchify.src.components.QSvgIconEngine import QSvgIconEngine
+from .components.QSvgIconEngine import QSvgIconEngine
 
 
-from .config import *
+from .settings.TouchifyConfig import *
 from zipfile import ZipFile
 
 from krita import *
@@ -58,7 +58,7 @@ class ResourceManager:
 
     def getCustomIconList():
         result = []
-        PATH_RESOURCES = os.path.join(ConfigManager.instance().getResourceFolder(), "custom")
+        PATH_RESOURCES = os.path.join(TouchifyConfig.instance().getResourceFolder(), "custom")
 
         # Custom Icon Code
         try:
@@ -82,7 +82,7 @@ class ResourceManager:
         if ICON_PACKS_LOADED:
             return
         
-        MATERIAL_ICONS = os.path.join(ConfigManager.instance().getResourceFolder(), "builtin", 'material-icons.zip')
+        MATERIAL_ICONS = os.path.join(TouchifyConfig.instance().getResourceFolder(), "builtin", 'material-icons.zip')
         with ZipFile(MATERIAL_ICONS, 'r') as zip:
             for item in zip.filelist:
                 if item.filename.startswith('MaterialDesign-master/svg/') and item.filename.endswith('.svg'):
@@ -98,7 +98,7 @@ class ResourceManager:
             return ResourceManager.getFallbackIcon()
 
     def customIcon(iconName):
-        PATH_RESOURCES = os.path.join(ConfigManager.instance().getResourceFolder(), "custom")
+        PATH_RESOURCES = os.path.join(TouchifyConfig.instance().getResourceFolder(), "custom")
 
         filename = '{0}.svg'.format(iconName)
         
@@ -123,6 +123,6 @@ class ResourceManager:
         return Krita.instance().icon(iconName)
     
     def getFallbackIcon():
-        return QtGui.QIcon(os.path.join(ConfigManager.instance().getResourceFolder(), 'builtin', 'default.svg'))
+        return QtGui.QIcon(os.path.join(TouchifyConfig.instance().getResourceFolder(), 'builtin', 'default.svg'))
     
 ResourceManager.loadIconPacks()

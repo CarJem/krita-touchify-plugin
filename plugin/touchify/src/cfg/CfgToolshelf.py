@@ -1,4 +1,4 @@
-from ..ext.typedlist import TypedList
+from ..ext.TypedList import TypedList
 from ..ext.extensions_json import JsonExtensions as Extensions
 
 
@@ -53,6 +53,18 @@ class CfgToolshelfAction:
     def forceLoad(self):
         self.context_menu_actions = TypedList(self.context_menu_actions, CfgToolshelfActionSubItem)
 
+    def propertygrid_hidden(self):
+        if self.has_context_menu == True:
+            return [
+                "id",
+                "useActionIcon"
+            ]
+        else:
+            return [
+                "context_menu_name",
+                "context_menu_actions"
+            ]
+
     def propertygrid_labels(self):
         labels = {}
         labels["id"] = "Action ID"
@@ -80,8 +92,8 @@ class CfgToolshelfAction:
         ]
 
         groups = {}
-        groups["normal"] = {"name": "Basic...", "items": basic_group}
-        groups["context_menu"] = {"name": "Context Menu...", "items": context_menu_group}
+        #groups["normal"] = {"name": "Basic...", "items": basic_group}
+        #groups["context_menu"] = {"name": "Context Menu...", "items": context_menu_group}
         return groups
 
     def propertygrid_restrictions(self):
@@ -140,6 +152,35 @@ class CfgToolshelfGroup:
         hints["size_x"] = "leave set to 0 for automatic sizing"
         hints["size_y"] = "leave set to 0 for automatic sizing"
         return hints
+    
+    def propertygrid_hidden(self):
+        action_groups = [
+            "action_section_name", 
+            "action_section_display_mode",
+            "action_section_alignment_x", 
+            "action_section_alignment_y", 
+            "action_section_btn_width", 
+            "action_section_btn_height",
+            "action_section_icon_size",
+            "action_section_contents", 
+        ]
+
+        docker_groups = [
+            "id", 
+            "docker_nesting_mode", 
+            "docker_unloaded_visibility", 
+            "docker_loading_priority"
+        ]
+
+        result = []
+        if self.section_type != "docker":
+            for item in docker_groups:
+                result.append(item)
+        if self.section_type != "actions":
+            for item in action_groups:
+                result.append(item)
+
+        return result
 
     def propertygrid_labels(self):
         labels = {}
@@ -178,28 +219,7 @@ class CfgToolshelfGroup:
         return row
 
     def propertygrid_groups(self):
-
-        action_groups = [
-            "action_section_name", 
-            "action_section_display_mode",
-            "action_section_alignment_x", 
-            "action_section_alignment_y", 
-            "action_section_btn_width", 
-            "action_section_btn_height",
-            "action_section_icon_size",
-            "action_section_contents", 
-        ]
-
-        docker_groups = [
-            "id", 
-            "docker_nesting_mode", 
-            "docker_unloaded_visibility", 
-            "docker_loading_priority"
-        ]
-
         groups = {}
-        groups["dockers"] = {"name": "Docker Panel...", "items": docker_groups}
-        groups["actions"] = {"name": "Action Panel...", "items": action_groups}
         return groups
 
     def propertygrid_restrictions(self):

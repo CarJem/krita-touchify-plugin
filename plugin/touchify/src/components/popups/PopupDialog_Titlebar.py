@@ -38,7 +38,7 @@ class PopupDialog_Titlebar(QWidget):
         self.minimizeBtn.setFixedSize(buttonSize,buttonSize)
         self.minimizeBtn.setIconSize(QSize(iconSize, iconSize))
         self.minimizeBtn.clicked.connect(self.toggleMinimized)
-        self.minimizeBtn.setStyleSheet(stylesheet.nu_toggle_button_style)
+        self.minimizeBtn.setStyleSheet(stylesheet.touchify_toggle_button)
         self.ourLayout.addWidget(self.minimizeBtn)
 
         self.closeButton = QPushButton(self)
@@ -46,7 +46,7 @@ class PopupDialog_Titlebar(QWidget):
         self.closeButton.setFixedSize(buttonSize,buttonSize)
         self.closeButton.setIconSize(QSize(iconSize, iconSize))
         self.closeButton.clicked.connect(self.parentDialog.close)
-        self.closeButton.setStyleSheet(stylesheet.nu_toggle_button_style)
+        self.closeButton.setStyleSheet(stylesheet.touchify_toggle_button)
         self.ourLayout.addWidget(self.closeButton)
 
     def getTitleFont(self, textSize: int):
@@ -63,7 +63,6 @@ class PopupDialog_Titlebar(QWidget):
             self.isMoving = True
         elif event.button() == Qt.MouseButton.LeftButton and self.parentDialog.isResizing:
             self.parentDialog.resizeWindow(event.pos())
-
 
     def mouseMoveEvent(self, event: QMouseEvent):
         if self.isMoving:

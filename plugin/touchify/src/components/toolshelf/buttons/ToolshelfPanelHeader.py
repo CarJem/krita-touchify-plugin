@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
-from ....config import *
+from ....settings.TouchifyConfig import *
 from ....variables import *
 from ....docker_manager import *
 from .... import stylesheet
@@ -70,9 +70,4 @@ class ToolshelfPanelHeader(QWidget):
             self.rootContainer.togglePinned()
 
     def updateStyleSheet(self):
-        if self.backButton:
-            self.backButton.setStyleSheet(stylesheet.nu_toolshelf_header_style)
-        if self.fillerWidget:
-            self.fillerWidget.setStyleSheet(stylesheet.nu_toolshelf_header_style)
-        if self.pinButton:
-            self.pinButton.setStyleSheet(stylesheet.nu_toolshelf_header_style)
+        self.setStyleSheet(stylesheet.touchify_toolshelf_header)

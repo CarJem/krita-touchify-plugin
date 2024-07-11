@@ -5,7 +5,7 @@ import sys
 import importlib.util
 
 from ..cfg.CfgWorkspace import CfgWorkspace
-from ..config import *
+from ..settings.TouchifyConfig import *
 from ..resources import *
 
 from krita import *
@@ -38,7 +38,7 @@ class WorkspaceToggles(object):
                 break
 
     def reloadWorkspaces(self):
-        cfg = ConfigManager.instance().getJSON()
+        cfg = TouchifyConfig.instance().getJSON()
 
         Workspaces = []
         main_menu = self.qWin.menuBar()
@@ -88,6 +88,6 @@ class WorkspaceToggles(object):
         sectionName = TOUCHIFY_ID_ACTIONS_WORKSPACE
         subItemPath = actionPath + "/" + sectionName
 
-        cfg = ConfigManager.instance().getJSON()
+        cfg = TouchifyConfig.instance().getJSON()
         for workspace in cfg.workspaces:
             self.createAction(window, workspace, subItemPath)

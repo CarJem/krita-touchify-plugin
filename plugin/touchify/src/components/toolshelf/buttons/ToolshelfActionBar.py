@@ -10,7 +10,7 @@ from krita import *
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import QMargins
-from ....config import *
+from ....settings.TouchifyConfig import *
 from .ToolshelfButtonBar import ToolshelfButton, ToolshelfButtonBar
 from .... import stylesheet
 

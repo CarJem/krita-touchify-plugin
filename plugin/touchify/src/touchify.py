@@ -10,13 +10,13 @@ from PyQt5.QtWidgets import QMessageBox
 from .variables import *
 
 
-from .settings import *
+from .ui.SettingsDialog import *
 from .features.touchify_tweaks import *
 from .features.docker_toggles import *
 from .features.docker_groups import *
 from .features.popup_buttons import *
 from .features.workspace_toggles import *
-from .features.redesign_components import *
+from .features.touchify_canvas import *
 from .features.touchify_hotkeys import *
 from .instance import *
 
@@ -35,7 +35,7 @@ class Touchify(Extension):
 
     def setup(self):
         Krita.instance().notifier().windowCreated.connect(self.onWindowCreated)
-        ConfigManager.instance().notifyConnect(self.onConfigUpdated)
+        TouchifyConfig.instance().notifyConnect(self.onConfigUpdated)
         KritaSettings.notifyConnect(self.onKritaConfigUpdated)
 
     def onKritaConfigUpdated(self):

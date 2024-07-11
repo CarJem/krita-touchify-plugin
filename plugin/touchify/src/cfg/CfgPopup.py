@@ -1,7 +1,31 @@
-from .CfgPopupInfo import CfgPopupInfo
 from ..ext.extensions_json import JsonExtensions as Extensions
 from ..ext.extensions import TypedList
 
+
+class CfgPopupInfo:
+    text: str = ""
+    action: str = ""
+    icon: str = ""
+
+
+    def propertygrid_labels(self):
+        labels = {}
+        labels["action"] = "Action ID"
+        labels["icon"] = "Display Icon"
+        labels["text"] = "Display Text"
+        return labels
+
+    def __init__(self, **args) -> None:
+        Extensions.dictToObject(self, args)
+
+    def __str__(self):
+        return self.text.replace("\n", "\\n")
+
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        restrictions["icon"] = {"type": "icon_selection"}
+        restrictions["action"] = {"type": "action_selection"}
+        return restrictions
 
 class CfgPopup:
     id: str = ""
@@ -25,9 +49,8 @@ class CfgPopup:
         row["item_size"] = {"name": "Item Size", "items": ["item_width","item_height"]}
         row["icon_size"] = {"name": "Icon Size", "items": ["icon_width","icon_height"]}
         return row
-
-
-    def propertygrid_groups(self):
+    
+    def propertygrid_hidden(self):
         action_mode_settings = [
             "opacity",
             "grid_width",
@@ -41,9 +64,19 @@ class CfgPopup:
             "docker_id"
         ]
 
+        result = []
+        if self.type != "docker":
+            for item in docker_mode_settings:
+                result.append(item)
+        if self.type != "actions":
+            for item in action_mode_settings:
+                result.append(item)
+
+        return result
+
+
+    def propertygrid_groups(self):
         groups = {}
-        groups["actions_mode"] = {"name": "Actions Mode Settings", "items": action_mode_settings}
-        groups["docker_mode"] = {"name": "Docker Mode Settings", "items": docker_mode_settings}
         return groups
 
     def __init__(self, **args) -> None:

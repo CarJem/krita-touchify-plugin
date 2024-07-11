@@ -5,10 +5,12 @@ from krita import *
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import *
 
+from .settings.TouchifySettings import TouchifySettings
+
 from .ext.KritaSettings import KritaSettings
 
 from .ext.extensions import *
-from .config import *
+from .settings.TouchifyConfig import *
 
 class DockerManager(object):
     class BorrowData:
@@ -77,10 +79,10 @@ class DockerManager(object):
         self._listeners: dict[DockerManager.SignalType, list] = {}
         self._hiddenDockers: dict[Qt.DockWidgetArea, list[str]] = {}
 
-        self._hiddenDockers[1] = InternalConfig.instance().DockerUtils_HiddenDockersLeft.split(",")
-        self._hiddenDockers[2] = InternalConfig.instance().DockerUtils_HiddenDockersRight.split(",")
-        self._hiddenDockers[4] = InternalConfig.instance().DockerUtils_HiddenDockersUp.split(",")
-        self._hiddenDockers[8] = InternalConfig.instance().DockerUtils_HiddenDockersDown.split(",")
+        self._hiddenDockers[1] = TouchifySettings.instance().DockerUtils_HiddenDockersLeft.split(",")
+        self._hiddenDockers[2] = TouchifySettings.instance().DockerUtils_HiddenDockersRight.split(",")
+        self._hiddenDockers[4] = TouchifySettings.instance().DockerUtils_HiddenDockersUp.split(",")
+        self._hiddenDockers[8] = TouchifySettings.instance().DockerUtils_HiddenDockersDown.split(",")
         self.mainWindow = window
         self.qWin = window.qwindow()
 
@@ -146,14 +148,14 @@ class DockerManager(object):
 
         match area:
             case 1:
-                InternalConfig.instance().DockerUtils_HiddenDockersLeft = ",".join(self._hiddenDockers[area])
+                TouchifySettings.instance().DockerUtils_HiddenDockersLeft = ",".join(self._hiddenDockers[area])
             case 2:
-                InternalConfig.instance().DockerUtils_HiddenDockersRight = ",".join(self._hiddenDockers[area])
+                TouchifySettings.instance().DockerUtils_HiddenDockersRight = ",".join(self._hiddenDockers[area])
             case 4:
-                InternalConfig.instance().DockerUtils_HiddenDockersUp = ",".join(self._hiddenDockers[area])
+                TouchifySettings.instance().DockerUtils_HiddenDockersUp = ",".join(self._hiddenDockers[area])
             case 8:
-                InternalConfig.instance().DockerUtils_HiddenDockersDown = ",".join(self._hiddenDockers[area])
-        InternalConfig.instance().saveSettings()
+                TouchifySettings.instance().DockerUtils_HiddenDockersDown = ",".join(self._hiddenDockers[area])
+        TouchifySettings.instance().saveSettings()
 
     def dockerWindowTitle(self, docker_id: str):
         docker = self.findDocker(docker_id)

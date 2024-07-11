@@ -12,7 +12,7 @@ import importlib.util
 from .PopupDialog_Titlebar import PopupDialog_Titlebar
 
 from ...cfg.CfgPopup import CfgPopup
-from ...config import *
+from ...settings.TouchifyConfig import *
 from ....resources import *
 from ... import stylesheet
 

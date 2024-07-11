@@ -12,7 +12,7 @@ from .PropertyGrid_SelectorDialog import *
 
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from ...ext.typedlist import *
+from ...ext.TypedList import *
 from ...resources import *
 from ...ext.extensions_krita import KritaExtensions
 from ..CollapsibleBox import CollapsibleBox
@@ -34,6 +34,7 @@ class PropertyGridPanel(QScrollArea):
         super().__init__()
 
         self.fields: list[PropertyField] = []
+        self.labels: dict[str, QWidget] = {}
         
 
         self.stackHost = parentStack
@@ -57,8 +58,9 @@ class PropertyGridPanel(QScrollArea):
             PropertyUtils_Extensions.setVariable(newItem, name, data)
         return newItem
     
-
-
+    def onPropertyChanged(self, value: bool):
+        self.updateVisibility()
+    
     def createRow(self, item: any, varName: str, layout: QFormLayout, labelData: dict, sisterData: dict):
 
         def getFieldText(field: PropertyField):
@@ -72,6 +74,7 @@ class PropertyGridPanel(QScrollArea):
         def createDataRow(_varName: str):
             variable = PropertyUtils_Extensions.getVariable(item, _varName)
             field = PropertyUtils_Praser.getPropertyType(_varName, variable, item)
+            field.propertyChanged.connect(self.onPropertyChanged)
             field.setStackHost(self.stackHost)
             if field:
                 self.fields.append(field)
@@ -121,16 +124,33 @@ class PropertyGridPanel(QScrollArea):
             sisters = populateSisDataRows()
             if len(sisters) == 0:
                 header = createLabelRow(getFieldText(field))
+                self.labels[field.variable_name] = header
                 layout.addRow(header, field)
             else:
                 header = createSisLabelRow(field, sisters)
+                self.labels[field.variable_name] = header
                 sister_field = createSisDataRow(field, sisters)
                 layout.addRow(header, sister_field)
-                
-    
+
+    def updateVisibility(self):
+        if self.item == None:
+            return
+        
+        hiddenItems = PropertyUtils_Extensions.getHidden(self.currentData())
+        for field in self.fields:     
+            if field.variable_name in hiddenItems:
+                field.setHidden(True)
+                if field.variable_name in self.labels:
+                    self.labels[field.variable_name].setHidden(True)
+            else:
+                field.setHidden(False)
+                if field.variable_name in self.labels:
+                    self.labels[field.variable_name].setHidden(False)
+
     def updateDataObject(self, item):
         self.item = item
         self.fields.clear()
+        self.labels.clear()
         PropertyUtils_Extensions.clearLayout(self.formLayout)
         sisterData = PropertyUtils_Extensions.getSisters(item)
         groupData = PropertyUtils_Extensions.getGroups(item)
@@ -182,3 +202,5 @@ class PropertyGridPanel(QScrollArea):
             section.setContentLayout(sectionLayout)
 
             self.formLayout.addRow(section)
+
+        self.updateVisibility()

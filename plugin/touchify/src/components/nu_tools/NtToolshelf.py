@@ -7,7 +7,7 @@ from ...docker_manager import DockerManager
 
 from .NtAdjustToSubwindowFilter import NtAdjustToSubwindowFilter
 from ...ext.extensions_krita import KritaExtensions
-from ...config import InternalConfig
+from ...settings.TouchifySettings import TouchifySettings
 from ... import stylesheet
 from .NtWidgetPad import NtWidgetPad
 from krita import *

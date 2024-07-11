@@ -9,7 +9,7 @@ from touchify.src.components.toolshelf.buttons.ToolshelfPanelHeader import Tools
 from .buttons.ToolshelfActionBar import ToolshelfActionBar
 from .pages.ToolshelfPage import ToolshelfPage
 
-from ...config import *
+from ...settings.TouchifyConfig import *
 from ...variables import *
 from ...docker_manager import *
 from .ToolshelfContainer import *

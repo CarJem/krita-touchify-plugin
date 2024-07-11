@@ -21,7 +21,7 @@ from PyQt5.QtCore import Qt, QSize, QPoint
 
 from ...ext.KritaSettings import KritaSettings
 
-from ...config import *
+from ...settings.TouchifyConfig import *
 from ... import stylesheet
 
 from krita import *
@@ -229,7 +229,7 @@ class Nt_ToggleVisibleButton(QToolButton):
         super(Nt_ToggleVisibleButton, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.setIconSize(QSize(11, 11))
-        self.setStyleSheet(stylesheet.nu_toggle_button_style)
+        self.setStyleSheet(stylesheet.touchify_toggle_button)
         
     def setArrow(self, alignment):
         if alignment == "right":

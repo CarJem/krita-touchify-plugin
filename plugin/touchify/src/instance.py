@@ -1,15 +1,17 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QMessageBox
+
+from .features.touchify_looks import TouchifyLooks
 from .variables import *
 
 
-from .settings import *
+from .ui.SettingsDialog import *
 from .features.touchify_tweaks import *
 from .features.docker_toggles import *
 from .features.docker_groups import *
 from .features.popup_buttons import *
 from .features.workspace_toggles import *
-from .features.redesign_components import *
+from .features.touchify_canvas import *
 from .features.touchify_hotkeys import *
 
 
@@ -22,15 +24,16 @@ class TouchifyInstance(object):
         self.docker_groups = DockerGroups(self)
         self.workspace_toggles = WorkspaceToggles(self)
         self.popup_toggles = PopupButtons(self)
-        self.redesign_components = RedesignComponents(self)
+        self.touchify_looks = TouchifyLooks(self)
+        self.touchify_canvas = TouchifyCanvas(self)
         self.touchify_hotkeys = TouchifyHotkeys(self)
         self.touchify_tweaks = TouchifyTweaks(self)
 
     def onKritaConfigUpdated(self):
-        self.redesign_components.onKritaConfigUpdated()
+        self.touchify_canvas.onKritaConfigUpdated()
 
     def onConfigUpdated(self):
-        self.redesign_components.onConfigUpdated()
+        self.touchify_canvas.onConfigUpdated()
         self.popup_toggles.onConfigUpdated()
         self.docker_groups.onConfigUpdated()        
 
@@ -49,7 +52,8 @@ class TouchifyInstance(object):
         openSettingsAction.triggered.connect(self.openSettings)
         self.mainMenuBar.addAction(openSettingsAction)
 
-        self.redesign_components.createActions(window, self.mainMenuBar)
+        self.touchify_looks.createActions(window, self.mainMenuBar)
+        self.touchify_canvas.createActions(window, self.mainMenuBar)
 
         seperator = QAction("Actions", self.mainMenuBar)
         seperator.setSeparator(True)
@@ -69,7 +73,8 @@ class TouchifyInstance(object):
         
         self.touchify_hotkeys.windowCreated()
         self.touchify_tweaks.windowCreated()
-        self.redesign_components.windowCreated()
+        self.touchify_looks.windowCreated()
+        self.touchify_canvas.windowCreated()
         self.workspace_toggles.windowCreated()
 
         self.touchify_hotkeys.buildMenu(self.mainMenuBar)

@@ -113,7 +113,7 @@ class ToolshelfPage(QWidget):
         #region ActionContainer Setup
         for btn in actionWidget.bar._buttons:
             actionBtn = actionWidget.bar._buttons[btn]
-            actionBtn.setStyleSheet("QPushButton::menu-indicator { image: none; }")
+            actionBtn.setStyleSheet(stylesheet.hide_menu_indicator)
             
             if actionInfo.action_section_display_mode == "flat":
                 actionBtn.setFlat(True)
@@ -262,7 +262,7 @@ class ToolshelfPage(QWidget):
         return QSize(container_width, container_height)
     
     def updateStyleSheet(self):
-        self.quickActions.setStyleSheet(stylesheet.nu_toolshelf_button_style)
+        self.quickActions.setStyleSheet(stylesheet.touchify_toolshelf_header_button)
 
     def sizeHint(self):
         if self.size:

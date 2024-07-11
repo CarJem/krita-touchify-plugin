@@ -18,17 +18,18 @@
 
 from krita import *
 
-highlight = qApp.palette().color(QPalette.Highlight).name().split("#")[1]
-background = qApp.palette().color(QPalette.Window).name().split("#")[1]
-alternate = qApp.palette().color(QPalette.AlternateBase).name().split("#")[1]
-inactive_text_color = qApp.palette().color(QPalette.ToolTipText).name().split("#")[1]
-active_text_color = qApp.palette().color(QPalette.WindowText).name().split("#")[1]
+highlight = qApp.palette().color(QPalette.ColorRole.Highlight).name().split("#")[1]
+background = qApp.palette().color(QPalette.ColorRole.Window).name().split("#")[1]
+alternate = qApp.palette().color(QPalette.ColorRole.AlternateBase).name().split("#")[1]
+inactive_text_color = qApp.palette().color(QPalette.ColorRole.ToolTipText).name().split("#")[1]
+active_text_color = qApp.palette().color(QPalette.ColorRole.WindowText).name().split("#")[1]
 
 small_tab_size = 20
-
 no_borders_style = " QToolBar { border: none; } "
+small_tab_style = f"QTabBar::tab {{ height: {small_tab_size}px; }}"
+hide_menu_indicator = f"""QPushButton::menu-indicator {{ image: none; }}"""
 
-nu_toolbox_style = f"""
+touchify_nt_toolbox = f"""
             QWidget {{ 
                 background-color: #01{alternate};
             }}
@@ -64,7 +65,7 @@ nu_toolbox_style = f"""
             }}
         """
 
-nu_toggle_button_style = f"""
+touchify_toggle_button = f"""
         QToolButton {{
             background-color: #aa{background};
             border: none;
@@ -95,7 +96,7 @@ nu_toggle_button_style = f"""
         }}
         """
 
-nu_toolshelf_header_style = f"""
+touchify_toolshelf_header = f"""
         QPushButton {{
             background-color: #aa{background};
             border: none;
@@ -131,7 +132,7 @@ nu_toolshelf_header_style = f"""
         }}
         """
 
-nu_toolshelf_button_style = f"""
+touchify_toolshelf_header_button = f"""
         QToolButton {{
             background-color: #aa{background};
             border: none;
@@ -144,6 +145,10 @@ nu_toolshelf_button_style = f"""
         
         QToolButton:pressed {{
             background-color: #{alternate};
+        }}
+
+        QPushButton::menu-indicator {{ 
+            image: none; 
         }}
 
         QPushButton {{
@@ -159,9 +164,30 @@ nu_toolshelf_button_style = f"""
         QPushButton:pressed {{
             background-color: #{alternate};
         }}
+
+        QPushButton::menu-indicator {{ 
+            image: none; 
+        }}
         """
 
-small_tab_style = f"QTabBar::tab {{ height: {small_tab_size}px; }}"
+def touchify_popup_action_btn(opacityLevel: float):
+    return f"""
+        QToolButton {{
+            border-radius: 0px; 
+            background-color: rgba(0,0,0,{opacityLevel}); 
+            padding: 5px 5px;
+            border: 0px solid transparent; 
+            font-size: 12px
+        }}
+        
+        QToolButton:hover {{
+            background-color: rgba(155,155,155,{opacityLevel}); 
+        }}
+                        
+        QToolButton:pressed {{
+            background-color: rgba(128,128,128,{opacityLevel}); 
+        }}
+    """
 
 def touchify_popup_frame(opacityAllowed: bool, opacityValue: float) -> str:
     if opacityAllowed:

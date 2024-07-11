@@ -10,7 +10,7 @@ import importlib.util
 from ..DockerContainer import DockerContainer
 
 from ...cfg.CfgPopup import CfgPopup
-from ...config import *
+from ...settings.TouchifyConfig import *
 from ...resources import *
 from .PopupDialog import *
 from ...docker_manager import *

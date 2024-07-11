@@ -6,7 +6,7 @@ import sys
 import xml.etree.ElementTree as ET
 from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from ...ext.typedlist import *
+from ...ext.TypedList import *
 from ...resources import *
 from ...ext.extensions_krita import KritaExtensions
 from ..CollapsibleBox import CollapsibleBox
@@ -130,8 +130,8 @@ class PropertyField_Str(PropertyField):
 
     def currentIndexChanged(self):
         self.variable_data = str(self.editor.currentText()).replace("\\n", "\n")
-        PropertyUtils_Extensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
+        super().setVariable(self.variable_source, self.variable_name, self.variable_data)
 
     def textChanged(self):
         self.variable_data = self.editor.text().replace("\\n", "\n")
-        PropertyUtils_Extensions.setVariable(self.variable_source, self.variable_name, self.variable_data)
+        super().setVariable(self.variable_source, self.variable_name, self.variable_data)

@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtGui
 from ..variables import *
 from ..cfg.CfgDockerGroup import CfgDockerGroup
-from ..config import *
+from ..settings.TouchifyConfig import *
 from ..resources import *
 from krita import *
 from typing import TYPE_CHECKING
@@ -77,12 +77,12 @@ class DockerGroups(object):
         sectionName = TOUCHIFY_ID_ACTIONS_DOCKER_GROUP
         subItemPath = actionPath + "/" + sectionName
 
-        cfg = ConfigManager.instance().getJSON()
+        cfg = TouchifyConfig.instance().getJSON()
         for docker in cfg.docker_groups:
             self.createAction(window, docker, subItemPath)
 
     def onConfigUpdated(self):
-        cfg: ConfigFile = ConfigManager.instance().getJSON()
+        cfg: TouchifyConfig.ConfigFile = TouchifyConfig.instance().getJSON()
         for item in cfg.docker_groups:
             newDockerGroupData: CfgDockerGroup = item
             if newDockerGroupData.id in self.custom_docker_states:

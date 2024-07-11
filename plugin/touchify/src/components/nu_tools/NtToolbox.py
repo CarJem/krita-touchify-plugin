@@ -65,7 +65,7 @@ class NtToolbox(object):
             self.updateStyleSheet()
 
     def updateStyleSheet(self):
-        self.pad.setStyleSheet(stylesheet.nu_toolbox_style)
+        self.pad.setStyleSheet(stylesheet.touchify_nt_toolbox)
 
     def close(self):
         self.mdiArea.subWindowActivated.disconnect(self.onSubWindowActivated)

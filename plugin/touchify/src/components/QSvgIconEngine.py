@@ -4,7 +4,7 @@ import os
 import xml
 
 
-from ..config import *
+from ..settings.TouchifyConfig import *
 from zipfile import ZipFile
 
 from krita import *

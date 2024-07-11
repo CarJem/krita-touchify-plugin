@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QMdiArea, QDockWidget
 from ...docker_manager import DockerManager
 from .NtToolbox import NtToolbox
 from .NtToolshelf import NtToolshelf
-from ...config import InternalConfig
+from ...settings.TouchifySettings import TouchifySettings
 from krita import *
 from PyQt5.QtCore import QObject, QEvent, QPoint
 from ...variables import *
@@ -91,15 +91,15 @@ class NtCanvas(object):
 
     #region Get / Set Functions
     def getToolOptionsAlignment(self):
-        isToolboxOnRight = InternalConfig.instance().CanvasWidgets_ToolboxOnRight
+        isToolboxOnRight = TouchifySettings.instance().CanvasWidgets_ToolboxOnRight
         return 'left' if isToolboxOnRight else 'right'
 
     def getToolboxAlignment(self):
-        isToolboxOnRight = InternalConfig.instance().CanvasWidgets_ToolboxOnRight
+        isToolboxOnRight = TouchifySettings.instance().CanvasWidgets_ToolboxOnRight
         return 'right' if isToolboxOnRight else 'left'
     
     def getToolboxAltPositionState(self):
-        return InternalConfig.instance().CanvasWidgets_AlternativeToolboxPosition
+        return TouchifySettings.instance().CanvasWidgets_AlternativeToolboxPosition
     #endregion
 
     #region Update Functions
@@ -108,9 +108,9 @@ class NtCanvas(object):
         if self.windowLoaded == False:
             return
         
-        usesNuToolbox = InternalConfig.instance().CanvasWidgets_EnableToolbox
-        usesNuToolOptionsAlt = InternalConfig.instance().CanvasWidgets_EnableAltToolshelf
-        usesNuToolOptions = InternalConfig.instance().CanvasWidgets_EnableToolshelf
+        usesNuToolbox = TouchifySettings.instance().CanvasWidgets_EnableToolbox
+        usesNuToolOptionsAlt = TouchifySettings.instance().CanvasWidgets_EnableAltToolshelf
+        usesNuToolOptions = TouchifySettings.instance().CanvasWidgets_EnableToolshelf
 
         if self.toolbox == None and usesNuToolbox:
             self.toolbox = NtToolbox(self, self.toolboxAlignment, self.window)

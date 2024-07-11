@@ -3,9 +3,12 @@ from math import e
 from PyQt5.QtWidgets import QWidget
 from krita import *
 from PyQt5.QtCore import *
+
+from touchify.src import stylesheet
+
+from ..settings.DockerSettings import DockerSettings_BrushOptions
 from ..components.krita_ext.KisSliderSpinBox import KisSliderSpinBox
 from ..components.krita_ext.KisAngleSelector import KisAngleSelector
-from ..ext.KritaSettings import KritaSettings
 
 DOCKER_TITLE = 'Brush Options'
 
@@ -93,32 +96,10 @@ class BrushRotationSlider(KisAngleSelector):
         if self.view == None: return
         self.setAngle(self.view.brushRotation())
 
-class BrushOptionsConfig:
-    
-    def __init__(self):
-        self.ShowFlowSlider = KritaSettings.readSettingBool("BrushOptionsDocker", "ShowFlowSlider", True)
-        self.ShowOpacitySlider = KritaSettings.readSettingBool("BrushOptionsDocker", "ShowOpacitySlider", True)
-        self.ShowSizeSlider = KritaSettings.readSettingBool("BrushOptionsDocker", "ShowSizeSlider", True)
-        self.ShowRotationSlider = KritaSettings.readSettingBool("BrushOptionsDocker", "ShowRotationSlider", True)
-    
-    def toggle(self, setting: str):
-        if hasattr(self, setting):
-            currentValue = getattr(self, setting)
-            currentValue = not currentValue
-            setattr(self, setting, currentValue)
-            self.save()
-        
-
-    def save(self):
-        KritaSettings.writeSettingBool("BrushOptionsDocker", "ShowFlowSlider", self.ShowFlowSlider)
-        KritaSettings.writeSettingBool("BrushOptionsDocker", "ShowOpacitySlider", self.ShowOpacitySlider)
-        KritaSettings.writeSettingBool("BrushOptionsDocker", "ShowSizeSlider", self.ShowSizeSlider)
-        KritaSettings.writeSettingBool("BrushOptionsDocker", "ShowRotationSlider", self.ShowRotationSlider)
-
 class BrushOptionsWidget(QWidget):
     def __init__(self, parent: QWidget | None = None):
         super(BrushOptionsWidget, self).__init__(parent)
-        self.config = BrushOptionsConfig()
+        self.config = DockerSettings_BrushOptions()
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
 
         self.timer_pulse = QTimer(self)
@@ -141,7 +122,7 @@ class BrushOptionsWidget(QWidget):
         self.optionsButton.setIcon(Krita.instance().icon("configure"))
         self.optionsButton.setMenu(self.optionsMenu)
         self.optionsButton.setFixedHeight(15)
-        self.optionsButton.setStyleSheet(f"QPushButton::menu-indicator{{width:0px;}}")
+        self.optionsButton.setStyleSheet(stylesheet.hide_menu_indicator)
         self.optionsButton.clicked.connect(self.optionsButton.showMenu)
         self.gridLayout.addWidget(self.optionsButton)
         

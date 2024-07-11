@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
 
 from ..variables import *
-from ..config import *
+from ..settings.TouchifyConfig import *
 from .. import stylesheet
 from PyQt5.QtWidgets import QMessageBox
 
