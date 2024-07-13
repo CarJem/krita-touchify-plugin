@@ -524,7 +524,7 @@
             "action_section_name": "Panel"
         }
     ],
-    "dockerButtonHeight": 18,
+    "dockerButtonHeight": 20,
     "dockerBackHeight": 16,
     "actionHeight": 18
 }

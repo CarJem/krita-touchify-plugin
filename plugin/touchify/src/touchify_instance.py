@@ -48,7 +48,7 @@ class TouchifyInstance(object):
         self.workspace_toggles.createActions(window, subItemPath)
         self.popup_toggles.createActions(window, subItemPath)
 
-        openSettingsAction = QAction("Configure Touchify...", self.mainMenuBar)
+        openSettingsAction = window.createAction(TOUCHIFY_ID_ACTION_CONFIGURE, "Configure Touchify...", TOUCHIFY_ID_MENU_ROOT)
         openSettingsAction.triggered.connect(self.openSettings)
         self.mainMenuBar.addAction(openSettingsAction)
 

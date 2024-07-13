@@ -152,6 +152,8 @@ class CfgToolshelfSection:
             name = self.action_section_name.replace("\n", "\\n") + " (Actions)"
         else:
             name = self.id.replace("\n", "\\n")
+            
+        name += f" [{self.panel_x}, {self.panel_y}]"
         return name
     
     def propertygrid_hints(self):
@@ -223,6 +225,7 @@ class CfgToolshelfSection:
         row["size"] = {"name": "Base Width / Height", "items": ["size_x","size_y"]}
         row["min_size"] = {"name": "Min Width / Height", "items": ["min_size_x","min_size_y"]}
         row["max_size"] = {"name": "Max Width / Height", "items": ["max_size_x","max_size_y"]}
+        row["panel_location"] = {"name": "Panel Position", "items": ["panel_x", "panel_y"]}
         return row
 
     def propertygrid_groups(self):

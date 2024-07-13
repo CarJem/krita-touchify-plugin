@@ -21,9 +21,9 @@ class CfgDocker:
     
     def propertygrid_labels(self):
         labels = {}
-        labels["display_name"] = "Display Name"
         labels["docker_name"] = "Docker ID"
-        labels["icon"] = "Preview Icon"
+        labels["display_name"] = "Text"
+        labels["icon"] = "Icon"
         return labels
 
     def propertygrid_restrictions(self):

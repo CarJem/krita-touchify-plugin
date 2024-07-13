@@ -2,22 +2,43 @@
     "panels": [],
     "actions": [
         {
-            "icon": "document-new",
-            "action_id": "view_show_canvas_only",
+            "icon": "",
+            "action_id": "file_new",
             "row": 0,
-            "context_menu_actions": []
+            "context_menu_actions": [],
+            "use_icon": true,
+            "action_type": "action",
+            "action_use_default_icon": true,
+            "brush_name": "",
+            "brush_override_icon": false,
+            "context_menu_name": "",
+            "text": ""
         },
         {
-            "icon": "mirror-view-16",
-            "action_id": "mirror_canvas",
+            "icon": "",
+            "action_id": "file_open",
             "row": 0,
-            "context_menu_actions": []
+            "context_menu_actions": [],
+            "use_icon": true,
+            "action_type": "action",
+            "action_use_default_icon": true,
+            "brush_name": "",
+            "brush_override_icon": false,
+            "context_menu_name": "",
+            "text": ""
         },
         {
-            "icon": "view-fullscreen",
-            "action_id": "fullscreen",
+            "context_menu_actions": [],
+            "use_icon": true,
+            "action_id": "file_save",
+            "action_type": "action",
+            "action_use_default_icon": true,
+            "brush_name": "",
+            "brush_override_icon": false,
+            "context_menu_name": "",
+            "icon": "",
             "row": 0,
-            "context_menu_actions": []
+            "text": ""
         }
     ],
     "sections": [
@@ -39,48 +60,128 @@
             "action_section_contents": [
                 {
                     "context_menu_actions": [],
-                    "action_id": "show-global-selection-mask",
-                    "icon": "selection-mode_ants",
-                    "row": 0,
-                    "action_use_default_icon": false,
+                    "use_icon": true,
+                    "action_id": "view_show_canvas_only",
                     "action_type": "action",
-                    "context_menu_name": ""
+                    "action_use_default_icon": false,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "context_menu_name": "",
+                    "icon": "config-canvas-only",
+                    "row": 0,
+                    "text": ""
+                },
+                {
+                    "context_menu_actions": [],
+                    "use_icon": true,
+                    "action_id": "mirror_canvas",
+                    "action_type": "action",
+                    "action_use_default_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "context_menu_name": "",
+                    "icon": "",
+                    "row": 0,
+                    "text": ""
+                },
+                {
+                    "context_menu_actions": [],
+                    "use_icon": true,
+                    "action_id": "fullscreen",
+                    "action_type": "action",
+                    "action_use_default_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "context_menu_name": "",
+                    "icon": "",
+                    "row": 0,
+                    "text": ""
                 }
             ],
-            "action_section_name": "Canvas Stuff",
-            "section_type": "actions",
-            "panel_y": 1,
-            "size_x": 0,
+            "action_section_name": "Actions (Left)",
+            "action_section_alignment_x": "left",
+            "action_section_alignment_y": "none",
+            "action_section_btn_width": 0,
+            "action_section_btn_height": 0,
+            "action_section_display_mode": "flat",
+            "action_section_icon_size": 0,
+            "docker_loading_priority": "normal",
+            "docker_nesting_mode": "normal",
+            "docker_unloaded_visibility": "normal",
+            "id": "",
             "max_size_x": 0,
             "max_size_y": 0,
             "min_size_x": 0,
             "min_size_y": 0,
             "panel_x": 0,
-            "size_y": 0,
-            "id": "",
-            "docker_nesting_mode": "normal",
-            "docker_unloaded_visibility": "normal",
-            "docker_loading_priority": "normal",
-            "action_section_display_mode": "flat",
-            "action_section_alignment_x": "left",
-            "action_section_alignment_y": "none",
-            "action_section_btn_width": 0,
-            "action_section_btn_height": 0,
-            "action_section_icon_size": 0
+            "panel_y": 1,
+            "section_type": "actions",
+            "size_x": 0,
+            "size_y": 0
         },
         {
             "action_section_contents": [
                 {
                     "context_menu_actions": [],
+                    "use_icon": true,
+                    "action_id": "show_snap_options_popup",
+                    "action_type": "action",
+                    "action_use_default_icon": false,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "context_menu_name": "",
+                    "icon": "material:vector-link",
+                    "row": 0,
+                    "text": "Snap"
+                },
+                {
+                    "context_menu_actions": [
+                        {
+                            "id": "view_ruler"
+                        },
+                        {
+                            "id": "view_toggle_reference_images"
+                        },
+                        {
+                            "id": "view_toggle_painting_assistants"
+                        },
+                        {
+                            "id": "show-global-selection-mask"
+                        }
+                    ],
                     "action_id": "deselect",
                     "action_use_default_icon": true,
-                    "icon": "",
+                    "icon": "krita_tool_assistant",
                     "row": 0,
-                    "action_type": "action",
-                    "context_menu_name": ""
+                    "action_type": "menu",
+                    "context_menu_name": "Assistants",
+                    "use_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "text": ""
+                },
+                {
+                    "context_menu_actions": [
+                        {
+                            "id": "options_configure"
+                        },
+                        {
+                            "id": "touchify_configure"
+                        }
+                    ],
+                    "use_icon": true,
+                    "action_id": "",
+                    "action_type": "menu",
+                    "action_use_default_icon": false,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "context_menu_name": "Other",
+                    "icon": "settings-button",
+                    "row": 0,
+                    "text": ""
                 }
             ],
-            "action_section_name": "Selection Panel",
+            "action_section_name": "Actions (Right)",
             "section_type": "actions",
             "panel_x": 1,
             "panel_y": 1,
@@ -97,8 +198,8 @@
             "action_section_display_mode": "flat",
             "action_section_alignment_x": "right",
             "action_section_alignment_y": "none",
-            "action_section_btn_width": 0,
-            "action_section_btn_height": 0,
+            "action_section_btn_width": 25,
+            "action_section_btn_height": 25,
             "action_section_icon_size": 0
         }
     ],

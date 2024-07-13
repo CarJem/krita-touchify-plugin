@@ -90,8 +90,8 @@ class ColorSourceToggle(QWidget):
         fg_color = self.krita_to_qcolor(activeView.foregroundColor())
         bg_color = self.krita_to_qcolor(activeView.backgroundColor())
 
-        self.setFgBtn.setStyleSheet("background-color: {0}".format(fg_color.name()))
-        self.setBgBtn.setStyleSheet("background-color: {0}".format(bg_color.name()))
+        self.setFgBtn.setStyleSheet("border: 1px solid transparent; background-color: {0}".format(fg_color.name()))
+        self.setBgBtn.setStyleSheet("border: 1px solid transparent; background-color: {0}".format(bg_color.name()))
 
     def onCanvasChanged(self, canvas: Canvas):
         self.canvas = canvas

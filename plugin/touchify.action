@@ -32,6 +32,9 @@
         <Action name="touchify_hotkey_10">
             <shortcut></shortcut>
         </Action>
+        <Action name="touchify_configure">
+            <shortcut></shortcut>
+        </Action>
         <Action name="touchify_showToolbox">
             <icon></icon>
             <activationFlags>0</activationFlags>
