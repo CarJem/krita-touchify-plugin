@@ -36,6 +36,8 @@
     > Similar to the 4 Brush Option Sliders in the Toolbar, this docker replicates their functionality in the form of a docker
 - **New Docker - Color Options**
     > Similar to the Color Picker in the Toolbar, this docker replicates it's functionality in the form of a docker
+- **And More...**
+    > - Added an Action for "Configure Touchify..."
 ## Bug Fixes:
 - **Popup Dockers Improvements** 
     > Various Bug Fixes and Other Backend Improvements
