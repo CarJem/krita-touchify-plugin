@@ -30,7 +30,10 @@ class TouchifyCanvas(object):
         result = window.createAction(id, text, menuLocation)
         result.setCheckable(setCheckable)
         result.setChecked(setChecked)
-        result.toggled.connect(onToggled)
+        if setCheckable:
+            result.toggled.connect(onToggled)
+        else:
+            result.triggered.connect(onToggled)
         return result
 
     def createActions(self, window: Window, mainMenuBar: QMenuBar):
@@ -49,6 +52,7 @@ class TouchifyCanvas(object):
         nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_ENABLETOOLSHELF_ALT, "Enable Toolshelf (Alt.)", sublocation_path, True, config.CanvasWidgets_EnableAltToolshelf, self.nuToolOptionsAltToggled))
         
         nu_options_menu.addSection("Widget Options")
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_SWAPTOOLBOXORIENTATION, "Swap Toolbox Orientation", sublocation_path, False, False, self.nuOptionsOrientationSwapRequested))
         nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_RIGHTHANDTOOLBOX, "Right Hand Toolbox", sublocation_path, True, config.CanvasWidgets_ToolboxOnRight, self.nuOptionsRightHandToolboxToggled))
         nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_ALTTOOLBOXPOSITION, "Alternative Toolbox Position", sublocation_path, True, config.CanvasWidgets_AlternativeToolboxPosition, self.nuOptionsAltToolboxPosToggled))
 
@@ -83,3 +87,7 @@ class TouchifyCanvas(object):
         TouchifySettings.instance().CanvasWidgets_ToolboxOnRight = toggled
         TouchifySettings.instance().saveSettings()
 
+    def nuOptionsOrientationSwapRequested(self):
+        if self.ntCanvas:
+            if self.ntCanvas.toolbox:
+                self.ntCanvas.toolbox.swapOrientation()

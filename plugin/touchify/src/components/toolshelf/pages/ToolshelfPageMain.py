@@ -1,6 +1,8 @@
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+
+from ....resources import ResourceManager
 from ..buttons.ToolshelfButtonBar import ToolshelfButtonBar
 from ....settings.TouchifyConfig import TouchifyConfig
 from .ToolshelfPage import ToolshelfPage
@@ -26,8 +28,8 @@ class ToolshelfPageMain(ToolshelfPage):
 
         pageCfg = CfgToolshelfPanel()
         pageCfg.actionHeight = self.rootCfg.actionHeight
-        pageCfg.quick_actions = self.rootCfg.actions
-        pageCfg.additional_dockers = self.rootCfg.dockers
+        pageCfg.actions = self.rootCfg.actions
+        pageCfg.sections = self.rootCfg.sections
 
         super(ToolshelfPageMain, self).__init__(parent, 'MAIN', pageCfg)
         
@@ -38,10 +40,11 @@ class ToolshelfPageMain(ToolshelfPage):
         self.shelfLayout.insertWidget(0, self.dockerBtns)    
     
     def addDockerButton(self, properties: CfgToolshelfPanel, onClick, title):
-        self.dockerBtns.addCfgButton(properties, onClick, title)
-        self.dockerBtns.button(properties.id).setFixedHeight(self.rootCfg.dockerButtonHeight)
-        self.dockerBtns.button(properties.id).setMinimumWidth(self.rootCfg.dockerButtonHeight)
-        self.dockerBtns.button(properties.id).setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
+        btn = self.dockerBtns.addButton(properties.id, properties.row, onClick, title, False)
+        btn.setIcon(ResourceManager.iconLoader(properties.icon))
+        btn.setFixedHeight(self.rootCfg.dockerButtonHeight)
+        btn.setMinimumWidth(self.rootCfg.dockerButtonHeight)
+        btn.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
            
 
     def loadPage(self):

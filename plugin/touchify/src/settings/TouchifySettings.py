@@ -22,6 +22,7 @@ class TouchifySettings:
         self.CanvasWidgets_EnableAltToolshelf = False
         self.CanvasWidgets_ToolboxOnRight = False
         self.CanvasWidgets_AlternativeToolboxPosition = False
+        self.CanvasWidgets_ToolboxDirection = ""
 
         self.DockerUtils_HiddenDockersLeft: str = ""
         self.DockerUtils_HiddenDockersRight: str = ""
@@ -49,9 +50,11 @@ class TouchifySettings:
 
         self.Styles_BorderlessToolbar = self.private_readSettingBool("usesBorderlessToolbar", False)
         self.Styles_ThinDocumentTabs = self.private_readSettingBool("usesThinDocumentTabs", False)
+        
         self.CanvasWidgets_EnableToolbox = self.private_readSettingBool("usesNuToolbox", False)
         self.CanvasWidgets_EnableToolshelf = self.private_readSettingBool("usesNuToolOptions", False)
         self.CanvasWidgets_EnableAltToolshelf = self.private_readSettingBool("usesNuToolOptionsAlt", False)
+        self.CanvasWidgets_ToolboxDirection = self.private_readSetting("CanvasWidgets_ToolboxDirection", "")
 
         self.CanvasWidgets_ToolboxOnRight = self.private_readSettingBool("nuOptions_ToolboxOnRight", False)
         self.CanvasWidgets_AlternativeToolboxPosition = self.private_readSettingBool("nuOptions_alternativeToolboxPosition", False)
@@ -67,6 +70,8 @@ class TouchifySettings:
         self.private_writeSettingBool("usesNuToolbox", self.CanvasWidgets_EnableToolbox, False)
         self.private_writeSettingBool("usesNuToolOptions", self.CanvasWidgets_EnableToolshelf, False)
         self.private_writeSettingBool("usesNuToolOptionsAlt", self.CanvasWidgets_EnableAltToolshelf, False)
+        self.private_writeSetting("CanvasWidgets_ToolboxDirection", self.CanvasWidgets_ToolboxDirection, "")
+
 
         self.private_writeSettingBool("nuOptions_ToolboxOnRight", self.CanvasWidgets_ToolboxOnRight, False)
         self.private_writeSettingBool("nuOptions_alternativeToolboxPosition", self.CanvasWidgets_AlternativeToolboxPosition, False)

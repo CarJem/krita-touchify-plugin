@@ -36,6 +36,7 @@ class PropertyField_Str(PropertyField):
         self.is_docker_selector = False
         self.is_action_selection = False
         self.is_hotkey_selector = False
+        self.is_brush_selection = False
         self.is_combobox = False
         self.combobox_items: list[tuple[str, str]] = []
 
@@ -57,6 +58,8 @@ class PropertyField_Str(PropertyField):
                     self.is_docker_selector = True
                 elif restrictions[variable_name]["type"] == "icon_selection":
                     self.is_icon_viewer = True
+                elif restrictions[variable_name]["type"] == "brush_selection":
+                    self.is_brush_selection = True
                 elif restrictions[variable_name]["type"] == "hotkey_selection":
                     combobox_items = list[tuple[str, str]]()
                     avaliableItems = TouchifyConfig.instance().hotkey_options_storage
@@ -68,7 +71,7 @@ class PropertyField_Str(PropertyField):
                     self.is_combobox = True
                     
 
-        if self.is_icon_viewer or self.is_docker_selector or self.is_action_selection:
+        if self.is_icon_viewer or self.is_docker_selector or self.is_action_selection or self.is_brush_selection:
             self.editor = QLineEdit()
             self.editor.textChanged.connect(self.textChanged)
             self.editor.setText(self.variable_data.replace("\n", "\\n"))
@@ -76,6 +79,8 @@ class PropertyField_Str(PropertyField):
             self.editorHelper = QPushButton()
             if self.is_icon_viewer: 
                 self.editorHelper.setIcon(ResourceManager.iconLoader(self.variable_data.replace("\n", "\\n")))
+            elif self.is_brush_selection: 
+                self.editorHelper.setIcon(ResourceManager.brushIcon(self.variable_data.replace("\n", "\\n")))
             else:
                 self.editorHelper.setIcon(ResourceManager.iconLoader("properties"))
 
@@ -84,6 +89,7 @@ class PropertyField_Str(PropertyField):
             if self.is_icon_viewer: editorHelperType = "icons"
             elif self.is_docker_selector: editorHelperType = "dockers"
             elif self.is_action_selection: editorHelperType = "actions"
+            elif self.is_brush_selection: editorHelperType = "brushes"
 
             self.editorHelper.clicked.connect(lambda: self.helperRequested(editorHelperType))
 
@@ -145,6 +151,8 @@ class PropertyField_Str(PropertyField):
             result = self.dlg.selectedResult()
             if self.is_icon_viewer: 
                 self.editorHelper.setIcon(ResourceManager.iconLoader(result))
+            elif self.is_brush_selection:
+                self.editorHelper.setIcon(ResourceManager.brushIcon(result))
             self.editor.setText(result)
             
 

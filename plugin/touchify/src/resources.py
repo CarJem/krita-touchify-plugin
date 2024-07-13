@@ -109,6 +109,17 @@ class ResourceManager:
             icon = ResourceManager.getFallbackIcon()
             return icon
         
+    def getBrushPresets():
+        return Krita.instance().resources('preset')
+        
+    def brushIcon(brushName):
+        brush_presets = Krita.instance().resources('preset')
+        if brushName in brush_presets:
+            preset = brush_presets[brushName]
+            return QIcon(QPixmap.fromImage(preset.image()))
+        else:
+            return ResourceManager.getFallbackIcon()
+        
     def iconLoader(iconName):
         if str(iconName).startswith("material:"):
             materialName = str(iconName)[len("material:"):]

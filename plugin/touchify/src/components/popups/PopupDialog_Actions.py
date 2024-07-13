@@ -27,13 +27,13 @@ class PopupDialog_Actions(PopupDialog):
 
 
     def generateSize(self):
-        padding = self.metadata.grid_padding
-        grid_width = self.metadata.grid_width
+        padding = self.metadata.actions_grid_padding
+        grid_width = self.metadata.actions_grid_width
     
-        item_width = self.metadata.item_width + padding * 2
-        item_height = self.metadata.item_height + padding * 2
+        item_width = self.metadata.actions_item_width + padding * 2
+        item_height = self.metadata.actions_item_height + padding * 2
 
-        item_count = len(self.metadata.items)
+        item_count = len(self.metadata.actions_items)
 
 
         item_count_x = grid_width
@@ -66,10 +66,10 @@ class PopupDialog_Actions(PopupDialog):
 
         if icon:
             btn.setIcon(self.getActionIcon(icon))
-            btn.setIconSize(QSize(self.metadata.icon_width, self.metadata.icon_height))
+            btn.setIconSize(QSize(self.metadata.actions_icon_width, self.metadata.actions_icon_height))
 
         btn.setWindowOpacity(opacityLevel)
-        btn.setFixedSize(self.metadata.item_width, self.metadata.item_height)
+        btn.setFixedSize(self.metadata.actions_item_width, self.metadata.actions_item_height)
         btn.clicked.connect(lambda: self.runAction(action))
         layout.addWidget(btn, x, y)
 
@@ -83,16 +83,16 @@ class PopupDialog_Actions(PopupDialog):
         current_y = 0
         current_index = 0
 
-        padding = self.metadata.grid_padding
-        maximum_x = self.metadata.grid_width
-        item_count = len(self.metadata.items)
+        padding = self.metadata.actions_grid_padding
+        maximum_x = self.metadata.actions_grid_width
+        item_count = len(self.metadata.actions_items)
 
         while current_index < item_count:
             if not current_x < maximum_x:
                 current_y += 1
                 current_x = 0
             
-            btn = self.metadata.items[current_index]
+            btn = self.metadata.actions_items[current_index]
             self.createActionButton(layout, btn.text, btn.icon, btn.action, current_y, current_x)
             current_x += 1
             current_index += 1

@@ -36,7 +36,7 @@ class PopupDialog(QDialog):
         self.oldSize = None
         self.autoConceal = False
         
-        self.popupMode = self.metadata.popupType
+        self.windowMode = self.metadata.window_type
         self.popupType = self.metadata.type
 
         qApp.installEventFilter(self)
@@ -105,11 +105,11 @@ class PopupDialog(QDialog):
         self.setAutoFillBackground(True)
         self.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
 
-        if self.popupMode == "popup":
+        if self.windowMode == "popup":
             self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
             self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, True)
             self.autoConceal = True
-        elif self.popupMode == "window":
+        elif self.windowMode == "window":
             self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
             self.setMouseTracking(True)
             self.autoConceal = False
@@ -123,7 +123,7 @@ class PopupDialog(QDialog):
         self.rootLayout.setSpacing(0)
         self.setLayout(self.rootLayout)
 
-        if self.popupMode == "window":
+        if self.windowMode == "window":
             self.titlebarEnabled = True
             self._toolbar = PopupDialog_Titlebar(self)
             self.rootLayout.addWidget(self._toolbar)
@@ -152,7 +152,7 @@ class PopupDialog(QDialog):
     def triggerPopup(self, ourMode: str, parent: QWidget | None):
         if self.isVisible():
             self.close()
-            if not self.popupMode == "popup":
+            if not self.windowMode == "popup":
                 return
         
         actual_x = 0
@@ -168,7 +168,7 @@ class PopupDialog(QDialog):
         self.setGeometry(actual_x, actual_y, dialog_width, dialog_height)
         self.show()
 
-        if self.popupMode == "popup":
+        if self.windowMode == "popup":
             self.activateWindow()
 
     def shutdownWidget(self):

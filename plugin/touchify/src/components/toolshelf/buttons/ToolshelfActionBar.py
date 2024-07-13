@@ -3,6 +3,8 @@
 
 from multiprocessing import context
 import uuid
+
+from ....resources import ResourceManager
 from ....cfg.CfgToolshelf import CfgToolshelfAction, CfgToolshelfActionSubItem
 from ....variables import *
 from ....cfg.CfgToolshelf import CfgToolshelfAction
@@ -65,47 +67,75 @@ class ToolshelfActionBar(QWidget):
                 action[0].changed.disconnect(action[1])
             except TypeError:
                 pass
+            
+            
+    def __brushButtonClicked(self, id: Resource):
+        Krita.instance().activeWindow().activeView().setCurrentBrushPreset(id)
+            
+    def __createBrushButton(self, act: CfgToolshelfAction):
+        id = act.brush_name
+        brush_presets = ResourceManager.getBrushPresets()
+        
+        if id in brush_presets:
+            preset = brush_presets[id]
+            btn = self.bar.addButton(id, act.row, lambda: self.__brushButtonClicked(preset), preset.name(), False)
+            if act.brush_override_icon:
+                if act.use_icon:
+                    btn.setIcon(ResourceManager.iconLoader())
+                else:
+                    btn.setText(act.text)
+            else:
+                btn.setIcon(ResourceManager.brushIcon(id))
+                   
+    def __createMenuButton(self, act: CfgToolshelfAction):
+        id = str(uuid.uuid4())
+        btn = self.bar.addButton(id, act.row, None, act.context_menu_name, False)
+        contextMenu = QMenu(btn)
+        
+        if act.use_icon:
+            btn.setIcon(ResourceManager.iconLoader(act.icon))
+        else:
+            btn.setText(act.text)
+        
+        for entry in act.context_menu_actions:
+            action_cfg: CfgToolshelfActionSubItem = entry
+            actual_action = Krita.instance().action(action_cfg.id)
+            if actual_action:
+                contextMenu.addAction(actual_action)
+
+
+        btn.setMenu(contextMenu)
+        btn.clicked.connect(btn.showMenu)
+        
+    def __createActionButton(self, act: CfgToolshelfAction):
+        action = Krita.instance().action(act.action_id)
+        if action:
+            checkable = action.isCheckable()
+            if act.action_id in KNOWN_UNCHECKABLES:
+                checkable = False
+                
+                
+            btn = self.bar.addButton(act.action_id, act.row, action.trigger, action.toolTip(), checkable)
+            
+            if act.use_icon:
+                if act.action_use_default_icon:
+                    btn.setIcon(action.icon())
+                else:
+                    btn.setIcon(ResourceManager.iconLoader(act.icon))
+            else:
+                btn.setText(act.text)
+
+            if checkable:
+                btn.setChecked(action.isChecked())
+                self.registerAction(btn, action, act.action_use_default_icon)
 
     def initQuickActions(self):
         actions = self.cfg
         for entry in actions:
             act: CfgToolshelfAction = entry
-            if act.has_context_menu:
-                id = str(uuid.uuid4())
-                self.bar.addButton(id, act.icon, act.row, None, act.context_menu_name, False, True)
-                btn = self.bar.button(id)
-
-                contextMenu = QMenu(btn)
-                
-                for entry in act.context_menu_actions:
-                    action_cfg: CfgToolshelfActionSubItem = entry
-                    actual_action = Krita.instance().action(action_cfg.id)
-                    if actual_action:
-                        contextMenu.addAction(actual_action)
-
-
-                btn.setMenu(contextMenu)
-                btn.clicked.connect(btn.showMenu)
-
+            if act.action_type == "menu":
+                self.__createMenuButton(act)
+            elif act.action_type == "brush":
+                self.__createBrushButton(act)
             else:
-                action = Krita.instance().action(act.id)
-                if action:
-                    checkable = action.isCheckable()
-                    if act.id in KNOWN_UNCHECKABLES:
-                        checkable = False
-
-                    self.bar.addCfgButton(
-                        act,
-                        action.trigger,
-                        action.toolTip(),
-                        checkable
-                        )
-                    
-                    if act.useActionIcon:
-                        btn = self.bar.button(act.id)
-                        btn.setIcon(action.icon())
-
-                    if checkable:
-                        btn = self.bar.button(act.id)
-                        btn.setChecked(action.isChecked())
-                        self.registerAction(btn, action, act.useActionIcon)
+                self.__createActionButton(act)

@@ -65,11 +65,11 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         if mode == "icons":
             self.listView.setViewMode(QListView.ViewMode.IconMode)
             self.listView.setUniformItemSizes(True)
-            icons = ResourceManager.getIconList()
-            for iconName in icons:
+            presets = ResourceManager.getIconList()
+            for preset_key in presets:
                 listItem = QListWidgetItem()
-                listItem.setIcon(ResourceManager.iconLoader(iconName))
-                listItem.setData(DATA_INDEX, iconName)
+                listItem.setIcon(ResourceManager.iconLoader(preset_key))
+                listItem.setData(DATA_INDEX, preset_key)
                 self.listView.addItem(listItem)
 
             custom_icons = ResourceManager.getCustomIconList()
@@ -77,6 +77,17 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem = QListWidgetItem()
                 listItem.setIcon(ResourceManager.iconLoader(customIconName))
                 listItem.setData(DATA_INDEX, customIconName)
+                self.listView.addItem(listItem)
+        elif mode == "brushes":
+            self.listView.setViewMode(QListView.ViewMode.IconMode)
+            self.listView.setUniformItemSizes(True)
+            presets = ResourceManager.getBrushPresets()
+            for preset_key in presets:
+                preset = presets[preset_key]
+                listItem = QListWidgetItem()
+                listItem.setIcon(ResourceManager.brushIcon(preset.name()))
+                listItem.setText(preset.name())
+                listItem.setData(DATA_INDEX, preset_key)
                 self.listView.addItem(listItem)
         elif mode == "dockers":
             self.listView.setViewMode(QListView.ViewMode.ListMode)

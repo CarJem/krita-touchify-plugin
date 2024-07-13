@@ -1,4 +1,6 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
+
+from ...settings.TouchifySettings import TouchifySettings
 from .NtAdjustToSubwindowFilter import NtAdjustToSubwindowFilter
 from ... import stylesheet
 from .NtWidgetPad import NtWidgetPad
@@ -13,15 +15,16 @@ if TYPE_CHECKING:
 #Other Toolbox: pyKrita_CoolBox
 
 class NtToolboxInteractFilter(QObject):
-    def __init__(self, parent=None):
+    def __init__(self, parent: QWidget):
         super(NtToolboxInteractFilter, self).__init__(parent)
         self.target = None
 
     def eventFilter(self, obj: QObject, e: QEvent):
         if (self.target and e.type() == QEvent.Type.MouseButtonPress):
             mouseEvent: QMouseEvent = e
-            if mouseEvent.button() == Qt.MouseButton.RightButton:
-                self.target.contextMenuEvent(QContextMenuEvent(QContextMenuEvent.Reason.Keyboard, QPoint(0,0)))
+            match mouseEvent.button():
+                case Qt.MouseButton.RightButton:
+                    self.target.contextMenuEvent(QContextMenuEvent(QContextMenuEvent.Reason.Keyboard, QPoint(0,0)))
 
         return False
 
@@ -35,7 +38,8 @@ class NtToolbox(object):
         self.mdiArea = self.qWin.findChild(QMdiArea)
         self.canvas = canvas
         self.toolbox = self.qWin.findChild(QDockWidget, 'ToolBox')
-
+        self.previousOrientation: Qt.DockWidgetArea = None
+        self.initOrientation()
         # Create "pad"
         self.pad = NtWidgetPad(self.mdiArea)
         self.pad.setObjectName("toolBoxPad")
@@ -57,6 +61,32 @@ class NtToolbox(object):
         # Disable the related QDockWidget
         self.dockerAction = window.qwindow().findChild(QDockWidget, "ToolBox").toggleViewAction()
         self.dockerAction.setEnabled(False)
+        
+    def initOrientation(self):
+        self.previousOrientation = self.qWin.dockWidgetArea(self.toolbox)
+        self.updateOrientation()
+        
+    def resetOrientation(self):
+        if self.previousOrientation != None:
+            self.toolbox.updateToolBoxOrientation(self.previousOrientation)
+            
+    def updateOrientation(self):
+        orientation = TouchifySettings.instance().CanvasWidgets_ToolboxDirection
+        if orientation == "Horizontal":
+            self.toolbox.updateToolBoxOrientation(Qt.DockWidgetArea.TopDockWidgetArea)
+        else:
+            self.toolbox.updateToolBoxOrientation(Qt.DockWidgetArea.LeftDockWidgetArea)
+
+    
+    def swapOrientation(self):
+        orientation = TouchifySettings.instance().CanvasWidgets_ToolboxDirection
+        if orientation == "Vertical":
+            TouchifySettings.instance().CanvasWidgets_ToolboxDirection = "Horizontal"
+            TouchifySettings.instance().saveSettings()
+        else:
+            TouchifySettings.instance().CanvasWidgets_ToolboxDirection = "Vertical"
+            TouchifySettings.instance().saveSettings()
+        self.updateOrientation()
 
     def onSubWindowActivated(self, subWin):
         if subWin:
@@ -65,9 +95,12 @@ class NtToolbox(object):
             self.updateStyleSheet()
 
     def updateStyleSheet(self):
-        self.pad.setStyleSheet(stylesheet.touchify_nt_toolbox)
+        self.updateOrientation()
+        self.pad.setStyleSheet(stylesheet.touchify_nt_toolbox)    
+
 
     def close(self):
+        self.resetOrientation()
         self.mdiArea.subWindowActivated.disconnect(self.onSubWindowActivated)
         self.pad.removeEventFilter(self.interactFilter)
         self.pad.removeEventFilter(self.adjustFilter)

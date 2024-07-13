@@ -57,19 +57,15 @@ class ToolshelfButton(QPushButton):
 class ToolshelfButtonBar(QWidget):
     def __init__(self, parent=None):
         super(ToolshelfButtonBar, self).__init__(parent)
-        self.rows: dict[int, QWidget] = {}
+        self._rows: dict[int, QWidget] = {}
         self.setLayout(QVBoxLayout())
         self.layout().setSpacing(1)
         self.layout().setContentsMargins(0, 0, 0, 0)
 
         self._buttons: dict[any, ToolshelfButton] = {}
 
-    def addButton(self, id: any, displayData: str, row: int, onClick: any, toolTip: str, checkable: bool, hasIcon: bool):
+    def addButton(self, id: any, row: int, onClick: any, toolTip: str, checkable: bool):
         btn = ToolshelfButton()
-        if hasIcon:
-            btn.setIcon(ResourceManager.iconLoader(displayData))
-        else: 
-            btn.setText(displayData)
         if onClick:
             btn.clicked.connect(onClick) # collect and disconnect all when closing
         btn.setToolTip(toolTip)
@@ -77,25 +73,14 @@ class ToolshelfButtonBar(QWidget):
         btn.setCheckable(checkable)
         self._buttons[id] = btn
 
-        if row not in self.rows:
+        if row not in self._rows:
             rowWid = QWidget()
             rowWid.setLayout(QHBoxLayout())
             rowWid.layout().setSpacing(1)
             rowWid.layout().setContentsMargins(0, 0, 0, 0)
             rowWid.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-            self.rows[row] = rowWid
+            self._rows[row] = rowWid
             self.layout().addWidget(rowWid)
 
-        self.rows[row].layout().addWidget(btn)
-
-    def addTextButton(self, id: any, text: str, onClick: any, toolTip: str="", row: int = 0):
-        self.addButton(id, text, row, onClick, toolTip, False, False)
-
-    def addCfgButton(self, properties: CfgToolshelfAction | CfgToolshelfPanel, onClick, toolTip="", checkable=False):
-        self.addButton(properties.id, properties.icon, properties.row, onClick, toolTip, checkable, True)
-
-    def count(self):
-        return len(self._buttons)
-
-    def button(self, ID):
-        return self._buttons[ID]
+        self._rows[row].layout().addWidget(btn)
+        return btn

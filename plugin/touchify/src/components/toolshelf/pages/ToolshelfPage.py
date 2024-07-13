@@ -59,7 +59,7 @@ class ToolshelfPage(QWidget):
         self.size = None
         self.panelProperties = data
 
-        self.quickActions = ToolshelfActionBar(self.panelProperties.quick_actions, self)
+        self.quickActions = ToolshelfActionBar(self.panelProperties.actions, self)
         self.quickActions.bar.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         for btnKey in self.quickActions.bar._buttons:
             self.quickActions.bar._buttons[btnKey].setFixedHeight(self.panelProperties.actionHeight)
@@ -94,7 +94,7 @@ class ToolshelfPage(QWidget):
     def _createSections(self):
         widget_groups: Mapping[int, Mapping[int, list[DockerContainer | ToolshelfActionBar]]] = {}
         
-        for dockerData in self.panelProperties.additional_dockers:     
+        for dockerData in self.panelProperties.sections:     
             actionInfo: CfgToolshelfGroup = dockerData
             actionWidget = self._createSection(actionInfo)
             if actionWidget == None: continue

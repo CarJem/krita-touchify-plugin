@@ -3,24 +3,24 @@
     "actions": [
         {
             "icon": "document-new",
-            "id": "view_show_canvas_only",
+            "action_id": "view_show_canvas_only",
             "row": 0,
             "context_menu_actions": []
         },
         {
             "icon": "mirror-view-16",
-            "id": "mirror_canvas",
+            "action_id": "mirror_canvas",
             "row": 0,
             "context_menu_actions": []
         },
         {
             "icon": "view-fullscreen",
-            "id": "fullscreen",
+            "action_id": "fullscreen",
             "row": 0,
             "context_menu_actions": []
         }
     ],
-    "dockers": [
+    "sections": [
         {
             "id": "OverviewDocker",
             "size_x": 300,
@@ -39,11 +39,11 @@
             "action_section_contents": [
                 {
                     "context_menu_actions": [],
-                    "id": "show-global-selection-mask",
+                    "action_id": "show-global-selection-mask",
                     "icon": "selection-mode_ants",
                     "row": 0,
-                    "useActionIcon": false,
-                    "has_context_menu": false,
+                    "action_use_default_icon": false,
+                    "action_type": "action",
                     "context_menu_name": ""
                 }
             ],
@@ -72,11 +72,11 @@
             "action_section_contents": [
                 {
                     "context_menu_actions": [],
-                    "id": "deselect",
-                    "useActionIcon": true,
+                    "action_id": "deselect",
+                    "action_use_default_icon": true,
                     "icon": "",
                     "row": 0,
-                    "has_context_menu": false,
+                    "action_type": "action",
                     "context_menu_name": ""
                 }
             ],

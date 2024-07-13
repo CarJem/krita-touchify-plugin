@@ -28,15 +28,21 @@ class CfgToolshelfActionSubItem:
         return restrictions
 
 class CfgToolshelfAction:
-    id: str = ""
     icon: str = ""
     row: int = 0
-    useActionIcon: bool = False
+    text: str = ""
+    use_icon: bool = True
+    
+    action_type: str = "action"
+    
+    action_id: str = ""
+    action_use_default_icon: bool = False
 
-
-    has_context_menu: bool = False
     context_menu_actions: TypedList[CfgToolshelfActionSubItem] = []
     context_menu_name: str = ""
+    
+    brush_name: str = ""
+    brush_override_icon: bool = False
 
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
@@ -44,62 +50,63 @@ class CfgToolshelfAction:
         self.context_menu_actions = Extensions.list_assignment(context_menu_actions, CfgToolshelfActionSubItem)
 
     def __str__(self):
-        if self.has_context_menu:
+        if self.action_type == "brush":
+            name = self.brush_name.replace("\n", "\\n") + " (Brush)"
+        elif self.action_type == "menu":
             name = self.context_menu_name.replace("\n", "\\n") + " (Menu)"
         else:
-            name = self.id.replace("\n", "\\n") 
+            name = self.action_id.replace("\n", "\\n") 
         return name
 
     def forceLoad(self):
         self.context_menu_actions = TypedList(self.context_menu_actions, CfgToolshelfActionSubItem)
 
     def propertygrid_hidden(self):
-        if self.has_context_menu == True:
-            return [
-                "id",
-                "useActionIcon"
-            ]
-        else:
-            return [
-                "context_menu_name",
-                "context_menu_actions"
-            ]
+        result = []
+        if self.action_type != "action":
+            result.append("action_id")
+            result.append("action_use_default_icon")
+        if self.action_type != "menu":
+            result.append("context_menu_name")
+            result.append("context_menu_actions")
+        if self.action_type != "brush":
+            result.append("brush_name")
+            result.append("brush_override_icon")  
+        if self.action_type == "brush" and self.brush_override_icon == False:
+            result.append("icon") 
+            result.append("use_icon")
+            result.append("text")  
+        result.append("text" if self.use_icon else "icon")
+        return result
 
     def propertygrid_labels(self):
         labels = {}
-        labels["id"] = "Action ID"
+        labels["action_id"] = "Action ID"
         labels["icon"] = "Display Icon"
         labels["row"] = "Tab Row"
-        labels["useActionIcon"] = "Use Default Icon"
+        labels["action_type"] = "Action Type"
+        labels["use_icon"] = "Use Icon"
+        
+        labels["action_use_default_icon"] = "Use Default Icon"
 
-        labels["has_context_menu"] = "Enable Context Menu"
         labels["context_menu_name"] = "Menu Name"
         labels["context_menu_actions"] = "Menu Actions"
+        
+        labels["brush_name"] = "Brush"
+        labels["brush_override_icon"] = "Override Brush Icon"
 
         return labels
 
     def propertygrid_groups(self):
-
-        basic_group = [
-            "id",
-            "useActionIcon"
-        ]
-
-        context_menu_group = [
-            "has_context_menu", 
-            "context_menu_name",
-            "context_menu_actions", 
-        ]
-
         groups = {}
-        #groups["normal"] = {"name": "Basic...", "items": basic_group}
-        #groups["context_menu"] = {"name": "Context Menu...", "items": context_menu_group}
         return groups
 
     def propertygrid_restrictions(self):
         restrictions = {}
+        restrictions["action_type"] = {"type": "values", "entries": ["action", "menu", "brush"]}
+        restrictions["brush_name"] = {"type": "brush_selection"}
         restrictions["icon"] = {"type": "icon_selection"}
-        restrictions["id"] = {"type": "action_selection"}
+        restrictions["action_id"] = {"type": "action_selection"}
         return restrictions
 
 class CfgToolshelfGroup:
@@ -253,20 +260,21 @@ class CfgToolshelfPanel:
     size_x: int = 0
     size_y: int = 0
     row: int = 0
-    quick_actions: TypedList[CfgToolshelfAction] = []
-    additional_dockers: TypedList[CfgToolshelfGroup] = []
+    actions: TypedList[CfgToolshelfAction] = []
+    sections: TypedList[CfgToolshelfGroup] = []
+    
     actionHeight: int = 10
 
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
-        additional_dockers = Extensions.default_assignment(args, "additional_dockers", [])
-        quick_actions = Extensions.default_assignment(args, "quick_actions", [])
-        self.additional_dockers = Extensions.list_assignment(additional_dockers, CfgToolshelfGroup)
-        self.quick_actions = Extensions.list_assignment(quick_actions, CfgToolshelfAction)
+        sections = Extensions.default_assignment(args, "sections", [])
+        actions = Extensions.default_assignment(args, "actions", [])
+        self.sections = Extensions.list_assignment(sections, CfgToolshelfGroup)
+        self.actions = Extensions.list_assignment(actions, CfgToolshelfAction)
 
     def forceLoad(self):
-        self.additional_dockers = TypedList(self.additional_dockers, CfgToolshelfGroup)
-        self.quick_actions = TypedList(self.quick_actions, CfgToolshelfAction)
+        self.sections = TypedList(self.sections, CfgToolshelfGroup)
+        self.actions = TypedList(self.actions, CfgToolshelfAction)
 
     def __str__(self):
         name = self.id.replace("\n", "\\n")
@@ -284,8 +292,8 @@ class CfgToolshelfPanel:
         labels["size_x"] = "Panel Width"
         labels["size_y"] = "Panel Height"
         labels["row"] = "Tab Row"
-        labels["additional_dockers"] = "Dockers"
-        labels["quick_actions"] = "Actions"
+        labels["sections"] = "Sections"
+        labels["actions"] = "Actions"
         labels["actionHeight"] = "Action Button Height"
         return labels
 
@@ -301,7 +309,7 @@ class CfgToolshelfPanel:
 class CfgToolshelf:
     panels: TypedList[CfgToolshelfPanel] = []
     actions: TypedList[CfgToolshelfAction] = []
-    dockers: TypedList[CfgToolshelfGroup] = []
+    sections: TypedList[CfgToolshelfGroup] = []
     
     dockerButtonHeight: int = 32
     dockerBackHeight: int = 16
@@ -313,22 +321,22 @@ class CfgToolshelf:
         self.panels = Extensions.list_assignment(panels, CfgToolshelfPanel)
         actions = Extensions.default_assignment(args, "actions", [])
         self.actions = Extensions.list_assignment(actions, CfgToolshelfAction)
-        dockers = Extensions.default_assignment(args, "dockers", [])
-        self.dockers = Extensions.list_assignment(dockers, CfgToolshelfGroup)
+        sections = Extensions.default_assignment(args, "sections", [])
+        self.sections = Extensions.list_assignment(sections, CfgToolshelfGroup)
     
     def forceLoad(self):
         self.panels = TypedList(self.panels, CfgToolshelfPanel)
         self.actions = TypedList(self.actions, CfgToolshelfAction)
-        self.dockers = TypedList(self.dockers, CfgToolshelfGroup)
+        self.sections = TypedList(self.sections, CfgToolshelfGroup)
 
     def propertygrid_labels(self):
         labels = {}
         labels["panels"] = "Panels"
         labels["actions"] = "Actions"
+        labels["sections"] = "Sections"
         labels["dockerButtonHeight"] = "Docker Button Height"
         labels["dockerBackHeight"] = "Back Button Height"
         labels["actionHeight"] = "Action Button Height"
-        labels["dockers"] = "Dockers"
         return labels
 
     def propertygrid_groups(self):

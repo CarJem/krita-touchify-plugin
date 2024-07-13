@@ -49,8 +49,8 @@ class PopupDialog_Docker(PopupDialog):
         self.updateDocker(True)
    
     def generateSize(self):
-        dialog_width = self.metadata.item_width
-        dialog_height = self.metadata.item_height
+        dialog_width = self.metadata.actions_item_width
+        dialog_height = self.metadata.actions_item_height
         return [int(dialog_width), int(dialog_height)]
 
     def triggerPopup(self, mode: str, parent: QWidget | None):

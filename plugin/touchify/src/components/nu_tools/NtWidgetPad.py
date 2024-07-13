@@ -137,8 +137,8 @@ class NtWidgetPad(QWidget):
             if isinstance(self.widget, Nt_ScrollAreaContainer):
                 containerSize = self.widget.sizeHint() 
                 
-                if view.height() < containerSize.height() + self.btnHide.height() + 14 + self.scrollBarMargin():
-                    containerSize.setHeight(view.height() - self.btnHide.height() - 14 - self.scrollBarMargin())
+                if view.height() < containerSize.height() + self.btnHide.height() + 14 + self.scrollBarMargin() + self.rulerMargin():
+                    containerSize.setHeight(view.height() - self.btnHide.height() - 14 - self.scrollBarMargin() - self.rulerMargin())
 
                 if view.width() < containerSize.width() + 8 + self.scrollBarMargin():
                     containerSize.setWidth(view.width() - 8 - self.scrollBarMargin())

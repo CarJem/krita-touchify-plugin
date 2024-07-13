@@ -38,10 +38,10 @@ class JsonExtensions:
         else:
             return defaultValue
         
-    def dictToObject(obj, dict):
-        if dict is not None:
-            for key, value in dict.items():
-                if hasattr(obj, key):
+    def dictToObject(obj, args: dict[str, any]):
+        if args is not None:
+            for key, value in args.items():
+                if hasattr(obj, key) and type(getattr(obj, key)) == type(value):
                     setattr(obj, key, value)
 
     def default_assignment(args, attributeName, defaultValue):

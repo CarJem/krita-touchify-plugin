@@ -117,11 +117,13 @@ touchify_toolshelf_header = f"""
         QPushButton#back-widget {{
             border-top-left-radius: 4px;
             border-bottom-left-radius: 4px;
+            border: none;
         }}
 
         QPushButton#pin-widget {{
             border-top-right-radius: 4px;
             border-bottom-right-radius: 4px;
+            border: none;
         }}
 
         QWidget#filler-widget {{
