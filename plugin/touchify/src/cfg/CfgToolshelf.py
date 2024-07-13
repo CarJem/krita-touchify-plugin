@@ -109,7 +109,7 @@ class CfgToolshelfAction:
         restrictions["action_id"] = {"type": "action_selection"}
         return restrictions
 
-class CfgToolshelfGroup:
+class CfgToolshelfSection:
     id: str = ""
 
     size_x: int = 0
@@ -261,7 +261,7 @@ class CfgToolshelfPanel:
     size_y: int = 0
     row: int = 0
     actions: TypedList[CfgToolshelfAction] = []
-    sections: TypedList[CfgToolshelfGroup] = []
+    sections: TypedList[CfgToolshelfSection] = []
     
     actionHeight: int = 10
 
@@ -269,11 +269,11 @@ class CfgToolshelfPanel:
         Extensions.dictToObject(self, args)
         sections = Extensions.default_assignment(args, "sections", [])
         actions = Extensions.default_assignment(args, "actions", [])
-        self.sections = Extensions.list_assignment(sections, CfgToolshelfGroup)
+        self.sections = Extensions.list_assignment(sections, CfgToolshelfSection)
         self.actions = Extensions.list_assignment(actions, CfgToolshelfAction)
 
     def forceLoad(self):
-        self.sections = TypedList(self.sections, CfgToolshelfGroup)
+        self.sections = TypedList(self.sections, CfgToolshelfSection)
         self.actions = TypedList(self.actions, CfgToolshelfAction)
 
     def __str__(self):
@@ -309,7 +309,7 @@ class CfgToolshelfPanel:
 class CfgToolshelf:
     panels: TypedList[CfgToolshelfPanel] = []
     actions: TypedList[CfgToolshelfAction] = []
-    sections: TypedList[CfgToolshelfGroup] = []
+    sections: TypedList[CfgToolshelfSection] = []
     
     dockerButtonHeight: int = 32
     dockerBackHeight: int = 16
@@ -322,12 +322,12 @@ class CfgToolshelf:
         actions = Extensions.default_assignment(args, "actions", [])
         self.actions = Extensions.list_assignment(actions, CfgToolshelfAction)
         sections = Extensions.default_assignment(args, "sections", [])
-        self.sections = Extensions.list_assignment(sections, CfgToolshelfGroup)
+        self.sections = Extensions.list_assignment(sections, CfgToolshelfSection)
     
     def forceLoad(self):
         self.panels = TypedList(self.panels, CfgToolshelfPanel)
         self.actions = TypedList(self.actions, CfgToolshelfAction)
-        self.sections = TypedList(self.sections, CfgToolshelfGroup)
+        self.sections = TypedList(self.sections, CfgToolshelfSection)
 
     def propertygrid_labels(self):
         labels = {}

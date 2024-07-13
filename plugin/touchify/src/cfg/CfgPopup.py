@@ -2,7 +2,7 @@ from ..ext.extensions_json import JsonExtensions as Extensions
 from ..ext.extensions import TypedList
 
 
-class CfgPopupInfo:
+class CfgPopupActionItem:
     text: str = ""
     action: str = ""
     icon: str = ""
@@ -41,7 +41,7 @@ class CfgPopup:
     actions_item_height: int = 100
     actions_icon_width: int = 30
     actions_icon_height: int = 30
-    actions_items: TypedList[CfgPopupInfo] = []
+    actions_items: TypedList[CfgPopupActionItem] = []
     
     docker_id: str = ""
 
@@ -83,13 +83,13 @@ class CfgPopup:
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
         items = Extensions.default_assignment(args, "actions_items", [])
-        self.actions_items = Extensions.list_assignment(items, CfgPopupInfo)
+        self.actions_items = Extensions.list_assignment(items, CfgPopupActionItem)
 
     def __str__(self):
         return self.btnName.replace("\n", "\\n")
 
     def forceLoad(self):
-        self.actions_items = TypedList(self.actions_items, CfgPopupInfo)
+        self.actions_items = TypedList(self.actions_items, CfgPopupActionItem)
         pass
 
     def propertygrid_labels(self):

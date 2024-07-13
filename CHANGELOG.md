@@ -18,6 +18,8 @@
     > Returning feature from KanvasBuddy, when not pinned, whatever page your Toolshelf is on when the Canvas is interacted with, will return to the main page, when pinned, it will stay in place
 - **New Toolshelf Feature - Action Panels**
     > You can now have an additional set of actions within toolshelf pages, come with many diffrent features and options. You can now have as many actions as you want wherever you want inside toolshelfs!
+- **New Toolshelf Feature - Brush Preset Actions**
+    > Action Panels can now be used to switch to diffrent brush presets, allowing you to place and orginize your brushes however you see fit
 - **New Toolshelf Feature - Customizable Frontpage**
     > Frontpages are now treated the same as normal pages, meaning anything you can do with subpages, you can do on the frontpages
 - **New Toolshelf Feature - Multi-Column Support**

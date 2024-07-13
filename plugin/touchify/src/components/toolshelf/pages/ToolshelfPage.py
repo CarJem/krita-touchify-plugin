@@ -6,7 +6,7 @@ from ..buttons.ToolshelfPageTabWidget import ToolshelfPageTabWidget
 from ....docker_manager import DockerManager
 from ..buttons.ToolshelfActionBar import ToolshelfActionBar
 from ....cfg.CfgToolshelf import CfgToolshelfPanel
-from ....cfg.CfgToolshelf import CfgToolshelfGroup
+from ....cfg.CfgToolshelf import CfgToolshelfSection
 from ...DockerContainer import DockerContainer
 from .... import stylesheet
 
@@ -95,7 +95,7 @@ class ToolshelfPage(QWidget):
         widget_groups: Mapping[int, Mapping[int, list[DockerContainer | ToolshelfActionBar]]] = {}
         
         for dockerData in self.panelProperties.sections:     
-            actionInfo: CfgToolshelfGroup = dockerData
+            actionInfo: CfgToolshelfSection = dockerData
             actionWidget = self._createSection(actionInfo)
             if actionWidget == None: continue
 
@@ -107,7 +107,7 @@ class ToolshelfPage(QWidget):
             widget_groups[actionInfo.panel_y][actionInfo.panel_x].append(actionWidget)
         return widget_groups
     
-    def _createActionSection(self, actionInfo: CfgToolshelfGroup):
+    def _createActionSection(self, actionInfo: CfgToolshelfSection):
         actionWidget = ToolshelfActionBar(actionInfo.action_section_contents, self)
         actionWidget.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
         #region ActionContainer Setup
@@ -171,7 +171,7 @@ class ToolshelfPage(QWidget):
         #endregion
         return actionWidget
     
-    def _createDockerSection(self, actionInfo: CfgToolshelfGroup):
+    def _createDockerSection(self, actionInfo: CfgToolshelfSection):
         actionWidget = DockerContainer(self, actionInfo.id, self.docker_manager)
         if actionInfo.docker_nesting_mode == "docking":
             actionWidget.setDockMode(True)
@@ -197,7 +197,7 @@ class ToolshelfPage(QWidget):
         self.dockerWidgets[actionInfo.id] = actionWidget
         return actionWidget
     
-    def _createSection(self, actionInfo: CfgToolshelfGroup):
+    def _createSection(self, actionInfo: CfgToolshelfSection):
         if actionInfo.section_type == "docker":
             return self._createDockerSection(actionInfo)
         elif actionInfo.section_type == "actions":
