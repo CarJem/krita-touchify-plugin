@@ -29,6 +29,12 @@ no_borders_style = " QToolBar { border: none; } "
 small_tab_style = f"QTabBar::tab {{ height: {small_tab_size}px; }}"
 hide_menu_indicator = f"""QPushButton::menu-indicator {{ image: none; }}"""
 
+propertygrid_selectordialog_listview = f"""
+    QListWidget::item:selected {{ 
+        background-color: #cc{highlight}; 
+    }}
+"""
+
 touchify_nt_toolbox = f"""
             QWidget {{ 
                 background-color: #01{alternate};

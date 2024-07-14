@@ -45,13 +45,19 @@
                     "panel_y": 2,
                     "section_type": "docker",
                     "size_x": 0,
-                    "docker_nesting_mode": "docking",
+                    "docker_nesting_mode": "normal",
                     "docker_unloaded_visibility": "normal",
                     "docker_loading_priority": "normal",
                     "action_section_alignment_x": "none",
                     "action_section_alignment_y": "none",
                     "action_section_btn_width": 0,
-                    "action_section_btn_height": 0
+                    "action_section_btn_height": 0,
+                    "action_section_display_mode": "normal",
+                    "action_section_icon_size": 0,
+                    "max_size_x": 0,
+                    "max_size_y": 0,
+                    "min_size_x": 0,
+                    "min_size_y": 0
                 }
             ],
             "actions": [],
@@ -287,60 +293,6 @@
                     "max_size_y": 0,
                     "min_size_x": 0,
                     "min_size_y": 0
-                },
-                {
-                    "action_section_contents": [
-                        {
-                            "context_menu_actions": [],
-                            "context_menu_name": "",
-                            "action_type": "brush",
-                            "brush_name": "a) Eraser Circle",
-                            "row": 0,
-                            "action_use_default_icon": false,
-                            "action_id": "",
-                            "icon": ""
-                        },
-                        {
-                            "context_menu_actions": [],
-                            "action_id": "",
-                            "action_type": "brush",
-                            "action_use_default_icon": false,
-                            "brush_name": "b) Basic-5 Size",
-                            "context_menu_name": "",
-                            "icon": "",
-                            "row": 0
-                        },
-                        {
-                            "context_menu_actions": [],
-                            "action_id": "",
-                            "action_type": "brush",
-                            "action_use_default_icon": false,
-                            "brush_name": "b) Airbrush Soft",
-                            "context_menu_name": "",
-                            "icon": "",
-                            "row": 0
-                        }
-                    ],
-                    "action_section_name": "Pinned Brushes",
-                    "action_section_alignment_x": "left",
-                    "action_section_alignment_y": "none",
-                    "action_section_btn_width": 50,
-                    "action_section_btn_height": 50,
-                    "action_section_display_mode": "normal",
-                    "action_section_icon_size": 50,
-                    "docker_loading_priority": "normal",
-                    "docker_nesting_mode": "normal",
-                    "docker_unloaded_visibility": "normal",
-                    "id": "",
-                    "max_size_x": 0,
-                    "max_size_y": 0,
-                    "min_size_x": 0,
-                    "min_size_y": 0,
-                    "panel_x": 0,
-                    "panel_y": 1,
-                    "section_type": "actions",
-                    "size_x": 0,
-                    "size_y": 0
                 }
             ],
             "actions": [],
