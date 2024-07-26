@@ -28,6 +28,7 @@ class SettingsDialog(QDialog):
 
     def __init__(self, qwin: Window):
         super().__init__(qwin.qwindow())
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.qwin = qwin.qwindow()
         self.editableConfig = TouchifyConfig.instance().getEditableCfg()
         self.gridLayout = QGridLayout()

@@ -14,6 +14,14 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 class PyQtExtensions:
+    
+    
+    def isDeleted(item: QObject):
+        try:
+            item.objectName()
+            return False
+        except RuntimeError as e:
+            return True
 
     def quickDialog(parent, text):
         dlg = QMessageBox(parent)

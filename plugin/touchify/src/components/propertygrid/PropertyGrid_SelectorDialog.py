@@ -82,7 +82,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem.setData(DATA_INDEX, customIconName)
                 self.listView.addItem(listItem)
         elif mode == "brushes":
-            self.listView.setViewMode(QListView.ViewMode.IconMode)
+            self.listView.setViewMode(QListView.ViewMode.ListMode)
             self.listView.setUniformItemSizes(True)
             presets = ResourceManager.getBrushPresets()
             for preset_key in presets:
@@ -109,8 +109,6 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             for actionData in actions:
                 displayName = f"{actionData.toolTip()}\n---[{actionData.objectName()}]---"
                 icon = actionData.icon()
-                if icon.isNull():
-                    icon = ResourceManager.getFallbackIcon()
                 listItem = QListWidgetItem()
                 listItem.setText(displayName)
                 listItem.setIcon(icon)

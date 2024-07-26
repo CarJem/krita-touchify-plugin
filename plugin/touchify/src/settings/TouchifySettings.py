@@ -13,9 +13,9 @@ class TouchifySettings:
     def __init__(self) -> None:
         self.__has_preloaded = False
 
-        self.Styles_FlatTheme = False
         self.Styles_BorderlessToolbar = False
         self.Styles_ThinDocumentTabs = False
+        self.Styles_PrivacyMode = False
 
         self.CanvasWidgets_EnableToolbox = False
         self.CanvasWidgets_EnableToolshelf = False
@@ -50,6 +50,7 @@ class TouchifySettings:
 
         self.Styles_BorderlessToolbar = self.private_readSettingBool("usesBorderlessToolbar", False)
         self.Styles_ThinDocumentTabs = self.private_readSettingBool("usesThinDocumentTabs", False)
+        self.Styles_PrivacyMode = self.private_readSettingBool("Styles_PrivacyMode", False)
         
         self.CanvasWidgets_EnableToolbox = self.private_readSettingBool("usesNuToolbox", False)
         self.CanvasWidgets_EnableToolshelf = self.private_readSettingBool("usesNuToolOptions", False)
@@ -67,6 +68,8 @@ class TouchifySettings:
     def saveSettings(self):
         self.private_writeSettingBool("usesBorderlessToolbar", self.Styles_BorderlessToolbar, False)
         self.private_writeSettingBool("usesThinDocumentTabs", self.Styles_ThinDocumentTabs, False)
+        self.private_writeSettingBool("Styles_PrivacyMode", self.Styles_PrivacyMode, False)
+        
         self.private_writeSettingBool("usesNuToolbox", self.CanvasWidgets_EnableToolbox, False)
         self.private_writeSettingBool("usesNuToolOptions", self.CanvasWidgets_EnableToolshelf, False)
         self.private_writeSettingBool("usesNuToolOptionsAlt", self.CanvasWidgets_EnableAltToolshelf, False)

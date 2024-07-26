@@ -44,9 +44,9 @@ class PropertyField_TypedList(PropertyField):
         listView.doubleClicked.connect(self.itemOptions_edit)
         listView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-        btns = QVBoxLayout()
+        btns = QGridLayout()
         btns.setAlignment(Qt.AlignmentFlag.AlignTop)
-        btn_width = 20
+        btn_width = 24
 
         self.model = QtGui.QStandardItemModel()
         self.updateList()
@@ -56,40 +56,41 @@ class PropertyField_TypedList(PropertyField):
         field.addLayout(btns)
 
         addButton = QPushButton()
-        addButton.setText("+")
-        addButton.setFixedWidth(btn_width)
+        addButton.setIcon(ResourceManager.iconLoader("material:plus"))
+        addButton.setFixedSize(btn_width, btn_width)
         addButton.clicked.connect(self.itemOptions_add)
-        btns.addWidget(addButton)
+        btns.addWidget(addButton, 0, 0, 1, 1)
 
         removeButton = QPushButton()
-        removeButton.setText("-")
-        removeButton.setFixedWidth(btn_width)
+        removeButton.setIcon(ResourceManager.iconLoader("material:minus"))
+        removeButton.setFixedSize(btn_width, btn_width)
         removeButton.clicked.connect(self.itemOptions_remove)
-        btns.addWidget(removeButton)
+        btns.addWidget(removeButton, 1, 0, 1, 1)
 
         moveUpButton = QPushButton()
-        moveUpButton.setText("↑")
-        moveUpButton.setFixedWidth(btn_width)
+        moveUpButton.setIcon(ResourceManager.iconLoader("material:arrow-up"))
+        moveUpButton.setFixedSize(btn_width, btn_width)
         moveUpButton.clicked.connect(self.itemOptions_moveup)
-        btns.addWidget(moveUpButton)
+        btns.addWidget(moveUpButton, 0, 1, 1, 1)
 
         moveDownButton = QPushButton()
-        moveDownButton.setText("↓")
-        moveDownButton.setFixedWidth(btn_width)
+        moveDownButton.setIcon(ResourceManager.iconLoader("material:arrow-down"))  
+        moveDownButton.setFixedSize(btn_width, btn_width)
         moveDownButton.clicked.connect(self.itemOptions_movedown)
-        btns.addWidget(moveDownButton)
+        btns.addWidget(moveDownButton, 1, 1, 1, 1)
 
         editButton = QPushButton()
-        editButton.setText("...")
-        editButton.setFixedWidth(btn_width)
+        editButton.setIcon(ResourceManager.iconLoader("material:pencil"))                                                                                                                                                                                                                                                                                                                                 
+        editButton.setFixedHeight(btn_width)
         editButton.clicked.connect(self.itemOptions_edit)
-        btns.addWidget(editButton)
+        btns.addWidget(editButton, 2, 0, 1, 2)
 
         self.selection_model = listView.selectionModel()
         self.selection_model.currentChanged.connect(lambda x, y: self.updateSelected(x, y))
 
         self.setLayout(field)
 
+    #region Item Options
     def itemOptions_add(self):
         self.list_modify("add")
 
@@ -104,7 +105,9 @@ class PropertyField_TypedList(PropertyField):
 
     def itemOptions_edit(self):
         self.list_modify("edit")
+    #endregion
 
+    #region Dialog
     def dlg_dispose(self):
         self.subwindowEditable = None
         self.subwindowPropGrid.deleteLater()
@@ -131,7 +134,9 @@ class PropertyField_TypedList(PropertyField):
         self.dlg.reject()
         self.stackHost.goBack()
         self.dlg_dispose()
+    #endregion
 
+    #region List Actions
     def list_move(self, direction: Literal['up', 'down'] = 'up'):
         if self.selectedIndex != -1:
             variable = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
@@ -181,14 +186,14 @@ class PropertyField_TypedList(PropertyField):
 
     def list_remove(self):
         if self.selectedIndex != -1:
-            variable = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
+            variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
             newIndex = self.selectedIndex
             if not newIndex - 1 < 0:
                 newIndex -= 1
             variable.pop(self.selectedIndex)
             self.updateList()
             self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
-
+    #endregion
 
     def updateList(self):
         self.model.clear()

@@ -38,6 +38,8 @@
     > Similar to the Color Picker in the Toolbar, this docker replicates it's functionality in the form of a docker
 - **And More...**
     > - Added an Action for "Configure Touchify..."
+    > - Toolshelfs can now share the Page Buttons with other Panels besides just the Home Panel
+    > - Added a WIP Privacy Mode to Hide Recent Documents
 ## Bug Fixes:
 - **Popup Dockers Improvements** 
     > Various Bug Fixes and Other Backend Improvements

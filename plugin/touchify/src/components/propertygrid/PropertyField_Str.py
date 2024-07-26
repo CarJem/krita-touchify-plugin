@@ -39,6 +39,8 @@ class PropertyField_Str(PropertyField):
         self.is_brush_selection = False
         self.is_combobox = False
         self.combobox_items: list[tuple[str, str]] = []
+        
+        self.editorHelper: QPushButton | None = None
 
         restric_func = PropertyUtils_Extensions.getVariable(self.variable_source, "propertygrid_restrictions")
         if callable(restric_func):
@@ -162,4 +164,11 @@ class PropertyField_Str(PropertyField):
 
     def textChanged(self):
         self.variable_data = self.editor.text().replace("\\n", "\n")
+        
+        if self.editorHelper:
+            if self.is_icon_viewer: 
+                self.editorHelper.setIcon(ResourceManager.iconLoader(self.variable_data.replace("\n", "\\n")))
+            elif self.is_brush_selection: 
+                self.editorHelper.setIcon(ResourceManager.brushIcon(self.variable_data.replace("\n", "\\n")))
+        
         super().setVariable(self.variable_source, self.variable_name, self.variable_data)

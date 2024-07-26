@@ -265,6 +265,7 @@ class CfgToolshelfPanel:
     row: int = 0
     actions: TypedList[CfgToolshelfAction] = []
     sections: TypedList[CfgToolshelfSection] = []
+    section_show_tabs: bool = False
     
     actionHeight: int = 10
 
@@ -298,6 +299,7 @@ class CfgToolshelfPanel:
         labels["sections"] = "Sections"
         labels["actions"] = "Actions"
         labels["actionHeight"] = "Action Button Height"
+        labels["section_show_tabs"] = "Show Tabs"
         return labels
 
     def propertygrid_groups(self):

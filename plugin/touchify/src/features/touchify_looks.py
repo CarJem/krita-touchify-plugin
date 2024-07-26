@@ -30,7 +30,8 @@ class TouchifyLooks(object):
 
     def createActions(self, window: Window, mainMenuBar: QMenuBar):
         config = TouchifySettings.instance()
-        
+
+        mainMenuBar.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_PRIVACYMODE, "Privacy Mode", TOUCHIFY_ID_MENU_ROOT, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
         mainMenuBar.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_BORDERLESSTOOLBARS, "Borderless Toolbars", TOUCHIFY_ID_MENU_ROOT, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))
         mainMenuBar.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_TABHEIGHT, "Thin Document Tabs", TOUCHIFY_ID_MENU_ROOT, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
 
@@ -43,19 +44,23 @@ class TouchifyLooks(object):
         TouchifySettings.instance().Styles_ThinDocumentTabs = toggled
         TouchifySettings.instance().saveSettings()
         self.rebuildStyleSheet(self.qWin)
+        
+    def privacyModeToggled(self, toggled):
+        TouchifySettings.instance().Styles_PrivacyMode = toggled
+        TouchifySettings.instance().saveSettings()
+        self.rebuildStyleSheet(self.qWin)
 
     def rebuildStyleSheet(self, window: QMainWindow):
         config = TouchifySettings.instance()
 
+        # region No Toolbar Borders
         full_style_sheet = ""
-
         if config.Styles_BorderlessToolbar:
             full_style_sheet += f"\n {stylesheet.no_borders_style} \n"    
-        
         window.setStyleSheet(full_style_sheet)
+        #endregion
 
-
-        # For document tab
+        # region Small Tabs
         canvas_style_sheet = ""
         
         if config.Styles_ThinDocumentTabs:
@@ -64,3 +69,18 @@ class TouchifyLooks(object):
         canvas = window.centralWidget()
         canvas.setStyleSheet(canvas_style_sheet)
         canvas.adjustSize()
+        # endregion
+        
+        # region Privacy Mode
+        recentDocumentsListView = window.findChild(QListView,'recentDocumentsListView')
+        recentDocumentsListView.setHidden(config.Styles_PrivacyMode)
+        recent_files_action = Krita.instance().action("file_open_recent")
+        recent_files_native_actions = [
+            "no_entries",
+            "separator",
+            "clear_action"
+        ]
+        for item in recent_files_action.menu().actions():
+            if item.objectName() not in recent_files_native_actions:
+                item.setVisible(not config.Styles_PrivacyMode)
+        #endregion

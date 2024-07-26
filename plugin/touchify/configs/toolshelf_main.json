@@ -276,7 +276,7 @@
                     "action_section_name": "Panel",
                     "id": "PresetDocker",
                     "panel_x": 0,
-                    "panel_y": 0,
+                    "panel_y": 1,
                     "section_type": "docker",
                     "size_x": 250,
                     "size_y": 300,
@@ -293,6 +293,43 @@
                     "max_size_y": 0,
                     "min_size_x": 0,
                     "min_size_y": 0
+                },
+                {
+                    "action_section_contents": [
+                        {
+                            "context_menu_actions": [],
+                            "use_icon": true,
+                            "action_id": "show_brush_editor",
+                            "action_type": "action",
+                            "action_use_default_icon": false,
+                            "brush_name": "",
+                            "brush_override_icon": false,
+                            "context_menu_name": "",
+                            "icon": "paintop_settings_02",
+                            "row": 0,
+                            "text": ""
+                        }
+                    ],
+                    "action_section_name": "Panel",
+                    "action_section_alignment_x": "right",
+                    "action_section_alignment_y": "none",
+                    "action_section_btn_width": 0,
+                    "action_section_btn_height": 0,
+                    "action_section_display_mode": "flat",
+                    "action_section_icon_size": 0,
+                    "docker_loading_priority": "normal",
+                    "docker_nesting_mode": "normal",
+                    "docker_unloaded_visibility": "normal",
+                    "id": "",
+                    "max_size_x": 0,
+                    "max_size_y": 0,
+                    "min_size_x": 0,
+                    "min_size_y": 0,
+                    "panel_x": 0,
+                    "panel_y": 0,
+                    "section_type": "actions",
+                    "size_x": 0,
+                    "size_y": 0
                 }
             ],
             "actions": [],
@@ -301,7 +338,8 @@
             "icon": "material:brush",
             "row": 0,
             "size_x": 0,
-            "size_y": 0
+            "size_y": 0,
+            "section_show_tabs": false
         }
     ],
     "actions": [],
@@ -341,7 +379,13 @@
             "action_section_alignment_x": "none",
             "action_section_alignment_y": "none",
             "action_section_btn_width": 0,
-            "action_section_btn_height": 0
+            "action_section_btn_height": 0,
+            "action_section_display_mode": "normal",
+            "action_section_icon_size": 0,
+            "max_size_x": 0,
+            "max_size_y": 0,
+            "min_size_x": 0,
+            "min_size_y": 0
         },
         {
             "action_section_contents": [],
@@ -359,7 +403,12 @@
             "action_section_alignment_y": "none",
             "action_section_btn_width": 0,
             "action_section_btn_height": 0,
-            "min_size_x": 0
+            "min_size_x": 0,
+            "action_section_display_mode": "normal",
+            "action_section_icon_size": 0,
+            "max_size_x": 0,
+            "max_size_y": 0,
+            "min_size_y": 0
         },
         {
             "action_section_contents": [
@@ -473,7 +522,20 @@
             "size_y": 0,
             "docker_loading_priority": "normal",
             "action_section_contents": [],
-            "action_section_name": "Panel"
+            "action_section_name": "Panel",
+            "action_section_alignment_x": "none",
+            "action_section_alignment_y": "none",
+            "action_section_btn_width": 0,
+            "action_section_btn_height": 0,
+            "action_section_display_mode": "normal",
+            "action_section_icon_size": 0,
+            "docker_nesting_mode": "normal",
+            "max_size_x": 0,
+            "max_size_y": 0,
+            "min_size_x": 0,
+            "min_size_y": 0,
+            "panel_x": 0,
+            "section_type": "docker"
         }
     ],
     "dockerButtonHeight": 20,

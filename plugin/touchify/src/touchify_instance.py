@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QMessageBox
 
+from .ext.extensions_pyqt import PyQtExtensions
+
 from .features.touchify_looks import TouchifyLooks
 from .variables import *
 
@@ -28,6 +30,8 @@ class TouchifyInstance(object):
         self.touchify_canvas = TouchifyCanvas(self)
         self.touchify_hotkeys = TouchifyHotkeys(self)
         self.touchify_tweaks = TouchifyTweaks(self)
+        
+        self.settings_dlg: SettingsDialog | None = None
 
     def onKritaConfigUpdated(self):
         self.touchify_canvas.onKritaConfigUpdated()
@@ -91,5 +95,10 @@ class TouchifyInstance(object):
         msg.exec_()
 
     def openSettings(self):
-        dlg = SettingsDialog(self.instanceWindow)
-        dlg.show()
+        if self.settings_dlg != None:
+            if PyQtExtensions.isDeleted(self.settings_dlg) == False:
+                return
+        
+        
+        self.settings_dlg = SettingsDialog(self.instanceWindow)
+        self.settings_dlg.show()

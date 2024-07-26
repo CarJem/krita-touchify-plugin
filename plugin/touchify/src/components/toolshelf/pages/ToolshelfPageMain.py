@@ -30,21 +30,11 @@ class ToolshelfPageMain(ToolshelfPage):
         pageCfg.actionHeight = self.rootCfg.actionHeight
         pageCfg.actions = self.rootCfg.actions
         pageCfg.sections = self.rootCfg.sections
+        pageCfg.section_show_tabs = True
 
         super(ToolshelfPageMain, self).__init__(parent, 'MAIN', pageCfg)
         
         self.splitter.setAutoFillBackground(False)
-
-        self.dockerBtns = ToolshelfButtonBar(self)
-        self.dockerBtns.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-        self.shelfLayout.insertWidget(0, self.dockerBtns)    
-    
-    def addDockerButton(self, properties: CfgToolshelfPanel, onClick, title):
-        btn = self.dockerBtns.addButton(properties.id, properties.row, onClick, title, False)
-        btn.setIcon(ResourceManager.iconLoader(properties.icon))
-        btn.setFixedHeight(self.rootCfg.dockerButtonHeight)
-        btn.setMinimumWidth(self.rootCfg.dockerButtonHeight)
-        btn.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
            
 
     def loadPage(self):
@@ -52,7 +42,6 @@ class ToolshelfPageMain(ToolshelfPage):
             self.dockerWidgets[host_id].loadWidget(True)
 
     def updateStyleSheet(self):
-        self.dockerBtns.setStyleSheet(stylesheet.touchify_toolshelf_header_button)
         super().updateStyleSheet()
     
 

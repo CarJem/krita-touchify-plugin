@@ -37,15 +37,13 @@ class ToolshelfContainer(QStackedWidget):
         self.isPrimaryPanel = isPrimaryPanel
         self.cfg = self.getCfg()
         super().currentChanged.connect(self.onCurrentChanged)
-
+        
         self.addMainPanel()
         panels = self.cfg.panels
         for entry in panels:
             properties: CfgToolshelfPanel = entry
-            PANEL_ID = properties.id
-            panel_title = properties.id
-            self.addPanel(PANEL_ID, properties)
-            self._mainWidget.addDockerButton(properties, self.panel(PANEL_ID).activate, panel_title)
+            self.addPanel(properties.id, properties)
+
         self.changePanel('MAIN')
 
     def getCfg(self):
@@ -61,7 +59,7 @@ class ToolshelfContainer(QStackedWidget):
         self._mainWidget.shelfLayout.insertWidget(0, header)
         super().addWidget(self._mainWidget)
 
-    def addPanel(self, ID, data):
+    def addPanel(self, ID, data: CfgToolshelfPanel):
         panel = ToolshelfPage(self, ID, data)
         header = ToolshelfPanelHeader(self.cfg, False, self)
 

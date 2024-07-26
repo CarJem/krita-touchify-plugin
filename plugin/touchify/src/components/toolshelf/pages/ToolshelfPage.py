@@ -1,6 +1,11 @@
+from functools import partial
 from uuid import uuid4
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+
+from ....resources import ResourceManager
+
+from ..buttons.ToolshelfButtonBar import ToolshelfButtonBar
 
 from ..buttons.ToolshelfPageTabWidget import ToolshelfPageTabWidget
 from ....docker_manager import DockerManager
@@ -58,16 +63,45 @@ class ToolshelfPage(QWidget):
         self.dockerWidgets: dict[any, DockerContainer] = {}
         self.size = None
         self.panelProperties = data
+        
+        
+        self._initDockerTabs()
+            
 
         self.quickActions = ToolshelfActionBar(self.panelProperties.actions, self)
         self.quickActions.bar.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        
         for btnKey in self.quickActions.bar._buttons:
             self.quickActions.bar._buttons[btnKey].setFixedHeight(self.panelProperties.actionHeight)
             self.quickActions.bar._buttons[btnKey].setMinimumWidth(self.panelProperties.actionHeight)
             self.quickActions.bar._buttons[btnKey].setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
         self.shelfLayout.addWidget(self.quickActions)
         self._initSections()
+    
+    
+    def _initDockerTabs(self):
+        if self.panelProperties.section_show_tabs == False:
+            self.dockerBtns = None
+            return
         
+        self.dockerBtns = ToolshelfButtonBar(self)
+        self.dockerBtns.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        self.shelfLayout.insertWidget(0, self.dockerBtns)    
+        
+        panels = self.toolshelf.cfg.panels
+        for entry in panels:
+            properties: CfgToolshelfPanel = entry
+            PANEL_ID = properties.id
+            panel_title = properties.id
+            self.addDockerButton(properties, partial(self.toolshelf.changePanel, properties.id), panel_title)
+    
+    def addDockerButton(self, properties: CfgToolshelfPanel, onClick, title):
+        btn = self.dockerBtns.addButton(properties.id, properties.row, onClick, title, False)
+        btn.setIcon(ResourceManager.iconLoader(properties.icon))
+        btn.setFixedHeight(self.toolshelf.cfg.dockerButtonHeight)
+        btn.setMinimumWidth(self.toolshelf.cfg.dockerButtonHeight)
+        btn.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)  
+      
     def _initSections(self):    
 
 
@@ -262,6 +296,8 @@ class ToolshelfPage(QWidget):
         return QSize(container_width, container_height)
     
     def updateStyleSheet(self):
+        if self.dockerBtns:
+            self.dockerBtns.setStyleSheet(stylesheet.touchify_toolshelf_header_button)
         self.quickActions.setStyleSheet(stylesheet.touchify_toolshelf_header_button)
 
     def sizeHint(self):
