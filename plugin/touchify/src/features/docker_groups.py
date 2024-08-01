@@ -75,12 +75,12 @@ class DockerGroups(object):
         sectionName = TOUCHIFY_ID_ACTIONS_DOCKER_GROUP
         subItemPath = actionPath + "/" + sectionName
 
-        cfg = TouchifyConfig.instance().getJSON()
+        cfg = TouchifyConfig.instance().getConfig()
         for docker in cfg.docker_groups:
             self.createAction(window, docker, subItemPath)
 
     def onConfigUpdated(self):
-        cfg: TouchifyConfig.ConfigFile = TouchifyConfig.instance().getJSON()
+        cfg: TouchifyConfig.ConfigFile = TouchifyConfig.instance().getConfig()
         for item in cfg.docker_groups:
             newDockerGroupData: CfgDockerGroup = item
             if newDockerGroupData.id in self.custom_docker_states:

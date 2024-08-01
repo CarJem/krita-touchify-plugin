@@ -11,6 +11,8 @@ class DockerContainer(QWidget):
 
         self.docker_manager = docker_manager
 
+        self.emptySpaceState: bool = None
+
         self.isLoaded = False
         self.docker_id = docker_id
         self.borrowedDocker = None
@@ -84,26 +86,28 @@ class DockerContainer(QWidget):
             self.unloadedButton.setText("Load Docker")
             self.unloadedButton.clicked.connect(self._stealDocker)
 
-        if state:
-            self.outLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            self.outLayout.addWidget(self.unloadedLabel)
-            self.outLayout.addWidget(self.unloadedButton)
-            if self.hiddenMode:
-                self.setVisible(False)
-                self.setAutoFillBackground(False)
-        else:
-            self.outLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-            self.outLayout.removeWidget(self.unloadedLabel)
-            self.outLayout.removeWidget(self.unloadedButton)
-            if self.hiddenMode:
-                self.setVisible(True)
-                self.setAutoFillBackground(True)
+        if self.emptySpaceState != state:
+            if state:
+                self.outLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                self.outLayout.addWidget(self.unloadedLabel)
+                self.outLayout.addWidget(self.unloadedButton)
+                if self.hiddenMode:
+                    self.setVisible(False)
+                    self.setAutoFillBackground(False)
+            else:
+                self.outLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+                self.outLayout.removeWidget(self.unloadedLabel)
+                self.outLayout.removeWidget(self.unloadedButton)
+                if self.hiddenMode:
+                    self.setVisible(True)
+                    self.setAutoFillBackground(True)
 
-        self.docker_busy = state
-        self.unloadedButton.setVisible(state)
-        self.unloadedButton.setEnabled(state)
-        self.unloadedLabel.setVisible(state)
-        self.unloadedLabel.setEnabled(state)
+            self.docker_busy = state
+            self.unloadedButton.setVisible(state)
+            self.unloadedButton.setEnabled(state)
+            self.unloadedLabel.setVisible(state)
+            self.unloadedLabel.setEnabled(state)
+            self.emptySpaceState = state
     #endregion
 
     #region Event Functions

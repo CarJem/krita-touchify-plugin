@@ -5,12 +5,34 @@ from krita import *
 from PyQt5.QtCore import *
 
 from touchify.src import stylesheet
-
-from ..settings.DockerSettings import DockerSettings_BrushOptions
+from ..ext.KritaSettings import *
 from ..components.krita_ext.KisSliderSpinBox import KisSliderSpinBox
 from ..components.krita_ext.KisAngleSelector import KisAngleSelector
 
 DOCKER_TITLE = 'Brush Options'
+
+
+class BrushOptionsDockerCfg:
+
+    def __init__(self):
+        self.ShowFlowSlider = KritaSettings.readSettingBool("BrushOptionsDocker", "ShowFlowSlider", True)
+        self.ShowOpacitySlider = KritaSettings.readSettingBool("BrushOptionsDocker", "ShowOpacitySlider", True)
+        self.ShowSizeSlider = KritaSettings.readSettingBool("BrushOptionsDocker", "ShowSizeSlider", True)
+        self.ShowRotationSlider = KritaSettings.readSettingBool("BrushOptionsDocker", "ShowRotationSlider", True)
+
+    def toggle(self, setting: str):
+        if hasattr(self, setting):
+            currentValue = getattr(self, setting)
+            currentValue = not currentValue
+            setattr(self, setting, currentValue)
+            self.save()
+
+
+    def save(self):
+        KritaSettings.writeSettingBool("BrushOptionsDocker", "ShowFlowSlider", self.ShowFlowSlider)
+        KritaSettings.writeSettingBool("BrushOptionsDocker", "ShowOpacitySlider", self.ShowOpacitySlider)
+        KritaSettings.writeSettingBool("BrushOptionsDocker", "ShowSizeSlider", self.ShowSizeSlider)
+        KritaSettings.writeSettingBool("BrushOptionsDocker", "ShowRotationSlider", self.ShowRotationSlider)
 
 class BrushSizeSlider(KisSliderSpinBox):
 
@@ -99,7 +121,7 @@ class BrushRotationSlider(KisAngleSelector):
 class BrushOptionsWidget(QWidget):
     def __init__(self, parent: QWidget | None = None):
         super(BrushOptionsWidget, self).__init__(parent)
-        self.config = DockerSettings_BrushOptions()
+        self.config = BrushOptionsDockerCfg()
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
 
         self.timer_pulse = QTimer(self)

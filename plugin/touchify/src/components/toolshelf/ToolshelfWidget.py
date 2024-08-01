@@ -1,4 +1,3 @@
-from ast import Call
 from PyQt5.QtWidgets import QSizePolicy, QStackedWidget
 import uuid
 from krita import *
@@ -23,10 +22,10 @@ class ToolshelfWidget(QDockWidget):
 
     sizeChanged = pyqtSignal()
 
-    def __init__(self, isPrimaryPanel: bool, docker_manager: DockerManager):
+    def __init__(self, panel_index: int, docker_manager: DockerManager):
         super().__init__()
         self.setWindowTitle("Touchify Toolshelf")
-        self.isPrimaryPanel = isPrimaryPanel
+        self.PanelIndex = panel_index
         self.docker_manager = docker_manager
 
         stylesheet = f"""QScrollArea {{ background: transparent; }}
@@ -62,7 +61,7 @@ class ToolshelfWidget(QDockWidget):
         self.sizeChanged.emit()
     
     def onLoaded(self):              
-        self.panelStack = ToolshelfContainer(self, self.isPrimaryPanel)
+        self.panelStack = ToolshelfContainer(self, self.PanelIndex)
         self.panelStack.updateStyleSheet()
         self.scrollArea.setWidget(self.panelStack)
 

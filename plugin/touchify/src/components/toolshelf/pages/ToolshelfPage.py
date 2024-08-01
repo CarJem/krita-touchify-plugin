@@ -43,8 +43,11 @@ class ToolshelfSplitter(QWidget):
         self.layout().addWidget(widget)
 
 class ToolshelfPage(QWidget):
-
+    
     dockerWidgets: dict = {}
+    
+    pageLoadedSignal = pyqtSignal()
+    pageUnloadSignal = pyqtSignal()
 
     def __init__(self, parent: "ToolshelfContainer", ID: any, data: CfgToolshelfPanel):
         super(ToolshelfPage, self).__init__(parent)
@@ -229,6 +232,8 @@ class ToolshelfPage(QWidget):
             actionWidget.setMaximumHeight(actionInfo.max_size_y)
 
         self.dockerWidgets[actionInfo.id] = actionWidget
+        self.pageLoadedSignal.connect(actionWidget.loadWidget)
+        self.pageUnloadSignal.connect(actionWidget.unloadWidget)
         return actionWidget
     
     def _createSection(self, actionInfo: CfgToolshelfSection):
@@ -274,12 +279,16 @@ class ToolshelfPage(QWidget):
         super().resizeEvent(event)
 
     def unloadPage(self):
-        for host_id in self.dockerWidgets:
-            self.dockerWidgets[host_id].unloadWidget()
+        self.pageUnloadSignal.emit()
+        # TODO: Lag Reduction?
+        #for host_id in self.dockerWidgets:
+            #self.dockerWidgets[host_id].unloadWidget()
 
     def loadPage(self):
-        for host_id in self.dockerWidgets:
-            self.dockerWidgets[host_id].loadWidget()
+        self.pageLoadedSignal.emit()
+        # TODO: Lag Reduction?
+        #for host_id in self.dockerWidgets:
+            #self.dockerWidgets[host_id].loadWidget()
 
     def setSizeHint(self, size):
         self.size = QSize(size[0] + 20, size[1] + 20)

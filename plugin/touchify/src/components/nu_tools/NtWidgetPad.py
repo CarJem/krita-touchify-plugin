@@ -84,7 +84,9 @@ class NtWidgetPad(QWidget):
             elif self.alignment == 'right':
                 globalTargetPos = view.mapToGlobal(QPoint(view.width() - self.width() - self.scrollBarMargin() - self.offset_x_right, self.rulerMargin()))
 
-            self.move(self.parentWidget().mapFromGlobal(globalTargetPos))
+            newPos = self.parentWidget().mapFromGlobal(globalTargetPos)
+            if self.pos() != newPos:
+                self.move(newPos)
 
 
     def borrowDocker(self, docker):
@@ -132,7 +134,6 @@ class NtWidgetPad(QWidget):
         view = self.activeView()
 
         if view:
-            
             ### GOAL: REMOVE THIS IF-STATEMENT
             if isinstance(self.widget, Nt_ScrollAreaContainer):
                 containerSize = self.widget.sizeHint() 
@@ -142,8 +143,9 @@ class NtWidgetPad(QWidget):
 
                 if view.width() < containerSize.width() + 8 + self.scrollBarMargin():
                     containerSize.setWidth(view.width() - 8 - self.scrollBarMargin())
-                
-                self.widget.setFixedSize(containerSize)
+            
+                if self.widget.size() != containerSize:
+                    self.widget.setFixedSize(containerSize)
 
 
             newSize = self.sizeHint()
@@ -153,7 +155,8 @@ class NtWidgetPad(QWidget):
             if view.width() < newSize.width():
                 newSize.setWidth(view.width())
             
-            self.resize(newSize)
+            if self.size() != newSize:
+                self.resize(newSize)
 
     def returnDocker(self):
         """

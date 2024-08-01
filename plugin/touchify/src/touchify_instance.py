@@ -1,6 +1,10 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QMessageBox
 
+from ..src.dockers import TouchifyToolshelfDocker
+from .components.toolshelf.ToolshelfWidget import ToolshelfWidget
+
+
 from .ext.extensions_pyqt import PyQtExtensions
 
 from .features.touchify_looks import TouchifyLooks
@@ -15,6 +19,7 @@ from .features.popup_buttons import *
 from .features.workspace_toggles import *
 from .features.touchify_canvas import *
 from .features.touchify_hotkeys import *
+from .features.canvas_decoration_presets import *
 
 
 
@@ -34,9 +39,15 @@ class TouchifyInstance(object):
         self.settings_dlg: SettingsDialog | None = None
 
     def onKritaConfigUpdated(self):
+        toolshelf_docker = self.getDockerToolshelf()
+        if toolshelf_docker: toolshelf_docker.onKritaConfigUpdate()
+        
         self.touchify_canvas.onKritaConfigUpdated()
 
-    def onConfigUpdated(self):
+    def onConfigUpdated(self):     
+        toolshelf_docker = self.getDockerToolshelf()
+        if toolshelf_docker: toolshelf_docker.onConfigUpdated()
+        
         self.touchify_canvas.onConfigUpdated()
         self.popup_toggles.onConfigUpdated()
         self.docker_groups.onConfigUpdated()        
@@ -52,24 +63,45 @@ class TouchifyInstance(object):
         self.workspace_toggles.createActions(window, subItemPath)
         self.popup_toggles.createActions(window, subItemPath)
 
+
+        self.mainMenuBar.addSection("Touchify")
+        
         openSettingsAction = window.createAction(TOUCHIFY_ID_ACTION_CONFIGURE, "Configure Touchify...", TOUCHIFY_ID_MENU_ROOT)
         openSettingsAction.triggered.connect(self.openSettings)
         self.mainMenuBar.addAction(openSettingsAction)
-
+        
         self.touchify_looks.createActions(window, self.mainMenuBar)
         self.touchify_canvas.createActions(window, self.mainMenuBar)
+        
+        canvasDecorationsPopup = window.createAction(TOUCHIFY_ID_ACTION_CANVAS_DECORATION_PRESETS, "Canvas Presets...", TOUCHIFY_ID_MENU_ROOT)
+        canvasDecorationsPopup.triggered.connect(self.openCanvasDecoPopup)
+        self.mainMenuBar.addAction(canvasDecorationsPopup)
 
-        seperator = QAction("Actions", self.mainMenuBar)
-        seperator.setSeparator(True)
-        self.mainMenuBar.addAction(seperator)
+        self.mainMenuBar.addSection("Actions")
 
-        reloadItemsAction = QAction("Refresh Known Items...", self.mainMenuBar)
+        reloadItemsAction = QAction("Refresh Known Items", self.mainMenuBar)
         reloadItemsAction.triggered.connect(self.reloadKnownItems)
         self.mainMenuBar.addAction(reloadItemsAction)
+    
+    
+    def getDockerToolshelf(self):
+        for docker in Krita.instance().dockers():
+            if docker.objectName() == "TouchifyToolshelfDocker":
+                toolshelfDocker: TouchifyToolshelfDocker = docker
+                return toolshelfDocker
+        return None
+        
+    def setupDockers(self, window: Window):
+        for docker in Krita.instance().dockers():
+            if docker.objectName() == "TouchifyToolshelfDocker":
+                toolshelfDocker: TouchifyToolshelfDocker = docker
+                toolshelfDocker.setup(self)
 
     def onWindowCreated(self, window: Window):
         self.instanceWindow = window
         self.docker_management = DockerManager(self.instanceWindow)
+        
+        self.setupDockers(window)
 
         seperator = QAction("", self.mainMenuBar)
         seperator.setSeparator(True)
@@ -93,6 +125,11 @@ class TouchifyInstance(object):
         msg = QMessageBox(self.instanceWindow.qwindow())
         msg.setText("Reloaded Known Workspaces/Dockers. You will need to reload to use them with this extension")
         msg.exec_()
+        
+    def openCanvasDecoPopup(self):
+        canvas_deco_popup = CanvasDecorationsPopup(self.instanceWindow.qwindow())
+        canvas_deco_popup.move(QCursor.pos())
+        canvas_deco_popup.show()
 
     def openSettings(self):
         if self.settings_dlg != None:

@@ -14,16 +14,20 @@ if TYPE_CHECKING:
     from ..ToolshelfContainer import ToolshelfContainer
 
 class ToolshelfPageMain(ToolshelfPage):
-    def __init__(self, parent: "ToolshelfContainer", isPrimaryPanel: bool):
+    def __init__(self, parent: "ToolshelfContainer", panel_index : int):
 
         self.dockerWidgets: dict = {}
         
-        self.isPrimaryPanel = isPrimaryPanel
+        self.PanelIndex = panel_index
 
-        if self.isPrimaryPanel: 
-            self.rootCfg = TouchifyConfig.instance().getJSON().toolshelf_main
-        else: 
-            self.rootCfg = TouchifyConfig.instance().getJSON().toolshelf_alt
+        if self.PanelIndex == 0: 
+            self.rootCfg = TouchifyConfig.instance().getConfig().toolshelf_main
+        elif self.PanelIndex == 1: 
+            self.rootCfg = TouchifyConfig.instance().getConfig().toolshelf_alt
+        elif self.PanelIndex == 2: 
+            self.rootCfg = TouchifyConfig.instance().getConfig().toolshelf_docker
+        else:
+            self.rootCfg = None
 
 
         pageCfg = CfgToolshelfPanel()

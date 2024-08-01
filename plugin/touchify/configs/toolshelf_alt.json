@@ -124,6 +124,19 @@
                 {
                     "context_menu_actions": [],
                     "use_icon": true,
+                    "action_id": "touchify_canvasDecoPopup",
+                    "action_type": "action",
+                    "action_use_default_icon": false,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "context_menu_name": "",
+                    "icon": "config-canvas-input",
+                    "row": 0,
+                    "text": ""
+                },
+                {
+                    "context_menu_actions": [],
+                    "use_icon": true,
                     "action_id": "show_snap_options_popup",
                     "action_type": "action",
                     "action_use_default_icon": false,

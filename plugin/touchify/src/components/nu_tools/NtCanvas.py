@@ -37,7 +37,6 @@ class NtCanvas(object):
 
 
     def createActions(self, window: Window, menu: QMenu, path: str):
-
         menu.addSection("Widget Visibility")
 
         tlb_action = window.createAction(TOUCHIFY_ID_ACTION_CANVAS_SHOWTOOLBOX, "Show Toolbox", path)

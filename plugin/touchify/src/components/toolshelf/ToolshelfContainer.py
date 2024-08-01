@@ -21,21 +21,37 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ToolshelfWidget import ToolshelfWidget
 
-
 class ToolshelfContainer(QStackedWidget):
+    
+    
+    class MouseListener(QObject):
+        mouseReleased = pyqtSignal()
 
-    def __init__(self, parent: "ToolshelfWidget", isPrimaryPanel: bool):
+        def __init__(self):
+            super().__init__()
+
+        def eventFilter(self, obj, event):
+            if (event.type() == QEvent.MouseButtonRelease and event.button() == Qt.LeftButton) or \
+            (event.type() == QEvent.TabletRelease and event.button() == Qt.LeftButton):
+                self.mouseReleased.emit()
+            return super().eventFilter(obj, event)
+
+    def __init__(self, parent: "ToolshelfWidget", PanelIndex: int):
         super(ToolshelfContainer, self).__init__(parent)
+        
+        self.mouse_listener = ToolshelfContainer.MouseListener()
+        
         self.dockWidget = parent
         self._panels = {}
         self._pinned = False
         self._current_panel_id = 'MAIN'
         self._headers: List[ToolshelfPanelHeader] = []
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        qApp.focusObjectChanged.connect(self.handleFocusChange)
 
-        self.isPrimaryPanel = isPrimaryPanel
+        self.PanelIndex = PanelIndex
         self.cfg = self.getCfg()
+        QApplication.instance().installEventFilter(self.mouse_listener)
+        self.mouse_listener.mouseReleased.connect(self.onMouseRelease)
         super().currentChanged.connect(self.onCurrentChanged)
         
         self.addMainPanel()
@@ -47,12 +63,14 @@ class ToolshelfContainer(QStackedWidget):
         self.changePanel('MAIN')
 
     def getCfg(self):
-        cfg = TouchifyConfig.instance().getJSON()
-        if self.isPrimaryPanel: return cfg.toolshelf_main
-        else: return cfg.toolshelf_alt
+        cfg = TouchifyConfig.instance().getConfig()
+        if self.PanelIndex == 0: return cfg.toolshelf_main
+        elif self.PanelIndex == 1: return cfg.toolshelf_alt
+        elif self.PanelIndex == 2: return cfg.toolshelf_docker
+        else: return None
 
     def addMainPanel(self):
-        self._mainWidget = ToolshelfPageMain(self, self.isPrimaryPanel)
+        self._mainWidget = ToolshelfPageMain(self, self.PanelIndex)
         self._panels['MAIN'] = self._mainWidget
         header = ToolshelfPanelHeader(self.cfg, True, self)
         self._headers.append(header)
@@ -94,11 +112,11 @@ class ToolshelfContainer(QStackedWidget):
         new_panel = self.panel(panel_id)
         old_panel = self.panel(self._current_panel_id)
 
+
         old_panel.unloadPage()
         self._current_panel_id = panel_id
         new_panel.loadPage()
         self.setCurrentWidget(new_panel)
-        self.onCurrentChanged(self.currentIndex())
 
     def onCurrentChanged(self, index):
         for i in range(0, self.count()):
@@ -126,8 +144,9 @@ class ToolshelfContainer(QStackedWidget):
             return None
     
     def shutdownWidget(self):
-        qApp.focusObjectChanged.disconnect(self.handleFocusChange)
         super().currentChanged.disconnect(self.onCurrentChanged)
+        QApplication.instance().removeEventFilter(self.mouse_listener)
+        self.mouse_listener.mouseReleased.disconnect(self.onMouseRelease)
 
         children = self.findChildren(DockerContainer)
         for child in children:
@@ -142,20 +161,18 @@ class ToolshelfContainer(QStackedWidget):
 
         for panel_id in self._panels:
             self._panels[panel_id].close()
-
-    def doesCanvasHaveFocus(self, source):
-        if not isinstance(source, QOpenGLWidget): return False
-
-        if source.metaObject().className() == "KisOpenGLCanvas2":
-            return True
-                
-        return False
     
     def onKritaConfigUpdate(self):
         pass
 
-    def handleFocusChange(self, source):
-        if self.isPinned() == False and self.doesCanvasHaveFocus(source):
+    def onMouseRelease(self):
+        cursor_pos = QCursor.pos()
+        widget_under_cursor = QApplication.widgetAt(cursor_pos)
+        
+        if not isinstance(widget_under_cursor, QOpenGLWidget): return
+        if not widget_under_cursor.metaObject().className() == "KisOpenGLCanvas2": return
+        
+        if self.isPinned() == False:
             self.goHome()
 
     def updateStyleSheet(self):

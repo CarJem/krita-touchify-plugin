@@ -24,8 +24,9 @@ class NtToolshelf(object):
         self.qWin = window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
         self.canvas = canvas
-
-        self.toolshelf = ToolshelfWidget(isPrimaryPanel, docker_manager)
+        
+        panel_index = 0 if isPrimaryPanel else 1
+        self.toolshelf = ToolshelfWidget(panel_index, docker_manager)
 
         # Create "pad"
         self.pad = NtWidgetPad(self.mdiArea)

@@ -70,7 +70,7 @@ class TouchifyHotkeys(object):
     
     def triggerHotkey(self, index: int):
         actionRequest = "none"
-        cfg = TouchifyConfig.instance().getJSON().hotkeys
+        cfg = TouchifyConfig.instance().getConfig().hotkeys
         match index:
             case  1: 
                 actionRequest = cfg.hotkey1
@@ -97,7 +97,7 @@ class TouchifyHotkeys(object):
 
     def createActions(self, window: Window, subItemPath: str):
 
-        self.hotkey_menu = QtWidgets.QMenu("Actions...")
+        self.hotkey_menu = QtWidgets.QMenu("Hotkey Actions")
         hotkey_subpath = "actions"
 
         # Global Hotkey Assignments
@@ -108,7 +108,7 @@ class TouchifyHotkeys(object):
             self.hotkeys_storage[i] = hotkeyAction
             self.hotkey_menu.addAction(hotkeyAction)
 
-        self.other_menu = QtWidgets.QMenu("Other...")
+        self.other_menu = QtWidgets.QMenu("Other Actions")
         other_subpath = "other"
 
         # Show Popup Palette
@@ -123,7 +123,7 @@ class TouchifyHotkeys(object):
         popupMenuToggle.triggered.connect(self.showMenubarPopup)
         self.other_menu.addAction(popupMenuToggle)
 
-        self.docker_utils_menu = QtWidgets.QMenu("Docker Utils...")
+        self.docker_utils_menu = QtWidgets.QMenu("Docker Utils")
         docker_utils_subpath = "docker_utils"
 
         # Toggle Dockers

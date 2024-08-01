@@ -67,5 +67,12 @@
             <isCheckable>true</isCheckable>
             <statusTip></statusTip>
         </Action>
+        <Action name="touchify_canvasDecoPopup">
+            <icon></icon>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <statusTip></statusTip>
+        </Action>
     </Actions>
 </ActionCollection>

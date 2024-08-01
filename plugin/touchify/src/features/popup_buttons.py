@@ -65,9 +65,9 @@ class PopupButtons(object):
         sectionName = TOUCHIFY_ID_ACTIONS_POPUP
         subItemPath = actionPath + "/" + sectionName
 
-        self.root_menu = QtWidgets.QMenu("Popups")
+        self.root_menu = QtWidgets.QMenu("Popup Widgets")
 
-        cfg = TouchifyConfig.instance().getJSON()
+        cfg = TouchifyConfig.instance().getConfig()
         for popup in cfg.popups:
             self.popup_data[popup.id] = popup
             self.createAction(window, popup, subItemPath)
@@ -99,7 +99,7 @@ class PopupButtons(object):
             self.popup_dialogs[popupKeys] = None
 
 
-        cfg: TouchifyConfig.ConfigFile = TouchifyConfig.instance().getJSON()
+        cfg: TouchifyConfig.ConfigFile = TouchifyConfig.instance().getConfig()
         for item in cfg.popups:
             newPopupData: CfgPopup = item
             id = newPopupData.id

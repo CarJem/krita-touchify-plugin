@@ -12,7 +12,7 @@ from .ext.KritaSettings import KritaSettings
 from .ext.extensions import *
 from .settings.TouchifyConfig import *
 
-class DockerManager(object):
+class DockerManager(QObject):
     class BorrowData:
         def __init__(self, dockMode: bool, previousVisibility: bool, mainWindow: QMainWindow, dockWidgetArea: Qt.DockWidgetArea) -> None:
             self.dockerParent = None
@@ -73,7 +73,13 @@ class DockerManager(object):
         def __init__(self, dockMode: bool = False) -> None:
             self.dockMode = dockMode
 
+    onReleaseDockerSignal = pyqtSignal(str)
+    onStealDockerSignal = pyqtSignal(str)
+    onLoadDockerSignal = pyqtSignal(str)
+
     def __init__(self, window: Window):
+        
+        super().__init__(window)
 
         self._shareData: dict[any, DockerManager.BorrowData] = {}
         self._listeners: dict[DockerManager.SignalType, list] = {}
@@ -91,15 +97,32 @@ class DockerManager(object):
             self._listeners[type] = list()
     
         self._listeners[type].append(source)
+        
+        if type == DockerManager.SignalType.OnStealDocker:
+            self.onStealDockerSignal.connect(source)
+        elif type == DockerManager.SignalType.OnReleaseDocker:
+            self.onReleaseDockerSignal.connect(source)
+        elif type == DockerManager.SignalType.OnLoadDocker:
+            self.onLoadDockerSignal.connect(source)
 
     def removeListener(self, type: SignalType, source: Callable):
         if type in self._listeners:
             self._listeners[type].remove(source)
+            if type == DockerManager.SignalType.OnStealDocker:
+                self.onStealDockerSignal.disconnect(source)
+            elif type == DockerManager.SignalType.OnReleaseDocker:
+                self.onReleaseDockerSignal.disconnect(source)
+            elif type == DockerManager.SignalType.OnLoadDocker:
+                self.onLoadDockerSignal.disconnect(source)
 
     def invokeListeners(self, docker_id: str, type: SignalType):
         if type in self._listeners:
-            for hook in self._listeners[type]:
-                hook(docker_id)
+            if type == DockerManager.SignalType.OnStealDocker:
+                self.onStealDockerSignal.emit(docker_id)
+            elif type == DockerManager.SignalType.OnReleaseDocker:
+                self.onReleaseDockerSignal.emit(docker_id)
+            elif type == DockerManager.SignalType.OnLoadDocker:
+                self.onLoadDockerSignal.emit(docker_id)
 
     def findDocker(self, docker_id: str):
         return self.qWin.findChild(QDockWidget, docker_id)

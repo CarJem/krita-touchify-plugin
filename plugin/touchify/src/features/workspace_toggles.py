@@ -38,7 +38,7 @@ class WorkspaceToggles(object):
                 break
 
     def reloadWorkspaces(self):
-        cfg = TouchifyConfig.instance().getJSON()
+        cfg = TouchifyConfig.instance().getConfig()
 
         Workspaces = []
         main_menu = self.qWin.menuBar()
@@ -82,11 +82,11 @@ class WorkspaceToggles(object):
         action.triggered.connect(lambda: self.toggleWorkspace(id))
 
     def createActions(self, window, actionPath):
-        self.root_menu = QtWidgets.QMenu("Workspaces")
+        self.root_menu = QtWidgets.QMenu("Workspace Triggers")
 
         sectionName = TOUCHIFY_ID_ACTIONS_WORKSPACE
         subItemPath = actionPath + "/" + sectionName
 
-        cfg = TouchifyConfig.instance().getJSON()
+        cfg = TouchifyConfig.instance().getConfig()
         for workspace in cfg.workspaces:
             self.createAction(window, workspace, subItemPath)

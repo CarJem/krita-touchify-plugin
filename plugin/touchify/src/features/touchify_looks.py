@@ -30,10 +30,16 @@ class TouchifyLooks(object):
 
     def createActions(self, window: Window, mainMenuBar: QMenuBar):
         config = TouchifySettings.instance()
+        
+        sublocation_name = "Styles and Tweaks"
+        sublocation_path = TOUCHIFY_ID_MENU_ROOT + "/" + sublocation_name
 
-        mainMenuBar.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_PRIVACYMODE, "Privacy Mode", TOUCHIFY_ID_MENU_ROOT, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
-        mainMenuBar.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_BORDERLESSTOOLBARS, "Borderless Toolbars", TOUCHIFY_ID_MENU_ROOT, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))
-        mainMenuBar.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_TABHEIGHT, "Thin Document Tabs", TOUCHIFY_ID_MENU_ROOT, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
+        nu_options_menu = QtWidgets.QMenu(sublocation_name, mainMenuBar)
+        mainMenuBar.addMenu(nu_options_menu)
+
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_PRIVACYMODE, "Privacy Mode", sublocation_path, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_BORDERLESSTOOLBARS, "Borderless Toolbars", sublocation_path, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))
+        nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_TABHEIGHT, "Thin Document Tabs", sublocation_path, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
 
     def toolbarBorderToggled(self, toggled):
         TouchifySettings.instance().Styles_BorderlessToolbar = toggled

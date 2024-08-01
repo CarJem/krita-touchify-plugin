@@ -20,13 +20,13 @@
     "python.REPL.enableREPLSmartSend": false,
     "python.envFile": "${workspaceFolder}/.venv",
     "python.analysis.importFormat": "relative",
-    "python.analysis.diagnosticMode": "workspace",
-    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.diagnosticMode": "openFilesOnly",
     "python.analysis.indexing": true,
     "python.analysis.inlayHints.functionReturnTypes": false,
     "python.languageServer": "Default",
     "search.exclude": {
         "**/krita_env/krita": true,
         "**/testscripts": true
-    }
+    },
+    "python.analysis.autoImportCompletions": false
 }

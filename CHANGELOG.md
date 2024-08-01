@@ -36,6 +36,8 @@
     > Similar to the 4 Brush Option Sliders in the Toolbar, this docker replicates their functionality in the form of a docker
 - **New Docker - Color Options**
     > Similar to the Color Picker in the Toolbar, this docker replicates it's functionality in the form of a docker
+- **New Docker - Touchify Toolshelf**
+    > Just like the On-Canvas Toolshelf Widgets, but now in the form of a Docker
 - **And More...**
     > - Added an Action for "Configure Touchify..."
     > - Toolshelfs can now share the Page Buttons with other Panels besides just the Home Panel
@@ -46,7 +48,9 @@
 - **Tool Options Bug Fixes and Improvements**
     > No Longer will Tool Options have certain quirks that prevent it from being used in other ways
 - **On-Canvas Widgets Bug Fixes**:
+    > Improved Canvas Focus Detection for Pinned Mode
     > Addressed Widget Offset when Canvas Rulers are visible 
+    > Workaround for the Scaled Lag when Pinned Mode is Off for On Canvas Widgets
 
 
 

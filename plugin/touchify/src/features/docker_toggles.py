@@ -27,7 +27,7 @@ class DockerToggles(object):
                 docker.setVisible(not docker.isVisible())
 
     def reloadDockers(self):
-        cfg = TouchifyConfig.instance().getJSON()
+        cfg = TouchifyConfig.instance().getConfig()
         dockersList = Krita.instance().dockers()
         data = []
 
@@ -61,8 +61,8 @@ class DockerToggles(object):
     def createActions(self, window: Window, actionPath: str):
         sectionName = TOUCHIFY_ID_ACTIONS_DOCKER
         subItemPath = actionPath + "/" + sectionName
-        cfg = TouchifyConfig.instance().getJSON()
-        self.root_menu = QtWidgets.QMenu("Dockers")
+        cfg = TouchifyConfig.instance().getConfig()
+        self.root_menu = QtWidgets.QMenu("Docker Triggers")
 
         for docker in cfg.dockers:
             self.createAction(window, docker, subItemPath)
