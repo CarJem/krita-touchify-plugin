@@ -69,8 +69,9 @@ class TouchifyConfig:
             labels["docker_groups"] = "Docker Groups"
             labels["popups"] = "Popups"
             labels["workspaces"] = "Workspaces"
-            labels["toolshelf_main"] = "Tool Options Shelf"
             labels["toolshelf_alt"] = "Toolbox Shelf"
+            labels["toolshelf_main"] = "Sidebar Shelf"
+            labels["toolshelf_docker"] = "Docker Shelf"
             labels["hotkeys"] = "Hotkeys"
             return labels
 

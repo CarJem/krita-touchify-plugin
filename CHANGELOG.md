@@ -38,6 +38,8 @@
     > Similar to the Color Picker in the Toolbar, this docker replicates it's functionality in the form of a docker
 - **New Docker - Touchify Toolshelf**
     > Just like the On-Canvas Toolshelf Widgets, but now in the form of a Docker
+- **New Feature - Canvas Decoration Presets**
+    > Change Transparency Background Colors, Selection Overlays, and More with Presets!
 - **And More...**
     > - Added an Action for "Configure Touchify..."
     > - Toolshelfs can now share the Page Buttons with other Panels besides just the Home Panel
