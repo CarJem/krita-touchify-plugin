@@ -101,10 +101,10 @@ class TouchifyHotkeys(object):
         hotkey_subpath = "actions"
 
         # Global Hotkey Assignments
-        for i in range(1, 10):
+        for i in range(1, 11):
             hotkeyName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_HOTKEY, str(i))
             hotkeyAction = window.createAction(hotkeyName, "Touchify - Action " + str(i), subItemPath + "/" + hotkey_subpath)
-            hotkeyAction.triggered.connect(lambda: self.triggerHotkey(1))
+            hotkeyAction.triggered.connect(lambda z, x=i: self.triggerHotkey(x))
             self.hotkeys_storage[i] = hotkeyAction
             self.hotkey_menu.addAction(hotkeyAction)
 

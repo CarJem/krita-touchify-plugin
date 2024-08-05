@@ -115,73 +115,25 @@
                 {
                     "action_section_contents": [
                         {
-                            "icon": "material:undo",
-                            "action_id": "edit_undo",
-                            "row": 0,
-                            "context_menu_actions": []
-                        },
-                        {
-                            "row": 1,
-                            "action_id": "edit_redo",
-                            "icon": "material:redo",
-                            "context_menu_actions": []
-                        },
-                        {
-                            "row": 2,
-                            "action_id": "touchify_popup_selection-tool",
-                            "icon": "custom:SelectionTool",
-                            "context_menu_actions": []
-                        },
-                        {
-                            "icon": "gridbrush",
-                            "action_id": "touchify_popup_GridDockerPopup",
-                            "row": 4,
-                            "context_menu_actions": []
-                        },
-                        {
-                            "icon": "paintop_settings_02",
-                            "action_id": "show_brush_editor",
-                            "row": 6,
-                            "context_menu_actions": []
-                        },
-                        {
-                            "row": 7,
-                            "action_id": "touchify_showPopupMenu",
-                            "icon": "material:menu-open",
-                            "context_menu_actions": []
-                        },
-                        {
-                            "action_id": "touchify_showPopupPalette",
-                            "icon": "config-popup-palette",
-                            "row": 8,
-                            "context_menu_actions": []
-                        }
-                    ],
-                    "action_section_name": "Canvas Toolbar",
-                    "section_type": "actions",
-                    "panel_x": 1,
-                    "panel_y": 0,
-                    "size_x": 0,
-                    "size_y": 200,
-                    "id": "",
-                    "docker_nesting_mode": "normal",
-                    "docker_unloaded_visibility": "normal",
-                    "docker_loading_priority": "normal",
-                    "action_section_alignment_x": "left",
-                    "action_section_alignment_y": "top",
-                    "action_section_btn_width": 0,
-                    "action_section_btn_height": 0,
-                    "action_section_display_mode": "flat"
-                },
-                {
-                    "action_section_contents": [
-                        {
                             "action_id": "merge_layer",
                             "action_use_default_icon": true,
                             "action_type": "action",
                             "icon": "",
                             "row": 0,
                             "context_menu_actions": []
+                        },
+                        {
+                            "context_menu_actions": [],
+                            "use_icon": true,
+                            "action_id": "RenameCurrentLayer",
+                            "action_type": "action",
+                            "action_use_default_icon": false,
+                            "brush_name": "",
+                            "brush_override_icon": false,
+                            "context_menu_name": "",
+                            "icon": "edit-rename",
+                            "row": 0,
+                            "text": ""
                         }
                     ],
                     "action_section_name": "LayerOptions",
@@ -210,10 +162,10 @@
                         {
                             "context_menu_actions": [
                                 {
-                                    "id": "isolate_active_layer"
+                                    "action_id": "isolate_active_layer"
                                 },
                                 {
-                                    "id": "isolate_active_group"
+                                    "action_id": "isolate_active_group"
                                 }
                             ],
                             "icon": "view-filter",
@@ -226,10 +178,10 @@
                         {
                             "context_menu_actions": [
                                 {
-                                    "id": "create_quick_group"
+                                    "action_id": "create_quick_group"
                                 },
                                 {
-                                    "id": "quick_ungroup"
+                                    "action_id": "quick_ungroup"
                                 }
                             ],
                             "action_type": "menu",
@@ -267,7 +219,8 @@
             "icon": "all-layers",
             "row": 0,
             "size_x": 0,
-            "size_y": 0
+            "size_y": 0,
+            "section_show_tabs": false
         },
         {
             "sections": [
@@ -447,72 +400,6 @@
             "action_section_btn_height": 30,
             "action_section_display_mode": "normal",
             "action_section_icon_size": 0
-        },
-        {
-            "section_type": "actions",
-            "panel_x": 1,
-            "panel_y": 2,
-            "size_x": 0,
-            "size_y": 200,
-            "action_section_contents": [
-                {
-                    "icon": "material:undo",
-                    "action_id": "edit_undo",
-                    "row": 0,
-                    "context_menu_actions": []
-                },
-                {
-                    "icon": "material:redo",
-                    "action_id": "edit_redo",
-                    "row": 1,
-                    "context_menu_actions": []
-                },
-                {
-                    "icon": "custom:SelectionTool",
-                    "action_id": "touchify_popup_selection-tool",
-                    "row": 2,
-                    "context_menu_actions": []
-                },
-                {
-                    "action_id": "touchify_popup_GridDockerPopup",
-                    "icon": "gridbrush",
-                    "row": 4,
-                    "context_menu_actions": []
-                },
-                {
-                    "icon": "paintop_settings_02",
-                    "action_id": "show_brush_editor",
-                    "row": 6,
-                    "context_menu_actions": []
-                },
-                {
-                    "icon": "material:menu-open",
-                    "action_id": "touchify_showPopupMenu",
-                    "row": 7,
-                    "context_menu_actions": []
-                },
-                {
-                    "action_id": "touchify_showPopupPalette",
-                    "icon": "config-popup-palette",
-                    "row": 8,
-                    "context_menu_actions": []
-                }
-            ],
-            "action_section_name": "Canvas Toolbar",
-            "action_section_alignment_y": "top",
-            "action_section_alignment_x": "center",
-            "action_section_btn_width": 30,
-            "action_section_display_mode": "flat",
-            "action_section_btn_height": 0,
-            "action_section_icon_size": 0,
-            "docker_loading_priority": "normal",
-            "docker_nesting_mode": "normal",
-            "docker_unloaded_visibility": "normal",
-            "id": "",
-            "max_size_x": 0,
-            "max_size_y": 0,
-            "min_size_x": 0,
-            "min_size_y": 0
         },
         {
             "id": "sharedtooldocker",

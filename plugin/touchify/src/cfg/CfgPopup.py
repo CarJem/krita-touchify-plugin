@@ -47,8 +47,8 @@ class CfgPopup:
 
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
-        row["item_size"] = {"name": "Item Size", "actions_items": ["actions_item_width","actions_item_height"]}
-        row["icon_size"] = {"name": "Icon Size", "actions_items": ["actions_icon_width","actions_icon_height"]}
+        row["item_size"] = {"name": "Item Size", "items": ["actions_item_width","actions_item_height"]}
+        row["icon_size"] = {"name": "Icon Size", "items": ["actions_icon_width","actions_icon_height"]}
         return row
     
     def propertygrid_hidden(self):

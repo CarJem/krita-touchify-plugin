@@ -161,11 +161,6 @@
                     "icon": "transform_icons_mirror_x"
                 },
                 {
-                    "action": "merge_layer",
-                    "text": "Merge with\nLayer Below",
-                    "icon": "merge-layer-below"
-                },
-                {
                     "action": "",
                     "text": "",
                     "icon": ""
@@ -174,9 +169,15 @@
                     "action": "",
                     "text": "",
                     "icon": ""
+                },
+                {
+                    "action": "",
+                    "icon": "",
+                    "text": ""
                 }
             ],
-            "opacity": 1.0
+            "opacity": 1.0,
+            "window_type": "popup"
         },
         {
             "actions_items": [],

@@ -4,36 +4,58 @@
         <text>Touchify</text>
         <Action name="touchify_hotkey_1">
             <shortcut></shortcut>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
         </Action>
         <Action name="touchify_hotkey_2">
             <shortcut></shortcut>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
         </Action>
         <Action name="touchify_hotkey_3">
             <shortcut></shortcut>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
         </Action>
         <Action name="touchify_hotkey_4">
             <shortcut></shortcut>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
         </Action>
         <Action name="touchify_hotkey_5">
             <shortcut></shortcut>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
         </Action>
         <Action name="touchify_hotkey_6">
             <shortcut></shortcut>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
         </Action>
         <Action name="touchify_hotkey_7">
             <shortcut></shortcut>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
         </Action>
         <Action name="touchify_hotkey_8">
             <shortcut></shortcut>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
         </Action>
         <Action name="touchify_hotkey_9">
             <shortcut></shortcut>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
         </Action>
         <Action name="touchify_hotkey_10">
             <shortcut></shortcut>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
         </Action>
         <Action name="touchify_configure">
             <shortcut></shortcut>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
         </Action>
         <Action name="touchify_showToolbox">
             <icon></icon>

@@ -19,7 +19,7 @@ from .features.popup_buttons import *
 from .features.workspace_toggles import *
 from .features.touchify_canvas import *
 from .features.touchify_hotkeys import *
-from .features.canvas_decoration_presets import *
+from .features.canvas_presets import *
 
 
 
@@ -35,6 +35,7 @@ class TouchifyInstance(object):
         self.touchify_canvas = TouchifyCanvas(self)
         self.touchify_hotkeys = TouchifyHotkeys(self)
         self.touchify_tweaks = TouchifyTweaks(self)
+        self.canvas_presets = CanvasPresets(self)
         
         self.settings_dlg: SettingsDialog | None = None
 
@@ -127,9 +128,7 @@ class TouchifyInstance(object):
         msg.exec_()
         
     def openCanvasDecoPopup(self):
-        canvas_deco_popup = CanvasDecorationsPopup(self.instanceWindow.qwindow())
-        canvas_deco_popup.move(QCursor.pos())
-        canvas_deco_popup.show()
+        self.canvas_presets.show()
 
     def openSettings(self):
         if self.settings_dlg != None:

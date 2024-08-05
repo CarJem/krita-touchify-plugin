@@ -1,7 +1,9 @@
 
 
 from PyQt5.QtGui import QColor, QIcon, QImage, QPalette, QPixmap
-from ....cfg.CfgToolshelf import CfgToolshelfAction, CfgToolshelfPanel
+
+from ....cfg.CfgToolshelfAction import CfgToolshelfAction
+from ....cfg.CfgToolshelf import CfgToolshelfPanel
 from ....resources import ResourceManager
 from krita import *
 

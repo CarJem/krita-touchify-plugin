@@ -39,6 +39,58 @@
             "icon": "",
             "row": 0,
             "text": ""
+        },
+        {
+            "context_menu_actions": [],
+            "use_icon": true,
+            "action_id": "touchify_popup_selection-tool",
+            "action_type": "action",
+            "action_use_default_icon": false,
+            "brush_name": "",
+            "brush_override_icon": false,
+            "context_menu_name": "",
+            "icon": "custom:SelectionTool",
+            "row": 0,
+            "text": ""
+        },
+        {
+            "context_menu_actions": [],
+            "use_icon": true,
+            "action_id": "touchify_showPopupMenu",
+            "action_type": "action",
+            "action_use_default_icon": false,
+            "brush_name": "",
+            "brush_override_icon": false,
+            "context_menu_name": "",
+            "icon": "material:menu",
+            "row": 0,
+            "text": ""
+        },
+        {
+            "context_menu_actions": [],
+            "use_icon": true,
+            "action_id": "edit_undo",
+            "action_type": "action",
+            "action_use_default_icon": true,
+            "brush_name": "",
+            "brush_override_icon": false,
+            "context_menu_name": "",
+            "icon": "",
+            "row": 1,
+            "text": ""
+        },
+        {
+            "context_menu_actions": [],
+            "use_icon": true,
+            "action_id": "edit_redo",
+            "action_type": "action",
+            "action_use_default_icon": true,
+            "brush_name": "",
+            "brush_override_icon": false,
+            "context_menu_name": "",
+            "icon": "",
+            "row": 1,
+            "text": ""
         }
     ],
     "sections": [
@@ -54,7 +106,23 @@
             "docker_nesting_mode": "normal",
             "size_x": 300,
             "size_y": 200,
-            "action_section_contents": []
+            "action_section_contents": [],
+            "action_section_name": "Panel",
+            "action_section_alignment_x": "none",
+            "action_section_alignment_y": "none",
+            "action_section_btn_width": 0,
+            "action_section_btn_height": 0,
+            "action_section_display_mode": "normal",
+            "action_section_icon_size": 0,
+            "docker_loading_priority": "normal",
+            "docker_unloaded_visibility": "normal",
+            "max_size_x": 0,
+            "max_size_y": 0,
+            "min_size_x": 0,
+            "min_size_y": 0,
+            "panel_x": 0,
+            "panel_y": 0,
+            "section_type": "docker"
         },
         {
             "action_section_contents": [
@@ -101,8 +169,8 @@
             "action_section_name": "Actions (Left)",
             "action_section_alignment_x": "left",
             "action_section_alignment_y": "none",
-            "action_section_btn_width": 0,
-            "action_section_btn_height": 0,
+            "action_section_btn_width": 25,
+            "action_section_btn_height": 25,
             "action_section_display_mode": "flat",
             "action_section_icon_size": 0,
             "docker_loading_priority": "normal",
@@ -124,19 +192,6 @@
                 {
                     "context_menu_actions": [],
                     "use_icon": true,
-                    "action_id": "touchify_canvasDecoPopup",
-                    "action_type": "action",
-                    "action_use_default_icon": false,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "context_menu_name": "",
-                    "icon": "config-canvas-input",
-                    "row": 0,
-                    "text": ""
-                },
-                {
-                    "context_menu_actions": [],
-                    "use_icon": true,
                     "action_id": "show_snap_options_popup",
                     "action_type": "action",
                     "action_use_default_icon": false,
@@ -150,16 +205,16 @@
                 {
                     "context_menu_actions": [
                         {
-                            "id": "view_ruler"
+                            "action_id": "view_ruler"
                         },
                         {
-                            "id": "view_toggle_reference_images"
+                            "action_id": "view_toggle_reference_images"
                         },
                         {
-                            "id": "view_toggle_painting_assistants"
+                            "action_id": "view_toggle_painting_assistants"
                         },
                         {
-                            "id": "show-global-selection-mask"
+                            "action_id": "show-global-selection-mask"
                         }
                     ],
                     "action_id": "deselect",
@@ -171,26 +226,6 @@
                     "use_icon": true,
                     "brush_name": "",
                     "brush_override_icon": false,
-                    "text": ""
-                },
-                {
-                    "context_menu_actions": [
-                        {
-                            "id": "options_configure"
-                        },
-                        {
-                            "id": "touchify_configure"
-                        }
-                    ],
-                    "use_icon": true,
-                    "action_id": "",
-                    "action_type": "menu",
-                    "action_use_default_icon": false,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "context_menu_name": "Other",
-                    "icon": "settings-button",
-                    "row": 0,
                     "text": ""
                 }
             ],

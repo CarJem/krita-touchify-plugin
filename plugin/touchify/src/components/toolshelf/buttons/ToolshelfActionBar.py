@@ -4,10 +4,11 @@
 from multiprocessing import context
 import uuid
 
+from ....cfg.CfgToolshelfAction import CfgToolshelfAction
+
 from ....resources import ResourceManager
-from ....cfg.CfgToolshelf import CfgToolshelfAction, CfgToolshelfActionSubItem
 from ....variables import *
-from ....cfg.CfgToolshelf import CfgToolshelfAction
+from ....cfg.CfgToolshelfAction import CfgToolshelfAction
 from krita import *
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
@@ -98,8 +99,8 @@ class ToolshelfActionBar(QWidget):
             btn.setText(act.text)
         
         for entry in act.context_menu_actions:
-            action_cfg: CfgToolshelfActionSubItem = entry
-            actual_action = Krita.instance().action(action_cfg.id)
+            action_cfg: CfgToolshelfAction = entry
+            actual_action = Krita.instance().action(action_cfg.action_id)
             if actual_action:
                 contextMenu.addAction(actual_action)
 
