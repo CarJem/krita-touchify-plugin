@@ -1,21 +1,20 @@
-
-
-
-from multiprocessing import context
 import uuid
 
-from ....cfg.CfgToolshelfAction import CfgToolshelfAction
+from .TouchifyActionBar import TouchifyActionBar
+from .TouchifyActionButton import TouchifyActionButton
+from .TouchifyActionMenu import TouchifyActionMenu
+
+from ....cfg.CfgTouchifyAction import CfgTouchifyAction
 
 from ....resources import ResourceManager
 from ....variables import *
-from ....cfg.CfgToolshelfAction import CfgToolshelfAction
+from ....cfg.CfgTouchifyAction import CfgTouchifyAction
 from krita import *
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea
-from PyQt5.QtCore import QMargins
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 from ....settings.TouchifyConfig import *
-from .ToolshelfButtonBar import ToolshelfButton, ToolshelfButtonBar
-from .... import stylesheet
+
 
 KNOWN_UNCHECKABLES = [
     "show_brush_editor"
@@ -26,9 +25,9 @@ EXPANDING_SPACERS = [
     "expanding_spacer2"
 ]
 
-class ToolshelfActionBar(QWidget):
-    def __init__(self, cfg: List[CfgToolshelfAction], parent: QWidget=None,):
-        super(ToolshelfActionBar, self).__init__(parent)
+class TouchifyActionPanel(QWidget):
+    def __init__(self, cfg: List[CfgTouchifyAction], parent: QWidget=None,):
+        super(TouchifyActionPanel, self).__init__(parent)
 
         self.cfg = cfg
 
@@ -40,7 +39,7 @@ class ToolshelfActionBar(QWidget):
         self.ourLayout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.ourLayout)
 
-        self.bar = ToolshelfButtonBar(self)
+        self.bar = TouchifyActionBar(self)
         self.initQuickActions()
         self.ourLayout.addWidget(self.bar)
 
@@ -53,12 +52,12 @@ class ToolshelfActionBar(QWidget):
         else:
             return self.minimumSize()
         
-    def updateButton(self, btn: ToolshelfButton, action: QAction, useIcon: bool):
+    def updateButton(self, btn: TouchifyActionButton, action: QAction, useIcon: bool):
         btn.setChecked(action.isChecked())
         if useIcon:
             btn.setIcon(action.icon())
     
-    def registerAction(self, btn: ToolshelfButton, action: QAction, useIcon: bool):
+    def registerAction(self, btn: TouchifyActionButton, action: QAction, useIcon: bool):
         connection = action.changed.connect(lambda: self.updateButton(btn, action, useIcon))
         self.registered_actions.append((action, connection, useIcon))
     
@@ -68,12 +67,11 @@ class ToolshelfActionBar(QWidget):
                 action[0].changed.disconnect(action[1])
             except TypeError:
                 pass
-            
-            
+                       
     def __brushButtonClicked(self, id: Resource):
         Krita.instance().activeWindow().activeView().setCurrentBrushPreset(id)
             
-    def __createBrushButton(self, act: CfgToolshelfAction):
+    def __createBrushButton(self, act: CfgTouchifyAction):
         id = act.brush_name
         brush_presets = ResourceManager.getBrushPresets()
         
@@ -88,27 +86,20 @@ class ToolshelfActionBar(QWidget):
             else:
                 btn.setIcon(ResourceManager.brushIcon(id))
                    
-    def __createMenuButton(self, act: CfgToolshelfAction):
+    def __createMenuButton(self, act: CfgTouchifyAction):
         id = str(uuid.uuid4())
         btn = self.bar.addButton(id, act.row, None, act.context_menu_name, False)
-        contextMenu = QMenu(btn)
         
         if act.use_icon:
             btn.setIcon(ResourceManager.iconLoader(act.icon))
         else:
             btn.setText(act.text)
         
-        for entry in act.context_menu_actions:
-            action_cfg: CfgToolshelfAction = entry
-            actual_action = Krita.instance().action(action_cfg.action_id)
-            if actual_action:
-                contextMenu.addAction(actual_action)
-
-
+        contextMenu = TouchifyActionMenu(act, btn)
         btn.setMenu(contextMenu)
         btn.clicked.connect(btn.showMenu)
         
-    def __createActionButton(self, act: CfgToolshelfAction):
+    def __createActionButton(self, act: CfgTouchifyAction):
         action = Krita.instance().action(act.action_id)
         if action:
             checkable = action.isCheckable()
@@ -133,7 +124,7 @@ class ToolshelfActionBar(QWidget):
     def initQuickActions(self):
         actions = self.cfg
         for entry in actions:
-            act: CfgToolshelfAction = entry
+            act: CfgTouchifyAction = entry
             if act.action_type == "menu":
                 self.__createMenuButton(act)
             elif act.action_type == "brush":

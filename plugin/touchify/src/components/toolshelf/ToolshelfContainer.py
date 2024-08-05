@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 from .buttons.ToolshelfPanelHeader import ToolshelfPanelHeader
-from .buttons.ToolshelfActionBar import ToolshelfActionBar
+from ..touchify.actions.TouchifyActionPanel import TouchifyActionPanel
 from .pages.ToolshelfPage import ToolshelfPage
 from ..DockerContainer import DockerContainer
 
@@ -152,7 +152,7 @@ class ToolshelfContainer(QStackedWidget):
         for child in children:
             child.shutdownWidget()
 
-        children = self.findChildren(ToolshelfActionBar)
+        children = self.findChildren(TouchifyActionPanel)
         for child in children:
             child.unregisterActions()
 

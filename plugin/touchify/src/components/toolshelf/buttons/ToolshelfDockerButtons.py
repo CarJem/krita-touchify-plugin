@@ -2,7 +2,7 @@
 
 from PyQt5.QtGui import QColor, QIcon, QImage, QPalette, QPixmap
 
-from ....cfg.CfgToolshelfAction import CfgToolshelfAction
+from ....cfg.CfgTouchifyAction import CfgTouchifyAction
 from ....cfg.CfgToolshelf import CfgToolshelfPanel
 from ....resources import ResourceManager
 from krita import *
@@ -14,10 +14,10 @@ from PyQt5.QtWidgets import QSizePolicy, QPushButton, QWidget, QHBoxLayout
 from PyQt5.QtCore import QSize, Qt
 
 
-class ToolshelfButton(QPushButton):
+class ToolshelfDockerButton(QPushButton):
 
     def __init__(self, parent = None):
-        super(ToolshelfButton, self).__init__(parent)
+        super(ToolshelfDockerButton, self).__init__(parent)
 
         self.setFocusPolicy(Qt.NoFocus)
         self.highlightConnection = None
@@ -56,18 +56,18 @@ class ToolshelfButton(QPushButton):
             p.setColor(QPalette.Button, p.color(QPalette.Highlight))
         self.setPalette(p)
 
-class ToolshelfButtonBar(QWidget):
+class ToolshelfDockerButtons(QWidget):
     def __init__(self, parent=None):
-        super(ToolshelfButtonBar, self).__init__(parent)
+        super(ToolshelfDockerButtons, self).__init__(parent)
         self._rows: dict[int, QWidget] = {}
         self.setLayout(QVBoxLayout())
         self.layout().setSpacing(1)
         self.layout().setContentsMargins(0, 0, 0, 0)
 
-        self._buttons: dict[any, ToolshelfButton] = {}
+        self._buttons: dict[any, ToolshelfDockerButton] = {}
 
     def addButton(self, id: any, row: int, onClick: any, toolTip: str, checkable: bool):
-        btn = ToolshelfButton()
+        btn = ToolshelfDockerButton()
         if onClick:
             btn.clicked.connect(onClick) # collect and disconnect all when closing
         btn.setToolTip(toolTip)

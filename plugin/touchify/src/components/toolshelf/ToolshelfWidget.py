@@ -4,8 +4,7 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from touchify.src.components.toolshelf.buttons.ToolshelfPanelHeader import ToolshelfPanelHeader
-from .buttons.ToolshelfActionBar import ToolshelfActionBar
+from ..touchify.actions.TouchifyActionPanel import TouchifyActionPanel
 from .pages.ToolshelfPage import ToolshelfPage
 
 from ...settings.TouchifyConfig import *

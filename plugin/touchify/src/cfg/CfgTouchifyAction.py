@@ -1,7 +1,7 @@
 from ..ext.TypedList import TypedList
 from ..ext.extensions_json import JsonExtensions as Extensions
     
-class CfgToolshelfAction:
+class CfgTouchifyAction:
     icon: str = ""
     row: int = 0
     text: str = ""
@@ -12,7 +12,7 @@ class CfgToolshelfAction:
     action_id: str = ""
     action_use_default_icon: bool = False
 
-    context_menu_actions: TypedList["CfgToolshelfAction"] = []
+    context_menu_actions: TypedList["CfgTouchifyAction"] = []
     context_menu_name: str = ""
 
     brush_name: str = ""
@@ -21,7 +21,7 @@ class CfgToolshelfAction:
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
         context_menu_actions = Extensions.default_assignment(args, "context_menu_actions", [])
-        self.context_menu_actions = Extensions.list_assignment(context_menu_actions, CfgToolshelfAction)
+        self.context_menu_actions = Extensions.list_assignment(context_menu_actions, CfgTouchifyAction)
 
     def __str__(self):
         if self.action_type == "brush":
@@ -33,7 +33,7 @@ class CfgToolshelfAction:
         return name
 
     def forceLoad(self):
-        self.context_menu_actions = TypedList(self.context_menu_actions, CfgToolshelfAction)
+        self.context_menu_actions = TypedList(self.context_menu_actions, CfgTouchifyAction)
 
     def propertygrid_hidden(self):
         result = []

@@ -5,11 +5,11 @@ from PyQt5.QtCore import *
 
 from ....resources import ResourceManager
 
-from ..buttons.ToolshelfButtonBar import ToolshelfButtonBar
+from ..buttons.ToolshelfDockerButtons import ToolshelfDockerButtons
 
 from ..buttons.ToolshelfPageTabWidget import ToolshelfPageTabWidget
 from ....docker_manager import DockerManager
-from ..buttons.ToolshelfActionBar import ToolshelfActionBar
+from ...touchify.actions.TouchifyActionPanel import TouchifyActionPanel
 from ....cfg.CfgToolshelf import CfgToolshelfPanel
 from ....cfg.CfgToolshelf import CfgToolshelfSection
 from ...DockerContainer import DockerContainer
@@ -71,7 +71,7 @@ class ToolshelfPage(QWidget):
         self._initDockerTabs()
             
 
-        self.quickActions = ToolshelfActionBar(self.panelProperties.actions, self)
+        self.quickActions = TouchifyActionPanel(self.panelProperties.actions, self)
         self.quickActions.bar.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         
         for btnKey in self.quickActions.bar._buttons:
@@ -87,7 +87,7 @@ class ToolshelfPage(QWidget):
             self.dockerBtns = None
             return
         
-        self.dockerBtns = ToolshelfButtonBar(self)
+        self.dockerBtns = ToolshelfDockerButtons(self)
         self.dockerBtns.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.shelfLayout.insertWidget(0, self.dockerBtns)    
         
@@ -129,7 +129,7 @@ class ToolshelfPage(QWidget):
         self._insertSections(widget_groups)
 
     def _createSections(self):
-        widget_groups: Mapping[int, Mapping[int, list[DockerContainer | ToolshelfActionBar]]] = {}
+        widget_groups: Mapping[int, Mapping[int, list[DockerContainer | TouchifyActionPanel]]] = {}
         
         for dockerData in self.panelProperties.sections:     
             actionInfo: CfgToolshelfSection = dockerData
@@ -145,7 +145,7 @@ class ToolshelfPage(QWidget):
         return widget_groups
     
     def _createActionSection(self, actionInfo: CfgToolshelfSection):
-        actionWidget = ToolshelfActionBar(actionInfo.action_section_contents, self)
+        actionWidget = TouchifyActionPanel(actionInfo.action_section_contents, self)
         actionWidget.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
         #region ActionContainer Setup
         for btn in actionWidget.bar._buttons:
@@ -244,7 +244,7 @@ class ToolshelfPage(QWidget):
         else:
             return None
               
-    def _insertSections(self, widget_groups: Mapping[int, Mapping[int, list[DockerContainer | ToolshelfActionBar]]]):
+    def _insertSections(self, widget_groups: Mapping[int, Mapping[int, list[DockerContainer | TouchifyActionPanel]]]):
         def initCell(x, y, splitter: QSplitter):
             if len(widget_groups[y][x]) == 1:
                 splitter.addWidget(widget_groups[y][x][0])

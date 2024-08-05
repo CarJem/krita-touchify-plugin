@@ -1,4 +1,4 @@
-from .CfgToolshelfAction import *
+from .CfgTouchifyAction import *
 from ..ext.TypedList import TypedList
 from ..ext.extensions_json import JsonExtensions as Extensions
 
@@ -25,7 +25,7 @@ class CfgToolshelfSection:
 
     action_section_display_mode: str = "normal"
     action_section_name: str = "Panel"
-    action_section_contents: TypedList[CfgToolshelfAction] = []
+    action_section_contents: TypedList[CfgTouchifyAction] = []
     action_section_alignment_x: str = "none"
     action_section_alignment_y: str = "none"
     action_section_btn_width: int = 0
@@ -35,10 +35,10 @@ class CfgToolshelfSection:
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
         action_section_contents = Extensions.default_assignment(args, "action_section_contents", [])
-        self.action_section_contents = Extensions.list_assignment(action_section_contents, CfgToolshelfAction)
+        self.action_section_contents = Extensions.list_assignment(action_section_contents, CfgTouchifyAction)
 
     def forceLoad(self):
-        self.action_section_contents = TypedList(self.action_section_contents, CfgToolshelfAction)
+        self.action_section_contents = TypedList(self.action_section_contents, CfgTouchifyAction)
 
     def __str__(self):
         if self.section_type == "actions":
@@ -156,7 +156,7 @@ class CfgToolshelfPanel:
     size_x: int = 0
     size_y: int = 0
     row: int = 0
-    actions: TypedList[CfgToolshelfAction] = []
+    actions: TypedList[CfgTouchifyAction] = []
     sections: TypedList[CfgToolshelfSection] = []
     section_show_tabs: bool = False
     
@@ -167,11 +167,11 @@ class CfgToolshelfPanel:
         sections = Extensions.default_assignment(args, "sections", [])
         actions = Extensions.default_assignment(args, "actions", [])
         self.sections = Extensions.list_assignment(sections, CfgToolshelfSection)
-        self.actions = Extensions.list_assignment(actions, CfgToolshelfAction)
+        self.actions = Extensions.list_assignment(actions, CfgTouchifyAction)
 
     def forceLoad(self):
         self.sections = TypedList(self.sections, CfgToolshelfSection)
-        self.actions = TypedList(self.actions, CfgToolshelfAction)
+        self.actions = TypedList(self.actions, CfgTouchifyAction)
 
     def __str__(self):
         name = self.id.replace("\n", "\\n")
@@ -206,7 +206,7 @@ class CfgToolshelfPanel:
         
 class CfgToolshelf:
     panels: TypedList[CfgToolshelfPanel] = []
-    actions: TypedList[CfgToolshelfAction] = []
+    actions: TypedList[CfgTouchifyAction] = []
     sections: TypedList[CfgToolshelfSection] = []
     
     dockerButtonHeight: int = 32
@@ -218,13 +218,13 @@ class CfgToolshelf:
         panels = Extensions.default_assignment(args, "panels", [])
         self.panels = Extensions.list_assignment(panels, CfgToolshelfPanel)
         actions = Extensions.default_assignment(args, "actions", [])
-        self.actions = Extensions.list_assignment(actions, CfgToolshelfAction)
+        self.actions = Extensions.list_assignment(actions, CfgTouchifyAction)
         sections = Extensions.default_assignment(args, "sections", [])
         self.sections = Extensions.list_assignment(sections, CfgToolshelfSection)
     
     def forceLoad(self):
         self.panels = TypedList(self.panels, CfgToolshelfPanel)
-        self.actions = TypedList(self.actions, CfgToolshelfAction)
+        self.actions = TypedList(self.actions, CfgTouchifyAction)
         self.sections = TypedList(self.sections, CfgToolshelfSection)
 
     def propertygrid_labels(self):

@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from ....resources import ResourceManager
-from ..buttons.ToolshelfButtonBar import ToolshelfButtonBar
+from ..buttons.ToolshelfDockerButtons import ToolshelfDockerButtons
 from ....settings.TouchifyConfig import TouchifyConfig
 from .ToolshelfPage import ToolshelfPage
 from ....cfg.CfgToolshelf import CfgToolshelfPanel
