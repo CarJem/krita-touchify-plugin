@@ -6,7 +6,7 @@ from ....settings.TouchifyConfig import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-class TouchifyActionButton(QPushButton):
+class TouchifyActionButton(QToolButton):
 
     def __init__(self, parent = None):
         super(TouchifyActionButton, self).__init__(parent)

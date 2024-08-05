@@ -145,26 +145,18 @@ class ToolshelfPage(QWidget):
         return widget_groups
     
     def _createActionSection(self, actionInfo: CfgToolshelfSection):
-        actionWidget = TouchifyActionPanel(actionInfo.action_section_contents, self)
+        
+        display_type = "toolbar"
+        if actionInfo.action_section_display_mode == "flat":
+            display_type = "toolbar_flat"
+        
+        icon_size = actionInfo.action_section_icon_size
+        fixed_width = actionInfo.action_section_btn_width
+        fixed_height = actionInfo.action_section_btn_height
+               
+        actionWidget = TouchifyActionPanel(cfg=actionInfo.action_section_contents, parent=self, type=display_type, icon_width=icon_size, icon_height=icon_size, item_height=fixed_height, item_width=fixed_width)
         actionWidget.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
-        #region ActionContainer Setup
-        for btn in actionWidget._buttons:
-            actionBtn = actionWidget._buttons[btn]
-            actionBtn.setStyleSheet(stylesheet.hide_menu_indicator)
-            
-            if actionInfo.action_section_display_mode == "flat":
-                actionBtn.setFlat(True)
-
-            if actionInfo.action_section_icon_size != 0:
-                icnSize = actionInfo.action_section_icon_size
-                actionBtn.setIconSize(QSize(icnSize, icnSize))
-
-            if actionInfo.action_section_btn_height != 0:
-                actionBtn.setFixedHeight(actionInfo.action_section_btn_height)
-            if actionInfo.action_section_btn_width != 0:
-                actionBtn.setFixedWidth(actionInfo.action_section_btn_width)
-
-            actionBtn.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)                    
+        #region ActionContainer Setup    
 
         if actionInfo.action_section_alignment_x != "none" or actionInfo.action_section_alignment_y != "none":
             align_x = actionInfo.action_section_alignment_x

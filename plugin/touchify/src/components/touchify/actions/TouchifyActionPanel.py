@@ -9,6 +9,7 @@ from PyQt5.QtGui import *
 
 from ....cfg.CfgTouchifyAction import CfgTouchifyAction
 from ....resources import ResourceManager
+from .... import stylesheet
 from ....variables import *
 from ....settings.TouchifyConfig import *
 
@@ -23,11 +24,19 @@ EXPANDING_SPACERS = [
 ]
 
 class TouchifyActionPanel(QWidget):
-    def __init__(self, cfg: List[CfgTouchifyAction], parent: QWidget=None,):
+    def __init__(self, cfg: List[CfgTouchifyAction], parent: QWidget=None, type: str = "default", icon_width: int = -1, icon_height: int = -1, item_width: int = -1, item_height: int = -1, opacity: float = 1.0):
         super(TouchifyActionPanel, self).__init__(parent)
 
         self.cfg = cfg
-        self.type = "default"
+        self.type = type
+        
+        self.icon_width: int = icon_width
+        self.icon_height: int = icon_height
+        
+        self.item_width: int = item_width
+        self.item_height: int = item_height
+        
+        self.opacity: float = opacity
 
         self._rows: dict[int, QWidget] = {}
         self._buttons: dict[any, TouchifyActionButton] = {}
@@ -35,8 +44,7 @@ class TouchifyActionPanel(QWidget):
         self.hinted_size: QSize | None = None
         self.registered_actions: list[tuple[QAction, QMetaObject.Connection, bool]] = []
         
-        
-        self.__createPanel()
+        self.createPanel()
 
     def setSizeHint(self, hint: QSize):
         self.hinted_size = hint
@@ -63,7 +71,24 @@ class TouchifyActionPanel(QWidget):
             except TypeError:
                 pass
                        
-       
+    
+    def __finalizeButton(self, btn: TouchifyActionButton):
+        if self.icon_width > 0 and self.icon_height > 0:
+            btn.setIconSize(QSize(self.icon_width, self.icon_height))
+            
+        if self.item_width > 0:
+            btn.setFixedWidth(self.item_width)
+            
+        if self.item_height > 0:
+            btn.setFixedHeight(self.item_height)
+            
+        if self.type == "popup":
+            btn.setStyleSheet(stylesheet.touchify_action_btn_popup(self.opacity))
+            btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+        elif self.type == "toolbar" or self.type == "toolbar_flat":
+            btn.setStyleSheet(stylesheet.touchify_action_btn_toolshelf(self.type == "toolbar_flat"))
+            btn.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        
     def __createButton(self, id: any, row: int, onClick: any, toolTip: str, checkable: bool):
         btn = TouchifyActionButton()
         if onClick:
@@ -99,10 +124,12 @@ class TouchifyActionPanel(QWidget):
             if act.brush_override_icon:
                 if act.use_icon:
                     btn.setIcon(ResourceManager.iconLoader())
+                    if act.text_and_icon: btn.setText(act.text)
                 else:
                     btn.setText(act.text)
             else:
                 btn.setIcon(ResourceManager.brushIcon(id))
+        self.__finalizeButton(btn)
                    
     def __createButton_Menu(self, act: CfgTouchifyAction):
         id = str(uuid.uuid4())
@@ -110,12 +137,14 @@ class TouchifyActionPanel(QWidget):
         
         if act.use_icon:
             btn.setIcon(ResourceManager.iconLoader(act.icon))
+            if act.text_and_icon: btn.setText(act.text)
         else:
             btn.setText(act.text)
         
         contextMenu = TouchifyActionMenu(act, btn)
         btn.setMenu(contextMenu)
         btn.clicked.connect(btn.showMenu)
+        self.__finalizeButton(btn)
         
     def __createButton_Action(self, act: CfgTouchifyAction):
         action = Krita.instance().action(act.action_id)
@@ -130,31 +159,30 @@ class TouchifyActionPanel(QWidget):
             if act.use_icon:
                 if act.action_use_default_icon:
                     btn.setIcon(action.icon())
+                    if act.text_and_icon: btn.setText(act.text)
                 else:
                     btn.setIcon(ResourceManager.iconLoader(act.icon))
+                    if act.text_and_icon: btn.setText(act.text)
             else:
                 btn.setText(act.text)
 
             if checkable:
                 btn.setChecked(action.isChecked())
                 self.registerAction(btn, action, act.action_use_default_icon)
+            self.__finalizeButton(btn)
 
-    def __createPanel(self):
+    def createPanel(self):
         self.ourLayout = QVBoxLayout()
         self.setLayout(self.ourLayout)
-        
-        
-        if self.type == "default":        
-            self.layout().setSpacing(1)
-            self.layout().setContentsMargins(0, 0, 0, 0)
-        
+        self.layout().setSpacing(1)
+        self.layout().setContentsMargins(0, 0, 0, 0)
         
         actions = self.cfg
         for entry in actions:
             act: CfgTouchifyAction = entry
-            if act.action_type == "menu":
+            if act.action_type == CfgTouchifyAction.ActionType.Menu:
                 self.__createButton_Menu(act)
-            elif act.action_type == "brush":
+            elif act.action_type == CfgTouchifyAction.ActionType.Brush:
                 self.__createButton_Brush(act)
-            else:
+            elif act.action_type == CfgTouchifyAction.ActionType.Action:
                 self.__createButton_Action(act)

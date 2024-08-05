@@ -4,7 +4,7 @@ import json
 import sys
 import importlib.util
 
-from ..cfg.CfgWorkspace import CfgWorkspace
+from ..cfg.old.CfgWorkspace import CfgWorkspace
 from ..settings.TouchifyConfig import *
 from ..resources import *
 

@@ -162,10 +162,12 @@
                         {
                             "context_menu_actions": [
                                 {
-                                    "action_id": "isolate_active_layer"
+                                    "action_id": "isolate_active_layer",
+                                    "context_menu_actions": []
                                 },
                                 {
-                                    "action_id": "isolate_active_group"
+                                    "action_id": "isolate_active_group",
+                                    "context_menu_actions": []
                                 }
                             ],
                             "icon": "view-filter",
@@ -178,10 +180,12 @@
                         {
                             "context_menu_actions": [
                                 {
-                                    "action_id": "create_quick_group"
+                                    "action_id": "create_quick_group",
+                                    "context_menu_actions": []
                                 },
                                 {
-                                    "action_id": "quick_ungroup"
+                                    "action_id": "quick_ungroup",
+                                    "context_menu_actions": []
                                 }
                             ],
                             "action_type": "menu",

@@ -19,6 +19,7 @@ from .features.workspace_toggles import *
 from .features.touchify_canvas import *
 from .features.touchify_hotkeys import *
 from .features.canvas_presets import *
+from .features.touchify_actions import *
 
 
 
@@ -30,6 +31,7 @@ class TouchifyInstance(object):
         self.docker_groups = DockerGroups(self)
         self.workspace_toggles = WorkspaceToggles(self)
         self.popup_toggles = PopupButtons(self)
+        self.touchify_actions = TouchifyActions(self)
         self.touchify_looks = TouchifyLooks(self)
         self.touchify_canvas = TouchifyCanvas(self)
         self.touchify_hotkeys = TouchifyHotkeys(self)
@@ -58,10 +60,11 @@ class TouchifyInstance(object):
         subItemPath = TOUCHIFY_ID_MENU_ROOT
 
         self.touchify_hotkeys.createActions(window, subItemPath)
-        self.basic_dockers.createActions(window, subItemPath)  
+        self.touchify_actions.createActions(window, subItemPath)
         self.docker_groups.createActions(window, subItemPath)     
-        self.workspace_toggles.createActions(window, subItemPath)
         self.popup_toggles.createActions(window, subItemPath)
+        #self.basic_dockers.createActions(window, subItemPath)  
+        #self.workspace_toggles.createActions(window, subItemPath)
 
 
         self.mainMenuBar.addSection("Touchify")
@@ -114,10 +117,11 @@ class TouchifyInstance(object):
         self.workspace_toggles.windowCreated()
 
         self.touchify_hotkeys.buildMenu(self.mainMenuBar)
-        self.basic_dockers.buildMenu(self.mainMenuBar)  
+        self.touchify_actions.buildMenu(self.mainMenuBar)
         self.docker_groups.buildMenu(self.mainMenuBar)     
         self.popup_toggles.buildMenu(self.mainMenuBar)
-        self.workspace_toggles.buildMenu(self.mainMenuBar)
+        #self.workspace_toggles.buildMenu(self.mainMenuBar)
+        #self.basic_dockers.buildMenu(self.mainMenuBar)  
 
     def reloadKnownItems(self):
         self.basic_dockers.reloadDockers()

@@ -7,7 +7,7 @@ import importlib.util
 
 from ..variables import *
 
-from ..cfg.CfgDocker import CfgDocker
+from ..cfg.old.CfgDocker import CfgDocker
 from ..settings.TouchifyConfig import *
 from ..resources import *
 

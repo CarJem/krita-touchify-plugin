@@ -7,8 +7,9 @@ from functools import partial
 import sys
 import importlib.util
 
-from ...cfg.CfgPopup import CfgPopup
+from ...cfg.CfgPopup import CfgPopup, CfgPopupActionItem
 from ...settings.TouchifyConfig import *
+from ..touchify.actions.TouchifyActionPanel import *
 from ...resources import *
 from .PopupDialog import *
 
@@ -44,60 +45,48 @@ class PopupDialog_Actions(PopupDialog):
         dialog_height = (item_count_y * item_height)
         return [int(dialog_width), int(dialog_height)]
 
-    def runAction(self, actionName):
-        try:
-            action = Krita.instance().action(actionName)
-            if action:
-                action.trigger()
-        except:
-            pass
-
-    def getActionIcon(self, iconName):
-        return ResourceManager.iconLoader(iconName)
-            
-    def createActionButton(self, layout, text, icon, action, x, y):
-
-        opacityLevel = self.metadata.opacity
-
-        btn = QToolButton()
-        btn.setStyleSheet(stylesheet.touchify_popup_action_btn(opacityLevel))
-        btn.setText(text)
-        btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
-
-        if icon:
-            btn.setIcon(self.getActionIcon(icon))
-            btn.setIconSize(QSize(self.metadata.actions_icon_width, self.metadata.actions_icon_height))
-
-        btn.setWindowOpacity(opacityLevel)
-        btn.setFixedSize(self.metadata.actions_item_width, self.metadata.actions_item_height)
-        btn.clicked.connect(lambda: self.runAction(action))
-        layout.addWidget(btn, x, y)
-
     def triggerPopup(self, mode:str, parent: QWidget | None):
         super().triggerPopup(mode, parent)    
 
-    def generateActionsLayout(self):
-        layout = QGridLayout()
-
+    def generateActionsLayout(self):   
+        layout = QVBoxLayout()
+        
+        converted_actions: list[CfgTouchifyAction] = []
+            
         current_x = 0
         current_y = 0
         current_index = 0
-
+        
         padding = self.metadata.actions_grid_padding
         maximum_x = self.metadata.actions_grid_width
-        item_count = len(self.metadata.actions_items)
-
-        while current_index < item_count:
+        
+        actionItem: CfgPopupActionItem
+        for actionItem in self.metadata.actions_items:
             if not current_x < maximum_x:
                 current_y += 1
                 current_x = 0
             
-            btn = self.metadata.actions_items[current_index]
-            self.createActionButton(layout, btn.text, btn.icon, btn.action, current_y, current_x)
+            newAction = CfgTouchifyAction()
+            newAction.action_id = actionItem.action
+            newAction.text = actionItem.text
+            newAction.icon = actionItem.icon
+            newAction.text_and_icon = True
+            newAction.row = current_y
+            converted_actions.append(newAction)
+            
             current_x += 1
             current_index += 1
-
+        
+        icon_width = self.metadata.actions_icon_width
+        icon_height = self.metadata.actions_icon_height
+        
+        item_width = self.metadata.actions_item_width
+        item_height = self.metadata.actions_item_height
+        
+        self.actionPanel = TouchifyActionPanel(converted_actions, None, "popup", icon_width, icon_height, item_width, item_height)
+        layout.addWidget(self.actionPanel)
+        
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setHorizontalSpacing(padding)
-        layout.setVerticalSpacing(padding)
+        layout.setSpacing(padding)
+        
         return layout

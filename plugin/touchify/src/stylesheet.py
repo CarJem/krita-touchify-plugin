@@ -178,7 +178,23 @@ touchify_toolshelf_header_button = f"""
         }}
         """
 
-def touchify_popup_action_btn(opacityLevel: float):
+
+def touchify_action_btn_toolshelf(isFlat: bool):
+        flatStyle = f"""
+            QToolButton  {{
+                border: 0px solid transparent;
+            }}
+        """
+        
+        result = f"""QToolButton::menu-indicator {{ image: none; }}"""
+        
+        if isFlat:
+            result += flatStyle
+            
+        return result
+            
+
+def touchify_action_btn_popup(opacityLevel: float):
     return f"""
         QToolButton {{
             border-radius: 0px; 

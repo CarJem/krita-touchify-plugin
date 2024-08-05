@@ -205,16 +205,20 @@
                 {
                     "context_menu_actions": [
                         {
-                            "action_id": "view_ruler"
+                            "action_id": "view_ruler",
+                            "context_menu_actions": []
                         },
                         {
-                            "action_id": "view_toggle_reference_images"
+                            "action_id": "view_toggle_reference_images",
+                            "context_menu_actions": []
                         },
                         {
-                            "action_id": "view_toggle_painting_assistants"
+                            "action_id": "view_toggle_painting_assistants",
+                            "context_menu_actions": []
                         },
                         {
-                            "action_id": "show-global-selection-mask"
+                            "action_id": "show-global-selection-mask",
+                            "context_menu_actions": []
                         }
                     ],
                     "action_id": "deselect",

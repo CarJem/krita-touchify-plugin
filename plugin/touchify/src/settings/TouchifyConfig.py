@@ -7,10 +7,11 @@ from ..cfg.CfgHotkeys import CfgHotkeys
 from ..ext.extensions_json import JsonExtensions
 from ..cfg.CfgToolshelf import CfgToolshelf
 from ..variables import *
-from ..cfg.CfgDocker import CfgDocker
+from ..cfg.old.CfgDocker import CfgDocker
 from ..cfg.CfgDockerGroup import CfgDockerGroup
 from ..cfg.CfgPopup import CfgPopup
-from ..cfg.CfgWorkspace import CfgWorkspace
+from ..cfg.old.CfgWorkspace import CfgWorkspace
+from ..cfg.CfgTouchifyRegistry import CfgTouchifyRegistry
 from ..ext.extensions import *
 from ...paths import BASE_DIR
 import copy
@@ -29,6 +30,7 @@ class TouchifyConfig:
             self.popups: TypedList[CfgPopup] = []
             self.workspaces: TypedList[CfgWorkspace] = []
             
+            self.actions_registry: CfgTouchifyRegistry = CfgTouchifyRegistry()
             self.hotkeys: CfgHotkeys = CfgHotkeys()
             self.toolshelf_main: CfgToolshelf = CfgToolshelf()
             self.toolshelf_alt: CfgToolshelf = CfgToolshelf()
@@ -72,14 +74,15 @@ class TouchifyConfig:
             labels["toolshelf_alt"] = "Toolbox Shelf"
             labels["toolshelf_main"] = "Sidebar Shelf"
             labels["toolshelf_docker"] = "Docker Shelf"
+            labels["actions_registry"] = "Registry"
             labels["hotkeys"] = "Hotkeys"
             return labels
 
         def propertygrid_groups(self):
             groups = {}
             groups["core"] = {"name": "Core Features", "items": ["dockers", "docker_groups", "popups", "workspaces"]}
-            groups["canvas"] = {"name": "Toolshelf Widgets", "items": ["toolshelf_alt", "toolshelf_main", "toolshelf_docker"]}
-            groups["miscellaneous"] = {"name": "Miscellaneous", "items": ["hotkeys"]}
+            #groups["canvas"] = {"name": "Toolshelf Widgets", "items": ["toolshelf_alt", "toolshelf_main", "toolshelf_docker"]}
+            #groups["miscellaneous"] = {"name": "Miscellaneous", "items": ["hotkeys"]}
             return groups
         
         def propertygrid_restrictions(self):
@@ -88,6 +91,7 @@ class TouchifyConfig:
             restrictions["toolshelf_main"] = {"type": "expandable"}
             restrictions["toolshelf_alt"] = {"type": "expandable"}
             restrictions["toolshelf_docker"] = {"type": "expandable"}
+            restrictions["actions_registry"] = {"type": "expandable"}
             return restrictions
         
         def save(self):
@@ -95,6 +99,7 @@ class TouchifyConfig:
             self.save_chunk(self.docker_groups, "docker_groups")
             self.save_chunk(self.popups, "popups")
             self.save_chunk(self.workspaces, "workspaces")
+            self.saveClass(self.actions_registry, "actions_registry")
             self.saveClass(self.hotkeys, "hotkeys")
             self.saveClass(self.toolshelf_main, "toolshelf_main")
             self.saveClass(self.toolshelf_alt, "toolshelf_alt")
@@ -105,6 +110,7 @@ class TouchifyConfig:
             self.docker_groups = self.load_chunk("docker_groups", CfgDockerGroup)
             self.popups = self.load_chunk("popups", CfgPopup)
             self.workspaces = self.load_chunk("workspaces", CfgWorkspace)
+            self.actions_registry = self.loadClass("actions_registry", CfgTouchifyRegistry)
             self.hotkeys = self.loadClass("hotkeys", CfgHotkeys)
             self.toolshelf_main = self.loadClass("toolshelf_main", CfgToolshelf)
             self.toolshelf_alt = self.loadClass("toolshelf_alt", CfgToolshelf)
