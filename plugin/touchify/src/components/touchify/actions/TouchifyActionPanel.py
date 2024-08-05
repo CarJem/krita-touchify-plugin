@@ -1,18 +1,15 @@
 import uuid
+from krita import *
 
-from .TouchifyActionBar import TouchifyActionBar
 from .TouchifyActionButton import TouchifyActionButton
 from .TouchifyActionMenu import TouchifyActionMenu
 
-from ....cfg.CfgTouchifyAction import CfgTouchifyAction
-
-from ....resources import ResourceManager
-from ....variables import *
-from ....cfg.CfgTouchifyAction import CfgTouchifyAction
-from krita import *
-
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+
+from ....cfg.CfgTouchifyAction import CfgTouchifyAction
+from ....resources import ResourceManager
+from ....variables import *
 from ....settings.TouchifyConfig import *
 
 
@@ -30,18 +27,16 @@ class TouchifyActionPanel(QWidget):
         super(TouchifyActionPanel, self).__init__(parent)
 
         self.cfg = cfg
+        self.type = "default"
 
+        self._rows: dict[int, QWidget] = {}
+        self._buttons: dict[any, TouchifyActionButton] = {}
+        
         self.hinted_size: QSize | None = None
         self.registered_actions: list[tuple[QAction, QMetaObject.Connection, bool]] = []
-
-        self.ourLayout = QVBoxLayout()
-        self.ourLayout.setSpacing(0)
-        self.ourLayout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(self.ourLayout)
-
-        self.bar = TouchifyActionBar(self)
-        self.initQuickActions()
-        self.ourLayout.addWidget(self.bar)
+        
+        
+        self.__createPanel()
 
     def setSizeHint(self, hint: QSize):
         self.hinted_size = hint
@@ -68,16 +63,39 @@ class TouchifyActionPanel(QWidget):
             except TypeError:
                 pass
                        
-    def __brushButtonClicked(self, id: Resource):
-        Krita.instance().activeWindow().activeView().setCurrentBrushPreset(id)
-            
-    def __createBrushButton(self, act: CfgTouchifyAction):
+       
+    def __createButton(self, id: any, row: int, onClick: any, toolTip: str, checkable: bool):
+        btn = TouchifyActionButton()
+        if onClick:
+            btn.clicked.connect(onClick) # collect and disconnect all when closing
+        btn.setToolTip(toolTip)
+        btn.setContentsMargins(0,0,0,0)
+        btn.setCheckable(checkable)
+        self._buttons[id] = btn
+
+        if row not in self._rows:
+            rowWid = QWidget()
+            rowWid.setLayout(QHBoxLayout())
+            rowWid.layout().setSpacing(1)
+            rowWid.layout().setContentsMargins(0, 0, 0, 0)
+            rowWid.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+            self._rows[row] = rowWid
+            self.layout().addWidget(rowWid)
+
+        self._rows[row].layout().addWidget(btn)
+        return btn
+   
+    def __createButton_Brush(self, act: CfgTouchifyAction):
+        
+        def __brushButtonClicked(self, id: Resource):
+            Krita.instance().activeWindow().activeView().setCurrentBrushPreset(id)
+        
         id = act.brush_name
         brush_presets = ResourceManager.getBrushPresets()
         
         if id in brush_presets:
             preset = brush_presets[id]
-            btn = self.bar.addButton(id, act.row, lambda: self.__brushButtonClicked(preset), preset.name(), False)
+            btn = self.__createButton(id, act.row, lambda: __brushButtonClicked(preset), preset.name(), False)
             if act.brush_override_icon:
                 if act.use_icon:
                     btn.setIcon(ResourceManager.iconLoader())
@@ -86,9 +104,9 @@ class TouchifyActionPanel(QWidget):
             else:
                 btn.setIcon(ResourceManager.brushIcon(id))
                    
-    def __createMenuButton(self, act: CfgTouchifyAction):
+    def __createButton_Menu(self, act: CfgTouchifyAction):
         id = str(uuid.uuid4())
-        btn = self.bar.addButton(id, act.row, None, act.context_menu_name, False)
+        btn = self.__createButton(id, act.row, None, act.context_menu_name, False)
         
         if act.use_icon:
             btn.setIcon(ResourceManager.iconLoader(act.icon))
@@ -99,7 +117,7 @@ class TouchifyActionPanel(QWidget):
         btn.setMenu(contextMenu)
         btn.clicked.connect(btn.showMenu)
         
-    def __createActionButton(self, act: CfgTouchifyAction):
+    def __createButton_Action(self, act: CfgTouchifyAction):
         action = Krita.instance().action(act.action_id)
         if action:
             checkable = action.isCheckable()
@@ -107,7 +125,7 @@ class TouchifyActionPanel(QWidget):
                 checkable = False
                 
                 
-            btn = self.bar.addButton(act.action_id, act.row, action.trigger, action.toolTip(), checkable)
+            btn = self.__createButton(act.action_id, act.row, action.trigger, action.toolTip(), checkable)
             
             if act.use_icon:
                 if act.action_use_default_icon:
@@ -121,13 +139,22 @@ class TouchifyActionPanel(QWidget):
                 btn.setChecked(action.isChecked())
                 self.registerAction(btn, action, act.action_use_default_icon)
 
-    def initQuickActions(self):
+    def __createPanel(self):
+        self.ourLayout = QVBoxLayout()
+        self.setLayout(self.ourLayout)
+        
+        
+        if self.type == "default":        
+            self.layout().setSpacing(1)
+            self.layout().setContentsMargins(0, 0, 0, 0)
+        
+        
         actions = self.cfg
         for entry in actions:
             act: CfgTouchifyAction = entry
             if act.action_type == "menu":
-                self.__createMenuButton(act)
+                self.__createButton_Menu(act)
             elif act.action_type == "brush":
-                self.__createBrushButton(act)
+                self.__createButton_Brush(act)
             else:
-                self.__createActionButton(act)
+                self.__createButton_Action(act)

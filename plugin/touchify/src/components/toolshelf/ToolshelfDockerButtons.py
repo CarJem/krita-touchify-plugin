@@ -1,14 +1,10 @@
 
 
 from PyQt5.QtGui import QColor, QIcon, QImage, QPalette, QPixmap
-
-from ....cfg.CfgTouchifyAction import CfgTouchifyAction
-from ....cfg.CfgToolshelf import CfgToolshelfPanel
-from ....resources import ResourceManager
 from krita import *
 
 
-from ....settings.TouchifyConfig import *
+from ...settings.TouchifyConfig import *
 
 from PyQt5.QtWidgets import QSizePolicy, QPushButton, QWidget, QHBoxLayout
 from PyQt5.QtCore import QSize, Qt

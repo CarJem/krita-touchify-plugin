@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 from ..touchify.actions.TouchifyActionPanel import TouchifyActionPanel
-from .pages.ToolshelfPage import ToolshelfPage
+from .ToolshelfPage import ToolshelfPage
 
 from ...settings.TouchifyConfig import *
 from ...variables import *
@@ -13,8 +13,8 @@ from ...docker_manager import *
 from .ToolshelfContainer import *
 
 from ...cfg.CfgToolshelf import CfgToolshelfPanel
-from .pages.ToolshelfPageMain import ToolshelfPageMain
-from .pages.ToolshelfPage import ToolshelfPage
+from .ToolshelfPageMain import ToolshelfPageMain
+from .ToolshelfPage import ToolshelfPage
 
  
 class ToolshelfWidget(QDockWidget):

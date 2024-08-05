@@ -4,9 +4,9 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from .buttons.ToolshelfPanelHeader import ToolshelfPanelHeader
+from .ToolshelfPanelHeader import ToolshelfPanelHeader
 from ..touchify.actions.TouchifyActionPanel import TouchifyActionPanel
-from .pages.ToolshelfPage import ToolshelfPage
+from .ToolshelfPage import ToolshelfPage
 from ..DockerContainer import DockerContainer
 
 from ...settings.TouchifyConfig import *
@@ -14,8 +14,8 @@ from ...variables import *
 from ...docker_manager import *
 
 from ...cfg.CfgToolshelf import CfgToolshelfPanel
-from .pages.ToolshelfPageMain import ToolshelfPageMain
-from .pages.ToolshelfPage import ToolshelfPage
+from .ToolshelfPageMain import ToolshelfPageMain
+from .ToolshelfPage import ToolshelfPage
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

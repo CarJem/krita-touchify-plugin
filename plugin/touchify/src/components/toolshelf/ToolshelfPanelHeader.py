@@ -5,14 +5,14 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
-from ....settings.TouchifyConfig import *
-from ....variables import *
-from ....docker_manager import *
-from .... import stylesheet
+from ...settings.TouchifyConfig import *
+from ...variables import *
+from ...docker_manager import *
+from ... import stylesheet
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..ToolshelfContainer import ToolshelfContainer
+    from .ToolshelfContainer import ToolshelfContainer
 
 class ToolshelfPanelHeader(QWidget):
     def __init__(self, cfg: CfgToolshelf, isRootHeader: bool = True, parent: "ToolshelfContainer" = None):

@@ -3,23 +3,23 @@ from uuid import uuid4
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from ....resources import ResourceManager
+from ...resources import ResourceManager
 
-from ..buttons.ToolshelfDockerButtons import ToolshelfDockerButtons
+from .ToolshelfDockerButtons import ToolshelfDockerButtons
 
-from ..buttons.ToolshelfPageTabWidget import ToolshelfPageTabWidget
-from ....docker_manager import DockerManager
-from ...touchify.actions.TouchifyActionPanel import TouchifyActionPanel
-from ....cfg.CfgToolshelf import CfgToolshelfPanel
-from ....cfg.CfgToolshelf import CfgToolshelfSection
-from ...DockerContainer import DockerContainer
-from .... import stylesheet
+from .ToolshelfPageTabWidget import ToolshelfPageTabWidget
+from ...docker_manager import DockerManager
+from ..touchify.actions.TouchifyActionPanel import TouchifyActionPanel
+from ...cfg.CfgToolshelf import CfgToolshelfPanel
+from ...cfg.CfgToolshelf import CfgToolshelfSection
+from ..DockerContainer import DockerContainer
+from ... import stylesheet
 
 from krita import *
 
 from typing import TYPE_CHECKING, Mapping
 if TYPE_CHECKING:
-    from ..ToolshelfContainer import ToolshelfContainer
+    from .ToolshelfContainer import ToolshelfContainer
 
 class ToolshelfSplitter(QWidget):
     def __init__(self, orientation: Qt.Orientation, parent: QWidget | None = None) -> None:
@@ -72,12 +72,12 @@ class ToolshelfPage(QWidget):
             
 
         self.quickActions = TouchifyActionPanel(self.panelProperties.actions, self)
-        self.quickActions.bar.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        self.quickActions.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         
-        for btnKey in self.quickActions.bar._buttons:
-            self.quickActions.bar._buttons[btnKey].setFixedHeight(self.panelProperties.actionHeight)
-            self.quickActions.bar._buttons[btnKey].setMinimumWidth(self.panelProperties.actionHeight)
-            self.quickActions.bar._buttons[btnKey].setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
+        for btnKey in self.quickActions._buttons:
+            self.quickActions._buttons[btnKey].setFixedHeight(self.panelProperties.actionHeight)
+            self.quickActions._buttons[btnKey].setMinimumWidth(self.panelProperties.actionHeight)
+            self.quickActions._buttons[btnKey].setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
         self.shelfLayout.addWidget(self.quickActions)
         self._initSections()
     
@@ -148,8 +148,8 @@ class ToolshelfPage(QWidget):
         actionWidget = TouchifyActionPanel(actionInfo.action_section_contents, self)
         actionWidget.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
         #region ActionContainer Setup
-        for btn in actionWidget.bar._buttons:
-            actionBtn = actionWidget.bar._buttons[btn]
+        for btn in actionWidget._buttons:
+            actionBtn = actionWidget._buttons[btn]
             actionBtn.setStyleSheet(stylesheet.hide_menu_indicator)
             
             if actionInfo.action_section_display_mode == "flat":
@@ -189,13 +189,13 @@ class ToolshelfPage(QWidget):
 
             actionWidget.layout().setAlignment(alignment_x | alignment_y)
             if expand_x:
-                actionWidget.bar.setSizePolicy(expand_x, expand_y)
+                actionWidget.setSizePolicy(expand_x, expand_y)
 
         if actionInfo.size_x != 0 or actionInfo.size_y != 0:
             if actionInfo.size_x != 0:
-                actionWidget.bar.setFixedWidth(actionInfo.size_x)
+                actionWidget.setFixedWidth(actionInfo.size_x)
             if actionInfo.size_y != 0:
-                actionWidget.bar.setFixedHeight(actionInfo.size_y)
+                actionWidget.setFixedHeight(actionInfo.size_y)
         else:
             if actionInfo.min_size_x != 0:
                 actionWidget.setMinimumWidth(actionInfo.min_size_x)

@@ -6,7 +6,7 @@ from krita import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..pages.ToolshelfPage import ToolshelfPage
+    from .ToolshelfPage import ToolshelfPage
 
 class ToolshelfPageTabWidget(QWidget):
     def __init__(self, parent: "ToolshelfPage") -> None:

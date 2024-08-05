@@ -2,16 +2,16 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from ....resources import ResourceManager
-from ..buttons.ToolshelfDockerButtons import ToolshelfDockerButtons
-from ....settings.TouchifyConfig import TouchifyConfig
+from ...resources import ResourceManager
+from .ToolshelfDockerButtons import ToolshelfDockerButtons
+from ...settings.TouchifyConfig import TouchifyConfig
 from .ToolshelfPage import ToolshelfPage
-from ....cfg.CfgToolshelf import CfgToolshelfPanel
-from .... import stylesheet
+from ...cfg.CfgToolshelf import CfgToolshelfPanel
+from ... import stylesheet
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..ToolshelfContainer import ToolshelfContainer
+    from .ToolshelfContainer import ToolshelfContainer
 
 class ToolshelfPageMain(ToolshelfPage):
     def __init__(self, parent: "ToolshelfContainer", panel_index : int):
