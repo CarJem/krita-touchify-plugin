@@ -4,15 +4,15 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from ..touchify.actions.TouchifyActionPanel import TouchifyActionPanel
+from ...touchify.actions.TouchifyActionPanel import TouchifyActionPanel
 from .ToolshelfPage import ToolshelfPage
 
-from ...settings.TouchifyConfig import *
-from ...variables import *
-from ...docker_manager import *
+from ....settings.TouchifyConfig import *
+from ....variables import *
+from ....docker_manager import *
 from .ToolshelfContainer import *
 
-from ...cfg.CfgToolshelf import CfgToolshelfPanel
+from ....cfg.CfgToolshelf import CfgToolshelfPanel
 from .ToolshelfPageMain import ToolshelfPageMain
 from .ToolshelfPage import ToolshelfPage
 

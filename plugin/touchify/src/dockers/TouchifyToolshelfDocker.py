@@ -8,7 +8,7 @@ from ..docker_manager import DockerManager
 if TYPE_CHECKING:
     from ..touchify_instance import TouchifyInstance
 
-from ..components.toolshelf.ToolshelfContainer import ToolshelfContainer
+from ..components.touchify.toolshelf.ToolshelfContainer import ToolshelfContainer
 
 from ..resources import ResourceManager
 

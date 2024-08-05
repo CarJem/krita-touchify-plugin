@@ -12,7 +12,7 @@ from ... import stylesheet
 from .NtWidgetPad import NtWidgetPad
 from krita import *
 from ...variables import *
-from ..toolshelf.ToolshelfWidget import ToolshelfWidget
+from ..touchify.toolshelf.ToolshelfWidget import ToolshelfWidget
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

@@ -3,17 +3,17 @@ from uuid import uuid4
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from ...resources import ResourceManager
+from ....resources import ResourceManager
 
 from .ToolshelfDockerButtons import ToolshelfDockerButtons
 
 from .ToolshelfPageTabWidget import ToolshelfPageTabWidget
-from ...docker_manager import DockerManager
-from ..touchify.actions.TouchifyActionPanel import TouchifyActionPanel
-from ...cfg.CfgToolshelf import CfgToolshelfPanel
-from ...cfg.CfgToolshelf import CfgToolshelfSection
-from ..DockerContainer import DockerContainer
-from ... import stylesheet
+from ....docker_manager import DockerManager
+from ...touchify.actions.TouchifyActionPanel import TouchifyActionPanel
+from ....cfg.CfgToolshelf import CfgToolshelfPanel
+from ....cfg.CfgToolshelf import CfgToolshelfSection
+from ...DockerContainer import DockerContainer
+from .... import stylesheet
 
 from krita import *
 

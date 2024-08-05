@@ -2,12 +2,12 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from ...resources import ResourceManager
+from ....resources import ResourceManager
 from .ToolshelfDockerButtons import ToolshelfDockerButtons
-from ...settings.TouchifyConfig import TouchifyConfig
+from ....settings.TouchifyConfig import TouchifyConfig
 from .ToolshelfPage import ToolshelfPage
-from ...cfg.CfgToolshelf import CfgToolshelfPanel
-from ... import stylesheet
+from ....cfg.CfgToolshelf import CfgToolshelfPanel
+from .... import stylesheet
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

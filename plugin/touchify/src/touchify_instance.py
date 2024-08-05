@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QMessageBox
 
 from ..src.dockers import TouchifyToolshelfDocker
-from .components.toolshelf.ToolshelfWidget import ToolshelfWidget
 
 
 from .ext.extensions_pyqt import PyQtExtensions
