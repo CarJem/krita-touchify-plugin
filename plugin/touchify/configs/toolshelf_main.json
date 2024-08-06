@@ -64,7 +64,6 @@
             "actionHeight": 20,
             "icon": "extended_color_selector",
             "id": "Colors",
-            "row": 0,
             "size_x": 0,
             "size_y": 0
         },
@@ -119,12 +118,12 @@
                             "action_use_default_icon": true,
                             "action_type": "action",
                             "icon": "",
-                            "row": 0,
+                            "action_panel_row": 0,
                             "context_menu_actions": []
                         },
                         {
                             "context_menu_actions": [],
-                            "use_icon": true,
+                            "action_use_icon": true,
                             "action_id": "RenameCurrentLayer",
                             "action_type": "action",
                             "action_use_default_icon": false,
@@ -132,7 +131,7 @@
                             "brush_override_icon": false,
                             "context_menu_name": "",
                             "icon": "edit-rename",
-                            "row": 0,
+                            "action_panel_row": 0,
                             "text": ""
                         }
                     ],
@@ -173,7 +172,7 @@
                             "icon": "view-filter",
                             "action_type": "menu",
                             "context_menu_name": "Isolate...",
-                            "row": 0,
+                            "action_panel_row": 0,
                             "action_id": "",
                             "action_use_default_icon": false
                         },
@@ -191,7 +190,7 @@
                             "action_type": "menu",
                             "context_menu_name": "Grouping...",
                             "icon": "groupLayer",
-                            "row": 0,
+                            "action_panel_row": 0,
                             "action_use_default_icon": false
                         }
                     ],
@@ -221,7 +220,6 @@
             "actionHeight": 10,
             "id": "Layers",
             "icon": "all-layers",
-            "row": 0,
             "size_x": 0,
             "size_y": 0,
             "section_show_tabs": false
@@ -255,7 +253,7 @@
                     "action_section_contents": [
                         {
                             "context_menu_actions": [],
-                            "use_icon": true,
+                            "action_use_icon": true,
                             "action_id": "show_brush_editor",
                             "action_type": "action",
                             "action_use_default_icon": false,
@@ -263,7 +261,7 @@
                             "brush_override_icon": false,
                             "context_menu_name": "",
                             "icon": "paintop_settings_02",
-                            "row": 0,
+                            "action_panel_row": 0,
                             "text": ""
                         }
                     ],
@@ -293,7 +291,6 @@
             "actionHeight": 10,
             "id": "Brush Presets",
             "icon": "material:brush",
-            "row": 0,
             "size_x": 0,
             "size_y": 0,
             "section_show_tabs": false
@@ -306,20 +303,20 @@
                 {
                     "action_id": "eraser_preset_action",
                     "icon": "draw-eraser",
-                    "row": 0,
+                    "action_panel_row": 0,
                     "context_menu_actions": []
                 },
                 {
                     "icon": "bar-transparency-unlocked",
                     "action_id": "preserve_alpha",
-                    "row": 0,
+                    "action_panel_row": 0,
                     "action_use_default_icon": true,
                     "context_menu_actions": []
                 },
                 {
                     "action_id": "reload_preset_action",
                     "icon": "reload-preset",
-                    "row": 0,
+                    "action_panel_row": 0,
                     "context_menu_actions": []
                 }
             ],
@@ -372,14 +369,14 @@
                 {
                     "icon": "material:palette-swatch-variant",
                     "action_id": "touchify_popup_quick-settings",
-                    "row": 0,
+                    "action_panel_row": 0,
                     "action_use_default_icon": false,
                     "context_menu_actions": []
                 },
                 {
                     "icon": "custom:pencil-ruler-outline",
                     "action_id": "touchify_popup_brushOptionsPopup",
-                    "row": 1,
+                    "action_panel_row": 1,
                     "action_use_default_icon": false,
                     "context_menu_actions": []
                 }

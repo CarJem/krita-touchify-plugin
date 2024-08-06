@@ -4,9 +4,9 @@
         {
             "icon": "",
             "action_id": "file_new",
-            "row": 0,
+            "action_panel_row": 0,
             "context_menu_actions": [],
-            "use_icon": true,
+            "action_use_icon": true,
             "action_type": "action",
             "action_use_default_icon": true,
             "brush_name": "",
@@ -17,9 +17,9 @@
         {
             "icon": "",
             "action_id": "file_open",
-            "row": 0,
+            "action_panel_row": 0,
             "context_menu_actions": [],
-            "use_icon": true,
+            "action_use_icon": true,
             "action_type": "action",
             "action_use_default_icon": true,
             "brush_name": "",
@@ -29,7 +29,7 @@
         },
         {
             "context_menu_actions": [],
-            "use_icon": true,
+            "action_use_icon": true,
             "action_id": "file_save",
             "action_type": "action",
             "action_use_default_icon": true,
@@ -37,12 +37,12 @@
             "brush_override_icon": false,
             "context_menu_name": "",
             "icon": "",
-            "row": 0,
+            "action_panel_row": 0,
             "text": ""
         },
         {
             "context_menu_actions": [],
-            "use_icon": true,
+            "action_use_icon": true,
             "action_id": "touchify_popup_selection-tool",
             "action_type": "action",
             "action_use_default_icon": false,
@@ -50,12 +50,12 @@
             "brush_override_icon": false,
             "context_menu_name": "",
             "icon": "custom:SelectionTool",
-            "row": 0,
+            "action_panel_row": 0,
             "text": ""
         },
         {
             "context_menu_actions": [],
-            "use_icon": true,
+            "action_use_icon": true,
             "action_id": "touchify_showPopupMenu",
             "action_type": "action",
             "action_use_default_icon": false,
@@ -63,12 +63,12 @@
             "brush_override_icon": false,
             "context_menu_name": "",
             "icon": "material:menu",
-            "row": 0,
+            "action_panel_row": 0,
             "text": ""
         },
         {
             "context_menu_actions": [],
-            "use_icon": true,
+            "action_use_icon": true,
             "action_id": "edit_undo",
             "action_type": "action",
             "action_use_default_icon": true,
@@ -76,12 +76,12 @@
             "brush_override_icon": false,
             "context_menu_name": "",
             "icon": "",
-            "row": 1,
+            "action_panel_row": 1,
             "text": ""
         },
         {
             "context_menu_actions": [],
-            "use_icon": true,
+            "action_use_icon": true,
             "action_id": "edit_redo",
             "action_type": "action",
             "action_use_default_icon": true,
@@ -89,7 +89,7 @@
             "brush_override_icon": false,
             "context_menu_name": "",
             "icon": "",
-            "row": 1,
+            "action_panel_row": 1,
             "text": ""
         }
     ],
@@ -128,7 +128,7 @@
             "action_section_contents": [
                 {
                     "context_menu_actions": [],
-                    "use_icon": true,
+                    "action_use_icon": true,
                     "action_id": "view_show_canvas_only",
                     "action_type": "action",
                     "action_use_default_icon": false,
@@ -136,12 +136,12 @@
                     "brush_override_icon": false,
                     "context_menu_name": "",
                     "icon": "config-canvas-only",
-                    "row": 0,
+                    "action_panel_row": 0,
                     "text": ""
                 },
                 {
                     "context_menu_actions": [],
-                    "use_icon": true,
+                    "action_use_icon": true,
                     "action_id": "mirror_canvas",
                     "action_type": "action",
                     "action_use_default_icon": true,
@@ -149,12 +149,12 @@
                     "brush_override_icon": false,
                     "context_menu_name": "",
                     "icon": "",
-                    "row": 0,
+                    "action_panel_row": 0,
                     "text": ""
                 },
                 {
                     "context_menu_actions": [],
-                    "use_icon": true,
+                    "action_use_icon": true,
                     "action_id": "fullscreen",
                     "action_type": "action",
                     "action_use_default_icon": true,
@@ -162,7 +162,7 @@
                     "brush_override_icon": false,
                     "context_menu_name": "",
                     "icon": "",
-                    "row": 0,
+                    "action_panel_row": 0,
                     "text": ""
                 }
             ],
@@ -191,7 +191,7 @@
             "action_section_contents": [
                 {
                     "context_menu_actions": [],
-                    "use_icon": true,
+                    "action_use_icon": true,
                     "action_id": "show_snap_options_popup",
                     "action_type": "action",
                     "action_use_default_icon": false,
@@ -199,7 +199,7 @@
                     "brush_override_icon": false,
                     "context_menu_name": "",
                     "icon": "material:vector-link",
-                    "row": 0,
+                    "action_panel_row": 0,
                     "text": "Snap"
                 },
                 {
@@ -224,10 +224,10 @@
                     "action_id": "deselect",
                     "action_use_default_icon": true,
                     "icon": "krita_tool_assistant",
-                    "row": 0,
+                    "action_panel_row": 0,
                     "action_type": "menu",
                     "context_menu_name": "Assistants",
-                    "use_icon": true,
+                    "action_use_icon": true,
                     "brush_name": "",
                     "brush_override_icon": false,
                     "text": ""

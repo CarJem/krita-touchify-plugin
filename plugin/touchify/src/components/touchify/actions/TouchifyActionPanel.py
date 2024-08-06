@@ -120,11 +120,11 @@ class TouchifyActionPanel(QWidget):
         
         if id in brush_presets:
             preset = brush_presets[id]
-            btn = self.__createButton(id, act.row, lambda: __brushButtonClicked(preset), preset.name(), False)
+            btn = self.__createButton(id, act.action_panel_row, lambda: __brushButtonClicked(preset), preset.name(), False)
             if act.brush_override_icon:
-                if act.use_icon:
+                if act.action_use_icon:
                     btn.setIcon(ResourceManager.iconLoader())
-                    if act.text_and_icon: btn.setText(act.text)
+                    if act.action_text_and_icon: btn.setText(act.text)
                 else:
                     btn.setText(act.text)
             else:
@@ -133,11 +133,11 @@ class TouchifyActionPanel(QWidget):
                    
     def __createButton_Menu(self, act: CfgTouchifyAction):
         id = str(uuid.uuid4())
-        btn = self.__createButton(id, act.row, None, act.context_menu_name, False)
+        btn = self.__createButton(id, act.action_panel_row, None, act.context_menu_name, False)
         
-        if act.use_icon:
+        if act.action_use_icon:
             btn.setIcon(ResourceManager.iconLoader(act.icon))
-            if act.text_and_icon: btn.setText(act.text)
+            if act.action_text_and_icon: btn.setText(act.text)
         else:
             btn.setText(act.text)
         
@@ -154,15 +154,15 @@ class TouchifyActionPanel(QWidget):
                 checkable = False
                 
                 
-            btn = self.__createButton(act.action_id, act.row, action.trigger, action.toolTip(), checkable)
+            btn = self.__createButton(act.action_id, act.action_panel_row, action.trigger, action.toolTip(), checkable)
             
-            if act.use_icon:
+            if act.action_use_icon:
                 if act.action_use_default_icon:
                     btn.setIcon(action.icon())
-                    if act.text_and_icon: btn.setText(act.text)
+                    if act.action_text_and_icon: btn.setText(act.text)
                 else:
                     btn.setIcon(ResourceManager.iconLoader(act.icon))
-                    if act.text_and_icon: btn.setText(act.text)
+                    if act.action_text_and_icon: btn.setText(act.text)
             else:
                 btn.setText(act.text)
 

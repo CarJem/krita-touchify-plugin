@@ -7,10 +7,10 @@ from ..ext.extensions import Extensions
 
 
 class KS_Color:
-    def __init__(self, _r = 0, _g = 0, _b = 0):
-        self.r = _r if  0 <= _r <= 255 else 0
-        self.g =  _g if  0 <=  _g <= 255 else 0
-        self.b = _b if  0 <= _b <= 255 else 0
+    def __init__(self, r = 0, g = 0, b = 0):
+        self.r = r if  0 <= r <= 255 else 0
+        self.g =  g if  0 <=  g <= 255 else 0
+        self.b = b if  0 <= b <= 255 else 0
         
         
     def setOpacityFloat(self, value: float):
@@ -26,9 +26,9 @@ class KS_Color:
         return f"{self.r},{self.g},{self.b}"
 
 class KS_AlphaColor(KS_Color):
-    def __init__(self, _r = 0, _g = 0, _b = 0, _a = 0):
-        super().__init__(_r, _g, _b)
-        self.a = _a if 0 <= _a <= 255 else 0
+    def __init__(self, r = 0, g = 0, b = 0, a = 0):
+        super().__init__(r, g, b)
+        self.a = a if 0 <= a <= 255 else 0
         
     def getOpacityFloat(self) -> float:
         return self.a / 255

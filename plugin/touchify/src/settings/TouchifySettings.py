@@ -1,5 +1,6 @@
-from ..ext.KritaSettings import KritaSettings
+from ..ext.KritaSettings import KritaSettings, KS_Color, KS_AlphaColor
 import json
+from ..ext.extensions_json import JsonExtensions
 from ..cfg.CfgCanvasPreset import CfgCanvasPreset
 
 class TouchifySettings:
@@ -48,7 +49,7 @@ class TouchifySettings:
                 for dict_item in json_list:
                     if isinstance(dict_item, dict):
                         presetItem = CfgCanvasPreset()
-                        presetItem.loads(dict_item)
+                        JsonExtensions.dictToObject(presetItem, dict_item, [KS_AlphaColor, KS_Color])
                         result[str(index)] = presetItem
                         index += 1
         except:

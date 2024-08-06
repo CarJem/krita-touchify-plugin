@@ -28,15 +28,6 @@ class CfgCanvasPreset:
         
         self.border_color: KS_Color = KS_Color(128, 128, 128)
         self.border_enabled: bool = False
-             
-    def loads(self, _dict: dict[str, any]):
-        if _dict is not None:
-            for key, value in _dict.items():
-                if hasattr(self, key):
-                    if type(getattr(self, key)) == type(value):
-                        setattr(self, key, value)
-                    elif isinstance(getattr(self, key), KS_Color):
-                        setattr(self, key, KS_Color(value["r"], value["g"], value["b"]))
                                
     def activate(self): 
         if self.checkers_enabled:

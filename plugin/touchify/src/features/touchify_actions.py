@@ -4,6 +4,7 @@ import os
 import json
 import sys
 import importlib.util
+import uuid
 
 from ..variables import *
 
@@ -17,39 +18,18 @@ if TYPE_CHECKING:
     from ..touchify import TouchifyInstance
     
 class TouchifyActions(object):
+    
     def __init__(self, instance: "TouchifyInstance"):
-        self.appEngine = instance
-        
-    def windowCreated(self):
-        self.qWin = self.appEngine.instanceWindow.qwindow()        
-        
-    def toggleDocker(self, path):
-        dockersList = Krita.instance().dockers()
-        for docker in dockersList:
-            if (docker.objectName() == path):
-                docker.setVisible(not docker.isVisible())
-                
-    def toggleWorkspace(self, path):
-        main_menu = self.qWin.menuBar()
-        for root_items in main_menu.actions():
-            if root_items.objectName() == 'window':
-                for sub_item in root_items.menu().actions():
-                    if sub_item.text() == 'Wor&kspace':
-                        for workspace in sub_item.menu().actions():
-                            if workspace.text() == path:
-                                workspace.trigger()
-                                break
-                break
+        self.appEngine = instance  
 
     def buildMenu(self, menu: QMenu):
         menu.addMenu(self.root_menu)
         
-    def executeAction(self, data: CfgTouchifyAction):
-        if data.action_type == CfgTouchifyAction.ActionType.Docker:
-            self.toggleDocker(data.docker_id)
+    def executeAction(self, data: CfgTouchifyAction, action: QAction, overMouse: bool = False):
+        self.appEngine.action_management.executeAction(action, data, overMouse)
 
     def createAction(self, window: Window, data: CfgTouchifyAction, actionPath: str):
-        actionIdentifier ='{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_DOCKER, data.action_id)
+        actionIdentifier ='TouchifyAction_{0}'.format(data.id)
         iconName = data.icon
         displayName = data.text
 
@@ -57,9 +37,9 @@ class TouchifyActions(object):
         icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
 
-        TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.executeAction, {'data': data})
+        TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.executeAction, {'data': data, 'action': action, 'overMouse': True})
         
-        action.triggered.connect(lambda: self.executeAction(data))
+        action.triggered.connect(lambda: self.executeAction(data, action, False))
         self.root_menu.addAction(action)
 
     def createActions(self, window: Window, actionPath: str):
@@ -70,3 +50,4 @@ class TouchifyActions(object):
 
         for action in cfg.actions_registry.actions_registry:
             self.createAction(window, action, subItemPath)
+            

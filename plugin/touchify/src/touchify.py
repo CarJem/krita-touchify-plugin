@@ -12,10 +12,6 @@ from .variables import *
 
 from .ui.SettingsDialog import *
 from .features.touchify_tweaks import *
-from .features.docker_toggles import *
-from .features.docker_groups import *
-from .features.popup_buttons import *
-from .features.workspace_toggles import *
 from .features.touchify_canvas import *
 from .features.touchify_hotkeys import *
 from .touchify_instance import *

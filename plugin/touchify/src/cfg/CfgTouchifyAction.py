@@ -1,4 +1,5 @@
-from .CfgDockerGroup import CfgDockerGroupItem
+from .CfgDockerGroup import CfgDockerGroup
+from .CfgPopup import CfgPopup
 from ..ext.StrEnum import StrEnum
 from ..ext.TypedList import TypedList
 from ..ext.extensions_json import JsonExtensions as Extensions
@@ -14,18 +15,21 @@ class CfgTouchifyAction:
         Popup = "popup"
         Docker = "docker"
         Workspace = "workspace"
+        DockerGroup = "docker_group"
         
         
+
+    id: str = ""      
     icon: str = ""
-    row: int = 0
     text: str = ""
-    use_icon: bool = True
-    text_and_icon: bool = False
     action_type: str = "action"
 
     #Action Params
     action_id: str = ""
+    action_text_and_icon: bool = False
+    action_use_icon: bool = True
     action_use_default_icon: bool = False
+    action_panel_row: int = 0
 
     #Menu Params
     context_menu_actions: TypedList["CfgTouchifyAction"] = []
@@ -42,16 +46,18 @@ class CfgTouchifyAction:
     workspace_id: str = ""
     
     #Docker Group Params
-    docker_group_data: CfgDockerGroupItem
+    docker_group_data: CfgDockerGroup = CfgDockerGroup()
+    popup_data: CfgPopup = CfgPopup()
+    
 
     def __init__(self, **args) -> None:
-        Extensions.dictToObject(self, args)
+        Extensions.dictToObject(self, args, [CfgPopup, CfgDockerGroup])
         
         context_menu_actions = Extensions.default_assignment(args, "context_menu_actions", [])
         self.context_menu_actions = Extensions.list_assignment(context_menu_actions, CfgTouchifyAction)
+        
 
     def __str__(self):
-        name = self.action_id.replace("\n", "\\n")
         match self.action_type:
             case CfgTouchifyAction.ActionType.Action:
                 prefix = "[Action] "
@@ -65,10 +71,12 @@ class CfgTouchifyAction:
                 prefix = "[Workspace] "
             case CfgTouchifyAction.ActionType.Docker:
                 prefix = "[Docker] "
+            case CfgTouchifyAction.ActionType.DockerGroup:
+                prefix = "[Docker Group] "
             case _:
                 prefix = ""
         
-        return prefix + name
+        return prefix + self.text
 
     def forceLoad(self):
         self.context_menu_actions = TypedList(self.context_menu_actions, CfgTouchifyAction)
@@ -88,20 +96,24 @@ class CfgTouchifyAction:
             result.append("workspace_id")
         if self.action_type != CfgTouchifyAction.ActionType.Docker:
             result.append("docker_id")
+        if self.action_type != CfgTouchifyAction.ActionType.Popup:
+            result.append("popup_data")
+        if self.action_type != CfgTouchifyAction.ActionType.DockerGroup:
+            result.append("docker_group_data")
 
         return result
 
     def propertygrid_labels(self):
         labels = {}
-        labels["action_id"] = "Action ID"
-        labels["icon"] = "Display Icon"
-        labels["row"] = "Tab Row"
+        labels["icon"] = "Icon"
         labels["text"] = "Text"
         labels["action_type"] = "Action Type"
-        labels["use_icon"] = "Use Icon"
-        labels["text_and_icon"] = "Show Text & Icon"
 
+        labels["action_id"] = "Action ID"
+        labels["action_text_and_icon"] = "Show Text & Icon"
+        labels["action_use_icon"] = "Use Icon"
         labels["action_use_default_icon"] = "Use Default Icon"
+        labels["action_panel_row"] = "Tab Row"
 
         labels["context_menu_name"] = "Menu Name"
         labels["context_menu_actions"] = "Menu Actions"
@@ -125,10 +137,13 @@ class CfgTouchifyAction:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["action_type"] = {"type": "values", "entries": self.ActionType.values()}
-        restrictions["brush_name"] = {"type": "brush_selection"}
         restrictions["icon"] = {"type": "icon_selection"}
+        restrictions["action_type"] = {"type": "values", "entries": self.ActionType.values()}
+        
+        restrictions["brush_name"] = {"type": "brush_selection"}
         restrictions["action_id"] = {"type": "action_selection"}
         restrictions["workspace_id"] = {"type": "workspace_selection"}
         restrictions["docker_id"] = {"type": "docker_selection"}
+        restrictions["docker_group_data"] = {"type": "expandable"}
+        restrictions["popup_data"] = {"type": "expandable"}
         return restrictions

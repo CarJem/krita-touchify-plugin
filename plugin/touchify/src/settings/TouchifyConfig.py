@@ -24,12 +24,7 @@ class TouchifyConfig:
     class ConfigFile(object):
 
         def __init__(self):
-            self.__base_dir__ = BASE_DIR
-            self.dockers: TypedList[CfgDocker] = []
-            self.docker_groups: TypedList[CfgDockerGroup] = []
-            self.popups: TypedList[CfgPopup] = []
-            self.workspaces: TypedList[CfgWorkspace] = []
-            
+            self.__base_dir__ = BASE_DIR            
             self.actions_registry: CfgTouchifyRegistry = CfgTouchifyRegistry()
             self.hotkeys: CfgHotkeys = CfgHotkeys()
             self.toolshelf_main: CfgToolshelf = CfgToolshelf()
@@ -67,10 +62,6 @@ class TouchifyConfig:
 
         def propertygrid_labels(self):
             labels = {}
-            labels["dockers"] = "Dockers"
-            labels["docker_groups"] = "Docker Groups"
-            labels["popups"] = "Popups"
-            labels["workspaces"] = "Workspaces"
             labels["toolshelf_alt"] = "Toolbox Shelf"
             labels["toolshelf_main"] = "Sidebar Shelf"
             labels["toolshelf_docker"] = "Docker Shelf"
@@ -80,7 +71,6 @@ class TouchifyConfig:
 
         def propertygrid_groups(self):
             groups = {}
-            groups["core"] = {"name": "Core Features", "items": ["dockers", "docker_groups", "popups", "workspaces"]}
             #groups["canvas"] = {"name": "Toolshelf Widgets", "items": ["toolshelf_alt", "toolshelf_main", "toolshelf_docker"]}
             #groups["miscellaneous"] = {"name": "Miscellaneous", "items": ["hotkeys"]}
             return groups
@@ -95,10 +85,6 @@ class TouchifyConfig:
             return restrictions
         
         def save(self):
-            self.save_chunk(self.dockers, "dockers")
-            self.save_chunk(self.docker_groups, "docker_groups")
-            self.save_chunk(self.popups, "popups")
-            self.save_chunk(self.workspaces, "workspaces")
             self.saveClass(self.actions_registry, "actions_registry")
             self.saveClass(self.hotkeys, "hotkeys")
             self.saveClass(self.toolshelf_main, "toolshelf_main")
@@ -106,10 +92,6 @@ class TouchifyConfig:
             self.saveClass(self.toolshelf_docker, "toolshelf_docker")
 
         def load(self):
-            self.dockers = self.load_chunk("dockers", CfgDocker)
-            self.docker_groups = self.load_chunk("docker_groups", CfgDockerGroup)
-            self.popups = self.load_chunk("popups", CfgPopup)
-            self.workspaces = self.load_chunk("workspaces", CfgWorkspace)
             self.actions_registry = self.loadClass("actions_registry", CfgTouchifyRegistry)
             self.hotkeys = self.loadClass("hotkeys", CfgHotkeys)
             self.toolshelf_main = self.loadClass("toolshelf_main", CfgToolshelf)
