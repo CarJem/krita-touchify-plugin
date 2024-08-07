@@ -36,6 +36,8 @@ class ActionManager(QObject):
             self.action_dockergroup(data.docker_group_data)
         elif data.variant == CfgTouchifyAction.Variants.Menu:
             self.action_menu(action, data)
+        elif data.variant == CfgTouchifyAction.Variants.Action:
+            self.action_trigger(data)
             
     def __getActionSource(self, action: QAction):
         _sender = action.sender()
@@ -52,6 +54,12 @@ class ActionManager(QObject):
                     _parent = widget
                     break
         return _parent
+    
+    
+    def action_trigger(self, data: CfgTouchifyAction):
+        action = Krita.instance().action(data.action_id)
+        if action:
+            action.trigger()
     
     def action_menu(self, action: QAction, data: CfgTouchifyAction):
         _parent = self.__getActionSource(action)
