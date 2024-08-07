@@ -61,6 +61,7 @@ class ToolshelfPage(QWidget):
         self.setLayout(self.shelfLayout)
 
         self.docker_manager = self.toolshelf.dockWidget.docker_manager
+        self.actions_manager = self.toolshelf.dockWidget.actions_manager
 
         self.ID = ID
         self.dockerWidgets: dict[any, DockerContainer] = {}
@@ -71,7 +72,7 @@ class ToolshelfPage(QWidget):
         self._initDockerTabs()
             
 
-        self.quickActions = TouchifyActionPanel(self.panelProperties.actions, self)
+        self.quickActions = TouchifyActionPanel(self.panelProperties.actions, self, self.actions_manager)
         self.quickActions.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         
         for btnKey in self.quickActions._buttons:
@@ -154,7 +155,7 @@ class ToolshelfPage(QWidget):
         fixed_width = actionInfo.action_section_btn_width
         fixed_height = actionInfo.action_section_btn_height
                
-        actionWidget = TouchifyActionPanel(cfg=actionInfo.action_section_contents, parent=self, type=display_type, icon_width=icon_size, icon_height=icon_size, item_height=fixed_height, item_width=fixed_width)
+        actionWidget = TouchifyActionPanel(cfg=actionInfo.action_section_contents, parent=self, actions_manager=self.actions_manager, type=display_type, icon_width=icon_size, icon_height=icon_size, item_height=fixed_height, item_width=fixed_width)
         actionWidget.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
         #region ActionContainer Setup    
 

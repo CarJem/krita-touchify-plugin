@@ -1,10 +1,10 @@
-from .PropertyField import *
-from .PropertyField_Float import *
-from .PropertyField_Int import *
-from .PropertyField_Bool import *
-from .PropertyField_Str import *
-from .PropertyField_TypedList import *
-from .PropertyField_TempValue import *
+from ..fields.PropertyField import *
+from ..fields.PropertyField_Float import *
+from ..fields.PropertyField_Int import *
+from ..fields.PropertyField_Bool import *
+from ..fields.PropertyField_Str import *
+from ..fields.PropertyField_TypedList import *
+from ..fields.PropertyField_TempValue import *
 
 class PropertyUtils_Praser:
     def getPropertyType(varName, variable, item):

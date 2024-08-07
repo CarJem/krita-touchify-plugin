@@ -6,16 +6,16 @@ import sys
 import xml.etree.ElementTree as ET
 
 from .PropertyGrid import PropertyGrid
-from .PropertyUtils_Extensions import *
-from .PropertyUtils_Praser import *
-from .PropertyGrid_SelectorDialog import *
+from .utils.PropertyUtils_Extensions import *
+from .utils.PropertyUtils_Praser import *
+from .dialogs.PropertyGrid_SelectorDialog import *
 
-from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
+from ...extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from ...ext.TypedList import *
-from ...resources import *
-from ...ext.extensions_krita import KritaExtensions
-from ..CollapsibleBox import CollapsibleBox
+from ....ext.TypedList import *
+from ....resources import *
+from ....ext.extensions_krita import KritaExtensions
+from ...CollapsibleBox import CollapsibleBox
 
 
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
@@ -27,7 +27,7 @@ GROUP_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 LABEL_ALIGNMENT = Qt.AlignmentFlag.AlignLeft
 
 
-class PropertyGridPanel(QScrollArea):
+class PropertyGrid_Panel(QScrollArea):
 
 
     def __init__(self, parentStack: PropertyGrid):

@@ -1,41 +1,52 @@
 from .CfgTouchifyAction import *
 from ..ext.TypedList import TypedList
 from ..ext.extensions_json import JsonExtensions as Extensions
-from .CfgToolshelfPanel import CfgToolshelfPanel
 from .CfgToolshelfSection import CfgToolshelfSection
 from .CfgTouchifyActionGroup import CfgTouchifyActionGroup
-   
-class CfgToolshelf:
-    panels: TypedList[CfgToolshelfPanel] = []
+
+class CfgToolshelfPanel:
+    id: str = ""
+    icon: str = ""
+    size_x: int = 0
+    size_y: int = 0
+    row: int = 0
     actions: TypedList[CfgTouchifyActionGroup] = []
     sections: TypedList[CfgToolshelfSection] = []
+    section_show_tabs: bool = False
     
-    dockerButtonHeight: int = 32
-    dockerBackHeight: int = 16
-    actionHeight: int = 16
+    actionHeight: int = 10
 
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
-        panels = Extensions.default_assignment(args, "panels", [])
-        self.panels = Extensions.list_assignment(panels, CfgToolshelfPanel)
-        actions = Extensions.default_assignment(args, "actions", [])
-        self.actions = Extensions.list_assignment(actions, CfgTouchifyActionGroup)
         sections = Extensions.default_assignment(args, "sections", [])
+        actions = Extensions.default_assignment(args, "actions", [])
         self.sections = Extensions.list_assignment(sections, CfgToolshelfSection)
-    
+        self.actions = Extensions.list_assignment(actions, CfgTouchifyActionGroup)
+
     def forceLoad(self):
-        self.panels = TypedList(self.panels, CfgToolshelfPanel)
-        self.actions = TypedList(self.actions, CfgTouchifyActionGroup)
         self.sections = TypedList(self.sections, CfgToolshelfSection)
+        self.actions = TypedList(self.actions, CfgTouchifyActionGroup)
+
+    def __str__(self):
+        name = self.id.replace("\n", "\\n")
+        return name
+    
+    def propertygrid_sisters(self):
+        row: dict[str, list[str]] = {}
+        row["size"] = {"name": "Panel Width / Height", "items": ["size_x","size_y"]}
+        return row
 
     def propertygrid_labels(self):
         labels = {}
-        labels["panels"] = "Panels"
-        labels["actions"] = "Actions"
+        labels["id"] = "Panel ID (must be unique)"
+        labels["icon"] = "Display Icon"
+        labels["size_x"] = "Panel Width"
+        labels["size_y"] = "Panel Height"
+        labels["row"] = "Tab Row"
         labels["sections"] = "Sections"
-        labels["dockerButtonHeight"] = "Docker Button Height"
-        labels["dockerBackHeight"] = "Back Button Height"
+        labels["actions"] = "Actions"
         labels["actionHeight"] = "Action Button Height"
+        labels["section_show_tabs"] = "Show Tabs"
         return labels
 
     def propertygrid_groups(self):
@@ -44,6 +55,5 @@ class CfgToolshelf:
 
     def propertygrid_restrictions(self):
         restrictions = {}
+        restrictions["icon"] = {"type": "icon_selection"}
         return restrictions
-
-

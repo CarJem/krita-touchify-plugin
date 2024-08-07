@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 from typing import TYPE_CHECKING
 
 from ..docker_manager import DockerManager
+from ..action_manager import ActionManager
 if TYPE_CHECKING:
     from ..touchify_instance import TouchifyInstance
 
@@ -20,6 +21,7 @@ class TouchifyToolshelfDocker(DockWidget):
         super().__init__()
         self.toolshelfHost: ToolshelfContainer = None
         self.docker_manager: DockerManager = None
+        self.actions_manager: ActionManager = None
         self.PanelIndex = 2
         self._last_panel_id: str | None = None
         self._last_pinned: bool = False
@@ -27,6 +29,7 @@ class TouchifyToolshelfDocker(DockWidget):
       
     def setup(self, instance: "TouchifyInstance"):
         self.docker_manager = instance.docker_management
+        self.actions_manager = instance.action_management
         self.onLoaded()
         
     def onKritaConfigUpdate(self):

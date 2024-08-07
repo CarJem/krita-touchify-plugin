@@ -4,11 +4,10 @@
             "context_menu_actions": [],
             "action_use_icon": true,
             "action_id": "",
-            "action_type": "popup",
+            "variant": "popup",
             "action_use_default_icon": false,
             "brush_name": "",
             "brush_override_icon": false,
-            "context_menu_name": "",
             "docker_group_data": {
                 "docker_names": []
             },
@@ -131,7 +130,6 @@
                 "opacity": 1.0,
                 "window_type": "popup"
             },
-            "action_panel_row": 0,
             "text": "Selection Popup",
             "action_text_and_icon": false,
             "workspace_id": "",
@@ -141,11 +139,10 @@
             "context_menu_actions": [],
             "action_use_icon": true,
             "action_id": "",
-            "action_type": "popup",
+            "variant": "popup",
             "action_use_default_icon": false,
             "brush_name": "",
             "brush_override_icon": false,
-            "context_menu_name": "",
             "docker_group_data": {
                 "docker_names": []
             },
@@ -167,7 +164,6 @@
                 "actions_items": [],
                 "window_type": "popup"
             },
-            "action_panel_row": 0,
             "text": "Grid and Guides Popup",
             "action_text_and_icon": false,
             "workspace_id": "",
@@ -177,11 +173,10 @@
             "context_menu_actions": [],
             "action_use_icon": true,
             "action_id": "",
-            "action_type": "popup",
+            "variant": "popup",
             "action_use_default_icon": false,
             "brush_name": "",
             "brush_override_icon": false,
-            "context_menu_name": "",
             "docker_group_data": {
                 "docker_names": []
             },
@@ -203,7 +198,6 @@
                 "icon": "custom:pencil-ruler-outline",
                 "window_type": "popup"
             },
-            "action_panel_row": 0,
             "text": "Brush Options Popup",
             "action_text_and_icon": false,
             "workspace_id": "",
@@ -213,11 +207,10 @@
             "context_menu_actions": [],
             "action_use_icon": true,
             "action_id": "",
-            "action_type": "popup",
+            "variant": "popup",
             "action_use_default_icon": false,
             "brush_name": "",
             "brush_override_icon": false,
-            "context_menu_name": "",
             "docker_group_data": {
                 "docker_names": []
             },
@@ -239,7 +232,6 @@
                 "opacity": 1.0,
                 "window_type": "popup"
             },
-            "action_panel_row": 0,
             "text": "Quick Settings Popup",
             "action_text_and_icon": false,
             "workspace_id": "",

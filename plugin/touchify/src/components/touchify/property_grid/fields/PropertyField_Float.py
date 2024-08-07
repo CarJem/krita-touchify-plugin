@@ -4,16 +4,16 @@ from PyQt5.QtCore import *
 from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
-from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
+from ....extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from ...ext.TypedList import *
-from ...resources import *
-from ...ext.extensions_krita import KritaExtensions
-from ..CollapsibleBox import CollapsibleBox
+from .....ext.TypedList import *
+from .....resources import *
+from .....ext.extensions_krita import KritaExtensions
+from ....CollapsibleBox import CollapsibleBox
 
-from .PropertyUtils_Extensions import *
-from .PropertyGrid import *
-from .PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
+from ..utils.PropertyUtils_Extensions import *
+from ..PropertyGrid import *
+from ..dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from .PropertyField import *
 
 
@@ -36,15 +36,13 @@ class PropertyField_Float(PropertyField):
         self.editor.valueChanged.connect(self.updateValue)
         self.editor.setValue(self.variable_data)
 
-        restric_func = PropertyUtils_Extensions.getVariable(self.variable_source, "propertygrid_restrictions")
-        if callable(restric_func):
-            restrictions = restric_func()
-            if variable_name in restrictions:
-                if restrictions[variable_name]["type"] == "range":
-                    if "min" in restrictions[variable_name]:
-                        self.editor.setMinimum(restrictions[variable_name]["min"])
-                    if "max" in restrictions[variable_name]:
-                        self.editor.setMaximum(restrictions[variable_name]["max"])
+        restrictions = PropertyUtils_Extensions.getRestrictions(self.variable_source)
+        if variable_name in restrictions:
+            if restrictions[variable_name]["type"] == "range":
+                if "min" in restrictions[variable_name]:
+                    self.editor.setMinimum(restrictions[variable_name]["min"])
+                if "max" in restrictions[variable_name]:
+                    self.editor.setMaximum(restrictions[variable_name]["max"])
         
         editorLayout = QHBoxLayout()
         editorLayout.setSpacing(0)

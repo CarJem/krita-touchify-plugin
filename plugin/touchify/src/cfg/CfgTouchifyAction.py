@@ -3,12 +3,14 @@ from .CfgPopup import CfgPopup
 from ..ext.StrEnum import StrEnum
 from ..ext.TypedList import TypedList
 from ..ext.extensions_json import JsonExtensions as Extensions
+from ..ext.nameof import nameof
+from typing import Annotated
 
 
     
 class CfgTouchifyAction:
-    
-    class ActionType(StrEnum):
+     
+    class Variants(StrEnum):
         Action = "action"
         Menu = "menu"
         Brush = "brush"
@@ -17,23 +19,19 @@ class CfgTouchifyAction:
         Workspace = "workspace"
         DockerGroup = "docker_group"
         
-        
-
     id: str = ""      
     icon: str = ""
     text: str = ""
-    action_type: str = "action"
+    variant: str = "action"
 
     #Action Params
     action_id: str = ""
     action_text_and_icon: bool = False
     action_use_icon: bool = True
     action_use_default_icon: bool = False
-    action_panel_row: int = 0
 
     #Menu Params
     context_menu_actions: TypedList["CfgTouchifyAction"] = []
-    context_menu_name: str = ""
 
     #Brush Params
     brush_name: str = ""
@@ -47,6 +45,8 @@ class CfgTouchifyAction:
     
     #Docker Group Params
     docker_group_data: CfgDockerGroup = CfgDockerGroup()
+    
+    #Popup Params
     popup_data: CfgPopup = CfgPopup()
     
 
@@ -58,76 +58,112 @@ class CfgTouchifyAction:
         
 
     def __str__(self):
-        match self.action_type:
-            case CfgTouchifyAction.ActionType.Action:
+        match self.variant:
+            case CfgTouchifyAction.Variants.Action:
                 prefix = "[Action] "
-            case CfgTouchifyAction.ActionType.Menu:
+                suffix = self.action_id
+            case CfgTouchifyAction.Variants.Menu:
                 prefix = "[Menu] "
-            case CfgTouchifyAction.ActionType.Brush:
+                suffix = self.text
+            case CfgTouchifyAction.Variants.Brush:
                 prefix = "[Brush] "
-            case CfgTouchifyAction.ActionType.Popup:
+                suffix = self.brush_name
+            case CfgTouchifyAction.Variants.Popup:
                 prefix = "[Popup] "
-            case CfgTouchifyAction.ActionType.Workspace:
+                suffix = self.text
+            case CfgTouchifyAction.Variants.Workspace:
                 prefix = "[Workspace] "
-            case CfgTouchifyAction.ActionType.Docker:
+                suffix = self.workspace_id
+            case CfgTouchifyAction.Variants.Docker:
                 prefix = "[Docker] "
-            case CfgTouchifyAction.ActionType.DockerGroup:
+                suffix = self.docker_id
+            case CfgTouchifyAction.Variants.DockerGroup:
                 prefix = "[Docker Group] "
+                suffix = self.text
             case _:
-                prefix = ""
+                prefix = f"[{self.variant}] "
+                suffix = self.text
+                
+        if self.text != "":
+            suffix = self.text
         
-        return prefix + self.text
+        return prefix + suffix
 
     def forceLoad(self):
         self.context_menu_actions = TypedList(self.context_menu_actions, CfgTouchifyAction)
+        
+    def propertygrid_sorted(self):
+        return [
+            "id",
+            "icon",
+            "text",
+            "variant",
+            #Action Params
+            "action_id",
+            "action_text_and_icon",
+            "action_use_icon",
+            "action_use_default_icon",
+            #Menu Params
+            "context_menu_actions",
+            #Brush Params
+            "brush_name",
+            "brush_override_icon",       
+            #Docker Params
+            "docker_id",       
+            #Workspace Params
+            "workspace_id",
+            #Docker Group Params
+            "docker_group_data",
+            #Popup Params
+            "popup_data"
+        ]
 
     def propertygrid_hidden(self):
         result = []
-        if self.action_type != CfgTouchifyAction.ActionType.Action:
+        if self.variant != CfgTouchifyAction.Variants.Action:
             result.append("action_id")
             result.append("action_use_default_icon")
-        if self.action_type != CfgTouchifyAction.ActionType.Menu:
-            result.append("context_menu_name")
+            result.append("action_use_icon")
+            result.append("action_text_and_icon")
+        if self.variant != CfgTouchifyAction.Variants.Menu:
             result.append("context_menu_actions")            
-        if self.action_type != CfgTouchifyAction.ActionType.Brush:
+        if self.variant != CfgTouchifyAction.Variants.Brush:
             result.append("brush_name")
             result.append("brush_override_icon")
-        if self.action_type != CfgTouchifyAction.ActionType.Workspace:
+        if self.variant != CfgTouchifyAction.Variants.Workspace:
             result.append("workspace_id")
-        if self.action_type != CfgTouchifyAction.ActionType.Docker:
+        if self.variant != CfgTouchifyAction.Variants.Docker:
             result.append("docker_id")
-        if self.action_type != CfgTouchifyAction.ActionType.Popup:
+        if self.variant != CfgTouchifyAction.Variants.Popup:
             result.append("popup_data")
-        if self.action_type != CfgTouchifyAction.ActionType.DockerGroup:
+        if self.variant != CfgTouchifyAction.Variants.DockerGroup:
             result.append("docker_group_data")
 
         return result
 
     def propertygrid_labels(self):
         labels = {}
+        
+        labels["id"] = "ID"
         labels["icon"] = "Icon"
         labels["text"] = "Text"
-        labels["action_type"] = "Action Type"
+        labels["variant"] = "Action Type"
 
         labels["action_id"] = "Action ID"
         labels["action_text_and_icon"] = "Show Text & Icon"
         labels["action_use_icon"] = "Use Icon"
         labels["action_use_default_icon"] = "Use Default Icon"
-        labels["action_panel_row"] = "Tab Row"
 
-        labels["context_menu_name"] = "Menu Name"
         labels["context_menu_actions"] = "Menu Actions"
 
         labels["brush_name"] = "Brush"
         labels["brush_override_icon"] = "Override Brush Icon"
         
         labels["workspace_id"] = "Workspace ID"
-        
         labels["docker_id"] = "Docker ID"
         
-        labels["docker_group_tabs_mode"] = "Tabs Mode"
-        labels["docker_group_tab_id"] = "Tab ID"
-        labels["docker_group_dockers"] = "Dockers"
+        labels["docker_group_data"] = "Group Settings"
+        labels["popup_data"] = "Popup Settings"
 
         return labels
 
@@ -138,7 +174,7 @@ class CfgTouchifyAction:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["icon"] = {"type": "icon_selection"}
-        restrictions["action_type"] = {"type": "values", "entries": self.ActionType.values()}
+        restrictions["variant"] = {"type": "values", "entries": self.Variants.values()}
         
         restrictions["brush_name"] = {"type": "brush_selection"}
         restrictions["action_id"] = {"type": "action_selection"}

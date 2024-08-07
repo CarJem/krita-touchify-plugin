@@ -7,19 +7,24 @@ from functools import partial
 import sys
 import importlib.util
 
-from ...cfg.CfgPopup import CfgPopup, CfgPopupActionItem
-from ...settings.TouchifyConfig import *
-from ..touchify.actions.TouchifyActionPanel import *
-from ...resources import *
+from ....cfg.CfgPopup import CfgPopup, CfgPopupActionItem
+from ....settings.TouchifyConfig import *
+from ..actions.TouchifyActionPanel import *
+from ....resources import *
 from .PopupDialog import *
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ....action_manager import ActionManager
 
 from krita import *
 
 
 class PopupDialog_Actions(PopupDialog):
 
-    def __init__(self, parent: QMainWindow, args: CfgPopup):     
+    def __init__(self, parent: QMainWindow, args: CfgPopup, actions_manager: "ActionManager"):     
         super().__init__(parent, args)
+        self.actions_manager = actions_manager
         self.grid = self.generateActionsLayout()
         self.allowOpacity = True
         if self.isSizeGripEnabled():
@@ -45,13 +50,13 @@ class PopupDialog_Actions(PopupDialog):
         dialog_height = (item_count_y * item_height)
         return [int(dialog_width), int(dialog_height)]
 
-    def triggerPopup(self, mode:str, parent: QWidget | None):
-        super().triggerPopup(mode, parent)    
+    def triggerPopup(self, parent: QWidget | None):
+        super().triggerPopup(parent)    
 
     def generateActionsLayout(self):   
         layout = QVBoxLayout()
         
-        converted_actions: list[CfgTouchifyAction] = []
+        converted_groups: dict[int, CfgTouchifyActionGroup] = {}
             
         current_x = 0
         current_y = 0
@@ -60,19 +65,23 @@ class PopupDialog_Actions(PopupDialog):
         padding = self.metadata.actions_grid_padding
         maximum_x = self.metadata.actions_grid_width
         
+        
         actionItem: CfgPopupActionItem
         for actionItem in self.metadata.actions_items:
             if not current_x < maximum_x:
                 current_y += 1
                 current_x = 0
+                
+            if current_y not in converted_groups:
+                converted_groups[current_y] = CfgTouchifyActionGroup()
+            
             
             newAction = CfgTouchifyAction()
             newAction.action_id = actionItem.action
             newAction.text = actionItem.text
             newAction.icon = actionItem.icon
             newAction.action_text_and_icon = True
-            newAction.action_panel_row = current_y
-            converted_actions.append(newAction)
+            converted_groups[current_y].actions.append(newAction)
             
             current_x += 1
             current_index += 1
@@ -83,7 +92,7 @@ class PopupDialog_Actions(PopupDialog):
         item_width = self.metadata.actions_item_width
         item_height = self.metadata.actions_item_height
         
-        self.actionPanel = TouchifyActionPanel(converted_actions, None, "popup", icon_width, icon_height, item_width, item_height)
+        self.actionPanel = TouchifyActionPanel(list(converted_groups.values()), None, self.actions_manager, "popup", icon_width, icon_height, item_width, item_height)
         layout.addWidget(self.actionPanel)
         
         layout.setContentsMargins(0, 0, 0, 0)

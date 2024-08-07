@@ -6,8 +6,8 @@ class PropertyGrid(QStackedWidget):
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        from .PropertyGridPanel import PropertyGridPanel
-        self.rootPropertyGrid = PropertyGridPanel(self)
+        from .PropertyGrid_Panel import PropertyGrid_Panel
+        self.rootPropertyGrid = PropertyGrid_Panel(self)
         self.insertWidget(0, self.rootPropertyGrid)
     
     def updateDataObject(self, data: any):

@@ -5,17 +5,17 @@ from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
 
-from ...features.touchify_hotkeys import TouchifyHotkeys
-from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
+from .....features.touchify_hotkeys import TouchifyHotkeys
+from ....extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from ...ext.TypedList import *
-from ...resources import *
-from ...ext.extensions_krita import KritaExtensions
-from ..CollapsibleBox import CollapsibleBox
+from .....ext.TypedList import *
+from .....resources import *
+from .....ext.extensions_krita import KritaExtensions
+from ....CollapsibleBox import CollapsibleBox
 
-from .PropertyUtils_Extensions import *
-from .PropertyGrid import *
-from .PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
+from ..utils.PropertyUtils_Extensions import *
+from ..PropertyGrid import *
+from ..dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from .PropertyField import *
 
 
@@ -42,36 +42,34 @@ class PropertyField_Str(PropertyField):
         
         self.editorHelper: QPushButton | None = None
 
-        restric_func = PropertyUtils_Extensions.getVariable(self.variable_source, "propertygrid_restrictions")
-        if callable(restric_func):
-            restrictions = restric_func()
-            if variable_name in restrictions:
-                if restrictions[variable_name]["type"] == "values":
-                    combobox_items =  list[tuple[str, str]]()
-                    avaliableItems = list[str](restrictions[variable_name]["entries"])
-                    for item in avaliableItems:
-                        input = (item, item)
-                        combobox_items.append(input)                         
-                    self.combobox_items = combobox_items
-                    self.is_combobox = True
-                elif restrictions[variable_name]["type"] == "action_selection":
-                    self.is_action_selection = True
-                elif restrictions[variable_name]["type"] == "docker_selection":
-                    self.is_docker_selector = True
-                elif restrictions[variable_name]["type"] == "icon_selection":
-                    self.is_icon_viewer = True
-                elif restrictions[variable_name]["type"] == "brush_selection":
-                    self.is_brush_selection = True
-                elif restrictions[variable_name]["type"] == "hotkey_selection":
-                    combobox_items = list[tuple[str, str]]()
-                    avaliableItems = TouchifyConfig.instance().hotkey_options_storage
-                    combobox_items.append(("None", "none"))
-                    for item in avaliableItems:
-                        input = (avaliableItems[item]["displayName"], item)
-                        combobox_items.append(input)
-                    self.combobox_items = combobox_items
-                    self.is_combobox = True
-                    
+        restrictions = PropertyUtils_Extensions.getRestrictions(self.variable_source)
+        if variable_name in restrictions:
+            if restrictions[variable_name]["type"] == "values":
+                combobox_items =  list[tuple[str, str]]()
+                avaliableItems = list[str](restrictions[variable_name]["entries"])
+                for item in avaliableItems:
+                    input = (item, item)
+                    combobox_items.append(input)                         
+                self.combobox_items = combobox_items
+                self.is_combobox = True
+            elif restrictions[variable_name]["type"] == "action_selection":
+                self.is_action_selection = True
+            elif restrictions[variable_name]["type"] == "docker_selection":
+                self.is_docker_selector = True
+            elif restrictions[variable_name]["type"] == "icon_selection":
+                self.is_icon_viewer = True
+            elif restrictions[variable_name]["type"] == "brush_selection":
+                self.is_brush_selection = True
+            elif restrictions[variable_name]["type"] == "hotkey_selection":
+                combobox_items = list[tuple[str, str]]()
+                avaliableItems = TouchifyConfig.instance().hotkey_options_storage
+                combobox_items.append(("None", "none"))
+                for item in avaliableItems:
+                    input = (avaliableItems[item]["displayName"], item)
+                    combobox_items.append(input)
+                self.combobox_items = combobox_items
+                self.is_combobox = True
+                
 
         if self.is_icon_viewer or self.is_docker_selector or self.is_action_selection or self.is_brush_selection:
             self.editor = QLineEdit()

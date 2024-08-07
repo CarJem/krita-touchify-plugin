@@ -10,8 +10,15 @@ import sys
 
 from krita import *
 
-def nameof(obj: any, namespace: dict[str, Any]):
-    return [name for name in namespace if namespace[name] is obj]
+def nameof(var):
+    current_frame = inspect.currentframe()
+    try:
+        frame_locals = current_frame.f_back.f_locals
+        var_name = [name for name, value in frame_locals.items() if value is var][0]
+        print(f"Variable name: {var_name}")
+        return var_name
+    finally:
+        del current_frame
 
 
 class Extensions:

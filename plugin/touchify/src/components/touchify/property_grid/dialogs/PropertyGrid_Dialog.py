@@ -3,9 +3,9 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
-from ...resources import ResourceManager
+from .....resources import ResourceManager
 
-from ...ext.extensions_krita import KritaExtensions
+from .....ext.extensions_krita import KritaExtensions
 
 class PropertyGrid_Dialog(QDialog):
 

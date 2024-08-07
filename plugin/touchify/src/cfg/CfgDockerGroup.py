@@ -1,36 +1,9 @@
 from ..ext.extensions_json import JsonExtensions as Extensions
 from ..ext.extensions import TypedList
-
-
-class CfgDockerGroupItem:
-    id: str=""
-
-    def __init__(self, **args) -> None:
-        Extensions.dictToObject(self, args)
-
-    def __str__(self):
-        return self.id.replace("\n", "\\n")
-
-    def forceLoad(self):
-        pass
-
-    def propertygrid_ismodel(self):
-        return True
-
-    def propertygrid_labels(self):
-        labels = {}
-        labels["id"] = "Docker ID"
-        return labels
-
-    def propertygrid_restrictions(self):
-        restrictions = {}
-        restrictions["id"] = {"type": "docker_selection"}
-        return restrictions
+from .CfgDockerGroupItem import CfgDockerGroupItem
 
 class CfgDockerGroup:
-    display_name: str = ""
     id: str = ""
-    icon: str = ""
     tabsMode: bool = True
     groupId: str = ""
     docker_names: TypedList[CfgDockerGroupItem] = []
@@ -39,9 +12,6 @@ class CfgDockerGroup:
         Extensions.dictToObject(self, args)
         docker_names = Extensions.default_assignment(args, "docker_names", [])
         self.docker_names = Extensions.list_assignment(docker_names, CfgDockerGroupItem)
-
-    def __str__(self):
-        return self.display_name.replace("\n", "\\n")
 
     def forceLoad(self):
         self.docker_names = TypedList(self.docker_names, CfgDockerGroupItem)
@@ -52,9 +22,7 @@ class CfgDockerGroup:
     
     def propertygrid_labels(self):
         labels = {}
-        labels["display_name"] = "Display Name"
         labels["id"] = "Group ID (should be unique)"
-        labels["icon"] = "Preview Icon"
         labels["tabsMode"] = "Tab Mode"
         labels["groupId"] = "Tab Mode Group ID"
         labels["docker_names"] = "Dockers"
@@ -62,5 +30,4 @@ class CfgDockerGroup:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["icon"] = {"type": "icon_selection"}
         return restrictions

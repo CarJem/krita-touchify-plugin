@@ -5,17 +5,17 @@ from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
 
-from .PropertyGrid_Dialog import PropertyGrid_Dialog
+from ..dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 
-from .PropertyUtils_Extensions import *
-from .PropertyGrid import *
+from ..utils.PropertyUtils_Extensions import *
+from ..PropertyGrid import *
 
-from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
-from .PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
-from ...ext.TypedList import *
-from ...resources import *
-from ...ext.extensions_krita import KritaExtensions
-from ..CollapsibleBox import CollapsibleBox
+from ....extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
+from ..dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
+from .....ext.TypedList import *
+from .....resources import *
+from .....ext.extensions_krita import KritaExtensions
+from ....CollapsibleBox import CollapsibleBox
 
 
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
@@ -56,12 +56,10 @@ class PropertyField(QWidget):
     #region Nestables
 
     def testExpandability(self):
-        restric_func = PropertyUtils_Extensions.getVariable(self.variable_source, "propertygrid_restrictions")
-        if callable(restric_func):
-            restrictions = restric_func()
-            if self.variable_name in restrictions:
-                if restrictions[self.variable_name]["type"] == "expandable":
-                    self.setupExpandable()
+        restrictions = PropertyUtils_Extensions.getRestrictions(self.variable_source)
+        if self.variable_name in restrictions:
+            if restrictions[self.variable_name]["type"] == "expandable":
+                self.setupExpandable()
 
     def setupExpandable(self):
         self.editor = QPushButton()
@@ -82,8 +80,8 @@ class PropertyField(QWidget):
         self.nested_dlg.btns.accepted.connect(lambda: self.nested_dlg_accept())
         self.nested_dlg.btns.rejected.connect(lambda: self.nested_dlg_reject())
 
-        from .PropertyGridPanel import PropertyGridPanel
-        self.nested_subwindowPropGrid = PropertyGridPanel(self.stackHost)
+        from ..PropertyGrid_Panel import PropertyGrid_Panel
+        self.nested_subwindowPropGrid = PropertyGrid_Panel(self.stackHost)
         self.nested_container.addWidget(self.nested_subwindowPropGrid)
         self.nested_container.addWidget(self.nested_dlg.btns)
         self.nested_dlg.setLayout(self.nested_container)

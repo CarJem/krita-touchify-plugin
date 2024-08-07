@@ -7,10 +7,6 @@ from ..cfg.CfgHotkeys import CfgHotkeys
 from ..ext.extensions_json import JsonExtensions
 from ..cfg.CfgToolshelf import CfgToolshelf
 from ..variables import *
-from ..cfg.old.CfgDocker import CfgDocker
-from ..cfg.CfgDockerGroup import CfgDockerGroup
-from ..cfg.CfgPopup import CfgPopup
-from ..cfg.old.CfgWorkspace import CfgWorkspace
 from ..cfg.CfgTouchifyRegistry import CfgTouchifyRegistry
 from ..ext.extensions import *
 from ...paths import BASE_DIR

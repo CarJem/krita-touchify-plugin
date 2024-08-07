@@ -5,9 +5,9 @@ from krita import *
 from touchify.src import stylesheet
 from .PropertyGrid_Dialog import PropertyGrid_Dialog
 
-from ...resources import ResourceManager
+from .....resources import ResourceManager
 
-from ...ext.extensions_krita import KritaExtensions
+from .....ext.extensions_krita import KritaExtensions
 
 DATA_INDEX = 3
 

@@ -5,16 +5,16 @@ from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
 
-from .PropertyGrid_Dialog import PropertyGrid_Dialog
-from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
+from ..dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
+from ....extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from ...ext.TypedList import *
-from ...resources import *
-from ...ext.extensions_krita import KritaExtensions
-from ..CollapsibleBox import CollapsibleBox
+from .....ext.TypedList import *
+from .....resources import *
+from .....ext.extensions_krita import KritaExtensions
+from ....CollapsibleBox import CollapsibleBox
 
-from .PropertyUtils_Extensions import *
-from .PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
+from ..utils.PropertyUtils_Extensions import *
+from ..dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from .PropertyField import *
 from .PropertyField_TempValue import *
 
@@ -164,8 +164,8 @@ class PropertyField_TypedList(PropertyField):
         self.dlg.btns.accepted.connect(lambda: self.dlg_accept())
         self.dlg.btns.rejected.connect(lambda: self.dlg_reject())
 
-        from .PropertyGridPanel import PropertyGridPanel
-        self.subwindowPropGrid = PropertyGridPanel(self.stackHost)
+        from ..PropertyGrid_Panel import PropertyGrid_Panel
+        self.subwindowPropGrid = PropertyGrid_Panel(self.stackHost)
         self.container.addWidget(self.subwindowPropGrid)
         self.container.addWidget(self.dlg.btns)
         self.dlg.setLayout(self.container)
@@ -216,6 +216,6 @@ class PropertyField_TypedList(PropertyField):
         isClassModel = PropertyUtils_Extensions.isClassModel(item)
 
         if attrCount <= 1 and not isClassModel:
-                return PropertyField_TempValue(item, self.variable_source, self.variable_name, index)
+            return PropertyField_TempValue(item, self.variable_source, self.variable_name, index)
         else:
             return item        

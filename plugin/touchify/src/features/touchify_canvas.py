@@ -23,7 +23,7 @@ class TouchifyCanvas(object):
 
     def windowCreated(self):
         self.qWin = self.appEngine.instanceWindow.qwindow()
-        self.ntCanvas.setDockerManager(self.appEngine.docker_management)
+        self.ntCanvas.setManagers(self.appEngine.docker_management, self.appEngine.action_management)
         self.ntCanvas.windowCreated(self.appEngine.instanceWindow)
 
     def createAction(self, window: Window, id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):

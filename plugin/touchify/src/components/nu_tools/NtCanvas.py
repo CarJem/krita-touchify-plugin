@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 
 from ...docker_manager import DockerManager
+from ...action_manager import ActionManager
 from .NtToolbox import NtToolbox
 from .NtToolshelf import NtToolshelf
 from ...settings.TouchifySettings import TouchifySettings
@@ -25,8 +26,9 @@ class NtCanvas(object):
         self.updateElements()
         self.updateCanvas()
 
-    def setDockerManager(self, manager: DockerManager):
+    def setManagers(self, manager: DockerManager, actionsManager: ActionManager):
         self.dockerManager = manager
+        self.actions_manager = actionsManager
 
     def windowCreated(self, window: Window):
         self.window = window
@@ -122,7 +124,7 @@ class NtCanvas(object):
             self.toolbox = None
 
         if self.toolboxOptions == None and usesNuToolOptionsAlt:
-            self.toolboxOptions = NtToolshelf(self, self.window, self.toolboxAlignment, False, self.dockerManager)
+            self.toolboxOptions = NtToolshelf(self, self.window, self.toolboxAlignment, False, self.dockerManager, self.actions_manager)
             self.toolboxOptions.updateStyleSheet()
             self.installEventFilters(self.toolboxOptions)
             self.toolboxOptions.pad.show()
@@ -132,7 +134,7 @@ class NtCanvas(object):
             self.toolboxOptions = None
 
         if self.toolOptions == None and usesNuToolOptions:
-            self.toolOptions = NtToolshelf(self, self.window, self.toolOptionsAlignment, True, self.dockerManager)
+            self.toolOptions = NtToolshelf(self, self.window, self.toolOptionsAlignment, True, self.dockerManager, self.actions_manager)
             self.toolOptions.updateStyleSheet()
             self.installEventFilters(self.toolOptions)
             self.toolOptions.pad.show()

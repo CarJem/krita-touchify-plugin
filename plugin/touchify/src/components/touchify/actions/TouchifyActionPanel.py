@@ -8,10 +8,14 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
 from ....cfg.CfgTouchifyAction import CfgTouchifyAction
+from ....cfg.CfgTouchifyActionGroup import CfgTouchifyActionGroup
 from ....resources import ResourceManager
 from .... import stylesheet
 from ....variables import *
 from ....settings.TouchifyConfig import *
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ....action_manager import ActionManager
 
 
 KNOWN_UNCHECKABLES = [
@@ -24,11 +28,12 @@ EXPANDING_SPACERS = [
 ]
 
 class TouchifyActionPanel(QWidget):
-    def __init__(self, cfg: List[CfgTouchifyAction], parent: QWidget=None, type: str = "default", icon_width: int = -1, icon_height: int = -1, item_width: int = -1, item_height: int = -1, opacity: float = 1.0):
+    def __init__(self, cfg: List[CfgTouchifyActionGroup], parent: QWidget=None, actions_manager: "ActionManager" = None, type: str = "default", icon_width: int = -1, icon_height: int = -1, item_width: int = -1, item_height: int = -1, opacity: float = 1.0):
         super(TouchifyActionPanel, self).__init__(parent)
 
         self.cfg = cfg
         self.type = type
+        self.actions_manager = actions_manager
         
         self.icon_width: int = icon_width
         self.icon_height: int = icon_height
@@ -110,7 +115,7 @@ class TouchifyActionPanel(QWidget):
         self._rows[row].layout().addWidget(btn)
         return btn
    
-    def __createButton_Brush(self, act: CfgTouchifyAction):
+    def __createButton_Brush(self, act: CfgTouchifyAction, row: int):
         
         def __brushButtonClicked(self, id: Resource):
             Krita.instance().activeWindow().activeView().setCurrentBrushPreset(id)
@@ -120,7 +125,7 @@ class TouchifyActionPanel(QWidget):
         
         if id in brush_presets:
             preset = brush_presets[id]
-            btn = self.__createButton(id, act.action_panel_row, lambda: __brushButtonClicked(preset), preset.name(), False)
+            btn = self.__createButton(id, row, lambda: __brushButtonClicked(preset), preset.name(), False)
             if act.brush_override_icon:
                 if act.action_use_icon:
                     btn.setIcon(ResourceManager.iconLoader())
@@ -131,9 +136,9 @@ class TouchifyActionPanel(QWidget):
                 btn.setIcon(ResourceManager.brushIcon(id))
         self.__finalizeButton(btn)
                    
-    def __createButton_Menu(self, act: CfgTouchifyAction):
+    def __createButton_Menu(self, act: CfgTouchifyAction, row: int):
         id = str(uuid.uuid4())
-        btn = self.__createButton(id, act.action_panel_row, None, act.context_menu_name, False)
+        btn = self.__createButton(id, row, None, act.text, False)
         
         if act.action_use_icon:
             btn.setIcon(ResourceManager.iconLoader(act.icon))
@@ -146,7 +151,7 @@ class TouchifyActionPanel(QWidget):
         btn.clicked.connect(btn.showMenu)
         self.__finalizeButton(btn)
         
-    def __createButton_Action(self, act: CfgTouchifyAction):
+    def __createButton_Action(self, act: CfgTouchifyAction, row: int):
         action = Krita.instance().action(act.action_id)
         if action:
             checkable = action.isCheckable()
@@ -154,7 +159,7 @@ class TouchifyActionPanel(QWidget):
                 checkable = False
                 
                 
-            btn = self.__createButton(act.action_id, act.action_panel_row, action.trigger, action.toolTip(), checkable)
+            btn = self.__createButton(act.action_id, row, action.trigger, action.toolTip(), checkable)
             
             if act.action_use_icon:
                 if act.action_use_default_icon:
@@ -178,11 +183,17 @@ class TouchifyActionPanel(QWidget):
         self.layout().setContentsMargins(0, 0, 0, 0)
         
         actions = self.cfg
-        for entry in actions:
-            act: CfgTouchifyAction = entry
-            if act.action_type == CfgTouchifyAction.ActionType.Menu:
-                self.__createButton_Menu(act)
-            elif act.action_type == CfgTouchifyAction.ActionType.Brush:
-                self.__createButton_Brush(act)
-            elif act.action_type == CfgTouchifyAction.ActionType.Action:
-                self.__createButton_Action(act)
+        row_index = 0
+        
+        
+        for row in actions:
+            row: CfgTouchifyActionGroup
+            for entry in row.actions:
+                act: CfgTouchifyAction = entry
+                if act.variant == CfgTouchifyAction.Variants.Menu:
+                    self.__createButton_Menu(act, row_index)
+                elif act.variant == CfgTouchifyAction.Variants.Brush:
+                    self.__createButton_Brush(act, row_index)
+                elif act.variant == CfgTouchifyAction.Variants.Action:
+                    self.__createButton_Action(act, row_index)
+            row_index += 1

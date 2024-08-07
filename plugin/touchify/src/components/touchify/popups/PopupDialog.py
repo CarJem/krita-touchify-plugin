@@ -11,10 +11,10 @@ import importlib.util
 
 from .PopupDialog_Titlebar import PopupDialog_Titlebar
 
-from ...cfg.CfgPopup import CfgPopup
-from ...settings.TouchifyConfig import *
+from ....cfg.CfgPopup import CfgPopup
+from ....settings.TouchifyConfig import *
 from ....resources import *
-from ... import stylesheet
+from .... import stylesheet
 
 from krita import *
 
@@ -149,7 +149,7 @@ class PopupDialog(QDialog):
     def generateSize(self):
         return [0, 0]
     
-    def triggerPopup(self, ourMode: str, parent: QWidget | None):
+    def triggerPopup(self, parent: QWidget | None):
         if self.isVisible():
             self.close()
             if not self.windowMode == "popup":
@@ -160,7 +160,7 @@ class PopupDialog(QDialog):
         dialog_width = 0
         dialog_height = 0
         
-        if ourMode == "mouse":
+        if parent == None:
             actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(QCursor.pos(), 0, 0, True)
         else:
             actual_x, actual_y, dialog_width, dialog_height = self.getActionSource(parent)

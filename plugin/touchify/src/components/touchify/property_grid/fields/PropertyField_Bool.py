@@ -4,16 +4,16 @@ from PyQt5.QtCore import *
 from PyQt5 import QtGui
 import sys
 import xml.etree.ElementTree as ET
-from ..extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
+from ....extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from ...ext.TypedList import *
-from ...resources import *
-from ...ext.extensions_krita import KritaExtensions
-from ..CollapsibleBox import CollapsibleBox
+from .....ext.TypedList import *
+from .....resources import *
+from .....ext.extensions_krita import KritaExtensions
+from ....CollapsibleBox import CollapsibleBox
 
-from .PropertyUtils_Extensions import *
-from .PropertyGrid import *
-from .PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
+from ..utils.PropertyUtils_Extensions import *
+from ..PropertyGrid import *
+from ..dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from .PropertyField import *
 
 

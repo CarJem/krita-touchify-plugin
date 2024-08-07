@@ -2,95 +2,159 @@
     "panels": [],
     "actions": [
         {
-            "icon": "",
-            "action_id": "file_new",
-            "action_panel_row": 0,
-            "context_menu_actions": [],
-            "action_use_icon": true,
-            "action_type": "action",
-            "action_use_default_icon": true,
-            "brush_name": "",
-            "brush_override_icon": false,
-            "context_menu_name": "",
-            "text": ""
+            "actions": [
+                {
+                    "icon": "",
+                    "action_id": "file_new",
+                    "context_menu_actions": [],
+                    "action_use_icon": true,
+                    "variant": "action",
+                    "action_use_default_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "text": "",
+                    "action_text_and_icon": false,
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "docker_id": "",
+                    "id": "",
+                    "popup_data": {
+                        "actions_items": []
+                    },
+                    "workspace_id": ""
+                },
+                {
+                    "icon": "",
+                    "action_id": "file_open",
+                    "context_menu_actions": [],
+                    "action_use_icon": true,
+                    "variant": "action",
+                    "action_use_default_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "text": "",
+                    "action_text_and_icon": false,
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "docker_id": "",
+                    "id": "",
+                    "popup_data": {
+                        "actions_items": []
+                    },
+                    "workspace_id": ""
+                },
+                {
+                    "context_menu_actions": [],
+                    "action_use_icon": true,
+                    "action_id": "file_save",
+                    "variant": "action",
+                    "action_use_default_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "icon": "",
+                    "text": "",
+                    "id": "",
+                    "action_text_and_icon": false,
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "actions_items": []
+                    }
+                },
+                {
+                    "context_menu_actions": [],
+                    "action_use_icon": true,
+                    "action_id": "TouchifyAction_SelectionPopup",
+                    "variant": "action",
+                    "action_use_default_icon": false,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "text": "",
+                    "icon": "custom:SelectionTool",
+                    "action_text_and_icon": false,
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "docker_id": "",
+                    "id": "",
+                    "popup_data": {
+                        "actions_items": []
+                    },
+                    "workspace_id": ""
+                },
+                {
+                    "context_menu_actions": [],
+                    "action_use_icon": true,
+                    "action_id": "touchify_showPopupMenu",
+                    "variant": "action",
+                    "action_use_default_icon": false,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "text": "",
+                    "icon": "material:menu",
+                    "action_text_and_icon": false,
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "docker_id": "",
+                    "id": "",
+                    "popup_data": {
+                        "actions_items": []
+                    },
+                    "workspace_id": ""
+                }
+            ]
         },
         {
-            "icon": "",
-            "action_id": "file_open",
-            "action_panel_row": 0,
-            "context_menu_actions": [],
-            "action_use_icon": true,
-            "action_type": "action",
-            "action_use_default_icon": true,
-            "brush_name": "",
-            "brush_override_icon": false,
-            "context_menu_name": "",
-            "text": ""
-        },
-        {
-            "context_menu_actions": [],
-            "action_use_icon": true,
-            "action_id": "file_save",
-            "action_type": "action",
-            "action_use_default_icon": true,
-            "brush_name": "",
-            "brush_override_icon": false,
-            "context_menu_name": "",
-            "icon": "",
-            "action_panel_row": 0,
-            "text": ""
-        },
-        {
-            "context_menu_actions": [],
-            "action_use_icon": true,
-            "action_id": "touchify_popup_selection-tool",
-            "action_type": "action",
-            "action_use_default_icon": false,
-            "brush_name": "",
-            "brush_override_icon": false,
-            "context_menu_name": "",
-            "icon": "custom:SelectionTool",
-            "action_panel_row": 0,
-            "text": ""
-        },
-        {
-            "context_menu_actions": [],
-            "action_use_icon": true,
-            "action_id": "touchify_showPopupMenu",
-            "action_type": "action",
-            "action_use_default_icon": false,
-            "brush_name": "",
-            "brush_override_icon": false,
-            "context_menu_name": "",
-            "icon": "material:menu",
-            "action_panel_row": 0,
-            "text": ""
-        },
-        {
-            "context_menu_actions": [],
-            "action_use_icon": true,
-            "action_id": "edit_undo",
-            "action_type": "action",
-            "action_use_default_icon": true,
-            "brush_name": "",
-            "brush_override_icon": false,
-            "context_menu_name": "",
-            "icon": "",
-            "action_panel_row": 1,
-            "text": ""
-        },
-        {
-            "context_menu_actions": [],
-            "action_use_icon": true,
-            "action_id": "edit_redo",
-            "action_type": "action",
-            "action_use_default_icon": true,
-            "brush_name": "",
-            "brush_override_icon": false,
-            "context_menu_name": "",
-            "icon": "",
-            "action_panel_row": 1,
-            "text": ""
+            "actions": [
+                {
+                    "context_menu_actions": [],
+                    "action_use_icon": true,
+                    "id": "",
+                    "icon": "",
+                    "text": "",
+                    "variant": "action",
+                    "action_id": "edit_undo",
+                    "action_text_and_icon": false,
+                    "action_use_default_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "actions_items": []
+                    }
+                },
+                {
+                    "context_menu_actions": [],
+                    "action_use_icon": true,
+                    "id": "",
+                    "icon": "",
+                    "text": "",
+                    "variant": "action",
+                    "action_id": "edit_redo",
+                    "action_text_and_icon": false,
+                    "action_use_default_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "actions_items": []
+                    }
+                }
+            ]
         }
     ],
     "sections": [
@@ -127,43 +191,41 @@
         {
             "action_section_contents": [
                 {
-                    "context_menu_actions": [],
-                    "action_use_icon": true,
-                    "action_id": "view_show_canvas_only",
-                    "action_type": "action",
-                    "action_use_default_icon": false,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "context_menu_name": "",
-                    "icon": "config-canvas-only",
-                    "action_panel_row": 0,
-                    "text": ""
-                },
-                {
-                    "context_menu_actions": [],
-                    "action_use_icon": true,
-                    "action_id": "mirror_canvas",
-                    "action_type": "action",
-                    "action_use_default_icon": true,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "context_menu_name": "",
-                    "icon": "",
-                    "action_panel_row": 0,
-                    "text": ""
-                },
-                {
-                    "context_menu_actions": [],
-                    "action_use_icon": true,
-                    "action_id": "fullscreen",
-                    "action_type": "action",
-                    "action_use_default_icon": true,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "context_menu_name": "",
-                    "icon": "",
-                    "action_panel_row": 0,
-                    "text": ""
+                    "actions": [
+                        {
+                            "context_menu_actions": [],
+                            "action_use_icon": true,
+                            "action_id": "view_show_canvas_only",
+                            "variant": "action",
+                            "action_use_default_icon": false,
+                            "brush_name": "",
+                            "brush_override_icon": false,
+                            "icon": "config-canvas-only",
+                            "text": ""
+                        },
+                        {
+                            "context_menu_actions": [],
+                            "action_use_icon": true,
+                            "action_id": "mirror_canvas",
+                            "variant": "action",
+                            "action_use_default_icon": true,
+                            "brush_name": "",
+                            "brush_override_icon": false,
+                            "icon": "",
+                            "text": ""
+                        },
+                        {
+                            "context_menu_actions": [],
+                            "action_use_icon": true,
+                            "action_id": "fullscreen",
+                            "variant": "action",
+                            "action_use_default_icon": true,
+                            "brush_name": "",
+                            "brush_override_icon": false,
+                            "icon": "",
+                            "text": ""
+                        }
+                    ]
                 }
             ],
             "action_section_name": "Actions (Left)",
@@ -190,47 +252,47 @@
         {
             "action_section_contents": [
                 {
-                    "context_menu_actions": [],
-                    "action_use_icon": true,
-                    "action_id": "show_snap_options_popup",
-                    "action_type": "action",
-                    "action_use_default_icon": false,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "context_menu_name": "",
-                    "icon": "material:vector-link",
-                    "action_panel_row": 0,
-                    "text": "Snap"
-                },
-                {
-                    "context_menu_actions": [
+                    "actions": [
                         {
-                            "action_id": "view_ruler",
-                            "context_menu_actions": []
+                            "context_menu_actions": [],
+                            "action_use_icon": true,
+                            "action_id": "show_snap_options_popup",
+                            "variant": "action",
+                            "action_use_default_icon": false,
+                            "brush_name": "",
+                            "brush_override_icon": false,
+                            "icon": "material:vector-link",
+                            "text": "Snap"
                         },
                         {
-                            "action_id": "view_toggle_reference_images",
-                            "context_menu_actions": []
-                        },
-                        {
-                            "action_id": "view_toggle_painting_assistants",
-                            "context_menu_actions": []
-                        },
-                        {
-                            "action_id": "show-global-selection-mask",
-                            "context_menu_actions": []
+                            "context_menu_actions": [
+                                {
+                                    "action_id": "view_ruler",
+                                    "context_menu_actions": []
+                                },
+                                {
+                                    "action_id": "view_toggle_reference_images",
+                                    "context_menu_actions": []
+                                },
+                                {
+                                    "action_id": "view_toggle_painting_assistants",
+                                    "context_menu_actions": []
+                                },
+                                {
+                                    "action_id": "show-global-selection-mask",
+                                    "context_menu_actions": []
+                                }
+                            ],
+                            "action_id": "deselect",
+                            "action_use_default_icon": true,
+                            "icon": "krita_tool_assistant",
+                            "variant": "menu",
+                            "text": "Assistants",
+                            "action_use_icon": true,
+                            "brush_name": "",
+                            "brush_override_icon": false
                         }
-                    ],
-                    "action_id": "deselect",
-                    "action_use_default_icon": true,
-                    "icon": "krita_tool_assistant",
-                    "action_panel_row": 0,
-                    "action_type": "menu",
-                    "context_menu_name": "Assistants",
-                    "action_use_icon": true,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "text": ""
+                    ]
                 }
             ],
             "action_section_name": "Actions (Right)",

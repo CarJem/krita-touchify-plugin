@@ -2,11 +2,11 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import os
-from ..components.propertygrid.PropertyGrid import PropertyGrid
+from ..components.touchify.property_grid.PropertyGrid import PropertyGrid
 from ..settings.TouchifyConfig import *
 from ..resources import *
 from ..ext.extensions import *
-from ..components.propertygrid.PropertyGridPanel import *
+from ..components.touchify.property_grid.PropertyGrid_Panel import *
 from ...paths import BASE_DIR
 
 from krita import *

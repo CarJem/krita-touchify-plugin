@@ -3,7 +3,7 @@ from krita import Krita
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-from ... import stylesheet
+from .... import stylesheet
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

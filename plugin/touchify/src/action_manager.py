@@ -5,10 +5,11 @@ from PyQt5.QtWidgets import *
 from .variables import *
 
 from .cfg.CfgTouchifyAction import *
+from .ext.extensions_krita import *
 
-from .components.popups.PopupDialog import *
-from .components.popups.PopupDialog_Actions import *
-from .components.popups.PopupDialog_Docker import *
+from .components.touchify.popups.PopupDialog import *
+from .components.touchify.popups.PopupDialog_Actions import *
+from .components.touchify.popups.PopupDialog_Docker import *
 
 
 
@@ -22,14 +23,46 @@ class ActionManager(QObject):
         self.mainWindow = window
         self.qWin = window.qwindow()
         
-    def executeAction(self, action: QAction, data: CfgTouchifyAction, overMouse: bool):
-        if data.action_type == CfgTouchifyAction.ActionType.Docker:
+    def executeAction(self, data: CfgTouchifyAction, action: QAction):
+        if data.variant == CfgTouchifyAction.Variants.Docker:
             self.action_docker(data.docker_id)
-        elif data.action_type == CfgTouchifyAction.ActionType.Workspace:
+        elif data.variant == CfgTouchifyAction.Variants.Workspace:
             self.action_workspace(data.workspace_id)
-        elif data.action_type == CfgTouchifyAction.ActionType.Popup:
-            self.action_popup(action, data.popup_data, overMouse)
+        elif data.variant == CfgTouchifyAction.Variants.Popup:
+            self.action_popup(action, data.popup_data)
+        elif data.variant == CfgTouchifyAction.Variants.Brush:
+            self.action_brush(data.brush_name)
+        elif data.variant == CfgTouchifyAction.Variants.DockerGroup:
+            self.action_dockergroup(data.docker_group_data)
+        elif data.variant == CfgTouchifyAction.Variants.Menu:
+            self.action_menu(action, data)
             
+    def __getActionSource(self, action: QAction):
+        _sender = action.sender()
+        _parent: QWidget | None = None  
+        
+        if not isinstance(_sender, QWidgetAction):
+            return None
+
+        _sender: QWidgetAction
+
+        for widget in _sender.associatedWidgets():
+            if isinstance(widget, QToolButton):
+                if widget.underMouse():
+                    _parent = widget
+                    break
+        return _parent
+    
+    def action_menu(self, action: QAction, data: CfgTouchifyAction):
+        _parent = self.__getActionSource(action)
+        contextMenu = TouchifyActionMenu(data, _parent)
+        contextMenu.show()
+            
+    def action_brush(self, id):
+        brush_presets = ResourceManager.getBrushPresets()
+        if id in brush_presets:
+            preset = brush_presets[id]
+            Krita.instance().activeWindow().activeView().setCurrentBrushPreset(preset)
     
     def action_docker(self, path):
         dockersList = Krita.instance().dockers()
@@ -84,19 +117,12 @@ class ActionManager(QObject):
                 if (docker.objectName() == path):
                     docker.setVisible(isVisible)
                             
-    def action_popup(self, action: QAction, data: CfgPopup, overMouse: bool):    
-        
-        _mode = "mouse" if overMouse else "button"
-        _sender = action.sender()
-        _parent = None
-        if isinstance(_sender, QWidget):
-            _parent: QWidget = _sender
-            
+    def action_popup(self, action: QAction, data: CfgPopup):    
+        _parent = self.__getActionSource(action)            
         if data.type == "actions":
-            popup = PopupDialog_Actions(self.qWin, data)
+            popup = PopupDialog_Actions(self.qWin, data, self)
         elif data.type == "docker":
             popup = PopupDialog_Docker(self.qWin, data, self.docker_management)
         else:
-            popup = PopupDialog(self.qWin, data)
-            
-        popup.triggerPopup(_mode, _parent)
+            popup = PopupDialog(self.qWin, data)  
+        popup.triggerPopup(_parent)

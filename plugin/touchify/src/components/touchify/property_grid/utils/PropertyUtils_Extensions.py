@@ -39,6 +39,11 @@ class PropertyUtils_Extensions:
         if hasattr(obj, "propertygrid_groups"):
             return dict(obj.propertygrid_groups())
         else: return {}
+        
+    def getRestrictions(obj):
+        if hasattr(obj, "propertygrid_restrictions"):
+            return dict(obj.propertygrid_restrictions())
+        else: return {}            
 
     def getSisters(obj):
         if hasattr(obj, "propertygrid_sisters"):

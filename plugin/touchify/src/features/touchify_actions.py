@@ -5,6 +5,7 @@ import json
 import sys
 import importlib.util
 import uuid
+from ..ext.extensions_krita import *
 
 from ..variables import *
 
@@ -25,10 +26,11 @@ class TouchifyActions(object):
     def buildMenu(self, menu: QMenu):
         menu.addMenu(self.root_menu)
         
-    def executeAction(self, data: CfgTouchifyAction, action: QAction, overMouse: bool = False):
-        self.appEngine.action_management.executeAction(action, data, overMouse)
-
-    def createAction(self, window: Window, data: CfgTouchifyAction, actionPath: str):
+    def executeAction(self, data: CfgTouchifyAction, action: QAction):
+        self.appEngine.action_management.executeAction(data, action)
+        
+        
+    def createAction(self, data: CfgTouchifyAction, window: Window, actionPath: str):
         actionIdentifier ='TouchifyAction_{0}'.format(data.id)
         iconName = data.icon
         displayName = data.text
@@ -37,9 +39,9 @@ class TouchifyActions(object):
         icon = ResourceManager.iconLoader(iconName)
         action.setIcon(icon)
 
-        TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.executeAction, {'data': data, 'action': action, 'overMouse': True})
+        TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.executeAction, {'data': data, 'action': action})
         
-        action.triggered.connect(lambda: self.executeAction(data, action, False))
+        action.triggered.connect(lambda: self.executeAction(data, action))
         self.root_menu.addAction(action)
 
     def createActions(self, window: Window, actionPath: str):
@@ -49,5 +51,6 @@ class TouchifyActions(object):
         self.root_menu = QtWidgets.QMenu("Registered Actions")
 
         for action in cfg.actions_registry.actions_registry:
-            self.createAction(window, action, subItemPath)
+            self.createAction(action, window, subItemPath)
+
             

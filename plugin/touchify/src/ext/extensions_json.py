@@ -9,6 +9,7 @@ from PyQt5.QtCore import *
 import sys
 
 from krita import *
+    
 
 class JsonExtensions:
 

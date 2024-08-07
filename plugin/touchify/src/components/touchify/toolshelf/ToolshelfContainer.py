@@ -20,6 +20,7 @@ from .ToolshelfPage import ToolshelfPage
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ToolshelfWidget import ToolshelfWidget
+    from ....dockers.TouchifyToolshelfDocker import TouchifyToolshelfDocker
 
 class ToolshelfContainer(QStackedWidget):
     
@@ -41,7 +42,7 @@ class ToolshelfContainer(QStackedWidget):
         
         self.mouse_listener = ToolshelfContainer.MouseListener()
         
-        self.dockWidget = parent
+        self.dockWidget: "ToolshelfWidget" | "TouchifyToolshelfDocker"  = parent
         self._panels = {}
         self._pinned = False
         self._current_panel_id = 'MAIN'

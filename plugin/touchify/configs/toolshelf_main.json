@@ -114,25 +114,26 @@
                 {
                     "action_section_contents": [
                         {
-                            "action_id": "merge_layer",
-                            "action_use_default_icon": true,
-                            "action_type": "action",
-                            "icon": "",
-                            "action_panel_row": 0,
-                            "context_menu_actions": []
-                        },
-                        {
-                            "context_menu_actions": [],
-                            "action_use_icon": true,
-                            "action_id": "RenameCurrentLayer",
-                            "action_type": "action",
-                            "action_use_default_icon": false,
-                            "brush_name": "",
-                            "brush_override_icon": false,
-                            "context_menu_name": "",
-                            "icon": "edit-rename",
-                            "action_panel_row": 0,
-                            "text": ""
+                            "actions": [
+                                {
+                                    "action_id": "merge_layer",
+                                    "action_use_default_icon": true,
+                                    "variant": "action",
+                                    "icon": "",
+                                    "context_menu_actions": []
+                                },
+                                {
+                                    "context_menu_actions": [],
+                                    "action_use_icon": true,
+                                    "action_id": "RenameCurrentLayer",
+                                    "variant": "action",
+                                    "action_use_default_icon": false,
+                                    "brush_name": "",
+                                    "brush_override_icon": false,
+                                    "icon": "edit-rename",
+                                    "text": ""
+                                }
+                            ]
                         }
                     ],
                     "action_section_name": "LayerOptions",
@@ -159,39 +160,41 @@
                 {
                     "action_section_contents": [
                         {
-                            "context_menu_actions": [
+                            "actions": [
                                 {
-                                    "action_id": "isolate_active_layer",
-                                    "context_menu_actions": []
+                                    "context_menu_actions": [
+                                        {
+                                            "action_id": "isolate_active_layer",
+                                            "context_menu_actions": []
+                                        },
+                                        {
+                                            "action_id": "isolate_active_group",
+                                            "context_menu_actions": []
+                                        }
+                                    ],
+                                    "icon": "view-filter",
+                                    "variant": "menu",
+                                    "text": "Isolate...",
+                                    "action_id": "",
+                                    "action_use_default_icon": false
                                 },
                                 {
-                                    "action_id": "isolate_active_group",
-                                    "context_menu_actions": []
+                                    "context_menu_actions": [
+                                        {
+                                            "action_id": "create_quick_group",
+                                            "context_menu_actions": []
+                                        },
+                                        {
+                                            "action_id": "quick_ungroup",
+                                            "context_menu_actions": []
+                                        }
+                                    ],
+                                    "variant": "menu",
+                                    "text": "Grouping...",
+                                    "icon": "groupLayer",
+                                    "action_use_default_icon": false
                                 }
-                            ],
-                            "icon": "view-filter",
-                            "action_type": "menu",
-                            "context_menu_name": "Isolate...",
-                            "action_panel_row": 0,
-                            "action_id": "",
-                            "action_use_default_icon": false
-                        },
-                        {
-                            "context_menu_actions": [
-                                {
-                                    "action_id": "create_quick_group",
-                                    "context_menu_actions": []
-                                },
-                                {
-                                    "action_id": "quick_ungroup",
-                                    "context_menu_actions": []
-                                }
-                            ],
-                            "action_type": "menu",
-                            "context_menu_name": "Grouping...",
-                            "icon": "groupLayer",
-                            "action_panel_row": 0,
-                            "action_use_default_icon": false
+                            ]
                         }
                     ],
                     "action_section_name": "LayerOptions2",
@@ -252,17 +255,19 @@
                 {
                     "action_section_contents": [
                         {
-                            "context_menu_actions": [],
-                            "action_use_icon": true,
-                            "action_id": "show_brush_editor",
-                            "action_type": "action",
-                            "action_use_default_icon": false,
-                            "brush_name": "",
-                            "brush_override_icon": false,
-                            "context_menu_name": "",
-                            "icon": "paintop_settings_02",
-                            "action_panel_row": 0,
-                            "text": ""
+                            "actions": [
+                                {
+                                    "context_menu_actions": [],
+                                    "action_use_icon": true,
+                                    "action_id": "show_brush_editor",
+                                    "variant": "action",
+                                    "action_use_default_icon": false,
+                                    "brush_name": "",
+                                    "brush_override_icon": false,
+                                    "icon": "paintop_settings_02",
+                                    "text": ""
+                                }
+                            ]
                         }
                     ],
                     "action_section_name": "Panel",
@@ -301,23 +306,24 @@
         {
             "action_section_contents": [
                 {
-                    "action_id": "eraser_preset_action",
-                    "icon": "draw-eraser",
-                    "action_panel_row": 0,
-                    "context_menu_actions": []
-                },
-                {
-                    "icon": "bar-transparency-unlocked",
-                    "action_id": "preserve_alpha",
-                    "action_panel_row": 0,
-                    "action_use_default_icon": true,
-                    "context_menu_actions": []
-                },
-                {
-                    "action_id": "reload_preset_action",
-                    "icon": "reload-preset",
-                    "action_panel_row": 0,
-                    "context_menu_actions": []
+                    "actions": [
+                        {
+                            "action_id": "eraser_preset_action",
+                            "icon": "draw-eraser",
+                            "context_menu_actions": []
+                        },
+                        {
+                            "icon": "bar-transparency-unlocked",
+                            "action_id": "preserve_alpha",
+                            "action_use_default_icon": true,
+                            "context_menu_actions": []
+                        },
+                        {
+                            "action_id": "reload_preset_action",
+                            "icon": "reload-preset",
+                            "context_menu_actions": []
+                        }
+                    ]
                 }
             ],
             "action_section_name": "Brush Options",
@@ -367,18 +373,56 @@
         {
             "action_section_contents": [
                 {
-                    "icon": "material:palette-swatch-variant",
-                    "action_id": "touchify_popup_quick-settings",
-                    "action_panel_row": 0,
-                    "action_use_default_icon": false,
-                    "context_menu_actions": []
+                    "actions": [
+                        {
+                            "icon": "material:palette-swatch-variant",
+                            "action_id": "TouchifyAction_QuickSettingsPopup",
+                            "action_use_default_icon": false,
+                            "context_menu_actions": [],
+                            "action_use_icon": true,
+                            "action_text_and_icon": false,
+                            "variant": "action",
+                            "brush_name": "",
+                            "brush_override_icon": false,
+                            "docker_group_data": {
+                                "docker_names": []
+                            },
+                            "docker_id": "",
+                            "id": "",
+                            "popup_data": {
+                                "actions_items": []
+                            },
+                            "text": "",
+                            "workspace_id": ""
+                        }
+                    ],
+                    "row_name": "Actions Row"
                 },
                 {
-                    "icon": "custom:pencil-ruler-outline",
-                    "action_id": "touchify_popup_brushOptionsPopup",
-                    "action_panel_row": 1,
-                    "action_use_default_icon": false,
-                    "context_menu_actions": []
+                    "actions": [
+                        {
+                            "context_menu_actions": [],
+                            "action_use_icon": true,
+                            "id": "",
+                            "icon": "",
+                            "text": "",
+                            "variant": "action",
+                            "action_id": "TouchifyAction_brushOptionsPopup",
+                            "action_text_and_icon": false,
+                            "action_use_default_icon": true,
+                            "brush_name": "",
+                            "brush_override_icon": false,
+                            "docker_id": "",
+                            "workspace_id": "",
+                            "docker_group_data": {
+                                "docker_names": []
+                            },
+                            "popup_data": {
+                                "actions_items": []
+                            }
+                        }
+                    ],
+                    "row_name": "Actions Row"
                 }
             ],
             "action_section_name": "Slider Options",
