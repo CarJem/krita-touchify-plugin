@@ -80,7 +80,7 @@ class PopupDialog_Actions(PopupDialog):
             newAction.action_id = actionItem.action
             newAction.text = actionItem.text
             newAction.icon = actionItem.icon
-            newAction.action_text_and_icon = True
+            newAction.showText = True
             converted_groups[current_y].actions.append(newAction)
             
             current_x += 1

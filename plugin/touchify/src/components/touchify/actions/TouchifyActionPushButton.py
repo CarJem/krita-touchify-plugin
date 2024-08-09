@@ -6,10 +6,10 @@ from ....settings.TouchifyConfig import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-class TouchifyActionButton(QToolButton):
+class TouchifyActionPushButton(QPushButton):
 
     def __init__(self, parent = None):
-        super(TouchifyActionButton, self).__init__(parent)
+        super(TouchifyActionPushButton, self).__init__(parent)
 
         self.setFocusPolicy(Qt.NoFocus)
         self.highlightConnection = None

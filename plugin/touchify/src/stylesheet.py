@@ -179,24 +179,14 @@ touchify_toolshelf_header_button = f"""
         """
 
 
-def touchify_action_btn_toolshelf(isFlat: bool):
-        flatStyle = f"""
-            QToolButton  {{
-                border: 0px solid transparent;
-            }}
-        """
-        
-        result = f"""QToolButton::menu-indicator {{ image: none; }}"""
-        
-        if isFlat:
-            result += flatStyle
-            
+def touchify_action_btn_toolshelf():
+        result = f"""QPushButton::menu-indicator, QToolButton::menu-indicator {{ image: none; }}"""  
         return result
             
 
 def touchify_action_btn_popup(opacityLevel: float):
     return f"""
-        QToolButton {{
+        QToolButton, QPushButton {{
             border-radius: 0px; 
             background-color: rgba(0,0,0,{opacityLevel}); 
             padding: 5px 5px;
@@ -204,11 +194,11 @@ def touchify_action_btn_popup(opacityLevel: float):
             font-size: 12px
         }}
         
-        QToolButton:hover {{
+        QToolButton:hover, QPushButton:hover {{
             background-color: rgba(155,155,155,{opacityLevel}); 
         }}
                         
-        QToolButton:pressed {{
+        QToolButton:pressed, QToolButton:pressed {{
             background-color: rgba(128,128,128,{opacityLevel}); 
         }}
     """

@@ -2,6 +2,7 @@
 from krita import *
 from PyQt5.QtCore import *
 
+from ..components.ColorFramedButton import ColorFramedButton
 from ..resources import ResourceManager
 
 DOCKER_TITLE = 'Color Options'
@@ -27,7 +28,7 @@ class ColorSourceToggle(QWidget):
         self.gridLayout.setSpacing(0)
         self.gridLayout.setContentsMargins(0,0,0,0)
 
-        self.setFgBtn = QPushButton(self)
+        self.setFgBtn = ColorFramedButton(self)
         self.setFgBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.setFgBtn.clicked.connect(self.setForegroundColor)
         self.setFgBtn.setFixedHeight(self.cubeSize)
@@ -41,7 +42,7 @@ class ColorSourceToggle(QWidget):
         self.toggleBtn.setStyleSheet("border-radius: 0px;")
         self.gridLayout.addWidget(self.toggleBtn)
 
-        self.setBgBtn = QPushButton(self)
+        self.setBgBtn = ColorFramedButton(self)
         self.setBgBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.setBgBtn.clicked.connect(self.setBackgroundColor)
         self.setBgBtn.setFixedHeight(self.cubeSize)
@@ -89,9 +90,12 @@ class ColorSourceToggle(QWidget):
         
         fg_color = self.krita_to_qcolor(activeView.foregroundColor())
         bg_color = self.krita_to_qcolor(activeView.backgroundColor())
+        
+        self.setFgBtn.setColor(fg_color)
+        self.setBgBtn.setColor(bg_color)
 
-        self.setFgBtn.setStyleSheet("border: 1px solid transparent; background-color: {0}".format(fg_color.name()))
-        self.setBgBtn.setStyleSheet("border: 1px solid transparent; background-color: {0}".format(bg_color.name()))
+        #self.setFgBtn.setStyleSheet("border: 1px solid transparent; background-color: {0}".format(fg_color.name()))
+        #self.setBgBtn.setStyleSheet("border: 1px solid transparent; background-color: {0}".format(bg_color.name()))
 
     def onCanvasChanged(self, canvas: Canvas):
         self.canvas = canvas

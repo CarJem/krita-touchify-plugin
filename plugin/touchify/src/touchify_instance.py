@@ -33,6 +33,8 @@ class TouchifyInstance(object):
         self.touchify_tweaks = TouchifyTweaks(self)
         self.canvas_presets = CanvasPresets(self)
         
+        self.action_management = ActionManager()
+        
         self.settings_dlg: SettingsDialog | None = None
 
     def onKritaConfigUpdated(self):
@@ -92,7 +94,7 @@ class TouchifyInstance(object):
     def onWindowCreated(self, window: Window):
         self.instanceWindow = window
         self.docker_management = DockerManager(self.instanceWindow)
-        self.action_management = ActionManager(self.instanceWindow, self.docker_management)
+        self.action_management.windowCreated(self.instanceWindow, self.docker_management)
         
         self.setupDockers(window)
 

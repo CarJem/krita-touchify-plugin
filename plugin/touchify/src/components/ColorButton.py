@@ -1,7 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, pyqtSignal
+from .ColorFramedButton import ColorFramedButton
 
-class ColorButton(QtWidgets.QPushButton):
+class ColorButton(ColorFramedButton):
     '''
     Custom Qt Widget to show a chosen color.
 
@@ -26,10 +27,8 @@ class ColorButton(QtWidgets.QPushButton):
             self._color = color
             self.colorChanged.emit(color)
 
-        if self._color:
-            self.setStyleSheet("ColorButton { background-color: %s; }" % self._color.name() )
-        else:
-            self.setStyleSheet("")
+
+        super().setColor(self._color)
 
     def color(self):
         return self._color

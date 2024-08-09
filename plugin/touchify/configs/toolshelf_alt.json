@@ -7,13 +7,13 @@
                     "icon": "",
                     "action_id": "file_new",
                     "context_menu_actions": [],
-                    "action_use_icon": true,
+                    "showIcon": true,
                     "variant": "action",
-                    "action_use_default_icon": true,
+                    "action_use_icon": true,
                     "brush_name": "",
                     "brush_override_icon": false,
                     "text": "",
-                    "action_text_and_icon": false,
+                    "showText": false,
                     "docker_group_data": {
                         "docker_names": []
                     },
@@ -28,13 +28,13 @@
                     "icon": "",
                     "action_id": "file_open",
                     "context_menu_actions": [],
-                    "action_use_icon": true,
+                    "showIcon": true,
                     "variant": "action",
-                    "action_use_default_icon": true,
+                    "action_use_icon": true,
                     "brush_name": "",
                     "brush_override_icon": false,
                     "text": "",
-                    "action_text_and_icon": false,
+                    "showText": false,
                     "docker_group_data": {
                         "docker_names": []
                     },
@@ -47,16 +47,16 @@
                 },
                 {
                     "context_menu_actions": [],
-                    "action_use_icon": true,
+                    "showIcon": true,
                     "action_id": "file_save",
                     "variant": "action",
-                    "action_use_default_icon": true,
+                    "action_use_icon": true,
                     "brush_name": "",
                     "brush_override_icon": false,
                     "icon": "",
                     "text": "",
                     "id": "",
-                    "action_text_and_icon": false,
+                    "showText": false,
                     "docker_id": "",
                     "workspace_id": "",
                     "docker_group_data": {
@@ -68,15 +68,15 @@
                 },
                 {
                     "context_menu_actions": [],
-                    "action_use_icon": true,
+                    "showIcon": true,
                     "action_id": "TouchifyAction_SelectionPopup",
                     "variant": "action",
-                    "action_use_default_icon": false,
+                    "action_use_icon": false,
                     "brush_name": "",
                     "brush_override_icon": false,
                     "text": "",
                     "icon": "custom:SelectionTool",
-                    "action_text_and_icon": false,
+                    "showText": false,
                     "docker_group_data": {
                         "docker_names": []
                     },
@@ -89,15 +89,15 @@
                 },
                 {
                     "context_menu_actions": [],
-                    "action_use_icon": true,
+                    "showIcon": true,
                     "action_id": "touchify_showPopupMenu",
                     "variant": "action",
-                    "action_use_default_icon": false,
+                    "action_use_icon": false,
                     "brush_name": "",
                     "brush_override_icon": false,
                     "text": "",
                     "icon": "material:menu",
-                    "action_text_and_icon": false,
+                    "showText": false,
                     "docker_group_data": {
                         "docker_names": []
                     },
@@ -108,20 +108,21 @@
                     },
                     "workspace_id": ""
                 }
-            ]
+            ],
+            "row_name": "File Row"
         },
         {
             "actions": [
                 {
                     "context_menu_actions": [],
-                    "action_use_icon": true,
+                    "showIcon": true,
                     "id": "",
                     "icon": "",
                     "text": "",
                     "variant": "action",
                     "action_id": "edit_undo",
-                    "action_text_and_icon": false,
-                    "action_use_default_icon": true,
+                    "showText": false,
+                    "action_use_icon": true,
                     "brush_name": "",
                     "brush_override_icon": false,
                     "docker_id": "",
@@ -135,14 +136,14 @@
                 },
                 {
                     "context_menu_actions": [],
-                    "action_use_icon": true,
+                    "showIcon": true,
                     "id": "",
                     "icon": "",
                     "text": "",
                     "variant": "action",
                     "action_id": "edit_redo",
-                    "action_text_and_icon": false,
-                    "action_use_default_icon": true,
+                    "showText": false,
+                    "action_use_icon": true,
                     "brush_name": "",
                     "brush_override_icon": false,
                     "docker_id": "",
@@ -154,7 +155,8 @@
                         "actions_items": []
                     }
                 }
-            ]
+            ],
+            "row_name": "Undo / Redo Row"
         }
     ],
     "sections": [
@@ -194,10 +196,10 @@
                     "actions": [
                         {
                             "context_menu_actions": [],
-                            "action_use_icon": true,
+                            "showIcon": true,
                             "action_id": "view_show_canvas_only",
                             "variant": "action",
-                            "action_use_default_icon": false,
+                            "action_use_icon": false,
                             "brush_name": "",
                             "brush_override_icon": false,
                             "icon": "config-canvas-only",
@@ -205,10 +207,10 @@
                         },
                         {
                             "context_menu_actions": [],
-                            "action_use_icon": true,
+                            "showIcon": true,
                             "action_id": "mirror_canvas",
                             "variant": "action",
-                            "action_use_default_icon": true,
+                            "action_use_icon": true,
                             "brush_name": "",
                             "brush_override_icon": false,
                             "icon": "",
@@ -216,10 +218,10 @@
                         },
                         {
                             "context_menu_actions": [],
-                            "action_use_icon": true,
+                            "showIcon": true,
                             "action_id": "fullscreen",
                             "variant": "action",
-                            "action_use_default_icon": true,
+                            "action_use_icon": true,
                             "brush_name": "",
                             "brush_override_icon": false,
                             "icon": "",
@@ -255,10 +257,10 @@
                     "actions": [
                         {
                             "context_menu_actions": [],
-                            "action_use_icon": true,
+                            "showIcon": true,
                             "action_id": "show_snap_options_popup",
                             "variant": "action",
-                            "action_use_default_icon": false,
+                            "action_use_icon": false,
                             "brush_name": "",
                             "brush_override_icon": false,
                             "icon": "material:vector-link",
@@ -284,15 +286,26 @@
                                 }
                             ],
                             "action_id": "deselect",
-                            "action_use_default_icon": true,
+                            "action_use_icon": true,
                             "icon": "krita_tool_assistant",
                             "variant": "menu",
                             "text": "Assistants",
-                            "action_use_icon": true,
+                            "showIcon": true,
                             "brush_name": "",
-                            "brush_override_icon": false
+                            "brush_override_icon": false,
+                            "id": "krita_tool_assistant",
+                            "showText": false,
+                            "docker_id": "",
+                            "workspace_id": "",
+                            "docker_group_data": {
+                                "docker_names": []
+                            },
+                            "popup_data": {
+                                "actions_items": []
+                            }
                         }
-                    ]
+                    ],
+                    "row_name": "Actions Row"
                 }
             ],
             "action_section_name": "Actions (Right)",

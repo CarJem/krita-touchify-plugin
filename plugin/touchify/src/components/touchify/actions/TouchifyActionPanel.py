@@ -1,7 +1,8 @@
 import uuid
 from krita import *
 
-from .TouchifyActionButton import TouchifyActionButton
+from .TouchifyActionPushButton import *
+from .TouchifyActionToolButton import *
 from .TouchifyActionMenu import TouchifyActionMenu
 
 from PyQt5.QtWidgets import *
@@ -44,7 +45,7 @@ class TouchifyActionPanel(QWidget):
         self.opacity: float = opacity
 
         self._rows: dict[int, QWidget] = {}
-        self._buttons: dict[any, TouchifyActionButton] = {}
+        self._buttons: dict[any, TouchifyActionPushButton | TouchifyActionToolButton] = {}
         
         self.hinted_size: QSize | None = None
         self.registered_actions: list[tuple[QAction, QMetaObject.Connection, bool]] = []
@@ -60,12 +61,12 @@ class TouchifyActionPanel(QWidget):
         else:
             return self.minimumSize()
         
-    def updateButton(self, btn: TouchifyActionButton, action: QAction, useIcon: bool):
+    def updateButton(self, btn: TouchifyActionPushButton | TouchifyActionToolButton, action: QAction, useIcon: bool):
         btn.setChecked(action.isChecked())
         if useIcon:
             btn.setIcon(action.icon())
     
-    def registerAction(self, btn: TouchifyActionButton, action: QAction, useIcon: bool):
+    def registerAction(self, btn: TouchifyActionPushButton | TouchifyActionToolButton, action: QAction, useIcon: bool):
         connection = action.changed.connect(lambda: self.updateButton(btn, action, useIcon))
         self.registered_actions.append((action, connection, useIcon))
     
@@ -76,32 +77,21 @@ class TouchifyActionPanel(QWidget):
             except TypeError:
                 pass
                        
-    
-    def __finalizeButton(self, btn: TouchifyActionButton):
-        if self.icon_width > 0 and self.icon_height > 0:
-            btn.setIconSize(QSize(self.icon_width, self.icon_height))
-            
-        if self.item_width > 0:
-            btn.setFixedWidth(self.item_width)
-            
-        if self.item_height > 0:
-            btn.setFixedHeight(self.item_height)
-            
-        if self.type == "popup":
-            btn.setStyleSheet(stylesheet.touchify_action_btn_popup(self.opacity))
-            btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
-        elif self.type == "toolbar" or self.type == "toolbar_flat":
-            btn.setStyleSheet(stylesheet.touchify_action_btn_toolshelf(self.type == "toolbar_flat"))
-            btn.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+    def appendButton(self, data: CfgTouchifyAction, btn: TouchifyActionPushButton | TouchifyActionToolButton, row: int):
+        def action_id():
+            result = None
+            while result in self._buttons or result == None:
+                result = str(uuid.uuid4())
+            return result
         
-    def __createButton(self, id: any, row: int, onClick: any, toolTip: str, checkable: bool):
-        btn = TouchifyActionButton()
-        if onClick:
-            btn.clicked.connect(onClick) # collect and disconnect all when closing
-        btn.setToolTip(toolTip)
-        btn.setContentsMargins(0,0,0,0)
-        btn.setCheckable(checkable)
+        id = action_id()
         self._buttons[id] = btn
+        
+        if data.variant == CfgTouchifyAction.Variants.Action:
+            action = Krita.instance().action(data.action_id)
+            if action:
+                if action.isCheckable():
+                    self.registerAction(btn, action, data.action_use_icon)
 
         if row not in self._rows:
             rowWid = QWidget()
@@ -113,68 +103,24 @@ class TouchifyActionPanel(QWidget):
             self.layout().addWidget(rowWid)
 
         self._rows[row].layout().addWidget(btn)
-        return btn
-   
-    def __createButton_Brush(self, act: CfgTouchifyAction, row: int):
         
-        def __brushButtonClicked(self, id: Resource):
-            Krita.instance().activeWindow().activeView().setCurrentBrushPreset(id)
-        
-        id = act.brush_name
-        brush_presets = ResourceManager.getBrushPresets()
-        
-        if id in brush_presets:
-            preset = brush_presets[id]
-            btn = self.__createButton(id, row, lambda: __brushButtonClicked(preset), preset.name(), False)
-            if act.brush_override_icon:
-                if act.action_use_icon:
-                    btn.setIcon(ResourceManager.iconLoader())
-                    if act.action_text_and_icon: btn.setText(act.text)
-                else:
-                    btn.setText(act.text)
-            else:
-                btn.setIcon(ResourceManager.brushIcon(id))
-        self.__finalizeButton(btn)
-                   
-    def __createButton_Menu(self, act: CfgTouchifyAction, row: int):
-        id = str(uuid.uuid4())
-        btn = self.__createButton(id, row, None, act.text, False)
-        
-        if act.action_use_icon:
-            btn.setIcon(ResourceManager.iconLoader(act.icon))
-            if act.action_text_and_icon: btn.setText(act.text)
-        else:
-            btn.setText(act.text)
-        
-        contextMenu = TouchifyActionMenu(act, btn)
-        btn.setMenu(contextMenu)
-        btn.clicked.connect(btn.showMenu)
-        self.__finalizeButton(btn)
-        
-    def __createButton_Action(self, act: CfgTouchifyAction, row: int):
-        action = Krita.instance().action(act.action_id)
-        if action:
-            checkable = action.isCheckable()
-            if act.action_id in KNOWN_UNCHECKABLES:
-                checkable = False
-                
-                
-            btn = self.__createButton(act.action_id, row, action.trigger, action.toolTip(), checkable)
+    def stylizeButton(self, btn: TouchifyActionPushButton | TouchifyActionToolButton):   
+        if self.icon_width > 0 and self.icon_height > 0:
+            btn.setIconSize(QSize(self.icon_width, self.icon_height))
             
-            if act.action_use_icon:
-                if act.action_use_default_icon:
-                    btn.setIcon(action.icon())
-                    if act.action_text_and_icon: btn.setText(act.text)
-                else:
-                    btn.setIcon(ResourceManager.iconLoader(act.icon))
-                    if act.action_text_and_icon: btn.setText(act.text)
-            else:
-                btn.setText(act.text)
-
-            if checkable:
-                btn.setChecked(action.isChecked())
-                self.registerAction(btn, action, act.action_use_default_icon)
-            self.__finalizeButton(btn)
+        if self.item_width > 0:
+            btn.setFixedWidth(self.item_width)
+            
+        if self.item_height > 0:
+            btn.setFixedHeight(self.item_height)
+            
+        if self.type == "popup":
+            btn.setStyleSheet(stylesheet.touchify_action_btn_popup(self.opacity))
+            if isinstance(btn, TouchifyActionToolButton): btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+        elif self.type == "toolbar" or self.type == "toolbar_flat":
+            btn.setStyleSheet(stylesheet.touchify_action_btn_toolshelf())
+            if isinstance(btn, TouchifyActionPushButton) and self.type == "toolbar_flat": btn.setFlat(True)
+            btn.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
     def createPanel(self):
         self.ourLayout = QVBoxLayout()
@@ -184,16 +130,19 @@ class TouchifyActionPanel(QWidget):
         
         actions = self.cfg
         row_index = 0
+        isTool = False
+        
+        if self.type == "popup":
+            isTool = True
         
         
         for row in actions:
             row: CfgTouchifyActionGroup
             for entry in row.actions:
                 act: CfgTouchifyAction = entry
-                if act.variant == CfgTouchifyAction.Variants.Menu:
-                    self.__createButton_Menu(act, row_index)
-                elif act.variant == CfgTouchifyAction.Variants.Brush:
-                    self.__createButton_Brush(act, row_index)
-                elif act.variant == CfgTouchifyAction.Variants.Action:
-                    self.__createButton_Action(act, row_index)
+                btn = self.actions_manager.createButton(act, isTool)
+                if btn:
+                    self.stylizeButton(btn)
+                    self.appendButton(act, btn, row_index)
+
             row_index += 1

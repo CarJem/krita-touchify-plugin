@@ -26,22 +26,8 @@ class TouchifyActions(object):
     def buildMenu(self, menu: QMenu):
         menu.addMenu(self.root_menu)
         
-    def executeAction(self, data: CfgTouchifyAction, action: QAction):
-        self.appEngine.action_management.executeAction(data, action)
-        
-        
     def createAction(self, data: CfgTouchifyAction, window: Window, actionPath: str):
-        actionIdentifier ='TouchifyAction_{0}'.format(data.id)
-        iconName = data.icon
-        displayName = data.text
-
-        action = window.createAction(actionIdentifier, displayName, actionPath)    
-        icon = ResourceManager.iconLoader(iconName)
-        action.setIcon(icon)
-
-        TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.executeAction, {'data': data, 'action': action})
-        
-        action.triggered.connect(lambda: self.executeAction(data, action))
+        action = self.appEngine.action_management.createAction(data, window, actionPath)
         self.root_menu.addAction(action)
 
     def createActions(self, window: Window, actionPath: str):

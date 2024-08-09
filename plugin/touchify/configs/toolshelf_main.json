@@ -117,17 +117,17 @@
                             "actions": [
                                 {
                                     "action_id": "merge_layer",
-                                    "action_use_default_icon": true,
+                                    "action_use_icon": true,
                                     "variant": "action",
                                     "icon": "",
                                     "context_menu_actions": []
                                 },
                                 {
                                     "context_menu_actions": [],
-                                    "action_use_icon": true,
+                                    "showIcon": true,
                                     "action_id": "RenameCurrentLayer",
                                     "variant": "action",
-                                    "action_use_default_icon": false,
+                                    "action_use_icon": false,
                                     "brush_name": "",
                                     "brush_override_icon": false,
                                     "icon": "edit-rename",
@@ -176,7 +176,7 @@
                                     "variant": "menu",
                                     "text": "Isolate...",
                                     "action_id": "",
-                                    "action_use_default_icon": false
+                                    "action_use_icon": false
                                 },
                                 {
                                     "context_menu_actions": [
@@ -192,7 +192,7 @@
                                     "variant": "menu",
                                     "text": "Grouping...",
                                     "icon": "groupLayer",
-                                    "action_use_default_icon": false
+                                    "action_use_icon": false
                                 }
                             ]
                         }
@@ -258,10 +258,10 @@
                             "actions": [
                                 {
                                     "context_menu_actions": [],
-                                    "action_use_icon": true,
+                                    "showIcon": true,
                                     "action_id": "show_brush_editor",
                                     "variant": "action",
-                                    "action_use_default_icon": false,
+                                    "action_use_icon": false,
                                     "brush_name": "",
                                     "brush_override_icon": false,
                                     "icon": "paintop_settings_02",
@@ -315,7 +315,7 @@
                         {
                             "icon": "bar-transparency-unlocked",
                             "action_id": "preserve_alpha",
-                            "action_use_default_icon": true,
+                            "action_use_icon": true,
                             "context_menu_actions": []
                         },
                         {
@@ -377,10 +377,10 @@
                         {
                             "icon": "material:palette-swatch-variant",
                             "action_id": "TouchifyAction_QuickSettingsPopup",
-                            "action_use_default_icon": false,
+                            "action_use_icon": false,
                             "context_menu_actions": [],
-                            "action_use_icon": true,
-                            "action_text_and_icon": false,
+                            "showIcon": true,
+                            "showText": false,
                             "variant": "action",
                             "brush_name": "",
                             "brush_override_icon": false,
@@ -402,14 +402,14 @@
                     "actions": [
                         {
                             "context_menu_actions": [],
-                            "action_use_icon": true,
+                            "showIcon": true,
                             "id": "",
                             "icon": "",
                             "text": "",
                             "variant": "action",
                             "action_id": "TouchifyAction_brushOptionsPopup",
-                            "action_text_and_icon": false,
-                            "action_use_default_icon": true,
+                            "showText": false,
+                            "action_use_icon": true,
                             "brush_name": "",
                             "brush_override_icon": false,
                             "docker_id": "",

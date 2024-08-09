@@ -23,12 +23,12 @@ class CfgTouchifyAction:
     icon: str = ""
     text: str = ""
     variant: str = "action"
+    showText: bool = False
+    showIcon: bool = True
 
     #Action Params
     action_id: str = ""
-    action_text_and_icon: bool = False
-    action_use_icon: bool = True
-    action_use_default_icon: bool = False
+    action_use_icon: bool = False
 
     #Menu Params
     context_menu_actions: TypedList["CfgTouchifyAction"] = []
@@ -98,11 +98,11 @@ class CfgTouchifyAction:
             "icon",
             "text",
             "variant",
+            "showText",
+            "showIcon",
             #Action Params
             "action_id",
-            "action_text_and_icon",
             "action_use_icon",
-            "action_use_default_icon",
             #Menu Params
             "context_menu_actions",
             #Brush Params
@@ -122,9 +122,7 @@ class CfgTouchifyAction:
         result = []
         if self.variant != CfgTouchifyAction.Variants.Action:
             result.append("action_id")
-            result.append("action_use_default_icon")
             result.append("action_use_icon")
-            result.append("action_text_and_icon")
         if self.variant != CfgTouchifyAction.Variants.Menu:
             result.append("context_menu_actions")            
         if self.variant != CfgTouchifyAction.Variants.Brush:
@@ -148,11 +146,11 @@ class CfgTouchifyAction:
         labels["icon"] = "Icon"
         labels["text"] = "Text"
         labels["variant"] = "Action Type"
+        labels["showText"] = "Show Text"
+        labels["showIcon"] = "Show Icon"
 
         labels["action_id"] = "Action ID"
-        labels["action_text_and_icon"] = "Show Text & Icon"
-        labels["action_use_icon"] = "Use Icon"
-        labels["action_use_default_icon"] = "Use Default Icon"
+        labels["action_use_icon"] = "Use Action Icon"
 
         labels["context_menu_actions"] = "Menu Actions"
 
