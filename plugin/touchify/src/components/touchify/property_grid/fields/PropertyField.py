@@ -10,12 +10,12 @@ from ..dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 from ..utils.PropertyUtils_Extensions import *
 from ..PropertyGrid import *
 
-from ....extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
+from ....pyqt.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 from ..dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from .....ext.TypedList import *
 from .....resources import *
 from .....ext.extensions_krita import KritaExtensions
-from ....CollapsibleBox import CollapsibleBox
+from ....pyqt.widgets.CollapsibleBox import CollapsibleBox
 
 
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored

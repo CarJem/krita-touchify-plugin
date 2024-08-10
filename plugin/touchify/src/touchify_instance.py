@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 from .docker_manager import DockerManager
 
-from ..src.dockers import TouchifyToolshelfDocker
+from .components.touchify.dockers import TouchifyToolshelfDocker
 
 from .action_manager import ActionManager
 

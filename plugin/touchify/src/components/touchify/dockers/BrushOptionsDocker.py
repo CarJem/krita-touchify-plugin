@@ -5,9 +5,9 @@ from krita import *
 from PyQt5.QtCore import *
 
 from touchify.src import stylesheet
-from ..ext.KritaSettings import *
-from ..components.krita_ext.KisSliderSpinBox import KisSliderSpinBox
-from ..components.krita_ext.KisAngleSelector import KisAngleSelector
+from ....ext.KritaSettings import *
+from ...krita.KisSliderSpinBox import KisSliderSpinBox
+from ...krita.KisAngleSelector import KisAngleSelector
 
 DOCKER_TITLE = 'Brush Options'
 

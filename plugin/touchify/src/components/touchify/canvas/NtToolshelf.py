@@ -1,19 +1,19 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 from PyQt5.QtCore import QObject, QEvent, QPoint
 
-from ...ext.KritaSettings import KritaSettings
+from ....ext.KritaSettings import KritaSettings
 
-from ...docker_manager import DockerManager
-from ...action_manager import ActionManager
+from ....docker_manager import DockerManager
+from ....action_manager import ActionManager
 
-from .NtAdjustToSubwindowFilter import NtAdjustToSubwindowFilter
-from ...ext.extensions_krita import KritaExtensions
-from ...settings.TouchifySettings import TouchifySettings
-from ... import stylesheet
+from .NtSubWinFilter import NtSubWinFilter
+from ....ext.extensions_krita import KritaExtensions
+from ....settings.TouchifySettings import TouchifySettings
+from .... import stylesheet
 from .NtWidgetPad import NtWidgetPad
 from krita import *
-from ...variables import *
-from ..touchify.toolshelf.ToolshelfWidget import ToolshelfWidget
+from ....variables import *
+from ..toolshelf.ToolshelfWidget import ToolshelfWidget
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -36,7 +36,7 @@ class NtToolshelf(object):
         self.pad.borrowDocker(self.toolshelf)
 
         # Create and install event filter
-        self.adjustFilter = NtAdjustToSubwindowFilter(self.mdiArea)
+        self.adjustFilter = NtSubWinFilter(self.mdiArea)
         self.adjustFilter.setTargetWidget(self)
         self.mdiArea.subWindowActivated.connect(self.onSubWindowActivated)
         self.qWin.installEventFilter(self.adjustFilter)

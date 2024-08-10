@@ -12,7 +12,7 @@ from ....docker_manager import DockerManager
 from ...touchify.actions.TouchifyActionPanel import TouchifyActionPanel
 from ....cfg.CfgToolshelf import CfgToolshelfPanel
 from ....cfg.CfgToolshelf import CfgToolshelfSection
-from ...DockerContainer import DockerContainer
+from ..core.DockerContainer import DockerContainer
 from .... import stylesheet
 
 from krita import *

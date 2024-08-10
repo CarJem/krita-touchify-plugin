@@ -1,13 +1,13 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 
-from ...docker_manager import DockerManager
-from ...action_manager import ActionManager
+from ....docker_manager import DockerManager
+from ....action_manager import ActionManager
 from .NtToolbox import NtToolbox
 from .NtToolshelf import NtToolshelf
-from ...settings.TouchifySettings import TouchifySettings
+from ....settings.TouchifySettings import TouchifySettings
 from krita import *
 from PyQt5.QtCore import QObject, QEvent, QPoint
-from ...variables import *
+from ....variables import *
 
 class NtCanvas(object):
     def __init__(self, window: Window):

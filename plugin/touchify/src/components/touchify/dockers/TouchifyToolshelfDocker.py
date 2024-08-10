@@ -4,14 +4,14 @@ from PyQt5.QtCore import *
 
 from typing import TYPE_CHECKING
 
-from ..docker_manager import DockerManager
-from ..action_manager import ActionManager
+from ....docker_manager import DockerManager
+from ....action_manager import ActionManager
 if TYPE_CHECKING:
-    from ..touchify_instance import TouchifyInstance
+    from ....touchify_instance import TouchifyInstance
 
-from ..components.touchify.toolshelf.ToolshelfContainer import ToolshelfContainer
+from ..toolshelf.ToolshelfContainer import ToolshelfContainer
 
-from ..resources import ResourceManager
+from ....resources import ResourceManager
 
 DOCKER_TITLE = 'Touchify Toolshelf'
 

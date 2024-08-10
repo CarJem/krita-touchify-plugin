@@ -6,12 +6,12 @@ import sys
 import xml.etree.ElementTree as ET
 
 from ..dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
-from ....extras.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
+from ....pyqt.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
 from .....ext.TypedList import *
 from .....resources import *
 from .....ext.extensions_krita import KritaExtensions
-from ....CollapsibleBox import CollapsibleBox
+from ....pyqt.widgets.CollapsibleBox import CollapsibleBox
 
 from ..utils.PropertyUtils_Extensions import *
 from ..dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog

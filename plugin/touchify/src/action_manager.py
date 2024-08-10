@@ -17,7 +17,7 @@ from .components.touchify.popups.PopupDialog_Docker import *
 
 
 
-#class ActionManager(QObject):
+
 class ActionManager:
     
     class TriggerConstants:
@@ -29,13 +29,6 @@ class ActionManager:
             "expanding_spacer1",
             "expanding_spacer2"
         ]
-    
-    #def __init__(self, window: Window, docker_manager: DockerManager):  
-        #super().__init__(window)
-        #self.custom_docker_states = {}
-        #self.docker_management = docker_manager
-        #self.mainWindow = window
-        #self.qWin = window.qwindow()
         
     def __init__(self):  
         self.custom_docker_states = {}       
@@ -89,7 +82,7 @@ class ActionManager:
         return action
 
 
-         
+   
     def __getActionSource(self, action: QAction):
         _sender = action.sender()
         _parent: QWidget | None = None  

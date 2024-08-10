@@ -19,10 +19,10 @@
 from PyQt5.QtWidgets import QWidget, QToolButton, QDockWidget, QVBoxLayout, QSizePolicy, QScrollArea
 from PyQt5.QtCore import Qt, QSize, QPoint
 
-from ...ext.KritaSettings import KritaSettings
+from ....ext.KritaSettings import KritaSettings
 
-from ...settings.TouchifyConfig import *
-from ... import stylesheet
+from ....settings.TouchifyConfig import *
+from .... import stylesheet
 
 from krita import *
 

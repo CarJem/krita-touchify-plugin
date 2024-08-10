@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
 
 from ..settings.TouchifySettings import TouchifySettings
-from ..components.nu_tools.NtCanvas import NtCanvas
+from ..components.touchify.canvas.NtCanvas import NtCanvas
 
 from ..variables import *
 from ..settings.TouchifyConfig import *

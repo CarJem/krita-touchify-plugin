@@ -1,7 +1,7 @@
 from typing import Callable
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy, QFrame
 from PyQt5.QtCore import QSize, QEvent
-from ..docker_manager import *
+from ....docker_manager import *
 from krita import *
 
 class DockerContainer(QWidget):

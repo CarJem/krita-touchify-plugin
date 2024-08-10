@@ -1,12 +1,12 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 
-from ...settings.TouchifySettings import TouchifySettings
-from .NtAdjustToSubwindowFilter import NtAdjustToSubwindowFilter
-from ... import stylesheet
+from ....settings.TouchifySettings import TouchifySettings
+from .NtSubWinFilter import NtSubWinFilter
+from .... import stylesheet
 from .NtWidgetPad import NtWidgetPad
 from krita import *
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
-from ...variables import *
+from ....variables import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -51,7 +51,7 @@ class NtToolbox(object):
         self.pad.installEventFilter(self.interactFilter)
 
         # Create and install event filter
-        self.adjustFilter = NtAdjustToSubwindowFilter(self.mdiArea)
+        self.adjustFilter = NtSubWinFilter(self.mdiArea)
         self.adjustFilter.setTargetWidget(self)
         self.mdiArea.subWindowActivated.connect(self.onSubWindowActivated)
         self.pad.installEventFilter(self.adjustFilter)

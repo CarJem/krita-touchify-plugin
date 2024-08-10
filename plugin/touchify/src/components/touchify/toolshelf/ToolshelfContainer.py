@@ -7,7 +7,7 @@ from krita import *
 from .ToolshelfPanelHeader import ToolshelfPanelHeader
 from ...touchify.actions.TouchifyActionPanel import TouchifyActionPanel
 from .ToolshelfPage import ToolshelfPage
-from ...DockerContainer import DockerContainer
+from ..core.DockerContainer import DockerContainer
 
 from ....settings.TouchifyConfig import *
 from ....variables import *
@@ -20,7 +20,7 @@ from .ToolshelfPage import ToolshelfPage
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ToolshelfWidget import ToolshelfWidget
-    from ....dockers.TouchifyToolshelfDocker import TouchifyToolshelfDocker
+    from ..dockers.TouchifyToolshelfDocker import TouchifyToolshelfDocker
 
 class ToolshelfContainer(QStackedWidget):
     
@@ -62,7 +62,7 @@ class ToolshelfContainer(QStackedWidget):
             self.addPanel(properties.id, properties)
 
         self.changePanel('MAIN')
-
+        
     def getCfg(self):
         cfg = TouchifyConfig.instance().getConfig()
         if self.PanelIndex == 0: return cfg.toolshelf_main

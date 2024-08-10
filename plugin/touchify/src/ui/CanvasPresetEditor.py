@@ -9,9 +9,9 @@ from touchify.src import stylesheet
 import json
 import copy
 
-from ..components.krita_ext.KisSliderSpinBox import KisSliderSpinBox
-from ..components.krita_ext.KisAngleSelector import KisAngleSelector
-from ..components.ColorButton import ColorButton
+from ..components.krita.KisSliderSpinBox import KisSliderSpinBox
+from ..components.krita.KisAngleSelector import KisAngleSelector
+from ..components.pyqt.widgets.ColorButton import ColorButton
 
 class CanvasPresetEditor(QDialog):
     def __init__(self, preset: CfgCanvasPreset, parent: QWidget | None = None):

@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 import os
 
 
-from .components.QSvgIconEngine import QSvgIconEngine
+from .components.pyqt.icon_engines.QSvgIconEngine import QSvgIconEngine
 
 
 from .settings.TouchifyConfig import *
