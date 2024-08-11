@@ -88,7 +88,6 @@ class ToolshelfContainer(QStackedWidget):
         self._panels[ID] = panel
         super().addWidget(panel)
 
-
     def resizeEvent(self, event: QResizeEvent):
         self.dockWidget.onSizeChanged()
         super().resizeEvent(event)

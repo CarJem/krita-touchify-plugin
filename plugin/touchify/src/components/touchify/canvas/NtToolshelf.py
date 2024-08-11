@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 
 class NtToolshelf(object):
 
-    def __init__(self, canvas: "NtCanvas", window: Window, alignment: str, isPrimaryPanel: bool, docker_manager: DockerManager, actions_manager: ActionManager):
+    def __init__(self, canvas: "NtCanvas", window: Window, alignment: NtWidgetPad.Alignment, isPrimaryPanel: bool, docker_manager: DockerManager, actions_manager: ActionManager):
         self.qWin = window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
         self.canvas = canvas

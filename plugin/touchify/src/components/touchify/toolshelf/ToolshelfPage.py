@@ -224,6 +224,7 @@ class ToolshelfPage(QWidget):
         if actionInfo.max_size_y != 0:
             actionWidget.setMaximumHeight(actionInfo.max_size_y)
 
+
         self.dockerWidgets[actionInfo.id] = actionWidget
         self.pageLoadedSignal.connect(actionWidget.loadWidget)
         self.pageUnloadSignal.connect(actionWidget.unloadWidget)

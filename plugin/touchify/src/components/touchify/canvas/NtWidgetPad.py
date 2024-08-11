@@ -16,6 +16,7 @@
 """
 
 
+from enum import Enum
 from PyQt5.QtWidgets import QWidget, QToolButton, QDockWidget, QVBoxLayout, QSizePolicy, QScrollArea
 from PyQt5.QtCore import Qt, QSize, QPoint
 
@@ -30,6 +31,11 @@ class NtWidgetPad(QWidget):
     """
     An on-canvas toolbox widget. I'm dubbing widgets that 'float' 
     on top of the canvas '(lily) pads' for the time being :) """
+    
+    
+    class Alignment(Enum):
+        Left = 0
+        Right = 1
 
     def __init__(self, parent):
         super(NtWidgetPad, self).__init__(parent)
@@ -40,7 +46,7 @@ class NtWidgetPad(QWidget):
             )
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(4,4,4,4)
-        self.alignment = 'left'
+        self.alignment = NtWidgetPad.Alignment.Left
 
         self.offset_x_left = 0
         self.offset_x_right = 0
@@ -53,8 +59,114 @@ class NtWidgetPad(QWidget):
         self.btnHide = Nt_ToggleVisibleButton()
         self.btnHide.clicked.connect(self.toggleWidgetVisible)
         self.layout().addWidget(self.btnHide)
+        
+        self.gripSize = QSize(10, 10)
+        self.oldResizePoint = QPoint()
+        self.resizing = False
+        
+    def getResizeGripArea(self):
+        if self.alignment == NtWidgetPad.Alignment.Left:
+            x = self.width() - self.gripSize.width()
+            y = self.height() - self.gripSize.height()
+            width = self.gripSize.width()
+            height = self.gripSize.height()
+        elif self.alignment == NtWidgetPad.Alignment.Right:
+            x = 0
+            y = self.height() - self.gripSize.height()
+            width = self.gripSize.width()
+            height = self.gripSize.height()
+        else:
+            x = 0
+            y = 0
+            width = 0
+            height = 0
+        
+        return (x, y, width, height)
+        
+    def mouseInGrip(self, mousePos: QPoint):
+        x, y, width, height = self.getResizeGripArea()
+        return QRect(x, y, width, height).contains(mousePos)
 
-    def activeView(self):
+        
+    def mousePressEvent(self, e: QMouseEvent):
+        if self.mouseInGrip(e.pos()):
+            self.oldResizePoint = QPoint(e.pos())
+            self.resizing = True
+        else:
+            self.resizing = False
+    
+    def mouseMoveEvent(self, e: QMouseEvent):
+        if self.resizing and self.widget:
+            #adapt the widget size based on mouse movement
+            delta: QPoint = e.pos() - self.oldResizePoint
+            self.oldResizePoint = QPoint(e.pos())
+        
+            if self.alignment == NtWidgetPad.Alignment.Left:
+                x = delta.x()
+            elif self.alignment == NtWidgetPad.Alignment.Right:
+                x = -delta.x()
+            
+            y = delta.y()   
+            
+            self.resizeToView(x, y)
+        
+            qApp.instance().processEvents()
+            self.resizeToView()
+
+            
+    def fitToView(self, sizeToFit: QSize):
+        def height_scale(input):
+            return input + self.btnHide.height() + 14 + self.scrollBarMargin() + self.rulerMargin()
+        
+        def height_offset(input):
+            return input - self.btnHide.height() - 14 - self.scrollBarMargin() - self.rulerMargin()
+        
+        def width_offset(input):
+            return input - 8 - self.scrollBarMargin()
+        
+        def width_scale(input):
+            return input + 8 + self.scrollBarMargin()
+        
+        view = self.activeView()
+        
+        result = QSize(sizeToFit)
+
+        if view:   
+            if view.height() < height_scale(result.height()):
+                result.setHeight(height_offset(view.height()))
+        
+            if view.width() < width_scale(result.width()):
+                result.setWidth(width_offset(view.width()))
+                
+        return result
+
+    def fitSize(self, sourceSize: QSize, targetSize: QSize):
+        """
+        Resize the target size to fit the source size"""
+        
+        result: QSize = QSize(targetSize)
+        
+        if sourceSize.width() > result.width():
+            result.setWidth(sourceSize.width())
+                
+        if sourceSize.height() > result.height():
+            result.setHeight(sourceSize.height())
+            
+        return result
+    
+    def widgetSize(self) -> QSize:
+        if self.widget:
+            return self.widget.size()
+        return QSize(0,0)
+    
+    def widgetSizeHint(self) -> QSize:
+        if self.widget:
+            return self.widget.sizeHint()
+        return QSize(0,0)    
+
+
+
+    def activeView(self) -> QWidget:
         """
         Get the View widget of the active subwindow."""
         if not self.parentWidget():
@@ -69,25 +181,26 @@ class NtWidgetPad(QWidget):
             if 'view' in child.objectName(): # Grab the View from the active tab/sub-window
                 return child
         
-        return None
+        return None 
 
     def adjustToView(self):
         """
         Adjust the position and size of the Pad to that of the active View."""
+        
         view = self.activeView()
+
         if view:          
             self.resizeToView()
 
             globalTargetPos = QPoint()
-            if self.alignment == 'left':
+            if self.alignment == NtWidgetPad.Alignment.Left:
                 globalTargetPos = view.mapToGlobal(QPoint(self.rulerMargin() + self.offset_x_left, self.rulerMargin()))
-            elif self.alignment == 'right':
+            elif self.alignment == NtWidgetPad.Alignment.Right:
                 globalTargetPos = view.mapToGlobal(QPoint(view.width() - self.width() - self.scrollBarMargin() - self.offset_x_right, self.rulerMargin()))
 
             newPos = self.parentWidget().mapFromGlobal(globalTargetPos)
             if self.pos() != newPos:
                 self.move(newPos)
-
 
     def borrowDocker(self, docker):
         """
@@ -126,37 +239,38 @@ class NtWidgetPad(QWidget):
         Needed to resize the Pad if the user decides to 
         change the icon size of the toolbox"""
         self.adjustToView()
-        return super().paintEvent(e)
+        super().paintEvent(e)
+        p = QPainter(self)
+        
+        x, y, width, height = self.getResizeGripArea()
+        p.setPen(Qt.GlobalColor.red)
+        p.drawRect(x, y, width, height)
 
-    def resizeToView(self):
+
+    def resizeToView(self, delta_x: int = 0, delta_y: int = 0):
         """
         Resize the Pad to an appropriate size that fits within the subwindow."""
+        
         view = self.activeView()
-
+        
         if view:
-            ### GOAL: REMOVE THIS IF-STATEMENT
-            if isinstance(self.widget, Nt_ScrollAreaContainer):
-                containerSize = self.widget.sizeHint() 
+            widgetSize = self.widgetSize()
+            widgetSizeHint = self.widgetSizeHint()
+            widgetNewSize = QSize(widgetSize.width() + delta_x, widgetSize.height() + delta_y)
+                              
+            widgetNewSize = self.fitToView(self.fitSize(widgetSizeHint, widgetNewSize))                   
+            if widgetSize != widgetNewSize:
+                self.widget.setFixedSize(widgetNewSize)
                 
-                if view.height() < containerSize.height() + self.btnHide.height() + 14 + self.scrollBarMargin() + self.rulerMargin():
-                    containerSize.setHeight(view.height() - self.btnHide.height() - 14 - self.scrollBarMargin() - self.rulerMargin())
+            padSizeHint = self.sizeHint()
+            if view.height() < padSizeHint.height():
+                padSizeHint.setHeight(view.height())
 
-                if view.width() < containerSize.width() + 8 + self.scrollBarMargin():
-                    containerSize.setWidth(view.width() - 8 - self.scrollBarMargin())
+            if view.width() < padSizeHint.width():
+                padSizeHint.setWidth(view.width())
             
-                if self.widget.size() != containerSize:
-                    self.widget.setFixedSize(containerSize)
-
-
-            newSize = self.sizeHint()
-            if view.height() < newSize.height():
-                newSize.setHeight(view.height())
-
-            if view.width() < newSize.width():
-                newSize.setWidth(view.width())
-            
-            if self.size() != newSize:
-                self.resize(newSize)
+            if self.size() != padSizeHint:
+                self.resize(padSizeHint)
 
     def returnDocker(self):
         """
@@ -188,17 +302,14 @@ class NtWidgetPad(QWidget):
 
         return 14 # Canvas crollbar pixel width/height on Windows 
 
-    def setViewAlignment(self, newAlignment):
+    def setViewAlignment(self, newAlignment: Alignment):
         """
         Set the Pad's alignment to the view to either 'left' or 'right'. 
         Returns False if the argument is an invalid value."""
-        if isinstance(newAlignment, str):
-                if (newAlignment.lower() == 'left' or
-                    newAlignment.lower() == 'right'):
-                    self.btnHide.setArrow(self.alignment)
-                    if self.alignment != newAlignment.lower():
-                        self.alignment = newAlignment.lower()
-                        return True
+        self.btnHide.setArrow(self.alignment)
+        if self.alignment != newAlignment:
+            self.alignment = newAlignment
+            return True
     
         return False
 
@@ -213,19 +324,17 @@ class NtWidgetPad(QWidget):
     def updateHideButtonIcon(self, isVisible): 
         """
         Flip the direction of the arrow to fit the Pads current visibility"""
-        if self.alignment == 'left':
+        if self.alignment == NtWidgetPad.Alignment.Left:
             if isVisible:
                 self.btnHide.setArrowType(Qt.ArrowType.LeftArrow)
             else:
                 self.btnHide.setArrowType(Qt.ArrowType.RightArrow)
-        elif self.alignment == 'right':
+        elif self.alignment == NtWidgetPad.Alignment.Right:
             if isVisible:
                 self.btnHide.setArrowType(Qt.ArrowType.RightArrow)
             else:
                 self.btnHide.setArrowType(Qt.ArrowType.LeftArrow)
-
-    def getViewAlignment(self):
-        return self.alignment
+    
 
 class Nt_ToggleVisibleButton(QToolButton):
     def __init__(self, parent = None):
@@ -235,7 +344,7 @@ class Nt_ToggleVisibleButton(QToolButton):
         self.setStyleSheet(stylesheet.touchify_toggle_button)
         
     def setArrow(self, alignment):
-        if alignment == "right":
+        if alignment == NtWidgetPad.Alignment.Right:
             self.setArrowType(Qt.ArrowType.RightArrow)
         else:
             self.setArrowType(Qt.ArrowType.LeftArrow)

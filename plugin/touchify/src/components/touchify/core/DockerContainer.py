@@ -2,7 +2,11 @@ from typing import Callable
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy, QFrame
 from PyQt5.QtCore import QSize, QEvent
 from ....docker_manager import *
+from ...pyqt.widgets.ResizeFrame import ResizeFrame
 from krita import *
+
+    
+
 
 class DockerContainer(QWidget):
   
@@ -18,11 +22,11 @@ class DockerContainer(QWidget):
         self.borrowedDocker = None
         self.setAutoFillBackground(True)
         self.size = None
-        self.outLayout = QVBoxLayout(self)
-        self.setLayout(self.outLayout)
-        self.outLayout.setContentsMargins(0, 0, 0, 0)
-        self.outLayout.setSpacing(0)
-
+        self.baseLayout = QVBoxLayout(self)
+        self.setLayout(self.baseLayout)
+        self.baseLayout.setContentsMargins(0, 0, 0, 0)
+        self.baseLayout.setSpacing(0)
+        
         self.hiddenMode = False
         self.dockMode = False
         self.passiveMode = False
@@ -67,7 +71,7 @@ class DockerContainer(QWidget):
             self._updateEmptySpace(True)
             return
         self.borrowedDocker = dockerLoaded
-        self.outLayout.addWidget(self.borrowedDocker)
+        self.baseLayout.addWidget(self.borrowedDocker)
         self._updateEmptySpace(False)
         if self.dockMode: self.borrowedDocker.show()
 
@@ -86,18 +90,19 @@ class DockerContainer(QWidget):
             self.unloadedButton.setText("Load Docker")
             self.unloadedButton.clicked.connect(self._stealDocker)
 
+
         if self.emptySpaceState != state:
             if state:
-                self.outLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-                self.outLayout.addWidget(self.unloadedLabel)
-                self.outLayout.addWidget(self.unloadedButton)
+                self.baseLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                self.baseLayout.addWidget(self.unloadedLabel)
+                self.baseLayout.addWidget(self.unloadedButton)
                 if self.hiddenMode:
                     self.setVisible(False)
                     self.setAutoFillBackground(False)
             else:
-                self.outLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-                self.outLayout.removeWidget(self.unloadedLabel)
-                self.outLayout.removeWidget(self.unloadedButton)
+                self.baseLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+                self.baseLayout.removeWidget(self.unloadedLabel)
+                self.baseLayout.removeWidget(self.unloadedButton)
                 if self.hiddenMode:
                     self.setVisible(True)
                     self.setAutoFillBackground(True)
@@ -135,13 +140,26 @@ class DockerContainer(QWidget):
     #endregion
 
     #region Overrides
-    def sizeHint(self):
-        if self.size:
-            return self.size
-        elif self.borrowedDocker:
-            return self.borrowedDocker.sizeHint()
+    
+    
+    def minimumSize(self) -> QSize:
+        baseSize: QSize = QSize()
+        if self.borrowedDocker:
+            baseSize = self.borrowedDocker.minimumSize()
         else:
-            return super().sizeHint()
+            baseSize = super().minimumSize()
+        return baseSize
+    
+    def sizeHint(self):
+        baseSize: QSize = QSize()
+        if self.size:
+            baseSize = self.size
+        elif self.borrowedDocker:
+            baseSize = self.borrowedDocker.sizeHint()
+        else:
+            baseSize = super().sizeHint()
+            
+        return baseSize
 
     def widget(self):
         return self.borrowedDocker

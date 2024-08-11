@@ -33,7 +33,7 @@ class NtToolboxInteractFilter(QObject):
 
 class NtToolbox(object):
 
-    def __init__(self, canvas: "NtCanvas", alignment: str, window: Window):
+    def __init__(self, canvas: "NtCanvas", alignment: NtWidgetPad.Alignment, window: Window):
         self.qWin = window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
         self.canvas = canvas
