@@ -1,9 +1,12 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 
+from touchify.src.components.touchify.canvas.NtToolboxInteractFilter import NtToolboxInteractFilter
+
 from ....settings.TouchifySettings import TouchifySettings
 from .NtSubWinFilter import NtSubWinFilter
 from .... import stylesheet
 from .NtWidgetPad import NtWidgetPad
+from .NtWidgetPadAlignment import NtWidgetPadAlignment
 from krita import *
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 from ....variables import *
@@ -14,26 +17,9 @@ if TYPE_CHECKING:
 
 #Other Toolbox: pyKrita_CoolBox
 
-class NtToolboxInteractFilter(QObject):
-    def __init__(self, parent: QWidget):
-        super(NtToolboxInteractFilter, self).__init__(parent)
-        self.target = None
-
-    def eventFilter(self, obj: QObject, e: QEvent):
-        if (self.target and e.type() == QEvent.Type.MouseButtonPress):
-            mouseEvent: QMouseEvent = e
-            match mouseEvent.button():
-                case Qt.MouseButton.RightButton:
-                    self.target.contextMenuEvent(QContextMenuEvent(QContextMenuEvent.Reason.Keyboard, QPoint(0,0)))
-
-        return False
-
-    def setTargetWidget(self, wdgt: QDockWidget):
-        self.target = wdgt
-
 class NtToolbox(object):
 
-    def __init__(self, canvas: "NtCanvas", alignment: NtWidgetPad.Alignment, window: Window):
+    def __init__(self, canvas: "NtCanvas", alignment: NtWidgetPadAlignment, window: Window):
         self.qWin = window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
         self.canvas = canvas

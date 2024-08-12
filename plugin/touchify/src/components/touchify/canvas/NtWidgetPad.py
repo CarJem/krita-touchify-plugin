@@ -16,14 +16,17 @@
 """
 
 
-from enum import Enum
-from PyQt5.QtWidgets import QWidget, QToolButton, QDockWidget, QVBoxLayout, QSizePolicy, QScrollArea
+
+from PyQt5.QtWidgets import QWidget, QDockWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import Qt, QSize, QPoint
 
+from .NtScrollAreaContainer import NtScrollAreaContainer
+from .NtTogglePadButton import NtTogglePadButton
+
 from ....ext.KritaSettings import KritaSettings
+from .NtWidgetPadAlignment import NtWidgetPadAlignment
 
 from ....settings.TouchifyConfig import *
-from .... import stylesheet
 from ....ext.extensions_pyqt import PyQtExtensions as Ext
 
 from krita import *
@@ -32,11 +35,7 @@ class NtWidgetPad(QWidget):
     """
     An on-canvas toolbox widget. I'm dubbing widgets that 'float' 
     on top of the canvas '(lily) pads' for the time being :) """
-    
-    
-    class Alignment(Enum):
-        Left = 0
-        Right = 1
+
 
     def __init__(self, parent, allowResizing: bool = False):
         super(NtWidgetPad, self).__init__(parent)
@@ -47,7 +46,7 @@ class NtWidgetPad(QWidget):
             )
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(4,4,4,4)
-        self.alignment = NtWidgetPad.Alignment.Left
+        self.alignment = NtWidgetPadAlignment.Left
 
         self.offset_x_left = 0
         self.offset_x_right = 0
@@ -61,7 +60,7 @@ class NtWidgetPad(QWidget):
         
 
          # Visibility toggle
-        self.btnHide = Nt_ToggleVisibleButton()
+        self.btnHide = NtTogglePadButton()
         self.btnHide.clicked.connect(self.toggleWidgetVisible)
         self.layout().addWidget(self.btnHide)
         
@@ -172,7 +171,7 @@ class NtWidgetPad(QWidget):
             self.widgetDocker = docker
 
             if isinstance(docker.widget(), QScrollArea):
-                self.widget = Nt_ScrollAreaContainer(docker.widget())
+                self.widget = NtScrollAreaContainer(docker.widget())
             else:
                 self.widget = docker.widget()
 
@@ -189,7 +188,7 @@ class NtWidgetPad(QWidget):
         Return the borrowed docker to it's original QDockWidget"""
         # Ensure there's a widget to return
         if self.widgetDocker and self.widget:
-            if isinstance(self.widget, Nt_ScrollAreaContainer):
+            if isinstance(self.widget, NtScrollAreaContainer):
                 self.widgetDocker.setWidget(self.widget.scrollArea())
             else:
                 self.widgetDocker.setWidget(self.widget)
@@ -252,9 +251,9 @@ class NtWidgetPad(QWidget):
                 self.resize(padSizeHint)
 
             globalTargetPos = QPoint()
-            if self.alignment == NtWidgetPad.Alignment.Left:
+            if self.alignment == NtWidgetPadAlignment.Left:
                 globalTargetPos = view.mapToGlobal(QPoint(self.rulerMargin() + self.offset_x_left, self.rulerMargin()))
-            elif self.alignment == NtWidgetPad.Alignment.Right:
+            elif self.alignment == NtWidgetPadAlignment.Right:
                 globalTargetPos = view.mapToGlobal(QPoint(view.width() - self.width() - self.scrollBarMargin() - self.offset_x_right, self.rulerMargin()))
 
             newPos = self.parentWidget().mapFromGlobal(globalTargetPos)
@@ -287,7 +286,7 @@ class NtWidgetPad(QWidget):
     #endregion
 
     #region Functions
-    def setViewAlignment(self, newAlignment: Alignment):
+    def setViewAlignment(self, newAlignment: NtWidgetPadAlignment):
         """
         Set the Pad's alignment to the view to either 'left' or 'right'. 
         Returns False if the argument is an invalid value."""
@@ -379,73 +378,3 @@ class NtWidgetPad(QWidget):
     #endregion
     
 
-class Nt_ToggleVisibleButton(QToolButton):
-    def __init__(self, parent = None):
-        super(Nt_ToggleVisibleButton, self).__init__(parent)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
-        self.setIconSize(QSize(11, 11))
-        self.setStyleSheet(stylesheet.touchify_toggle_button)
-        
-    def mousePressEvent(self, e: QMouseEvent):
-        if e.button() == Qt.MouseButton.RightButton:
-            self.showMenu()
-        else:
-            return super().mousePressEvent(e)
-        
-    def setArrow(self, alignment):
-        if alignment == NtWidgetPad.Alignment.Right:
-            self.setArrowType(Qt.ArrowType.RightArrow)
-        else:
-            self.setArrowType(Qt.ArrowType.LeftArrow)
-
-class Nt_ScrollAreaContainer(QWidget):
-
-    def __init__(self, scrollArea = None, parent=None):
-        super(Nt_ScrollAreaContainer, self).__init__(parent)
-        self.setLayout(QVBoxLayout())
-        self.layout().setContentsMargins(0,0,0,0)
-        self.sa = None
-        
-        self.setScrollArea(scrollArea)
-
-
-
-
-
-    def sizeHint(self):
-        """
-        Reimplemented function. If a QScrollArea as been set
-        the size hint of it's widget will be returned."""
-        if self.sa and self.sa.widget():
-            return self.sa.widget().sizeHint()
-
-        return super().sizeHint()
-
-
-    def setScrollArea(self, scrollArea):
-        """
-        Set the QScrollArea for the container to hold.
-
-        True will be returned upon success and if no prior QScrollArea was set. 
-        If another QScrollArea was already set it will be returned so that 
-        it can be disposed of properly.
-        
-        If an invalid arguement (i.e. not a QScrollArea) or the same QScrollArea
-        as the currently set one is passed, nothing happens and False is returned."""
-        if (isinstance(scrollArea, QScrollArea) and
-            scrollArea is not self.sa):
-            ret = True
-
-            if not self.sa:
-                self.layout().addWidget(scrollArea)
-            else:
-                self.layout().replaceWidget(self.sa, scrollArea)
-                ret = self.sa # set the old QScrollArea to be returned
-            
-            self.sa = scrollArea
-            return ret
-        
-        return False
-
-    def scrollArea(self):
-        return self.sa

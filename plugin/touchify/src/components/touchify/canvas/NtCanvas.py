@@ -9,6 +9,7 @@ from krita import *
 from PyQt5.QtCore import QObject, QEvent, QPoint
 from ....variables import *
 from .NtWidgetPad import NtWidgetPad
+from .NtWidgetPadAlignment import NtWidgetPadAlignment
 
 from ..core.DockerContainer import DockerContainer
 
@@ -96,11 +97,11 @@ class NtCanvas(object):
     #region Get / Set Functions
     def getToolOptionsAlignment(self):
         isToolboxOnRight = TouchifySettings.instance().CanvasWidgets_ToolboxOnRight
-        return NtWidgetPad.Alignment.Left if isToolboxOnRight else NtWidgetPad.Alignment.Right
+        return NtWidgetPadAlignment.Left if isToolboxOnRight else NtWidgetPadAlignment.Right
 
     def getToolboxAlignment(self):
         isToolboxOnRight = TouchifySettings.instance().CanvasWidgets_ToolboxOnRight
-        return NtWidgetPad.Alignment.Right if isToolboxOnRight else NtWidgetPad.Alignment.Left
+        return NtWidgetPadAlignment.Right if isToolboxOnRight else NtWidgetPadAlignment.Left
     
     def getToolboxAltPositionState(self):
         return TouchifySettings.instance().CanvasWidgets_AlternativeToolboxPosition
@@ -166,20 +167,20 @@ class NtCanvas(object):
             return
         else:
             if self.alternativeToolboxPos:
-                if self.toolboxAlignment == NtWidgetPad.Alignment.Left:
+                if self.toolboxAlignment == NtWidgetPadAlignment.Left:
                     self.toolbox.pad.offset_x_left = self.toolboxOptions.pad.width()
                     self.toolbox.pad.offset_x_right = 0
-                elif self.toolboxAlignment == NtWidgetPad.Alignment.Right:
+                elif self.toolboxAlignment == NtWidgetPadAlignment.Right:
                     self.toolbox.pad.offset_x_right = self.toolboxOptions.pad.width()
                     self.toolbox.pad.offset_x_left = 0
 
                 self.toolboxOptions.pad.offset_x_right = 0
                 self.toolboxOptions.pad.offset_x_left = 0
             else:
-                if self.toolboxAlignment == NtWidgetPad.Alignment.Left:
+                if self.toolboxAlignment == NtWidgetPadAlignment.Left:
                     self.toolboxOptions.pad.offset_x_left = self.toolbox.pad.width()
                     self.toolboxOptions.pad.offset_x_right = 0
-                elif self.toolboxAlignment == NtWidgetPad.Alignment.Right:
+                elif self.toolboxAlignment == NtWidgetPadAlignment.Right:
                     self.toolboxOptions.pad.offset_x_right = self.toolbox.pad.width()
                     self.toolboxOptions.pad.offset_x_left = 0
 

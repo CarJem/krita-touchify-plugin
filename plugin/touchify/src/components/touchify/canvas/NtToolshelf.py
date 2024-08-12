@@ -14,6 +14,7 @@ from .NtWidgetPad import NtWidgetPad
 from krita import *
 from ....variables import *
 from ..toolshelf.ToolshelfWidget import ToolshelfWidget
+from .NtWidgetPadAlignment import NtWidgetPadAlignment
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -21,7 +22,7 @@ if TYPE_CHECKING:
 
 class NtToolshelf(object):
 
-    def __init__(self, canvas: "NtCanvas", window: Window, alignment: NtWidgetPad.Alignment, isPrimaryPanel: bool, docker_manager: DockerManager, actions_manager: ActionManager):
+    def __init__(self, canvas: "NtCanvas", window: Window, alignment: NtWidgetPadAlignment, isPrimaryPanel: bool, docker_manager: DockerManager, actions_manager: ActionManager):
         self.qWin = window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
         self.canvas = canvas
