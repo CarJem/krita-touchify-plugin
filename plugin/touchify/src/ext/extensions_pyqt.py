@@ -15,6 +15,35 @@ from PyQt5.QtWidgets import QMessageBox
 
 class PyQtExtensions:
     
+    class QSize:
+        def fitToTarget(sourceSize: QSize, targetSize: QSize):
+            """
+            Resize the source size to fit the target size"""
+            
+            result: QSize = QSize(targetSize)
+            
+            if sourceSize.width() < result.width():
+                result.setWidth(sourceSize.width())
+                    
+            if sourceSize.height() < result.height():
+                result.setHeight(sourceSize.height())
+                
+            return result
+
+        def fitToSource(sourceSize: QSize, targetSize: QSize):
+            """
+            Resize the target size to fit the source size"""
+            
+            result: QSize = QSize(targetSize)
+            
+            if sourceSize.width() > result.width():
+                result.setWidth(sourceSize.width())
+                    
+            if sourceSize.height() > result.height():
+                result.setHeight(sourceSize.height())
+                
+            return result
+    
     
     def isDeleted(item: QObject):
         try:

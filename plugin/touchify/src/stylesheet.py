@@ -72,34 +72,21 @@ touchify_nt_toolbox = f"""
         """
 
 touchify_toggle_button = f"""
-        QToolButton {{
+        QToolButton, QPushButton {{
             background-color: #aa{background};
             border: none;
             border-radius: 4px;
         }}
         
-        QToolButton:hover {{
+        QToolButton:hover, QPushButton:hover {{
             background-color: #{highlight};
         }}
         
-        QToolButton:pressed {{
+        QToolButton:pressed, QPushButton:pressed {{
             background-color: #{alternate};
         }}
-
-
-        QPushButton {{
-            background-color: #aa{background};
-            border: none;
-            border-radius: 4px;
-        }}
         
-        QPushButton:hover {{
-            background-color: #{highlight};
-        }}
-        
-        QPushButton:pressed {{
-            background-color: #{alternate};
-        }}
+        QToolButton::menu-indicator, QPushButton::menu-indicator {{ image: none; }}
         """
 
 touchify_toolshelf_header = f"""

@@ -2,7 +2,6 @@ from typing import Callable
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy, QFrame
 from PyQt5.QtCore import QSize, QEvent
 from ....docker_manager import *
-from ...pyqt.widgets.ResizeFrame import ResizeFrame
 from krita import *
 
     

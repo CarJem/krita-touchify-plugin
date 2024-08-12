@@ -30,7 +30,7 @@ class NtToolshelf(object):
         self.toolshelf = ToolshelfWidget(panel_index, docker_manager, actions_manager)
 
         # Create "pad"
-        self.pad = NtWidgetPad(self.mdiArea)
+        self.pad = NtWidgetPad(self.mdiArea, True)
         self.pad.setObjectName("toolshelfPad")
         self.pad.setViewAlignment(alignment)
         self.pad.borrowDocker(self.toolshelf)
