@@ -11,12 +11,8 @@ from .components.touchify.popups.PopupDialog import *
 from .components.touchify.popups.PopupDialog_Actions import *
 from .components.touchify.popups.PopupDialog_Docker import *
 
-
-
-
-
-
-
+if TYPE_CHECKING:
+    from .touchify import TouchifyInstance
 
 class ActionManager:
     
@@ -30,13 +26,15 @@ class ActionManager:
             "expanding_spacer2"
         ]
         
-    def __init__(self):  
+    def __init__(self, instance: "TouchifyInstance"):
+        self.appEngine = instance
         self.custom_docker_states = {}       
-        
+
     def windowCreated(self, window: Window, docker_manager: DockerManager):
         self.docker_management = docker_manager
         self.mainWindow = window
         self.qWin = window.qwindow()
+
         
     def executeAction(self, data: CfgTouchifyAction, action: QAction):
         match data.variant:
@@ -55,16 +53,16 @@ class ActionManager:
             case CfgTouchifyAction.Variants.Action:
                 self.action_trigger(data)
             
-    def createButton(self, data: CfgTouchifyAction, isTool: bool):
+    def createButton(self, data: CfgTouchifyAction):
         match data.variant:
             case CfgTouchifyAction.Variants.Brush:
-                self.button_brush(data.brush_name, isTool)
+                return self.button_brush(data)
             case CfgTouchifyAction.Variants.Menu:
-                return self.button_menu(data, isTool)
+                return self.button_menu(data)
             case CfgTouchifyAction.Variants.Action:
-                return self.button_trigger(data, isTool)
+                return self.button_trigger(data)
             case _:
-                return None
+                return self.button_generic(data)
     
     def createAction(self, data: CfgTouchifyAction, window: Window, actionPath: str):
         actionIdentifier ='TouchifyAction_{0}'.format(data.id)
@@ -117,8 +115,11 @@ class ActionManager:
         icon_loader_index = 0
         
         if data.variant == CfgTouchifyAction.Variants.Brush:
-            if data.brush_override_icon and data.showIcon:
-                icon_loader_index = 3
+            if data.showIcon:
+                if data.brush_override_icon and data.showIcon:
+                    icon_loader_index = 1
+                else:
+                    icon_loader_index = 3
         elif data.variant == CfgTouchifyAction.Variants.Action:
             if data.showIcon and data.action_use_icon:
                 icon_loader_index = 2
@@ -147,23 +148,35 @@ class ActionManager:
 
         return (use_text, text, use_icon, icon)
 
-    def __setButtonDisplay(self, act: CfgTouchifyAction, btn: TouchifyActionPushButton | TouchifyActionToolButton, isTool: bool):
+    def __setButtonDisplay(self, act: CfgTouchifyAction, btn: TouchifyActionButton):
         (use_text, text, use_icon, icon) = self.__getActionDisplay(act)
         
-        if isTool:
-            btn.setText(text)
-        elif use_text:
+        if use_text:
             btn.setText(text)
         
         if use_icon: 
-            btn.setIcon(icon)        
+            btn.setIcon(icon)
+            
+        btn.setMetadata(text, icon)
+
+    def __brushButtonUpdate(self, __btn: TouchifyActionButton, id: str):
+        win = Krita.instance().activeWindow()
+        if not win: return
+        view = win.activeView()
+        if not view: return
+        currentPreset: Resource = view.currentBrushPreset()
+        if not currentPreset: return
+        
+        __brush_presets = ResourceManager.getBrushPresets()
+        if id not in __brush_presets: return
+        btn_preset = __brush_presets[id]
+        
+        if currentPreset != btn_preset: __btn.setChecked(False)
+        else: __btn.setChecked(True)
 
        
-    def button_main(self, onClick: any, toolTip: str, checkable: bool, isTool: bool):
-        if isTool:
-            btn = TouchifyActionToolButton()
-        else:
-            btn = TouchifyActionPushButton()
+    def button_main(self, onClick: any, toolTip: str, checkable: bool):
+        btn = TouchifyActionButton()
         
         if onClick:
             btn.clicked.connect(onClick) # collect and disconnect all when closing
@@ -172,36 +185,57 @@ class ActionManager:
         btn.setCheckable(checkable)
         return btn
    
-    def button_brush(self, act: CfgTouchifyAction, isTool: bool):
-        btn: TouchifyActionPushButton | TouchifyActionToolButton | None = None
+    def button_brush(self, act: CfgTouchifyAction):
+        btn: TouchifyActionButton | None = None
         id = act.brush_name
         brush_presets = ResourceManager.getBrushPresets()
         
         if id in brush_presets:
             preset = brush_presets[id]
-            btn = self.button_main(lambda: self.action_brush(act.brush_name), preset.name(), False, isTool)
-            self.__setButtonDisplay(act, btn, isTool)
+            btn = self.button_main(lambda: self.action_brush(id), preset.name(), False)
+            btn.intervalTimer.timeout.connect(lambda: self.__brushButtonUpdate(btn, id))
+            btn.intervalTimer.start(1000)
+            self.__setButtonDisplay(act, btn)
         return btn
                    
-    def button_menu(self, act: CfgTouchifyAction, isTool: bool):
-        btn: TouchifyActionPushButton | TouchifyActionToolButton = self.button_main(None, act.text, False, isTool)   
-        self.__setButtonDisplay(act, btn, isTool)
+    def button_menu(self, act: CfgTouchifyAction):
+        btn: TouchifyActionButton = self.button_main(None, act.text, False)   
+        self.__setButtonDisplay(act, btn)
         
         contextMenu = TouchifyActionMenu(act, btn)
         btn.setMenu(contextMenu)
         btn.clicked.connect(btn.showMenu)
         return btn
+    
+    def button_generic(self, data: CfgTouchifyAction):
+        btn: TouchifyActionButton | None = None
         
-    def button_trigger(self, act: CfgTouchifyAction, isTool: bool):
+        onClick = None
+        
+        match data.variant:
+            case CfgTouchifyAction.Variants.Docker:
+                onClick = (lambda: self.action_docker(data.docker_id))
+            case CfgTouchifyAction.Variants.Workspace:
+                onClick = (lambda: self.action_workspace(data.workspace_id))
+            case CfgTouchifyAction.Variants.Popup:
+                onClick = (lambda: self.action_popup(None, data.popup_data))
+            case CfgTouchifyAction.Variants.DockerGroup:
+                onClick = (lambda: self.action_dockergroup(data.docker_group_data))
+
+        btn = self.button_main(onClick, data.text, False)
+        self.__setButtonDisplay(data, btn)
+        return btn
+        
+    def button_trigger(self, act: CfgTouchifyAction):
         action = Krita.instance().action(act.action_id)
-        btn: TouchifyActionPushButton | TouchifyActionToolButton | None = None
+        btn: TouchifyActionButton | None = None
         if action:
             checkable = action.isCheckable()
             if act.action_id in ActionManager.TriggerConstants.KNOWN_UNCHECKABLES:
                 checkable = False
                   
-            btn = self.button_main(action.trigger, action.toolTip(), checkable, isTool)
-            self.__setButtonDisplay(act, btn, isTool)
+            btn = self.button_main(action.trigger, action.toolTip(), checkable)
+            self.__setButtonDisplay(act, btn)
 
             if checkable:
                 btn.setChecked(action.isChecked())
@@ -265,7 +299,7 @@ class ActionManager:
         if dockerGroup["tabsMode"]:
             for index, key in enumerate(self.custom_docker_states):
                 entry = self.custom_docker_states[key]
-                if key is not id and dockerGroup["groupId"] == entry["groupId"] and entry["tabsMode"]:
+                if key is not data.id and dockerGroup["groupId"] == entry["groupId"] and entry["tabsMode"]:
                     sub_visibility = False
                     entry["enabled"] = sub_visibility
                     for path in entry["paths"]:
@@ -273,7 +307,7 @@ class ActionManager:
                             if (docker.objectName() == path):
                                 docker.setVisible(sub_visibility)
 
-        for path in self.custom_docker_states[id]["paths"]:
+        for path in self.custom_docker_states[data.id]["paths"]:
             for docker in dockersList:
                 if (docker.objectName() == path):
                     docker.setVisible(isVisible)

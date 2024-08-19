@@ -2,8 +2,8 @@
 from krita import *
 from PyQt5.QtCore import *
 
-from ...pyqt.widgets.ColorFramedButton import ColorFramedButton
-from ....resources import ResourceManager
+from ....pyqt.widgets.ColorFramedButton import ColorFramedButton
+from .....resources import ResourceManager
 
 DOCKER_TITLE = 'Color Options'
 

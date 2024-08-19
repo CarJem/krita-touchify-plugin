@@ -20,7 +20,7 @@ from .ToolshelfPage import ToolshelfPage
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ToolshelfWidget import ToolshelfWidget
-    from ..dockers.TouchifyToolshelfDocker import TouchifyToolshelfDocker
+    from ..dockers.toolshelf.ToolshelfDocker import TouchifyToolshelfDocker
 
 class ToolshelfContainer(QStackedWidget):
     
@@ -93,7 +93,8 @@ class ToolshelfContainer(QStackedWidget):
         super().resizeEvent(event)
 
     def goHome(self):
-        self.changePanel('MAIN')
+        if self.currentWidget() != self._mainWidget:
+            self.changePanel('MAIN')
 
     def isPinned(self):
         return self._pinned

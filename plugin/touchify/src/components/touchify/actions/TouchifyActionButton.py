@@ -1,19 +1,27 @@
 import uuid
 from ....resources import ResourceManager
 from ....variables import *
+from ....ext.extensions_krita import *
 from krita import *
 from ....settings.TouchifyConfig import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-class TouchifyActionPushButton(QPushButton):
+class TouchifyActionButton(QToolButton):
 
     def __init__(self, parent = None):
-        super(TouchifyActionPushButton, self).__init__(parent)
-
+        super(TouchifyActionButton, self).__init__(parent)
+        self.intervalTimer = QTimer(self)
         self.setFocusPolicy(Qt.NoFocus)
-        self.highlightConnection = None
+        self.toggled.connect(self.highlight)
         self._resizing = False
+        
+        self.meta_icon: QIcon = None
+        self.meta_text: str = ""
+        
+    def setMetadata(self, text, icon):
+        self.meta_text = text
+        self.meta_icon = icon
 
     def setIcon(self, icon):
         if isinstance(icon, QIcon):
@@ -32,15 +40,6 @@ class TouchifyActionPushButton(QPushButton):
             self.setIcon(pxmap)
         else:
             raise TypeError(f"Unable to set color of invalid type {type(color)}")
-
-    def setCheckable(self, checkable):
-        if checkable:
-            self.highlightConnection = self.toggled.connect(self.highlight)
-        else:
-            if self.highlightConnection:
-                self.disconnect(self.highlightConnection)
-                self.highlightConnection = None
-        return super().setCheckable(checkable)
 
     def highlight(self, toggled):
         p = self.window().palette()

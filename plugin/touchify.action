@@ -86,8 +86,16 @@
             <activationFlags>0</activationFlags>
             <activationConditions>0</activationConditions>
             <shortcut></shortcut>
-            <isCheckable>true</isCheckable>
+            <isCheckable>false</isCheckable>
             <statusTip></statusTip>
+        </Action>
+        <Action name="touchify_showPopupMenu">
+            <icon></icon>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>            
         </Action>
         <Action name="touchify_canvasDecoPopup">
             <icon></icon>

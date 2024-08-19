@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 from .docker_manager import DockerManager
 
-from .components.touchify.dockers import TouchifyToolshelfDocker
+from .components.touchify.dockers.toolshelf import ToolshelfDocker
 
 from .action_manager import ActionManager
 
@@ -33,7 +33,10 @@ class TouchifyInstance(object):
         self.touchify_tweaks = TouchifyTweaks(self)
         self.canvas_presets = CanvasPresets(self)
         
-        self.action_management = ActionManager()
+        
+        self.timer: QTimer = None
+        
+        self.action_management = ActionManager(self)
         
         self.settings_dlg: SettingsDialog | None = None
 
@@ -81,15 +84,20 @@ class TouchifyInstance(object):
     def getDockerToolshelf(self):
         for docker in Krita.instance().dockers():
             if docker.objectName() == "TouchifyToolshelfDocker":
-                toolshelfDocker: TouchifyToolshelfDocker = docker
+                toolshelfDocker: ToolshelfDocker = docker
                 return toolshelfDocker
         return None
         
     def setupDockers(self, window: Window):
         for docker in Krita.instance().dockers():
             if docker.objectName() == "TouchifyToolshelfDocker":
-                toolshelfDocker: TouchifyToolshelfDocker = docker
+                toolshelfDocker: ToolshelfDocker = docker
                 toolshelfDocker.setup(self)
+                
+    def startTimer(self, window: Window):
+        self.timer = QTimer(window.qwindow())
+        self.timer.setInterval(500)
+        self.timer.start()
 
     def onWindowCreated(self, window: Window):
         self.instanceWindow = window
@@ -97,6 +105,7 @@ class TouchifyInstance(object):
         self.action_management.windowCreated(self.instanceWindow, self.docker_management)
         
         self.setupDockers(window)
+        self.startTimer(window)
 
         seperator = QAction("", self.mainMenuBar)
         seperator.setSeparator(True)

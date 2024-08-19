@@ -27,7 +27,7 @@ active_text_color = qApp.palette().color(QPalette.ColorRole.WindowText).name().s
 small_tab_size = 20
 no_borders_style = " QToolBar { border: none; } "
 small_tab_style = f"QTabBar::tab {{ height: {small_tab_size}px; }}"
-hide_menu_indicator = f"""QPushButton::menu-indicator {{ image: none; }}"""
+hide_menu_indicator = f"""QPushButton::menu-indicator {{ image: none; }} QToolButton::menu-indicator {{ image: none; }}"""
 
 propertygrid_selectordialog_listview = f"""
     QListWidget::item:selected {{ 
@@ -164,11 +164,6 @@ touchify_toolshelf_header_button = f"""
             image: none; 
         }}
         """
-
-
-def touchify_action_btn_toolshelf():
-        result = f"""QPushButton::menu-indicator, QToolButton::menu-indicator {{ image: none; }}"""  
-        return result
             
 
 def touchify_action_btn_popup(opacityLevel: float):

@@ -1,9 +1,12 @@
 
 from krita import DockWidgetFactory, DockWidgetFactoryBase, Krita
-from .components.touchify.dockers.ColorOptionsDocker import ColorOptionsDocker
-from .components.touchify.dockers.BrushOptionsDocker import BrushOptionsDocker
-from .components.touchify.dockers.TouchifyToolshelfDocker import TouchifyToolshelfDocker
+from .variables import *
+from .components.touchify.dockers.color_options.ColorOptionsDocker import ColorOptionsDocker
+from .components.touchify.dockers.brush_options.BrushOptionsDocker import BrushOptionsDocker
+from .components.touchify.dockers.toolshelf.ToolshelfDocker import TouchifyToolshelfDocker
+from .components.touchify.dockers.reference_tabs.ReferenceTabsDocker import ReferenceTabsDocker
 
-Krita.instance().addDockWidgetFactory(DockWidgetFactory("ColorOptionsDocker", DockWidgetFactoryBase.DockRight, ColorOptionsDocker))
-Krita.instance().addDockWidgetFactory(DockWidgetFactory("BrushOptionsDocker", DockWidgetFactoryBase.DockRight, BrushOptionsDocker))
-Krita.instance().addDockWidgetFactory(DockWidgetFactory("TouchifyToolshelfDocker", DockWidgetFactoryBase.DockRight, TouchifyToolshelfDocker))
+Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_COLOROPTIONSDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ColorOptionsDocker))
+Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, BrushOptionsDocker))
+Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, TouchifyToolshelfDocker))
+Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_REFERENCETABSDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ReferenceTabsDocker))

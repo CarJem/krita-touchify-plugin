@@ -5,7 +5,7 @@
                 {
                     "action_section_contents": [],
                     "action_section_name": "Panel",
-                    "id": "ColorOptionsDocker",
+                    "id": "Touchify/ColorOptionsDocker",
                     "panel_x": 0,
                     "panel_y": 0,
                     "section_type": "docker",
@@ -90,16 +90,42 @@
             ],
             "size_x": 0,
             "size_y": 0,
-            "actions": []
+            "actions": [],
+            "actionHeight": 10,
+            "row": 0,
+            "section_show_tabs": false
         },
         {
             "sections": [
                 {
                     "action_section_contents": [],
                     "action_section_name": "Panel",
-                    "id": "KisLayerBox",
+                    "action_section_alignment_x": "none",
+                    "action_section_alignment_y": "none",
+                    "action_section_btn_width": 0,
+                    "action_section_btn_height": 0,
+                    "action_section_display_mode": "normal",
+                    "action_section_icon_size": 0,
+                    "docker_loading_priority": "normal",
+                    "docker_nesting_mode": "normal",
+                    "docker_unloaded_visibility": "normal",
+                    "id": "Touchify/ColorOptionsDocker",
+                    "max_size_x": 0,
+                    "max_size_y": 0,
+                    "min_size_x": 0,
+                    "min_size_y": 0,
                     "panel_x": 0,
                     "panel_y": 0,
+                    "section_type": "docker",
+                    "size_x": 0,
+                    "size_y": 0
+                },
+                {
+                    "action_section_contents": [],
+                    "action_section_name": "Panel",
+                    "id": "KisLayerBox",
+                    "panel_x": 0,
+                    "panel_y": 1,
                     "section_type": "docker",
                     "size_x": 0,
                     "size_y": 0,
@@ -109,7 +135,13 @@
                     "action_section_alignment_x": "none",
                     "action_section_alignment_y": "none",
                     "action_section_btn_width": 0,
-                    "action_section_btn_height": 0
+                    "action_section_btn_height": 0,
+                    "action_section_display_mode": "normal",
+                    "action_section_icon_size": 0,
+                    "max_size_x": 0,
+                    "max_size_y": 0,
+                    "min_size_x": 0,
+                    "min_size_y": 0
                 },
                 {
                     "action_section_contents": [
@@ -144,7 +176,7 @@
                     "min_size_x": 0,
                     "min_size_y": 0,
                     "panel_x": 0,
-                    "panel_y": 1,
+                    "panel_y": 2,
                     "size_x": 0,
                     "size_y": 0,
                     "id": "",
@@ -200,7 +232,7 @@
                     "action_section_name": "LayerOptions2",
                     "section_type": "actions",
                     "panel_x": 1,
-                    "panel_y": 1,
+                    "panel_y": 2,
                     "max_size_x": 0,
                     "max_size_y": 0,
                     "min_size_x": 0,
@@ -225,7 +257,8 @@
             "icon": "all-layers",
             "size_x": 0,
             "size_y": 0,
-            "section_show_tabs": false
+            "section_show_tabs": false,
+            "row": 0
         },
         {
             "sections": [
@@ -265,16 +298,48 @@
                                     "brush_name": "",
                                     "brush_override_icon": false,
                                     "icon": "paintop_settings_02",
-                                    "text": ""
+                                    "text": "",
+                                    "id": "",
+                                    "showText": false,
+                                    "docker_id": "",
+                                    "workspace_id": "",
+                                    "docker_group_data": {
+                                        "docker_names": []
+                                    },
+                                    "popup_data": {
+                                        "actions_items": []
+                                    }
+                                },
+                                {
+                                    "context_menu_actions": [],
+                                    "showIcon": true,
+                                    "id": "brush_test",
+                                    "icon": "",
+                                    "text": "",
+                                    "variant": "brush",
+                                    "showText": false,
+                                    "action_id": "",
+                                    "action_use_icon": false,
+                                    "brush_name": "Jem's Basic",
+                                    "brush_override_icon": false,
+                                    "docker_id": "",
+                                    "workspace_id": "",
+                                    "docker_group_data": {
+                                        "docker_names": []
+                                    },
+                                    "popup_data": {
+                                        "actions_items": []
+                                    }
                                 }
-                            ]
+                            ],
+                            "row_name": "Actions Row"
                         }
                     ],
                     "action_section_name": "Panel",
                     "action_section_alignment_x": "right",
                     "action_section_alignment_y": "none",
-                    "action_section_btn_width": 0,
-                    "action_section_btn_height": 0,
+                    "action_section_btn_width": 22,
+                    "action_section_btn_height": 22,
                     "action_section_display_mode": "flat",
                     "action_section_icon_size": 0,
                     "docker_loading_priority": "normal",
@@ -298,10 +363,120 @@
             "icon": "material:brush",
             "size_x": 0,
             "size_y": 0,
-            "section_show_tabs": false
+            "section_show_tabs": false,
+            "row": 0
         }
     ],
-    "actions": [],
+    "actions": [
+        {
+            "actions": [
+                {
+                    "context_menu_actions": [],
+                    "showIcon": true,
+                    "id": "AnimationDockers",
+                    "icon": "custom:AnimationPanel",
+                    "text": "Animation",
+                    "variant": "docker_group",
+                    "showText": false,
+                    "action_id": "",
+                    "action_use_icon": false,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": [
+                            {
+                                "id": "TimelineDocker"
+                            },
+                            {
+                                "id": "OnionSkinsDocker"
+                            }
+                        ],
+                        "tabsMode": false,
+                        "groupId": "",
+                        "id": "AnimationsDocker"
+                    },
+                    "popup_data": {
+                        "actions_items": []
+                    }
+                },
+                {
+                    "context_menu_actions": [],
+                    "showIcon": true,
+                    "id": "",
+                    "icon": "",
+                    "text": "",
+                    "variant": "docker_group",
+                    "showText": false,
+                    "action_id": "",
+                    "action_use_icon": false,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": [],
+                        "tabsMode": true,
+                        "groupId": "",
+                        "id": "Blank"
+                    },
+                    "popup_data": {
+                        "actions_items": []
+                    }
+                },
+                {
+                    "context_menu_actions": [],
+                    "showIcon": true,
+                    "id": "",
+                    "icon": "",
+                    "text": "",
+                    "variant": "docker_group",
+                    "showText": false,
+                    "action_id": "",
+                    "action_use_icon": false,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": [],
+                        "tabsMode": true,
+                        "groupId": "",
+                        "id": "Blank"
+                    },
+                    "popup_data": {
+                        "actions_items": []
+                    }
+                },
+                {
+                    "context_menu_actions": [],
+                    "showIcon": true,
+                    "id": "",
+                    "icon": "",
+                    "text": "",
+                    "variant": "docker_group",
+                    "showText": false,
+                    "action_id": "",
+                    "action_use_icon": false,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": [],
+                        "tabsMode": true,
+                        "groupId": "",
+                        "id": "Blank"
+                    },
+                    "popup_data": {
+                        "actions_items": []
+                    }
+                }
+            ],
+            "row_name": "Dockers Toggles"
+        }
+    ],
     "sections": [
         {
             "action_section_contents": [
@@ -350,7 +525,7 @@
         {
             "action_section_contents": [],
             "action_section_name": "Panel",
-            "id": "BrushOptionsDocker",
+            "id": "Touchify/BrushOptionsDocker",
             "panel_x": 0,
             "panel_y": 1,
             "section_type": "docker",
@@ -472,5 +647,5 @@
     ],
     "dockerButtonHeight": 20,
     "dockerBackHeight": 16,
-    "actionHeight": 18
+    "actionHeight": 20
 }

@@ -3,22 +3,24 @@ from math import e
 from PyQt5.QtWidgets import QWidget
 from krita import *
 from PyQt5.QtCore import *
+from .....variables import *
 
 from touchify.src import stylesheet
-from ....ext.KritaSettings import *
-from ...krita.KisSliderSpinBox import KisSliderSpinBox
-from ...krita.KisAngleSelector import KisAngleSelector
+from .....ext.KritaSettings import *
+from ....krita.KisSliderSpinBox import KisSliderSpinBox
+from ....krita.KisAngleSelector import KisAngleSelector
 
 DOCKER_TITLE = 'Brush Options'
+
 
 
 class BrushOptionsDockerCfg:
 
     def __init__(self):
-        self.ShowFlowSlider = KritaSettings.readSettingBool("BrushOptionsDocker", "ShowFlowSlider", True)
-        self.ShowOpacitySlider = KritaSettings.readSettingBool("BrushOptionsDocker", "ShowOpacitySlider", True)
-        self.ShowSizeSlider = KritaSettings.readSettingBool("BrushOptionsDocker", "ShowSizeSlider", True)
-        self.ShowRotationSlider = KritaSettings.readSettingBool("BrushOptionsDocker", "ShowRotationSlider", True)
+        self.ShowFlowSlider = KritaSettings.readSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowFlowSlider", True)
+        self.ShowOpacitySlider = KritaSettings.readSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowOpacitySlider", True)
+        self.ShowSizeSlider = KritaSettings.readSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowSizeSlider", True)
+        self.ShowRotationSlider = KritaSettings.readSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowRotationSlider", True)
 
     def toggle(self, setting: str):
         if hasattr(self, setting):
@@ -29,10 +31,10 @@ class BrushOptionsDockerCfg:
 
 
     def save(self):
-        KritaSettings.writeSettingBool("BrushOptionsDocker", "ShowFlowSlider", self.ShowFlowSlider)
-        KritaSettings.writeSettingBool("BrushOptionsDocker", "ShowOpacitySlider", self.ShowOpacitySlider)
-        KritaSettings.writeSettingBool("BrushOptionsDocker", "ShowSizeSlider", self.ShowSizeSlider)
-        KritaSettings.writeSettingBool("BrushOptionsDocker", "ShowRotationSlider", self.ShowRotationSlider)
+        KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowFlowSlider", self.ShowFlowSlider)
+        KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowOpacitySlider", self.ShowOpacitySlider)
+        KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowSizeSlider", self.ShowSizeSlider)
+        KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowRotationSlider", self.ShowRotationSlider)
 
 class BrushSizeSlider(KisSliderSpinBox):
 

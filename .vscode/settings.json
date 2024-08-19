@@ -4,18 +4,15 @@
         "**/__pycache__": true,
         "**/.venv": true
     },
-    "emeraldwalk.runonsave": {
-        "commands": [
-            {
-                "match": ".*",
-                "isAsync": true,
-                "cmd": "${workspaceFolder}/dev-flatpak-install.sh"
-            }
-        ]
-    },
-    "python.analysis.extraPaths": [
-        "${workspaceFolder}/krita_env",
+    "python.analysis.extraPaths": [    
+        "~/.local/share/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs",
+        "~/.local/share/flatpak/app/org.kde.krita/current/active/files/lib/python3.11/site-packages",
         "./plugin"
+    ],
+    "python.defaultInterpreterPath": "python",
+    "python.analysis.extraPaths.disabled": [
+        "C:\\Program Files\\Krita (x64)\\lib\\krita-python-libs",
+        "${workspaceFolder}/env/krita_imports",
     ],
     "python.REPL.enableREPLSmartSend": false,
     "python.envFile": "${workspaceFolder}/.venv",

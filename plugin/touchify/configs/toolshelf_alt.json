@@ -168,7 +168,7 @@
             "action_section_contents": []
         },
         {
-            "id": "pykrita_reference_tabs",
+            "id": "Touchify/ReferenceTabsDocker",
             "docker_nesting_mode": "normal",
             "size_x": 300,
             "size_y": 200,
@@ -233,10 +233,10 @@
             "action_section_name": "Actions (Left)",
             "action_section_alignment_x": "left",
             "action_section_alignment_y": "none",
-            "action_section_btn_width": 25,
-            "action_section_btn_height": 25,
+            "action_section_btn_width": 22,
+            "action_section_btn_height": 22,
             "action_section_display_mode": "flat",
-            "action_section_icon_size": 0,
+            "action_section_icon_size": 16,
             "docker_loading_priority": "normal",
             "docker_nesting_mode": "normal",
             "docker_unloaded_visibility": "normal",
@@ -325,9 +325,9 @@
             "action_section_display_mode": "flat",
             "action_section_alignment_x": "right",
             "action_section_alignment_y": "none",
-            "action_section_btn_width": 25,
-            "action_section_btn_height": 25,
-            "action_section_icon_size": 0
+            "action_section_btn_width": 22,
+            "action_section_btn_height": 22,
+            "action_section_icon_size": 16
         }
     ],
     "dockerButtonHeight": 32,

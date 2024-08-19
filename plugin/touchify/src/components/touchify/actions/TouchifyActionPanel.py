@@ -1,9 +1,9 @@
 import uuid
 from krita import *
 
-from .TouchifyActionPushButton import *
-from .TouchifyActionToolButton import *
+from .TouchifyActionButton import *
 from .TouchifyActionMenu import TouchifyActionMenu
+from .TouchifyActionToolbar import TouchifyActionToolbar
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -44,8 +44,8 @@ class TouchifyActionPanel(QWidget):
         
         self.opacity: float = opacity
 
-        self._rows: dict[int, QWidget] = {}
-        self._buttons: dict[any, TouchifyActionPushButton | TouchifyActionToolButton] = {}
+        self._rows: dict[int, any] = {}
+        self._buttons: dict[any, TouchifyActionButton] = {}
         
         self.hinted_size: QSize | None = None
         self.registered_actions: list[tuple[QAction, QMetaObject.Connection, bool]] = []
@@ -61,12 +61,12 @@ class TouchifyActionPanel(QWidget):
         else:
             return self.minimumSize()
         
-    def updateButton(self, btn: TouchifyActionPushButton | TouchifyActionToolButton, action: QAction, useIcon: bool):
+    def updateButton(self, btn: TouchifyActionButton, action: QAction, useIcon: bool):
         btn.setChecked(action.isChecked())
         if useIcon:
             btn.setIcon(action.icon())
     
-    def registerAction(self, btn: TouchifyActionPushButton | TouchifyActionToolButton, action: QAction, useIcon: bool):
+    def registerAction(self, btn: TouchifyActionButton, action: QAction, useIcon: bool):
         connection = action.changed.connect(lambda: self.updateButton(btn, action, useIcon))
         self.registered_actions.append((action, connection, useIcon))
     
@@ -76,8 +76,46 @@ class TouchifyActionPanel(QWidget):
                 action[0].changed.disconnect(action[1])
             except TypeError:
                 pass
-                       
-    def appendButton(self, data: CfgTouchifyAction, btn: TouchifyActionPushButton | TouchifyActionToolButton, row: int):
+     
+     
+    def appendRow(self, row: int):
+        if self.type == "toolbar_flat":
+            rowWid = TouchifyActionToolbar()
+            rowWid.setObjectName("touchify_actionpanel_toolbar")
+            rowWid.layout().setSpacing(0)
+            rowWid.layout().setContentsMargins(0,0,0,0)        
+            rowWid.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+            rowWid.setStyleSheet(f"""TouchifyActionToolbar {{ padding: 1; margin: 1; spacing: 1; }}""")
+            if self.icon_width > 0 and self.icon_height > 0:
+                rowWid.setIconSize(QSize(self.icon_width, self.icon_height))
+            self._rows[row] = rowWid
+            self.layout().addWidget(rowWid)
+        else:
+            rowWid = QWidget()
+            rowWid.setLayout(QHBoxLayout())
+            rowWid.layout().setSpacing(1)
+            rowWid.layout().setContentsMargins(0, 0, 0, 0)
+            rowWid.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+            self._rows[row] = rowWid
+            self.layout().addWidget(rowWid)
+     
+    def addWidgetToRow(self, row: int, btn: TouchifyActionButton):
+        if row not in self._rows:
+            self.appendRow(row)
+        
+        rowItem = self._rows[row]
+        if isinstance(rowItem, TouchifyActionToolbar):
+            tlb: TouchifyActionToolbar = rowItem
+            tlb.addWidget(btn)
+            tlb.layout().setContentsMargins(0, 0, 0, 0)        
+        elif isinstance(rowItem, QWidget):
+            tlb: QWidget = rowItem
+            tlb.layout().addWidget(btn)
+
+     
+
+     
+    def appendButton(self, data: CfgTouchifyAction, btn: TouchifyActionButton, row: int):
         def action_id():
             result = None
             while result in self._buttons or result == None:
@@ -92,22 +130,17 @@ class TouchifyActionPanel(QWidget):
             if action:
                 if action.isCheckable():
                     self.registerAction(btn, action, data.action_use_icon)
+                    
+        self.addWidgetToRow(row, btn)
 
-        if row not in self._rows:
-            rowWid = QWidget()
-            rowWid.setLayout(QHBoxLayout())
-            rowWid.layout().setSpacing(1)
-            rowWid.layout().setContentsMargins(0, 0, 0, 0)
-            rowWid.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-            self._rows[row] = rowWid
-            self.layout().addWidget(rowWid)
-
-        self._rows[row].layout().addWidget(btn)
         
-    def stylizeButton(self, btn: TouchifyActionPushButton | TouchifyActionToolButton):   
+        
+    def stylizeButton(self, btn: TouchifyActionButton):
+        
+
         if self.icon_width > 0 and self.icon_height > 0:
             btn.setIconSize(QSize(self.icon_width, self.icon_height))
-            
+
         if self.item_width > 0:
             btn.setFixedWidth(self.item_width)
             
@@ -116,17 +149,25 @@ class TouchifyActionPanel(QWidget):
             
         if self.type == "popup":
             btn.setStyleSheet(stylesheet.touchify_action_btn_popup(self.opacity))
-            if isinstance(btn, TouchifyActionToolButton): btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
-        elif self.type == "toolbar" or self.type == "toolbar_flat":
-            btn.setStyleSheet(stylesheet.touchify_action_btn_toolshelf())
-            if isinstance(btn, TouchifyActionPushButton) and self.type == "toolbar_flat": btn.setFlat(True)
+            btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+            btn.setText(btn.meta_text)
+        elif self.type == "toolbar":
+            btn.setStyleSheet(stylesheet.hide_menu_indicator)
             btn.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        elif self.type == "toolbar_flat":
+            btn.setContentsMargins(0,0,0,0)
+            btn.setStyleSheet(stylesheet.hide_menu_indicator)
 
     def createPanel(self):
         self.ourLayout = QVBoxLayout()
         self.setLayout(self.ourLayout)
-        self.layout().setSpacing(1)
-        self.layout().setContentsMargins(0, 0, 0, 0)
+        
+        if self.type == "toolbar_flat":
+            self.layout().setSpacing(0)
+            self.layout().setContentsMargins(0, 0, 0, 0)
+        else:
+            self.layout().setSpacing(1)
+            self.layout().setContentsMargins(0, 0, 0, 0)
         
         actions = self.cfg
         row_index = 0
@@ -140,7 +181,7 @@ class TouchifyActionPanel(QWidget):
             row: CfgTouchifyActionGroup
             for entry in row.actions:
                 act: CfgTouchifyAction = entry
-                btn = self.actions_manager.createButton(act, isTool)
+                btn = self.actions_manager.createButton(act)
                 if btn:
                     self.stylizeButton(btn)
                     self.appendButton(act, btn, row_index)
