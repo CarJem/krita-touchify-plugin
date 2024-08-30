@@ -65,7 +65,10 @@
             "icon": "extended_color_selector",
             "id": "Colors",
             "size_x": 0,
-            "size_y": 0
+            "size_y": 0,
+            "row": 0,
+            "section_show_tabs": true,
+            "section_show_root_actions": true
         },
         {
             "icon": "custom:HistoryDockers",
@@ -93,39 +96,17 @@
             "actions": [],
             "actionHeight": 10,
             "row": 0,
-            "section_show_tabs": false
+            "section_show_tabs": true,
+            "section_show_root_actions": true
         },
         {
             "sections": [
                 {
                     "action_section_contents": [],
                     "action_section_name": "Panel",
-                    "action_section_alignment_x": "none",
-                    "action_section_alignment_y": "none",
-                    "action_section_btn_width": 0,
-                    "action_section_btn_height": 0,
-                    "action_section_display_mode": "normal",
-                    "action_section_icon_size": 0,
-                    "docker_loading_priority": "normal",
-                    "docker_nesting_mode": "normal",
-                    "docker_unloaded_visibility": "normal",
-                    "id": "Touchify/ColorOptionsDocker",
-                    "max_size_x": 0,
-                    "max_size_y": 0,
-                    "min_size_x": 0,
-                    "min_size_y": 0,
-                    "panel_x": 0,
-                    "panel_y": 0,
-                    "section_type": "docker",
-                    "size_x": 0,
-                    "size_y": 0
-                },
-                {
-                    "action_section_contents": [],
-                    "action_section_name": "Panel",
                     "id": "KisLayerBox",
                     "panel_x": 0,
-                    "panel_y": 1,
+                    "panel_y": 0,
                     "section_type": "docker",
                     "size_x": 0,
                     "size_y": 0,
@@ -176,7 +157,7 @@
                     "min_size_x": 0,
                     "min_size_y": 0,
                     "panel_x": 0,
-                    "panel_y": 2,
+                    "panel_y": 1,
                     "size_x": 0,
                     "size_y": 0,
                     "id": "",
@@ -232,7 +213,7 @@
                     "action_section_name": "LayerOptions2",
                     "section_type": "actions",
                     "panel_x": 1,
-                    "panel_y": 2,
+                    "panel_y": 1,
                     "max_size_x": 0,
                     "max_size_y": 0,
                     "min_size_x": 0,
@@ -257,8 +238,9 @@
             "icon": "all-layers",
             "size_x": 0,
             "size_y": 0,
-            "section_show_tabs": false,
-            "row": 0
+            "section_show_tabs": true,
+            "row": 0,
+            "section_show_root_actions": true
         },
         {
             "sections": [
@@ -363,8 +345,9 @@
             "icon": "material:brush",
             "size_x": 0,
             "size_y": 0,
-            "section_show_tabs": false,
-            "row": 0
+            "section_show_tabs": true,
+            "row": 0,
+            "section_show_root_actions": true
         }
     ],
     "actions": [

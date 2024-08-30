@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 
 from ....resources import ResourceManager
 
-from .ToolshelfDockerButtons import ToolshelfDockerButtons
+from .ToolshelfPageButtons import ToolshelfPageButtons
 
 from .ToolshelfPageTabWidget import ToolshelfPageTabWidget
 from ....docker_manager import DockerManager
@@ -59,6 +59,7 @@ class ToolshelfPage(QWidget):
         self.shelfLayout.setContentsMargins(0, 0, 0, 0)
         self.shelfLayout.setSpacing(1)
         self.setLayout(self.shelfLayout)
+        self.setAutoFillBackground(True)
 
         self.docker_manager = self.toolshelf.dockWidget.docker_manager
         self.actions_manager = self.toolshelf.dockWidget.actions_manager
@@ -69,38 +70,57 @@ class ToolshelfPage(QWidget):
         self.panelProperties = data
         
         
-        self._initDockerTabs()
-            
+        self._initPageTabs()
+        self._initPageActions()
+        self._initSections()
+    
 
-        self.quickActions = TouchifyActionPanel(self.panelProperties.actions, self, self.actions_manager)
+    def _initPageActions(self):
+        if self.panelProperties.section_show_root_actions:
+            actionsList = self.toolshelf.cfg.actions
+            actionHeight = self.toolshelf.cfg.actionHeight
+        else:
+            actionsList = self.panelProperties.actions
+            actionHeight = self.panelProperties.actionHeight
+
+
+        self.quickActions = TouchifyActionPanel(actionsList, self, self.actions_manager)
+        self.quickActions.setAutoFillBackground(True)
         self.quickActions.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         
         for btnKey in self.quickActions._buttons:
-            self.quickActions._buttons[btnKey].setFixedHeight(self.panelProperties.actionHeight)
-            self.quickActions._buttons[btnKey].setMinimumWidth(self.panelProperties.actionHeight)
+            self.quickActions._buttons[btnKey].setFixedHeight(actionHeight)
+            self.quickActions._buttons[btnKey].setMinimumWidth(actionHeight)
             self.quickActions._buttons[btnKey].setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
         self.shelfLayout.addWidget(self.quickActions)
-        self._initSections()
     
-    
-    def _initDockerTabs(self):
+    def _initPageTabs(self):
         if self.panelProperties.section_show_tabs == False:
-            self.dockerBtns = None
+            self.pageBtns = None
             return
         
-        self.dockerBtns = ToolshelfDockerButtons(self)
-        self.dockerBtns.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-        self.shelfLayout.insertWidget(0, self.dockerBtns)    
+        self.pageBtns = ToolshelfPageButtons(self)
+        self.pageBtns.setAutoFillBackground(True)
+        self.pageBtns.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        self.shelfLayout.insertWidget(0, self.pageBtns)    
         
         panels = self.toolshelf.cfg.panels
         for entry in panels:
             properties: CfgToolshelfPanel = entry
-            PANEL_ID = properties.id
-            panel_title = properties.id
-            self.addDockerButton(properties, partial(self.toolshelf.changePanel, properties.id), panel_title)
+            if properties.id == self.ID:
+                homeProps = CfgToolshelfPanel()
+                homeProps.row = properties.row
+                homeProps.id = "ROOT"
+                homeProps.icon = "material:home"
+                panel_title = "Home"
+                self.addPageButton(homeProps, self.toolshelf.goHome, panel_title)
+            else:
+                PANEL_ID = properties.id
+                panel_title = properties.id
+                self.addPageButton(properties, partial(self.toolshelf.changePanel, properties.id), panel_title)
     
-    def addDockerButton(self, properties: CfgToolshelfPanel, onClick, title):
-        btn = self.dockerBtns.addButton(properties.id, properties.row, onClick, title, False)
+    def addPageButton(self, properties: CfgToolshelfPanel, onClick, title):
+        btn = self.pageBtns.addButton(properties.id, properties.row, onClick, title, False)
         btn.setIcon(ResourceManager.iconLoader(properties.icon))
         btn.setFixedHeight(self.toolshelf.cfg.dockerButtonHeight)
         btn.setMinimumWidth(self.toolshelf.cfg.dockerButtonHeight)
@@ -299,8 +319,8 @@ class ToolshelfPage(QWidget):
         return QSize(container_width, container_height)
     
     def updateStyleSheet(self):
-        if self.dockerBtns:
-            self.dockerBtns.setStyleSheet(stylesheet.touchify_toolshelf_header_button)
+        if self.pageBtns:
+            self.pageBtns.setStyleSheet(stylesheet.touchify_toolshelf_header_button)
         self.quickActions.setStyleSheet(stylesheet.touchify_toolshelf_header_button)
 
     def sizeHint(self):

@@ -9,6 +9,7 @@ from ....action_manager import ActionManager
 from .NtSubWinFilter import NtSubWinFilter
 from ....ext.extensions_krita import KritaExtensions
 from ....settings.TouchifySettings import TouchifySettings
+from ....settings.TouchifyConfig import TouchifyConfig
 from .... import stylesheet
 from .NtWidgetPad import NtWidgetPad
 from krita import *
@@ -30,6 +31,9 @@ class NtToolshelf(object):
         panel_index = 0 if isPrimaryPanel else 1
         self.toolshelf = ToolshelfWidget(panel_index, docker_manager, actions_manager)
 
+
+        
+
         # Create "pad"
         self.pad = NtWidgetPad(self.mdiArea, True)
         self.pad.setObjectName("toolshelfPad")
@@ -43,6 +47,11 @@ class NtToolshelf(object):
         self.qWin.installEventFilter(self.adjustFilter)
         self.toolshelf.installEventFilter(self.adjustFilter)
         self.toolshelf.sizeChanged.connect(self.onSizeChanged)
+
+        toolshelf_cfg = TouchifyConfig.instance().getToolshelfConfig(panel_index)
+        if toolshelf_cfg:
+            if toolshelf_cfg.canvas_enable_resizing_by_default:
+                self.pad.toggleResizing()
 
     def onSizeChanged(self):
         self.canvas.updateCanvas()

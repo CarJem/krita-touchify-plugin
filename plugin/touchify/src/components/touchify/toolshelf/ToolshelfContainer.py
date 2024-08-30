@@ -50,7 +50,7 @@ class ToolshelfContainer(QStackedWidget):
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
         self.PanelIndex = PanelIndex
-        self.cfg = self.getCfg()
+        self.cfg = TouchifyConfig.instance().getToolshelfConfig(self.PanelIndex)
         QApplication.instance().installEventFilter(self.mouse_listener)
         self.mouse_listener.mouseReleased.connect(self.onMouseRelease)
         super().currentChanged.connect(self.onCurrentChanged)
@@ -62,13 +62,7 @@ class ToolshelfContainer(QStackedWidget):
             self.addPanel(properties.id, properties)
 
         self.changePanel('MAIN')
-        
-    def getCfg(self):
-        cfg = TouchifyConfig.instance().getConfig()
-        if self.PanelIndex == 0: return cfg.toolshelf_main
-        elif self.PanelIndex == 1: return cfg.toolshelf_alt
-        elif self.PanelIndex == 2: return cfg.toolshelf_docker
-        else: return None
+
 
     def addMainPanel(self):
         self._mainWidget = ToolshelfPageMain(self, self.PanelIndex)

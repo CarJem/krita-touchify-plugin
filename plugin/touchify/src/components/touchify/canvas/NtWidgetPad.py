@@ -74,9 +74,10 @@ class NtWidgetPad(QWidget):
         self.resizingToggleAction.changed.connect(self.allowResizingChanged)
         self.resizingToggleAction.setEnabled(self.allowResizing)
         
-        self.contextMenu = QMenu(self.btnHide)
-        self.contextMenu.addAction(self.resizingToggleAction)
-        self.btnHide.setMenu(self.contextMenu)
+        if self.allowResizing:
+            self.contextMenu = QMenu(self.btnHide)
+            self.contextMenu.addAction(self.resizingToggleAction)
+            self.btnHide.setMenu(self.contextMenu)
         
         self.gripSize = QSize(10, 10)
         self.resizeStart = QPoint()
@@ -286,6 +287,12 @@ class NtWidgetPad(QWidget):
     #endregion
 
     #region Functions
+
+    def toggleResizing(self):
+        if self.allowResizing:
+            self.resizingToggleAction.trigger()
+
+
     def setViewAlignment(self, newAlignment: NtWidgetPadAlignment):
         """
         Set the Pad's alignment to the view to either 'left' or 'right'. 

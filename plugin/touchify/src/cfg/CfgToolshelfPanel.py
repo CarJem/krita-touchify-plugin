@@ -13,6 +13,7 @@ class CfgToolshelfPanel:
     actions: TypedList[CfgTouchifyActionGroup] = []
     sections: TypedList[CfgToolshelfSection] = []
     section_show_tabs: bool = False
+    section_show_root_actions: bool = False
     
     actionHeight: int = 10
 
@@ -46,7 +47,8 @@ class CfgToolshelfPanel:
         labels["sections"] = "Sections"
         labels["actions"] = "Actions"
         labels["actionHeight"] = "Action Button Height"
-        labels["section_show_tabs"] = "Show Tabs"
+        labels["section_show_tabs"] = "Show Page Tabs"
+        labels["section_show_root_actions"] = "Show Root Actions"
         return labels
 
     def propertygrid_groups(self):

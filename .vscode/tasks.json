@@ -21,7 +21,12 @@
         {
             "label": "Update Configs",
             "type": "shell",
-            "command": "cmd.exe /D /C dev-windows-update-config.bat",
+            "windows": {
+                "command": "cmd.exe /D /C dev-windows-update-config.bat",
+            },
+            "linux": {
+                "command": "./dev-flatpak-update-config.sh"
+            },
             "presentation": {
                 "reveal": "silent",
                 "revealProblems": "onProblem",

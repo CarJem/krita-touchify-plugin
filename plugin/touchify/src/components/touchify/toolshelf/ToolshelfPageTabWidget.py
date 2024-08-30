@@ -1,7 +1,7 @@
 from uuid import uuid4
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from .ToolshelfDockerButtons import ToolshelfDockerButtons
+from .ToolshelfPageButtons import ToolshelfPageButtons
 from krita import *
 
 from typing import TYPE_CHECKING

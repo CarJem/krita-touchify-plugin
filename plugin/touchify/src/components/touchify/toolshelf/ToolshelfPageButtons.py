@@ -10,10 +10,10 @@ from PyQt5.QtWidgets import QSizePolicy, QPushButton, QWidget, QHBoxLayout
 from PyQt5.QtCore import QSize, Qt
 
 
-class ToolshelfDockerButton(QPushButton):
+class ToolshelfPageButton(QPushButton):
 
     def __init__(self, parent = None):
-        super(ToolshelfDockerButton, self).__init__(parent)
+        super(ToolshelfPageButton, self).__init__(parent)
 
         self.setFocusPolicy(Qt.NoFocus)
         self.highlightConnection = None
@@ -52,18 +52,18 @@ class ToolshelfDockerButton(QPushButton):
             p.setColor(QPalette.Button, p.color(QPalette.Highlight))
         self.setPalette(p)
 
-class ToolshelfDockerButtons(QWidget):
+class ToolshelfPageButtons(QWidget):
     def __init__(self, parent=None):
-        super(ToolshelfDockerButtons, self).__init__(parent)
+        super(ToolshelfPageButtons, self).__init__(parent)
         self._rows: dict[int, QWidget] = {}
         self.setLayout(QVBoxLayout())
         self.layout().setSpacing(1)
         self.layout().setContentsMargins(0, 0, 0, 0)
 
-        self._buttons: dict[any, ToolshelfDockerButton] = {}
+        self._buttons: dict[any, ToolshelfPageButton] = {}
 
     def addButton(self, id: any, row: int, onClick: any, toolTip: str, checkable: bool):
-        btn = ToolshelfDockerButton()
+        btn = ToolshelfPageButton()
         if onClick:
             btn.clicked.connect(onClick) # collect and disconnect all when closing
         btn.setToolTip(toolTip)

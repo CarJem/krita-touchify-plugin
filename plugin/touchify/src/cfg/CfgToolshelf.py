@@ -10,6 +10,7 @@ class CfgToolshelf:
     actions: TypedList[CfgTouchifyActionGroup] = []
     sections: TypedList[CfgToolshelfSection] = []
     
+    canvas_enable_resizing_by_default: bool = False
     dockerButtonHeight: int = 32
     dockerBackHeight: int = 16
     actionHeight: int = 16
@@ -36,6 +37,7 @@ class CfgToolshelf:
         labels["dockerButtonHeight"] = "Docker Button Height"
         labels["dockerBackHeight"] = "Back Button Height"
         labels["actionHeight"] = "Action Button Height"
+        labels["canvas_enable_resizing_by_default"] = "Enable Canvas Widget\nResizing by Default"
         return labels
 
     def propertygrid_groups(self):

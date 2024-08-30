@@ -91,7 +91,7 @@ touchify_toggle_button = f"""
 
 touchify_toolshelf_header = f"""
         QPushButton {{
-            background-color: #aa{background};
+            background-color: #{alternate};
             border: none;
         }}
 
@@ -108,28 +108,28 @@ touchify_toolshelf_header = f"""
         }}
 
         QPushButton#back-widget {{
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
             border: none;
         }}
 
         QPushButton#pin-widget {{
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 0px;
             border: none;
         }}
 
         QWidget#filler-widget {{
-            background-color: #aa{background};
+            background-color: #{alternate};
             border: none;
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
         }}
         """
 
 touchify_toolshelf_header_button = f"""
         QToolButton {{
-            background-color: #aa{background};
+            background-color: #aa{alternate};
             border: none;
             border-radius: 4px;
         }}
@@ -147,7 +147,7 @@ touchify_toolshelf_header_button = f"""
         }}
 
         QPushButton {{
-            background-color: #aa{background};
+            background-color: #aa{alternate};
             border: none;
             border-radius: 4px;
         }}

@@ -108,6 +108,13 @@ class TouchifyConfig:
         
     def getConfig(self) -> ConfigFile:
         return self.cfg
+    
+    def getToolshelfConfig(self, index: int) -> CfgToolshelf | None:
+        cfg = self.getConfig()
+        if index == 0: return cfg.toolshelf_main
+        elif index == 1: return cfg.toolshelf_alt
+        elif index == 2: return cfg.toolshelf_docker
+        else: return None
 
     def copyConfig(self):
         return copy.copy(self.cfg)
