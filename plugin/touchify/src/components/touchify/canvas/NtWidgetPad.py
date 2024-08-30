@@ -351,7 +351,7 @@ class NtWidgetPad(QWidget):
                     y = delta.y()      
             
             self.adjustToView(x, y)
-            qApp.instance().processEvents()
+            #qApp.instance().processEvents()
         self.updateCursor(e.pos())
             
     

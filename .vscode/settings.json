@@ -2,20 +2,19 @@
     "files.exclude": {
         ".vscode\\PythonImportHelper-v2-Completion.json": true,
         "**/__pycache__": true,
-        "**/.venv": true
+        "**/.venv": true,
+        "**/.conda": true
     },
     "python.analysis.extraPaths": [    
-        "~/.local/share/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs",
-        "~/.local/share/flatpak/app/org.kde.krita/current/active/files/lib/python3.11/site-packages",
+        "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs",
         "./plugin"
     ],
-    "python.defaultInterpreterPath": "python",
     "python.analysis.extraPaths.disabled": [
+        "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/python3.11/site-packages",
         "C:\\Program Files\\Krita (x64)\\lib\\krita-python-libs",
         "${workspaceFolder}/env/krita_imports",
     ],
     "python.REPL.enableREPLSmartSend": false,
-    "python.envFile": "${workspaceFolder}/.venv",
     "python.analysis.importFormat": "relative",
     "python.analysis.diagnosticMode": "openFilesOnly",
     "python.analysis.indexing": true,
@@ -25,5 +24,10 @@
         "**/krita_env/krita": true,
         "**/testscripts": true
     },
-    "python.analysis.autoImportCompletions": false
+    "python.analysis.autoImportCompletions": false,
+    "sshfs.configs": [
+        {
+            "name": "Deployment"
+        }
+    ],
 }

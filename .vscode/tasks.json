@@ -6,7 +6,12 @@
         {
             "label": "Install Plugin",
             "type": "shell",
-            "command": "cmd.exe /D /C dev-windows-install.bat",
+            "windows": {
+                "command": "cmd.exe /D /C dev-windows-install.bat",
+            },
+            "linux": {
+                "command": "./dev-flatpak-install.sh"
+            },
             "presentation": {
                 "reveal": "silent",
                 "revealProblems": "onProblem",

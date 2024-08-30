@@ -2,6 +2,7 @@
 from krita import *
 from PyQt5.QtWidgets import QDockWidget
 from ....variables import *
+from ....ext.extensions_krita import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -18,7 +19,9 @@ class NtToolboxInteractFilter(QObject):
             mouseEvent: QMouseEvent = e
             match mouseEvent.button():
                 case Qt.MouseButton.RightButton:
-                    self.target.contextMenuEvent(QContextMenuEvent(QContextMenuEvent.Reason.Keyboard, QPoint(0,0)))
+                    pass
+                    #TODO: Does not work on Linux
+                    #self.target.contextMenuEvent(QContextMenuEvent(QContextMenuEvent.Reason.Keyboard, QPoint(0,0)))
 
         return False
 

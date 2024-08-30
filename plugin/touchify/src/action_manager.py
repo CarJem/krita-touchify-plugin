@@ -82,7 +82,7 @@ class ActionManager:
 
    
     def __getActionSource(self, action: QAction):
-        _sender = action.sender()
+        _sender: QObject = action
         _parent: QWidget | None = None  
         
         if isinstance(_sender, QWidgetAction):
