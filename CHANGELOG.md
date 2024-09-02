@@ -1,4 +1,30 @@
+# alpha.0.0.4
+
+## Breaking Changes:
+- **Configuration Format Change**
+    > While I try to keep the configuration formats from breaking between each version, there are simply some changes that can't be done without breaking the last version's configuration files. Some may still work, but I recommend you back them up. The format will become more consistent once the alpha is over
+
+## Additions:
+- **Massive Refactoring** 
+    > Lots of code consoldiation again, to make the code easier to follow for myself
+- **New Docker - Touchify Toolbox**
+    > Combines ideas from the Toolkit Plugin and the Default Docker, it replaces the default toolbox in the On-Canvas widgets as well.
+- **Theming Refresh**
+    > Made some theming changes to hopefully better suit those who don't wish to use a dark theme. Still not a perfect reload when switching between themes but at least it works better with a light theme now.
+- **NtWidgetPad Improvements**
+    > Now has the ability to be resized and has also undergone
+- **Universal Actions / Action System Change**
+    > Massively reworked the entire action assignment system to allow for more flexibility and customization without restarting the entire application. This also allows you to do things with the Toolshelfs that previously required a registered action
+- **Migrated Popups, Docker Groups, Docker Toggles, and Workspace Toggles to the Universal Actions System**
+    > This means that these kinds of features can be constructed without reloading the application when used with a toolshelf.
+
+## Known Bugs:
+- **Compatibility with Multiple Instances of Krita**
+    > While it will not crash, there are currently some kinks I'm investigating related to some functionality. Help would be appreciated on this if you are a dev
+
+
 # alpha.0.0.3
+
 ## Breaking Changes:
 - **Configuration Format Change**
     > While I try to keep the configuration formats from breaking between each version, there are simply some changes that can't be done without breaking the last version's configuration files. Some may still work, but I recommend you back them up. The format will become more consistent once the alpha is over

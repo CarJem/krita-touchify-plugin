@@ -14,6 +14,8 @@ class ToolboxButton(QToolButton):
         palette.setColor(QPalette.Button, QColor(74, 108, 134))
         self.setPalette(palette)
 
+        self.setStyleSheet("padding: 2px")
+
 
     def enterEvent(self, event):
         super().enterEvent(event)

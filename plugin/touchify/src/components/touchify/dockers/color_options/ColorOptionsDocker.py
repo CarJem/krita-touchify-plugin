@@ -14,6 +14,8 @@ class ColorSourceToggle(QWidget):
         self.canvas: Canvas = None
         self.setContentsMargins(2,2,2,2)
 
+        self.krita = Krita.instance()
+
         self.cubeSize = cubeSize
 
         self.timer_pulse = QTimer(self)
@@ -57,17 +59,17 @@ class ColorSourceToggle(QWidget):
         self.gridLayout.addWidget(self.resetBtn)
 
     def setForegroundColor(self):
-        Krita.instance().action("chooseForegroundColor").trigger()
+        self.krita.action("chooseForegroundColor").trigger()
 
     def setBackgroundColor(self):
-        Krita.instance().action("chooseBackgroundColor").trigger()
+        self.krita.action("chooseBackgroundColor").trigger()
 
     def toggleColors(self):
-        Krita.instance().action("toggle_fg_bg").trigger()
+        self.krita.action("toggle_fg_bg").trigger()
         self.updateColors()
 
     def resetColors(self):
-        Krita.instance().action("reset_fg_bg").trigger()
+        self.krita.action("reset_fg_bg").trigger()
         self.updateColors()
 
     def showEvent(self, event):
@@ -83,7 +85,7 @@ class ColorSourceToggle(QWidget):
         return source.colorForCanvas(self.canvas)
 
     def updateColors(self):
-        activeWin = Krita.instance().activeWindow()
+        activeWin = self.krita.activeWindow()
         if activeWin == None: return
         activeView = activeWin.activeView()
         if activeView == None: return

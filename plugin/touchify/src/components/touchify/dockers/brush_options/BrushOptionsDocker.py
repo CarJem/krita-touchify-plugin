@@ -123,6 +123,10 @@ class BrushRotationSlider(KisAngleSelector):
 class BrushOptionsWidget(QWidget):
     def __init__(self, parent: QWidget | None = None):
         super(BrushOptionsWidget, self).__init__(parent)
+
+
+        self.krita = Krita.instance()
+
         self.config = BrushOptionsDockerCfg()
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
 
@@ -143,7 +147,7 @@ class BrushOptionsWidget(QWidget):
 
         self.optionsMenu = self.genMenu()
         self.optionsButton = QPushButton(self)
-        self.optionsButton.setIcon(Krita.instance().icon("configure"))
+        self.optionsButton.setIcon(self.krita.icon("configure"))
         self.optionsButton.setMenu(self.optionsMenu)
         self.optionsButton.setFixedHeight(15)
         self.optionsButton.setStyleSheet(Stylesheet.instance().hide_menu_indicator)
@@ -208,7 +212,7 @@ class BrushOptionsWidget(QWidget):
         updateSliderVisibility(self.config.ShowFlowSlider, self.flowSlider)
         updateSliderVisibility(self.config.ShowRotationSlider, self.rotationSlider)
 
-        active_window = Krita.instance().activeWindow()
+        active_window = self.krita.activeWindow()
         if active_window == None: return
 
         active_view = active_window.activeView()
@@ -227,8 +231,9 @@ class BrushOptionsWidget(QWidget):
         self.timer_pulse.stop()
         super().closeEvent(event)
 
+
     def onCanvasChanged(self, canvas: Canvas):
-        active_window = Krita.instance().activeWindow()
+        active_window = self.krita.activeWindow()
         if active_window == None: return
 
         active_view = active_window.activeView()

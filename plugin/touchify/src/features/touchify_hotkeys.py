@@ -9,26 +9,26 @@ from PyQt5.QtWidgets import QMessageBox
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..touchify import TouchifyInstance
+    from ..touchify import Touchify
 
 from krita import *
     
 class TouchifyHotkeys(object):
 
 
-    def __init__(self, instance: "TouchifyInstance"):
+    def __init__(self, instance: "Touchify"):
         self.appEngine = instance
         self.hotkeys_storage = {}
         self.hotkey_options_storage = {}
 
-    def onAppEngineStart(self, instance: "TouchifyInstance"):
+    def onAppEngineStart(self, instance: "Touchify"):
         self.appEngine = instance
 
     def windowCreated(self):
         self.qWin = self.appEngine.instanceWindow.qwindow()
 
     def showPopupPalette(self):
-        activeWindow = self.appEngine.instanceWindow
+        activeWindow = Krita.instance().activeWindow()
         viewIndex = activeWindow.views().index(activeWindow.activeView())
         pobj = self.qWin.findChild(QWidget,'view_' + str(viewIndex))
         mobj = next((w for w in pobj.findChildren(QWidget) if w.metaObject().className() == 'KisPopupPalette'), None)
@@ -53,7 +53,7 @@ class TouchifyHotkeys(object):
                 else:
                     destination.addAction(action)
 
-        activeWindow = self.appEngine.instanceWindow.qwindow()
+        activeWindow = Krita.instance().activeWindow().qwindow()
         popupMenu = QMenu(activeWindow)
         menuBar = activeWindow.menuBar()
         iterateActions(popupMenu, menuBar)

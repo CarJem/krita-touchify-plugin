@@ -132,29 +132,7 @@
         {
             "items": [
                 {
-                    "items": [
-                        {
-                            "name": "KisToolSelectElliptical"
-                        },
-                        {
-                            "name": "KisToolSelectPolygonal"
-                        },
-                        {
-                            "name": "KisToolSelectOutline"
-                        },
-                        {
-                            "name": "KisToolSelectContiguous"
-                        },
-                        {
-                            "name": "KisToolSelectSimilar"
-                        },
-                        {
-                            "name": "KisToolSelectPath"
-                        },
-                        {
-                            "name": "KisToolSelectMagnetic"
-                        }
-                    ],
+                    "items": [],
                     "name": "KisToolSelectRectangular"
                 },
                 {

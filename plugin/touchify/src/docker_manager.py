@@ -12,6 +12,10 @@ from .ext.KritaSettings import KritaSettings
 from .ext.extensions import *
 from .settings.TouchifyConfig import *
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .touchify import Touchify
+
 class DockerManager(QObject):
     class BorrowData:
         def __init__(self, dockMode: bool, previousVisibility: bool, mainWindow: QMainWindow, dockWidgetArea: Qt.DockWidgetArea) -> None:
@@ -77,9 +81,11 @@ class DockerManager(QObject):
     onStealDockerSignal = pyqtSignal(str)
     onLoadDockerSignal = pyqtSignal(str)
 
-    def __init__(self, window: Window):
+    def __init__(self, touchify: "Touchify"):
         
-        super().__init__(window)
+        super().__init__(touchify)
+
+        self.touchify = touchify
 
         self._shareData: dict[any, DockerManager.BorrowData] = {}
         self._listeners: dict[DockerManager.SignalType, list] = {}
@@ -89,8 +95,8 @@ class DockerManager(QObject):
         self._hiddenDockers[2] = TouchifySettings.instance().DockerUtils_HiddenDockersRight.split(",")
         self._hiddenDockers[4] = TouchifySettings.instance().DockerUtils_HiddenDockersUp.split(",")
         self._hiddenDockers[8] = TouchifySettings.instance().DockerUtils_HiddenDockersDown.split(",")
-        self.mainWindow = window
-        self.qWin = window.qwindow()
+        self.mainWindow = self.touchify.instanceWindow
+        self.qWin = self.touchify.instanceWindow.qwindow()
 
     def registerListener(self, type: SignalType, source: Callable):
         if type not in self._listeners:
@@ -151,12 +157,12 @@ class DockerManager(QObject):
             else: self.invokeListeners(docker_id, DockerManager.SignalType.OnStealDocker)
 
     def toggleDockersPerArea(self, area: int):
-        dockers = Krita.instance().dockers()
+        dockers = self.touchify.krita().dockers()
         mainWindow = self.qWin
 
         if len(self._hiddenDockers[area]) > 0: # show
             for dockerId in self._hiddenDockers[area]:
-                docker = next((w for w in Krita.instance().dockers() if w.objectName() == dockerId), None)
+                docker = next((w for w in self.touchify.krita().dockers() if w.objectName() == dockerId), None)
                 if docker:
                     docker.setVisible(True)
             self._hiddenDockers[area] = []

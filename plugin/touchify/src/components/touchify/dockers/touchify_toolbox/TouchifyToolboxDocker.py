@@ -7,6 +7,7 @@ from krita import *
 import json
 from os import path
 
+
 from .ToolboxCategory import ToolboxCategory
 from .ToolboxStyle import ToolboxStyle
 from .ToolboxMenu import ToolboxMenu
@@ -17,6 +18,46 @@ from .....cfg.CfgToolboxItem import CfgToolboxItem
 from .....cfg.CfgToolboxSubItem import CfgToolboxSubItem
 from .....cfg.CfgToolboxCategory import CfgToolboxCategory
 
+
+TOOLBOX_ITEMS = [
+    "KisToolTransform",
+    "KritaTransform/KisToolMove",
+    "KisToolCrop",
+    "InteractionTool",
+    "SvgTextTool",
+    "PathTool",
+    "KarbonCalligraphyTool",
+    "KritaShape/KisToolBrush",
+    "KritaShape/KisToolDyna",
+    "KritaShape/KisToolMultiBrush",
+    "KritaShape/KisToolSmartPatch",
+    "KisToolPencil",
+    "KritaFill/KisToolFill",
+    "KritaSelected/KisToolColorPicker",
+    "KritaShape/KisToolLazyBrush",
+    "KritaFill/KisToolGradient",
+    "KritaShape/KisToolRectangle",
+    "KritaShape/KisToolLine",
+    "KritaShape/KisToolEllipse",
+    "KisToolPolygon",
+    "KisToolPolyline",
+    "KisToolPath",
+    "KisToolEncloseAndFill",
+    "KisToolSelectRectangular",
+    "KisToolSelectElliptical",
+    "KisToolSelectPolygonal",
+    "KisToolSelectPath",
+    "KisToolSelectOutline",
+    "KisToolSelectContiguous",
+    "KisToolSelectSimilar",
+    "KisToolSelectMagnetic",
+    "ToolReferenceImages",
+    "KisAssistantTool",
+    "KritaShape/KisToolMeasure",
+    "PanTool",
+    "ZoomTool"
+]
+
 class TouchifyToolboxDocker(QDockWidget):
     def __init__(self):
         super().__init__()
@@ -24,19 +65,16 @@ class TouchifyToolboxDocker(QDockWidget):
         self.floating = False
         self.setWindowTitle('Touchify Toolbox') # window title also acts as the Docker title in Settings > Dockers
 
+        self.krita = Krita.instance()
+        self.sourceWindow: QWindow | None = None
+
         self.config: CfgToolbox = TouchifyConfig.instance().getConfig().toolbox
         TouchifyConfig.instance().notifyConnect(self.buildActions)
-
-
+        
         self.categories: dict[str, list[ToolboxButton]] = {}
-        self.registeredActions: dict[str, QAction] = {}
 
         self.lastActiveTool = ""
-
-        self.tickTimer = QTimer(self)
-        self.tickTimer.setInterval(250)
-        self.tickTimer.timeout.connect(self.updateState)
-        self.tickTimer.start()
+        self.registeredToolBtns: list[ToolboxButton] = []
 
         self.sourceWidget = QWidget()
         label = QLabel(" ") # label conceals the 'exit' buttons and Docker title
@@ -46,6 +84,10 @@ class TouchifyToolboxDocker(QDockWidget):
         label.setFrameStyle(QFrame.Panel | QFrame.Raised)
         label.setMinimumWidth(16)
 
+        self.tickTimer = QTimer(self)
+        self.tickTimer.setInterval(250)
+        self.tickTimer.timeout.connect(self.updateState)
+        self.tickTimer.start()
 
         self.setWidget(self.sourceWidget)
         self.setTitleBarWidget(label)
@@ -53,29 +95,32 @@ class TouchifyToolboxDocker(QDockWidget):
         self.gridLayout = QGridLayout()
 
         self.sourceWidget.setLayout(self.gridLayout)
-        Krita.instance().notifier().windowCreated.connect(self.buildActions)
+        self.krita.notifier().windowCreated.connect(self.buildActions)
 
     def getActiveToolButton(self):
         try:
-            qwin = Krita.instance().activeWindow().qwindow()
-            mobj = next((w for w in qwin.findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
-            wobj = mobj.findChild(QButtonGroup)
-            return wobj.checkedButton().objectName()
+            active_window = self.krita.activeWindow()           
+            if active_window != None:   
+                mobj = next((w for w in active_window.qwindow().findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
+                for q_obj in mobj.findChildren(QToolButton):
+                    if q_obj.metaObject().className() == "KoToolBoxButton":
+                        if q_obj.isChecked():
+                            return q_obj.objectName()
         except:
-            return ""
+            pass
+        return ""
 
-    def updateState(self, force=False):
+
+
+    def updateState(self):
         activeTool = self.getActiveToolButton()
-        if activeTool != self.lastActiveTool or force:
 
-            for cat in self.categories:
-                btnList: list[ToolboxButton] = self.categories[cat]
-                for btn in btnList:
-                    if btn.actionName == activeTool:
-                        btn.setChecked(True)
-                    else:
-                        btn.setChecked(False)
-
+        if activeTool != "":
+            for btn in self.registeredToolBtns:
+                if btn.actionName == activeTool:
+                    btn.setChecked(True)
+                else:
+                    btn.setChecked(False)
             self.lastActiveTool = activeTool
 
     #region Layouts
@@ -86,10 +131,12 @@ class TouchifyToolboxDocker(QDockWidget):
         for cat in self.categories:
             btnList: list[ToolboxButton] = self.categories[cat]
             for btn in btnList:
-                act: QAction = Krita.instance().action(btn.actionName)
+                act: QAction = self.krita.action(btn.actionName)
                 self.gridLayout.removeWidget(btn)
                 btn.hide()
                 btn.close()
+
+        self.registeredToolBtns = []
 
         x = 0
         y = 0
@@ -104,11 +151,8 @@ class TouchifyToolboxDocker(QDockWidget):
 
             for tool in category.items:
                 tool: CfgToolboxItem
-                ac = Krita.instance().action(tool.name)
+                ac = self.krita.action(tool.name)
                 if ac:
-                    if tool.name not in self.registeredActions:
-                        self.registeredActions[tool.name] = ac
-
                     btn: ToolboxButton = ToolboxButton(tool.name)
                     btn.setObjectName(tool.name)
                     btn.setText(ac.text())
@@ -116,9 +160,14 @@ class TouchifyToolboxDocker(QDockWidget):
                     btn.setIconSize(QSize(icon_size, icon_size))
                     btn.setToolTip(ac.text())
                     btn.setStyle(ToolboxStyle("fusion", self.config.menuDelay))
-                    btn.setCheckable(True)
-                    btn.setAutoRaise(True)
                     btn.pressed.connect(self.activateTool) # Activate when clicked
+
+                    if tool.name in TOOLBOX_ITEMS:
+                        btn.setCheckable(True)
+                        btn.setAutoRaise(True)
+                        self.registeredToolBtns.append(btn)
+
+
                     self.categories[category.id].append(btn)
                     if horizontal_mode:
                         self.gridLayout.addWidget(btn, x, y)
@@ -150,7 +199,7 @@ class TouchifyToolboxDocker(QDockWidget):
             action.setIconVisibleInMenu(True)
 
     def buildMenuAction(self, subMenu: ToolboxMenu, actionName: str):
-        act = Krita.instance().action(actionName)
+        act = self.krita.action(actionName)
         if act:
             toolIcon = QIcon(act.icon())
             toolText = act.text()
@@ -159,9 +208,9 @@ class TouchifyToolboxDocker(QDockWidget):
 
             # we need to call Krita's shortcut for the toolAction:
             try:
-                Krita.instance().action(toolName).shortcut()
+                self.krita.action(toolName).shortcut()
 
-                toolShortcut = Krita.instance().action(toolName).shortcut().toString() # find the global shortcut
+                toolShortcut = self.krita.action(toolName).shortcut().toString() # find the global shortcut
 
                 toolAction.setShortcut(toolShortcut)
 
@@ -170,8 +219,8 @@ class TouchifyToolboxDocker(QDockWidget):
 
             toolAction.setObjectName(toolName)
             toolAction.setParent(subMenu.parentBtn) # set toolbutton as parent
-            toolAction.triggered.connect(self.activateTool) # activate menu tool on click
             toolAction.triggered.connect(self.swapToolButton) # activate menu tool on click
+            toolAction.triggered.connect(self.activateTool) # activate menu tool on click
             subMenu.addAction(toolAction) # add the button for this tool in the menu
 
     #endregion
@@ -191,16 +240,14 @@ class TouchifyToolboxDocker(QDockWidget):
         btn.setText(ac.text())
         btn.setIcon(ac.icon())
 
-        self.updateState(True)
 
     def activateTool(self):
         actionName = self.sender().objectName() # get ToolButton name
-        ac = Krita.instance().action(actionName) # Search this name in Krita's action list
+        ac = self.krita.action(actionName) # Search this name in Krita's action list
 
         print(actionName, ac)
         if ac:
             ac.trigger() # trigger the action in Krita
-            self.updateState(True)
 
         else:
             pass

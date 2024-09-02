@@ -12,7 +12,7 @@ from .components.touchify.popups.PopupDialog_Actions import *
 from .components.touchify.popups.PopupDialog_Docker import *
 
 if TYPE_CHECKING:
-    from .touchify import TouchifyInstance
+    from .touchify import Touchify
 
 class ActionManager:
     
@@ -26,14 +26,9 @@ class ActionManager:
             "expanding_spacer2"
         ]
         
-    def __init__(self, instance: "TouchifyInstance"):
+    def __init__(self, instance: "Touchify"):
         self.appEngine = instance
         self.custom_docker_states = {}       
-
-    def windowCreated(self, window: Window, docker_manager: DockerManager):
-        self.docker_management = docker_manager
-        self.mainWindow = window
-        self.qWin = window.qwindow()
 
         
     def executeAction(self, data: CfgTouchifyAction, action: QAction):
@@ -134,7 +129,7 @@ class ActionManager:
                 result_icon = ResourceManager.iconLoader(data.icon)
                 use_icon, icon, use_text = self.__checkActionIcon(result_icon)
             case 2:
-                target_action = Krita.instance().action(data.action_id)
+                target_action = self.appEngine.krita().action(data.action_id)
                 result_icon: QIcon = None     
                 if target_action: result_icon = target_action.icon()
                 use_icon, icon, use_text = self.__checkActionIcon(result_icon)
@@ -160,7 +155,7 @@ class ActionManager:
         btn.setMetadata(text, icon)
 
     def __brushButtonUpdate(self, __btn: TouchifyActionButton, id: str):
-        win = Krita.instance().activeWindow()
+        win = self.appEngine.krita().activeWindow()
         if not win: return
         view = win.activeView()
         if not view: return
@@ -227,7 +222,7 @@ class ActionManager:
         return btn
         
     def button_trigger(self, act: CfgTouchifyAction):
-        action = Krita.instance().action(act.action_id)
+        action = self.appEngine.krita().action(act.action_id)
         btn: TouchifyActionButton | None = None
         if action:
             checkable = action.isCheckable()
@@ -244,7 +239,7 @@ class ActionManager:
 
     
     def action_trigger(self, data: CfgTouchifyAction):
-        action = Krita.instance().action(data.action_id)
+        action = self.appEngine.krita().action(data.action_id)
         if action:
             action.trigger()
     
@@ -257,16 +252,16 @@ class ActionManager:
         brush_presets = ResourceManager.getBrushPresets()
         if id in brush_presets:
             preset = brush_presets[id]
-            Krita.instance().activeWindow().activeView().setCurrentBrushPreset(preset)
+            self.appEngine.instanceWindow.activeView().setCurrentBrushPreset(preset)
     
     def action_docker(self, path):
-        dockersList = Krita.instance().dockers()
+        dockersList = self.appEngine.krita().dockers()
         for docker in dockersList:
             if (docker.objectName() == path):
                 docker.setVisible(not docker.isVisible())
                     
     def action_workspace(self, path):
-        main_menu = self.qWin.menuBar()
+        main_menu = self.appEngine.instanceWindow.qwindow().menuBar()
         for root_items in main_menu.actions():
             if root_items.objectName() == 'window':
                 for sub_item in root_items.menu().actions():
@@ -277,7 +272,7 @@ class ActionManager:
                                 break
                             
     def action_dockergroup(self, data: CfgDockerGroup):
-        dockersList = Krita.instance().dockers()
+        dockersList = self.appEngine.krita().dockers()
         
         if data.id not in self.custom_docker_states:
             paths = []
@@ -315,9 +310,9 @@ class ActionManager:
     def action_popup(self, action: QAction, data: CfgPopup):    
         _parent = self.__getActionSource(action)            
         if data.type == "actions":
-            popup = PopupDialog_Actions(self.qWin, data, self)
+            popup = PopupDialog_Actions(self.appEngine.instanceWindow.qwindow(), data, self)
         elif data.type == "docker":
-            popup = PopupDialog_Docker(self.qWin, data, self.docker_management)
+            popup = PopupDialog_Docker(self.appEngine.instanceWindow.qwindow(), data, self.appEngine.docker_management)
         else:
-            popup = PopupDialog(self.qWin, data)  
+            popup = PopupDialog(self.appEngine.instanceWindow.qwindow(), data)  
         popup.triggerPopup(_parent)

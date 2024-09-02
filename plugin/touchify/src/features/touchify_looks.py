@@ -7,14 +7,14 @@ from ..stylesheet import Stylesheet
 from PyQt5.QtWidgets import QMessageBox
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..touchify import TouchifyInstance
+    from ..touchify import Touchify
 
 
 from krita import *
     
 class TouchifyLooks(object):
 
-    def __init__(self, instance: "TouchifyInstance"):
+    def __init__(self, instance: "Touchify"):
         self.appEngine = instance
 
     def windowCreated(self):
