@@ -17,7 +17,9 @@
     > Massively reworked the entire action assignment system to allow for more flexibility and customization without restarting the entire application. This also allows you to do things with the Toolshelfs that previously required a registered action
 - **Migrated Popups, Docker Groups, Docker Toggles, and Workspace Toggles to the Universal Actions System**
     > This means that these kinds of features can be constructed without reloading the application when used with a toolshelf.
-
+## Bug Fixes:
+- **Fixed some Linux related crashing issues**
+    > Enough said
 ## Known Bugs:
 - **Compatibility with Multiple Instances of Krita**
     > While it will not crash, there are currently some kinks I'm investigating related to some functionality. Help would be appreciated on this if you are a dev
