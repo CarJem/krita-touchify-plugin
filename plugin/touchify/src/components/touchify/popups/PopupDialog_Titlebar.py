@@ -3,7 +3,7 @@ from krita import Krita
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-from .... import stylesheet
+from ....stylesheet import Stylesheet
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -16,7 +16,7 @@ class PopupDialog_Titlebar(QWidget):
         super(PopupDialog_Titlebar, self).__init__(parentDialog)
         self.parentDialog = parentDialog
         self.setObjectName("popupFrameTitlebar")
-        self.setStyleSheet(stylesheet.touchify_popup_titlebar(self.parentDialog.allowOpacity, self.parentDialog.metadata.opacity))
+        self.setStyleSheet(Stylesheet.instance().touchify_popup_titlebar(self.parentDialog.allowOpacity, self.parentDialog.metadata.opacity))
 
         buttonSize = 16
         iconSize = 13
@@ -38,7 +38,7 @@ class PopupDialog_Titlebar(QWidget):
         self.minimizeBtn.setFixedSize(buttonSize,buttonSize)
         self.minimizeBtn.setIconSize(QSize(iconSize, iconSize))
         self.minimizeBtn.clicked.connect(self.toggleMinimized)
-        self.minimizeBtn.setStyleSheet(stylesheet.touchify_toggle_button)
+        self.minimizeBtn.setStyleSheet(Stylesheet.instance().touchify_toggle_button)
         self.ourLayout.addWidget(self.minimizeBtn)
 
         self.closeButton = QPushButton(self)
@@ -46,7 +46,7 @@ class PopupDialog_Titlebar(QWidget):
         self.closeButton.setFixedSize(buttonSize,buttonSize)
         self.closeButton.setIconSize(QSize(iconSize, iconSize))
         self.closeButton.clicked.connect(self.parentDialog.close)
-        self.closeButton.setStyleSheet(stylesheet.touchify_toggle_button)
+        self.closeButton.setStyleSheet(Stylesheet.instance().touchify_toggle_button)
         self.ourLayout.addWidget(self.closeButton)
 
     def getTitleFont(self, textSize: int):

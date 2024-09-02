@@ -71,11 +71,11 @@
                     "showIcon": true,
                     "action_id": "TouchifyAction_SelectionPopup",
                     "variant": "action",
-                    "action_use_icon": false,
+                    "action_use_icon": true,
                     "brush_name": "",
                     "brush_override_icon": false,
                     "text": "",
-                    "icon": "custom:SelectionTool",
+                    "icon": "",
                     "showText": false,
                     "docker_group_data": {
                         "docker_names": []

@@ -71,7 +71,7 @@
             "section_show_root_actions": true
         },
         {
-            "icon": "custom:HistoryDockers",
+            "icon": "material:history",
             "id": "History",
             "sections": [
                 {
@@ -357,7 +357,7 @@
                     "context_menu_actions": [],
                     "showIcon": true,
                     "id": "AnimationDockers",
-                    "icon": "custom:AnimationPanel",
+                    "icon": "addblankframe",
                     "text": "Animation",
                     "variant": "docker_group",
                     "showText": false,
@@ -562,12 +562,12 @@
                             "context_menu_actions": [],
                             "showIcon": true,
                             "id": "",
-                            "icon": "",
+                            "icon": "material:pencil-ruler-outline",
                             "text": "",
                             "variant": "action",
                             "action_id": "TouchifyAction_brushOptionsPopup",
                             "showText": false,
-                            "action_use_icon": true,
+                            "action_use_icon": false,
                             "brush_name": "",
                             "brush_override_icon": false,
                             "docker_id": "",
@@ -630,5 +630,6 @@
     ],
     "dockerButtonHeight": 20,
     "dockerBackHeight": 16,
-    "actionHeight": 20
+    "actionHeight": 20,
+    "canvas_enable_resizing_by_default": false
 }

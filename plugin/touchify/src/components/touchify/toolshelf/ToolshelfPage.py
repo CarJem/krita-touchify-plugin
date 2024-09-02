@@ -13,7 +13,7 @@ from ...touchify.actions.TouchifyActionPanel import TouchifyActionPanel
 from ....cfg.CfgToolshelf import CfgToolshelfPanel
 from ....cfg.CfgToolshelf import CfgToolshelfSection
 from ..core.DockerContainer import DockerContainer
-from .... import stylesheet
+from ....stylesheet import Stylesheet
 
 from krita import *
 
@@ -320,8 +320,8 @@ class ToolshelfPage(QWidget):
     
     def updateStyleSheet(self):
         if self.pageBtns:
-            self.pageBtns.setStyleSheet(stylesheet.touchify_toolshelf_header_button)
-        self.quickActions.setStyleSheet(stylesheet.touchify_toolshelf_header_button)
+            self.pageBtns.setStyleSheet(Stylesheet.instance().touchify_toolshelf_header_button)
+        self.quickActions.setStyleSheet(Stylesheet.instance().touchify_toolshelf_header_button)
 
     def sizeHint(self):
         if self.size:

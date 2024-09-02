@@ -7,7 +7,7 @@ from ....ext.KritaSettings import KritaSettings
 from ....settings.TouchifyConfig import *
 from ....ext.extensions_pyqt import PyQtExtensions as Ext
 from .NtWidgetPadAlignment import NtWidgetPadAlignment
-from .... import stylesheet
+from ....stylesheet import Stylesheet
 
 
 from PyQt5.QtCore import QSize, Qt
@@ -19,7 +19,7 @@ class NtTogglePadButton(QToolButton):
         super(NtTogglePadButton, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.setIconSize(QSize(11, 11))
-        self.setStyleSheet(stylesheet.touchify_toggle_button)
+        self.setStyleSheet(Stylesheet.instance().touchify_toggle_button)
 
     def mousePressEvent(self, e: QMouseEvent):
         if e.button() == Qt.MouseButton.RightButton:

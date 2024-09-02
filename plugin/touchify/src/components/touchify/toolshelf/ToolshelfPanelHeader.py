@@ -8,7 +8,7 @@ from krita import *
 from ....settings.TouchifyConfig import *
 from ....variables import *
 from ....docker_manager import *
-from .... import stylesheet
+from ....stylesheet import Stylesheet
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -70,4 +70,4 @@ class ToolshelfPanelHeader(QWidget):
             self.rootContainer.togglePinned()
 
     def updateStyleSheet(self):
-        self.setStyleSheet(stylesheet.touchify_toolshelf_header)
+        self.setStyleSheet(Stylesheet.instance().touchify_toolshelf_header)

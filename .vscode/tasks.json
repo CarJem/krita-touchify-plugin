@@ -38,6 +38,12 @@
             "hide": true,
             "type": "shell",
             "command": "cmd.exe /D /C 'C:\\Program Files\\Krita (x64)\\bin\\krita.com'",
+        },
+        {
+            "label": "……………………………………………",
+            "type": "shell",
+            "command": "",
+            "hide": true
         }
     ]
 }

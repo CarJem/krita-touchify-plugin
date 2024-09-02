@@ -94,9 +94,6 @@ class ColorSourceToggle(QWidget):
         self.setFgBtn.setColor(fg_color)
         self.setBgBtn.setColor(bg_color)
 
-        #self.setFgBtn.setStyleSheet("border: 1px solid transparent; background-color: {0}".format(fg_color.name()))
-        #self.setBgBtn.setStyleSheet("border: 1px solid transparent; background-color: {0}".format(bg_color.name()))
-
     def onCanvasChanged(self, canvas: Canvas):
         self.canvas = canvas
         self.updateColors()

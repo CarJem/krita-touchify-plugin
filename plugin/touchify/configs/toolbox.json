@@ -1,0 +1,207 @@
+{
+    "categories": [
+        {
+            "items": [
+                {
+                    "items": [],
+                    "name": "InteractionTool"
+                },
+                {
+                    "items": [],
+                    "name": "SvgTextTool"
+                },
+                {
+                    "items": [],
+                    "name": "PathTool"
+                },
+                {
+                    "items": [],
+                    "name": "KarbonCalligraphyTool"
+                }
+            ],
+            "id": "Vector"
+        },
+        {
+            "items": [
+                {
+                    "items": [],
+                    "name": "KisToolTransform"
+                },
+                {
+                    "items": [],
+                    "name": "KritaTransform/KisToolMove"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolCrop"
+                }
+            ],
+            "id": "Transform"
+        },
+        {
+            "items": [
+                {
+                    "items": [],
+                    "name": "KisToolPencil"
+                },
+                {
+                    "items": [],
+                    "name": "KritaShape/KisToolLine"
+                },
+                {
+                    "items": [],
+                    "name": "KritaShape/KisToolRectangle"
+                },
+                {
+                    "items": [],
+                    "name": "KritaShape/KisToolEllipse"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolPolygon"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolPolyline"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolPath"
+                },
+                {
+                    "items": [],
+                    "name": "KritaShape/KisToolBrush"
+                },
+                {
+                    "items": [],
+                    "name": "KritaShape/KisToolDyna"
+                },
+                {
+                    "items": [],
+                    "name": "KritaShape/KisToolMultiBrush"
+                }
+            ],
+            "id": "Paint"
+        },
+        {
+            "items": [
+                {
+                    "items": [],
+                    "name": "KritaFill/KisToolGradient"
+                },
+                {
+                    "items": [],
+                    "name": "KritaSelected/KisToolColorPicker"
+                },
+                {
+                    "items": [],
+                    "name": "KritaShape/KisToolLazyBrush"
+                },
+                {
+                    "items": [],
+                    "name": "KritaShape/KisToolSmartPatch"
+                },
+                {
+                    "items": [],
+                    "name": "KritaFill/KisToolFill"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolEncloseAndFill"
+                }
+            ],
+            "id": "Color"
+        },
+        {
+            "items": [
+                {
+                    "items": [],
+                    "name": "KisAssistantTool"
+                },
+                {
+                    "items": [],
+                    "name": "KritaShape/KisToolMeasure"
+                },
+                {
+                    "items": [],
+                    "name": "ToolReferenceImages"
+                }
+            ],
+            "id": "Measure"
+        },
+        {
+            "items": [
+                {
+                    "items": [
+                        {
+                            "name": "KisToolSelectElliptical"
+                        },
+                        {
+                            "name": "KisToolSelectPolygonal"
+                        },
+                        {
+                            "name": "KisToolSelectOutline"
+                        },
+                        {
+                            "name": "KisToolSelectContiguous"
+                        },
+                        {
+                            "name": "KisToolSelectSimilar"
+                        },
+                        {
+                            "name": "KisToolSelectPath"
+                        },
+                        {
+                            "name": "KisToolSelectMagnetic"
+                        }
+                    ],
+                    "name": "KisToolSelectRectangular"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolSelectElliptical"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolSelectPolygonal"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolSelectOutline"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolSelectContiguous"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolSelectSimilar"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolSelectPath"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolSelectMagnetic"
+                }
+            ],
+            "id": "Select"
+        },
+        {
+            "items": [
+                {
+                    "items": [],
+                    "name": "PanTool"
+                },
+                {
+                    "items": [],
+                    "name": "ZoomTool"
+                }
+            ],
+            "id": "Navigation"
+        }
+    ],
+    "menuDelay": 200,
+    "submenuButton": false
+}

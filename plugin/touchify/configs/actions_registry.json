@@ -12,7 +12,7 @@
                 "docker_names": []
             },
             "docker_id": "",
-            "icon": "custom:SelectionTool",
+            "icon": "material:select",
             "popup_data": {
                 "id": "selection-tool",
                 "btnName": "Selection Popup",
@@ -181,7 +181,7 @@
                 "docker_names": []
             },
             "docker_id": "",
-            "icon": "custom:pencil-ruler-outline",
+            "icon": "material:pencil-ruler-outline",
             "popup_data": {
                 "actions_items": [],
                 "actions_item_width": 200,

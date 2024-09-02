@@ -14,7 +14,7 @@ from .PopupDialog_Titlebar import PopupDialog_Titlebar
 from ....cfg.CfgPopup import CfgPopup
 from ....settings.TouchifyConfig import *
 from ....resources import *
-from .... import stylesheet
+from ....stylesheet import Stylesheet
 
 from krita import *
 
@@ -133,7 +133,7 @@ class PopupDialog(QDialog):
         self.frameWidget.setFrameShadow(QFrame.Plain)
         self.frameWidget.setLineWidth(0 if self.titlebarEnabled else 1)
         self.frameWidget.setObjectName("popupFrame")
-        self.frameWidget.setStyleSheet(stylesheet.touchify_popup_frame(self.allowOpacity, self.metadata.opacity))
+        self.frameWidget.setStyleSheet(Stylesheet.instance().touchify_popup_frame(self.allowOpacity, self.metadata.opacity))
         self.rootLayout.addWidget(self.frameWidget)
 
 

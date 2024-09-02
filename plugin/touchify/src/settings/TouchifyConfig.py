@@ -8,6 +8,7 @@ from ..ext.extensions_json import JsonExtensions
 from ..cfg.CfgToolshelf import CfgToolshelf
 from ..variables import *
 from ..cfg.CfgTouchifyRegistry import CfgTouchifyRegistry
+from ..cfg.CfgToolbox import CfgToolbox
 from ..ext.extensions import *
 from ...paths import BASE_DIR
 import copy
@@ -26,6 +27,7 @@ class TouchifyConfig:
             self.toolshelf_main: CfgToolshelf = CfgToolshelf()
             self.toolshelf_alt: CfgToolshelf = CfgToolshelf()
             self.toolshelf_docker: CfgToolshelf = CfgToolshelf()
+            self.toolbox: CfgToolbox = CfgToolbox()
             self.load()
 
         def loadClass(self, configName, type):
@@ -63,6 +65,7 @@ class TouchifyConfig:
             labels["toolshelf_docker"] = "Docker Shelf"
             labels["actions_registry"] = "Registry"
             labels["hotkeys"] = "Hotkeys"
+            labels["toolbox"] = "Touchify Toolbox"
             return labels
 
         def propertygrid_groups(self):
@@ -78,6 +81,7 @@ class TouchifyConfig:
             restrictions["toolshelf_alt"] = {"type": "expandable"}
             restrictions["toolshelf_docker"] = {"type": "expandable"}
             restrictions["actions_registry"] = {"type": "expandable"}
+            restrictions["toolbox"] = {"type": "expandable"}
             return restrictions
         
         def save(self):
@@ -86,6 +90,7 @@ class TouchifyConfig:
             self.saveClass(self.toolshelf_main, "toolshelf_main")
             self.saveClass(self.toolshelf_alt, "toolshelf_alt")
             self.saveClass(self.toolshelf_docker, "toolshelf_docker")
+            self.saveClass(self.toolbox, "toolbox")
 
         def load(self):
             self.actions_registry = self.loadClass("actions_registry", CfgTouchifyRegistry)
@@ -93,6 +98,7 @@ class TouchifyConfig:
             self.toolshelf_main = self.loadClass("toolshelf_main", CfgToolshelf)
             self.toolshelf_alt = self.loadClass("toolshelf_alt", CfgToolshelf)
             self.toolshelf_docker = self.loadClass("toolshelf_docker", CfgToolshelf)
+            self.toolbox = self.loadClass("toolbox", CfgToolbox)
             
     def instance():
         try:

@@ -5,7 +5,7 @@ from krita import *
 from PyQt5.QtCore import *
 from .....variables import *
 
-from touchify.src import stylesheet
+from .....stylesheet import Stylesheet
 from .....ext.KritaSettings import *
 from ....krita.KisSliderSpinBox import KisSliderSpinBox
 from ....krita.KisAngleSelector import KisAngleSelector
@@ -146,7 +146,7 @@ class BrushOptionsWidget(QWidget):
         self.optionsButton.setIcon(Krita.instance().icon("configure"))
         self.optionsButton.setMenu(self.optionsMenu)
         self.optionsButton.setFixedHeight(15)
-        self.optionsButton.setStyleSheet(stylesheet.hide_menu_indicator)
+        self.optionsButton.setStyleSheet(Stylesheet.instance().hide_menu_indicator)
         self.optionsButton.clicked.connect(self.optionsButton.showMenu)
         self.gridLayout.addWidget(self.optionsButton)
         

@@ -7,7 +7,7 @@ from .ToolshelfPageButtons import ToolshelfPageButtons
 from ....settings.TouchifyConfig import TouchifyConfig
 from .ToolshelfPage import ToolshelfPage
 from ....cfg.CfgToolshelf import CfgToolshelfPanel
-from .... import stylesheet
+from ....stylesheet import Stylesheet
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

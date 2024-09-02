@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from ..settings.TouchifySettings import TouchifySettings
 from ..variables import *
 from ..settings.TouchifyConfig import *
-from .. import stylesheet
+from ..stylesheet import Stylesheet
 from PyQt5.QtWidgets import QMessageBox
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -62,7 +62,7 @@ class TouchifyLooks(object):
         # region No Toolbar Borders
         full_style_sheet = ""
         if config.Styles_BorderlessToolbar:
-            full_style_sheet += f"\n {stylesheet.no_borders_style} \n"    
+            full_style_sheet += f"\n {Stylesheet.instance().no_borders_style} \n"    
         window.setStyleSheet(full_style_sheet)
         #endregion
 
@@ -70,7 +70,7 @@ class TouchifyLooks(object):
         canvas_style_sheet = ""
         
         if config.Styles_ThinDocumentTabs:
-            canvas_style_sheet += f"\n {stylesheet.small_tab_style} \n"
+            canvas_style_sheet += f"\n {Stylesheet.instance().small_tab_style} \n"
 
         canvas = window.centralWidget()
         canvas.setStyleSheet(canvas_style_sheet)

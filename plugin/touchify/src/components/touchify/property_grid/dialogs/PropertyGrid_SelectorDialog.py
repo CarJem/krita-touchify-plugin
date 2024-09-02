@@ -2,7 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from touchify.src import stylesheet
+from touchify.src.stylesheet import Stylesheet
 from .PropertyGrid_Dialog import PropertyGrid_Dialog
 
 from .....resources import ResourceManager
@@ -64,7 +64,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
 
     def load_list(self, mode):
         self.listView.setSelectionRectVisible(True)
-        self.listView.setStyleSheet(stylesheet.propertygrid_selectordialog_listview)
+        self.listView.setStyleSheet(Stylesheet.instance().propertygrid_selectordialog_listview)
         if mode == "icons":
             self.listView.setViewMode(QListView.ViewMode.IconMode)
             self.listView.setUniformItemSizes(True)

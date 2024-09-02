@@ -10,7 +10,7 @@ from .NtSubWinFilter import NtSubWinFilter
 from ....ext.extensions_krita import KritaExtensions
 from ....settings.TouchifySettings import TouchifySettings
 from ....settings.TouchifyConfig import TouchifyConfig
-from .... import stylesheet
+from ....stylesheet import Stylesheet
 from .NtWidgetPad import NtWidgetPad
 from krita import *
 from ....variables import *

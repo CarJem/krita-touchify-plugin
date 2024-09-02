@@ -11,7 +11,7 @@ from PyQt5.QtGui import *
 from ....cfg.CfgTouchifyAction import CfgTouchifyAction
 from ....cfg.CfgTouchifyActionGroup import CfgTouchifyActionGroup
 from ....resources import ResourceManager
-from .... import stylesheet
+from ....stylesheet import Stylesheet
 from ....variables import *
 from ....settings.TouchifyConfig import *
 from typing import TYPE_CHECKING
@@ -132,12 +132,8 @@ class TouchifyActionPanel(QWidget):
                     self.registerAction(btn, action, data.action_use_icon)
                     
         self.addWidgetToRow(row, btn)
-
-        
         
     def stylizeButton(self, btn: TouchifyActionButton):
-        
-
         if self.icon_width > 0 and self.icon_height > 0:
             btn.setIconSize(QSize(self.icon_width, self.icon_height))
 
@@ -148,15 +144,15 @@ class TouchifyActionPanel(QWidget):
             btn.setFixedHeight(self.item_height)
             
         if self.type == "popup":
-            btn.setStyleSheet(stylesheet.touchify_action_btn_popup(self.opacity))
+            btn.setStyleSheet(Stylesheet.instance().touchify_action_btn_popup(self.opacity))
             btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
             btn.setText(btn.meta_text)
         elif self.type == "toolbar":
-            btn.setStyleSheet(stylesheet.hide_menu_indicator)
+            btn.setStyleSheet(Stylesheet.instance().hide_menu_indicator)
             btn.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         elif self.type == "toolbar_flat":
             btn.setContentsMargins(0,0,0,0)
-            btn.setStyleSheet(stylesheet.hide_menu_indicator)
+            btn.setStyleSheet(Stylesheet.instance().hide_menu_indicator)
 
     def createPanel(self):
         self.ourLayout = QVBoxLayout()

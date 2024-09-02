@@ -6,7 +6,7 @@ from ..components.touchify.canvas.NtCanvas import NtCanvas
 
 from ..variables import *
 from ..settings.TouchifyConfig import *
-from .. import stylesheet
+from ..stylesheet import Stylesheet
 from PyQt5.QtWidgets import QMessageBox
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
