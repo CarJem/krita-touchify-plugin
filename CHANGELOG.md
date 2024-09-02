@@ -12,7 +12,7 @@
 - **Theming Refresh**
     > Made some theming changes to hopefully better suit those who don't wish to use a dark theme. Still not a perfect reload when switching between themes but at least it works better with a light theme now.
 - **NtWidgetPad Improvements**
-    > Now has the ability to be resized and has also undergone
+    > Now has the ability to be resized and has also undergone some massive refactoring for continued stability
 - **Universal Actions / Action System Change**
     > Massively reworked the entire action assignment system to allow for more flexibility and customization without restarting the entire application. This also allows you to do things with the Toolshelfs that previously required a registered action
 - **Migrated Popups, Docker Groups, Docker Toggles, and Workspace Toggles to the Universal Actions System**
