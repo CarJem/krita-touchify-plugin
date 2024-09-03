@@ -19,44 +19,44 @@ from .....cfg.CfgToolboxSubItem import CfgToolboxSubItem
 from .....cfg.CfgToolboxCategory import CfgToolboxCategory
 
 
-TOOLBOX_ITEMS = [
-    "KisToolTransform",
-    "KritaTransform/KisToolMove",
-    "KisToolCrop",
-    "InteractionTool",
-    "SvgTextTool",
-    "PathTool",
-    "KarbonCalligraphyTool",
-    "KritaShape/KisToolBrush",
-    "KritaShape/KisToolDyna",
-    "KritaShape/KisToolMultiBrush",
-    "KritaShape/KisToolSmartPatch",
-    "KisToolPencil",
-    "KritaFill/KisToolFill",
-    "KritaSelected/KisToolColorPicker",
-    "KritaShape/KisToolLazyBrush",
-    "KritaFill/KisToolGradient",
-    "KritaShape/KisToolRectangle",
-    "KritaShape/KisToolLine",
-    "KritaShape/KisToolEllipse",
-    "KisToolPolygon",
-    "KisToolPolyline",
-    "KisToolPath",
-    "KisToolEncloseAndFill",
-    "KisToolSelectRectangular",
-    "KisToolSelectElliptical",
-    "KisToolSelectPolygonal",
-    "KisToolSelectPath",
-    "KisToolSelectOutline",
-    "KisToolSelectContiguous",
-    "KisToolSelectSimilar",
-    "KisToolSelectMagnetic",
-    "ToolReferenceImages",
-    "KisAssistantTool",
-    "KritaShape/KisToolMeasure",
-    "PanTool",
-    "ZoomTool"
-]
+TOOLBOX_ITEMS: dict[str, str] = {
+        "KisToolTransform": "KisToolTransform",
+        "KritaTransform/KisToolMove": "KritaTransform/KisToolMove",
+        "KisToolCrop": "KisToolCrop",
+        "InteractionTool": "InteractionTool",
+        "SvgTextTool": "SvgTextTool",
+        "PathTool": "PathTool",
+        "KarbonCalligraphyTool": "KarbonCalligraphyTool",
+        "KritaShape/KisToolBrush": "KritaShape/KisToolBrush",
+        "KritaShape/KisToolDyna": "KritaShape/KisToolDyna",
+        "KritaShape/KisToolMultiBrush": "KritaShape/KisToolMultiBrush",
+        "KritaShape/KisToolSmartPatch": "KritaShape/KisToolSmartPatch",
+        "KisToolPencil": "KisToolPencil",
+        "KritaFill/KisToolFill": "KritaFill/KisToolFill",
+        "KritaSelected/KisToolColorSampler": "KritaSelected/KisToolColorPicker",
+        "KritaShape/KisToolLazyBrush": "KritaShape/KisToolLazyBrush",
+        "KritaFill/KisToolGradient": "KritaFill/KisToolGradient",
+        "KritaShape/KisToolRectangle": "KritaShape/KisToolRectangle",
+        "KritaShape/KisToolLine": "KritaShape/KisToolLine",
+        "KritaShape/KisToolEllipse": "KritaShape/KisToolEllipse",
+        "KisToolPolygon": "KisToolPolygon",
+        "KisToolPolyline": "KisToolPolyline",
+        "KisToolPath": "KisToolPath",
+        "KisToolEncloseAndFill": "KisToolEncloseAndFill",
+        "KisToolSelectRectangular": "KisToolSelectRectangular",
+        "KisToolSelectElliptical": "KisToolSelectElliptical",
+        "KisToolSelectPolygonal": "KisToolSelectPolygonal",
+        "KisToolSelectPath": "KisToolSelectPath",
+        "KisToolSelectOutline": "KisToolSelectOutline",
+        "KisToolSelectContiguous": "KisToolSelectContiguous",
+        "KisToolSelectSimilar": "KisToolSelectSimilar",
+        "KisToolSelectMagnetic": "KisToolSelectMagnetic",
+        "ToolReferenceImages": "ToolReferenceImages",
+        "KisAssistantTool": "KisAssistantTool",
+        "KritaShape/KisToolMeasure": "KritaShape/KisToolMeasure",
+        "PanTool": "PanTool",
+        "ZoomTool": "ZoomTool"
+}
 
 class TouchifyToolboxDocker(QDockWidget):
     def __init__(self):
@@ -67,6 +67,7 @@ class TouchifyToolboxDocker(QDockWidget):
 
         self.krita = Krita.instance()
         self.sourceWindow: QWindow | None = None
+        self.preLoaded = False
 
         self.config: CfgToolbox = TouchifyConfig.instance().getConfig().toolbox
         TouchifyConfig.instance().notifyConnect(self.buildActions)
@@ -79,15 +80,17 @@ class TouchifyToolboxDocker(QDockWidget):
         self.sourceWidget = QWidget()
         label = QLabel(" ") # label conceals the 'exit' buttons and Docker title
 
+        self.buttonGroup = QButtonGroup(self)
+        self.buttonGroup.setExclusive(True)
+
         label.setFrameShape(QFrame.StyledPanel)
         label.setFrameShadow(QFrame.Raised)
         label.setFrameStyle(QFrame.Panel | QFrame.Raised)
         label.setMinimumWidth(16)
 
-        self.tickTimer = QTimer(self)
-        self.tickTimer.setInterval(250)
-        self.tickTimer.timeout.connect(self.updateState)
-        self.tickTimer.start()
+        #self.tickTimer = QTimer(self)
+        #self.tickTimer.setInterval(1000)
+        #self.tickTimer.timeout.connect(self.updateState)
 
         self.setWidget(self.sourceWidget)
         self.setTitleBarWidget(label)
@@ -97,6 +100,20 @@ class TouchifyToolboxDocker(QDockWidget):
         self.sourceWidget.setLayout(self.gridLayout)
         self.krita.notifier().windowCreated.connect(self.buildActions)
 
+
+    def registerToolButtonChanged(self):
+        try:
+            active_window = self.krita.activeWindow()           
+            if active_window != None:   
+                mobj = next((w for w in active_window.qwindow().findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
+                wobj = mobj.findChild(QButtonGroup)
+                wobj.idToggled.connect(self.updateState)
+                return True
+        except:
+            return False
+        return False
+
+
     def getActiveToolButton(self):
         try:
             active_window = self.krita.activeWindow()           
@@ -105,18 +122,22 @@ class TouchifyToolboxDocker(QDockWidget):
                 for q_obj in mobj.findChildren(QToolButton):
                     if q_obj.metaObject().className() == "KoToolBoxButton":
                         if q_obj.isChecked():
-                            return q_obj.objectName()
+                            name = q_obj.objectName()
+                            name = name.replace("\n", "")
+                            return name
         except:
             pass
         return ""
-
-
 
     def updateState(self):
         activeTool = self.getActiveToolButton()
 
         if activeTool != "":
             for btn in self.registeredToolBtns:
+                actualName = btn.actionName
+                if btn.actionName in TOOLBOX_ITEMS:
+                    actualName = TOOLBOX_ITEMS[actualName]
+  
                 if btn.actionName == activeTool:
                     btn.setChecked(True)
                 else:
@@ -126,6 +147,11 @@ class TouchifyToolboxDocker(QDockWidget):
     #region Layouts
 
     def buildActions(self):
+
+        if self.preLoaded == False:
+            if self.registerToolButtonChanged():
+                self.preLoaded = True
+
         self.config: CfgToolbox = TouchifyConfig.instance().getConfig().toolbox
 
         for cat in self.categories:
@@ -133,6 +159,8 @@ class TouchifyToolboxDocker(QDockWidget):
             for btn in btnList:
                 act: QAction = self.krita.action(btn.actionName)
                 self.gridLayout.removeWidget(btn)
+                if tool.actionName in TOOLBOX_ITEMS:
+                    self.buttonGroup.removeButton(btn)
                 btn.hide()
                 btn.close()
 
@@ -163,6 +191,7 @@ class TouchifyToolboxDocker(QDockWidget):
                     btn.pressed.connect(self.activateTool) # Activate when clicked
 
                     if tool.name in TOOLBOX_ITEMS:
+                        self.buttonGroup.addButton(btn)
                         btn.setCheckable(True)
                         btn.setAutoRaise(True)
                         self.registeredToolBtns.append(btn)
