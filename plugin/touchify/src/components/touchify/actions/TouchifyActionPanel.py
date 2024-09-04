@@ -8,8 +8,8 @@ from .TouchifyActionToolbar import TouchifyActionToolbar
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-from ....cfg.CfgTouchifyAction import CfgTouchifyAction
-from ....cfg.CfgTouchifyActionGroup import CfgTouchifyActionGroup
+from ....cfg.action.CfgTouchifyAction import CfgTouchifyAction
+from ....cfg.action.CfgTouchifyActionGroup import CfgTouchifyActionGroup
 from ....resources import ResourceManager
 from ....stylesheet import Stylesheet
 from ....variables import *

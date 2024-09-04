@@ -9,7 +9,7 @@ from ..ext.extensions_krita import *
 
 from ..variables import *
 
-from ..cfg.CfgTouchifyAction import CfgTouchifyAction
+from ..cfg.action.CfgTouchifyAction import CfgTouchifyAction
 from ..settings.TouchifyConfig import *
 from ..resources import *
 

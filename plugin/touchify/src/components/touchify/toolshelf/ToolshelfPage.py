@@ -10,8 +10,8 @@ from .ToolshelfPageButtons import ToolshelfPageButtons
 from .ToolshelfPageTabWidget import ToolshelfPageTabWidget
 from ....docker_manager import DockerManager
 from ...touchify.actions.TouchifyActionPanel import TouchifyActionPanel
-from ....cfg.CfgToolshelf import CfgToolshelfPanel
-from ....cfg.CfgToolshelf import CfgToolshelfSection
+from ....cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
+from ....cfg.toolshelf.CfgToolshelf import CfgToolshelfSection
 from ..core.DockerContainer import DockerContainer
 from ....stylesheet import Stylesheet
 

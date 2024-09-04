@@ -1,5 +1,5 @@
-from ..ext.TypedList import TypedList
-from ..ext.extensions_json import JsonExtensions as Extensions
+from ...ext.TypedList import TypedList
+from ...ext.extensions_json import JsonExtensions as Extensions
 
 class CfgToolboxSubItem:
 
@@ -10,6 +10,9 @@ class CfgToolboxSubItem:
     
     def __str__(self):
         return self.name.replace("\n", "\\n")
+    
+    def propertygrid_ismodel(self):
+        return True
     
     def propertygrid_labels(self):
         labels = {}

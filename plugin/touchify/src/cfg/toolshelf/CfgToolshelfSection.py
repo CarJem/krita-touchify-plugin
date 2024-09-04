@@ -1,7 +1,7 @@
-from .CfgTouchifyAction import *
-from .CfgTouchifyActionGroup import *
-from ..ext.TypedList import TypedList
-from ..ext.extensions_json import JsonExtensions as Extensions
+from ..action.CfgTouchifyAction import *
+from ..action.CfgTouchifyActionGroup import *
+from ...ext.TypedList import TypedList
+from ...ext.extensions_json import JsonExtensions as Extensions
 
 class CfgToolshelfSection:
     id: str = ""

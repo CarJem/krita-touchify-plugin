@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 
 from .variables import *
 
-from .cfg.CfgTouchifyAction import *
+from .cfg.action.CfgTouchifyAction import *
 from .ext.extensions_krita import *
 
 from .components.touchify.popups.PopupDialog import *

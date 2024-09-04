@@ -13,7 +13,7 @@ from ....settings.TouchifyConfig import *
 from ....variables import *
 from ....docker_manager import *
 
-from ....cfg.CfgToolshelf import CfgToolshelfPanel
+from ....cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
 from .ToolshelfPageMain import ToolshelfPageMain
 from .ToolshelfPage import ToolshelfPage
 

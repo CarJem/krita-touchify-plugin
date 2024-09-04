@@ -1,5 +1,5 @@
-from ..ext.TypedList import TypedList
-from ..ext.extensions_json import JsonExtensions as Extensions
+from ...ext.TypedList import TypedList
+from ...ext.extensions_json import JsonExtensions as Extensions
 from .CfgToolboxSubItem import CfgToolboxSubItem
 
 class CfgToolboxItem:

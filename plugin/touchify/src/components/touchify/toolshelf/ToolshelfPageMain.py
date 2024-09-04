@@ -6,7 +6,7 @@ from ....resources import ResourceManager
 from .ToolshelfPageButtons import ToolshelfPageButtons
 from ....settings.TouchifyConfig import TouchifyConfig
 from .ToolshelfPage import ToolshelfPage
-from ....cfg.CfgToolshelf import CfgToolshelfPanel
+from ....cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
 from ....stylesheet import Stylesheet
 
 from typing import TYPE_CHECKING

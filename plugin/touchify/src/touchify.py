@@ -8,7 +8,6 @@ from .action_manager import ActionManager
 
 from .ui.SettingsDialog import *
 
-from .features.touchify_tweaks import *
 from .features.touchify_canvas import *
 from .features.touchify_hotkeys import *
 from .features.touchify_looks import *
@@ -39,7 +38,6 @@ class Touchify(Extension):
         self.touchify_looks = TouchifyLooks(self)
         self.touchify_canvas = TouchifyCanvas(self)
         self.touchify_hotkeys = TouchifyHotkeys(self)
-        self.touchify_tweaks = TouchifyTweaks(self)
         self.canvas_presets = CanvasPresets(self)
         
         self.timer: QTimer = None
@@ -114,7 +112,6 @@ class Touchify(Extension):
         self.mainMenuBar.addAction(seperator)
         
         self.touchify_hotkeys.windowCreated()
-        self.touchify_tweaks.windowCreated()
         self.touchify_looks.windowCreated()
         self.touchify_canvas.windowCreated()
 

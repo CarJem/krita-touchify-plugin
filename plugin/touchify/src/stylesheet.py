@@ -24,6 +24,7 @@ class Stylesheet:
     touchify_toggle_button = ""
     touchify_toolshelf_header = ""
     touchify_toolshelf_header_button = ""
+    touchify_nt_toolbox_button = ""
 
     highlight_rgb = ""
     background_rgb = ""
@@ -72,30 +73,16 @@ class Stylesheet:
         self.active_text_color_hex = qApp.palette().color(QPalette.ColorRole.WindowText).name().split("#")[1]
 
         self.touchify_nt_toolbox = f"""
-
-                QPushButton::menu-indicator {{ 
-                    image: none; 
-                }} 
-                
-                QToolButton::menu-indicator {{ 
-                    image: none; 
-                }}
-
-                QWidget {{ 
-                    background-color: #01{self.alternate_hex};
+                QFrame {{ 
+                    background-color: #{self.background_hex};
+                    border: none;
+                    border-radius: 4px;
+                    padding: 4px;
                 }}
                 
-                .QScrollArea {{ 
-                    background-color: #00{self.background_hex};
-                }}
-                
-                QScrollArea * {{ 
-                    background-color: #00000000;
-                }}
-                
-                QScrollArea QToolTip {{
-                    background-color: #{self.active_text_color_hex};                         
-                }}
+                QScrollArea {{ background: transparent; }}
+                QScrollArea > QWidget > QWidget {{ background: transparent; }}
+                QScrollArea > QWidget > QScrollBar {{ background: palette(base); }}
                 
                 QAbstractButton {{
                     background-color: #aa{self.background_hex};
@@ -115,6 +102,20 @@ class Stylesheet:
                     background-color: #{self.alternate_hex};
                 }}
             """
+        
+        self.touchify_nt_toolbox_button = f"""
+                QPushButton::menu-indicator {{ 
+                    image: none; 
+                }} 
+                
+                QToolButton::menu-indicator {{ 
+                    image: none; 
+                }}
+                
+                QToolButton {{
+                    padding: 4px;
+                }}
+        """
 
         self.touchify_toggle_button = f"""
                 QToolButton, QPushButton {{

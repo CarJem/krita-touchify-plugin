@@ -10,7 +10,7 @@ from ....variables import *
 from ....docker_manager import *
 from .ToolshelfContainer import *
 
-from ....cfg.CfgToolshelf import CfgToolshelfPanel
+from ....cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
 from .ToolshelfPageMain import ToolshelfPageMain
 from ....action_manager import ActionManager
 

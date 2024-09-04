@@ -3,8 +3,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from krita import *
-from .....cfg.CfgToolboxSubItem import CfgToolboxSubItem
-from .....cfg.CfgToolboxItem import CfgToolboxItem
+from .....cfg.toolbox.CfgToolboxSubItem import CfgToolboxSubItem
+from .....cfg.toolbox.CfgToolboxItem import CfgToolboxItem
 
 class ToolboxMenu(QMenu): # this is the subtools menu
 

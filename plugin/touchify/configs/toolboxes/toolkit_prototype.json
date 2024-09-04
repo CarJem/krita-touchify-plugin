@@ -1,0 +1,170 @@
+{
+    "categories": [
+        {
+            "items": [
+                {
+                    "items": [],
+                    "name": "KisToolTransform"
+                },
+                {
+                    "items": [],
+                    "name": "KritaTransform/KisToolMove"
+                },
+                {
+                    "items": [],
+                    "name": "KisToolCrop"
+                }
+            ],
+            "id": "Transform",
+            "column_count": 3
+        },
+        {
+            "items": [
+                {
+                    "items": [
+                        {
+                            "name": "KarbonCalligraphyTool"
+                        },
+                        {
+                            "name": "SvgTextTool"
+                        },
+                        {
+                            "name": "PathTool"
+                        }
+                    ],
+                    "name": "InteractionTool"
+                },
+                {
+                    "items": [],
+                    "name": "KritaShape/KisToolBrush"
+                }
+            ],
+            "id": "Vector",
+            "column_count": 1
+        },
+        {
+            "items": [
+                {
+                    "items": [
+                        {
+                            "name": "KritaShape/KisToolRectangle"
+                        },
+                        {
+                            "name": "KritaShape/KisToolEllipse"
+                        },
+                        {
+                            "name": "KisToolPolygon"
+                        }
+                    ],
+                    "name": "KritaShape/KisToolLine"
+                },
+                {
+                    "items": [
+                        {
+                            "name": "KisToolPath"
+                        },
+                        {
+                            "name": "KisToolPolyline"
+                        },
+                        {
+                            "name": "KritaShape/KisToolDyna"
+                        },
+                        {
+                            "name": "KritaShape/KisToolMultiBrush"
+                        }
+                    ],
+                    "name": "KisToolPencil"
+                }
+            ],
+            "column_count": 1,
+            "id": "Shape"
+        },
+        {
+            "items": [
+                {
+                    "items": [
+                        {
+                            "name": "KritaFill/KisToolGradient"
+                        },
+                        {
+                            "name": "KisToolEncloseAndFill"
+                        },
+                        {
+                            "name": "KritaShape/KisToolLazyBrush"
+                        }
+                    ],
+                    "name": "KritaFill/KisToolFill"
+                },
+                {
+                    "items": [],
+                    "name": "KritaSelected/KisToolColorSampler"
+                },
+                {
+                    "items": [],
+                    "name": "KritaShape/KisToolSmartPatch"
+                },
+                {
+                    "items": [
+                        {
+                            "name": "KisAssistantTool"
+                        },
+                        {
+                            "name": "ToolReferenceImages"
+                        }
+                    ],
+                    "name": "KritaShape/KisToolMeasure"
+                },
+                {
+                    "items": [
+                        {
+                            "name": "KisToolSelectElliptical"
+                        },
+                        {
+                            "name": "KisToolPolygon"
+                        },
+                        {
+                            "name": "KisToolSelectOutline"
+                        }
+                    ],
+                    "name": "KisToolSelectRectangular"
+                },
+                {
+                    "items": [
+                        {
+                            "name": "KisToolSelectSimilar"
+                        },
+                        {
+                            "name": "KisToolSelectPath"
+                        },
+                        {
+                            "name": "KisToolSelectMagnetic"
+                        }
+                    ],
+                    "name": "KisToolSelectContiguous"
+                }
+            ],
+            "id": "Main",
+            "column_count": 1
+        },
+        {
+            "items": [
+                {
+                    "items": [],
+                    "name": "PanTool"
+                },
+                {
+                    "items": [],
+                    "name": "ZoomTool"
+                }
+            ],
+            "id": "Navigation",
+            "column_count": 1
+        }
+    ],
+    "presetName": "Toolkit Prototype",
+    "menuDelay": 200,
+    "submenuButton": false,
+    "column_count": 2,
+    "icon_size": 16,
+    "horizontal_mode": false
+}

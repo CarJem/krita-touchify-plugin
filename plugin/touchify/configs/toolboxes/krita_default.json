@@ -180,6 +180,10 @@
             "id": "Navigation"
         }
     ],
+    "presetName": "Krita Default",
     "menuDelay": 200,
-    "submenuButton": false
+    "submenuButton": false,
+    "column_count": 2,
+    "icon_size": 16,
+    "horizontal_mode": false
 }

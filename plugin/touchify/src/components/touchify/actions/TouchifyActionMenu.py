@@ -1,6 +1,6 @@
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from ....cfg.CfgTouchifyAction import *
+from ....cfg.action.CfgTouchifyAction import *
 from krita import *
 
 class TouchifyActionMenu(QMenu):

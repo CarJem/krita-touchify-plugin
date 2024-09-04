@@ -2,7 +2,7 @@ from .CfgDockerGroup import *
 from .CfgPopup import *
 from ..ext.TypedList import TypedList
 from ..ext.extensions_json import JsonExtensions as Extensions
-from .CfgTouchifyAction import *
+from .action.CfgTouchifyAction import *
     
 class CfgTouchifyRegistry:
     actions_registry: TypedList[CfgTouchifyAction] = []

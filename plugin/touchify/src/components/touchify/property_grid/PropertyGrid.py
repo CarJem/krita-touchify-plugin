@@ -9,6 +9,9 @@ class PropertyGrid(QStackedWidget):
         from .PropertyGrid_Panel import PropertyGrid_Panel
         self.rootPropertyGrid = PropertyGrid_Panel(self)
         self.insertWidget(0, self.rootPropertyGrid)
+
+    def forceUpdate(self):
+        pass
     
     def updateDataObject(self, data: any):
         self.rootPropertyGrid.updateDataObject(data)

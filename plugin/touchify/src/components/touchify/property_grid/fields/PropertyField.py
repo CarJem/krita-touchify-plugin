@@ -59,12 +59,17 @@ class PropertyField(QWidget):
         restrictions = PropertyUtils_Extensions.getRestrictions(self.variable_source)
         if self.variable_name in restrictions:
             if restrictions[self.variable_name]["type"] == "expandable":
-                self.setupExpandable()
+                self.setupExpandable(restrictions[self.variable_name])
 
-    def setupExpandable(self):
+    def setupExpandable(self, variableData: dict[str, any]):
         self.editor = QPushButton()
+        btnText = "Edit..."
+
+        if "text" in variableData:
+            btnText = variableData["text"]
+
         self.editor.clicked.connect(self.nested_edit)
-        self.editor.setText("Edit...")
+        self.editor.setText(btnText)
         
         editorLayout = QHBoxLayout()
         editorLayout.setSpacing(0)
