@@ -31,6 +31,9 @@ class ToolshelfPanelHeader(QWidget):
         self.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.setLayout(self.ourLayout)
 
+        qApp.paletteChanged.connect(self.updateStyleSheet)
+        self.updateStyleSheet()
+
         self.backButton = None
         self.fillerWidget = None
 

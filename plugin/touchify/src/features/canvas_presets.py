@@ -19,10 +19,10 @@ from ..components.krita.KisAngleSelector import KisAngleSelector
 from ..components.pyqt.widgets.ColorButton import ColorButton
 
 if TYPE_CHECKING:
-    from ..touchify import TouchifyInstance
+    from ..touchify import Touchify
 
 class CanvasPresets:
-    def __init__(self, instance: "TouchifyInstance"):
+    def __init__(self, instance: "Touchify.TouchifyWindow"):
         self.appEngine = instance
         
     def getEntries(self, parent: QMenu, mode: str, useParent: bool = False):
@@ -94,8 +94,8 @@ class CanvasPresets:
             if callable(canvas_call):
                 canvas_call()
         
-        qwin = Krita.instance().activeWindow().qwindow()
-        for i, view in enumerate(Krita.instance().activeWindow().views()):
+        qwin = self.appEngine.windowSource.qwindow()
+        for i, view in enumerate(self.appEngine.windowSource.views()):
             view_obj = qwin.findChild(QWidget,'view_' + str(i))     
             for child in view_obj.children():
                 slotConfigChanged(child)
@@ -103,7 +103,7 @@ class CanvasPresets:
             canvas_obj = view_obj.findChild(QOpenGLWidget)
             slotConfigChanged(canvas_obj)
             
-        for docker in Krita.instance().dockers():
+        for docker in self.appEngine.windowSource.dockers():
             if (docker.objectName() == "KisLayerBox"):
                 slotConfigChanged(docker)
                 

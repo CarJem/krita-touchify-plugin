@@ -7,14 +7,16 @@ from .....resources import ResourceManager
 
 DOCKER_TITLE = 'Color Options'
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .....touchify import Touchify
 
 class ColorSourceToggle(QWidget):
     def __init__(self, parent: QWidget | None = None, cubeSize: int = 25):
         super(ColorSourceToggle, self).__init__(parent)
         self.canvas: Canvas = None
         self.setContentsMargins(2,2,2,2)
-
-        self.krita = Krita.instance()
+        self.sourceWindow: Window = None
 
         self.cubeSize = cubeSize
 
@@ -58,18 +60,22 @@ class ColorSourceToggle(QWidget):
         self.resetBtn.setStyleSheet("border-radius: 0px;")
         self.gridLayout.addWidget(self.resetBtn)
 
+
+    def setup(self, instance: "Touchify.TouchifyWindow"):
+        self.sourceWindow = instance.windowSource
+
     def setForegroundColor(self):
-        self.krita.action("chooseForegroundColor").trigger()
+        Krita.instance().action("chooseForegroundColor").trigger()
 
     def setBackgroundColor(self):
-        self.krita.action("chooseBackgroundColor").trigger()
+        Krita.instance().action("chooseBackgroundColor").trigger()
 
     def toggleColors(self):
-        self.krita.action("toggle_fg_bg").trigger()
+        Krita.instance().action("toggle_fg_bg").trigger()
         self.updateColors()
 
     def resetColors(self):
-        self.krita.action("reset_fg_bg").trigger()
+        Krita.instance().action("reset_fg_bg").trigger()
         self.updateColors()
 
     def showEvent(self, event):
@@ -85,7 +91,7 @@ class ColorSourceToggle(QWidget):
         return source.colorForCanvas(self.canvas)
 
     def updateColors(self):
-        activeWin = self.krita.activeWindow()
+        activeWin = self.sourceWindow
         if activeWin == None: return
         activeView = activeWin.activeView()
         if activeView == None: return
@@ -109,6 +115,9 @@ class ColorOptionsDocker(DockWidget):
         self.setWidget(self.colorToggle)
         self.setFixedHeight(50)
         self.colorToggle.onCanvasChanged(self.canvas())
+
+    def setup(self, instance: "Touchify.TouchifyWindow"):
+        self.colorToggle.setup(instance)
 
     def showEvent(self, event):
         super().showEvent(event)

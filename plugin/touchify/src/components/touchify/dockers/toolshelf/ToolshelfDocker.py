@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from .....docker_manager import DockerManager
 from .....action_manager import ActionManager
 if TYPE_CHECKING:
-    from .....touchify_instance import TouchifyInstance
+    from .....touchify import Touchify
 
 from ...toolshelf.ToolshelfContainer import ToolshelfContainer
 
@@ -27,7 +27,7 @@ class TouchifyToolshelfDocker(DockWidget):
         self._last_pinned: bool = False
         self.setWindowTitle(DOCKER_TITLE)
       
-    def setup(self, instance: "TouchifyInstance"):
+    def setup(self, instance: "Touchify.TouchifyWindow"):
         self.docker_manager = instance.docker_management
         self.actions_manager = instance.action_management
         self.onLoaded()
@@ -38,7 +38,6 @@ class TouchifyToolshelfDocker(DockWidget):
     
     def onLoaded(self):              
         self.panelStack = ToolshelfContainer(self, self.PanelIndex)
-        self.panelStack.updateStyleSheet()
         self.setWidget(self.panelStack)
 
         if self._last_pinned:

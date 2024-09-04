@@ -12,15 +12,11 @@ class NtScrollAreaContainer(QWidget):
 
     def __init__(self, scrollArea = None, parent=None):
         super(NtScrollAreaContainer, self).__init__(parent)
-        self.setLayout(QVBoxLayout())
+        self.setLayout(QVBoxLayout(self))
         self.layout().setContentsMargins(0,0,0,0)
         self.sa = None
 
         self.setScrollArea(scrollArea)
-
-
-
-
 
     def sizeHint(self):
         """

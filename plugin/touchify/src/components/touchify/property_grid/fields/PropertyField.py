@@ -80,7 +80,7 @@ class PropertyField(QWidget):
     def nested_edit(self):
         self.nested_dlg = PropertyGrid_Dialog(self)
         self.nested_dlg.setWindowFlags(Qt.WindowType.Widget)
-        self.nested_container = QVBoxLayout()
+        self.nested_container = QVBoxLayout(self)
         self.nested_dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         self.nested_dlg.btns.accepted.connect(lambda: self.nested_dlg_accept())
         self.nested_dlg.btns.rejected.connect(lambda: self.nested_dlg_reject())

@@ -31,7 +31,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         self.filterBar.setPlaceholderText("Filter...")
         self.filterBar.textChanged.connect(self.onFilterUpdate)
 
-        self.dlgLayout = QVBoxLayout()
+        self.dlgLayout = QVBoxLayout(self)
         self.dlgLayout.addWidget(self.listView)
         self.dlgLayout.addWidget(self.filterBar)
 

@@ -13,8 +13,9 @@ from .NtWidgetPadAlignment import NtWidgetPadAlignment
 
 from ..core.DockerContainer import DockerContainer
 
-class NtCanvas(object):
-    def __init__(self, window: Window):
+class NtCanvas(QObject):
+    def __init__(self, parent: QObject, window: Window):
+        super().__init__(parent)
         self.window = window
         self.windowLoaded = False
         self.dockerManager = None
@@ -37,6 +38,7 @@ class NtCanvas(object):
     def windowCreated(self, window: Window):
         self.window = window
         self.windowLoaded = True
+        self.window.qwindow().themeChanged.connect(self.updatePalette)
 
         self.updateElements()
         self.updateCanvas()
@@ -72,8 +74,6 @@ class NtCanvas(object):
 
     #region Event Functions
     def onConfigUpdate(self):
-        self.updateStyleSheet()
-
         if self.toolboxOptions:
             self.toolboxOptions.toolshelf.onConfigUpdated()
         if self.toolOptions:
@@ -119,7 +119,6 @@ class NtCanvas(object):
 
         if self.toolbox == None and usesNuToolbox:
             self.toolbox = NtToolbox(self, self.toolboxAlignment, self.window)
-            self.toolbox.updateStyleSheet()
             self.installEventFilters(self.toolbox)
             self.toolbox.pad.show()
         elif self.toolbox and not usesNuToolbox:
@@ -129,7 +128,6 @@ class NtCanvas(object):
 
         if self.toolboxOptions == None and usesNuToolOptionsAlt:
             self.toolboxOptions = NtToolshelf(self, self.window, self.toolboxAlignment, False, self.dockerManager, self.actions_manager)
-            self.toolboxOptions.updateStyleSheet()
             self.installEventFilters(self.toolboxOptions)
             self.toolboxOptions.pad.show()
         elif self.toolboxOptions and not usesNuToolOptionsAlt:
@@ -139,7 +137,6 @@ class NtCanvas(object):
 
         if self.toolOptions == None and usesNuToolOptions:
             self.toolOptions = NtToolshelf(self, self.window, self.toolOptionsAlignment, True, self.dockerManager, self.actions_manager)
-            self.toolOptions.updateStyleSheet()
             self.installEventFilters(self.toolOptions)
             self.toolOptions.pad.show()
         elif self.toolOptions and not usesNuToolOptions:
@@ -191,6 +188,12 @@ class NtCanvas(object):
         if self.toolboxOptions: self.toolboxOptions.pad.adjustToView()
         if self.toolOptions: self.toolOptions.pad.adjustToView()
 
+    def updatePalette(self):
+        if self.toolboxOptions:
+            self.toolboxOptions.toolshelf.onConfigUpdated()
+        if self.toolOptions:
+            self.toolOptions.toolshelf.onConfigUpdated()
+
     #endregion
 
     #region Connect/Disconnect Functions
@@ -202,17 +205,10 @@ class NtCanvas(object):
 
     def removeEventFilters(self, widget: NtToolshelf | NtToolbox):
         widget.pad.btnHide.clicked.disconnect(self.updateCanvas)
+        self.qwin
         #widget.pad.removeEventFilter(self)
         #self.qWin.removeEventFilter(self)
 
     #endregion
-
-    def updateStyleSheet(self):
-        if self.toolbox:
-            self.toolbox.updateStyleSheet()
-        if self.toolboxOptions:
-            self.toolboxOptions.updateStyleSheet()
-        if self.toolOptions:
-            self.toolOptions.updateStyleSheet()
 
 

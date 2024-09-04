@@ -44,7 +44,7 @@ class NtWidgetPad(QWidget):
             Qt.WindowStaysOnTopHint | 
             Qt.FramelessWindowHint
             )
-        self.setLayout(QVBoxLayout())
+        self.setLayout(QVBoxLayout(self))
         self.layout().setContentsMargins(4,4,4,4)
         self.alignment = NtWidgetPadAlignment.Left
 

@@ -169,12 +169,3 @@ class ToolshelfContainer(QStackedWidget):
         
         if self.isPinned() == False:
             self.goHome()
-
-    def updateStyleSheet(self):
-        if self._mainWidget:
-            self._mainWidget.updateStyleSheet()
-        for panel in self._panels:
-            self._panels[panel].updateStyleSheet()
-        for button in self._headers:
-            button.updateStyleSheet()
-        return

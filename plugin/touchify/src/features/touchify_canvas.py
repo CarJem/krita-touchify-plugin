@@ -15,16 +15,17 @@ if TYPE_CHECKING:
 
 from krita import *
     
-class TouchifyCanvas(object):
+class TouchifyCanvas(QObject):
 
     def __init__(self, instance: "Touchify"):
+        super().__init__(instance)
         self.appEngine = instance
         self.ntCanvas: NtCanvas | None = None
 
     def windowCreated(self):
-        self.qWin = self.appEngine.instanceWindow.qwindow()
+        self.qWin = self.appEngine.windowSource.qwindow()
         self.ntCanvas.setManagers(self.appEngine.docker_management, self.appEngine.action_management)
-        self.ntCanvas.windowCreated(self.appEngine.instanceWindow)
+        self.ntCanvas.windowCreated(self.appEngine.windowSource)
 
     def createAction(self, window: Window, id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
         result = window.createAction(id, text, menuLocation)
@@ -56,7 +57,7 @@ class TouchifyCanvas(object):
         nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_RIGHTHANDTOOLBOX, "Right Hand Toolbox", sublocation_path, True, config.CanvasWidgets_ToolboxOnRight, self.nuOptionsRightHandToolboxToggled))
         nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_ALTTOOLBOXPOSITION, "Alternative Toolbox Position", sublocation_path, True, config.CanvasWidgets_AlternativeToolboxPosition, self.nuOptionsAltToolboxPosToggled))
 
-        self.ntCanvas = NtCanvas(window)
+        self.ntCanvas = NtCanvas(self, window)
         self.ntCanvas.createActions(window, nu_options_menu, sublocation_path)
 
     def onKritaConfigUpdated(self):
@@ -87,7 +88,8 @@ class TouchifyCanvas(object):
         TouchifySettings.instance().CanvasWidgets_ToolboxOnRight = toggled
         TouchifySettings.instance().saveSettings()
 
+    #TODO: Remove
     def nuOptionsOrientationSwapRequested(self):
         if self.ntCanvas:
             if self.ntCanvas.toolbox:
-                self.ntCanvas.toolbox.swapOrientation()
+                pass

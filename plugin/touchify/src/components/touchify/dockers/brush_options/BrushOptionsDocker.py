@@ -12,7 +12,9 @@ from ....krita.KisAngleSelector import KisAngleSelector
 
 DOCKER_TITLE = 'Brush Options'
 
-
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .....touchify import Touchify
 
 class BrushOptionsDockerCfg:
 
@@ -124,8 +126,7 @@ class BrushOptionsWidget(QWidget):
     def __init__(self, parent: QWidget | None = None):
         super(BrushOptionsWidget, self).__init__(parent)
 
-
-        self.krita = Krita.instance()
+        self.sourceWindow: Window = None
 
         self.config = BrushOptionsDockerCfg()
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
@@ -147,7 +148,7 @@ class BrushOptionsWidget(QWidget):
 
         self.optionsMenu = self.genMenu()
         self.optionsButton = QPushButton(self)
-        self.optionsButton.setIcon(self.krita.icon("configure"))
+        self.optionsButton.setIcon(Krita.instance().icon("configure"))
         self.optionsButton.setMenu(self.optionsMenu)
         self.optionsButton.setFixedHeight(15)
         self.optionsButton.setStyleSheet(Stylesheet.instance().hide_menu_indicator)
@@ -159,6 +160,9 @@ class BrushOptionsWidget(QWidget):
         self.gridLayout.addWidget(self.flowSlider)
         self.gridLayout.addWidget(self.rotationSlider)
         self.gridLayout.addWidget(self.optionsButton)
+
+    def setup(self, instance: "Touchify.TouchifyWindow"):
+        self.sourceWindow = instance.windowSource
 
     def genMenu(self):
         menu = QMenu()
@@ -192,7 +196,6 @@ class BrushOptionsWidget(QWidget):
         self.config.toggle(setting)
         self.updateSliders()
 
-
     def updateSliders(self):
 
         def updateSliderVisibility(option: bool, slider: KisSliderSpinBox):
@@ -212,7 +215,7 @@ class BrushOptionsWidget(QWidget):
         updateSliderVisibility(self.config.ShowFlowSlider, self.flowSlider)
         updateSliderVisibility(self.config.ShowRotationSlider, self.rotationSlider)
 
-        active_window = self.krita.activeWindow()
+        active_window = self.sourceWindow
         if active_window == None: return
 
         active_view = active_window.activeView()
@@ -233,7 +236,7 @@ class BrushOptionsWidget(QWidget):
 
 
     def onCanvasChanged(self, canvas: Canvas):
-        active_window = self.krita.activeWindow()
+        active_window = self.sourceWindow
         if active_window == None: return
 
         active_view = active_window.activeView()
@@ -252,6 +255,9 @@ class BrushOptionsDocker(DockWidget):
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         self.brushOptions = BrushOptionsWidget(self)
         self.setWidget(self.brushOptions)
+
+    def setup(self, instance: "Touchify.TouchifyWindow"):
+        self.brushOptions.setup(instance)
 
     def showEvent(self, event):
         super().showEvent(event)

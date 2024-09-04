@@ -44,9 +44,6 @@ class ToolshelfPageMain(ToolshelfPage):
     def loadPage(self):
         for host_id in self.dockerWidgets:
             self.dockerWidgets[host_id].loadWidget(True)
-
-    def updateStyleSheet(self):
-        super().updateStyleSheet()
     
 
     

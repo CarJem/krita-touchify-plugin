@@ -38,7 +38,7 @@ class ReferenceTabsWidget(QWidget):
 
         self.setAcceptDrops(True)
 
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self)
         self.setLayout(layout)
 
         menubar = QMenuBar()

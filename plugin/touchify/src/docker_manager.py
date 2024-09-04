@@ -81,7 +81,7 @@ class DockerManager(QObject):
     onStealDockerSignal = pyqtSignal(str)
     onLoadDockerSignal = pyqtSignal(str)
 
-    def __init__(self, touchify: "Touchify"):
+    def __init__(self, touchify: "Touchify.TouchifyWindow"):
         
         super().__init__(touchify)
 
@@ -95,8 +95,8 @@ class DockerManager(QObject):
         self._hiddenDockers[2] = TouchifySettings.instance().DockerUtils_HiddenDockersRight.split(",")
         self._hiddenDockers[4] = TouchifySettings.instance().DockerUtils_HiddenDockersUp.split(",")
         self._hiddenDockers[8] = TouchifySettings.instance().DockerUtils_HiddenDockersDown.split(",")
-        self.mainWindow = self.touchify.instanceWindow
-        self.qWin = self.touchify.instanceWindow.qwindow()
+        self.mainWindow = self.touchify.windowSource
+        self.qWin = self.touchify.windowSource.qwindow()
 
     def registerListener(self, type: SignalType, source: Callable):
         if type not in self._listeners:
@@ -157,12 +157,12 @@ class DockerManager(QObject):
             else: self.invokeListeners(docker_id, DockerManager.SignalType.OnStealDocker)
 
     def toggleDockersPerArea(self, area: int):
-        dockers = self.touchify.krita().dockers()
+        dockers = self.mainWindow.dockers()
         mainWindow = self.qWin
 
         if len(self._hiddenDockers[area]) > 0: # show
             for dockerId in self._hiddenDockers[area]:
-                docker = next((w for w in self.touchify.krita().dockers() if w.objectName() == dockerId), None)
+                docker = next((w for w in self.mainWindow.dockers() if w.objectName() == dockerId), None)
                 if docker:
                     docker.setVisible(True)
             self._hiddenDockers[area] = []

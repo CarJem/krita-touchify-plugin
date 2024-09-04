@@ -47,10 +47,6 @@ class ToolshelfWidget(QDockWidget):
                 return True
         return False
 
-    def updateStyleSheet(self):
-        if self.hasPanelStack():
-            self.panelStack.updateStyleSheet()
-
     def onKritaConfigUpdate(self):
         if self.hasPanelStack():
             self.panelStack.onKritaConfigUpdate()
@@ -60,7 +56,6 @@ class ToolshelfWidget(QDockWidget):
     
     def onLoaded(self):              
         self.panelStack = ToolshelfContainer(self, self.PanelIndex)
-        self.panelStack.updateStyleSheet()
         self.scrollArea.setWidget(self.panelStack)
 
         if self._last_pinned:

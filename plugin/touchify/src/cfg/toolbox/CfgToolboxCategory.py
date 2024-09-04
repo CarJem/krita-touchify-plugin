@@ -30,6 +30,7 @@ class CfgToolboxCategory:
     def propertygrid_labels(self):
         labels = {}
         labels["id"] = "Category ID"
+        labels["column_count"] = "Column Count"
         labels["items"] = "Items"
         return labels
 

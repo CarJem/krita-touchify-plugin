@@ -25,10 +25,10 @@ class PopupDialog(QDialog):
 
 
     
-    def __init__(self, parent: QMainWindow, args: CfgPopup):     
+    def __init__(self, parent: QWidget, args: CfgPopup):     
         super().__init__(parent)  
         self.grid: QLayout = None
-        self.parent: QMainWindow = parent
+        self.parent: QWidget = parent
         self.metadata = args
         self.allowOpacity = False
         self.titlebarEnabled = False

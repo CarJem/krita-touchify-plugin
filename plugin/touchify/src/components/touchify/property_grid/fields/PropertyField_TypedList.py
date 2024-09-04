@@ -159,7 +159,7 @@ class PropertyField_TypedList(PropertyField):
     def list_modify(self, mode: Literal['edit', 'add'] = 'add'):
         self.dlg = PropertyGrid_Dialog(self)
         self.dlg.setWindowFlags(Qt.WindowType.Widget)
-        self.container = QVBoxLayout()
+        self.container = QVBoxLayout(self)
         self.dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         self.dlg.btns.accepted.connect(lambda: self.dlg_accept())
         self.dlg.btns.rejected.connect(lambda: self.dlg_reject())

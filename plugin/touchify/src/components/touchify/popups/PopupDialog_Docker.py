@@ -22,7 +22,7 @@ class PopupDialog_Docker(PopupDialog):
 
 
 
-    def __init__(self, parent: QMainWindow, args: CfgPopup, docker_manager: DockerManager):     
+    def __init__(self, parent: QWidget, args: CfgPopup, docker_manager: DockerManager):     
         super().__init__(parent, args)
 
         self.dockerWidget: QDockWidget = None

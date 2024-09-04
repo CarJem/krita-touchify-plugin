@@ -54,7 +54,7 @@ class ToolshelfPage(QWidget):
         self.toolshelf: "ToolshelfContainer" = parent
         self.ID = ID
 
-        self.shelfLayout = QVBoxLayout()
+        self.shelfLayout = QVBoxLayout(self)
         self.shelfLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.shelfLayout.setContentsMargins(0, 0, 0, 0)
         self.shelfLayout.setSpacing(1)
@@ -68,11 +68,13 @@ class ToolshelfPage(QWidget):
         self.dockerWidgets: dict[any, DockerContainer] = {}
         self.size = None
         self.panelProperties = data
-        
-        
         self._initPageTabs()
         self._initPageActions()
         self._initSections()
+
+
+        qApp.paletteChanged.connect(self.updateStyleSheet)
+        self.updateStyleSheet()
     
 
     def _initPageActions(self):
@@ -130,7 +132,7 @@ class ToolshelfPage(QWidget):
 
 
         self.bgWidget = QWidget(self)
-        self.bgWidget.setLayout(QVBoxLayout())
+        self.bgWidget.setLayout(QVBoxLayout(self))
         self.bgWidget.layout().setSpacing(0)
         self.bgWidget.layout().setContentsMargins(0,0,0,0)
         self.bgWidget.setAutoFillBackground(True)

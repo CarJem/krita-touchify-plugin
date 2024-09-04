@@ -56,7 +56,7 @@ class ToolshelfPageButtons(QWidget):
     def __init__(self, parent=None):
         super(ToolshelfPageButtons, self).__init__(parent)
         self._rows: dict[int, QWidget] = {}
-        self.setLayout(QVBoxLayout())
+        self.setLayout(QVBoxLayout(self))
         self.layout().setSpacing(1)
         self.layout().setContentsMargins(0, 0, 0, 0)
 

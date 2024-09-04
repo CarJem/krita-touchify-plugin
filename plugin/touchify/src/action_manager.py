@@ -26,9 +26,10 @@ class ActionManager:
             "expanding_spacer2"
         ]
         
-    def __init__(self, instance: "Touchify"):
+    def __init__(self, instance: "Touchify.TouchifyWindow"):
         self.appEngine = instance
-        self.custom_docker_states = {}       
+        self.custom_docker_states = {}
+        self.registeredActions = {}
 
         
     def executeAction(self, data: CfgTouchifyAction, action: QAction):
@@ -63,7 +64,8 @@ class ActionManager:
         actionIdentifier ='TouchifyAction_{0}'.format(data.id)
         displayName = data.text
 
-        action = window.createAction(actionIdentifier, displayName, actionPath) 
+        action = window.createAction(actionIdentifier, displayName, actionPath)
+        self.registeredActions[actionIdentifier] = action
            
         TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.executeAction, {'data': data, 'action': action})      
         action.triggered.connect(lambda: self.executeAction(data, action))
@@ -129,7 +131,7 @@ class ActionManager:
                 result_icon = ResourceManager.iconLoader(data.icon)
                 use_icon, icon, use_text = self.__checkActionIcon(result_icon)
             case 2:
-                target_action = self.appEngine.krita().action(data.action_id)
+                target_action = Krita.instance().action(data.action_id)
                 result_icon: QIcon = None     
                 if target_action: result_icon = target_action.icon()
                 use_icon, icon, use_text = self.__checkActionIcon(result_icon)
@@ -155,7 +157,7 @@ class ActionManager:
         btn.setMetadata(text, icon)
 
     def __brushButtonUpdate(self, __btn: TouchifyActionButton, id: str):
-        win = self.appEngine.krita().activeWindow()
+        win = self.appEngine.windowSource
         if not win: return
         view = win.activeView()
         if not view: return
@@ -222,7 +224,7 @@ class ActionManager:
         return btn
         
     def button_trigger(self, act: CfgTouchifyAction):
-        action = self.appEngine.krita().action(act.action_id)
+        action = Krita.instance().action(act.action_id)
         btn: TouchifyActionButton | None = None
         if action:
             checkable = action.isCheckable()
@@ -239,9 +241,13 @@ class ActionManager:
 
     
     def action_trigger(self, data: CfgTouchifyAction):
-        action = self.appEngine.krita().action(data.action_id)
-        if action:
-            action.trigger()
+        if data.action_id in self.registeredActions:
+            act: QAction = self.registeredActions[data.action_id]
+            act.trigger()
+        else:
+            action = Krita.instance().action(data.action_id)
+            if action:
+                action.trigger()
     
     def action_menu(self, action: QAction, data: CfgTouchifyAction):
         _parent = self.__getActionSource(action)
@@ -252,16 +258,16 @@ class ActionManager:
         brush_presets = ResourceManager.getBrushPresets()
         if id in brush_presets:
             preset = brush_presets[id]
-            self.appEngine.instanceWindow.activeView().setCurrentBrushPreset(preset)
+            self.appEngine.windowSource.activeView().setCurrentBrushPreset(preset)
     
     def action_docker(self, path):
-        dockersList = self.appEngine.krita().dockers()
+        dockersList = self.appEngine.windowSource.dockers()
         for docker in dockersList:
             if (docker.objectName() == path):
                 docker.setVisible(not docker.isVisible())
                     
     def action_workspace(self, path):
-        main_menu = self.appEngine.instanceWindow.qwindow().menuBar()
+        main_menu = self.appEngine.windowSource.qwindow().menuBar()
         for root_items in main_menu.actions():
             if root_items.objectName() == 'window':
                 for sub_item in root_items.menu().actions():
@@ -272,7 +278,7 @@ class ActionManager:
                                 break
                             
     def action_dockergroup(self, data: CfgDockerGroup):
-        dockersList = self.appEngine.krita().dockers()
+        dockersList = self.appEngine.windowSource.dockers()
         
         if data.id not in self.custom_docker_states:
             paths = []
@@ -310,9 +316,9 @@ class ActionManager:
     def action_popup(self, action: QAction, data: CfgPopup):    
         _parent = self.__getActionSource(action)            
         if data.type == "actions":
-            popup = PopupDialog_Actions(self.appEngine.instanceWindow.qwindow(), data, self)
+            popup = PopupDialog_Actions(self.appEngine.windowSource.qwindow().window(), data, self)
         elif data.type == "docker":
-            popup = PopupDialog_Docker(self.appEngine.instanceWindow.qwindow(), data, self.appEngine.docker_management)
+            popup = PopupDialog_Docker(self.appEngine.windowSource.qwindow().window(), data, self.appEngine.docker_management)
         else:
-            popup = PopupDialog(self.appEngine.instanceWindow.qwindow(), data)  
+            popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
         popup.triggerPopup(_parent)

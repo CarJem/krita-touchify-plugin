@@ -17,16 +17,14 @@ if TYPE_CHECKING:
 
 #Other Toolbox: pyKrita_CoolBox
 
-class NtToolbox(object):
+class NtToolbox(QObject):
 
     def __init__(self, canvas: "NtCanvas", alignment: NtWidgetPadAlignment, window: Window):
+        super().__init__(canvas)
         self.qWin = window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
         self.canvas = canvas
         self.toolbox = self.qWin.findChild(QDockWidget, TOUCHIFY_ID_DOCKER_TOOLBOX)
-        #self.toolbox = self.qWin.findChild(QDockWidget, 'ToolBox')
-        self.previousOrientation: Qt.DockWidgetArea = None
-        self.initOrientation()
         # Create "pad"
         self.pad = NtWidgetPad(self.mdiArea)
         self.pad.setObjectName("toolBoxPad")
@@ -49,49 +47,24 @@ class NtToolbox(object):
         #self.dockerAction = window.qwindow().findChild(QDockWidget, "ToolBox").toggleViewAction()
         self.dockerAction = window.qwindow().findChild(QDockWidget, TOUCHIFY_ID_DOCKER_TOOLBOX).toggleViewAction()
         self.dockerAction.setEnabled(False)
-        
-    def initOrientation(self):
-        pass
-        #self.previousOrientation = self.qWin.dockWidgetArea(self.toolbox)
-        #self.updateOrientation()
-        
-    def resetOrientation(self):
-        pass
-        #if self.previousOrientation != None:
-            #self.toolbox.updateToolBoxOrientation(self.previousOrientation)
-            
-    def updateOrientation(self):
-        pass
-        #orientation = TouchifySettings.instance().CanvasWidgets_ToolboxDirection
-        #if orientation == "Horizontal":
-            #self.toolbox.updateToolBoxOrientation(Qt.DockWidgetArea.TopDockWidgetArea)
-        #else:
-            #self.toolbox.updateToolBoxOrientation(Qt.DockWidgetArea.LeftDockWidgetArea)
 
-    
-    def swapOrientation(self):
-        orientation = TouchifySettings.instance().CanvasWidgets_ToolboxDirection
-        if orientation == "Vertical":
-            TouchifySettings.instance().CanvasWidgets_ToolboxDirection = "Horizontal"
-            TouchifySettings.instance().saveSettings()
-        else:
-            TouchifySettings.instance().CanvasWidgets_ToolboxDirection = "Vertical"
-            TouchifySettings.instance().saveSettings()
-        self.updateOrientation()
+        qApp.paletteChanged.connect(self.updateStyleSheet)
+        self.updateStyleSheet()
+
+    def updatePalette(self):
+        self.pad.returnDocker()
+        self.pad.borrowDocker(self.toolbox)
 
     def onSubWindowActivated(self, subWin):
         if subWin:
             subWin.installEventFilter(self.adjustFilter)
             self.canvas.updateCanvas()
-            self.updateStyleSheet()
 
     def updateStyleSheet(self):
-        self.updateOrientation()
         self.pad.setStyleSheet(Stylesheet.instance().touchify_nt_toolbox)    
 
 
     def close(self):
-        self.resetOrientation()
         self.mdiArea.subWindowActivated.disconnect(self.onSubWindowActivated)
         #self.pad.removeEventFilter(self.interactFilter)
         self.pad.removeEventFilter(self.adjustFilter)

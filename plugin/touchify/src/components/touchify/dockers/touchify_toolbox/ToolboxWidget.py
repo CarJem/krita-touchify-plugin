@@ -9,7 +9,7 @@ from os import path
 
 from .....variables import *
 
-from .....ext.extensions_krita import KritaExtensions
+from .....ext.extensions_krita import KritaExtensions as KE
 from .....ext.KritaSettings import KritaSettings
 
 from .....stylesheet import Stylesheet
@@ -25,6 +25,10 @@ from .....cfg.toolbox.CfgToolbox import CfgToolbox
 from .....cfg.toolbox.CfgToolboxItem import CfgToolboxItem
 from .....cfg.toolbox.CfgToolboxSubItem import CfgToolboxSubItem
 from .....cfg.toolbox.CfgToolboxCategory import CfgToolboxCategory
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .....touchify import Touchify
 
 
 TOOLBOX_ITEMS: dict[str, str] = {
@@ -66,66 +70,63 @@ TOOLBOX_ITEMS: dict[str, str] = {
         "ZoomTool": "ZoomTool"
 }
 
-class TouchifyToolboxDocker(QDockWidget):
-    def __init__(self, parent: QWidget | None = None):
-        super().__init__(parent)
-
-        self.floating = False
-        self.setWindowTitle('Touchify Toolbox') # window title also acts as the Docker title in Settings > Dockers
-
-        label = QLabel(" ") # label conceals the 'exit' buttons and Docker title
-        label.setFrameShape(QFrame.StyledPanel)
-        label.setFrameShadow(QFrame.Raised)
-        label.setFrameStyle(QFrame.Panel | QFrame.Raised)
-        label.setMinimumWidth(16)
-
-        self.toolboxWidget = ToolboxWidget()
-        self.toolboxScroll = ToolboxScrollArea(self.toolboxWidget, self)
-        self.toolboxWidget.setScrollArea(self.toolboxScroll)
-        self.toolboxScroll.setViewportMargins(0,0,0,0)
-
-        self.setWidget(self.toolboxScroll)
-
-
 class ToolboxWidget(QWidget):
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
 
-        self.krita = Krita.instance()
-        self.sourceWindow: QWindow | None = None
-        self.preLoaded = False
+        self.sourceWindow: Window = None
 
+        self.__preload__themeChanged = False
+        self.__preload__checkChanged = False
 
-        self.scrollArea: ToolboxScrollArea | None = None
-
-
-        self.setContentsMargins(0,0,0,0)
         self.loadConfig()
-        TouchifyConfig.instance().notifyConnect(self.reload)
         
+        self.horizontalMode: bool = KritaSettings.readSettingBool(TOUCHIFY_ID_DOCKER_TOOLBOX, "IsHorizontal", False)
         self.categories: list[ToolboxCategory] = []
-
         self.lastActiveTool = ""
         self.registeredToolBtns: list[ToolboxButton] = []
+
 
         self.buttonGroup = QButtonGroup(self)
         self.buttonGroup.setExclusive(True)
 
-        self.gridLayout = QBoxLayout(QBoxLayout.Direction.Down, self)
-        self.setLayout(self.gridLayout)
-        
+        self.setLayout(QVBoxLayout(self))
+        self.setContentsMargins(0,0,0,0)
+
+        self.scrollArea = ToolboxScrollArea(self)
+        self.scrollArea.setContentsMargins(0,0,0,0)
+        self.scrollArea.setViewportMargins(0,0,0,0)
+        self.scrollArea.setWidgetResizable(True)
+        self.layout().addWidget(self.scrollArea)
 
         self.settingsBtn = QToolButton(self)
-        self.settingsBtn.setIcon(self.krita.icon("configure"))
+        self.settingsBtn.setIcon(Krita.instance().icon("configure"))
         self.settingsBtn.setIconSize(QSize(16,16))
         self.settingsBtn.setContentsMargins(0,0,0,0)
         self.settingsBtn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.settingsBtn.clicked.connect(self.settingsBtn.showMenu)
 
         self.settingsMenu = QMenu(self)
         self.settingsBtn.setMenu(self.settingsMenu)
-        self.gridLayout.addWidget(self.settingsBtn)
+        
+        self.viewportLayout = QBoxLayout(QBoxLayout.Direction.Down, self)
+        self.viewportLayout.setContentsMargins(0,0,0,0)
+        self.viewportLayout.addWidget(self.settingsBtn)
 
-        self.krita.notifier().windowCreated.connect(self.reload)
+        self.viewportWidget = QWidget(self)
+        self.viewportWidget.setContentsMargins(0,0,0,0)
+        self.viewportWidget.setLayout(self.viewportLayout)
+        self.scrollArea.setWidget(self.viewportWidget)
+
+
+    def setup(self, instance: "Touchify.TouchifyWindow"):
+        self.sourceWindow = instance.windowSource
+        self.reload()
+        
+
+    def updatePalette(self):
+        self.settingsBtn.setIcon(Krita.instance().icon("configure"))
+        self.reload()
 
     def sizeHint(self):
         actualSizeMod = super().sizeHint()
@@ -134,25 +135,15 @@ class ToolboxWidget(QWidget):
         opt.initFrom(self)
         padding = self.style().pixelMetric(QStyle.PM_TabBarScrollButtonWidth, opt, self)
 
-        actualSizeMod.setWidth(actualSizeMod.width() + padding)
-        actualSizeMod.setHeight(actualSizeMod.height() + padding)
+        if self.horizontalMode:
+            actualSizeMod.setWidth(actualSizeMod.width() + padding)
+        else:
+            actualSizeMod.setHeight(actualSizeMod.height() + padding)
         return actualSizeMod
-            
-    def registerToolButtonChanged(self):
-        try:
-            active_window = self.krita.activeWindow()           
-            if active_window != None:   
-                mobj = next((w for w in active_window.qwindow().findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
-                wobj = mobj.findChild(QButtonGroup)
-                wobj.idToggled.connect(self.updateState)
-                return True
-        except:
-            return False
-        return False
 
     def getActiveToolButton(self):
         try:
-            active_window = self.krita.activeWindow()           
+            active_window = self.sourceWindow         
             if active_window != None:   
                 mobj = next((w for w in active_window.qwindow().findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
                 for q_obj in mobj.findChildren(QToolButton):
@@ -165,7 +156,7 @@ class ToolboxWidget(QWidget):
             pass
         return ""
 
-    def updateState(self):
+    def updateCheckedStates(self):
         activeTool = self.getActiveToolButton()
 
         if activeTool != "":
@@ -182,9 +173,6 @@ class ToolboxWidget(QWidget):
 
     #region Setters
 
-    def setScrollArea(self, scrollArea: ToolboxScrollArea):
-        self.scrollArea = scrollArea
-
     def setOrientation(self, orientation: Qt.Orientation):
         if self.scrollArea and isinstance(self.scrollArea, ToolboxScrollArea):
             scrollArea: ToolboxScrollArea = self.scrollArea
@@ -194,6 +182,27 @@ class ToolboxWidget(QWidget):
 
 
     #region Layouts
+
+    def preload(self):
+        isPreloaded = self.__preload__themeChanged and self.__preload__checkChanged
+        if isPreloaded:
+            return
+
+        try:
+            active_window = self.sourceWindow
+            if active_window != None:   
+                if self.__preload__themeChanged == False:
+                    active_window.qwindow().themeChanged.connect(self.updatePalette)
+                    self.__preload__themeChanged = True
+
+                if self.__preload__checkChanged == False:
+                    mobj = next((w for w in active_window.qwindow().findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
+                    wobj = mobj.findChild(QButtonGroup)
+                    wobj.idToggled.connect(self.updateCheckedStates)
+                    self.__preload__checkChanged = True  
+        except:
+            pass
+        
 
 
     def reload(self):
@@ -209,16 +218,13 @@ class ToolboxWidget(QWidget):
                     self.buttonGroup.removeButton(btn)
                 btn.hide()
                 btn.close()
-            self.gridLayout.removeWidget(cat)
+            self.viewportLayout.removeWidget(cat)
 
         self.registeredToolBtns = []
         self.categories = []
     
     def load(self):
-        if self.preLoaded == False:
-            if self.registerToolButtonChanged():
-                self.preLoaded = True
-
+        self.preload()
         self.loadConfig()
         self.buildSettingsMenu()
         self.buildCategories()   
@@ -256,6 +262,16 @@ class ToolboxWidget(QWidget):
             action.triggered.connect(self.changePreset)
             index += 1
             self.settingsMenu.addAction(action)
+        
+        self.settingsMenu.addSeparator()
+
+        horizontalModeAction = QAction("Horizontal Mode", self.settingsMenu)
+        horizontalModeAction.setCheckable(True)
+        if self.horizontalMode:
+            horizontalModeAction.setChecked(True)
+        horizontalModeAction.triggered.connect(self.toggleHorizontalMode)
+
+        self.settingsMenu.addAction(horizontalModeAction)
 
     def buildCategories(self):
         x = 0
@@ -263,18 +279,20 @@ class ToolboxWidget(QWidget):
 
         col_max = self.config.column_count
         icon_size = self.config.icon_size
-        horizontal_mode = self.config.horizontal_mode
 
-        toolbox_item_alignment = Qt.AlignmentFlag.AlignTop if horizontal_mode else Qt.AlignmentFlag.AlignLeft
+        toolbox_item_alignment = Qt.AlignmentFlag.AlignTop if self.horizontalMode else Qt.AlignmentFlag.AlignLeft
 
-        if horizontal_mode:
-            self.gridLayout.setDirection(QBoxLayout.Direction.LeftToRight)
+        if self.horizontalMode:
+            self.viewportLayout.setDirection(QBoxLayout.Direction.LeftToRight)
+            self.viewportLayout.setAlignment(self.settingsBtn, Qt.AlignmentFlag.AlignLeft)
             self.settingsBtn.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
             self.setOrientation(Qt.Orientation.Horizontal)
         else:
-            self.gridLayout.setDirection(QBoxLayout.Direction.Down)
-            self.settingsBtn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+            self.viewportLayout.setDirection(QBoxLayout.Direction.Down)
+            self.viewportLayout.setAlignment(self.settingsBtn, Qt.AlignmentFlag.AlignTop)
+            self.settingsBtn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             self.setOrientation(Qt.Orientation.Vertical)
+
 
         for categoryData in self.config.categories: # Set up button logic
             categoryData: CfgToolboxCategory
@@ -284,8 +302,9 @@ class ToolboxWidget(QWidget):
             category = ToolboxCategory(self, categoryData.id)
             for tool in categoryData.items:
                 btn = self.buildCategoryAction(tool, icon_size)
+                btn.setParent(category)
                 if btn:
-                    if horizontal_mode: category.addTool(btn, x, y, toolbox_item_alignment)
+                    if self.horizontalMode: category.addTool(btn, x, y, toolbox_item_alignment)
                     else: category.addTool(btn, y, x, toolbox_item_alignment)
 
                     x = x + 1
@@ -294,15 +313,15 @@ class ToolboxWidget(QWidget):
                         y = y + 1
                         
             self.categories.append(category)
-            self.gridLayout.addWidget(category, 0, toolbox_item_alignment)
+            self.viewportLayout.addWidget(category, 0, toolbox_item_alignment)
             x = 0
             y = y + 1
-        self.updateState()
+        self.updateCheckedStates()
 
     def buildCategoryAction(self, tool: CfgToolboxItem, icon_size: int):
-        ac = self.krita.action(tool.name)
+        ac = Krita.instance().action(tool.name)
         if ac:
-            actionText = KritaExtensions.formatActionText(ac.text())
+            actionText = KE.formatActionText(ac.text())
             btn: ToolboxButton = ToolboxButton(tool.name)
             btn.setObjectName(tool.name)
             btn.setText(actionText)
@@ -339,18 +358,18 @@ class ToolboxWidget(QWidget):
             action.setIconVisibleInMenu(True)
 
     def buildMenuAction(self, subMenu: ToolboxMenu, actionName: str):
-        act = self.krita.action(actionName)
+        act = Krita.instance().action(actionName)
         if act:
             toolIcon = QIcon(act.icon())
-            toolText = KritaExtensions.formatActionText(act.text())
+            toolText = KE.formatActionText(act.text())
             toolName = actionName
             toolAction = QAction(toolIcon, toolText, subMenu) # set up initial toolAction
 
             # we need to call Krita's shortcut for the toolAction:
             try:
-                self.krita.action(toolName).shortcut()
+                Krita.instance().action(toolName).shortcut()
 
-                toolShortcut = self.krita.action(toolName).shortcut().toString() # find the global shortcut
+                toolShortcut = Krita.instance().action(toolName).shortcut().toString() # find the global shortcut
 
                 toolAction.setShortcut(toolShortcut)
 
@@ -382,7 +401,7 @@ class ToolboxWidget(QWidget):
 
     def activateTool(self):
         actionName = self.sender().objectName() # get ToolButton name
-        ac = self.krita.action(actionName) # Search this name in Krita's action list
+        ac = Krita.instance().action(actionName) # Search this name in Krita's action list
 
         print(actionName, ac)
         if ac:
@@ -398,6 +417,11 @@ class ToolboxWidget(QWidget):
             if isinstance(index, int):
                 KritaSettings.writeSettingInt(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", index)
                 self.reload()
+    
+    def toggleHorizontalMode(self):
+        self.horizontalMode = not self.horizontalMode
+        KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_TOOLBOX, "IsHorizontal", self.horizontalMode)
+        self.reload()
     #endregion
 
     def canvasChanged(self, canvas):

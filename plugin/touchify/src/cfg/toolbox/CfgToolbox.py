@@ -13,7 +13,6 @@ class CfgToolbox:
 
     column_count: int = 2
     icon_size: int = 16
-    horizontal_mode: bool = False
 
     presetName: str = "New Toolbox Preset"
 
@@ -44,7 +43,6 @@ class CfgToolbox:
         labels["submenuButton"] = "Submenu Button"
         labels["column_count"] = "Column Count"
         labels["icon_size"] = "Icon Size"
-        labels["horizontal_mode"] = "Horizontal Mode"
         return labels
 
     def propertygrid_groups(self):

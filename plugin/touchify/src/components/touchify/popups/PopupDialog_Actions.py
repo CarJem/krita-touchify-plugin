@@ -22,7 +22,7 @@ from krita import *
 
 class PopupDialog_Actions(PopupDialog):
 
-    def __init__(self, parent: QMainWindow, args: CfgPopup, actions_manager: "ActionManager"):     
+    def __init__(self, parent: QWidget, args: CfgPopup, actions_manager: "ActionManager"):     
         super().__init__(parent, args)
         self.actions_manager = actions_manager
         self.grid = self.generateActionsLayout()
@@ -54,7 +54,7 @@ class PopupDialog_Actions(PopupDialog):
         super().triggerPopup(parent)    
 
     def generateActionsLayout(self):   
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self)
         
         converted_groups: dict[int, CfgTouchifyActionGroup] = {}
             
@@ -92,7 +92,7 @@ class PopupDialog_Actions(PopupDialog):
         item_width = self.metadata.actions_item_width
         item_height = self.metadata.actions_item_height
         
-        self.actionPanel = TouchifyActionPanel(list(converted_groups.values()), None, self.actions_manager, "popup", icon_width, icon_height, item_width, item_height)
+        self.actionPanel = TouchifyActionPanel(list(converted_groups.values()), self, self.actions_manager, "popup", icon_width, icon_height, item_width, item_height)
         layout.addWidget(self.actionPanel)
         
         layout.setContentsMargins(0, 0, 0, 0)

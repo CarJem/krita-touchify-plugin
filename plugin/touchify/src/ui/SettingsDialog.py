@@ -48,7 +48,7 @@ class SettingsDialog(QDialog):
 
         self.gridLayout.addWidget(self.notice, 0, 1)
 
-        self.container = QVBoxLayout()
+        self.container = QVBoxLayout(self)
         self.setMinimumSize(600,400)
         self.setBaseSize(800,800)
         self.btns = self.createButtons()

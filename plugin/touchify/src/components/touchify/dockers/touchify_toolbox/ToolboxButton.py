@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QToolButton
 from PyQt5.QtGui import QPalette, QColor
 
 from .....stylesheet import Stylesheet
+from .....ext.extensions_krita import KritaExtensions as KE
 
 from krita import *
 
@@ -17,6 +18,10 @@ class ToolboxButton(QToolButton):
         palette.setColor(QPalette.Button, QColor(74, 108, 134))
         self.setPalette(palette)
 
+        qApp.paletteChanged.connect(self.updatePalette)
+        self.updatePalette()
+
+    def updatePalette(self):
         self.setStyleSheet(Stylesheet.instance().touchify_nt_toolbox_button)
 
 

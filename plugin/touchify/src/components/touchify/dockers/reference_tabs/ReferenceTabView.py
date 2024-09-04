@@ -44,7 +44,7 @@ class ReferenceTabView(QWidget):
 
         super().__init__(parent)
         self.setAttribute(Qt.WA_DeleteOnClose)
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self)
         self.setLayout(layout)
 
         # variables

@@ -19,6 +19,11 @@ class NtTogglePadButton(QToolButton):
         super(NtTogglePadButton, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         self.setIconSize(QSize(11, 11))
+
+        qApp.paletteChanged.connect(self.updateStyleSheet)
+        self.updateStyleSheet()
+
+    def updateStyleSheet(self):
         self.setStyleSheet(Stylesheet.instance().touchify_toggle_button)
 
     def mousePressEvent(self, e: QMouseEvent):

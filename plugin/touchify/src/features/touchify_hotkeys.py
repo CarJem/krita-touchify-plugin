@@ -16,19 +16,19 @@ from krita import *
 class TouchifyHotkeys(object):
 
 
-    def __init__(self, instance: "Touchify"):
+    def __init__(self, instance: "Touchify.TouchifyWindow"):
         self.appEngine = instance
         self.hotkeys_storage = {}
         self.hotkey_options_storage = {}
 
-    def onAppEngineStart(self, instance: "Touchify"):
+    def onAppEngineStart(self, instance: "Touchify.TouchifyWindow"):
         self.appEngine = instance
 
     def windowCreated(self):
-        self.qWin = self.appEngine.instanceWindow.qwindow()
+        self.qWin = self.appEngine.windowSource.qwindow()
 
     def showPopupPalette(self):
-        activeWindow = Krita.instance().activeWindow()
+        activeWindow = self.appEngine.windowSource
         viewIndex = activeWindow.views().index(activeWindow.activeView())
         pobj = self.qWin.findChild(QWidget,'view_' + str(viewIndex))
         mobj = next((w for w in pobj.findChildren(QWidget) if w.metaObject().className() == 'KisPopupPalette'), None)
@@ -53,7 +53,7 @@ class TouchifyHotkeys(object):
                 else:
                     destination.addAction(action)
 
-        activeWindow = Krita.instance().activeWindow().qwindow()
+        activeWindow = self.appEngine.windowSource.qwindow()
         popupMenu = QMenu(activeWindow)
         menuBar = activeWindow.menuBar()
         iterateActions(popupMenu, menuBar)

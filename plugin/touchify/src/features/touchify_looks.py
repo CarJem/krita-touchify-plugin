@@ -16,10 +16,13 @@ class TouchifyLooks(object):
 
     def __init__(self, instance: "Touchify"):
         self.appEngine = instance
+        self.qWin: QMainWindow | None = None
+
 
     def windowCreated(self):
-        self.qWin = self.appEngine.instanceWindow.qwindow()
-        self.rebuildStyleSheet(self.qWin)
+        self.qWin = self.appEngine.windowSource.qwindow()
+        self.qWin.themeChanged.connect(self.rebuildStyleSheet)
+        self.rebuildStyleSheet()
 
     def createAction(self, window: Window, id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
         result = window.createAction(id, text, menuLocation)
@@ -44,26 +47,30 @@ class TouchifyLooks(object):
     def toolbarBorderToggled(self, toggled):
         TouchifySettings.instance().Styles_BorderlessToolbar = toggled
         TouchifySettings.instance().saveSettings()
-        self.rebuildStyleSheet(self.qWin)
+        
+        self.qWin.themeChanged.emit()
 
     def tabHeightToggled(self, toggled):
         TouchifySettings.instance().Styles_ThinDocumentTabs = toggled
         TouchifySettings.instance().saveSettings()
-        self.rebuildStyleSheet(self.qWin)
+        self.qWin.themeChanged.emit()
         
     def privacyModeToggled(self, toggled):
         TouchifySettings.instance().Styles_PrivacyMode = toggled
         TouchifySettings.instance().saveSettings()
-        self.rebuildStyleSheet(self.qWin)
+        self.qWin.themeChanged.emit()
 
-    def rebuildStyleSheet(self, window: QMainWindow):
+    def rebuildStyleSheet(self):
+        if self.qWin == None:
+            return
+
         config = TouchifySettings.instance()
 
         # region No Toolbar Borders
         full_style_sheet = ""
         if config.Styles_BorderlessToolbar:
             full_style_sheet += f"\n {Stylesheet.instance().no_borders_style} \n"    
-        window.setStyleSheet(full_style_sheet)
+        self.qWin.setStyleSheet(full_style_sheet)
         #endregion
 
         # region Small Tabs
@@ -72,21 +79,23 @@ class TouchifyLooks(object):
         if config.Styles_ThinDocumentTabs:
             canvas_style_sheet += f"\n {Stylesheet.instance().small_tab_style} \n"
 
-        canvas = window.centralWidget()
-        canvas.setStyleSheet(canvas_style_sheet)
-        canvas.adjustSize()
+        canvas = self.qWin.centralWidget()
+        if canvas:
+            canvas.setStyleSheet(canvas_style_sheet)
+            canvas.adjustSize()
         # endregion
         
         # region Privacy Mode
-        recentDocumentsListView = window.findChild(QListView,'recentDocumentsListView')
-        recentDocumentsListView.setHidden(config.Styles_PrivacyMode)
-        recent_files_action = Krita.instance().action("file_open_recent")
-        recent_files_native_actions = [
-            "no_entries",
-            "separator",
-            "clear_action"
-        ]
-        for item in recent_files_action.menu().actions():
-            if item.objectName() not in recent_files_native_actions:
-                item.setVisible(not config.Styles_PrivacyMode)
+        recentDocumentsListView = self.qWin.findChild(QListView,'recentDocumentsListView')
+        if recentDocumentsListView:
+            recentDocumentsListView.setHidden(config.Styles_PrivacyMode)
+            recent_files_action = Krita.instance().action("file_open_recent")
+            recent_files_native_actions = [
+                "no_entries",
+                "separator",
+                "clear_action"
+            ]
+            for item in recent_files_action.menu().actions():
+                if item.objectName() not in recent_files_native_actions:
+                    item.setVisible(not config.Styles_PrivacyMode)
         #endregion

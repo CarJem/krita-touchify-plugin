@@ -4,19 +4,15 @@ from PyQt5.QtCore import Qt, QEvent, QObject
 from PyQt5.QtGui import QWheelEvent, QResizeEvent
 
 class ToolboxScrollArea(QScrollArea):
-    def __init__(self, toolBox, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
-        self.m_toolBox: QWidget = toolBox
         self.m_orientation = Qt.Vertical
         self.m_scrollPrev = QToolButton(self)
         self.m_scrollNext = QToolButton(self)
 
         self.setFrameShape(QFrame.NoFrame)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-
-        self.setWidget(self.m_toolBox)
-        self.setWidgetResizable(True)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         
 
         self.m_scrollPrev.setAutoRepeat(True)
@@ -54,10 +50,10 @@ class ToolboxScrollArea(QScrollArea):
         return self.m_orientation
 
     def minimumSizeHint(self):
-        return self.m_toolBox.minimumSizeHint()
+        return self.widget().minimumSizeHint()
 
     def sizeHint(self):
-        return self.m_toolBox.sizeHint()
+        return self.widget().sizeHint()
 
     def slotScrollerStateChange(self, state):
         pass
@@ -108,14 +104,6 @@ class ToolboxScrollArea(QScrollArea):
         return self.style().pixelMetric(QStyle.PM_TabBarScrollButtonWidth, opt, self)
 
     def layoutItems(self):
-        l = self.m_toolBox.layout()
-        newSize = self.viewport().size()
-        if self.m_orientation == Qt.Vertical:
-            newSize.setHeight(l.heightForWidth(newSize.width()))
-        else:
-            newSize.setWidth(l.heightForWidth(newSize.height()))
-        self.m_toolBox.resize(newSize)
-
         self.updateScrollButtons()
 
     def updateScrollButtons(self):

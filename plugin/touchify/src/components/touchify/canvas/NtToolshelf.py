@@ -21,9 +21,10 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .NtCanvas import NtCanvas
 
-class NtToolshelf(object):
+class NtToolshelf(QObject):
 
     def __init__(self, canvas: "NtCanvas", window: Window, alignment: NtWidgetPadAlignment, isPrimaryPanel: bool, docker_manager: DockerManager, actions_manager: ActionManager):
+        super().__init__(canvas)
         self.qWin = window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
         self.canvas = canvas
@@ -60,17 +61,12 @@ class NtToolshelf(object):
         if subWin:
             subWin.installEventFilter(self.adjustFilter)
             self.canvas.updateCanvas()
-            self.updateStyleSheet()
     
     def onConfigUpdate(self):
         pass
 
     def onKritaConfigUpdate(self):
         pass
-
-    def updateStyleSheet(self):
-        self.toolshelf.updateStyleSheet()
-        return
     
     def close(self):
         self.toolshelf.sizeChanged.disconnect(self.onSizeChanged)

@@ -17,6 +17,8 @@ class KisSliderSpinBox(QDoubleSpinBox):
         self.isInt = isInt
         self.contextMenuOpened = False
 
+        qApp.paletteChanged.connect(self.updateProgBar)
+
         self.setRange(min, max)
         self.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.lineEdit().setFocusPolicy(Qt.FocusPolicy.ClickFocus)

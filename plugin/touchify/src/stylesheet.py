@@ -19,62 +19,18 @@
 from krita import *
 
 class Stylesheet:
-
-    touchify_nt_toolbox = ""
-    touchify_toggle_button = ""
-    touchify_toolshelf_header = ""
-    touchify_toolshelf_header_button = ""
-    touchify_nt_toolbox_button = ""
-
-    highlight_rgb = ""
-    background_rgb = ""
-    alternate_rgb = ""
-
-    highlight_hex = ""
-    background_hex = ""
-    alternate_hex = ""
-    inactive_text_color_hex = ""
-    active_text_color_hex = ""
-
-
     def __init__(self) -> None:
         self.small_tab_size = 20
+
         self.no_borders_style = " QToolBar { border: none; } "
+
         self.small_tab_style = f"QTabBar::tab {{ height: {self.small_tab_size}px; }}"
+
         self.hide_menu_indicator = f"""QPushButton::menu-indicator {{ image: none; }} QToolButton::menu-indicator {{ image: none; }}"""
-        self.rebuild_stylesheets()
-        qApp.paletteChanged.connect(self.rebuild_stylesheets)
-
-    def instance():
-        try:
-            return Stylesheet.__instance
-        except AttributeError:
-            Stylesheet.__instance = Stylesheet()
-            return Stylesheet.__instance
-
-    def rebuild_stylesheets(self): 
-
-
-
-
-
-        self.background_raw = qApp.palette().color(QPalette.ColorRole.Window)
-        self.highlight_raw = qApp.palette().color(QPalette.ColorRole.Highlight)
-        self.alternate_raw = qApp.palette().color(QPalette.ColorRole.AlternateBase)
-
-        self.background_rgb = f"{self.background_raw.red()},{self.background_raw.green()},{self.background_raw.blue()}"
-        self.highlight_rgb = f"{self.highlight_raw.red()},{self.highlight_raw.green()},{self.highlight_raw.blue()}"
-        self.alternate_rgb = f"{self.alternate_raw.red()},{self.alternate_raw.green()},{self.alternate_raw.blue()}"
-
-        self.highlight_hex = self.highlight_raw.name().split("#")[1]
-        self.background_hex = self.background_raw.name().split("#")[1]
-        self.alternate_hex = self.alternate_raw.name().split("#")[1]
-        self.inactive_text_color_hex = qApp.palette().color(QPalette.ColorRole.ToolTipText).name().split("#")[1]
-        self.active_text_color_hex = qApp.palette().color(QPalette.ColorRole.WindowText).name().split("#")[1]
 
         self.touchify_nt_toolbox = f"""
-                QFrame {{ 
-                    background-color: #{self.background_hex};
+                QFrame#toolbox_frame {{ 
+                    background-color: palette(window);
                     border: none;
                     border-radius: 4px;
                     padding: 4px;
@@ -85,21 +41,21 @@ class Stylesheet:
                 QScrollArea > QWidget > QScrollBar {{ background: palette(base); }}
                 
                 QAbstractButton {{
-                    background-color: #aa{self.background_hex};
+                    background-color: palette(window);
                     border: none;
                     border-radius: 4px;
                 }}
                 
                 QAbstractButton:checked {{
-                    background-color: #cc{self.highlight_hex};
+                    background-color: palette(highlight);
                 }}
                 
                 QAbstractButton:hover {{
-                    background-color: #{self.highlight_hex};
+                    background-color: palette(highlight);
                 }}
                 
                 QAbstractButton:pressed {{
-                    background-color: #{self.alternate_hex};
+                    background-color: palette(alternate-base);
                 }}
             """
         
@@ -119,17 +75,17 @@ class Stylesheet:
 
         self.touchify_toggle_button = f"""
                 QToolButton, QPushButton {{
-                    background-color: #aa{self.background_hex};
+                    background-color: palette(window);
                     border: none;
                     border-radius: 4px;
                 }}
                 
                 QToolButton:hover, QPushButton:hover {{
-                    background-color: #{self.highlight_hex};
+                    background-color: palette(highlight);
                 }}
                 
                 QToolButton:pressed, QPushButton:pressed {{
-                    background-color: #{self.alternate_hex};
+                    background-color: palette(alternate-base);
                 }}
                 
                 QToolButton::menu-indicator, QPushButton::menu-indicator {{ image: none; }}
@@ -137,20 +93,20 @@ class Stylesheet:
 
         self.touchify_toolshelf_header = f"""
                 QPushButton {{
-                    background-color: #{self.alternate_hex};
+                    background-color: palette(alternate-base);
                     border: none;
                 }}
 
                 QPushButton:hover {{
-                    background-color: #{self.highlight_hex};
+                    background-color: palette(highlight);
                 }}
 
                 QPushButton:checked {{
-                    background-color: #cc{self.highlight_hex};
+                    background-color: palette(highlight);
                 }}
                 
                 QPushButton:pressed {{
-                    background-color: #{self.alternate_hex}; */
+                    background-color: palette(alternate-base);
                 }}
 
                 QPushButton#back-widget {{
@@ -166,7 +122,7 @@ class Stylesheet:
                 }}
 
                 QWidget#filler-widget {{
-                    background-color: #{self.alternate_hex};
+                    background-color: palette(alternate-base);
                     border: none;
                     border-top-left-radius: 0px;
                     border-bottom-left-radius: 0px;
@@ -175,17 +131,17 @@ class Stylesheet:
 
         self.touchify_toolshelf_header_button = f"""
                 QToolButton {{
-                    background-color: #aa{self.alternate_hex};
+                    background-color: palette(alternate-base);
                     border: none;
                     border-radius: 4px;
                 }}
                 
                 QToolButton:hover {{
-                    background-color: #{self.highlight_hex};
+                    background-color: palette(highlight);
                 }}
                 
                 QToolButton:pressed {{
-                    background-color: #{self.alternate_hex};
+                    background-color: palette(alternate-base);
                 }}
 
                 QPushButton::menu-indicator {{ 
@@ -193,17 +149,17 @@ class Stylesheet:
                 }}
 
                 QPushButton {{
-                    background-color: #aa{self.alternate_hex};
+                    background-color: palette(alternate-base);
                     border: none;
                     border-radius: 4px;
                 }}
                 
                 QPushButton:hover {{
-                    background-color: #{self.highlight_hex};
+                    background-color: palette(highlight);
                 }}
                 
                 QPushButton:pressed {{
-                    background-color: #{self.alternate_hex};
+                    background-color: palette(alternate-base);
                 }}
 
                 QPushButton::menu-indicator {{ 
@@ -213,29 +169,37 @@ class Stylesheet:
 
         self.propertygrid_selectordialog_listview = f"""
             QListWidget::item:selected {{ 
-                background-color: #cc{self.highlight_hex}; 
+                background-color: palette(alternate-base);
             }}
         """
 
+    def instance():
+        try:
+            return Stylesheet.__instance
+        except AttributeError:
+            Stylesheet.__instance = Stylesheet()
+            return Stylesheet.__instance
+
     def touchify_action_btn_popup(self, opacityLevel: float):
-
-
 
         return f"""
             QToolButton, QPushButton {{
                 border-radius: 0px; 
-                background-color: rgba({self.background_rgb},{opacityLevel});
+                background-color: palette(window);
                 padding: 5px 5px;
                 border: 0px solid transparent; 
-                font-size: 12px
+                font-size: 12px;
+                opacity: {opacityLevel};
             }}
             
             QToolButton:hover, QPushButton:hover {{
-                background-color: rgba({self.highlight_rgb},{opacityLevel});
+                background-color: palette(highlight);
+                opacity: {opacityLevel};
             }}
                             
             QToolButton:pressed, QToolButton:pressed {{
-                background-color: rgba({self.alternate_rgb},{opacityLevel});
+                background-color: palette(alternate-base);
+                opacity: {opacityLevel};
             }}
         """
 
