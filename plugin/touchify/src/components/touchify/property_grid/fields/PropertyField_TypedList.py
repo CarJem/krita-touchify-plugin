@@ -37,7 +37,7 @@ class PropertyField_TypedList(PropertyField):
         self.selectedIndex = -1
         self.selectedItem = None
         
-        field = QHBoxLayout()
+        field = QHBoxLayout(self)
         field.setSpacing(0)
         field.setContentsMargins(0,0,0,0)
         listView = QListView()

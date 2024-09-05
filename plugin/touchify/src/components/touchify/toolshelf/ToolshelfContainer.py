@@ -39,7 +39,7 @@ class ToolshelfContainer(QStackedWidget):
 
     def __init__(self, parent: "ToolshelfWidget", PanelIndex: int):
         super(ToolshelfContainer, self).__init__(parent)
-        
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.mouse_listener = ToolshelfContainer.MouseListener()
         
         self.dockWidget: "ToolshelfWidget" | "TouchifyToolshelfDocker"  = parent

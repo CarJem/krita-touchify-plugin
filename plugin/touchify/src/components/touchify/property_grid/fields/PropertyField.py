@@ -71,7 +71,7 @@ class PropertyField(QWidget):
         self.editor.clicked.connect(self.nested_edit)
         self.editor.setText(btnText)
         
-        editorLayout = QHBoxLayout()
+        editorLayout = QHBoxLayout(self)
         editorLayout.setSpacing(0)
         editorLayout.setContentsMargins(0,0,0,0)
         editorLayout.addWidget(self.editor)

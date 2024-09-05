@@ -93,7 +93,7 @@ class PropertyField_Str(PropertyField):
 
             self.editorHelper.clicked.connect(lambda: self.helperRequested(editorHelperType))
 
-            editorLayout = QHBoxLayout()
+            editorLayout = QHBoxLayout(self)
             editorLayout.setSpacing(0)
             editorLayout.setContentsMargins(0,0,0,0)
             editorLayout.addWidget(self.editor)
@@ -112,7 +112,7 @@ class PropertyField_Str(PropertyField):
                 self.editor.setCurrentIndex(index)
             self.editor.currentIndexChanged.connect(self.currentIndexChanged)
 
-            editorLayout = QHBoxLayout()
+            editorLayout = QHBoxLayout(self)
             editorLayout.setSpacing(0)
             editorLayout.setContentsMargins(0,0,0,0)
             editorLayout.addWidget(self.editor)
@@ -122,7 +122,7 @@ class PropertyField_Str(PropertyField):
             self.editor.textChanged.connect(self.textChanged)
             self.editor.setText(self.variable_data.replace("\n", "\\n"))
 
-            editorLayout = QHBoxLayout()
+            editorLayout = QHBoxLayout(self)
             editorLayout.setSpacing(0)
             editorLayout.setContentsMargins(0,0,0,0)
             editorLayout.addWidget(self.editor)

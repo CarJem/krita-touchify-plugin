@@ -11,6 +11,7 @@ class TouchifyActionButton(QToolButton):
 
     def __init__(self, parent = None):
         super(TouchifyActionButton, self).__init__(parent)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.intervalTimer = QTimer(self)
         self.setFocusPolicy(Qt.NoFocus)
         self.toggled.connect(self.highlight)

@@ -53,7 +53,7 @@ class ToolshelfPage(QWidget):
         super(ToolshelfPage, self).__init__(parent)
         self.toolshelf: "ToolshelfContainer" = parent
         self.ID = ID
-
+        
         self.shelfLayout = QVBoxLayout(self)
         self.shelfLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.shelfLayout.setContentsMargins(0, 0, 0, 0)

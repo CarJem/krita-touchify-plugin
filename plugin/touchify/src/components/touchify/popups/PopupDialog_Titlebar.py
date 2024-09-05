@@ -24,7 +24,7 @@ class PopupDialog_Titlebar(QWidget):
 
         self.isMoving = False
         
-        self.ourLayout = QHBoxLayout()
+        self.ourLayout = QHBoxLayout(self)
         self.ourLayout.setContentsMargins(3, 3, 3, 4)
         self.setLayout(self.ourLayout)
 

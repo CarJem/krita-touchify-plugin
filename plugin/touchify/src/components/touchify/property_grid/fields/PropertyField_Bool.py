@@ -28,11 +28,11 @@ class PropertyField_Bool(PropertyField):
         super(PropertyField, self).__init__()
         self.setup(variable_name, variable_data, variable_source)
         
-        self.editor = QCheckBox()
+        self.editor = QCheckBox(self)
         self.editor.stateChanged.connect(self.updateChecked)
         self.editor.setChecked(self.variable_data)
         
-        editorLayout = QHBoxLayout()
+        editorLayout = QHBoxLayout(self)
         editorLayout.setSpacing(0)
         editorLayout.setContentsMargins(0,0,0,0)
         editorLayout.addWidget(self.editor)

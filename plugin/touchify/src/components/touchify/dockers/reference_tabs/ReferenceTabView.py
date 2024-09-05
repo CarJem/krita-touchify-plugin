@@ -84,7 +84,7 @@ class ReferenceTabView(QWidget):
         self.zoomSpinBox.valueChanged.connect(self.reloadTransforms)
 
         # - page fit status
-        self.fitButton = QToolButton()
+        self.fitButton = QToolButton(self)
         self.fitButton.setIcon(Krita.instance().icon("zoom-fit"))
         self.fitButton.setToolTip("Fit to page")
         self.fitButton.setCheckable(True)
@@ -92,7 +92,7 @@ class ReferenceTabView(QWidget):
         self.fitButton.toggled.connect(self.enactFit)
 
         # - hmirrored status
-        self.hMirrorButton = QToolButton()
+        self.hMirrorButton = QToolButton(self)
         self.hMirrorButton.setIcon(Krita.instance().icon("transform_icons_mirror_x"))
         self.hMirrorButton.setToolTip("Horizontal mirroring")
         self.hMirrorButton.setCheckable(True)
@@ -100,7 +100,7 @@ class ReferenceTabView(QWidget):
         self.hMirrorButton.toggled.connect(self.reloadTransforms)
 
         # - vmirrored status
-        self.vMirrorButton = QToolButton()
+        self.vMirrorButton = QToolButton(self)
         self.vMirrorButton.setIcon(Krita.instance().icon("transform_icons_mirror_y"))
         self.vMirrorButton.setToolTip("Vertical mirroring")
         self.vMirrorButton.setCheckable(True)
@@ -121,7 +121,7 @@ class ReferenceTabView(QWidget):
         self.centerButton.setEnabled(False)
 
         # - color picker
-        self.colorSamplerButton = QToolButton()
+        self.colorSamplerButton = QToolButton(self)
         self.colorSamplerButton.setIcon(Krita.instance().icon("krita_tool_color_sampler"))
         self.colorSamplerButton.setToolTip("Sample color from image")
         self.colorSamplerButton.setCheckable(True)
@@ -134,7 +134,7 @@ class ReferenceTabView(QWidget):
         layout.addWidget(self.view)
         self.view.setVisible(True)
         #
-        toolLayout = QHBoxLayout()
+        toolLayout = QHBoxLayout(self)
         toolLayout.addWidget(self.zoomSpinBox, stretch=1)
         toolLayout.addWidget(self.fitButton)
         toolLayout.addWidget(self.hMirrorButton)

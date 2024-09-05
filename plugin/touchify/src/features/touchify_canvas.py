@@ -57,7 +57,7 @@ class TouchifyCanvas(QObject):
         nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_RIGHTHANDTOOLBOX, "Right Hand Toolbox", sublocation_path, True, config.CanvasWidgets_ToolboxOnRight, self.nuOptionsRightHandToolboxToggled))
         nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_CANVAS_ALTTOOLBOXPOSITION, "Alternative Toolbox Position", sublocation_path, True, config.CanvasWidgets_AlternativeToolboxPosition, self.nuOptionsAltToolboxPosToggled))
 
-        self.ntCanvas = NtCanvas(self, window)
+        self.ntCanvas = NtCanvas(window.qwindow().window(), window)
         self.ntCanvas.createActions(window, nu_options_menu, sublocation_path)
 
     def onKritaConfigUpdated(self):

@@ -132,7 +132,7 @@ class KisAngleSelector(QWidget):
         self._init_connections()
 
     def _init_ui(self):
-        main_layout = QHBoxLayout()
+        main_layout = QHBoxLayout(self)
         main_layout.setSpacing(5)
         main_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(main_layout)
@@ -141,7 +141,7 @@ class KisAngleSelector(QWidget):
         self._init_flip_buttons()
 
     def _init_flip_buttons(self):
-        layout_flip_buttons = QHBoxLayout()
+        layout_flip_buttons = QHBoxLayout(self)
         layout_flip_buttons.setSpacing(1)
         layout_flip_buttons.setContentsMargins(0, 0, 0, 0)
 

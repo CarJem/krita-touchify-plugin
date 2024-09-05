@@ -32,6 +32,8 @@ class TouchifyActionPanel(QWidget):
     def __init__(self, cfg: List[CfgTouchifyActionGroup], parent: QWidget=None, actions_manager: "ActionManager" = None, type: str = "default", icon_width: int = -1, icon_height: int = -1, item_width: int = -1, item_height: int = -1, opacity: float = 1.0):
         super(TouchifyActionPanel, self).__init__(parent)
 
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+
         self.cfg = cfg
         self.type = type
         self.actions_manager = actions_manager
@@ -48,7 +50,7 @@ class TouchifyActionPanel(QWidget):
         self._buttons: dict[any, TouchifyActionButton] = {}
         
         self.hinted_size: QSize | None = None
-        self.registered_actions: list[tuple[QAction, QMetaObject.Connection, bool]] = []
+        self.registered_actions: dict[QAction, tuple[TouchifyActionButton, bool]] = {}
         
         self.createPanel()
 
@@ -66,14 +68,26 @@ class TouchifyActionPanel(QWidget):
         if useIcon:
             btn.setIcon(action.icon())
     
-    def registerAction(self, btn: TouchifyActionButton, action: QAction, useIcon: bool):
-        connection = action.changed.connect(lambda: self.updateButton(btn, action, useIcon))
-        self.registered_actions.append((action, connection, useIcon))
+    def updateButtonV2(self):
+        action: QAction = self.sender()
+        if action in self.registered_actions:
+            btn, useIcon = self.registered_actions[action]
+            btn.setChecked(action.isChecked())
+            if useIcon: btn.setIcon(action.icon())
+            
     
+    def registerAction(self, btn: TouchifyActionButton, action: QAction, useIcon: bool):
+        action.changed.connect(self.updateButtonV2)
+        self.registered_actions[action] = (btn, useIcon)
+    
+    def close(self):
+        self.unregisterActions()
+        super().close()
+
     def unregisterActions(self):
         for action in self.registered_actions:
             try:
-                action[0].changed.disconnect(action[1])
+                action.changed.disconnect(self.updateButtonV2)
             except TypeError:
                 pass
      
@@ -91,8 +105,8 @@ class TouchifyActionPanel(QWidget):
             self._rows[row] = rowWid
             self.layout().addWidget(rowWid)
         else:
-            rowWid = QWidget()
-            rowWid.setLayout(QHBoxLayout())
+            rowWid = QWidget(self)
+            rowWid.setLayout(QHBoxLayout(self))
             rowWid.layout().setSpacing(1)
             rowWid.layout().setContentsMargins(0, 0, 0, 0)
             rowWid.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
@@ -155,7 +169,7 @@ class TouchifyActionPanel(QWidget):
             btn.setStyleSheet(Stylesheet.instance().hide_menu_indicator)
 
     def createPanel(self):
-        self.ourLayout = QVBoxLayout()
+        self.ourLayout = QVBoxLayout(self)
         self.setLayout(self.ourLayout)
         
         if self.type == "toolbar_flat":
@@ -177,7 +191,7 @@ class TouchifyActionPanel(QWidget):
             row: CfgTouchifyActionGroup
             for entry in row.actions:
                 act: CfgTouchifyAction = entry
-                btn = self.actions_manager.createButton(act)
+                btn = self.actions_manager.createButton(self, act)
                 if btn:
                     self.stylizeButton(btn)
                     self.appendButton(act, btn, row_index)

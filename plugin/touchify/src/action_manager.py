@@ -49,16 +49,20 @@ class ActionManager:
             case CfgTouchifyAction.Variants.Action:
                 self.action_trigger(data)
             
-    def createButton(self, data: CfgTouchifyAction):
+    def createButton(self, parent: QWidget, data: CfgTouchifyAction):
         match data.variant:
             case CfgTouchifyAction.Variants.Brush:
-                return self.button_brush(data)
+                result = self.button_brush(data)
             case CfgTouchifyAction.Variants.Menu:
-                return self.button_menu(data)
+                result = self.button_menu(data)
             case CfgTouchifyAction.Variants.Action:
-                return self.button_trigger(data)
+                result = self.button_trigger(data)
             case _:
-                return self.button_generic(data)
+                result = self.button_generic(data)
+
+        if result and result != None:
+            result.setParent(parent)
+        return result
     
     def createAction(self, data: CfgTouchifyAction, window: Window, actionPath: str):
         actionIdentifier ='TouchifyAction_{0}'.format(data.id)

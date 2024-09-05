@@ -72,8 +72,8 @@ class ToolshelfPageButtons(QWidget):
         self._buttons[id] = btn
 
         if row not in self._rows:
-            rowWid = QWidget()
-            rowWid.setLayout(QHBoxLayout())
+            rowWid = QWidget(self)
+            rowWid.setLayout(QHBoxLayout(self))
             rowWid.layout().setSpacing(1)
             rowWid.layout().setContentsMargins(0, 0, 0, 0)
             rowWid.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)

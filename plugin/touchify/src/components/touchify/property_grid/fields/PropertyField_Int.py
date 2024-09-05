@@ -45,7 +45,7 @@ class PropertyField_Int(PropertyField):
                 if "max" in restrictions[variable_name]:
                     self.editor.setMaximum(restrictions[variable_name]["max"])
         
-        editorLayout = QHBoxLayout()
+        editorLayout = QHBoxLayout(self)
         editorLayout.setSpacing(0)
         editorLayout.setContentsMargins(0,0,0,0)
         editorLayout.addWidget(self.editor)

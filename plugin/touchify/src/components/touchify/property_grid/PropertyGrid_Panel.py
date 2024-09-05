@@ -38,7 +38,7 @@ class PropertyGrid_Panel(QScrollArea):
         
 
         self.stackHost = parentStack
-        self.formWidget = QWidget()
+        self.formWidget = QWidget(self)
         self.formWidget.setContentsMargins(0,0,0,0)
         self.formLayout = QFormLayout()
         self.formLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -86,7 +86,7 @@ class PropertyGrid_Panel(QScrollArea):
             row_fields = QWidget(self)
             row_fields.setContentsMargins(0,0,0,0)
             
-            fields_layout = QHBoxLayout()
+            fields_layout = QHBoxLayout(self)
             fields_layout.setContentsMargins(0,0,0,0)
             fields_layout.setSpacing(0)
             fields_layout.addWidget(field)

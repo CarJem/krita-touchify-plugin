@@ -205,7 +205,6 @@ class NtCanvas(QObject):
 
     def removeEventFilters(self, widget: NtToolshelf | NtToolbox):
         widget.pad.btnHide.clicked.disconnect(self.updateCanvas)
-        self.qwin
         #widget.pad.removeEventFilter(self)
         #self.qWin.removeEventFilter(self)
 

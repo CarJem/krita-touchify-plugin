@@ -35,6 +35,8 @@ class PopupDialog(QDialog):
         self.isCollapsed = False
         self.oldSize = None
         self.autoConceal = False
+
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         
         self.windowMode = self.metadata.window_type
         self.popupType = self.metadata.type

@@ -65,5 +65,5 @@ class PopupDialog_Docker(PopupDialog):
             self.docker_panel.loadWidget(True)
 
     def generateDockerLayout(self):
-        grid = QHBoxLayout()
+        grid = QHBoxLayout(self)
         return grid
