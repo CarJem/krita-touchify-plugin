@@ -1,3 +1,4 @@
+import string
 from ..action.CfgTouchifyAction import *
 from ...ext.TypedList import TypedList
 from ...ext.extensions_json import JsonExtensions as Extensions
@@ -11,6 +12,7 @@ class CfgToolshelf:
     sections: TypedList[CfgToolshelfSection] = []
     
     canvas_enable_resizing_by_default: bool = False
+    tab_type: str = "buttons"
     dockerButtonHeight: int = 32
     dockerBackHeight: int = 16
     actionHeight: int = 16
@@ -25,7 +27,12 @@ class CfgToolshelf:
         self.actions = Extensions.list_assignment(actions, CfgTouchifyActionCollection)
         sections = Extensions.default_assignment(args, "sections", [])
         self.sections = Extensions.list_assignment(sections, CfgToolshelfSection)
-    
+
+    def getFileName(self):
+        valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+        filename = ''.join(c for c in self.presetName if c in valid_chars)
+        filename = filename.replace(' ','_') # I don't like spaces in filenames.
+        return filename.lower()    
 
     def __str__(self):
         return self.presetName.replace("\n", "\\n")
@@ -41,6 +48,7 @@ class CfgToolshelf:
             "panels",
             "actions",
             "sections",
+            "tab_type",
             "canvas_enable_resizing_by_default",
             "actionHeight"
             "dockerButtonHeight",
@@ -53,6 +61,7 @@ class CfgToolshelf:
         labels["panels"] = "Panels"
         labels["actions"] = "Actions"
         labels["sections"] = "Sections"
+        labels["tab_type"] = "Tab Type"
         labels["dockerButtonHeight"] = "Docker Button Height"
         labels["dockerBackHeight"] = "Back Button Height"
         labels["actionHeight"] = "Action Button Height"
@@ -65,6 +74,7 @@ class CfgToolshelf:
 
     def propertygrid_restrictions(self):
         restrictions = {}
+        restrictions["tab_type"] = {"type": "values", "entries": ["buttons", "tabs"]}
         return restrictions
 
 

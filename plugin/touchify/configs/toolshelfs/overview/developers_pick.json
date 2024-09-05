@@ -334,5 +334,6 @@
     "dockerBackHeight": 16,
     "actionHeight": 20,
     "canvas_enable_resizing_by_default": true,
-    "presetName": "Developer's Pick"
+    "presetName": "Developer's Pick",
+    "tab_type": "tabs"
 }

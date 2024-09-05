@@ -1,0 +1,34 @@
+{
+    "panels": [],
+    "actions": [],
+    "sections": [
+        {
+            "action_section_contents": [],
+            "action_section_name": "Panel",
+            "action_section_alignment_x": "none",
+            "action_section_alignment_y": "none",
+            "action_section_btn_width": 0,
+            "action_section_btn_height": 0,
+            "action_section_display_mode": "normal",
+            "action_section_icon_size": 0,
+            "docker_loading_priority": "normal",
+            "docker_nesting_mode": "normal",
+            "docker_unloaded_visibility": "normal",
+            "id": "sharedtooldocker",
+            "max_size_x": 0,
+            "max_size_y": 0,
+            "min_size_x": 0,
+            "min_size_y": 0,
+            "panel_x": 0,
+            "panel_y": 0,
+            "section_type": "docker",
+            "size_x": 0,
+            "size_y": 0
+        }
+    ],
+    "presetName": "Redesign / NuToolOptions",
+    "dockerBackHeight": 16,
+    "actionHeight": 16,
+    "dockerButtonHeight": 32,
+    "canvas_enable_resizing_by_default": false
+}

@@ -21,11 +21,20 @@ class ToolshelfPageTabWidget(QWidget):
         self.__layout.setSpacing(1)
         self.__layout.setContentsMargins(0,0,0,0)
         self.setLayout(self.__layout)
+        
+        self.mode = self.page.tabType
 
-        self.tabBar = QPushButton(self)
-        self.tabBarMenu = QMenu(self)
-        self.tabBar.setMenu(self.tabBarMenu)
-        self.__layout.addWidget(self.tabBar)    
+        if self.mode == "buttons":
+            self.tabButton = QPushButton(self)
+            self.tabButtonMenu = QMenu(self)
+            self.tabButton.setMenu(self.tabButtonMenu)
+            self.__layout.addWidget(self.tabButton)   
+        else:
+            self.tabBar = QTabBar(self)
+            self.tabBar.setExpanding(False)
+            self.tabBar.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+            self.tabBar.currentChanged.connect(self.onTabBarIndexChanged)
+            self.__layout.addWidget(self.tabBar) 
 
         self.stackPanel = QStackedWidget(self)
         self.stackPanel.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
@@ -38,9 +47,16 @@ class ToolshelfPageTabWidget(QWidget):
 
     def addTab(self, item: QWidget, title: str):
         index = self.stackPanel.addWidget(item)
-        self.tabBarMenu.addAction(title, lambda: self.setCurrentIndex(index))
-        self.tabTitles[index] = title
-        self.onCurrentChanged(0)
+        if self.mode == "buttons":
+            self.tabButtonMenu.addAction(title, lambda: self.setCurrentIndex(index))
+            self.tabTitles[index] = title
+            self.onCurrentChanged(0)
+        else:
+            self.tabBar.addTab(title)
+            self.tabTitles[index] = title
+
+    def onTabBarIndexChanged(self):
+        self.setCurrentIndex(self.tabBar.currentIndex())
 
     def onCurrentChanged(self, index):
         for i in range(0, self.stackPanel.count()):
@@ -59,8 +75,12 @@ class ToolshelfPageTabWidget(QWidget):
                 widget.updateGeometry()
                 widget.adjustSize()
 
-        if index in self.tabTitles:
-            self.tabBar.setText(self.tabTitles[index])
+        if self.mode == "buttons":
+            if index in self.tabTitles:
+                self.tabButton.setText(self.tabTitles[index])
+        else:
+            pass
+
         self.stackPanel.adjustSize()
         self.adjustSize()
         self.page.toolshelf.dockWidget.onSizeChanged()

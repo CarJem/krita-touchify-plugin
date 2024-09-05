@@ -21,7 +21,7 @@ class ToolshelfSettingsMenu(QMenu):
         super(ToolshelfSettingsMenu, self).__init__(parent)
         self.cfg = cfg
         self.panelIndex = panelIndex
-        self.selectedPresetIndex = 0
+        self.selectedPresetIndex = TouchifyConfig.instance().getActiveToolshelfIndex(self.panelIndex)
         self.parentNtWidget: NtWidgetPad = None
         self.setupWidgetPad = True
         self.loadPresets()

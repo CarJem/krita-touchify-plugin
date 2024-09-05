@@ -14,7 +14,7 @@ class CfgToolshelfPanel:
     sections: TypedList[CfgToolshelfSection] = []
     section_show_tabs: bool = False
     section_show_root_actions: bool = False
-    
+    tab_type: str = "buttons"
     actionHeight: int = 10
 
     def __init__(self, **args) -> None:
@@ -36,6 +36,14 @@ class CfgToolshelfPanel:
         row: dict[str, list[str]] = {}
         row["size"] = {"name": "Panel Width / Height", "items": ["size_x","size_y"]}
         return row
+    
+    def propertygrid_sorted(self):
+        return [
+            "id",
+            "icon",
+            "sections",
+            "actions"
+        ]
 
     def propertygrid_labels(self):
         labels = {}
@@ -44,6 +52,7 @@ class CfgToolshelfPanel:
         labels["size_x"] = "Panel Width"
         labels["size_y"] = "Panel Height"
         labels["row"] = "Tab Row"
+        labels["tab_type"] = "Tab Type"
         labels["sections"] = "Sections"
         labels["actions"] = "Actions"
         labels["actionHeight"] = "Action Button Height"
@@ -58,4 +67,5 @@ class CfgToolshelfPanel:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["icon"] = {"type": "icon_selection"}
+        restrictions["tab_type"] = {"type": "values", "entries": ["buttons", "tabs"]}
         return restrictions

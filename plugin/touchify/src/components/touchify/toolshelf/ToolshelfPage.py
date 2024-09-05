@@ -61,6 +61,8 @@ class ToolshelfPage(QWidget):
         self.setLayout(self.shelfLayout)
         self.setAutoFillBackground(True)
 
+        self.tabType = data.tab_type
+
         self.docker_manager = self.toolshelf.dockWidget.docker_manager
         self.actions_manager = self.toolshelf.dockWidget.actions_manager
 

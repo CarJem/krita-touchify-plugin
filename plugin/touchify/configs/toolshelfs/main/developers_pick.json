@@ -110,7 +110,7 @@
                     "section_type": "docker",
                     "size_x": 0,
                     "size_y": 0,
-                    "docker_nesting_mode": "normal",
+                    "docker_nesting_mode": "docking",
                     "docker_unloaded_visibility": "normal",
                     "docker_loading_priority": "normal",
                     "action_section_alignment_x": "none",
@@ -240,7 +240,8 @@
             "size_y": 0,
             "section_show_tabs": true,
             "row": 0,
-            "section_show_root_actions": true
+            "section_show_root_actions": true,
+            "tab_type": "buttons"
         },
         {
             "sections": [
@@ -632,5 +633,6 @@
     "dockerBackHeight": 16,
     "actionHeight": 20,
     "canvas_enable_resizing_by_default": false,
-    "presetName": "Developer's Pick"
+    "presetName": "Developer's Pick",
+    "tab_type": "buttons"
 }
