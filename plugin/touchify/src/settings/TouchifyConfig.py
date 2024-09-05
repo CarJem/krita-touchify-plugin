@@ -3,12 +3,16 @@ from PyQt5.QtCore import *
 import json
 import os
 
-from ..cfg.CfgHotkeys import CfgHotkeys
+from ..ext.KritaSettings import KritaSettings
+
+from ..cfg.CfgHotkeyRegistry import CfgHotkeyRegistry
 from ..ext.extensions_json import JsonExtensions
 from ..cfg.toolshelf.CfgToolshelf import CfgToolshelf
 from ..variables import *
-from ..cfg.CfgTouchifyRegistry import CfgTouchifyRegistry
-from ..cfg.CfgToolboxSettings import CfgToolboxSettings
+
+from ..cfg.CfgToolshelfRegistry import CfgToolshelfRegistry
+from ..cfg.CfgActionRegistry import CfgActionRegistry
+from ..cfg.CfgToolboxRegistry import CfgToolboxRegistry
 from ..ext.extensions import *
 from ...paths import BASE_DIR
 import copy
@@ -22,12 +26,12 @@ class TouchifyConfig:
 
         def __init__(self):
             self.__base_dir__ = BASE_DIR            
-            self.actions_registry: CfgTouchifyRegistry = CfgTouchifyRegistry()
-            self.hotkeys: CfgHotkeys = CfgHotkeys()
-            self.toolshelf_main: CfgToolshelf = CfgToolshelf()
-            self.toolshelf_alt: CfgToolshelf = CfgToolshelf()
-            self.toolshelf_docker: CfgToolshelf = CfgToolshelf()
-            self.toolbox_settings: CfgToolboxSettings = CfgToolboxSettings()
+            self.actions_registry: CfgActionRegistry = CfgActionRegistry()
+            self.hotkeys: CfgHotkeyRegistry = CfgHotkeyRegistry()
+            self.toolshelf_main: CfgToolshelfRegistry = CfgToolshelfRegistry("main")
+            self.toolshelf_alt: CfgToolshelfRegistry = CfgToolshelfRegistry("overview")
+            self.toolshelf_docker: CfgToolshelfRegistry = CfgToolshelfRegistry("docker")
+            self.toolbox_settings: CfgToolboxRegistry = CfgToolboxRegistry()
             self.load()
 
         def loadClass(self, configName, type):
@@ -92,17 +96,17 @@ class TouchifyConfig:
         def save(self):
             self.saveClass(self.actions_registry, "actions_registry")
             self.saveClass(self.hotkeys, "hotkeys")
-            self.saveClass(self.toolshelf_main, "toolshelf_main")
-            self.saveClass(self.toolshelf_alt, "toolshelf_alt")
-            self.saveClass(self.toolshelf_docker, "toolshelf_docker")
+            self.toolshelf_main.save() 
+            self.toolshelf_alt.save()
+            self.toolshelf_docker.save()
             self.toolbox_settings.save()
 
         def load(self):
-            self.actions_registry = self.loadClass("actions_registry", CfgTouchifyRegistry)
-            self.hotkeys = self.loadClass("hotkeys", CfgHotkeys)
-            self.toolshelf_main = self.loadClass("toolshelf_main", CfgToolshelf)
-            self.toolshelf_alt = self.loadClass("toolshelf_alt", CfgToolshelf)
-            self.toolshelf_docker = self.loadClass("toolshelf_docker", CfgToolshelf)
+            self.actions_registry = self.loadClass("actions_registry", CfgActionRegistry)
+            self.hotkeys = self.loadClass("hotkeys", CfgHotkeyRegistry)
+            self.toolshelf_main.load()
+            self.toolshelf_alt.load()
+            self.toolshelf_docker.load()
             self.toolbox_settings.load()
             
     def instance():
@@ -120,15 +124,36 @@ class TouchifyConfig:
     def getConfig(self) -> ConfigFile:
         return self.cfg
     
-    def getToolshelfConfig(self, index: int) -> CfgToolshelf | None:
+    def getToolshelfRegistry(self, registry_index: int) -> CfgToolshelfRegistry | None:
         cfg = self.getConfig()
-        if index == 0: return cfg.toolshelf_main
-        elif index == 1: return cfg.toolshelf_alt
-        elif index == 2: return cfg.toolshelf_docker
+        if registry_index == 0: return cfg.toolshelf_main
+        elif registry_index == 1: return cfg.toolshelf_alt
+        elif registry_index == 2: return cfg.toolshelf_docker
         else: return None
 
-    def copyConfig(self):
-        return copy.copy(self.cfg)
+    def getActiveToolshelfIndex(self, registry_index: int) -> int:
+        cfg = self.getConfig()
+        if registry_index == 0: return cfg.toolshelf_main.getActiveIndex()
+        elif registry_index == 1: return cfg.toolshelf_alt.getActiveIndex()
+        elif registry_index == 2: return cfg.toolshelf_docker.getActiveIndex()
+        else: return 0
+
+    def getActiveToolshelf(self, registry_index: int) -> CfgToolshelf | None:
+        cfg = self.getConfig()
+        if registry_index == 0: return cfg.toolshelf_main.getActive()
+        elif registry_index == 1: return cfg.toolshelf_alt.getActive()
+        elif registry_index == 2: return cfg.toolshelf_docker.getActive()
+        else: return None
+
+    def setActiveToolshelf(self, registry_index: int, index: int):
+        cfg = self.getConfig()
+        if registry_index == 0: cfg.toolshelf_main.setActive(index)
+        elif registry_index == 1: cfg.toolshelf_alt.setActive(index)
+        elif registry_index == 2: cfg.toolshelf_docker.setActive(index)
+
+        self.notifyUpdate()
+    
+
 
     def addHotkeyOption(self, actionName, displayName, action, parameters):
         self.hotkey_options_storage[actionName] = {

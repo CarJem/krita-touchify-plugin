@@ -11,7 +11,7 @@ import importlib.util
 
 from .PopupDialog_Titlebar import PopupDialog_Titlebar
 
-from ....cfg.CfgPopup import CfgPopup
+from ....cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from ....settings.TouchifyConfig import *
 from ....resources import *
 from ....stylesheet import Stylesheet
@@ -25,7 +25,7 @@ class PopupDialog(QDialog):
 
 
     
-    def __init__(self, parent: QWidget, args: CfgPopup):     
+    def __init__(self, parent: QWidget, args: CfgTouchifyActionPopup):     
         super().__init__(parent)  
         self.grid: QLayout = None
         self.parent: QWidget = parent

@@ -7,7 +7,9 @@ from functools import partial
 import sys
 import importlib.util
 
-from ....cfg.CfgPopup import CfgPopup, CfgPopupActionItem
+from ....cfg.action.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
+
+from ....cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from ....settings.TouchifyConfig import *
 from ..actions.TouchifyActionPanel import *
 from ....resources import *
@@ -22,7 +24,7 @@ from krita import *
 
 class PopupDialog_Actions(PopupDialog):
 
-    def __init__(self, parent: QWidget, args: CfgPopup, actions_manager: "ActionManager"):     
+    def __init__(self, parent: QWidget, args: CfgTouchifyActionPopup, actions_manager: "ActionManager"):     
         super().__init__(parent, args)
         self.actions_manager = actions_manager
         self.grid = self.generateActionsLayout()
@@ -56,7 +58,7 @@ class PopupDialog_Actions(PopupDialog):
     def generateActionsLayout(self):   
         layout = QVBoxLayout(self)
         
-        converted_groups: dict[int, CfgTouchifyActionGroup] = {}
+        converted_groups: dict[int, CfgTouchifyActionCollection] = {}
             
         current_x = 0
         current_y = 0
@@ -66,14 +68,14 @@ class PopupDialog_Actions(PopupDialog):
         maximum_x = self.metadata.actions_grid_width
         
         
-        actionItem: CfgPopupActionItem
+        actionItem: CfgTouchifyActionPopupItem
         for actionItem in self.metadata.actions_items:
             if not current_x < maximum_x:
                 current_y += 1
                 current_x = 0
                 
             if current_y not in converted_groups:
-                converted_groups[current_y] = CfgTouchifyActionGroup()
+                converted_groups[current_y] = CfgTouchifyActionCollection()
             
             
             newAction = CfgTouchifyAction()

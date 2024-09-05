@@ -5,21 +5,27 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
+from .ToolshelfSettingsMenu import *
+
 from ....settings.TouchifyConfig import *
 from ....variables import *
 from ....docker_manager import *
 from ....stylesheet import Stylesheet
+from ....resources import ResourceManager
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ToolshelfContainer import ToolshelfContainer
 
 class ToolshelfPanelHeader(QWidget):
-    def __init__(self, cfg: CfgToolshelf, isRootHeader: bool = True, parent: "ToolshelfContainer" = None):
-        super(ToolshelfPanelHeader, self).__init__(parent)
+    def __init__(self, cfg: CfgToolshelf, isRootHeader: bool = True, rootContainer: "ToolshelfContainer" = None, panelIndex: int = 0):
+        super(ToolshelfPanelHeader, self).__init__(rootContainer)
 
-        self.rootContainer = parent
+        self.rootContainer = rootContainer
+        self.panelIndex = panelIndex
 
+
+        self._menuPreloaded = False
         self._height = cfg.dockerBackHeight
         self._iconSize = self._height - 4
         self.setFixedHeight(self._height)
@@ -34,8 +40,22 @@ class ToolshelfPanelHeader(QWidget):
         qApp.paletteChanged.connect(self.updateStyleSheet)
         self.updateStyleSheet()
 
-        self.backButton = None
+        self.mainButton = None
         self.fillerWidget = None
+        self.backButton = None
+        self.optionsMenu = None
+
+        self.optionsMenu = ToolshelfSettingsMenu(self, cfg, self.panelIndex)
+        self.optionsMenu.aboutToHide.connect(self.closeSettings)
+
+        self.mainButton = QPushButton(self)
+        self.mainButton.setIcon(ResourceManager.iconLoader("material:circle"))
+        self.mainButton.setObjectName("menu-widget")
+        self.mainButton.setIconSize(QSize(self._iconSize, self._iconSize))
+        self.mainButton.setFixedHeight(self._height)
+        self.mainButton.setFixedWidth(self._height)
+        self.mainButton.clicked.connect(self.openSettings)
+        self.ourLayout.addWidget(self.mainButton)
 
         if not isRootHeader:
             self.backButton = QPushButton(self)
@@ -59,6 +79,16 @@ class ToolshelfPanelHeader(QWidget):
         self.pinButton.setCheckable(True)
         self.pinButton.clicked.connect(self.pinToolshelf)
         self.ourLayout.addWidget(self.pinButton)
+
+    def openSettings(self):
+        self.mainButton.setMenu(self.optionsMenu)
+        if self._menuPreloaded == False:
+            self.optionsMenu.setup()
+            self._menuPreloaded = True
+        self.mainButton.showMenu()
+    
+    def closeSettings(self):
+        self.mainButton.setMenu(None)
 
     def setPinState(self, value: bool):
         if self.pinButton:

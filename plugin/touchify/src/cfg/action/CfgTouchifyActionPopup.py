@@ -1,33 +1,9 @@
-from ..ext.extensions_json import JsonExtensions as Extensions
-from ..ext.extensions import TypedList
+from .CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
+from ...ext.extensions_json import JsonExtensions as Extensions
+from ...ext.extensions import TypedList
 
 
-class CfgPopupActionItem:
-    text: str = ""
-    action: str = ""
-    icon: str = ""
-
-
-    def propertygrid_labels(self):
-        labels = {}
-        labels["action"] = "Action ID"
-        labels["icon"] = "Display Icon"
-        labels["text"] = "Display Text"
-        return labels
-
-    def __init__(self, **args) -> None:
-        Extensions.dictToObject(self, args)
-
-    def __str__(self):
-        return self.text.replace("\n", "\\n")
-
-    def propertygrid_restrictions(self):
-        restrictions = {}
-        restrictions["icon"] = {"type": "icon_selection"}
-        restrictions["action"] = {"type": "action_selection"}
-        return restrictions
-
-class CfgPopup:
+class CfgTouchifyActionPopup:
     id: str = ""
     btnName: str = ""
     window_type: str = "popup"
@@ -41,7 +17,7 @@ class CfgPopup:
     actions_item_height: int = 100
     actions_icon_width: int = 30
     actions_icon_height: int = 30
-    actions_items: TypedList[CfgPopupActionItem] = []
+    actions_items: TypedList[CfgTouchifyActionPopupItem] = []
     
     docker_id: str = ""
 
@@ -83,13 +59,13 @@ class CfgPopup:
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
         items = Extensions.default_assignment(args, "actions_items", [])
-        self.actions_items = Extensions.list_assignment(items, CfgPopupActionItem)
+        self.actions_items = Extensions.list_assignment(items, CfgTouchifyActionPopupItem)
 
     def __str__(self):
         return self.btnName.replace("\n", "\\n")
 
     def forceLoad(self):
-        self.actions_items = TypedList(self.actions_items, CfgPopupActionItem)
+        self.actions_items = TypedList(self.actions_items, CfgTouchifyActionPopupItem)
         pass
 
     def propertygrid_labels(self):

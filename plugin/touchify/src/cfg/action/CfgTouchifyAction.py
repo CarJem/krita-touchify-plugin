@@ -1,13 +1,9 @@
-from ..CfgDockerGroup import CfgDockerGroup
-from ..CfgPopup import CfgPopup
+from .CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
+from .CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from ...ext.StrEnum import StrEnum
 from ...ext.TypedList import TypedList
 from ...ext.extensions_json import JsonExtensions as Extensions
-from ...ext.nameof import nameof
-from typing import Annotated
 
-
-    
 class CfgTouchifyAction:
      
     class Variants(StrEnum):
@@ -44,14 +40,14 @@ class CfgTouchifyAction:
     workspace_id: str = ""
     
     #Docker Group Params
-    docker_group_data: CfgDockerGroup = CfgDockerGroup()
+    docker_group_data: CfgTouchifyActionDockerGroup = CfgTouchifyActionDockerGroup()
     
     #Popup Params
-    popup_data: CfgPopup = CfgPopup()
+    popup_data: CfgTouchifyActionPopup = CfgTouchifyActionPopup()
     
 
     def __init__(self, **args) -> None:
-        Extensions.dictToObject(self, args, [CfgPopup, CfgDockerGroup])
+        Extensions.dictToObject(self, args, [CfgTouchifyActionPopup, CfgTouchifyActionDockerGroup])
         
         context_menu_actions = Extensions.default_assignment(args, "context_menu_actions", [])
         self.context_menu_actions = Extensions.list_assignment(context_menu_actions, CfgTouchifyAction)

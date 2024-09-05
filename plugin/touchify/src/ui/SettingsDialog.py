@@ -30,7 +30,7 @@ class SettingsDialog(QDialog):
         super().__init__(qwin.qwindow().window())
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.qwin = qwin.qwindow()
-        self.editableConfig = TouchifyConfig.instance().copyConfig()
+        self.editableConfig = copy.copy(TouchifyConfig.instance().getConfig())
         self.gridLayout = QGridLayout()
 
         self.notice = QLabel()

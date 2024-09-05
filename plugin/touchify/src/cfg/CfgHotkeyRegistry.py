@@ -1,7 +1,7 @@
 from ..ext.extensions_json import JsonExtensions as Extensions
 
 
-class CfgHotkeys:
+class CfgHotkeyRegistry:
 
 
     def __init__(self, **args) -> None:

@@ -2,7 +2,7 @@ from ..action.CfgTouchifyAction import *
 from ...ext.TypedList import TypedList
 from ...ext.extensions_json import JsonExtensions as Extensions
 from .CfgToolshelfSection import CfgToolshelfSection
-from ..action.CfgTouchifyActionGroup import CfgTouchifyActionGroup
+from ..action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
 
 class CfgToolshelfPanel:
     id: str = ""
@@ -10,7 +10,7 @@ class CfgToolshelfPanel:
     size_x: int = 0
     size_y: int = 0
     row: int = 0
-    actions: TypedList[CfgTouchifyActionGroup] = []
+    actions: TypedList[CfgTouchifyActionCollection] = []
     sections: TypedList[CfgToolshelfSection] = []
     section_show_tabs: bool = False
     section_show_root_actions: bool = False
@@ -22,11 +22,11 @@ class CfgToolshelfPanel:
         sections = Extensions.default_assignment(args, "sections", [])
         actions = Extensions.default_assignment(args, "actions", [])
         self.sections = Extensions.list_assignment(sections, CfgToolshelfSection)
-        self.actions = Extensions.list_assignment(actions, CfgTouchifyActionGroup)
+        self.actions = Extensions.list_assignment(actions, CfgTouchifyActionCollection)
 
     def forceLoad(self):
         self.sections = TypedList(self.sections, CfgToolshelfSection)
-        self.actions = TypedList(self.actions, CfgTouchifyActionGroup)
+        self.actions = TypedList(self.actions, CfgTouchifyActionCollection)
 
     def __str__(self):
         name = self.id.replace("\n", "\\n")

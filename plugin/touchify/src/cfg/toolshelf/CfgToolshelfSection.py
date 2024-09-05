@@ -1,5 +1,5 @@
 from ..action.CfgTouchifyAction import *
-from ..action.CfgTouchifyActionGroup import *
+from ..action.CfgTouchifyActionCollection import *
 from ...ext.TypedList import TypedList
 from ...ext.extensions_json import JsonExtensions as Extensions
 
@@ -26,7 +26,7 @@ class CfgToolshelfSection:
 
     action_section_display_mode: str = "normal"
     action_section_name: str = "Panel"
-    action_section_contents: TypedList[CfgTouchifyActionGroup] = []
+    action_section_contents: TypedList[CfgTouchifyActionCollection] = []
     action_section_alignment_x: str = "none"
     action_section_alignment_y: str = "none"
     action_section_btn_width: int = 0
@@ -36,10 +36,10 @@ class CfgToolshelfSection:
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
         action_section_contents = Extensions.default_assignment(args, "action_section_contents", [])
-        self.action_section_contents = Extensions.list_assignment(action_section_contents, CfgTouchifyActionGroup)
+        self.action_section_contents = Extensions.list_assignment(action_section_contents, CfgTouchifyActionCollection)
 
     def forceLoad(self):
-        self.action_section_contents = TypedList(self.action_section_contents, CfgTouchifyActionGroup)
+        self.action_section_contents = TypedList(self.action_section_contents, CfgTouchifyActionCollection)
 
     def __str__(self):
         if self.section_type == "actions":

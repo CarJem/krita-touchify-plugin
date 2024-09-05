@@ -4,5 +4,6 @@
     "sections": [],
     "actionHeight": 16,
     "dockerBackHeight": 16,
-    "dockerButtonHeight": 32
+    "dockerButtonHeight": 32,
+    "presetName": "Developer's Pick"
 }

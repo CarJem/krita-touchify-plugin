@@ -49,7 +49,7 @@ class NtToolshelf(QObject):
         self.toolshelf.installEventFilter(self.adjustFilter)
         self.toolshelf.sizeChanged.connect(self.onSizeChanged)
 
-        toolshelf_cfg = TouchifyConfig.instance().getToolshelfConfig(panel_index)
+        toolshelf_cfg = TouchifyConfig.instance().getActiveToolshelf(panel_index)
         if toolshelf_cfg:
             if toolshelf_cfg.canvas_enable_resizing_by_default:
                 self.pad.toggleResizing()

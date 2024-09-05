@@ -99,22 +99,22 @@ class KritaSettings:
         else: return None
         
         
-    def writeSettingInt(group:str, name:str, value:int):
-        return KritaSettings.writeSetting(group, name, str(value))
+    def writeSettingInt(group:str, name:str, value:int, notify: bool = True):
+        return KritaSettings.writeSetting(group, name, str(value), notify)
     
-    def writeSettingFloat(group:str, name:str, value:float):
-        return KritaSettings.writeSetting(group, name, str(value))
+    def writeSettingFloat(group:str, name:str, value:float, notify: bool = True):
+        return KritaSettings.writeSetting(group, name, str(value), notify)
     
-    def writeSettingColor(group:str, name:str, value:KS_Color):
-        return KritaSettings.writeSetting(group, name, str(value))
+    def writeSettingColor(group:str, name:str, value:KS_Color, notify: bool = True):
+        return KritaSettings.writeSetting(group, name, str(value), notify)
 
-    def writeSettingBool(group:str, name:str, value:bool):
+    def writeSettingBool(group:str, name:str, value:bool, notify: bool = True):
         defaultVal = "true" if value == True else "false"
-        return KritaSettings.writeSetting(group, name, defaultVal)
+        return KritaSettings.writeSetting(group, name, defaultVal, notify)
 
-    def writeSetting(group:str, name:str, value:str):
+    def writeSetting(group:str, name:str, value:str, notify: bool = True):
         result = Krita.instance().writeSetting(group, name, value)
-        KritaSettings.notifyUpdate()
+        if notify: KritaSettings.notifyUpdate()
         return result
 
     def showDockerTitlebars():

@@ -3,7 +3,7 @@ from ...ext.TypedList import TypedList
 from ...ext.extensions_json import JsonExtensions as Extensions
 from ...ext.extensions import nameof
 
-class CfgTouchifyActionGroup:
+class CfgTouchifyActionCollection:
     actions: TypedList["CfgTouchifyAction"] = []
     row_name: str = "Actions Row"
 

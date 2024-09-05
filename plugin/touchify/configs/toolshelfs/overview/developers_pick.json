@@ -333,5 +333,6 @@
     "dockerButtonHeight": 32,
     "dockerBackHeight": 16,
     "actionHeight": 20,
-    "canvas_enable_resizing_by_default": true
+    "canvas_enable_resizing_by_default": true,
+    "presetName": "Developer's Pick"
 }

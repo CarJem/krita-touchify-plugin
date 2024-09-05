@@ -45,6 +45,7 @@ class PyQtExtensions:
             return result
     
     
+    
     def isDeleted(item: QObject):
         try:
             item.objectName()

@@ -21,11 +21,11 @@ class ToolshelfPageMain(ToolshelfPage):
         self.PanelIndex = panel_index
 
         if self.PanelIndex == 0: 
-            self.rootCfg = TouchifyConfig.instance().getConfig().toolshelf_main
+            self.rootCfg = TouchifyConfig.instance().getConfig().toolshelf_main.getActive()
         elif self.PanelIndex == 1: 
-            self.rootCfg = TouchifyConfig.instance().getConfig().toolshelf_alt
+            self.rootCfg = TouchifyConfig.instance().getConfig().toolshelf_alt.getActive()
         elif self.PanelIndex == 2: 
-            self.rootCfg = TouchifyConfig.instance().getConfig().toolshelf_docker
+            self.rootCfg = TouchifyConfig.instance().getConfig().toolshelf_docker.getActive()
         else:
             self.rootCfg = None
 

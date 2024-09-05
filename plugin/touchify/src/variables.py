@@ -47,6 +47,8 @@ TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER="Touchify/BrushOptionsDocker"
 TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER="Touchify/ToolshelfDocker"
 TOUCHIFY_ID_DOCKER_REFERENCETABSDOCKER="Touchify/ReferenceTabsDocker"
 TOUCHIFY_ID_DOCKER_TOOLBOX="Touchify/TouchifyToolbox"
-
+#-----------------#
+# Setting Sections
+TOUCHIFY_ID_SETTINGS_TOOLSHELF="Touchify/Toolshelfs"
 
 

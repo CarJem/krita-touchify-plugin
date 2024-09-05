@@ -9,7 +9,7 @@ import importlib.util
 
 from ..core.DockerContainer import DockerContainer
 
-from ....cfg.CfgPopup import CfgPopup
+from ....cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from ....settings.TouchifyConfig import *
 from ....resources import *
 from .PopupDialog import *
@@ -22,7 +22,7 @@ class PopupDialog_Docker(PopupDialog):
 
 
 
-    def __init__(self, parent: QWidget, args: CfgPopup, docker_manager: DockerManager):     
+    def __init__(self, parent: QWidget, args: CfgTouchifyActionPopup, docker_manager: DockerManager):     
         super().__init__(parent, args)
 
         self.dockerWidget: QDockWidget = None

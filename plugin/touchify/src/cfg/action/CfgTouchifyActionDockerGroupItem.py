@@ -1,8 +1,8 @@
-from ..ext.extensions_json import JsonExtensions as Extensions
-from ..ext.extensions import TypedList, nameof
+from ...ext.extensions_json import JsonExtensions as Extensions
+from ...ext.extensions import TypedList, nameof
 
 
-class CfgDockerGroupItem:
+class CfgTouchifyActionDockerGroupItem:
     id: str=""
 
     def __init__(self, **args) -> None:

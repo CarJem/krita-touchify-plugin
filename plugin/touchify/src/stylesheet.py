@@ -121,6 +121,12 @@ class Stylesheet:
                     border: none;
                 }}
 
+                QPushButton#menu-widget {{
+                    border-top-right-radius: 0px;
+                    border-bottom-right-radius: 0px;
+                    border: none;
+                }}
+
                 QWidget#filler-widget {{
                     background-color: palette(alternate-base);
                     border: none;

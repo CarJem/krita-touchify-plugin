@@ -281,7 +281,7 @@ class ActionManager:
                                 workspace.trigger()
                                 break
                             
-    def action_dockergroup(self, data: CfgDockerGroup):
+    def action_dockergroup(self, data: CfgTouchifyActionDockerGroup):
         dockersList = self.appEngine.windowSource.dockers()
         
         if data.id not in self.custom_docker_states:
@@ -317,7 +317,7 @@ class ActionManager:
                 if (docker.objectName() == path):
                     docker.setVisible(isVisible)
                             
-    def action_popup(self, action: QAction, data: CfgPopup):    
+    def action_popup(self, action: QAction, data: CfgTouchifyActionPopup):    
         _parent = self.__getActionSource(action)            
         if data.type == "actions":
             popup = PopupDialog_Actions(self.appEngine.windowSource.qwindow().window(), data, self)

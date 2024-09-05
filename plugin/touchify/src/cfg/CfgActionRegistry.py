@@ -1,10 +1,10 @@
-from .CfgDockerGroup import *
-from .CfgPopup import *
+from .action.CfgTouchifyActionDockerGroup import *
+from .action.CfgTouchifyActionPopup import *
 from ..ext.TypedList import TypedList
 from ..ext.extensions_json import JsonExtensions as Extensions
 from .action.CfgTouchifyAction import *
     
-class CfgTouchifyRegistry:
+class CfgActionRegistry:
     actions_registry: TypedList[CfgTouchifyAction] = []
 
     def __init__(self, **args) -> None:
@@ -14,8 +14,6 @@ class CfgTouchifyRegistry:
 
     def forceLoad(self):
         self.actions_registry = TypedList(self.actions_registry, CfgTouchifyAction)
-        self.popups_registry = TypedList(self.popups_registry, CfgPopup)
-        self.docker_groups_registry = TypedList(self.docker_groups_registry, CfgDockerGroup)
 
     def propertygrid_hidden(self):
         result = []

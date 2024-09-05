@@ -20,7 +20,7 @@ from .ToolboxStyle import ToolboxStyle
 from .ToolboxMenu import ToolboxMenu
 from .ToolboxButton import ToolboxButton
 from .....settings.TouchifyConfig import TouchifyConfig
-from .....cfg.CfgToolboxSettings import CfgToolboxSettings
+from .....cfg.CfgToolboxRegistry import CfgToolboxRegistry
 from .....cfg.toolbox.CfgToolbox import CfgToolbox
 from .....cfg.toolbox.CfgToolboxItem import CfgToolboxItem
 from .....cfg.toolbox.CfgToolboxSubItem import CfgToolboxSubItem
@@ -230,7 +230,7 @@ class ToolboxWidget(QWidget):
         self.buildCategories()   
 
     def loadConfig(self):
-        self.settings: CfgToolboxSettings = TouchifyConfig.instance().getConfig().toolbox_settings
+        self.settings: CfgToolboxRegistry = TouchifyConfig.instance().getConfig().toolbox_settings
 
         self.config: CfgToolbox = CfgToolbox().loadDefaults()
         self.selectedPresetIndex = KritaSettings.readSettingInt(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", 0)

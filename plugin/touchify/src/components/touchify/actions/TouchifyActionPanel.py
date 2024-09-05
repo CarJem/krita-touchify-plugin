@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
 from ....cfg.action.CfgTouchifyAction import CfgTouchifyAction
-from ....cfg.action.CfgTouchifyActionGroup import CfgTouchifyActionGroup
+from ....cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
 from ....resources import ResourceManager
 from ....stylesheet import Stylesheet
 from ....variables import *
@@ -29,7 +29,7 @@ EXPANDING_SPACERS = [
 ]
 
 class TouchifyActionPanel(QWidget):
-    def __init__(self, cfg: List[CfgTouchifyActionGroup], parent: QWidget=None, actions_manager: "ActionManager" = None, type: str = "default", icon_width: int = -1, icon_height: int = -1, item_width: int = -1, item_height: int = -1, opacity: float = 1.0):
+    def __init__(self, cfg: List[CfgTouchifyActionCollection], parent: QWidget=None, actions_manager: "ActionManager" = None, type: str = "default", icon_width: int = -1, icon_height: int = -1, item_width: int = -1, item_height: int = -1, opacity: float = 1.0):
         super(TouchifyActionPanel, self).__init__(parent)
 
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
@@ -188,7 +188,7 @@ class TouchifyActionPanel(QWidget):
         
         
         for row in actions:
-            row: CfgTouchifyActionGroup
+            row: CfgTouchifyActionCollection
             for entry in row.actions:
                 act: CfgTouchifyAction = entry
                 btn = self.actions_manager.createButton(self, act)

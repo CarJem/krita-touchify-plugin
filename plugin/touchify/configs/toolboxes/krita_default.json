@@ -184,6 +184,5 @@
     "menuDelay": 200,
     "submenuButton": false,
     "column_count": 2,
-    "icon_size": 16,
-    "horizontal_mode": false
+    "icon_size": 16
 }

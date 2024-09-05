@@ -37,7 +37,7 @@ class ToolshelfContainer(QStackedWidget):
                 self.mouseReleased.emit()
             return super().eventFilter(obj, event)
 
-    def __init__(self, parent: "ToolshelfWidget", PanelIndex: int):
+    def __init__(self, parent: "ToolshelfWidget", registry_index: int):
         super(ToolshelfContainer, self).__init__(parent)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.mouse_listener = ToolshelfContainer.MouseListener()
@@ -49,8 +49,8 @@ class ToolshelfContainer(QStackedWidget):
         self._headers: List[ToolshelfPanelHeader] = []
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
-        self.PanelIndex = PanelIndex
-        self.cfg = TouchifyConfig.instance().getToolshelfConfig(self.PanelIndex)
+        self.registry_index = registry_index
+        self.cfg = TouchifyConfig.instance().getActiveToolshelf(self.registry_index)
         QApplication.instance().installEventFilter(self.mouse_listener)
         self.mouse_listener.mouseReleased.connect(self.onMouseRelease)
         super().currentChanged.connect(self.onCurrentChanged)
@@ -65,16 +65,16 @@ class ToolshelfContainer(QStackedWidget):
 
 
     def addMainPanel(self):
-        self._mainWidget = ToolshelfPageMain(self, self.PanelIndex)
+        self._mainWidget = ToolshelfPageMain(self, self.registry_index)
         self._panels['MAIN'] = self._mainWidget
-        header = ToolshelfPanelHeader(self.cfg, True, self)
+        header = ToolshelfPanelHeader(self.cfg, True, self, self.registry_index)
         self._headers.append(header)
         self._mainWidget.shelfLayout.insertWidget(0, header)
         super().addWidget(self._mainWidget)
 
     def addPanel(self, ID, data: CfgToolshelfPanel):
         panel = ToolshelfPage(self, ID, data)
-        header = ToolshelfPanelHeader(self.cfg, False, self)
+        header = ToolshelfPanelHeader(self.cfg, False, self, self.registry_index)
 
         panel.shelfLayout.insertWidget(0, header)
         self._headers.append(header)
