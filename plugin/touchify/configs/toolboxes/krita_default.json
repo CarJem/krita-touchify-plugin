@@ -184,5 +184,7 @@
     "menuDelay": 200,
     "submenuButton": false,
     "column_count": 2,
-    "icon_size": 16
+    "icon_size": 16,
+    "background_opacity": 128,
+    "button_opacity": 175
 }

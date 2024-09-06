@@ -22,7 +22,21 @@ class ToolboxButton(QToolButton):
         self.updatePalette()
 
     def updatePalette(self):
-        self.setStyleSheet(Stylesheet.instance().touchify_nt_toolbox_button)
+
+        self.setStyleSheet(f"""
+                QPushButton::menu-indicator {{ 
+                    image: none; 
+                }} 
+                
+                QToolButton::menu-indicator {{ 
+                    image: none; 
+                }}
+                
+                QToolButton {{
+                    padding: 4px;
+                    opacity: 0.65;
+                }}
+        """)
 
 
     def setMenu(self, menu: QMenu):

@@ -14,6 +14,9 @@ class CfgToolbox:
     column_count: int = 2
     icon_size: int = 16
 
+    background_opacity: int = 255
+    button_opacity: int = 255
+
     presetName: str = "New Toolbox Preset"
 
 
@@ -35,14 +38,26 @@ class CfgToolbox:
     def forceLoad(self):
         self.categories = TypedList(self.categories, CfgToolboxCategory)
 
+    def propertygrid_sorted(self):
+        return [
+            "menuDelay",
+            "submenuButton",
+            "column_count",
+            "icon_size",
+            "background_opacity",
+            "button_opacity",
+            "categories"
+        ]
+
     def propertygrid_labels(self):
         labels = {}
         labels["categories"] = "Categories"
-        labels["items"] = "Items"
         labels["menuDelay"] = "Menu Delay"
         labels["submenuButton"] = "Submenu Button"
         labels["column_count"] = "Column Count"
         labels["icon_size"] = "Icon Size"
+        labels["background_opacity"] = "Background Opacity"
+        labels["button_opacity"] = "Button Opacity"
         return labels
 
     def propertygrid_groups(self):
@@ -52,6 +67,8 @@ class CfgToolbox:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["column_count"] = {"type": "range", "min": 1}
+        restrictions["background_opacity"] = {"type": "range", "min": 0, "max": 255}
+        restrictions["button_opacity"] = {"type": "range", "min": 0, "max": 255}
         return restrictions
     
     def loadDefaults(self):

@@ -48,9 +48,6 @@ class NtToolbox(QObject):
         self.dockerAction = window.qwindow().findChild(QDockWidget, TOUCHIFY_ID_DOCKER_TOOLBOX).toggleViewAction()
         self.dockerAction.setEnabled(False)
 
-        qApp.paletteChanged.connect(self.updateStyleSheet)
-        self.updateStyleSheet()
-
     def updatePalette(self):
         self.pad.returnDocker()
         self.pad.borrowDocker(self.toolbox)
@@ -59,10 +56,6 @@ class NtToolbox(QObject):
         if subWin:
             subWin.installEventFilter(self.adjustFilter)
             self.canvas.updateCanvas()
-
-    def updateStyleSheet(self):
-        self.pad.setStyleSheet(Stylesheet.instance().touchify_nt_toolbox)    
-
 
     def close(self):
         self.mdiArea.subWindowActivated.disconnect(self.onSubWindowActivated)

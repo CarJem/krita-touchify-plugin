@@ -76,6 +76,8 @@ class ToolboxWidget(QWidget):
 
         self.sourceWindow: Window = None
 
+        self.OPACITY_LEVEL = 0.65
+
         self.__preload__themeChanged = False
         self.__preload__checkChanged = False
 
@@ -87,11 +89,12 @@ class ToolboxWidget(QWidget):
         self.registeredToolBtns: list[ToolboxButton] = []
 
 
-        self.buttonGroup = QButtonGroup(self)
-        self.buttonGroup.setExclusive(True)
-
         self.setLayout(QVBoxLayout(self))
         self.setContentsMargins(0,0,0,0)
+        self.updateStyleSheet()
+
+        self.buttonGroup = QButtonGroup(self)
+        self.buttonGroup.setExclusive(True)
 
         self.scrollArea = ToolboxScrollArea(self)
         self.scrollArea.setContentsMargins(0,0,0,0)
@@ -122,11 +125,67 @@ class ToolboxWidget(QWidget):
     def setup(self, instance: "Touchify.TouchifyWindow"):
         self.sourceWindow = instance.windowSource
         self.reload()
-        
+    
 
     def updatePalette(self):
         self.settingsBtn.setIcon(Krita.instance().icon("configure"))
         self.reload()
+
+
+    def updateStyleSheet(self):
+        highlight_hex = qApp.palette().color(QPalette.ColorRole.Highlight).name().split("#")[1]
+        background_hex = qApp.palette().color(QPalette.ColorRole.Window).name().split("#")[1]
+        alternate_hex = qApp.palette().color(QPalette.ColorRole.AlternateBase).name().split("#")[1]
+        inactive_text_color_hex = qApp.palette().color(QPalette.ColorRole.ToolTipText).name().split("#")[1]
+        active_text_color_hex = qApp.palette().color(QPalette.ColorRole.WindowText).name().split("#")[1]
+
+
+        
+
+        background_opacity = self.config.background_opacity
+        alternative_opacity = self.config.button_opacity
+
+        if background_opacity > 255: background_opacity = 255
+        if background_opacity < 0: background_opacity = 0
+
+        if alternative_opacity > 255: alternative_opacity = 255
+        if alternative_opacity < 0: alternative_opacity = 0
+
+
+        bg_opacity_hex = hex(background_opacity)[2:]
+        alt_opacity_hex = hex(alternative_opacity)[2:]
+    
+        self.setStyleSheet(f"""
+            QFrame#toolbox_frame {{ 
+                background-color: #{bg_opacity_hex}{background_hex};
+                border: none;
+                border-radius: 4px;
+                padding: 4px;
+            }}
+            
+            QScrollArea {{ background: transparent; }}
+            QScrollArea > QWidget > QWidget {{ background: transparent; }}
+            QScrollArea > QWidget > QScrollBar {{ background: palette(base); }}
+            
+            QAbstractButton {{
+                background-color: #{alt_opacity_hex}{background_hex};
+                border: none;
+                border-radius: 4px;
+            }}
+            
+            QAbstractButton:checked {{
+                background-color: #{alt_opacity_hex}{highlight_hex};
+            }}
+            
+            QAbstractButton:hover {{
+                background-color: #{alt_opacity_hex}{highlight_hex};
+            }}
+            
+            QAbstractButton:pressed {{
+                background-color: #{alt_opacity_hex}{alternate_hex};
+            }}
+        """)
+
 
     def sizeHint(self):
         actualSizeMod = super().sizeHint()
@@ -228,6 +287,7 @@ class ToolboxWidget(QWidget):
         self.loadConfig()
         self.buildSettingsMenu()
         self.buildCategories()   
+        self.updateStyleSheet()
 
     def loadConfig(self):
         self.settings: CfgToolboxRegistry = TouchifyConfig.instance().getConfig().toolbox_settings
@@ -300,6 +360,7 @@ class ToolboxWidget(QWidget):
             if categoryData.column_count >= 1:
                 specific_col_max = categoryData.column_count
             category = ToolboxCategory(self, categoryData.id)
+            category.setWindowOpacity(self.OPACITY_LEVEL)
             for tool in categoryData.items:
                 btn = self.buildCategoryAction(tool, icon_size)
                 btn.setParent(category)
@@ -323,6 +384,7 @@ class ToolboxWidget(QWidget):
         if ac:
             actionText = KE.formatActionText(ac.text())
             btn: ToolboxButton = ToolboxButton(tool.name)
+            btn.setWindowOpacity(self.OPACITY_LEVEL)
             btn.setObjectName(tool.name)
             btn.setText(actionText)
             btn.setIcon(ac.icon())

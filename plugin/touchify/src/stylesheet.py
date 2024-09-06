@@ -28,51 +28,6 @@ class Stylesheet:
 
         self.hide_menu_indicator = f"""QPushButton::menu-indicator {{ image: none; }} QToolButton::menu-indicator {{ image: none; }}"""
 
-        self.touchify_nt_toolbox = f"""
-                QFrame#toolbox_frame {{ 
-                    background-color: palette(window);
-                    border: none;
-                    border-radius: 4px;
-                    padding: 4px;
-                }}
-                
-                QScrollArea {{ background: transparent; }}
-                QScrollArea > QWidget > QWidget {{ background: transparent; }}
-                QScrollArea > QWidget > QScrollBar {{ background: palette(base); }}
-                
-                QAbstractButton {{
-                    background-color: palette(window);
-                    border: none;
-                    border-radius: 4px;
-                }}
-                
-                QAbstractButton:checked {{
-                    background-color: palette(highlight);
-                }}
-                
-                QAbstractButton:hover {{
-                    background-color: palette(highlight);
-                }}
-                
-                QAbstractButton:pressed {{
-                    background-color: palette(alternate-base);
-                }}
-            """
-        
-        self.touchify_nt_toolbox_button = f"""
-                QPushButton::menu-indicator {{ 
-                    image: none; 
-                }} 
-                
-                QToolButton::menu-indicator {{ 
-                    image: none; 
-                }}
-                
-                QToolButton {{
-                    padding: 4px;
-                }}
-        """
-
         self.touchify_toggle_button = f"""
                 QToolButton, QPushButton {{
                     background-color: palette(window);

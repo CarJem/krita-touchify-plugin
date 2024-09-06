@@ -70,5 +70,8 @@ class ToolboxDocker(QDockWidget):
         self.toolboxWidget = ToolboxWidget(self)
         self.setWidget(self.toolboxWidget)
 
+    def onConfigUpdated(self):
+        self.toolboxWidget.reload()
+
     def setup(self, instance: "Touchify.TouchifyWindow"):
         self.toolboxWidget.setup(instance)

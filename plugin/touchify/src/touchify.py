@@ -95,22 +95,32 @@ class Touchify(Extension):
             msg.exec_()
 
         def onKritaConfigUpdated(self):
-            toolshelf_docker = self.getDockerToolshelf()
+            toolshelf_docker = self.getToolshelfDocker()
             if toolshelf_docker: toolshelf_docker.onKritaConfigUpdate()
             
             self.touchify_canvas.onKritaConfigUpdated()
 
         def onConfigUpdated(self):
-            toolshelf_docker = self.getDockerToolshelf()
+            toolshelf_docker = self.getToolshelfDocker()
             if toolshelf_docker: toolshelf_docker.onConfigUpdated()
+            
+            toolbox_docker = self.getToolboxDocker()
+            if toolbox_docker: toolbox_docker.onConfigUpdated()
             
             self.touchify_canvas.onConfigUpdated()    
 
-        def getDockerToolshelf(self):
+        def getToolshelfDocker(self):
             for docker in self.windowSource.dockers():
                 if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER:
                     toolshelfDocker: TouchifyToolshelfDocker = docker
                     return toolshelfDocker
+            return None
+        
+        def getToolboxDocker(self):
+            for docker in self.windowSource.dockers():
+                if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLBOX:
+                    result: ToolboxDocker = docker
+                    return result
             return None
             
         def setupDockers(self):
