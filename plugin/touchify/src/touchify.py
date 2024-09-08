@@ -68,9 +68,6 @@ class Touchify(Extension):
 
 
             self.mainMenuBar.addSection("Touchify")
-
-            instanceIndicator = self.mainMenuBar.addSeparator()
-            instanceIndicator.setText(f"Window {self.windowUUID}")
             
             openSettingsAction = window.createAction(TOUCHIFY_ID_ACTION_CONFIGURE, "Configure Touchify...", TOUCHIFY_ID_MENU_ROOT)
             openSettingsAction.triggered.connect(self.openSettings)
@@ -82,17 +79,6 @@ class Touchify(Extension):
             canvasDecorationsPopup = window.createAction(TOUCHIFY_ID_ACTION_CANVAS_DECORATION_PRESETS, "Canvas Presets...", TOUCHIFY_ID_MENU_ROOT)
             canvasDecorationsPopup.triggered.connect(self.openCanvasDecoPopup)
             self.mainMenuBar.addAction(canvasDecorationsPopup)
-
-            self.mainMenuBar.addSection("Actions")
-
-            reloadItemsAction = QAction("Refresh Known Items", self.mainMenuBar)
-            reloadItemsAction.triggered.connect(self.reloadKnownItems)
-            self.mainMenuBar.addAction(reloadItemsAction)
-
-        def reloadKnownItems(self):
-            msg = QMessageBox(self.windowSource.qwindow())
-            msg.setText("Reloaded Known Workspaces/Dockers. You will need to reload to use them with this extension")
-            msg.exec_()
 
         def onKritaConfigUpdated(self):
             toolshelf_docker = self.getToolshelfDocker()
@@ -152,6 +138,8 @@ class Touchify(Extension):
             self.startTimer(self.windowSource)
 
             seperator = QAction("", self.mainMenuBar)
+            seperator.setText(f"Instance: #{self.windowUUID}")
+            seperator.setEnabled(False)
             seperator.setSeparator(True)
             self.mainMenuBar.addAction(seperator)
             

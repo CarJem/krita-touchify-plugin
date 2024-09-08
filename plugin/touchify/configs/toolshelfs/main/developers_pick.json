@@ -509,9 +509,33 @@
         {
             "action_section_contents": [],
             "action_section_name": "Panel",
-            "id": "Touchify/BrushOptionsDocker",
+            "action_section_alignment_x": "none",
+            "action_section_alignment_y": "none",
+            "action_section_btn_width": 0,
+            "action_section_btn_height": 0,
+            "action_section_display_mode": "normal",
+            "action_section_icon_size": 0,
+            "docker_loading_priority": "normal",
+            "docker_nesting_mode": "normal",
+            "docker_unloaded_visibility": "normal",
+            "id": "",
+            "max_size_x": 0,
+            "max_size_y": 0,
+            "min_size_x": 0,
+            "min_size_y": 0,
             "panel_x": 0,
             "panel_y": 1,
+            "section_type": "special",
+            "size_x": 0,
+            "size_y": 0,
+            "special_item_type": "brush_blending_options"
+        },
+        {
+            "action_section_contents": [],
+            "action_section_name": "Panel",
+            "id": "Touchify/BrushOptionsDocker",
+            "panel_x": 0,
+            "panel_y": 2,
             "section_type": "docker",
             "size_x": 0,
             "size_y": 0,
@@ -527,7 +551,8 @@
             "action_section_icon_size": 0,
             "max_size_x": 0,
             "max_size_y": 0,
-            "min_size_y": 0
+            "min_size_y": 0,
+            "special_item_type": "none"
         },
         {
             "action_section_contents": [
@@ -586,7 +611,7 @@
             ],
             "action_section_name": "Slider Options",
             "panel_x": 1,
-            "panel_y": 1,
+            "panel_y": 2,
             "section_type": "actions",
             "max_size_x": 30,
             "max_size_y": 0,
@@ -603,12 +628,13 @@
             "action_section_btn_width": 0,
             "action_section_btn_height": 30,
             "action_section_display_mode": "normal",
-            "action_section_icon_size": 0
+            "action_section_icon_size": 0,
+            "special_item_type": "none"
         },
         {
             "id": "sharedtooldocker",
             "docker_unloaded_visibility": "hidden",
-            "panel_y": 2,
+            "panel_y": 3,
             "size_x": 0,
             "size_y": 0,
             "docker_loading_priority": "normal",
@@ -626,13 +652,14 @@
             "min_size_x": 0,
             "min_size_y": 0,
             "panel_x": 0,
-            "section_type": "docker"
+            "section_type": "docker",
+            "special_item_type": "none"
         }
     ],
     "dockerButtonHeight": 20,
     "dockerBackHeight": 16,
     "actionHeight": 20,
-    "canvas_enable_resizing_by_default": false,
+    "resizableByDefault": false,
     "presetName": "Developer's Pick",
-    "tab_type": "buttons"
+    "tabType": "buttons"
 }

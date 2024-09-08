@@ -31,7 +31,7 @@ class ToolshelfPageMain(ToolshelfPage):
 
 
         pageCfg = CfgToolshelfPanel()
-        pageCfg.tab_type = self.rootCfg.tab_type
+        pageCfg.tab_type = self.rootCfg.tabType
         pageCfg.actionHeight = self.rootCfg.actionHeight
         pageCfg.actions = self.rootCfg.actions
         pageCfg.sections = self.rootCfg.sections

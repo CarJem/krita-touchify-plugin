@@ -30,5 +30,5 @@
     "dockerBackHeight": 16,
     "actionHeight": 16,
     "dockerButtonHeight": 32,
-    "canvas_enable_resizing_by_default": false
+    "resizableByDefault": false
 }

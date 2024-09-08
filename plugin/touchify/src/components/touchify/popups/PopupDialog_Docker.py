@@ -38,6 +38,10 @@ class PopupDialog_Docker(PopupDialog):
         self.docker_panel.setHiddenMode(True)
         self.grid.addWidget(self.docker_panel)
 
+        dialog_width = self.metadata.actions_item_width - 20
+        dialog_height = self.metadata.actions_item_height - 20
+        self.docker_panel.setSizeHint([dialog_width, dialog_height])
+
 
     def shutdownWidget(self):
         self.docker_panel.shutdownWidget()

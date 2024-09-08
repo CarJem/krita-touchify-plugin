@@ -7,12 +7,22 @@
 ## Additions:
 - **Massive Refactoring** 
     > Lots of code consoldiation again, to make the code easier to follow for myself
+- **New Toolshelf Feature - Presets**
+    > You can now save and load toolshelf configurations on the fly, and select them from within a dropdown in the toolshelf itself
+- **New Toolshelf Feature - Tabbed Section Customization**
+    > Ethier have your tabbed view as tabs or a dropdown button
+- **New Toolshelf Feature - Resizable Mode**
+    > You can now resize the On-Canvas Toolshelfs if enabled through the new dropdown where you find the presets
+- **New Toolshelf Feature - Brush Blending/Composite Selector**
+    > You can now add a section to your toolshelf to manage your brush blending options
 - **New Docker - Touchify Toolbox**
-    > Combines ideas from the Toolkit Plugin and the Default Docker, it replaces the default toolbox in the On-Canvas widgets as well.
+    > Combines ideas from the Toolkit Plugin and the Default Docker, it replaces the default toolbox in the On-Canvas widgets as well. It also features presets
+- **New Docker - Reference Tabs**
+    > Ported and Upgraded from the original Refrence Tabs Docker (https://krita-artists.org/t/plugin-reference-tabs-docker/47732)
 - **Theming Refresh**
-    > Made some theming changes to hopefully better suit those who don't wish to use a dark theme. Still not a perfect reload when switching between themes but at least it works better with a light theme now.
+    > Made some theming changes to hopefully better suit those who don't wish to use a dark theme. Never a perfect reload when switching between themes but at least it works better with any theme now. This will be an ongoing thing I continue to research
 - **NtWidgetPad Improvements**
-    > Now has the ability to be resized and has also undergone some massive refactoring for continued stability. To resize, simply right click or hold the collapse button to bring up a context menu to allow for resizing on supported components, such as the On-Canvas Toolshelfs
+    > Now has the ability to be resized and has also undergone some massive refactoring for continued stability.
 - **Universal Actions / Action System Change**
     > Massively reworked the entire action assignment system to allow for more flexibility and customization without restarting the entire application. This also allows you to do things with the Toolshelfs that previously required a registered action
 - **Migrated Popups, Docker Groups, Docker Toggles, and Workspace Toggles to the Universal Actions System**

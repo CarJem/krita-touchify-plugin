@@ -13,6 +13,7 @@ from ...touchify.actions.TouchifyActionPanel import TouchifyActionPanel
 from ....cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
 from ....cfg.toolshelf.CfgToolshelf import CfgToolshelfSection
 from ..core.DockerContainer import DockerContainer
+from .ToolshelfSpecialWidget import ToolshelfSpecialWidget
 from ....stylesheet import Stylesheet
 
 from krita import *
@@ -254,11 +255,29 @@ class ToolshelfPage(QWidget):
         self.pageUnloadSignal.connect(actionWidget.unloadWidget)
         return actionWidget
     
+    def _createSpecialSection(self, actionInfo: CfgToolshelfSection):
+        actionWidget = ToolshelfSpecialWidget(self, actionInfo)
+            
+        if actionInfo.size_x != 0 and actionInfo.size_y != 0:
+            size = [actionInfo.size_x, actionInfo.size_y]
+            actionWidget.setSizeHint(size)
+        if actionInfo.min_size_x != 0:
+            actionWidget.setMinimumWidth(actionInfo.min_size_x)
+        if actionInfo.min_size_y != 0:
+            actionWidget.setMinimumHeight(actionInfo.min_size_y)
+        if actionInfo.max_size_x != 0:
+            actionWidget.setMaximumWidth(actionInfo.max_size_x)
+        if actionInfo.max_size_y != 0:
+            actionWidget.setMaximumHeight(actionInfo.max_size_y)
+        return actionWidget
+
     def _createSection(self, actionInfo: CfgToolshelfSection):
-        if actionInfo.section_type == "docker":
+        if actionInfo.section_type == CfgToolshelfSection.SectionType.Docker:
             return self._createDockerSection(actionInfo)
-        elif actionInfo.section_type == "actions":
+        elif actionInfo.section_type == CfgToolshelfSection.SectionType.Actions:
             return self._createActionSection(actionInfo)
+        elif actionInfo.section_type == CfgToolshelfSection.SectionType.Special:
+            return self._createSpecialSection(actionInfo)
         else:
             return None
               

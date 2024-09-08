@@ -18,41 +18,21 @@ NOTICE_MESSAGE = """
 
 class SettingsDialog(QDialog):
 
-
-    def getNoticeMessage(self):
-        filePath = os.path.join(BASE_DIR, 'src', 'data', 'settings_message.txt')
-        result = ""
-        with open(filePath) as f:
-            result = f.read()
-        return result
-
     def __init__(self, qwin: Window):
         super().__init__(qwin.qwindow().window())
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.qwin = qwin.qwindow()
         self.editableConfig = copy.copy(TouchifyConfig.instance().getConfig())
-        self.gridLayout = QGridLayout()
 
-        self.notice = QLabel()
-        self.notice.setWordWrap(True)
-        self.notice.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.notice.setText(self.getNoticeMessage())
-        self.notice.setMinimumWidth(150)
-        self.notice.setStyleSheet('''font-size: 10px''')
 
         self.propertyGrid = PropertyGrid()
         self.propertyGrid.updateDataObject(self.editableConfig)
-        self.gridLayout.addWidget(self.propertyGrid, 0, 0)
-
-
-
-        self.gridLayout.addWidget(self.notice, 0, 1)
 
         self.container = QVBoxLayout(self)
         self.setMinimumSize(600,400)
         self.setBaseSize(800,800)
         self.btns = self.createButtons()
-        self.container.addLayout(self.gridLayout)
+        self.container.addWidget(self.propertyGrid)
         self.container.addWidget(self.btns)
         self.setLayout(self.container)     
 

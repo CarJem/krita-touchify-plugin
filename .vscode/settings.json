@@ -7,6 +7,7 @@
     },
     "python.analysis.extraPaths": [    
         "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs",
+        "/home/carjem/.var/app/org.kde.krita/data/krita/pykrita",
         "./plugin"
     ],
     "python.analysis.extraPaths.disabled": [
