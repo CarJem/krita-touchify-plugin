@@ -18,7 +18,7 @@
 - **New Docker - Touchify Toolbox**
     > Combines ideas from the Toolkit Plugin and the Default Docker, it replaces the default toolbox in the On-Canvas widgets as well. It also features presets
 - **New Docker - Reference Tabs**
-    > Ported and Upgraded from the original Refrence Tabs Docker (https://krita-artists.org/t/plugin-reference-tabs-docker/47732)
+    > Ported and Upgraded from the original Reference Tabs Docker (https://krita-artists.org/t/plugin-reference-tabs-docker/47732)
 - **Theming Refresh**
     > Made some theming changes to hopefully better suit those who don't wish to use a dark theme. Never a perfect reload when switching between themes but at least it works better with any theme now. This will be an ongoing thing I continue to research
 - **NtWidgetPad Improvements**

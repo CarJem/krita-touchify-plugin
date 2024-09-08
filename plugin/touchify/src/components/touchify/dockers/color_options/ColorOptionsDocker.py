@@ -43,7 +43,6 @@ class ColorSourceToggle(QWidget):
         self.toggleBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.toggleBtn.clicked.connect(self.toggleColors)
         self.toggleBtn.setFixedSize(self.cubeSize, self.cubeSize)
-        self.toggleBtn.setStyleSheet("border-radius: 0px;")
         self.gridLayout.addWidget(self.toggleBtn)
 
         self.setBgBtn = ColorFramedButton(self)
@@ -57,7 +56,6 @@ class ColorSourceToggle(QWidget):
         self.resetBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.resetBtn.clicked.connect(self.resetColors)
         self.resetBtn.setFixedSize(self.cubeSize, self.cubeSize)
-        self.resetBtn.setStyleSheet("border-radius: 0px;")
         self.gridLayout.addWidget(self.resetBtn)
 
 
