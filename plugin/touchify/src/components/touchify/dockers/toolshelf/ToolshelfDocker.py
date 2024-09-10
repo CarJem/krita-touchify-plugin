@@ -9,17 +9,17 @@ from .....action_manager import ActionManager
 if TYPE_CHECKING:
     from .....touchify import Touchify
 
-from ...toolshelf.ToolshelfContainer import ToolshelfContainer
+from .ToolshelfWidget import ToolshelfWidget
 
 from .....resources import ResourceManager
 
 DOCKER_TITLE = 'Touchify Toolshelf'
 
-class TouchifyToolshelfDocker(DockWidget):
+class ToolshelfDocker(DockWidget):
 
     def __init__(self): 
         super().__init__()
-        self.toolshelfHost: ToolshelfContainer = None
+        self.toolshelfHost: ToolshelfWidget = None
         self.docker_manager: DockerManager = None
         self.actions_manager: ActionManager = None
         self.PanelIndex = 2
@@ -33,25 +33,18 @@ class TouchifyToolshelfDocker(DockWidget):
         self.onLoaded()
         
     def onKritaConfigUpdate(self):
-        if self.panelStack:
-            self.panelStack.onKritaConfigUpdate()
+        pass
     
     def onLoaded(self):              
-        self.panelStack = ToolshelfContainer(self, self.PanelIndex)
-        self.setWidget(self.panelStack)
-
-        if self._last_pinned:
-            self.panelStack.setPinned(self._last_pinned)
-
-        if self.panelStack.panel(self._last_panel_id) != None:
-            self.panelStack.changePanel(self._last_panel_id)
+        self.mainWidget = ToolshelfWidget(self, self.PanelIndex)
+        self.setWidget(self.mainWidget)
+        self.mainWidget.restorePreviousState(self._last_pinned, self._last_panel_id)
 
     def onUnload(self):
-        self._last_panel_id = self.panelStack._current_panel_id
-        self._last_pinned = self.panelStack._pinned
-        self.panelStack.shutdownWidget()
-        self.panelStack.deleteLater()
-        self.panelStack = None
+        self._last_pinned, self._last_panel_id = self.mainWidget.backupPreviousState()
+        self.mainWidget.shutdownWidget()
+        self.mainWidget.deleteLater()
+        self.mainWidget = None
 
     def onConfigUpdated(self):
         self.onUnload()

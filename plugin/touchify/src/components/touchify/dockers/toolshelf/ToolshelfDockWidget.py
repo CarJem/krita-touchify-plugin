@@ -5,17 +5,19 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
-from ....settings.TouchifyConfig import *
-from ....variables import *
-from ....docker_manager import *
-from .ToolshelfContainer import *
+from .....settings.TouchifyConfig import *
+from .....variables import *
+from .....docker_manager import *
+from .ToolshelfWidget import *
 
-from ....cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
+from .....cfg.toolshelf.CfgToolshelfPanel import CfgToolshelfPanel
+from .....cfg.toolshelf.CfgToolshelf import CfgToolshelf
+
 from .ToolshelfPageMain import ToolshelfPageMain
-from ....action_manager import ActionManager
+from .....action_manager import ActionManager
 
  
-class ToolshelfWidget(QDockWidget):
+class ToolshelfDockWidget(QDockWidget):
 
     sizeChanged = pyqtSignal()
 
@@ -43,34 +45,27 @@ class ToolshelfWidget(QDockWidget):
 
     def hasPanelStack(self):
         if hasattr(self, "panelStack"):
-            if self.panelStack:
+            if self.mainWidget:
                 return True
         return False
 
     def onKritaConfigUpdate(self):
-        if self.hasPanelStack():
-            self.panelStack.onKritaConfigUpdate()
+        pass
 
     def onSizeChanged(self):
         self.sizeChanged.emit()
     
     def onLoaded(self):              
-        self.panelStack = ToolshelfContainer(self, self.PanelIndex)
-        self.scrollArea.setWidget(self.panelStack)
-
-        if self._last_pinned:
-            self.panelStack.setPinned(self._last_pinned)
-
-        if self.panelStack.panel(self._last_panel_id) != None:
-            self.panelStack.changePanel(self._last_panel_id)
+        self.mainWidget = ToolshelfWidget(self, self.PanelIndex)
+        self.scrollArea.setWidget(self.mainWidget)
+        self.mainWidget.restorePreviousState(self._last_pinned, self._last_panel_id)
 
     def onUnload(self):
-        self._last_panel_id = self.panelStack._current_panel_id
-        self._last_pinned = self.panelStack._pinned
-        self.panelStack.shutdownWidget()
+        self._last_pinned, self._last_panel_id = self.mainWidget.backupPreviousState()
+        self.mainWidget.shutdownWidget()
         self.scrollArea.takeWidget()
-        self.panelStack.deleteLater()
-        self.panelStack = None
+        self.mainWidget.deleteLater()
+        self.mainWidget = None
 
     def onConfigUpdated(self):
         self.onUnload()

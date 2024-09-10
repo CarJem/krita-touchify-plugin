@@ -1,14 +1,13 @@
 from uuid import uuid4
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from .ToolshelfPageButtons import ToolshelfPageButtons
 from krita import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ToolshelfPage import ToolshelfPage
 
-class ToolshelfPageTabWidget(QWidget):
+class ToolshelfSectionGroup(QWidget):
     def __init__(self, parent: "ToolshelfPage") -> None:
         super().__init__(parent)
         
@@ -83,4 +82,4 @@ class ToolshelfPageTabWidget(QWidget):
 
         self.stackPanel.adjustSize()
         self.adjustSize()
-        self.page.toolshelf.dockWidget.onSizeChanged()
+        self.page.toolshelf.rootWidget.onSizeChanged()

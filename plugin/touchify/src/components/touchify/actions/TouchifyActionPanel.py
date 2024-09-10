@@ -112,7 +112,7 @@ class TouchifyActionPanel(QWidget):
         else:
             rowWid = QWidget(self)
             rowWid.setLayout(QHBoxLayout(self))
-            rowWid.layout().setSpacing(1)
+            rowWid.layout().setSpacing(0)
             rowWid.layout().setContentsMargins(0, 0, 0, 0)
             rowWid.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
             self._rows[row] = rowWid
@@ -181,7 +181,7 @@ class TouchifyActionPanel(QWidget):
             self.layout().setSpacing(0)
             self.layout().setContentsMargins(0, 0, 0, 0)
         else:
-            self.layout().setSpacing(1)
+            self.layout().setSpacing(0)
             self.layout().setContentsMargins(0, 0, 0, 0)
         
         actions = self.cfg

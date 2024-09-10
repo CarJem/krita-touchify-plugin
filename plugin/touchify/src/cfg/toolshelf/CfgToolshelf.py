@@ -5,23 +5,20 @@ from ...ext.extensions_json import JsonExtensions as Extensions
 from .CfgToolshelfPanel import CfgToolshelfPanel
 from .CfgToolshelfSection import CfgToolshelfSection
 from ..action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
+from .CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
    
 class CfgToolshelf:
-    panels: TypedList[CfgToolshelfPanel] = []
     actions: TypedList[CfgTouchifyActionCollection] = []
     sections: TypedList[CfgToolshelfSection] = []
-    
-    resizableByDefault: bool = False
-    tabType: str = "buttons"
-
-    dockerButtonHeight: int = 32
-    dockerBackHeight: int = 16
     actionHeight: int = 16
-
+    tab_type: str = "buttons"
+    
+    panels: TypedList[CfgToolshelfPanel] = []
+    header_options: CfgToolshelfHeaderOptions = CfgToolshelfHeaderOptions()
     presetName: str = "New Toolshelf Preset"
 
     def __init__(self, **args) -> None:
-        Extensions.dictToObject(self, args)
+        Extensions.dictToObject(self, args, [CfgToolshelfHeaderOptions])
         panels = Extensions.default_assignment(args, "panels", [])
         self.panels = Extensions.list_assignment(panels, CfgToolshelfPanel)
         actions = Extensions.default_assignment(args, "actions", [])
@@ -49,11 +46,9 @@ class CfgToolshelf:
             "panels",
             "actions",
             "sections",
+            "header_options",
             "tabType",
-            "resizableByDefault",
             "actionHeight"
-            "dockerButtonHeight",
-            "dockerBackHeight"
         ]
 
     def propertygrid_labels(self):
@@ -63,10 +58,8 @@ class CfgToolshelf:
         labels["actions"] = "Actions"
         labels["sections"] = "Sections"
         labels["tabType"] = "Tab Type"
-        labels["dockerButtonHeight"] = "Docker Button Height"
-        labels["dockerBackHeight"] = "Back Button Height"
         labels["actionHeight"] = "Action Button Height"
-        labels["resizableByDefault"] = "Resizable by Default"
+        labels["header_options"] = "Header Options"
         return labels
 
     def propertygrid_groups(self):
@@ -76,6 +69,7 @@ class CfgToolshelf:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["tabType"] = {"type": "values", "entries": ["buttons", "tabs"]}
+        restrictions["header_options"] = {"type": "expandable"}
         return restrictions
 
 

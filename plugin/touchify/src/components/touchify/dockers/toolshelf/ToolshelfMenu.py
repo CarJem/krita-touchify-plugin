@@ -2,26 +2,26 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QPushButton, QSizePolicy, QStackedWidget
 from krita import *
 from PyQt5.QtWidgets import *
-from ..canvas.NtWidgetPad import NtWidgetPad
+from ...canvas.NtWidgetPad import NtWidgetPad
 
 from krita import *
 
-from ....settings.TouchifyConfig import *
-from ....variables import *
-from ....docker_manager import *
-from ....stylesheet import Stylesheet
-from ....ext.extensions_krita import KritaExtensions
+from .....settings.TouchifyConfig import *
+from .....variables import *
+from .....docker_manager import *
+from .....stylesheet import Stylesheet
+from .....ext.extensions_krita import KritaExtensions
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .ToolshelfPanelHeader import ToolshelfPanelHeader
+    from .ToolshelfHeader import ToolshelfHeader
 
-class ToolshelfSettingsMenu(QMenu):
-    def __init__(self, parent: QWidget, cfg: CfgToolshelf, panelIndex: int):
-        super(ToolshelfSettingsMenu, self).__init__(parent)
+class ToolshelfMenu(QMenu):
+    def __init__(self, parent: QWidget, cfg: CfgToolshelf, registry_index: int):
+        super(ToolshelfMenu, self).__init__(parent)
         self.cfg = cfg
-        self.panelIndex = panelIndex
-        self.selectedPresetIndex = TouchifyConfig.instance().getActiveToolshelfIndex(self.panelIndex)
+        self.registry_index = registry_index
+        self.current_preset_index = TouchifyConfig.instance().getActiveToolshelfIndex(self.registry_index)
         self.parentNtWidget: NtWidgetPad = None
         self.setupWidgetPad = True
         self.loadPresets()
@@ -46,14 +46,14 @@ class ToolshelfSettingsMenu(QMenu):
     def loadPresets(self):
         self.clear()
         
-        registry = TouchifyConfig.instance().getToolshelfRegistry(self.panelIndex)
+        registry = TouchifyConfig.instance().getToolshelfRegistry(self.registry_index)
         if registry != None:
             index = 0
             for preset in registry.presets:
                 preset: CfgToolshelf
                 action = QAction(preset.presetName, self)
                 action.setCheckable(True)
-                if self.selectedPresetIndex == index:
+                if self.current_preset_index == index:
                     action.setChecked(True)
                 action.setData(index)
                 action.triggered.connect(self.changePreset)
@@ -67,4 +67,4 @@ class ToolshelfSettingsMenu(QMenu):
         if isinstance(ac, QAction):
             index: int = ac.data()
             if isinstance(index, int):
-                TouchifyConfig.instance().setActiveToolshelf(self.panelIndex, index)
+                TouchifyConfig.instance().setActiveToolshelf(self.registry_index, index)

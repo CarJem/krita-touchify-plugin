@@ -1,164 +1,4 @@
 {
-    "panels": [],
-    "actions": [
-        {
-            "actions": [
-                {
-                    "icon": "",
-                    "action_id": "file_new",
-                    "context_menu_actions": [],
-                    "showIcon": true,
-                    "variant": "action",
-                    "action_use_icon": true,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "text": "",
-                    "showText": false,
-                    "docker_group_data": {
-                        "docker_names": []
-                    },
-                    "docker_id": "",
-                    "id": "",
-                    "popup_data": {
-                        "actions_items": []
-                    },
-                    "workspace_id": ""
-                },
-                {
-                    "icon": "",
-                    "action_id": "file_open",
-                    "context_menu_actions": [],
-                    "showIcon": true,
-                    "variant": "action",
-                    "action_use_icon": true,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "text": "",
-                    "showText": false,
-                    "docker_group_data": {
-                        "docker_names": []
-                    },
-                    "docker_id": "",
-                    "id": "",
-                    "popup_data": {
-                        "actions_items": []
-                    },
-                    "workspace_id": ""
-                },
-                {
-                    "context_menu_actions": [],
-                    "showIcon": true,
-                    "action_id": "file_save",
-                    "variant": "action",
-                    "action_use_icon": true,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "icon": "",
-                    "text": "",
-                    "id": "",
-                    "showText": false,
-                    "docker_id": "",
-                    "workspace_id": "",
-                    "docker_group_data": {
-                        "docker_names": []
-                    },
-                    "popup_data": {
-                        "actions_items": []
-                    }
-                },
-                {
-                    "context_menu_actions": [],
-                    "showIcon": true,
-                    "action_id": "TouchifyAction_SelectionPopup",
-                    "variant": "action",
-                    "action_use_icon": true,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "text": "",
-                    "icon": "",
-                    "showText": false,
-                    "docker_group_data": {
-                        "docker_names": []
-                    },
-                    "docker_id": "",
-                    "id": "",
-                    "popup_data": {
-                        "actions_items": []
-                    },
-                    "workspace_id": ""
-                },
-                {
-                    "context_menu_actions": [],
-                    "showIcon": true,
-                    "action_id": "touchify_showPopupMenu",
-                    "variant": "action",
-                    "action_use_icon": false,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "text": "",
-                    "icon": "material:menu",
-                    "showText": false,
-                    "docker_group_data": {
-                        "docker_names": []
-                    },
-                    "docker_id": "",
-                    "id": "",
-                    "popup_data": {
-                        "actions_items": []
-                    },
-                    "workspace_id": ""
-                }
-            ],
-            "row_name": "File Row"
-        },
-        {
-            "actions": [
-                {
-                    "context_menu_actions": [],
-                    "showIcon": true,
-                    "id": "",
-                    "icon": "",
-                    "text": "",
-                    "variant": "action",
-                    "action_id": "edit_undo",
-                    "showText": false,
-                    "action_use_icon": true,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "docker_id": "",
-                    "workspace_id": "",
-                    "docker_group_data": {
-                        "docker_names": []
-                    },
-                    "popup_data": {
-                        "actions_items": []
-                    }
-                },
-                {
-                    "context_menu_actions": [],
-                    "showIcon": true,
-                    "id": "",
-                    "icon": "",
-                    "text": "",
-                    "variant": "action",
-                    "action_id": "edit_redo",
-                    "showText": false,
-                    "action_use_icon": true,
-                    "brush_name": "",
-                    "brush_override_icon": false,
-                    "docker_id": "",
-                    "workspace_id": "",
-                    "docker_group_data": {
-                        "docker_names": []
-                    },
-                    "popup_data": {
-                        "actions_items": []
-                    }
-                }
-            ],
-            "row_name": "Undo / Redo Row"
-        }
-    ],
     "sections": [
         {
             "id": "OverviewDocker",
@@ -330,10 +170,175 @@
             "action_section_icon_size": 16
         }
     ],
-    "dockerButtonHeight": 32,
-    "dockerBackHeight": 16,
+    "actions": [
+        {
+            "actions": [
+                {
+                    "icon": "",
+                    "action_id": "file_new",
+                    "context_menu_actions": [],
+                    "showIcon": true,
+                    "variant": "action",
+                    "action_use_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "text": "",
+                    "showText": false,
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "docker_id": "",
+                    "id": "",
+                    "popup_data": {
+                        "actions_items": []
+                    },
+                    "workspace_id": ""
+                },
+                {
+                    "icon": "",
+                    "action_id": "file_open",
+                    "context_menu_actions": [],
+                    "showIcon": true,
+                    "variant": "action",
+                    "action_use_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "text": "",
+                    "showText": false,
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "docker_id": "",
+                    "id": "",
+                    "popup_data": {
+                        "actions_items": []
+                    },
+                    "workspace_id": ""
+                },
+                {
+                    "context_menu_actions": [],
+                    "showIcon": true,
+                    "action_id": "file_save",
+                    "variant": "action",
+                    "action_use_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "icon": "",
+                    "text": "",
+                    "id": "",
+                    "showText": false,
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "actions_items": []
+                    }
+                },
+                {
+                    "context_menu_actions": [],
+                    "showIcon": true,
+                    "action_id": "TouchifyAction_SelectionPopup",
+                    "variant": "action",
+                    "action_use_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "text": "",
+                    "icon": "",
+                    "showText": false,
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "docker_id": "",
+                    "id": "",
+                    "popup_data": {
+                        "actions_items": []
+                    },
+                    "workspace_id": ""
+                },
+                {
+                    "context_menu_actions": [],
+                    "showIcon": true,
+                    "action_id": "touchify_showPopupMenu",
+                    "variant": "action",
+                    "action_use_icon": false,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "text": "",
+                    "icon": "material:menu",
+                    "showText": false,
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "docker_id": "",
+                    "id": "",
+                    "popup_data": {
+                        "actions_items": []
+                    },
+                    "workspace_id": ""
+                }
+            ],
+            "row_name": "File Row"
+        },
+        {
+            "actions": [
+                {
+                    "context_menu_actions": [],
+                    "showIcon": true,
+                    "id": "",
+                    "icon": "",
+                    "text": "",
+                    "variant": "action",
+                    "action_id": "edit_undo",
+                    "showText": false,
+                    "action_use_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "actions_items": []
+                    }
+                },
+                {
+                    "context_menu_actions": [],
+                    "showIcon": true,
+                    "id": "",
+                    "icon": "",
+                    "text": "",
+                    "variant": "action",
+                    "action_id": "edit_redo",
+                    "showText": false,
+                    "action_use_icon": true,
+                    "brush_name": "",
+                    "brush_override_icon": false,
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "actions_items": []
+                    }
+                }
+            ],
+            "row_name": "Undo / Redo Row"
+        }
+    ],
+    "tab_type": "tabs",
     "actionHeight": 20,
-    "resizableByDefault": true,
-    "presetName": "Developer's Pick",
-    "tabType": "tabs"
+    "panels": [],
+    "header_options": {
+        "stack_preview": "default",
+        "position": "top",
+        "default_to_resize_mode": true,
+        "button_size": 32,
+        "header_size": 16,
+        "stack_actions": []
+    },
+    "presetName": "Developer's Pick"
 }

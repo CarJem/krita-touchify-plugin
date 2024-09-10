@@ -14,7 +14,7 @@ from ....stylesheet import Stylesheet
 from .NtWidgetPad import NtWidgetPad
 from krita import *
 from ....variables import *
-from ..toolshelf.ToolshelfWidget import ToolshelfWidget
+from ..dockers.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget
 from .NtWidgetPadAlignment import NtWidgetPadAlignment
 
 from typing import TYPE_CHECKING
@@ -30,7 +30,7 @@ class NtToolshelf(QObject):
         self.canvas = canvas
         
         panel_index = 0 if isPrimaryPanel else 1
-        self.toolshelf = ToolshelfWidget(panel_index, docker_manager, actions_manager)
+        self.toolshelf = ToolshelfDockWidget(panel_index, docker_manager, actions_manager)
 
 
         
@@ -51,8 +51,9 @@ class NtToolshelf(QObject):
 
         toolshelf_cfg = TouchifyConfig.instance().getActiveToolshelf(panel_index)
         if toolshelf_cfg:
-            if toolshelf_cfg.resizableByDefault:
-                self.pad.toggleResizing()
+            if toolshelf_cfg.header_options:
+                if toolshelf_cfg.header_options.default_to_resize_mode == True:
+                    self.pad.toggleResizing()
 
     def onSizeChanged(self):
         self.canvas.updateCanvas()

@@ -47,20 +47,31 @@ class Stylesheet:
                 """
 
         self.touchify_toolshelf_header = f"""
-                QPushButton {{
+
+                QWidget#toolshelf-header {{
                     background-color: palette(alternate-base);
                     border: none;
                 }}
 
-                QPushButton:hover {{
+                QWidget#toolshelf-tablist-row {{
+                    background-color: palette(alternate-base);
+                    border: none;
+                }}
+
+                QPushButton, QToolButton {{
+                    background-color: palette(alternate-base);
+                    border: none;
+                }}
+
+                QPushButton:hover, QToolButton:hover {{
                     background-color: palette(highlight);
                 }}
 
-                QPushButton:checked {{
+                QPushButton:checked, QToolButton:checked {{
                     background-color: palette(highlight);
                 }}
                 
-                QPushButton:pressed {{
+                QPushButton:pressed, QToolButton:pressed {{
                     background-color: palette(alternate-base);
                 }}
 
@@ -76,6 +87,10 @@ class Stylesheet:
                     border: none;
                 }}
 
+                QPushButton::menu-indicator, QToolButton::menu-indicator {{ 
+                    image: none; 
+                }}
+
                 QPushButton#menu-widget {{
                     border-top-right-radius: 0px;
                     border-bottom-right-radius: 0px;
@@ -87,44 +102,6 @@ class Stylesheet:
                     border: none;
                     border-top-left-radius: 0px;
                     border-bottom-left-radius: 0px;
-                }}
-                """
-
-        self.touchify_toolshelf_header_button = f"""
-                QToolButton {{
-                    background-color: palette(alternate-base);
-                    border: none;
-                    border-radius: 4px;
-                }}
-                
-                QToolButton:hover {{
-                    background-color: palette(highlight);
-                }}
-                
-                QToolButton:pressed {{
-                    background-color: palette(alternate-base);
-                }}
-
-                QPushButton::menu-indicator {{ 
-                    image: none; 
-                }}
-
-                QPushButton {{
-                    background-color: palette(alternate-base);
-                    border: none;
-                    border-radius: 4px;
-                }}
-                
-                QPushButton:hover {{
-                    background-color: palette(highlight);
-                }}
-                
-                QPushButton:pressed {{
-                    background-color: palette(alternate-base);
-                }}
-
-                QPushButton::menu-indicator {{ 
-                    image: none; 
                 }}
                 """
 

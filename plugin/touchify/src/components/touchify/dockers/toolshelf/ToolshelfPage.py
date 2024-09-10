@@ -1,47 +1,21 @@
-from functools import partial
-from uuid import uuid4
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from ....resources import ResourceManager
-
-from .ToolshelfPageButtons import ToolshelfPageButtons
-
-from .ToolshelfPageTabWidget import ToolshelfPageTabWidget
-from ....docker_manager import DockerManager
-from ...touchify.actions.TouchifyActionPanel import TouchifyActionPanel
-from ....cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
-from ....cfg.toolshelf.CfgToolshelf import CfgToolshelfSection
-from ..core.DockerContainer import DockerContainer
-from .ToolshelfSpecialWidget import ToolshelfSpecialWidget
-from ....stylesheet import Stylesheet
+from .ToolshelfSectionGroup import ToolshelfSectionGroup
+from .....docker_manager import DockerManager
+from ...actions.TouchifyActionPanel import TouchifyActionPanel
+from .....cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
+from .....cfg.toolshelf.CfgToolshelf import CfgToolshelfSection
+from ...core.DockerContainer import DockerContainer
+from ...toolshelf.ToolshelfSpecialWidget import ToolshelfSpecialWidget
+from .....stylesheet import Stylesheet
+from .ToolshelfPageSplitter import ToolshelfSplitter
 
 from krita import *
 
 from typing import TYPE_CHECKING, Mapping
 if TYPE_CHECKING:
-    from .ToolshelfContainer import ToolshelfContainer
-
-class ToolshelfSplitter(QWidget):
-    def __init__(self, orientation: Qt.Orientation, parent: QWidget | None = None) -> None:
-        super().__init__(parent)
-        self.orientation = orientation
-
-        if orientation == Qt.Orientation.Horizontal:
-            self.ourLayout = QHBoxLayout(self)
-        elif orientation == Qt.Orientation.Vertical:
-            self.ourLayout = QVBoxLayout(self)
-        else:
-            error = TypeError().add_note("invalid orientation: {0}".format(str(orientation)))
-            raise error
-        
-        self.ourLayout.setContentsMargins(0,0,0,0)
-        self.ourLayout.setSpacing(0)
-        self.setLayout(self.ourLayout)
-
-
-    def addWidget(self, widget: QWidget):
-        self.layout().addWidget(widget)
+    from .ToolshelfPageStack import ToolshelfPageStack
 
 class ToolshelfPage(QWidget):
     
@@ -50,40 +24,29 @@ class ToolshelfPage(QWidget):
     pageLoadedSignal = pyqtSignal()
     pageUnloadSignal = pyqtSignal()
 
-    def __init__(self, parent: "ToolshelfContainer", ID: any, data: CfgToolshelfPanel):
+    def __init__(self, parent: "ToolshelfPageStack", ID: any, data: CfgToolshelfPanel):
         super(ToolshelfPage, self).__init__(parent)
-        self.toolshelf: "ToolshelfContainer" = parent
+        self.toolshelf: "ToolshelfPageStack" = parent
         self.ID = ID
 
-        self.pageLayout = QHBoxLayout(self)
-        self.pageLayout.setContentsMargins(0, 0, 0, 0)
-        self.pageContainer = QWidget(self)
-        self.pageLayout.addWidget(self.pageContainer)
-        self.setLayout(self.pageLayout)
         self.setAutoFillBackground(True)
 
-
-        self.shelfContainer = QWidget(self.pageContainer)
-        self.pageLayout.addWidget(self.shelfContainer)
-
-        self.shelfLayout = QVBoxLayout(self.pageContainer)
+        self.shelfLayout = QVBoxLayout(self)
         self.shelfLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.shelfLayout.setContentsMargins(0, 0, 0, 0)
-        self.shelfLayout.setSpacing(1)
-        self.shelfContainer.setLayout(self.shelfLayout)
-        
+        self.shelfLayout.setSpacing(0)
+        self.setLayout(self.shelfLayout)
 
 
         self.tabType = data.tab_type
 
-        self.docker_manager = self.toolshelf.dockWidget.docker_manager
-        self.actions_manager = self.toolshelf.dockWidget.actions_manager
+        self.docker_manager = self.toolshelf.rootWidget.parent_docker.docker_manager
+        self.actions_manager = self.toolshelf.rootWidget.parent_docker.actions_manager
 
         self.ID = ID
         self.dockerWidgets: dict[any, DockerContainer] = {}
         self.size = None
         self.panelProperties = data
-        self._initPageTabs()
         self._initPageActions()
         self._initSections()
 
@@ -93,13 +56,8 @@ class ToolshelfPage(QWidget):
     
 
     def _initPageActions(self):
-        if self.panelProperties.section_show_root_actions:
-            actionsList = self.toolshelf.cfg.actions
-            actionHeight = self.toolshelf.cfg.actionHeight
-        else:
-            actionsList = self.panelProperties.actions
-            actionHeight = self.panelProperties.actionHeight
-
+        actionsList = self.panelProperties.actions
+        actionHeight = self.panelProperties.actionHeight
 
         self.quickActions = TouchifyActionPanel(actionsList, self, self.actions_manager)
         self.quickActions.setAutoFillBackground(True)
@@ -110,43 +68,6 @@ class ToolshelfPage(QWidget):
             self.quickActions._buttons[btnKey].setMinimumWidth(actionHeight)
             self.quickActions._buttons[btnKey].setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
         self.shelfLayout.addWidget(self.quickActions)
-    
-    def _initPageTabs(self):
-        if self.panelProperties.section_show_tabs == False:
-            self.pageBtns = None
-            return
-        
-        isHorizontal = True
-        
-        self.pageBtns = ToolshelfPageButtons(self, isHorizontal)
-        self.pageBtns.setAutoFillBackground(True)
-        self.pageBtns.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-        if isHorizontal:
-            self.pageLayout.insertWidget(0, self.pageBtns, 0, Qt.AlignmentFlag.AlignVCenter)
-        else:
-            self.shelfLayout.insertWidget(0, self.pageBtns)    
-        
-        panels = self.toolshelf.cfg.panels
-        for entry in panels:
-            properties: CfgToolshelfPanel = entry
-            if properties.id == self.ID:
-                homeProps = CfgToolshelfPanel()
-                homeProps.row = properties.row
-                homeProps.id = "ROOT"
-                homeProps.icon = "material:home"
-                panel_title = "Home"
-                self.addPageButton(homeProps, self.toolshelf.goHome, panel_title)
-            else:
-                PANEL_ID = properties.id
-                panel_title = properties.id
-                self.addPageButton(properties, partial(self.toolshelf.changePanel, properties.id), panel_title)
-    
-    def addPageButton(self, properties: CfgToolshelfPanel, onClick, title):
-        btn = self.pageBtns.addButton(properties.id, properties.row, onClick, title, False)
-        btn.setIcon(ResourceManager.iconLoader(properties.icon))
-        btn.setFixedHeight(self.toolshelf.cfg.dockerButtonHeight)
-        btn.setMinimumWidth(self.toolshelf.cfg.dockerButtonHeight)
-        btn.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)  
       
     def _initSections(self):    
 
@@ -304,7 +225,7 @@ class ToolshelfPage(QWidget):
             if len(widget_groups[y][x]) == 1:
                 splitter.addWidget(widget_groups[y][x][0])
             else:
-                tabBar = ToolshelfPageTabWidget(self)
+                tabBar = ToolshelfSectionGroup(self)
                 for item in widget_groups[y][x]:
                     if isinstance(item, DockerContainer):
                         title = self.docker_manager.dockerWindowTitle(item.docker_id)
@@ -332,7 +253,7 @@ class ToolshelfPage(QWidget):
         self.toolshelf.changePanel(self.ID)
 
     def resizeEvent(self, event: QResizeEvent):
-        self.toolshelf.dockWidget.onSizeChanged()
+        self.toolshelf.rootWidget.onSizeChanged()
         super().resizeEvent(event)
 
     def unloadPage(self):
@@ -356,9 +277,7 @@ class ToolshelfPage(QWidget):
         return QSize(container_width, container_height)
     
     def updateStyleSheet(self):
-        if self.pageBtns:
-            self.pageBtns.setStyleSheet(Stylesheet.instance().touchify_toolshelf_header_button)
-        self.quickActions.setStyleSheet(Stylesheet.instance().touchify_toolshelf_header_button)
+        self.quickActions.setStyleSheet(Stylesheet.instance().touchify_toolshelf_header)
 
     def sizeHint(self):
         if self.size:
