@@ -54,13 +54,25 @@ class ToolshelfPage(QWidget):
         super(ToolshelfPage, self).__init__(parent)
         self.toolshelf: "ToolshelfContainer" = parent
         self.ID = ID
-        
-        self.shelfLayout = QVBoxLayout(self)
+
+        self.pageLayout = QHBoxLayout(self)
+        self.pageLayout.setContentsMargins(0, 0, 0, 0)
+        self.pageContainer = QWidget(self)
+        self.pageLayout.addWidget(self.pageContainer)
+        self.setLayout(self.pageLayout)
+        self.setAutoFillBackground(True)
+
+
+        self.shelfContainer = QWidget(self.pageContainer)
+        self.pageLayout.addWidget(self.shelfContainer)
+
+        self.shelfLayout = QVBoxLayout(self.pageContainer)
         self.shelfLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.shelfLayout.setContentsMargins(0, 0, 0, 0)
         self.shelfLayout.setSpacing(1)
-        self.setLayout(self.shelfLayout)
-        self.setAutoFillBackground(True)
+        self.shelfContainer.setLayout(self.shelfLayout)
+        
+
 
         self.tabType = data.tab_type
 
@@ -104,10 +116,15 @@ class ToolshelfPage(QWidget):
             self.pageBtns = None
             return
         
-        self.pageBtns = ToolshelfPageButtons(self)
+        isHorizontal = True
+        
+        self.pageBtns = ToolshelfPageButtons(self, isHorizontal)
         self.pageBtns.setAutoFillBackground(True)
         self.pageBtns.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-        self.shelfLayout.insertWidget(0, self.pageBtns)    
+        if isHorizontal:
+            self.pageLayout.insertWidget(0, self.pageBtns, 0, Qt.AlignmentFlag.AlignVCenter)
+        else:
+            self.shelfLayout.insertWidget(0, self.pageBtns)    
         
         panels = self.toolshelf.cfg.panels
         for entry in panels:
@@ -181,6 +198,7 @@ class ToolshelfPage(QWidget):
         fixed_height = actionInfo.action_section_btn_height
                
         actionWidget = TouchifyActionPanel(cfg=actionInfo.action_section_contents, parent=self, actions_manager=self.actions_manager, type=display_type, icon_width=icon_size, icon_height=icon_size, item_height=fixed_height, item_width=fixed_width)
+        actionWidget.setTitle(actionInfo.action_section_name)
         actionWidget.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
         #region ActionContainer Setup    
 
@@ -291,6 +309,8 @@ class ToolshelfPage(QWidget):
                     if isinstance(item, DockerContainer):
                         title = self.docker_manager.dockerWindowTitle(item.docker_id)
                         tabBar.addTab(item, title)
+                    elif isinstance(item, TouchifyActionPanel):
+                        tabBar.addTab(item, item.title)
                     else:
                         tabBar.addTab(item, "Unknown")
                 tabBar.setCurrentIndex(0)
@@ -317,15 +337,9 @@ class ToolshelfPage(QWidget):
 
     def unloadPage(self):
         self.pageUnloadSignal.emit()
-        # TODO: Lag Reduction?
-        #for host_id in self.dockerWidgets:
-            #self.dockerWidgets[host_id].unloadWidget()
 
     def loadPage(self):
         self.pageLoadedSignal.emit()
-        # TODO: Lag Reduction?
-        #for host_id in self.dockerWidgets:
-            #self.dockerWidgets[host_id].loadWidget()
 
     def setSizeHint(self, size):
         self.size = QSize(size[0] + 20, size[1] + 20)

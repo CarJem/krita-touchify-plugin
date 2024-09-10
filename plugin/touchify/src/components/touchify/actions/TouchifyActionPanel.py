@@ -34,6 +34,8 @@ class TouchifyActionPanel(QWidget):
 
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
 
+        self.title = "Unknown"
+
         self.cfg = cfg
         self.type = type
         self.actions_manager = actions_manager
@@ -53,6 +55,9 @@ class TouchifyActionPanel(QWidget):
         self.registered_actions: dict[QAction, tuple[TouchifyActionButton, bool]] = {}
         
         self.createPanel()
+
+    def setTitle(self, text: str):
+        self.title = text
 
     def setSizeHint(self, hint: QSize):
         self.hinted_size = hint

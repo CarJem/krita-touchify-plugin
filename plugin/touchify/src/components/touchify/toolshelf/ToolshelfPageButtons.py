@@ -53,10 +53,14 @@ class ToolshelfPageButton(QPushButton):
         self.setPalette(p)
 
 class ToolshelfPageButtons(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, isHorizontal=False):
         super(ToolshelfPageButtons, self).__init__(parent)
         self._rows: dict[int, QWidget] = {}
-        self.setLayout(QVBoxLayout(self))
+        self.isHorizontal = isHorizontal
+        if self.isHorizontal:
+            self.setLayout(QHBoxLayout(self))
+        else:
+            self.setLayout(QVBoxLayout(self))
         self.layout().setSpacing(1)
         self.layout().setContentsMargins(0, 0, 0, 0)
 
@@ -73,7 +77,10 @@ class ToolshelfPageButtons(QWidget):
 
         if row not in self._rows:
             rowWid = QWidget(self)
-            rowWid.setLayout(QHBoxLayout(self))
+            if self.isHorizontal:
+                rowWid.setLayout(QVBoxLayout(self))
+            else:
+                rowWid.setLayout(QHBoxLayout(self))
             rowWid.layout().setSpacing(1)
             rowWid.layout().setContentsMargins(0, 0, 0, 0)
             rowWid.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
