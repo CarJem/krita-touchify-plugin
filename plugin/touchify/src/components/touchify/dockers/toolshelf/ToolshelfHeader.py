@@ -37,7 +37,6 @@ class ToolshelfHeader(QWidget):
         self.icon_size = self.button_size - 4
 
         self.setObjectName("toolshelf-header")
-        self.setobj
 
         self.setContentsMargins(0,0,0,0)
 

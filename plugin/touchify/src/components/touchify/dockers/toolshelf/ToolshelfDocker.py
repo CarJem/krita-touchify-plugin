@@ -41,10 +41,11 @@ class ToolshelfDocker(DockWidget):
         self.mainWidget.restorePreviousState(self._last_pinned, self._last_panel_id)
 
     def onUnload(self):
-        self._last_pinned, self._last_panel_id = self.mainWidget.backupPreviousState()
-        self.mainWidget.shutdownWidget()
-        self.mainWidget.deleteLater()
-        self.mainWidget = None
+        if hasattr(self, 'mainWidget'):
+            self._last_pinned, self._last_panel_id = self.mainWidget.backupPreviousState()
+            self.mainWidget.shutdownWidget()
+            self.mainWidget.deleteLater()
+            self.mainWidget = None
 
     def onConfigUpdated(self):
         self.onUnload()
