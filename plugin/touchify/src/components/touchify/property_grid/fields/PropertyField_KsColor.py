@@ -19,11 +19,7 @@ from .....ext.KritaSettings import KS_Color
 from ....pyqt.widgets.ColorButton import ColorButton
 
 
-ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
-ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
-GROUP_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
-GROUP_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
 class PropertyField_KsColor(PropertyField):
     def __init__(self, variable_name=str, variable_data=KS_Color, variable_source=any):

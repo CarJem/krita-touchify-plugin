@@ -3,35 +3,39 @@ from .CfgToolboxItem import *
 from .CfgToolboxCategory import *
 from ...ext.TypedList import TypedList
 from ...ext.extensions_json import JsonExtensions as Extensions
+from ..CfgBackwardsCompat import CfgBackwardsCompat
 
 
    
 class CfgToolbox:
-    categories: TypedList[CfgToolboxCategory] = [] 
-    menuDelay: int = 200
-    submenuButton: bool = False
+    preset_name: str = "New Toolbox Preset"
 
     column_count: int = 2
     icon_size: int = 16
 
+    submenu_delay: int = 200
     background_opacity: int = 255
     button_opacity: int = 255
 
-    presetName: str = "New Toolbox Preset"
+    categories: TypedList[CfgToolboxCategory] = [] 
+
+
+
 
 
     def __init__(self, **args) -> None:
+        args = CfgBackwardsCompat.CfgToolbox(args)
         Extensions.dictToObject(self, args)
 
         categories = Extensions.default_assignment(args, "categories", [])
         self.categories = Extensions.list_assignment(categories, CfgToolboxCategory)
 
     def __str__(self):
-        return self.presetName.replace("\n", "\\n")
+        return self.preset_name.replace("\n", "\\n")
 
     def getFileName(self):
         valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
-        filename = ''.join(c for c in self.presetName if c in valid_chars)
+        filename = ''.join(c for c in self.preset_name if c in valid_chars)
         filename = filename.replace(' ','_') # I don't like spaces in filenames.
         return filename.lower()
     
@@ -40,29 +44,28 @@ class CfgToolbox:
 
     def propertygrid_sorted(self):
         return [
-            "menuDelay",
-            "submenuButton",
+            "preset_name"
+            # Layout
             "column_count",
             "icon_size",
+            # Others
+            "submenu_delay",
             "background_opacity",
             "button_opacity",
+            # Items
             "categories"
         ]
 
     def propertygrid_labels(self):
         labels = {}
+        labels["preset_name"] = "Preset Name"
         labels["categories"] = "Categories"
-        labels["menuDelay"] = "Menu Delay"
-        labels["submenuButton"] = "Submenu Button"
+        labels["submenu_delay"] = "Menu Delay"
         labels["column_count"] = "Column Count"
         labels["icon_size"] = "Icon Size"
         labels["background_opacity"] = "Background Opacity"
         labels["button_opacity"] = "Button Opacity"
         return labels
-
-    def propertygrid_groups(self):
-        groups = {}
-        return groups
 
     def propertygrid_restrictions(self):
         restrictions = {}

@@ -180,9 +180,10 @@
             "id": "Navigation"
         }
     ],
-    "presetName": "Developer's Pick",
-    "menuDelay": 200,
-    "submenuButton": false,
     "column_count": 2,
-    "icon_size": 16
+    "icon_size": 16,
+    "preset_name": "Developer's Pick",
+    "submenu_delay": 200,
+    "background_opacity": 255,
+    "button_opacity": 255
 }

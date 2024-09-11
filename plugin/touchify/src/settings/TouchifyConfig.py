@@ -71,12 +71,6 @@ class TouchifyConfig:
             labels["hotkeys"] = "Hotkeys"
             labels["toolbox_settings"] = "Touchify Toolbox"
             return labels
-
-        def propertygrid_groups(self):
-            groups = {}
-            #groups["canvas"] = {"name": "Toolshelf Widgets", "items": ["toolshelf_alt", "toolshelf_main", "toolshelf_docker"]}
-            #groups["miscellaneous"] = {"name": "Miscellaneous", "items": ["hotkeys"]}
-            return groups
         
         def propertygrid_sisters(self):
             row: dict[str, list[str]] = {}

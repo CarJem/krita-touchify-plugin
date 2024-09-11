@@ -183,10 +183,6 @@ class CfgToolshelfSection:
         row["panel_location"] = {"name": "Panel Position", "items": ["panel_x", "panel_y"]}
         return row
 
-    def propertygrid_groups(self):
-        groups = {}
-        return groups
-
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["id"] = {"type": "docker_selection"}

@@ -21,9 +21,6 @@ from ...pyqt.widgets.CollapsibleBox import CollapsibleBox
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
 ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
-GROUP_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
-GROUP_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
-
 LABEL_ALIGNMENT = Qt.AlignmentFlag.AlignLeft
 
 
@@ -153,7 +150,6 @@ class PropertyGrid_Panel(QScrollArea):
         self.labels.clear()
         PropertyUtils_Extensions.clearLayout(self.formLayout)
         sisterData = PropertyUtils_Extensions.getSisters(item)
-        groupData = PropertyUtils_Extensions.getGroups(item)
         labelData = PropertyUtils_Extensions.getLabels(item)
 
         claimedSections = []
@@ -173,33 +169,9 @@ class PropertyGrid_Panel(QScrollArea):
 
                 for varName in sisterItems:
                     claimedSisters.append(varName)
-    
-        for groupId in groupData:
-            sisterName = groupData[groupId]["name"]
-            sisterItems = list(groupData[groupId]["items"])
-            for varName in sisterItems:
-                claimedSections.append(varName)
 
         for varName in PropertyUtils_Extensions.getClassVariables(item):
             if varName not in claimedSections and varName not in claimedSisters:
                 self.createRow(item, varName, self.formLayout, labelData, sisterParentData)
-
-        for groupId in groupData:
-            sisterName = groupData[groupId]["name"]
-            sisterItems = list(groupData[groupId]["items"])
-            section = CollapsibleBox(sisterName, self.formWidget)
-            sectionLayout = QFormLayout()
-            sectionLayout.setSpacing(0)
-            sectionLayout.setLabelAlignment(LABEL_ALIGNMENT)
-            sectionLayout.setContentsMargins(0,0,0,0)
-            section.setSizePolicy(GROUP_SIZE_POLICY_X, GROUP_SIZE_POLICY_Y)
-
-            for varName in sisterItems:
-                if varName not in claimedSisters:
-                    self.createRow(item, varName, sectionLayout, labelData, sisterParentData)
-
-            section.setContentLayout(sectionLayout)
-
-            self.formLayout.addRow(section)
 
         self.updateVisibility()

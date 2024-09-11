@@ -123,17 +123,17 @@ class ActionManager:
         icon_loader_index = 0
         
         if data.variant == CfgTouchifyAction.Variants.Brush:
-            if data.showIcon:
-                if data.brush_override_icon and data.showIcon:
+            if data.show_icon:
+                if data.brush_override_icon and data.show_icon:
                     icon_loader_index = 1
                 else:
                     icon_loader_index = 3
         elif data.variant == CfgTouchifyAction.Variants.Action:
-            if data.showIcon and data.action_use_icon:
+            if data.show_icon and data.action_use_icon:
                 icon_loader_index = 2
-            elif data.showIcon:
+            elif data.show_icon:
                 icon_loader_index = 1
-        elif data.showIcon:
+        elif data.show_icon:
             icon_loader_index = 1
             
                 
@@ -299,8 +299,8 @@ class ActionManager:
             self.custom_docker_states[data.id] = {
                 "enabled": False,
                 "paths": paths,
-                "groupId": data.groupId,
-                "tabsMode": data.tabsMode
+                "groupId": data.group_id,
+                "tabsMode": data.tabs_mode
             }
         dockerGroup = self.custom_docker_states[data.id]
             

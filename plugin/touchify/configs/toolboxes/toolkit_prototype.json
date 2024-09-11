@@ -161,9 +161,7 @@
             "column_count": 1
         }
     ],
-    "presetName": "Toolkit Prototype",
-    "menuDelay": 200,
-    "submenuButton": false,
     "column_count": 2,
-    "icon_size": 16
+    "icon_size": 16,
+    "preset_name": "Toolkit Prototype"
 }

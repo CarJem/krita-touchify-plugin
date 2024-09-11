@@ -123,10 +123,6 @@ class CfgTouchifyActionCanvasPreset:
         labels["border_color"] = "Color"
         return labels
 
-    def propertygrid_groups(self):
-        groups = {}
-        return groups
-
     def propertygrid_restrictions(self):   
         restrictions = {}
         restrictions["checkers_size"]  = {"type": "range", "min": 0}

@@ -180,11 +180,9 @@
             "id": "Navigation"
         }
     ],
-    "presetName": "Krita Default",
-    "menuDelay": 200,
-    "submenuButton": false,
     "column_count": 2,
     "icon_size": 16,
     "background_opacity": 128,
-    "button_opacity": 175
+    "button_opacity": 175,
+    "preset_name": "Krita Default"
 }

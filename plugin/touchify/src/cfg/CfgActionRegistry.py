@@ -24,10 +24,6 @@ class CfgActionRegistry:
         labels["actions_registry"] = "Registered Actions"
         return labels
 
-    def propertygrid_groups(self):
-        groups = {}
-        return groups
-
     def propertygrid_restrictions(self):
         restrictions = {}
         return restrictions

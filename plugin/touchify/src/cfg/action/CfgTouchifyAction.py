@@ -4,6 +4,7 @@ from .CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
 from ...ext.StrEnum import StrEnum
 from ...ext.TypedList import TypedList
 from ...ext.extensions_json import JsonExtensions as Extensions
+from ..CfgBackwardsCompat import CfgBackwardsCompat
 
 class CfgTouchifyAction:
      
@@ -21,8 +22,8 @@ class CfgTouchifyAction:
     icon: str = ""
     text: str = ""
     variant: str = "action"
-    showText: bool = False
-    showIcon: bool = True
+    show_text: bool = False
+    show_icon: bool = True
 
     #Action Params
     action_id: str = ""
@@ -52,6 +53,7 @@ class CfgTouchifyAction:
     
 
     def __init__(self, **args) -> None:
+        args = CfgBackwardsCompat.CfgTouchifyAction(args)
         Extensions.dictToObject(self, args, [CfgTouchifyActionPopup, CfgTouchifyActionDockerGroup, CfgTouchifyActionCanvasPreset])
         
         context_menu_actions = Extensions.default_assignment(args, "context_menu_actions", [])
@@ -152,8 +154,8 @@ class CfgTouchifyAction:
         labels["icon"] = "Icon"
         labels["text"] = "Text"
         labels["variant"] = "Action Type"
-        labels["showText"] = "Show Text"
-        labels["showIcon"] = "Show Icon"
+        labels["show_text"] = "Show Text"
+        labels["show_icon"] = "Show Icon"
 
         labels["action_id"] = "Action ID"
         labels["action_use_icon"] = "Use Action Icon"
@@ -172,10 +174,6 @@ class CfgTouchifyAction:
         labels["canvas_preset_data"] = "Canvas Settings"
 
         return labels
-
-    def propertygrid_groups(self):
-        groups = {}
-        return groups
 
     def propertygrid_restrictions(self):
         restrictions = {}

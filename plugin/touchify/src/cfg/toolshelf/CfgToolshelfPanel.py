@@ -3,6 +3,8 @@ from ...ext.TypedList import TypedList
 from ...ext.extensions_json import JsonExtensions as Extensions
 from .CfgToolshelfSection import CfgToolshelfSection
 from ..action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
+from ..CfgBackwardsCompat import CfgBackwardsCompat
+
 
 class CfgToolshelfPanel:
     id: str = ""
@@ -13,9 +15,10 @@ class CfgToolshelfPanel:
     actions: TypedList[CfgTouchifyActionCollection] = []
     sections: TypedList[CfgToolshelfSection] = []
     tab_type: str = "buttons"
-    actionHeight: int = 10
+    action_height: int = 10
 
     def __init__(self, **args) -> None:
+        args = CfgBackwardsCompat.CfgToolshelfPanel(args)
         Extensions.dictToObject(self, args)
         sections = Extensions.default_assignment(args, "sections", [])
         actions = Extensions.default_assignment(args, "actions", [])
@@ -53,12 +56,8 @@ class CfgToolshelfPanel:
         labels["tab_type"] = "Tab Type"
         labels["sections"] = "Sections"
         labels["actions"] = "Actions"
-        labels["actionHeight"] = "Action Button Height"
+        labels["action_height"] = "Action Button Height"
         return labels
-
-    def propertygrid_groups(self):
-        groups = {}
-        return groups
 
     def propertygrid_restrictions(self):
         restrictions = {}

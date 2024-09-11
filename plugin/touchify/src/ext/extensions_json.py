@@ -38,7 +38,7 @@ class JsonExtensions:
             return result
         else:
             return defaultValue
-        
+    
     def dictToObject(obj, args: dict[str, any], extraTypes: list[type] = []):
         if args is not None:
             for key, value in args.items():

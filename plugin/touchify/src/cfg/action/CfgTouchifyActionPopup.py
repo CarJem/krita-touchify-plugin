@@ -51,11 +51,6 @@ class CfgTouchifyActionPopup:
 
         return result
 
-
-    def propertygrid_groups(self):
-        groups = {}
-        return groups
-
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
         items = Extensions.default_assignment(args, "actions_items", [])

@@ -57,7 +57,7 @@ class ToolshelfPage(QWidget):
 
     def _initPageActions(self):
         actionsList = self.panelProperties.actions
-        actionHeight = self.panelProperties.actionHeight
+        actionHeight = self.panelProperties.action_height
 
         self.quickActions = TouchifyActionPanel(actionsList, self, self.actions_manager)
         self.quickActions.setAutoFillBackground(True)

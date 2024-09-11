@@ -314,7 +314,7 @@ class ToolboxWidget(QWidget):
         index = 0
         for preset in self.settings.presets:
             preset: CfgToolbox
-            action = QAction(preset.presetName, self.settingsMenu)
+            action = QAction(preset.preset_name, self.settingsMenu)
             action.setCheckable(True)
             if self.selectedPresetIndex == index:
                 action.setChecked(True)
@@ -391,8 +391,12 @@ class ToolboxWidget(QWidget):
             btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             btn.setIconSize(QSize(icon_size, icon_size))
             btn.setToolTip(actionText)
-            btn.setStyle(ToolboxStyle("fusion", self.config.menuDelay))
-            btn.pressed.connect(self.activateTool) # Activate when clicked
+            btn.setStyle(ToolboxStyle("fusion", self.config.submenu_delay))
+
+            if len(tool.items) >= 1:
+                btn.released.connect(self.activateTool) # Activate when clicked
+            else:
+                btn.pressed.connect(self.activateTool) # Activate when clicked
 
             if tool.name in TOOLBOX_ITEMS:
                 self.buttonGroup.addButton(btn)
@@ -405,7 +409,7 @@ class ToolboxWidget(QWidget):
                 btn.setMenu(subMenu) # this will be the submenu for each main tool
 
                 btn.menu().aboutToShow.connect(self.activateMenu) # Show submenu when clicked
-                if self.config.submenuButton == True:
+                if tool.open_on_click == True:
                     btn.menu().aboutToShow.connect(self.activateMenu)
             return btn
         return None

@@ -76,10 +76,6 @@ class CfgToolshelfRegistry:
         labels["presets"] = "Presets"
         return labels
 
-    def propertygrid_groups(self):
-        groups = {}
-        return groups
-
     def propertygrid_restrictions(self):
         restrictions = {}
         return restrictions

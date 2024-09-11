@@ -6,11 +6,12 @@ from .CfgToolshelfPanel import CfgToolshelfPanel
 from .CfgToolshelfSection import CfgToolshelfSection
 from ..action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
 from .CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
+from ..CfgBackwardsCompat import CfgBackwardsCompat
    
 class CfgToolshelf:
     actions: TypedList[CfgTouchifyActionCollection] = []
     sections: TypedList[CfgToolshelfSection] = []
-    actionHeight: int = 16
+    action_height: int = 16
     tab_type: str = "buttons"
     
     panels: TypedList[CfgToolshelfPanel] = []
@@ -18,6 +19,7 @@ class CfgToolshelf:
     presetName: str = "New Toolshelf Preset"
 
     def __init__(self, **args) -> None:
+        args = CfgBackwardsCompat.CfgToolshelf(args)
         Extensions.dictToObject(self, args, [CfgToolshelfHeaderOptions])
         panels = Extensions.default_assignment(args, "panels", [])
         self.panels = Extensions.list_assignment(panels, CfgToolshelfPanel)
@@ -47,8 +49,8 @@ class CfgToolshelf:
             "actions",
             "sections",
             "header_options",
-            "tabType",
-            "actionHeight"
+            "tab_type",
+            "action_height"
         ]
 
     def propertygrid_labels(self):
@@ -57,18 +59,14 @@ class CfgToolshelf:
         labels["panels"] = "Panels"
         labels["actions"] = "Actions"
         labels["sections"] = "Sections"
-        labels["tabType"] = "Tab Type"
-        labels["actionHeight"] = "Action Button Height"
+        labels["tab_type"] = "Tab Type"
         labels["header_options"] = "Header Options"
+        labels["action_height"] = "Action Button Height"
         return labels
-
-    def propertygrid_groups(self):
-        groups = {}
-        return groups
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["tabType"] = {"type": "values", "entries": ["buttons", "tabs"]}
+        restrictions["tab_type"] = {"type": "values", "entries": ["buttons", "tabs"]}
         restrictions["header_options"] = {"type": "expandable"}
         return restrictions
 
