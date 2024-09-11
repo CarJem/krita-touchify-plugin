@@ -7,7 +7,7 @@ from krita import *
 from .ToolshelfHeader import ToolshelfHeader
 from ...actions.TouchifyActionPanel import TouchifyActionPanel
 from .ToolshelfPage import ToolshelfPage
-from ...core.DockerContainer import DockerContainer
+from ...special.DockerContainer import DockerContainer
 
 from .....settings.TouchifyConfig import *
 from .....variables import *

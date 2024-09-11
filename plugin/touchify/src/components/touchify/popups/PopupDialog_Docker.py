@@ -7,7 +7,7 @@ from functools import partial
 import sys
 import importlib.util
 
-from ..core.DockerContainer import DockerContainer
+from ..special.DockerContainer import DockerContainer
 
 from ....cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from ....settings.TouchifyConfig import *

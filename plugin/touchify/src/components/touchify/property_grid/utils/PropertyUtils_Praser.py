@@ -1,3 +1,5 @@
+
+# Field Imports
 from ..fields.PropertyField import *
 from ..fields.PropertyField_Float import *
 from ..fields.PropertyField_Int import *
@@ -5,6 +7,10 @@ from ..fields.PropertyField_Bool import *
 from ..fields.PropertyField_Str import *
 from ..fields.PropertyField_TypedList import *
 from ..fields.PropertyField_TempValue import *
+from ..fields.PropertyField_KsColor import *
+
+# Type Imports
+from .....ext.KritaSettings import KS_Color
 
 class PropertyUtils_Praser:
     def getPropertyType(varName, variable, item):
@@ -17,6 +23,8 @@ class PropertyUtils_Praser:
             return PropertyField_Float(varName, variable, item)            
         elif varType == bool:
             return PropertyField_Bool(varName, variable, item)
+        elif varType == KS_Color:
+            return PropertyField_KsColor(varName, variable, item)
         elif varType == TypedList:
             return PropertyField_TypedList(varName, variable, item)
         else:

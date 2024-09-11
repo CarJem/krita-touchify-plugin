@@ -11,7 +11,7 @@ from ....variables import *
 from .NtWidgetPad import NtWidgetPad
 from .NtWidgetPadAlignment import NtWidgetPadAlignment
 
-from ..core.DockerContainer import DockerContainer
+from ..special.DockerContainer import DockerContainer
 
 class NtCanvas(QObject):
     def __init__(self, parent: QObject, window: Window):

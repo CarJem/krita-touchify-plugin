@@ -83,7 +83,6 @@ class CfgTouchifyActionPopup:
         labels["actions_item_height"] = "Docker / Action Item Height"
         labels["actions_icon_width"] = "Action Icon Width"
         labels["actions_icon_height"] = "Action Icon Height"
-        labels["autoConceal"] = "Auto Conceal"
         labels["actions_items"] = "Actions"
         return labels
 

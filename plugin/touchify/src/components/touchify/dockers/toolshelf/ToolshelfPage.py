@@ -6,8 +6,8 @@ from .....docker_manager import DockerManager
 from ...actions.TouchifyActionPanel import TouchifyActionPanel
 from .....cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
 from .....cfg.toolshelf.CfgToolshelf import CfgToolshelfSection
-from ...core.DockerContainer import DockerContainer
-from ...toolshelf.ToolshelfSpecialWidget import ToolshelfSpecialWidget
+from ...special.DockerContainer import DockerContainer
+from .ToolshelfSpecialWidget import ToolshelfSpecialWidget
 from .....stylesheet import Stylesheet
 from .ToolshelfPageSplitter import ToolshelfSplitter
 

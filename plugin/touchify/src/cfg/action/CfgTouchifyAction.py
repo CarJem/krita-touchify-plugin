@@ -1,5 +1,6 @@
 from .CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
 from .CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from .CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
 from ...ext.StrEnum import StrEnum
 from ...ext.TypedList import TypedList
 from ...ext.extensions_json import JsonExtensions as Extensions
@@ -14,6 +15,7 @@ class CfgTouchifyAction:
         Docker = "docker"
         Workspace = "workspace"
         DockerGroup = "docker_group"
+        CanvasPreset = "canvas_preset"
         
     id: str = ""      
     icon: str = ""
@@ -44,10 +46,13 @@ class CfgTouchifyAction:
     
     #Popup Params
     popup_data: CfgTouchifyActionPopup = CfgTouchifyActionPopup()
+
+    #Canvas Preset Params
+    canvas_preset_data: CfgTouchifyActionCanvasPreset = CfgTouchifyActionCanvasPreset()
     
 
     def __init__(self, **args) -> None:
-        Extensions.dictToObject(self, args, [CfgTouchifyActionPopup, CfgTouchifyActionDockerGroup])
+        Extensions.dictToObject(self, args, [CfgTouchifyActionPopup, CfgTouchifyActionDockerGroup, CfgTouchifyActionCanvasPreset])
         
         context_menu_actions = Extensions.default_assignment(args, "context_menu_actions", [])
         self.context_menu_actions = Extensions.list_assignment(context_menu_actions, CfgTouchifyAction)
@@ -75,6 +80,9 @@ class CfgTouchifyAction:
                 suffix = self.docker_id
             case CfgTouchifyAction.Variants.DockerGroup:
                 prefix = "[Docker Group] "
+                suffix = self.text
+            case CfgTouchifyAction.Variants.CanvasPreset:
+                prefix = "[Canvas Preset] "
                 suffix = self.text
             case _:
                 prefix = f"[{self.variant}] "
@@ -132,6 +140,8 @@ class CfgTouchifyAction:
             result.append("popup_data")
         if self.variant != CfgTouchifyAction.Variants.DockerGroup:
             result.append("docker_group_data")
+        if self.variant != CfgTouchifyAction.Variants.CanvasPreset:
+            result.append("canvas_preset_data")
 
         return result
 
@@ -159,6 +169,8 @@ class CfgTouchifyAction:
         labels["docker_group_data"] = "Group Settings"
         labels["popup_data"] = "Popup Settings"
 
+        labels["canvas_preset_data"] = "Canvas Settings"
+
         return labels
 
     def propertygrid_groups(self):
@@ -176,4 +188,5 @@ class CfgTouchifyAction:
         restrictions["docker_id"] = {"type": "docker_selection"}
         restrictions["docker_group_data"] = {"type": "expandable"}
         restrictions["popup_data"] = {"type": "expandable"}
+        restrictions["canvas_preset_data"] = {"type": "expandable"}
         return restrictions

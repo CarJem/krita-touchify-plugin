@@ -37,15 +37,15 @@ class PropertyField_TypedList(PropertyField):
         self.selectedIndex = -1
         self.selectedItem = None
         
-        field = QHBoxLayout(self)
+        field = QVBoxLayout(self)
         field.setSpacing(0)
         field.setContentsMargins(0,0,0,0)
         listView = QListView()
         listView.doubleClicked.connect(self.itemOptions_edit)
         listView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-        btns = QGridLayout()
-        btns.setAlignment(Qt.AlignmentFlag.AlignTop)
+        btns = QHBoxLayout()
+        btns.setAlignment(Qt.AlignmentFlag.AlignBottom)
         btn_width = 24
 
         self.model = QtGui.QStandardItemModel()
@@ -57,33 +57,39 @@ class PropertyField_TypedList(PropertyField):
 
         addButton = QPushButton()
         addButton.setIcon(ResourceManager.iconLoader("material:plus"))
-        addButton.setFixedSize(btn_width, btn_width)
+        addButton.setFixedHeight(btn_width)
         addButton.clicked.connect(self.itemOptions_add)
-        btns.addWidget(addButton, 0, 0, 1, 1)
+        btns.addWidget(addButton)
 
         removeButton = QPushButton()
         removeButton.setIcon(ResourceManager.iconLoader("material:minus"))
-        removeButton.setFixedSize(btn_width, btn_width)
+        removeButton.setFixedHeight(btn_width)
         removeButton.clicked.connect(self.itemOptions_remove)
-        btns.addWidget(removeButton, 1, 0, 1, 1)
+        btns.addWidget(removeButton)
 
         moveUpButton = QPushButton()
         moveUpButton.setIcon(ResourceManager.iconLoader("material:arrow-up"))
-        moveUpButton.setFixedSize(btn_width, btn_width)
+        moveUpButton.setFixedHeight(btn_width)
         moveUpButton.clicked.connect(self.itemOptions_moveup)
-        btns.addWidget(moveUpButton, 0, 1, 1, 1)
+        btns.addWidget(moveUpButton)
 
         moveDownButton = QPushButton()
         moveDownButton.setIcon(ResourceManager.iconLoader("material:arrow-down"))  
-        moveDownButton.setFixedSize(btn_width, btn_width)
+        moveDownButton.setFixedHeight(btn_width)
         moveDownButton.clicked.connect(self.itemOptions_movedown)
-        btns.addWidget(moveDownButton, 1, 1, 1, 1)
+        btns.addWidget(moveDownButton)
 
         editButton = QPushButton()
         editButton.setIcon(ResourceManager.iconLoader("material:pencil"))                                                                                                                                                                                                                                                                                                                                 
         editButton.setFixedHeight(btn_width)
         editButton.clicked.connect(self.itemOptions_edit)
-        btns.addWidget(editButton, 2, 0, 1, 2)
+        btns.addWidget(editButton)
+
+        duplicateButton = QPushButton()
+        duplicateButton.setIcon(ResourceManager.iconLoader("material:content-copy"))                                                                                                                                                                                                                                                                                                              
+        duplicateButton.setFixedHeight(btn_width)
+        duplicateButton.clicked.connect(self.itemOptions_duplicate)
+        btns.addWidget(duplicateButton)
 
         self.selection_model = listView.selectionModel()
         self.selection_model.currentChanged.connect(lambda x, y: self.updateSelected(x, y))
@@ -105,6 +111,10 @@ class PropertyField_TypedList(PropertyField):
 
     def itemOptions_edit(self):
         self.list_modify("edit")
+
+    def itemOptions_duplicate(self):
+        self.list_duplicate()
+
     #endregion
 
     #region Dialog
@@ -183,6 +193,14 @@ class PropertyField_TypedList(PropertyField):
             self.subwindowPropGrid.updateDataObject(self.subwindowEditable)
             self.stackHost.goForward(self.dlg)
             self.dlg.show()
+
+    def list_duplicate(self):
+        if self.selectedIndex != -1:
+            variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
+            item = variable[self.selectedIndex]
+            newItem = copy.deepcopy(item)
+            variable.append(newItem)
+            self.updateList()
 
     def list_remove(self):
         if self.selectedIndex != -1:

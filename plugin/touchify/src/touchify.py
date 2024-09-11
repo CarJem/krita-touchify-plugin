@@ -6,12 +6,11 @@ from .variables import *
 from .docker_manager import DockerManager
 from .action_manager import ActionManager
 
-from .ui.SettingsDialog import *
+from .settings_dialog import *
 
 from .features.touchify_canvas import *
 from .features.touchify_hotkeys import *
 from .features.touchify_looks import *
-from .features.canvas_presets import *
 from .features.touchify_actions import *
 
 from .ext.KritaSettings import KritaSettings
@@ -38,7 +37,6 @@ class Touchify(Extension):
             self.touchify_looks = TouchifyLooks(self)
             self.touchify_canvas = TouchifyCanvas(self)
             self.touchify_hotkeys = TouchifyHotkeys(self)
-            self.canvas_presets = CanvasPresets(self)
             
             self.timer: QTimer = None
             
@@ -54,9 +52,6 @@ class Touchify(Extension):
             
             self.settings_dlg = SettingsDialog(self.windowSource)
             self.settings_dlg.show()
-
-        def openCanvasDecoPopup(self):
-            self.canvas_presets.show()
 
         def createActions(self, window: Window):
             self.mainMenuBar = window.qwindow().menuBar().addMenu(TOUCHIFY_ID_MENU_ROOT)
@@ -75,10 +70,6 @@ class Touchify(Extension):
             
             self.touchify_looks.createActions(window, self.mainMenuBar)
             self.touchify_canvas.createActions(window, self.mainMenuBar)
-            
-            canvasDecorationsPopup = window.createAction(TOUCHIFY_ID_ACTION_CANVAS_DECORATION_PRESETS, "Canvas Presets...", TOUCHIFY_ID_MENU_ROOT)
-            canvasDecorationsPopup.triggered.connect(self.openCanvasDecoPopup)
-            self.mainMenuBar.addAction(canvasDecorationsPopup)
 
         def onKritaConfigUpdated(self):
             toolshelf_docker = self.getToolshelfDocker()

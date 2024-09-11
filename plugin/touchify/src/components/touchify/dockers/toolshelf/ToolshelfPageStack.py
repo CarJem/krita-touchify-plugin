@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 from ...actions.TouchifyActionPanel import TouchifyActionPanel
 from .ToolshelfPage import ToolshelfPage
-from ...core.DockerContainer import DockerContainer
+from ...special.DockerContainer import DockerContainer
 
 from .....settings.TouchifyConfig import *
 from .....variables import *

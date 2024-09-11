@@ -18,16 +18,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ....action_manager import ActionManager
 
-
-KNOWN_UNCHECKABLES = [
-    "show_brush_editor"
-]
-
-EXPANDING_SPACERS = [
-    "expanding_spacer1",
-    "expanding_spacer2"
-]
-
 class TouchifyActionPanel(QWidget):
     def __init__(self, cfg: List[CfgTouchifyActionCollection], parent: QWidget=None, actions_manager: "ActionManager" = None, type: str = "default", icon_width: int = -1, icon_height: int = -1, item_width: int = -1, item_height: int = -1, opacity: float = 1.0):
         super(TouchifyActionPanel, self).__init__(parent)

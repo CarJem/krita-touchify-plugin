@@ -236,6 +236,118 @@
             "showText": false,
             "workspace_id": "",
             "id": "QuickSettingsPopup"
+        },
+        {
+            "context_menu_actions": [],
+            "showIcon": true,
+            "id": "DarkCanvas",
+            "icon": "material:moon-waning-crescent",
+            "text": "Dark Canvas",
+            "variant": "canvas_preset",
+            "showText": false,
+            "action_id": "",
+            "action_use_icon": false,
+            "brush_name": "",
+            "brush_override_icon": false,
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "actions_items": []
+            },
+            "canvas_preset_data": {
+                "checkers_size": 32,
+                "pixgrid_threshold": 24,
+                "selection_outline_opacity": 1.0,
+                "selection_overlay_opacity": 0.5,
+                "checkers_enabled": true,
+                "pixgrid_enabled": false,
+                "selection_enabled": false,
+                "border_enabled": false,
+                "checkers_main_color": {
+                    "r": 38,
+                    "g": 38,
+                    "b": 38
+                },
+                "checkers_alt_color": {
+                    "r": 70,
+                    "g": 70,
+                    "b": 70
+                },
+                "pixgrid_color": {
+                    "r": 255,
+                    "g": 255,
+                    "b": 255
+                },
+                "selection_overlay_color": {
+                    "r": 255,
+                    "g": 0,
+                    "b": 0
+                },
+                "border_color": {
+                    "r": 128,
+                    "g": 128,
+                    "b": 128
+                }
+            }
+        },
+        {
+            "context_menu_actions": [],
+            "showIcon": true,
+            "id": "LightCanvas",
+            "icon": "material:white-balance-sunny",
+            "text": "Light Canvas",
+            "variant": "canvas_preset",
+            "showText": false,
+            "action_id": "",
+            "action_use_icon": false,
+            "brush_name": "",
+            "brush_override_icon": false,
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "actions_items": []
+            },
+            "canvas_preset_data": {
+                "checkers_size": 32,
+                "pixgrid_threshold": 24,
+                "selection_outline_opacity": 1.0,
+                "selection_overlay_opacity": 0.5,
+                "checkers_enabled": true,
+                "pixgrid_enabled": false,
+                "selection_enabled": false,
+                "border_enabled": false,
+                "checkers_main_color": {
+                    "r": 255,
+                    "g": 255,
+                    "b": 255
+                },
+                "checkers_alt_color": {
+                    "r": 219,
+                    "g": 219,
+                    "b": 219
+                },
+                "pixgrid_color": {
+                    "r": 255,
+                    "g": 255,
+                    "b": 255
+                },
+                "selection_overlay_color": {
+                    "r": 255,
+                    "g": 0,
+                    "b": 0
+                },
+                "border_color": {
+                    "r": 128,
+                    "g": 128,
+                    "b": 128
+                }
+            }
         }
     ]
 }

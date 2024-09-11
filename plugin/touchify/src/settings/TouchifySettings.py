@@ -1,7 +1,7 @@
 from ..ext.KritaSettings import KritaSettings, KS_Color, KS_AlphaColor
 import json
 from ..ext.extensions_json import JsonExtensions
-from ..cfg.CfgCanvasPreset import CfgCanvasPreset
+from ..cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
 
 class TouchifySettings:
 
@@ -31,7 +31,7 @@ class TouchifySettings:
         self.DockerUtils_HiddenDockersUp: str = ""
         self.DockerUtils_HiddenDockersDown: str = ""
         
-        self.CanvasPresets_Items: dict[int, CfgCanvasPreset] = dict()
+        self.CanvasPresets_Items: dict[int, CfgTouchifyActionCanvasPreset] = dict()
 
         self.loadSettings()
         
@@ -48,7 +48,7 @@ class TouchifySettings:
                 json_list: list = json_object
                 for dict_item in json_list:
                     if isinstance(dict_item, dict):
-                        presetItem = CfgCanvasPreset()
+                        presetItem = CfgTouchifyActionCanvasPreset()
                         JsonExtensions.dictToObject(presetItem, dict_item, [KS_AlphaColor, KS_Color])
                         result[str(index)] = presetItem
                         index += 1

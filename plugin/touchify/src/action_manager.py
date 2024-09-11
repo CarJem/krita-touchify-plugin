@@ -4,7 +4,12 @@ from PyQt5.QtWidgets import *
 
 from .variables import *
 
-from .cfg.action.CfgTouchifyAction import *
+from .cfg.action.CfgTouchifyAction import CfgTouchifyAction
+from .cfg.action.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
+from .cfg.action.CfgTouchifyActionDockerGroupItem import CfgTouchifyActionDockerGroupItem
+from .cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from .cfg.action.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
+from .cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
 from .ext.extensions_krita import *
 
 from .components.touchify.popups.PopupDialog import *
@@ -34,6 +39,8 @@ class ActionManager:
         
     def executeAction(self, data: CfgTouchifyAction, action: QAction):
         match data.variant:
+            case CfgTouchifyAction.Variants.CanvasPreset:
+                self.action_canvas(data.canvas_preset_data)
             case CfgTouchifyAction.Variants.Docker:
                 self.action_docker(data.docker_id)
             case CfgTouchifyAction.Variants.Workspace:
@@ -172,8 +179,8 @@ class ActionManager:
         if id not in __brush_presets: return
         btn_preset = __brush_presets[id]
         
-        if currentPreset != btn_preset: __btn.setChecked(False)
-        else: __btn.setChecked(True)
+        if currentPreset != btn_preset: __btn.setBrushSelected(False)
+        else: __btn.setBrushSelected(True)
 
        
     def button_main(self, onClick: any, toolTip: str, checkable: bool):
@@ -195,7 +202,7 @@ class ActionManager:
             preset = brush_presets[id]
             btn = self.button_main(lambda: self.action_brush(id), preset.name(), False)
             btn.intervalTimer.timeout.connect(lambda: self.__brushButtonUpdate(btn, id))
-            btn.intervalTimer.start(1000)
+            btn.intervalTimer.start(250)
             self.__setButtonDisplay(act, btn)
         return btn
                    
@@ -326,3 +333,24 @@ class ActionManager:
         else:
             popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
         popup.triggerPopup(_parent)
+    
+    def action_canvas(self, data: CfgTouchifyActionCanvasPreset):
+        def slotConfigChanged(obj: QObject):
+            canvas_call = getattr(obj, "slotConfigChanged", None)
+            if callable(canvas_call):
+                canvas_call()
+                
+        data.activate()
+
+        qwin = self.appEngine.windowSource.qwindow()
+        for i, view in enumerate(self.appEngine.windowSource.views()):
+            view_obj = qwin.findChild(QWidget,'view_' + str(i))     
+            for child in view_obj.children():
+                slotConfigChanged(child)
+            
+            canvas_obj = view_obj.findChild(QOpenGLWidget)
+            slotConfigChanged(canvas_obj)
+            
+        for docker in self.appEngine.windowSource.dockers():
+            if (docker.objectName() == "KisLayerBox"):
+                slotConfigChanged(docker)
