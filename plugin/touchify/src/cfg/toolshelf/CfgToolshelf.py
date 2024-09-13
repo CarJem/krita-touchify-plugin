@@ -16,7 +16,7 @@ class CfgToolshelf:
     
     panels: TypedList[CfgToolshelfPanel] = []
     header_options: CfgToolshelfHeaderOptions = CfgToolshelfHeaderOptions()
-    presetName: str = "New Toolshelf Preset"
+    preset_name: str = "New Toolshelf Preset"
 
     def __init__(self, **args) -> None:
         args = CfgBackwardsCompat.CfgToolshelf(args)
@@ -30,12 +30,12 @@ class CfgToolshelf:
 
     def getFileName(self):
         valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
-        filename = ''.join(c for c in self.presetName if c in valid_chars)
+        filename = ''.join(c for c in self.preset_name if c in valid_chars)
         filename = filename.replace(' ','_') # I don't like spaces in filenames.
         return filename.lower()    
 
     def __str__(self):
-        return self.presetName.replace("\n", "\\n")
+        return self.preset_name.replace("\n", "\\n")
 
     def forceLoad(self):
         self.panels = TypedList(self.panels, CfgToolshelfPanel)
@@ -44,7 +44,7 @@ class CfgToolshelf:
 
     def propertygrid_sorted(self):
         return [
-            "presetName",
+            "preset_name",
             "panels",
             "actions",
             "sections",
@@ -55,7 +55,7 @@ class CfgToolshelf:
 
     def propertygrid_labels(self):
         labels = {}
-        labels["presetName"] = "Preset Name"
+        labels["preset_name"] = "Preset Name"
         labels["panels"] = "Panels"
         labels["actions"] = "Actions"
         labels["sections"] = "Sections"

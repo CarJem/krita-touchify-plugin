@@ -25,6 +25,14 @@ class CfgBackwardsCompat:
         if args:
             if "actionHeight" in args:
                 args["action_height"] = args["actionHeight"]
+            if "presetName" in args:
+                args["preset_name"] = args["presetName"]
+        return args
+    
+    def CfgTouchifyActionPopup(args: dict[str, any]):
+        if args:
+            if "btnName" in args:
+                args["display_name"] = args["btnName"]
         return args
 
     def CfgToolbox(args: dict[str, any]):

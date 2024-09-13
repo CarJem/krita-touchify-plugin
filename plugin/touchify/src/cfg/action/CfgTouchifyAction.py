@@ -104,8 +104,8 @@ class CfgTouchifyAction:
             "icon",
             "text",
             "variant",
-            "showText",
-            "showIcon",
+            "show_text",
+            "show_icon",
             #Action Params
             "action_id",
             "action_use_icon",

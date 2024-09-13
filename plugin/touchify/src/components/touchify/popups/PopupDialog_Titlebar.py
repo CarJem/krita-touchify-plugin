@@ -30,7 +30,7 @@ class PopupDialog_Titlebar(QWidget):
 
         self.titlebarText = QLabel(self)
         self.titlebarText.setFont(self.getTitleFont(textSize))
-        self.titlebarText.setText(self.parentDialog.metadata.btnName)
+        self.titlebarText.setText(self.parentDialog.metadata.display_name)
         self.ourLayout.addWidget(self.titlebarText)
 
         self.minimizeBtn = QPushButton(self)

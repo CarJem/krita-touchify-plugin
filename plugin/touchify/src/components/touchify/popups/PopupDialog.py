@@ -95,7 +95,7 @@ class PopupDialog(QDialog):
                 actions = qobj.actions()
                 if actions:
                     for action in actions:
-                        if action.text() == self.metadata.btnName + POPUP_BTN_IDENTIFIER:
+                        if action.text() == self.metadata.display_name + POPUP_BTN_IDENTIFIER:
                             return self.getGeometry(qobj.mapToGlobal(QPoint(0,0)), qobj.width(), qobj.height())
             return 0, 0, 0, 0
 

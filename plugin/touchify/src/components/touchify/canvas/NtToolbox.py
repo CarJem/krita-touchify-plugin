@@ -1,7 +1,5 @@
 from PyQt5.QtWidgets import QMdiArea, QDockWidget
 
-from touchify.src.components.touchify.canvas.NtToolboxInteractFilter import NtToolboxInteractFilter
-
 from ....settings.TouchifySettings import TouchifySettings
 from .NtSubWinFilter import NtSubWinFilter
 from ....stylesheet import Stylesheet

@@ -51,7 +51,7 @@ class ToolshelfMenu(QMenu):
             index = 0
             for preset in registry.presets:
                 preset: CfgToolshelf
-                action = QAction(preset.presetName, self)
+                action = QAction(preset.preset_name, self)
                 action.setCheckable(True)
                 if self.current_preset_index == index:
                     action.setChecked(True)
