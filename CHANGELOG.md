@@ -11,10 +11,16 @@
     > You can now save and load toolshelf configurations on the fly, and select them from within a dropdown in the toolshelf itself
 - **New Toolshelf Feature - Tabbed Section Customization**
     > Ethier have your tabbed view as tabs or a dropdown button
+- **New Toolshelf Feature - Customizable Headers**
+    > Toolshelf Headers now have far more customization to be suit whatever your needs may be
+- **New On-Canvas Widgets Feature - Presets & Layout Editing**
+    > On-Canvas Widgets are now fully layout driven and can be flexibily customized to fit whatever your needs may be
 - **New Toolshelf Feature - Resizable Mode**
     > You can now resize the On-Canvas Toolshelfs if enabled through the new dropdown where you find the presets
 - **New Toolshelf Feature - Brush Blending/Composite Selector**
-    > You can now add a section to your toolshelf to manage your brush blending options
+    > You can now add a section to your toolshelf to manage your brush/layer blending options
+- **New Toolshelf Feature - Layer Color Label Selector**
+    > You can now add a section to your toolshelf to quickly modify the color label of any selected layers; Inspired by (https://github.com/LainFenrir/krita-label-box)
 - **New Docker - Touchify Toolbox**
     > Combines ideas from the Toolkit Plugin and the Default Docker, it replaces the default toolbox in the On-Canvas widgets as well. It also features presets
 - **New Docker - Reference Tabs**

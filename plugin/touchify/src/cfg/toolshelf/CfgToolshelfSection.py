@@ -14,6 +14,8 @@ class CfgToolshelfSection:
     class SpecialItemType(StrEnum):
         Nothing = "none"
         BrushBlendingMode = "brush_blending_options"
+        LayerBlendingMode = "layer_blending_options"
+        LayerLabelBox = "layer_label_box"
 
     id: str = ""
 

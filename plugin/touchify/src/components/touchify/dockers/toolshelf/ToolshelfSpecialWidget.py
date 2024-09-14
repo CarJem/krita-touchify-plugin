@@ -4,6 +4,8 @@ from PyQt5.QtCore import QSize, QEvent
 from .....cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
 from .....docker_manager import *
 from ...special.BrushBlendingSelector import BrushBlendingSelector
+from ...special.LayerBlendingSelector import LayerBlendingSelector
+from ...special.LayerLabelBox import LayerLabelBox
 from krita import *
     
 
@@ -25,6 +27,13 @@ class ToolshelfSpecialWidget(QWidget):
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushBlendingMode:
             self.ourWidget = BrushBlendingSelector(self)
             self.ourLayout.addWidget(self.ourWidget)
+        if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.LayerBlendingMode:
+            self.ourWidget = LayerBlendingSelector(self)
+            self.ourLayout.addWidget(self.ourWidget)
+        if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.LayerLabelBox:
+            self.ourWidget = LayerLabelBox(self)
+            self.ourLayout.addWidget(self.ourWidget)
+
 
     def setSizeHint(self, size):
         self.size = QSize(size[0], size[1])

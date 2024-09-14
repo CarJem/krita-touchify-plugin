@@ -309,6 +309,10 @@ class ToolboxWidget(QWidget):
         KritaSettings.writeSettingInt(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", self.selectedPresetIndex)
 
     def buildSettingsMenu(self):
+        if self.horizontalModeAction != None:
+            self.settingsMenu.removeAction(self.horizontalModeAction)
+
+
         self.settingsMenu.clear()
 
         index = 0
@@ -327,11 +331,12 @@ class ToolboxWidget(QWidget):
 
 
 
-        self.horizontalModeAction = QAction("Horizontal Mode", self.settingsMenu)
-        self.horizontalModeAction.setCheckable(True)
-        if self.horizontalMode:
-            self.horizontalModeAction.setChecked(True)
-        self.horizontalModeAction.triggered.connect(self.toggleHorizontalMode)
+        if self.horizontalModeAction == None:
+            self.horizontalModeAction = QAction("Horizontal Mode", self.settingsMenu)
+            self.horizontalModeAction.triggered.connect(self.toggleHorizontalMode)
+            self.horizontalModeAction.setCheckable(True)
+
+        self.horizontalModeAction.setChecked(self.horizontalMode)
 
         self.settingsMenu.addAction(self.horizontalModeAction)
 

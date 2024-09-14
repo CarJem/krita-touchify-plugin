@@ -1,0 +1,24 @@
+{
+    "preset_name": "Developer's Pick",
+    "toolbox": {
+        "position_x": 0,
+        "position_y": 0,
+        "alignment_x": "left",
+        "alignment_y": "top",
+        "horizontal_mode": false
+    },
+    "toolshelf": {
+        "position_x": 2,
+        "position_y": 0,
+        "alignment_x": "right",
+        "alignment_y": "top"
+    },
+    "toolshelf_alt": {
+        "position_x": 1,
+        "position_y": 0,
+        "alignment_x": "left",
+        "alignment_y": "top",
+        "stretch_x": 1,
+        "stretch_y": 0
+    }
+}

@@ -27,6 +27,7 @@ class DockerManager(QObject):
             self.previousVisibility = previousVisibility
             self.dockWidgetArea = dockWidgetArea
             self.detachedScrollArea = False
+            self.previousTitlebar = None
 
 
             self.mainWindow = mainWindow
@@ -36,7 +37,10 @@ class DockerManager(QObject):
         def setWidgetData(self, docker: QDockWidget):
             if self.dockMode:
                 self.dockerWidget: QDockWidget = docker
-                self.dockerWidget.titleBarWidget().setVisible(False)
+                self.previousTitlebar = self.dockerWidget.titleBarWidget()
+                self.titleBarHider = QWidget()
+                self.titleBarHider.setFixedHeight(0)
+                self.dockerWidget.setTitleBarWidget(self.titleBarHider)
             else:
                 self.dockerParent: QDockWidget = docker
                 self.dockerWidget: QWidget = docker.widget()
@@ -57,8 +61,7 @@ class DockerManager(QObject):
 
             if self.dockMode == True:
                 self.mainWindow.addDockWidget(self.dockWidgetArea, self.dockerWidget)
-                showTitlebar = KritaSettings.showDockerTitlebars()
-                self.dockerWidget.titleBarWidget().setVisible(showTitlebar)
+                self.dockerWidget.setTitleBarWidget(self.previousTitlebar)
                 if self.previousVisibility == False:
                     self.dockerWidget.hide()
             else:

@@ -333,7 +333,7 @@
     "panels": [],
     "header_options": {
         "stack_preview": "default",
-        "position": "bottom",
+        "position": "top",
         "default_to_resize_mode": true,
         "button_size": 32,
         "header_size": 16,

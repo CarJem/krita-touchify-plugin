@@ -4,6 +4,32 @@
             "items": [
                 {
                     "items": [],
+                    "name": "edit_undo",
+                    "open_on_click": false
+                },
+                {
+                    "items": [],
+                    "name": "edit_redo",
+                    "open_on_click": false
+                },
+                {
+                    "items": [],
+                    "name": "select_all",
+                    "open_on_click": false
+                },
+                {
+                    "items": [],
+                    "name": "deselect",
+                    "open_on_click": false
+                }
+            ],
+            "column_count": 0,
+            "id": "QuickSelection"
+        },
+        {
+            "items": [
+                {
+                    "items": [],
                     "name": "InteractionTool"
                 },
                 {
