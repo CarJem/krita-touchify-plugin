@@ -7,6 +7,8 @@
 ## Additions:
 - **Massive Refactoring** 
     > Lots of code consoldiation again, to make the code easier to follow for myself
+- **New PropertyGrid / Settings Functionality - Duplicate List Items**
+    > Need I say any more? You can now quickly duplicate any item in any configuration page!
 - **New Toolshelf Feature - Presets**
     > You can now save and load toolshelf configurations on the fly, and select them from within a dropdown in the toolshelf itself
 - **New Toolshelf Feature - Tabbed Section Customization**
