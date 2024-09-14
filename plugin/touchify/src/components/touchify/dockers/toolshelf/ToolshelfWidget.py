@@ -61,19 +61,23 @@ class ToolshelfWidget(QWidget):
                 headerOrientation = Qt.Orientation.Vertical
                 headerBeforePages = False
 
-        self.pages = ToolshelfPageStack(self, self.cfg)
         self.header = ToolshelfHeader(self, self.cfg, self.registry_index, headerOrientation)
+        self.pages = ToolshelfPageStack(self, self.cfg)
 
         self.mainLayout = QVBoxLayout(self) if headerOrientation == Qt.Orientation.Horizontal else QHBoxLayout(self)
+        self.mainLayout.setSpacing(0)
         self.mainLayout.setContentsMargins(0,0,0,0)
         self.setLayout(self.mainLayout)
 
-        if headerBeforePages:
-            self.mainLayout.addWidget(self.header)
-            self.mainLayout.addWidget(self.pages)
+        self.mainLayout.addWidget(self.header)
+        self.mainLayout.addWidget(self.pages)
+
+
+        if headerOrientation == Qt.Orientation.Horizontal:
+            self.mainLayout.setDirection(QVBoxLayout.Direction.TopToBottom if headerBeforePages else QBoxLayout.Direction.BottomToTop)
         else:
-            self.mainLayout.addWidget(self.header)
-            self.mainLayout.addWidget(self.pages)
+            self.mainLayout.setDirection(QHBoxLayout.Direction.LeftToRight if headerBeforePages else QHBoxLayout.Direction.RightToLeft)
+
 
     
     #region Getters / Setters
