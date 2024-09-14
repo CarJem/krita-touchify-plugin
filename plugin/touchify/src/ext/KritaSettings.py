@@ -123,13 +123,13 @@ class KritaSettings:
         return result
 
     def showRulers():
-        settingStr = KritaSettings.readSetting("", "showrulers", "true")
-        result = True if settingStr == "true" else False
+        settingStr: str = KritaSettings.readSetting("", "showrulers", "true")
+        result = True if settingStr.lower() == "true" else False
         return result
 
     def hideScrollbars():
-        settingStr = KritaSettings.readSetting("", "hideScrollbars", "false")
-        result = True if settingStr == "true" else False
+        settingStr: str = KritaSettings.readSetting("", "hideScrollbars", "false")
+        result = True if settingStr.lower() == "true" else False
         return result
     
 KritaSettings.init()

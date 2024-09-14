@@ -30,12 +30,10 @@
                     "actions": [
                         {
                             "context_menu_actions": [],
-                            "showIcon": true,
                             "id": "",
                             "icon": "",
                             "text": "",
                             "variant": "action",
-                            "showText": false,
                             "action_id": "view_show_canvas_only",
                             "action_use_icon": true,
                             "brush_name": "",
@@ -47,16 +45,16 @@
                             },
                             "popup_data": {
                                 "actions_items": []
-                            }
+                            },
+                            "show_text": false,
+                            "show_icon": true
                         },
                         {
                             "context_menu_actions": [],
-                            "showIcon": true,
                             "id": "",
                             "icon": "",
                             "text": "",
                             "variant": "action",
-                            "showText": false,
                             "action_id": "mirror_canvas",
                             "action_use_icon": true,
                             "brush_name": "",
@@ -68,16 +66,16 @@
                             },
                             "popup_data": {
                                 "actions_items": []
-                            }
+                            },
+                            "show_text": false,
+                            "show_icon": true
                         },
                         {
                             "context_menu_actions": [],
-                            "showIcon": true,
                             "id": "",
                             "icon": "",
                             "text": "",
                             "variant": "action",
-                            "showText": false,
                             "action_id": "fullscreen",
                             "action_use_icon": true,
                             "brush_name": "",
@@ -89,7 +87,9 @@
                             },
                             "popup_data": {
                                 "actions_items": []
-                            }
+                            },
+                            "show_text": false,
+                            "show_icon": true
                         }
                     ],
                     "row_name": "Actions Row"
@@ -118,7 +118,6 @@
         }
     ],
     "tab_type": "buttons",
-    "actionHeight": 16,
     "panels": [
         {
             "sections": [
@@ -147,12 +146,12 @@
                 }
             ],
             "actions": [],
-            "actionHeight": 10,
             "icon": "paintop_settings_01",
             "id": "Brushes",
             "row": 0,
             "size_x": 0,
-            "size_y": 0
+            "size_y": 0,
+            "action_height": 10
         },
         {
             "sections": [
@@ -181,12 +180,12 @@
                 }
             ],
             "actions": [],
-            "actionHeight": 10,
             "icon": "palette-library",
             "id": "Palette",
             "row": 0,
             "size_x": 0,
-            "size_y": 0
+            "size_y": 0,
+            "action_height": 10
         },
         {
             "sections": [
@@ -215,12 +214,12 @@
                 }
             ],
             "actions": [],
-            "actionHeight": 10,
             "icon": "all-layers",
             "id": "Layers",
             "row": 0,
             "size_x": 0,
-            "size_y": 0
+            "size_y": 0,
+            "action_height": 10
         },
         {
             "sections": [
@@ -249,12 +248,12 @@
                 }
             ],
             "actions": [],
-            "actionHeight": 10,
             "icon": "krita_tool_color_sampler",
             "id": "Color",
             "row": 0,
             "size_x": 0,
-            "size_y": 0
+            "size_y": 0,
+            "action_height": 10
         },
         {
             "sections": [
@@ -283,12 +282,12 @@
                 }
             ],
             "actions": [],
-            "actionHeight": 10,
             "icon": "duplicatelayer",
             "id": "Overview",
             "row": 0,
             "size_x": 0,
-            "size_y": 0
+            "size_y": 0,
+            "action_height": 10
         }
     ],
     "header_options": {
@@ -299,5 +298,6 @@
         "header_size": 16,
         "stack_actions": []
     },
-    "presetName": "KanvasBuddy"
+    "action_height": 16,
+    "preset_name": "KanvasBuddy"
 }

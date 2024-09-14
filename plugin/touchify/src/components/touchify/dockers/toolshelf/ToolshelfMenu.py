@@ -31,7 +31,7 @@ class ToolshelfMenu(QMenu):
             self.parentNtWidget = self.findWidgetPad()
             if self.parentNtWidget != None:
                 if self.parentNtWidget.allowResizing:
-                    self.addActions([self.parentNtWidget.resizingToggleAction])
+                    self.addActions([self.parentNtWidget.action_toggleResize])
             self.setupWidgetPad = False
 
     def findWidgetPad(self):

@@ -87,6 +87,7 @@ class ToolboxWidget(QWidget):
         self.categories: list[ToolboxCategory] = []
         self.lastActiveTool = ""
         self.registeredToolBtns: list[ToolboxButton] = []
+        self.horizontalModeAction: QAction = None
 
 
         self.setLayout(QVBoxLayout(self))
@@ -292,7 +293,7 @@ class ToolboxWidget(QWidget):
     def loadConfig(self):
         self.settings: CfgToolboxRegistry = TouchifyConfig.instance().getConfig().toolbox_settings
 
-        self.config: CfgToolbox = CfgToolbox().loadDefaults()
+        self.config: CfgToolbox = CfgToolbox()
         self.selectedPresetIndex = KritaSettings.readSettingInt(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", 0)
 
         if 0 <= self.selectedPresetIndex < len(self.settings.presets):
@@ -303,7 +304,6 @@ class ToolboxWidget(QWidget):
         else:
             self.selectedPresetIndex = 0
             newItem = CfgToolbox()
-            newItem.loadDefaults()
             self.config = newItem
         
         KritaSettings.writeSettingInt(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", self.selectedPresetIndex)
@@ -325,13 +325,15 @@ class ToolboxWidget(QWidget):
         
         self.settingsMenu.addSeparator()
 
-        horizontalModeAction = QAction("Horizontal Mode", self.settingsMenu)
-        horizontalModeAction.setCheckable(True)
-        if self.horizontalMode:
-            horizontalModeAction.setChecked(True)
-        horizontalModeAction.triggered.connect(self.toggleHorizontalMode)
 
-        self.settingsMenu.addAction(horizontalModeAction)
+
+        self.horizontalModeAction = QAction("Horizontal Mode", self.settingsMenu)
+        self.horizontalModeAction.setCheckable(True)
+        if self.horizontalMode:
+            self.horizontalModeAction.setChecked(True)
+        self.horizontalModeAction.triggered.connect(self.toggleHorizontalMode)
+
+        self.settingsMenu.addAction(self.horizontalModeAction)
 
     def buildCategories(self):
         x = 0
@@ -484,6 +486,11 @@ class ToolboxWidget(QWidget):
                 KritaSettings.writeSettingInt(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", index)
                 self.reload()
     
+    def setHorizontalMode(self, state: bool):
+        self.horizontalMode = state
+        KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_TOOLBOX, "IsHorizontal", self.horizontalMode)
+        self.reload()
+
     def toggleHorizontalMode(self):
         self.horizontalMode = not self.horizontalMode
         KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_TOOLBOX, "IsHorizontal", self.horizontalMode)

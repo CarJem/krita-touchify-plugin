@@ -101,8 +101,6 @@
                             "action_id": "TouchifyAction_QuickSettingsPopup",
                             "action_use_icon": false,
                             "context_menu_actions": [],
-                            "showIcon": true,
-                            "showText": false,
                             "variant": "action",
                             "brush_name": "",
                             "brush_override_icon": false,
@@ -115,7 +113,9 @@
                                 "actions_items": []
                             },
                             "text": "",
-                            "workspace_id": ""
+                            "workspace_id": "",
+                            "show_text": false,
+                            "show_icon": true
                         }
                     ],
                     "row_name": "Actions Row"
@@ -124,13 +124,11 @@
                     "actions": [
                         {
                             "context_menu_actions": [],
-                            "showIcon": true,
                             "id": "",
                             "icon": "material:pencil-ruler-outline",
                             "text": "",
                             "variant": "action",
                             "action_id": "TouchifyAction_brushOptionsPopup",
-                            "showText": false,
                             "action_use_icon": false,
                             "brush_name": "",
                             "brush_override_icon": false,
@@ -141,7 +139,9 @@
                             },
                             "popup_data": {
                                 "actions_items": []
-                            }
+                            },
+                            "show_text": false,
+                            "show_icon": true
                         }
                     ],
                     "row_name": "Actions Row"
@@ -257,12 +257,12 @@
                 }
             ],
             "actions": [],
-            "actionHeight": 20,
             "icon": "extended_color_selector",
             "id": "Colors",
             "size_x": 0,
             "size_y": 0,
-            "row": 0
+            "row": 0,
+            "action_height": 20
         },
         {
             "icon": "material:history",
@@ -288,8 +288,8 @@
             "size_x": 0,
             "size_y": 0,
             "actions": [],
-            "actionHeight": 10,
-            "row": 0
+            "row": 0,
+            "action_height": 10
         },
         {
             "sections": [
@@ -329,14 +329,14 @@
                                 },
                                 {
                                     "context_menu_actions": [],
-                                    "showIcon": true,
                                     "action_id": "RenameCurrentLayer",
                                     "variant": "action",
                                     "action_use_icon": false,
                                     "brush_name": "",
                                     "brush_override_icon": false,
                                     "icon": "edit-rename",
-                                    "text": ""
+                                    "text": "",
+                                    "show_icon": true
                                 }
                             ]
                         }
@@ -425,13 +425,13 @@
                 }
             ],
             "actions": [],
-            "actionHeight": 10,
             "id": "Layers",
             "icon": "all-layers",
             "size_x": 0,
             "size_y": 0,
             "row": 0,
-            "tab_type": "buttons"
+            "tab_type": "buttons",
+            "action_height": 10
         },
         {
             "sections": [
@@ -464,7 +464,6 @@
                             "actions": [
                                 {
                                     "context_menu_actions": [],
-                                    "showIcon": true,
                                     "action_id": "show_brush_editor",
                                     "variant": "action",
                                     "action_use_icon": false,
@@ -473,7 +472,6 @@
                                     "icon": "paintop_settings_02",
                                     "text": "",
                                     "id": "",
-                                    "showText": false,
                                     "docker_id": "",
                                     "workspace_id": "",
                                     "docker_group_data": {
@@ -481,16 +479,16 @@
                                     },
                                     "popup_data": {
                                         "actions_items": []
-                                    }
+                                    },
+                                    "show_text": false,
+                                    "show_icon": true
                                 },
                                 {
                                     "context_menu_actions": [],
-                                    "showIcon": true,
                                     "id": "brush_test",
                                     "icon": "",
                                     "text": "",
                                     "variant": "brush",
-                                    "showText": false,
                                     "action_id": "",
                                     "action_use_icon": false,
                                     "brush_name": "Jem's Basic",
@@ -502,7 +500,9 @@
                                     },
                                     "popup_data": {
                                         "actions_items": []
-                                    }
+                                    },
+                                    "show_text": false,
+                                    "show_icon": true
                                 }
                             ],
                             "row_name": "Actions Row"
@@ -531,28 +531,25 @@
                 }
             ],
             "actions": [],
-            "actionHeight": 10,
             "id": "Brush Presets",
             "icon": "material:brush",
             "size_x": 0,
             "size_y": 0,
-            "row": 0
+            "row": 0,
+            "action_height": 10
         }
     ],
     "actions": [],
-    "actionHeight": 20,
     "header_options": {
         "stack_actions": [
             {
                 "actions": [
                     {
                         "context_menu_actions": [],
-                        "showIcon": true,
                         "id": "AnimationDockers",
                         "icon": "addblankframe",
                         "text": "Animation",
                         "variant": "docker_group",
-                        "showText": false,
                         "action_id": "",
                         "action_use_icon": false,
                         "brush_name": "",
@@ -568,13 +565,15 @@
                                     "id": "OnionSkinsDocker"
                                 }
                             ],
-                            "tabsMode": false,
-                            "groupId": "",
-                            "id": "AnimationsDocker"
+                            "id": "AnimationsDocker",
+                            "group_id": "",
+                            "tabs_mode": false
                         },
                         "popup_data": {
                             "actions_items": []
-                        }
+                        },
+                        "show_text": false,
+                        "show_icon": true
                     }
                 ],
                 "row_name": "Dockers Toggles"
@@ -587,5 +586,6 @@
         "header_size": 16,
         "stack_alignment": "default"
     },
-    "presetName": "Developer's Pick"
+    "action_height": 20,
+    "preset_name": "Developer's Pick"
 }

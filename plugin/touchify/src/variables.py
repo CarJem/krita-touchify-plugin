@@ -50,5 +50,6 @@ TOUCHIFY_ID_DOCKER_TOOLBOX="Touchify/TouchifyToolbox"
 #-----------------#
 # Setting Sections
 TOUCHIFY_ID_SETTINGS_TOOLSHELF="Touchify/Toolshelfs"
+TOUCHIFY_ID_SETTINGS_WIDGETPAD="Touchify/WidgetPads"
 
 

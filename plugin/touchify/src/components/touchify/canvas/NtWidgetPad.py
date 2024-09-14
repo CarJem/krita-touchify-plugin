@@ -23,13 +23,16 @@ from PyQt5.QtCore import Qt, QSize, QPoint
 from .NtScrollAreaContainer import NtScrollAreaContainer
 from .NtTogglePadButton import NtTogglePadButton
 
-from ....ext.KritaSettings import KritaSettings
-from .NtWidgetPadAlignment import NtWidgetPadAlignment
+from .NtSubWinFilter import NtSubWinFilter
 
 from ....settings.TouchifyConfig import *
 from ....ext.extensions_pyqt import PyQtExtensions as Ext
 
 from krita import *
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .NtCanvas import NtCanvas
 
 class NtWidgetPad(QWidget):
     """
@@ -37,8 +40,13 @@ class NtWidgetPad(QWidget):
     on top of the canvas '(lily) pads' for the time being :) """
 
 
-    def __init__(self, parent, allowResizing: bool = False):
-        super(NtWidgetPad, self).__init__(parent)
+    def __init__(self, window: Window, canvas: "NtCanvas", allowResizing: bool = False):
+        super(NtWidgetPad, self).__init__(canvas)
+
+        self.qWin = window.qwindow()
+        self.mdiArea = self.qWin.findChild(QMdiArea)
+        self.canvas = canvas
+
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowFlags(
             Qt.WindowStaysOnTopHint | 
@@ -46,10 +54,11 @@ class NtWidgetPad(QWidget):
             )
         self.setLayout(QVBoxLayout(self))
         self.layout().setContentsMargins(4,4,4,4)
-        self.alignment = NtWidgetPadAlignment.Left
 
-        self.offset_x_left = 0
-        self.offset_x_right = 0
+        self.alignment_x = Qt.AlignmentFlag.AlignLeft
+        self.alignment_y = Qt.AlignmentFlag.AlignTop
+        self.widgetEnabled = True
+
         
         self.setMouseTracking(True)
         
@@ -63,26 +72,35 @@ class NtWidgetPad(QWidget):
         self.btnHide = NtTogglePadButton()
         self.btnHide.clicked.connect(self.toggleWidgetVisible)
         self.layout().addWidget(self.btnHide)
-        
+        self.updateArrow()
         
         #region Auto Sizing Toggle
         self.allowResizing = allowResizing
         self.resizingEnabled = False
-        self.resizingToggleAction = QAction(self)
-        self.resizingToggleAction.setText("Allow resizing")
-        self.resizingToggleAction.setCheckable(True)
-        self.resizingToggleAction.changed.connect(self.allowResizingChanged)
-        self.resizingToggleAction.setEnabled(self.allowResizing)
-        
-        #if self.allowResizing:
-            #self.contextMenu = QMenu(self.btnHide)
-            #self.contextMenu.addAction(self.resizingToggleAction)
-            #self.btnHide.setMenu(self.contextMenu)
+
         
         self.gripSize = QSize(10, 10)
         self.resizeStart = QPoint()
         self.resizeCorner: Qt.Corner | None = None
         self.resizing = False
+
+        #Install Event Filters
+        self.adjustFilter = NtSubWinFilter(self.mdiArea)
+        self.adjustFilter.setTargetWidget(self)
+
+        self.qWin.installEventFilter(self.adjustFilter)
+        self.installEventFilter(self.adjustFilter)
+
+        self.mdiArea.subWindowActivated.connect(self.onSubWindowActivated)        
+
+        self.createActions()
+    
+    def createActions(self):
+        self.action_toggleResize = QAction(self)
+        self.action_toggleResize.setText("Allow resizing")
+        self.action_toggleResize.setCheckable(True)
+        self.action_toggleResize.changed.connect(self.allowResizingChanged)
+        self.action_toggleResize.setEnabled(self.allowResizing)
         
     #region States
     def mouseInGrip(self, mousePos: QPoint):
@@ -99,6 +117,16 @@ class NtWidgetPad(QWidget):
     #endregion
 
     #region Getters     
+
+
+    def getAlignment(self):
+        return self.alignment_x | self.alignment_y
+
+    def isWidgetVisible(self):
+        if self.widget:
+            return self.widget.isVisible()
+        return False
+
     def gripAreas(self):
         bottom_right = QRect(
             self.width() - self.gripSize.width(),
@@ -129,33 +157,30 @@ class NtWidgetPad(QWidget):
             return self.widget.sizeHint()
         return QSize(0,0)    
     
-    def rulerMargin(self):
-        if KritaSettings.showRulers():
-            return 20 # Canvas ruler pixel width on Windows
-        return 0
+    #endregion
 
-    def scrollBarMargin(self):
-        if KritaSettings.hideScrollbars():
-            return 0
+    #region Setters
 
-        return 14 # Canvas crollbar pixel width/height on Windows 
-    
-    def activeView(self) -> QWidget:
-        """
-        Get the View widget of the active subwindow."""
-        if not self.parentWidget():
-            return None 
+    def setLayoutAlignmentX(self, align_x: Qt.AlignmentFlag):
+        if align_x == Qt.AlignmentFlag.AlignLeft:
+            self.alignment_x = align_x
+        elif align_x == Qt.AlignmentFlag.AlignHCenter:
+            self.alignment_x = align_x
+        elif align_x == Qt.AlignmentFlag.AlignRight:
+            self.alignment_x = align_x
         
-        subWin = self.parentWidget().activeSubWindow()
-        
-        if not subWin:
-            return None
+        self.updateArrow()
 
-        for child in subWin.children(): 
-            if 'view' in child.objectName(): # Grab the View from the active tab/sub-window
-                return child
-        
-        return None 
+    def setLayoutAlignmentY(self, align_y: Qt.AlignmentFlag):
+        if align_y == Qt.AlignmentFlag.AlignTop:
+            self.alignment_y = align_y
+        elif align_y == Qt.AlignmentFlag.AlignVCenter:
+            self.alignment_y = align_y
+        elif align_y == Qt.AlignmentFlag.AlignBottom:
+            self.alignment_y = align_y
+
+        self.updateArrow()
+
     #endregion
 
     #region Widget / Docker
@@ -205,18 +230,19 @@ class NtWidgetPad(QWidget):
         Adjust the position and size of the Pad to that of the active View."""
         
         
+        
         def fitToView(_view: QWidget, _sizeToFit: QSize):
             def height_scale(input):
-                return input + self.btnHide.height() + 14 + self.scrollBarMargin() + self.rulerMargin()
+                return input + self.btnHide.height() + 14
             
             def height_offset(input):
-                return input - self.btnHide.height() - 14 - self.scrollBarMargin() - self.rulerMargin()
+                return input - self.btnHide.height() - 14
             
             def width_offset(input):
-                return input - 8 - self.scrollBarMargin()
+                return input - 14
             
             def width_scale(input):
-                return input + 8 + self.scrollBarMargin()
+                return input + 14
             
             result = QSize(_sizeToFit)
 
@@ -229,37 +255,25 @@ class NtWidgetPad(QWidget):
             return result
         
         
-        view = self.activeView()
 
-        if view:          
+
+        if self.canvas and self.widget != None:          
             widgetSize = self.widgetSize()
             widgetSizeHint = self.widgetSizeHint()
             widgetNewSize = QSize(widgetSize.width() + delta_x, widgetSize.height() + delta_y)
             
             if self.resizingEnabled == False:
                 widgetNewSize = QSize(widgetSizeHint)
-            
-            
-                              
-            widgetNewSize = fitToView(view, Ext.QSize.fitToSource(widgetSizeHint, widgetNewSize))                   
+                                           
+            widgetNewSize = fitToView(self.canvas, Ext.QSize.fitToSource(widgetSizeHint, widgetNewSize))                   
             if widgetSize != widgetNewSize:
                 self.widget.setFixedSize(widgetNewSize)
                 
             padSizeHint = self.sizeHint()
-            padSizeHint = Ext.QSize.fitToTarget(padSizeHint, view.size())
+            padSizeHint = Ext.QSize.fitToTarget(padSizeHint, self.canvas.size())
 
             if self.size() != padSizeHint:
                 self.resize(padSizeHint)
-
-            globalTargetPos = QPoint()
-            if self.alignment == NtWidgetPadAlignment.Left:
-                globalTargetPos = view.mapToGlobal(QPoint(self.rulerMargin() + self.offset_x_left, self.rulerMargin()))
-            elif self.alignment == NtWidgetPadAlignment.Right:
-                globalTargetPos = view.mapToGlobal(QPoint(view.width() - self.width() - self.scrollBarMargin() - self.offset_x_right, self.rulerMargin()))
-
-            newPos = self.parentWidget().mapFromGlobal(globalTargetPos)
-            if self.pos() != newPos:
-                self.move(newPos)
 
     def updateCursor(self, pos: QPoint):
         
@@ -283,34 +297,28 @@ class NtWidgetPad(QWidget):
                     self.setCursor(Qt.CursorShape.ArrowCursor)
         else:
             self.setCursor(Qt.CursorShape.ArrowCursor)
-            
+
+    def updateArrow(self):
+        self.btnHide.setArrow(self.alignment_x, self.alignment_y, self.widgetEnabled)
+
+
+           
     #endregion
 
     #region Functions
 
     def toggleResizing(self):
         if self.allowResizing:
-            self.resizingToggleAction.trigger()
-
-
-    def setViewAlignment(self, newAlignment: NtWidgetPadAlignment):
-        """
-        Set the Pad's alignment to the view to either 'left' or 'right'. 
-        Returns False if the argument is an invalid value."""
-        self.btnHide.setArrow(self.alignment)
-        if self.alignment != newAlignment:
-            self.alignment = newAlignment
-            return True
-    
-        return False
+            self.action_toggleResize.trigger()
 
     def toggleWidgetVisible(self, value=None):
         if self.widget:
             if not value:
                 value = not self.widget.isVisible()   
             self.widget.setVisible(value)
-        
-        self.btnHide.setArrow(self.alignment)
+            self.widgetEnabled = value
+
+        self.updateArrow()
         self.adjustToView()  
     #endregion
     
@@ -318,11 +326,14 @@ class NtWidgetPad(QWidget):
     
     def allowResizingChanged(self):
         if self.allowResizing:
-            self.resizingEnabled = self.resizingToggleAction.isChecked()
+            self.resizingEnabled = self.action_toggleResize.isChecked()
         self.adjustToView()
         self.updateCursor(self.cursor().pos())
         
-    
+    def onSubWindowActivated(self, subWin):
+        if subWin:
+            subWin.installEventFilter(self.adjustFilter)
+            self.canvas.updateView()
     #endregion
   
     #region Events
@@ -361,11 +372,18 @@ class NtWidgetPad(QWidget):
             #qApp.instance().processEvents()
         self.updateCursor(e.pos())
             
+    def subWindowEvent(self):
+        self.canvas.updateView()
     
     def closeEvent(self, e):
         """
         Since the plugins works by borrowing the actual docker 
         widget we need to ensure its returned upon closing the pad"""
+        self.mdiArea.subWindowActivated.disconnect(self.onSubWindowActivated)
+
+        self.qWin.removeEventFilter(self.adjustFilter)
+        self.removeEventFilter(self.adjustFilter)
+        
         self.returnDocker()
         return super().closeEvent(e)
 

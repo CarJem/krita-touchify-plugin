@@ -2,7 +2,6 @@
     "actions_registry": [
         {
             "context_menu_actions": [],
-            "showIcon": true,
             "action_id": "",
             "variant": "popup",
             "action_use_icon": false,
@@ -15,7 +14,6 @@
             "icon": "material:select",
             "popup_data": {
                 "id": "selection-tool",
-                "btnName": "Selection Popup",
                 "icon": "custom:SelectionTool",
                 "type": "actions",
                 "docker_id": "",
@@ -128,16 +126,17 @@
                     }
                 ],
                 "opacity": 1.0,
-                "window_type": "popup"
+                "window_type": "popup",
+                "display_name": "Selection Popup"
             },
             "text": "Selection Popup",
-            "showText": false,
             "workspace_id": "",
-            "id": "SelectionPopup"
+            "id": "SelectionPopup",
+            "show_text": false,
+            "show_icon": true
         },
         {
             "context_menu_actions": [],
-            "showIcon": true,
             "action_id": "",
             "variant": "popup",
             "action_use_icon": false,
@@ -151,7 +150,6 @@
             "popup_data": {
                 "id": "GridDockerPopup",
                 "opacity": 0.5,
-                "btnName": "Grid and Guides Popup",
                 "icon": "gridbrush",
                 "type": "docker",
                 "docker_id": "GridDocker",
@@ -162,16 +160,17 @@
                 "actions_icon_width": 30,
                 "actions_icon_height": 30,
                 "actions_items": [],
-                "window_type": "popup"
+                "window_type": "popup",
+                "display_name": "Grid and Guides Popup"
             },
             "text": "Grid and Guides Popup",
-            "showText": false,
             "workspace_id": "",
-            "id": "GridDockerPopup"
+            "id": "GridDockerPopup",
+            "show_text": false,
+            "show_icon": true
         },
         {
             "context_menu_actions": [],
-            "showIcon": true,
             "action_id": "",
             "variant": "popup",
             "action_use_icon": false,
@@ -191,21 +190,21 @@
                 "actions_grid_padding": 2,
                 "actions_icon_width": 30,
                 "actions_icon_height": 30,
-                "btnName": "Brush Options Popup",
                 "type": "docker",
                 "docker_id": "pykrita_compactbrushtoggler",
                 "id": "brushOptionsPopup",
                 "icon": "custom:pencil-ruler-outline",
-                "window_type": "popup"
+                "window_type": "popup",
+                "display_name": "Brush Options Popup"
             },
             "text": "Brush Options Popup",
-            "showText": false,
             "workspace_id": "",
-            "id": "brushOptionsPopup"
+            "id": "brushOptionsPopup",
+            "show_text": false,
+            "show_icon": true
         },
         {
             "context_menu_actions": [],
-            "showIcon": true,
             "action_id": "",
             "variant": "popup",
             "action_use_icon": false,
@@ -218,7 +217,6 @@
             "icon": "material:palette-swatch-variant",
             "popup_data": {
                 "id": "quick-settings",
-                "btnName": "Quick Settings Popup",
                 "icon": "material:palette-swatch-variant",
                 "type": "docker",
                 "docker_id": "quick_settings_docker",
@@ -230,21 +228,21 @@
                 "actions_icon_height": 30,
                 "actions_items": [],
                 "opacity": 1.0,
-                "window_type": "popup"
+                "window_type": "popup",
+                "display_name": "Quick Settings Popup"
             },
             "text": "Quick Settings Popup",
-            "showText": false,
             "workspace_id": "",
-            "id": "QuickSettingsPopup"
+            "id": "QuickSettingsPopup",
+            "show_text": false,
+            "show_icon": true
         },
         {
             "context_menu_actions": [],
-            "showIcon": true,
             "id": "DarkCanvas",
             "icon": "material:moon-waning-crescent",
             "text": "Dark Canvas",
             "variant": "canvas_preset",
-            "showText": false,
             "action_id": "",
             "action_use_icon": false,
             "brush_name": "",
@@ -291,16 +289,16 @@
                     "g": 128,
                     "b": 128
                 }
-            }
+            },
+            "show_text": false,
+            "show_icon": true
         },
         {
             "context_menu_actions": [],
-            "showIcon": true,
             "id": "LightCanvas",
             "icon": "material:white-balance-sunny",
             "text": "Light Canvas",
             "variant": "canvas_preset",
-            "showText": false,
             "action_id": "",
             "action_use_icon": false,
             "brush_name": "",
@@ -347,7 +345,9 @@
                     "g": 128,
                     "b": 128
                 }
-            }
+            },
+            "show_text": false,
+            "show_icon": true
         }
     ]
 }

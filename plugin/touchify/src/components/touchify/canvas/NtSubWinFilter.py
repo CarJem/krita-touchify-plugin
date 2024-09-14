@@ -17,7 +17,7 @@ class NtSubWinFilter(QObject):
             (e.type() == QEvent.Type.Move or
             e.type() == QEvent.Type.Resize or
             e.type() == QEvent.Type.WindowActivate)):
-            self.target.canvas.updateCanvas()
+            self.target.subWindowEvent()
 
         return False
 

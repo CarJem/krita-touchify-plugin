@@ -2,7 +2,6 @@
     "actions": [],
     "sections": [],
     "tab_type": "buttons",
-    "actionHeight": 16,
     "panels": [],
     "header_options": {
         "stack_preview": "default",
@@ -12,5 +11,6 @@
         "header_size": 16,
         "stack_actions": []
     },
-    "presetName": "Empty"
+    "action_height": 16,
+    "preset_name": "Empty"
 }

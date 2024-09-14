@@ -154,6 +154,7 @@ class Touchify(Extension):
     def setup(self):
         Krita.instance().notifier().windowCreated.connect(self.onWindowCreated)
         TouchifyConfig.instance().notifyConnect(self.onConfigUpdated)
+        Krita.instance().notifier().configurationChanged.connect(self.onKritaConfigUpdated)
         KritaSettings.notifyConnect(self.onKritaConfigUpdated)
 
     def onKritaConfigUpdated(self):

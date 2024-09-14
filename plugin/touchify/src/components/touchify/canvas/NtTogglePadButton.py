@@ -6,7 +6,6 @@ from ....ext.KritaSettings import KritaSettings
 
 from ....settings.TouchifyConfig import *
 from ....ext.extensions_pyqt import PyQtExtensions as Ext
-from .NtWidgetPadAlignment import NtWidgetPadAlignment
 from ....stylesheet import Stylesheet
 
 
@@ -32,8 +31,17 @@ class NtTogglePadButton(QToolButton):
         else:
             return super().mousePressEvent(e)
 
-    def setArrow(self, alignment: NtWidgetPadAlignment):
-        if alignment == NtWidgetPadAlignment.Right:
-            self.setArrowType(Qt.ArrowType.RightArrow)
+    def setArrow(self, alignment_x: Qt.AlignmentFlag, alignment_y: Qt.AlignmentFlag, enabled: bool = True):
+        if alignment_x == Qt.AlignmentFlag.AlignLeft:
+            self.setArrowType(Qt.ArrowType.RightArrow if not enabled else Qt.ArrowType.LeftArrow)
+        elif alignment_x == Qt.AlignmentFlag.AlignRight:
+            self.setArrowType(Qt.ArrowType.LeftArrow if not enabled else Qt.ArrowType.RightArrow)
+        elif alignment_x == Qt.AlignmentFlag.AlignHCenter:
+            if alignment_y == Qt.AlignmentFlag.AlignTop:
+                self.setArrowType(Qt.ArrowType.DownArrow if not enabled else Qt.ArrowType.UpArrow)
+            elif alignment_y == Qt.AlignmentFlag.AlignBottom:
+                self.setArrowType(Qt.ArrowType.UpArrow if not enabled else Qt.ArrowType.DownArrow)
+            else:
+                self.setArrowType(Qt.ArrowType.DownArrow if not enabled else Qt.ArrowType.UpArrow)
         else:
-            self.setArrowType(Qt.ArrowType.LeftArrow)
+            self.setArrowType(Qt.ArrowType.RightArrow if not enabled else Qt.ArrowType.LeftArrow)

@@ -13,6 +13,7 @@ from ..variables import *
 from ..cfg.CfgToolshelfRegistry import CfgToolshelfRegistry
 from ..cfg.CfgActionRegistry import CfgActionRegistry
 from ..cfg.CfgToolboxRegistry import CfgToolboxRegistry
+from ..cfg.CfgWidgetPadRegistry import CfgWidgetPadRegistry
 from ..ext.extensions import *
 from ...paths import BASE_DIR
 import copy
@@ -32,6 +33,7 @@ class TouchifyConfig:
             self.toolshelf_alt: CfgToolshelfRegistry = CfgToolshelfRegistry("overview")
             self.toolshelf_docker: CfgToolshelfRegistry = CfgToolshelfRegistry("docker")
             self.toolbox_settings: CfgToolboxRegistry = CfgToolboxRegistry()
+            self.widget_pads: CfgWidgetPadRegistry = CfgWidgetPadRegistry()
             self.load()
 
         def loadClass(self, configName, type):
@@ -69,6 +71,7 @@ class TouchifyConfig:
             labels["toolshelf_docker"] = "Docker Shelf"
             labels["actions_registry"] = "Registry"
             labels["hotkeys"] = "Hotkeys"
+            labels["widget_pads"] = "Widget Pads"
             labels["toolbox_settings"] = "Touchify Toolbox"
             return labels
         
@@ -85,6 +88,7 @@ class TouchifyConfig:
             restrictions["toolshelf_docker"] = {"type": "expandable", "text": "Docker"}
             restrictions["actions_registry"] = {"type": "expandable"}
             restrictions["toolbox_settings"] = {"type": "expandable"}
+            restrictions["widget_pads"] = {"type": "expandable"}
             return restrictions
         
         def save(self):
@@ -94,6 +98,7 @@ class TouchifyConfig:
             self.toolshelf_alt.save()
             self.toolshelf_docker.save()
             self.toolbox_settings.save()
+            self.widget_pads.save()
 
         def load(self):
             self.actions_registry = self.loadClass("actions_registry", CfgActionRegistry)
@@ -102,6 +107,7 @@ class TouchifyConfig:
             self.toolshelf_alt.load()
             self.toolshelf_docker.load()
             self.toolbox_settings.load()
+            self.widget_pads.load()
             
     def instance():
         try:
@@ -146,6 +152,7 @@ class TouchifyConfig:
         elif registry_index == 2: cfg.toolshelf_docker.setActive(index)
 
         self.notifyUpdate()
+
     
 
 

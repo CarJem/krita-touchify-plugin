@@ -36,36 +36,36 @@
                     "actions": [
                         {
                             "context_menu_actions": [],
-                            "showIcon": true,
                             "action_id": "view_show_canvas_only",
                             "variant": "action",
                             "action_use_icon": false,
                             "brush_name": "",
                             "brush_override_icon": false,
                             "icon": "config-canvas-only",
-                            "text": ""
+                            "text": "",
+                            "show_icon": true
                         },
                         {
                             "context_menu_actions": [],
-                            "showIcon": true,
                             "action_id": "mirror_canvas",
                             "variant": "action",
                             "action_use_icon": true,
                             "brush_name": "",
                             "brush_override_icon": false,
                             "icon": "",
-                            "text": ""
+                            "text": "",
+                            "show_icon": true
                         },
                         {
                             "context_menu_actions": [],
-                            "showIcon": true,
                             "action_id": "fullscreen",
                             "variant": "action",
                             "action_use_icon": true,
                             "brush_name": "",
                             "brush_override_icon": false,
                             "icon": "",
-                            "text": ""
+                            "text": "",
+                            "show_icon": true
                         }
                     ]
                 }
@@ -97,14 +97,14 @@
                     "actions": [
                         {
                             "context_menu_actions": [],
-                            "showIcon": true,
                             "action_id": "show_snap_options_popup",
                             "variant": "action",
                             "action_use_icon": false,
                             "brush_name": "",
                             "brush_override_icon": false,
                             "icon": "material:vector-link",
-                            "text": "Snap"
+                            "text": "Snap",
+                            "show_icon": true
                         },
                         {
                             "context_menu_actions": [
@@ -130,11 +130,9 @@
                             "icon": "krita_tool_assistant",
                             "variant": "menu",
                             "text": "Assistants",
-                            "showIcon": true,
                             "brush_name": "",
                             "brush_override_icon": false,
                             "id": "krita_tool_assistant",
-                            "showText": false,
                             "docker_id": "",
                             "workspace_id": "",
                             "docker_group_data": {
@@ -142,7 +140,9 @@
                             },
                             "popup_data": {
                                 "actions_items": []
-                            }
+                            },
+                            "show_text": false,
+                            "show_icon": true
                         }
                     ],
                     "row_name": "Actions Row"
@@ -177,13 +177,11 @@
                     "icon": "",
                     "action_id": "file_new",
                     "context_menu_actions": [],
-                    "showIcon": true,
                     "variant": "action",
                     "action_use_icon": true,
                     "brush_name": "",
                     "brush_override_icon": false,
                     "text": "",
-                    "showText": false,
                     "docker_group_data": {
                         "docker_names": []
                     },
@@ -192,19 +190,19 @@
                     "popup_data": {
                         "actions_items": []
                     },
-                    "workspace_id": ""
+                    "workspace_id": "",
+                    "show_text": false,
+                    "show_icon": true
                 },
                 {
                     "icon": "",
                     "action_id": "file_open",
                     "context_menu_actions": [],
-                    "showIcon": true,
                     "variant": "action",
                     "action_use_icon": true,
                     "brush_name": "",
                     "brush_override_icon": false,
                     "text": "",
-                    "showText": false,
                     "docker_group_data": {
                         "docker_names": []
                     },
@@ -213,11 +211,12 @@
                     "popup_data": {
                         "actions_items": []
                     },
-                    "workspace_id": ""
+                    "workspace_id": "",
+                    "show_text": false,
+                    "show_icon": true
                 },
                 {
                     "context_menu_actions": [],
-                    "showIcon": true,
                     "action_id": "file_save",
                     "variant": "action",
                     "action_use_icon": true,
@@ -226,7 +225,6 @@
                     "icon": "",
                     "text": "",
                     "id": "",
-                    "showText": false,
                     "docker_id": "",
                     "workspace_id": "",
                     "docker_group_data": {
@@ -234,11 +232,12 @@
                     },
                     "popup_data": {
                         "actions_items": []
-                    }
+                    },
+                    "show_text": false,
+                    "show_icon": true
                 },
                 {
                     "context_menu_actions": [],
-                    "showIcon": true,
                     "action_id": "TouchifyAction_SelectionPopup",
                     "variant": "action",
                     "action_use_icon": true,
@@ -246,7 +245,6 @@
                     "brush_override_icon": false,
                     "text": "",
                     "icon": "",
-                    "showText": false,
                     "docker_group_data": {
                         "docker_names": []
                     },
@@ -255,11 +253,12 @@
                     "popup_data": {
                         "actions_items": []
                     },
-                    "workspace_id": ""
+                    "workspace_id": "",
+                    "show_text": false,
+                    "show_icon": true
                 },
                 {
                     "context_menu_actions": [],
-                    "showIcon": true,
                     "action_id": "touchify_showPopupMenu",
                     "variant": "action",
                     "action_use_icon": false,
@@ -267,7 +266,6 @@
                     "brush_override_icon": false,
                     "text": "",
                     "icon": "material:menu",
-                    "showText": false,
                     "docker_group_data": {
                         "docker_names": []
                     },
@@ -276,7 +274,9 @@
                     "popup_data": {
                         "actions_items": []
                     },
-                    "workspace_id": ""
+                    "workspace_id": "",
+                    "show_text": false,
+                    "show_icon": true
                 }
             ],
             "row_name": "File Row"
@@ -285,13 +285,11 @@
             "actions": [
                 {
                     "context_menu_actions": [],
-                    "showIcon": true,
                     "id": "",
                     "icon": "",
                     "text": "",
                     "variant": "action",
                     "action_id": "edit_undo",
-                    "showText": false,
                     "action_use_icon": true,
                     "brush_name": "",
                     "brush_override_icon": false,
@@ -302,17 +300,17 @@
                     },
                     "popup_data": {
                         "actions_items": []
-                    }
+                    },
+                    "show_text": false,
+                    "show_icon": true
                 },
                 {
                     "context_menu_actions": [],
-                    "showIcon": true,
                     "id": "",
                     "icon": "",
                     "text": "",
                     "variant": "action",
                     "action_id": "edit_redo",
-                    "showText": false,
                     "action_use_icon": true,
                     "brush_name": "",
                     "brush_override_icon": false,
@@ -323,14 +321,15 @@
                     },
                     "popup_data": {
                         "actions_items": []
-                    }
+                    },
+                    "show_text": false,
+                    "show_icon": true
                 }
             ],
             "row_name": "Undo / Redo Row"
         }
     ],
     "tab_type": "tabs",
-    "actionHeight": 20,
     "panels": [],
     "header_options": {
         "stack_preview": "default",
@@ -340,5 +339,6 @@
         "header_size": 16,
         "stack_actions": []
     },
-    "presetName": "Developer's Pick"
+    "action_height": 20,
+    "preset_name": "Developer's Pick"
 }
