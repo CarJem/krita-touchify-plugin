@@ -168,6 +168,30 @@
             "action_section_btn_width": 22,
             "action_section_btn_height": 22,
             "action_section_icon_size": 16
+        },
+        {
+            "action_section_contents": [],
+            "action_section_name": "Panel",
+            "section_type": "docker",
+            "min_size_x": 0,
+            "min_size_y": 0,
+            "max_size_x": 0,
+            "max_size_y": 0,
+            "size_x": 0,
+            "size_y": 0,
+            "panel_x": 0,
+            "panel_y": 0,
+            "id": "pykrita_imagine_board_docker",
+            "docker_nesting_mode": "normal",
+            "docker_unloaded_visibility": "normal",
+            "docker_loading_priority": "normal",
+            "action_section_display_mode": "normal",
+            "action_section_alignment_x": "none",
+            "action_section_alignment_y": "none",
+            "action_section_btn_width": 0,
+            "action_section_btn_height": 0,
+            "action_section_icon_size": 0,
+            "special_item_type": "none"
         }
     ],
     "actions": [
