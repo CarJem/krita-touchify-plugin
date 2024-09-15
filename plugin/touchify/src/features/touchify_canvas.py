@@ -74,17 +74,3 @@ class TouchifyCanvas(QObject):
     def nuToolOptionsAltToggled(self, toggled):
         TouchifySettings.instance().CanvasWidgets_EnableAltToolshelf = toggled
         TouchifySettings.instance().saveSettings()
-
-    def nuOptionsAltToolboxPosToggled(self, toggled):
-        TouchifySettings.instance().CanvasWidgets_AlternativeToolboxPosition = toggled
-        TouchifySettings.instance().saveSettings()
-
-    def nuOptionsRightHandToolboxToggled(self, toggled):
-        TouchifySettings.instance().CanvasWidgets_ToolboxOnRight = toggled
-        TouchifySettings.instance().saveSettings()
-
-    #TODO: Remove
-    def nuOptionsOrientationSwapRequested(self):
-        if self.ntCanvas:
-            if self.ntCanvas.toolbox:
-                pass

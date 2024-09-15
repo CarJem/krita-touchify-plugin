@@ -55,6 +55,10 @@ class PopupDialog_Actions(PopupDialog):
     def triggerPopup(self, parent: QWidget | None):
         super().triggerPopup(parent)    
 
+    def onActionTriggered(self):
+        if self.metadata.actions_close_on_click:
+            self.close()
+
     def generateActionsLayout(self):   
         layout = QVBoxLayout(self)
         
@@ -95,6 +99,7 @@ class PopupDialog_Actions(PopupDialog):
         item_height = self.metadata.actions_item_height
         
         self.actionPanel = TouchifyActionPanel(list(converted_groups.values()), self, self.actions_manager, "popup", icon_width, icon_height, item_width, item_height)
+        self.actionPanel.action_triggered.connect(self.onActionTriggered)
         layout.addWidget(self.actionPanel)
         
         layout.setContentsMargins(0, 0, 0, 0)

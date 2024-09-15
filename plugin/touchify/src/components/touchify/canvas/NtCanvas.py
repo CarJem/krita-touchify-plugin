@@ -142,9 +142,11 @@ class NtCanvas(QWidget):
             self.active_preset = newItem
         
         KritaSettings.writeSettingInt(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", self.selectedPresetIndex)
-
-        if self.toolbox != None:
+        
+        if self.toolbox:
             self.toolbox.toolbox.toolboxWidget.setHorizontalMode(self.active_preset.toolbox.horizontal_mode)
+        elif TouchifySettings.instance().CanvasWidgets_EnableToolbox:
+            KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_TOOLBOX, "IsHorizontal", self.active_preset.toolbox.horizontal_mode)
 
         self.updateElements()
         self.updateView()

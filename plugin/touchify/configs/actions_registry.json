@@ -127,13 +127,15 @@
                 ],
                 "opacity": 1.0,
                 "window_type": "popup",
-                "display_name": "Selection Popup"
+                "display_name": "Selection Popup",
+                "actions_close_on_click": true
             },
             "text": "Selection Popup",
             "workspace_id": "",
             "id": "SelectionPopup",
             "show_text": false,
-            "show_icon": true
+            "show_icon": true,
+            "canvas_preset_data": {}
         },
         {
             "context_menu_actions": [],

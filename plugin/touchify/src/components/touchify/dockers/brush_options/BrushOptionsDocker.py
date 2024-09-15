@@ -3,12 +3,16 @@ from math import e
 from PyQt5.QtWidgets import QWidget
 from krita import *
 from PyQt5.QtCore import *
+
+from ...special.BrushFlowSlider import BrushFlowSlider
+from ...special.BrushOpacitySlider import BrushOpacitySlider
+from ...special.BrushRotationSlider import BrushRotationSlider
+from ...special.BrushSizeSlider import BrushSizeSlider
 from .....variables import *
 
 from .....stylesheet import Stylesheet
 from .....ext.KritaSettings import *
 from ....krita.KisSliderSpinBox import KisSliderSpinBox
-from ....krita.KisAngleSelector import KisAngleSelector
 
 DOCKER_TITLE = 'Brush Options'
 
@@ -38,90 +42,6 @@ class BrushOptionsDockerCfg:
         KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowSizeSlider", self.ShowSizeSlider)
         KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowRotationSlider", self.ShowRotationSlider)
 
-class BrushSizeSlider(KisSliderSpinBox):
-
-    def __init__(self, parent=None):
-        super(BrushSizeSlider, self).__init__(0.01, 1000, False, parent)
-        self.view: View = None
-        self.setScaling(3)
-        self.setAffixes('Size: ', ' px')
-        self.connectValueChanged(self.valueChanged)
-        
-    def valueChanged(self, value):
-        if self.view == None: return
-        self.view.setBrushSize(value)
-
-    def synchronizeView(self, view: View):
-        self.view = view
-        self.synchronize()
-
-    def synchronize(self):
-        if self.view == None: return
-        self.setValue(self.view.brushSize())
-
-class BrushOpacitySlider(KisSliderSpinBox):
-
-    def __init__(self, parent=None):
-        super(BrushOpacitySlider, self).__init__(parent=parent, isInt=True)
-        self.view: View = None
-        self.setAffixes('Opacity: ', '%')
-        self.connectValueChanged(self.valueChanged)
-        
-    def valueChanged(self, value):
-        if self.view == None: return
-        self.view.setPaintingOpacity(self.value()/100)
-
-    def synchronizeView(self, view: View):
-        self.view = view
-        self.synchronize()
-
-    def synchronize(self):
-        if self.view == None: return
-        self.setValue(self.view.paintingOpacity()*100)
-
-class BrushFlowSlider(KisSliderSpinBox):
-    def __init__(self, parent=None):
-        super(BrushFlowSlider, self).__init__(parent=parent, isInt=True)
-        self.view: View = None
-        self.setAffixes('Flow: ', '%')
-        self.connectValueChanged(self.valueChanged)
-        
-    def valueChanged(self, value):
-        if self.view == None: return
-        self.view.setPaintingFlow(self.value()/100)
-        
-    def synchronizeView(self, view: View):
-        self.view = view
-        self.synchronize()
-    
-    def synchronize(self):
-        if self.view == None: return
-        self.setValue(self.view.paintingFlow()*100)
-
-class BrushRotationSlider(KisAngleSelector):
-    def __init__(self, parent: QWidget | None = None) -> None:
-        super().__init__(parent)
-        self.setContentsMargins(0,0,0,0)
-        self.setMinimumWidth(100)
-        self.setFixedHeight(30)
-        self.setWidgetsHeight(30)
-
-        self.setFlipOptionsMode(KisAngleSelector.FlipOptionsMode.MenuButton)
-        self.spinBox.setPrefix('Rotation: ')
-        self.spinBox.valueChanged.connect(self.valueChanged)
-
-    def valueChanged(self, value):
-        if self.view == None: return
-        self.view.setBrushRotation(self.spinBox.value())
-        
-    def synchronizeView(self, view: View):
-        self.view = view
-        self.synchronize()
-    
-    def synchronize(self):
-        if self.view == None: return
-        self.setAngle(self.view.brushRotation())
-
 class BrushOptionsWidget(QWidget):
     def __init__(self, parent: QWidget | None = None):
         super(BrushOptionsWidget, self).__init__(parent)
@@ -130,10 +50,6 @@ class BrushOptionsWidget(QWidget):
 
         self.config = BrushOptionsDockerCfg()
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
-
-        self.timer_pulse = QTimer(self)
-        self.timer_pulse.timeout.connect(self.updateSliders)
-        self.timer_pulse.start(100)
 
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
@@ -161,8 +77,17 @@ class BrushOptionsWidget(QWidget):
         self.gridLayout.addWidget(self.rotationSlider)
         self.gridLayout.addWidget(self.optionsButton)
 
+        self.updateSliders()
+
     def setup(self, instance: "Touchify.TouchifyWindow"):
         self.sourceWindow = instance.windowSource
+        
+        self.sizeSlider.setSourceWindow(self.sourceWindow)
+        self.opacitySlider.setSourceWindow(self.sourceWindow)
+        self.flowSlider.setSourceWindow(self.sourceWindow)
+        self.rotationSlider.setSourceWindow(self.sourceWindow)
+
+        self.updateSliders()
 
     def genMenu(self):
         menu = QMenu()
@@ -214,38 +139,15 @@ class BrushOptionsWidget(QWidget):
         updateSliderVisibility(self.config.ShowOpacitySlider, self.opacitySlider)
         updateSliderVisibility(self.config.ShowFlowSlider, self.flowSlider)
         updateSliderVisibility(self.config.ShowRotationSlider, self.rotationSlider)
-
-        active_window = self.sourceWindow
-        if active_window == None: return
-
-        active_view = active_window.activeView()
-        if active_view == None: return
-
-        self.sizeSlider.synchronizeView(active_view)
-        self.opacitySlider.synchronizeView(active_view)
-        self.flowSlider.synchronizeView(active_view)
-        self.rotationSlider.synchronizeView(active_view)
         
     def showEvent(self, event):
-        self.timer_pulse.start()
         super().showEvent(event)
 
     def closeEvent(self, event):
-        self.timer_pulse.stop()
         super().closeEvent(event)
 
-
     def onCanvasChanged(self, canvas: Canvas):
-        active_window = self.sourceWindow
-        if active_window == None: return
-
-        active_view = active_window.activeView()
-        if active_view == None: return
-
-        self.sizeSlider.synchronizeView(active_view)
-        self.opacitySlider.synchronizeView(active_view)
-        self.flowSlider.synchronizeView(active_view)
-        self.rotationSlider.synchronizeView(active_view)
+        self.updateSliders()
 
 class BrushOptionsDocker(DockWidget):
 

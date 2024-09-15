@@ -7,6 +7,8 @@
 ## Additions:
 - **Massive Refactoring** 
     > Lots of code consoldiation again, to make the code easier to follow for myself
+- **New Popup Actions Feature - Close on Click**
+    > Closes the Popup on Action Trigger when using a Actions Popup. Allows for behavior more in line with a context menu
 - **New PropertyGrid / Settings Functionality - Duplicate List Items**
     > Need I say any more? You can now quickly duplicate any item in any configuration page!
 - **New Toolshelf Feature - Presets**

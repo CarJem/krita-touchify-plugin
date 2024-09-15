@@ -19,8 +19,10 @@ class CfgTouchifyActionPopup:
     actions_icon_width: int = 30
     actions_icon_height: int = 30
     actions_items: TypedList[CfgTouchifyActionPopupItem] = []
+    actions_close_on_click: bool = False
     
     docker_id: str = ""
+
 
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
@@ -36,10 +38,15 @@ class CfgTouchifyActionPopup:
             "actions_icon_width",
             "actions_icon_height",
             "actions_items",
+            "actions_close_on_click"
         ]
 
         docker_mode_settings = [
             "docker_id"
+        ]
+
+        popup_type_settings = [
+            "popup_close_on_trigger"
         ]
 
         result = []
@@ -81,6 +88,7 @@ class CfgTouchifyActionPopup:
         labels["actions_icon_width"] = "Action Icon Width"
         labels["actions_icon_height"] = "Action Icon Height"
         labels["actions_items"] = "Actions"
+        labels["actions_close_on_click"] = "Close on Click"
         return labels
 
     def propertygrid_restrictions(self):

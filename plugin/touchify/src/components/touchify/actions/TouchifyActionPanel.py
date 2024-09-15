@@ -19,6 +19,9 @@ if TYPE_CHECKING:
     from ....action_manager import ActionManager
 
 class TouchifyActionPanel(QWidget):
+
+    action_triggered = pyqtSignal()
+
     def __init__(self, cfg: List[CfgTouchifyActionCollection], parent: QWidget=None, actions_manager: "ActionManager" = None, type: str = "default", icon_width: int = -1, icon_height: int = -1, item_width: int = -1, item_height: int = -1, opacity: float = 1.0):
         super(TouchifyActionPanel, self).__init__(parent)
 
@@ -163,6 +166,9 @@ class TouchifyActionPanel(QWidget):
             btn.setContentsMargins(0,0,0,0)
             btn.setStyleSheet(Stylesheet.instance().hide_menu_indicator)
 
+    def onButtonClicked(self):
+        self.action_triggered.emit()
+
     def createPanel(self):
         self.ourLayout = QVBoxLayout(self)
         self.setLayout(self.ourLayout)
@@ -176,10 +182,6 @@ class TouchifyActionPanel(QWidget):
         
         actions = self.cfg
         row_index = 0
-        isTool = False
-        
-        if self.type == "popup":
-            isTool = True
         
         
         for row in actions:
@@ -188,6 +190,7 @@ class TouchifyActionPanel(QWidget):
                 act: CfgTouchifyAction = entry
                 btn = self.actions_manager.createButton(self, act)
                 if btn:
+                    btn.clicked.connect(self.onButtonClicked)
                     self.stylizeButton(btn)
                     self.appendButton(act, btn, row_index)
 
