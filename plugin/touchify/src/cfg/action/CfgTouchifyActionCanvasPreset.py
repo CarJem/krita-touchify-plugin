@@ -2,8 +2,8 @@ from PyQt5.QtWidgets import QWidget
 from krita import *
 from PyQt5.QtCore import *
 from ...ext.KritaSettings import *
-from ...ext.extensions_krita import *
-from ...ext.extensions_json import JsonExtensions as Extensions
+from ...ext.KritaExtensions import *
+from ...ext.JsonExtensions import JsonExtensions as Extensions
 
 class CfgTouchifyActionCanvasPreset:
     checkers_main_color: KS_Color = KS_Color()

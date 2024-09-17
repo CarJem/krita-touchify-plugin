@@ -10,7 +10,7 @@ from .cfg.action.CfgTouchifyActionDockerGroupItem import CfgTouchifyActionDocker
 from .cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from .cfg.action.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
 from .cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
-from .ext.extensions_krita import *
+from .ext.KritaExtensions import *
 
 from .components.touchify.popups.PopupDialog import *
 from .components.touchify.popups.PopupDialog_Actions import *

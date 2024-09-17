@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QToolButton
 from PyQt5.QtGui import QPalette, QColor
 
 from .....stylesheet import Stylesheet
-from .....ext.extensions_krita import KritaExtensions as KE
+from .....ext.KritaExtensions import KritaExtensions as KE
 
 from krita import *
 

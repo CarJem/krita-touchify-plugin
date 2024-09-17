@@ -1,16 +1,16 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import *
 
-from ..settings.TouchifySettings import TouchifySettings
-from ..components.touchify.canvas.NtCanvas import NtCanvas
+from touchify.src.settings.TouchifySettings import TouchifySettings
+from touchify.src.components.touchify.canvas.NtCanvas import NtCanvas
 
-from ..variables import *
-from ..settings.TouchifyConfig import *
-from ..stylesheet import Stylesheet
+from touchify.src.variables import *
+from touchify.src.settings.TouchifyConfig import *
+from touchify.src.stylesheet import Stylesheet
 from PyQt5.QtWidgets import QMessageBox
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..touchify import Touchify
+    from touchify.src.touchify import Touchify
 
 
 from krita import *

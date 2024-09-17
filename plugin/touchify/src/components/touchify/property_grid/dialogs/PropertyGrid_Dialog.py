@@ -5,7 +5,7 @@ from krita import *
 
 from .....resources import ResourceManager
 
-from .....ext.extensions_krita import KritaExtensions
+from .....ext.KritaExtensions import KritaExtensions
 
 class PropertyGrid_Dialog(QDialog):
 

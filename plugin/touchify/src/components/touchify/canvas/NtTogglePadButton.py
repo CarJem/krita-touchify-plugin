@@ -5,11 +5,12 @@ from PyQt5.QtCore import Qt, QSize, QPoint
 from ....ext.KritaSettings import KritaSettings
 
 from ....settings.TouchifyConfig import *
-from ....ext.extensions_pyqt import PyQtExtensions as Ext
+from ....ext.PyQtExtensions import PyQtExtensions as Ext
 from ....stylesheet import Stylesheet
 
 
 from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QMouseEvent
 from PyQt5.QtWidgets import QSizePolicy, QToolButton
 
 

@@ -1,7 +1,7 @@
 import uuid
 from ....resources import ResourceManager
 from ....variables import *
-from ....ext.extensions_krita import *
+from ....ext.KritaExtensions import *
 from krita import *
 from ....settings.TouchifyConfig import *
 from PyQt5.QtWidgets import *

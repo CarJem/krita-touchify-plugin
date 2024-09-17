@@ -1,6 +1,6 @@
-from ...ext.TypedList import TypedList
-from ...ext.extensions_json import JsonExtensions as Extensions
-from ...ext.StrEnum import StrEnum
+from ...ext.types.TypedList import TypedList
+from ...ext.JsonExtensions import JsonExtensions as Extensions
+from ...ext.types.StrEnum import StrEnum
 from ..action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
 
 class CfgToolshelfHeaderOptions:

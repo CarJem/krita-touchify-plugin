@@ -1,5 +1,5 @@
-from ...ext.extensions_json import JsonExtensions as Extensions
-from ...ext.extensions import TypedList
+from ...ext.JsonExtensions import JsonExtensions as Extensions
+from ...ext.types.TypedList import TypedList
 
 
 class CfgTouchifyActionPopupItem:

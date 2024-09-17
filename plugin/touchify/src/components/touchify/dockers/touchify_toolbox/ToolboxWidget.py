@@ -9,7 +9,7 @@ from os import path
 
 from .....variables import *
 
-from .....ext.extensions_krita import KritaExtensions as KE
+from .....ext.KritaExtensions import KritaExtensions as KE
 from .....ext.KritaSettings import KritaSettings
 
 from .....stylesheet import Stylesheet

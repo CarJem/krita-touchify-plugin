@@ -10,7 +10,7 @@ from .....settings.TouchifyConfig import *
 from .....variables import *
 from .....docker_manager import *
 from .....stylesheet import Stylesheet
-from .....ext.extensions_krita import KritaExtensions
+from .....ext.KritaExtensions import KritaExtensions
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

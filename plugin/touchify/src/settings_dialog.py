@@ -2,12 +2,12 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import os
-from .components.touchify.property_grid.PropertyGrid import PropertyGrid
-from .settings.TouchifyConfig import *
-from .resources import *
-from .ext.extensions import *
-from .components.touchify.property_grid.PropertyGrid_Panel import *
-from ..paths import BASE_DIR
+from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
+from touchify.src.settings.TouchifyConfig import TouchifyConfig
+from touchify.src.resources import ResourceManager
+from touchify.src.ext.Extensions import Extensions
+from touchify.src.components.touchify.property_grid.PropertyGrid_Panel import PropertyGrid_Panel
+import copy
 
 from krita import *
 

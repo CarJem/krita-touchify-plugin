@@ -6,15 +6,16 @@ from .variables import *
 from .docker_manager import DockerManager
 from .action_manager import ActionManager
 
-from .settings_dialog import *
+from .settings_dialog import SettingsDialog
+from .settings.TouchifyConfig import TouchifyConfig
 
-from .features.touchify_canvas import *
-from .features.touchify_hotkeys import *
-from .features.touchify_looks import *
-from .features.touchify_actions import *
+from .features.touchify_canvas import TouchifyCanvas
+from .features.touchify_hotkeys import TouchifyHotkeys
+from .features.touchify_looks import TouchifyLooks
+from .features.touchify_actions import TouchifyActions
 
 from .ext.KritaSettings import KritaSettings
-from .ext.extensions_pyqt import PyQtExtensions
+from .ext.PyQtExtensions import PyQtExtensions
 
 from .components.touchify.dockers.color_options.ColorOptionsDocker import ColorOptionsDocker
 from .components.touchify.dockers.brush_options.BrushOptionsDocker import BrushOptionsDocker

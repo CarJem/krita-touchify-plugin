@@ -6,9 +6,9 @@ import sys
 import xml.etree.ElementTree as ET
 from ....pyqt.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from .....ext.TypedList import *
+from .....ext.types.TypedList import *
 from .....resources import *
-from .....ext.extensions_krita import KritaExtensions
+from .....ext.KritaExtensions import KritaExtensions
 from ....pyqt.widgets.CollapsibleBox import CollapsibleBox
 
 from ..utils.PropertyUtils_Extensions import *

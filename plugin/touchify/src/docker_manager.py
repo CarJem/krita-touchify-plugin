@@ -9,10 +9,10 @@ from .settings.TouchifySettings import TouchifySettings
 
 from .ext.KritaSettings import KritaSettings
 
-from .ext.extensions import *
+from .ext.Extensions import *
 from .settings.TouchifyConfig import *
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 if TYPE_CHECKING:
     from .touchify import Touchify
 

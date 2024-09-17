@@ -1,7 +1,7 @@
-from ...ext.TypedList import TypedList
-from ...ext.extensions_json import JsonExtensions as Extensions
+from ...ext.types.TypedList import TypedList
+from ...ext.JsonExtensions import JsonExtensions as Extensions
 from .CfgWidgetPadOptions import CfgWidgetPadOptions
-from ...ext.StrEnum import StrEnum
+from ...ext.types.StrEnum import StrEnum
 from PyQt5.QtCore import Qt
 
 class CfgWidgetPadToolboxOptions:

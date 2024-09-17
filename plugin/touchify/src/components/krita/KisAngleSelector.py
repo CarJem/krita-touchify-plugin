@@ -148,21 +148,21 @@ class KisAngleSelector(QWidget):
 
         self.actionFlipHorizontally = QAction(self)
         self.actionFlipHorizontally.setText(
-            i18nc(
+            i18nc( # type: ignore
                 "Flips the angle horizontally, around the vertical axis",
                 "Flip the angle horizontally"
             )
         )
         self.actionFlipVertically = QAction(self)
         self.actionFlipVertically.setText(
-            i18nc(
+            i18nc( # type: ignore
                 "Flips the angle vertically, around the horizontal axis",
                 "Flip the angle vertically"
             )
         )
         self.actionFlipHorizontallyAndVertically = QAction(self)
         self.actionFlipHorizontallyAndVertically.setText(
-            i18nc(
+            i18nc( # type: ignore
                 "Flips the angle horizontally and vertically",
                 "Flip the angle horizontally and vertically"
             )
@@ -171,7 +171,7 @@ class KisAngleSelector(QWidget):
         menuSeparator.setSeparator(True)
         self.actionResetAngle = QAction(self)
         self.actionResetAngle.setText(
-            i18nc(
+            i18nc( # type: ignore
                 "Reset the angle to a predefined value",
                 "Reset angle"
             )

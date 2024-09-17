@@ -1,6 +1,6 @@
 from ..action.CfgTouchifyAction import *
-from ...ext.TypedList import TypedList
-from ...ext.extensions_json import JsonExtensions as Extensions
+from ...ext.types.TypedList import TypedList
+from ...ext.JsonExtensions import JsonExtensions as Extensions
 from .CfgToolshelfSection import CfgToolshelfSection
 from ..action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
 from ..CfgBackwardsCompat import CfgBackwardsCompat

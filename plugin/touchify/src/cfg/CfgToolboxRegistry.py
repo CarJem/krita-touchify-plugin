@@ -1,6 +1,6 @@
 from .toolbox.CfgToolbox import *
-from ..ext.TypedList import TypedList
-from ..ext.extensions_json import JsonExtensions as Extensions
+from ..ext.types.TypedList import TypedList
+from ..ext.JsonExtensions import JsonExtensions as Extensions
 import os, json
 from ...paths import BASE_DIR
 

@@ -1,22 +1,17 @@
 from functools import partial
 from PyQt5 import QtWidgets, QtGui
-import os
-import json
-import sys
-import importlib.util
-import uuid
-from ..ext.extensions_krita import *
+from touchify.src.ext.KritaExtensions import *
 
-from ..variables import *
+from touchify.src.variables import *
 
-from ..cfg.action.CfgTouchifyAction import CfgTouchifyAction
-from ..settings.TouchifyConfig import *
-from ..resources import *
+from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
+from touchify.src.settings.TouchifyConfig import *
+from touchify.src.resources import *
 
 from krita import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..touchify import Touchify
+    from touchify.src.touchify import Touchify
     
 class TouchifyActions(object):
     

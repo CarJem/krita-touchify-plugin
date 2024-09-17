@@ -1,6 +1,6 @@
 import inspect
 
-from .TypedList import *
+from .types.TypedList import *
 from typing import *
 from PyQt5 import *
 from PyQt5.QtWidgets import *

@@ -26,7 +26,7 @@ from .NtTogglePadButton import NtTogglePadButton
 from .NtSubWinFilter import NtSubWinFilter
 
 from ....settings.TouchifyConfig import *
-from ....ext.extensions_pyqt import PyQtExtensions as Ext
+from ....ext.PyQtExtensions import PyQtExtensions as Ext
 
 from krita import *
 

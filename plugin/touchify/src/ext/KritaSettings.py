@@ -1,6 +1,6 @@
 from krita import *
 from PyQt5.QtGui import QColor
-from ..ext.extensions import Extensions
+from .Extensions import Extensions
 
 
 

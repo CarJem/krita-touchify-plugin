@@ -1,6 +1,6 @@
 import inspect
 
-from .TypedList import *
+from .types.TypedList import TypedList
 from typing import *
 from PyQt5 import *
 from PyQt5.QtWidgets import *
@@ -19,7 +19,6 @@ class JsonExtensions:
         else:
             result: type = jsonData
             return result
-
 
     def tryGetListAssignment(jsonData, key, type, defaultValue):
         if not jsonData:
@@ -50,8 +49,6 @@ class JsonExtensions:
                             if isinstance(getattr(obj, key), cls):
                                 setattr(obj, key, cls(**value))
                             
-                    
-
     def default_assignment(args, attributeName, defaultValue):
         if attributeName in args:
             return args[attributeName]

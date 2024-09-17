@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QMdiArea, QDockWidget
 
 
 
-from ....ext.extensions_krita import KritaExtensions
+from ....ext.KritaExtensions import KritaExtensions
 
 from .NtSubWinFilter import NtSubWinFilter
 

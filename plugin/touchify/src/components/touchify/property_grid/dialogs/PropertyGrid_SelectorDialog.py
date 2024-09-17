@@ -7,7 +7,7 @@ from .PropertyGrid_Dialog import PropertyGrid_Dialog
 
 from .....resources import ResourceManager
 
-from .....ext.extensions_krita import KritaExtensions
+from .....ext.KritaExtensions import KritaExtensions
 
 DATA_INDEX = 3
 

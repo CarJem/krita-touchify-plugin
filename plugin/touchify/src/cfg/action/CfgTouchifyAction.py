@@ -1,9 +1,9 @@
 from .CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
 from .CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from .CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
-from ...ext.StrEnum import StrEnum
-from ...ext.TypedList import TypedList
-from ...ext.extensions_json import JsonExtensions as Extensions
+from ...ext.types.StrEnum import StrEnum
+from ...ext.types.TypedList import TypedList
+from ...ext.JsonExtensions import JsonExtensions as Extensions
 from ..CfgBackwardsCompat import CfgBackwardsCompat
 
 class CfgTouchifyAction:

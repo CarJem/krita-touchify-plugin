@@ -6,7 +6,7 @@ import os
 from ..ext.KritaSettings import KritaSettings
 
 from ..cfg.CfgHotkeyRegistry import CfgHotkeyRegistry
-from ..ext.extensions_json import JsonExtensions
+from ..ext.JsonExtensions import JsonExtensions
 from ..cfg.toolshelf.CfgToolshelf import CfgToolshelf
 from ..variables import *
 
@@ -14,7 +14,7 @@ from ..cfg.CfgToolshelfRegistry import CfgToolshelfRegistry
 from ..cfg.CfgActionRegistry import CfgActionRegistry
 from ..cfg.CfgToolboxRegistry import CfgToolboxRegistry
 from ..cfg.CfgWidgetPadRegistry import CfgWidgetPadRegistry
-from ..ext.extensions import *
+from ..ext.Extensions import *
 from ...paths import BASE_DIR
 import copy
 

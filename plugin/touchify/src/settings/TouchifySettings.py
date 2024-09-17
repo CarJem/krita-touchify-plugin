@@ -1,6 +1,6 @@
 from ..ext.KritaSettings import KritaSettings, KS_Color, KS_AlphaColor
 import json
-from ..ext.extensions_json import JsonExtensions
+from ..ext.JsonExtensions import JsonExtensions
 from ..cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
 
 class TouchifySettings:

@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt, QSize, QPoint
 from ....ext.KritaSettings import KritaSettings
 
 from ....settings.TouchifyConfig import *
-from ....ext.extensions_pyqt import PyQtExtensions as Ext
+from ....ext.PyQtExtensions import PyQtExtensions as Ext
 
 
 class NtScrollAreaContainer(QWidget):

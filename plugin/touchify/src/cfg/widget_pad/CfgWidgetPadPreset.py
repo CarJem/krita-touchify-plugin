@@ -1,8 +1,8 @@
 import string
 from .CfgWidgetPadOptions import CfgWidgetPadOptions
 from .CfgWidgetPadToolboxOptions import CfgWidgetPadToolboxOptions
-from ...ext.TypedList import TypedList
-from ...ext.extensions_json import JsonExtensions as Extensions
+from ...ext.types.TypedList import TypedList
+from ...ext.JsonExtensions import JsonExtensions as Extensions
    
 class CfgWidgetPadPreset:
     preset_name: str = "WidgetPad Preset"

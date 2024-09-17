@@ -7,7 +7,7 @@ from ....docker_manager import DockerManager
 from ....action_manager import ActionManager
 
 
-from ....ext.extensions_krita import KritaExtensions
+from ....ext.KritaExtensions import KritaExtensions
 from ....settings.TouchifySettings import TouchifySettings
 from ....settings.TouchifyConfig import TouchifyConfig
 from ....stylesheet import Stylesheet

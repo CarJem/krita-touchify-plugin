@@ -22,7 +22,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QMessageBox, \
                             QGraphicsView, QGraphicsScene, QGraphicsPixmapItem, QScroller, \
                             qApp
                             
-from .....ext.extensions_krita import *
+from .....ext.KritaExtensions import *
 from krita import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

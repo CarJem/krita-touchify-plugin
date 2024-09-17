@@ -1,26 +1,3 @@
-import inspect
-
-from .TypedList import *
-from typing import *
-from PyQt5 import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-
-import sys
-
-from krita import *
-
-def nameof(var):
-    current_frame = inspect.currentframe()
-    try:
-        frame_locals = current_frame.f_back.f_locals
-        var_name = [name for name, value in frame_locals.items() if value is var][0]
-        print(f"Variable name: {var_name}")
-        return var_name
-    finally:
-        del current_frame
-
-
 class Extensions:
    
    
