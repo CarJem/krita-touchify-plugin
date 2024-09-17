@@ -37,7 +37,12 @@
             "label": "Launch Krita.COM",
             "hide": true,
             "type": "shell",
-            "command": "cmd.exe /D /C 'C:\\Program Files\\Krita (x64)\\bin\\krita.com'",
+            "windows": {
+                "command": "cmd.exe /D /C 'C:\\Program Files\\Krita (x64)\\bin\\krita.com'",
+            },
+            "linux": {
+                "command": "/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=krita --file-forwarding org.kde.krita @@ %F @@"
+            }
         },
         {
             "label": "……………………………………………",

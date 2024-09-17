@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from .ToolshelfSectionGroup import ToolshelfSectionGroup
-from .....docker_manager import DockerManager
 from ...actions.TouchifyActionPanel import TouchifyActionPanel
 from .....cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
 from .....cfg.toolshelf.CfgToolshelf import CfgToolshelfSection
