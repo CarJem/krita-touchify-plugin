@@ -1,12 +1,15 @@
 import string
-from ..action.CfgTouchifyAction import *
-from ...ext.types.TypedList import TypedList
-from ...ext.JsonExtensions import JsonExtensions as Extensions
-from .CfgToolshelfPanel import CfgToolshelfPanel
-from .CfgToolshelfSection import CfgToolshelfSection
-from ..action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
-from .CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
-from ..CfgBackwardsCompat import CfgBackwardsCompat
+
+from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
+from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
+from touchify.src.cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
+from touchify.src.cfg.toolshelf.CfgToolshelfPanel import CfgToolshelfPanel
+from touchify.src.cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
+from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+
+
+
    
 class CfgToolshelf:
     actions: TypedList[CfgTouchifyActionCollection] = []

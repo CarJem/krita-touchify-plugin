@@ -1,6 +1,5 @@
-from PyQt5.QtCore import QObject
 from PyQt5.QtWidgets import *
-from ....docker_manager import *
+from touchify.src.docker_manager import *
 from krita import *
 
 try:

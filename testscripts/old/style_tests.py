@@ -1,18 +1,14 @@
-from calendar import c
-from inspect import _void, stack
-from json import tool
 from PyQt5.QtCore import *;
 from PyQt5.QtGui import *;
 from PyQt5.QtWidgets import *;
-from PyQt5.Qt import QWIDGETSIZE_MAX;
-import sys, os
+import sys
 
 sys.path.append('C:/Users/demo/Documents/Apps/Scripts/KritaDev/modules')
 
 highlight = qApp.palette().color(QPalette.Highlight).name().split("#")[1]
 
 
-from touchify.src.components.krita_ext.KisSliderSpinBox import KisSliderSpinBox
+from touchify.src.components.krita.KisSliderSpinBox import KisSliderSpinBox
 from krita import *
 qwin = Krita.instance().activeWindow().qwindow()
 wobj = qwin.findChild(QMdiArea)

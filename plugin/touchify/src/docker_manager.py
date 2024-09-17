@@ -1,5 +1,3 @@
-from ast import main
-import copy
 from enum import Enum
 from krita import *
 from PyQt5.QtWidgets import QWidget
@@ -7,7 +5,6 @@ from PyQt5.QtCore import *
 
 from .settings.TouchifySettings import TouchifySettings
 
-from .ext.KritaSettings import KritaSettings
 
 from .ext.Extensions import *
 from .settings.TouchifyConfig import *

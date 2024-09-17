@@ -7,16 +7,11 @@
     },
     "python.analysis.extraPaths": [    
         "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs",
-        "/home/carjem/.var/app/org.kde.krita/data/krita/pykrita",
-        "./plugin"
+        "~/.var/app/org.kde.krita/data/krita/pykrita"
     ],
-    "python.analysis.extraPaths.disabled": [
-        "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/python3.11/site-packages",
-        "C:\\Program Files\\Krita (x64)\\lib\\krita-python-libs",
-        "${workspaceFolder}/env/krita_imports",
-    ],
+    "python.analysis.fixAll" : ["source.unusedImports", "source.convertImportFormat"],
     "python.REPL.enableREPLSmartSend": false,
-    "python.analysis.importFormat": "absolute",
+    "python.analysis.importFormat": "relative",
     "python.analysis.diagnosticMode": "workspace",
     "python.analysis.indexing": true,
     "python.analysis.inlayHints.functionReturnTypes": false,
@@ -25,14 +20,11 @@
         "**/krita_env/krita": true,
         "**/testscripts": true
     },
-    "python.analysis.autoImportCompletions": false,
-    "sshfs.configs": [
-        {
-            "name": "Deployment"
-        }
-    ],
-    "python.analysis.diagnosticSeverityOverrides": {
-
+    "editor.codeActionsOnSave": {
+        "source.unusedImports": "explicit",
+        "source.organizeImports": "explicit",
+        "source.convertImportFormat": "explicit",
     },
-    "pylint.importStrategy": "fromEnvironment"
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.diagnosticSeverityOverrides": {},
 }

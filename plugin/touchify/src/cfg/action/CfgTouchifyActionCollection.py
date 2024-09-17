@@ -1,6 +1,6 @@
-from .CfgTouchifyAction import *
-from ...ext.types.TypedList import TypedList
-from ...ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.cfg.action.CfgTouchifyAction import *
+from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 class CfgTouchifyActionCollection:
     actions: TypedList["CfgTouchifyAction"] = []

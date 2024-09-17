@@ -6,9 +6,7 @@ from .variables import *
 
 from .cfg.action.CfgTouchifyAction import CfgTouchifyAction
 from .cfg.action.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
-from .cfg.action.CfgTouchifyActionDockerGroupItem import CfgTouchifyActionDockerGroupItem
 from .cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from .cfg.action.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
 from .cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
 from .ext.KritaExtensions import *
 

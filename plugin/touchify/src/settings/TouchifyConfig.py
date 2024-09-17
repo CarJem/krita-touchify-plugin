@@ -3,7 +3,6 @@ from PyQt5.QtCore import *
 import json
 import os
 
-from ..ext.KritaSettings import KritaSettings
 
 from ..cfg.CfgHotkeyRegistry import CfgHotkeyRegistry
 from ..ext.JsonExtensions import JsonExtensions
@@ -16,7 +15,6 @@ from ..cfg.CfgToolboxRegistry import CfgToolboxRegistry
 from ..cfg.CfgWidgetPadRegistry import CfgWidgetPadRegistry
 from ..ext.Extensions import *
 from ...paths import BASE_DIR
-import copy
 
 import json
 

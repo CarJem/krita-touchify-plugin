@@ -1,12 +1,10 @@
-import inspect
 
-from .types.TypedList import *
+from touchify.src.ext.types.TypedList import *
 from typing import *
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-import sys
 
 from krita import *
 

@@ -1,5 +1,4 @@
-from functools import partial
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets
 from touchify.src.ext.KritaExtensions import *
 
 from touchify.src.variables import *
