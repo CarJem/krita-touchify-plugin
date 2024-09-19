@@ -4,15 +4,12 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from krita import *
 
-import json
-from os import path
 
 from .....variables import *
 
 from .....ext.KritaExtensions import KritaExtensions as KE
 from .....ext.KritaSettings import KritaSettings
 
-from .....stylesheet import Stylesheet
 
 from .ToolboxCategory import ToolboxCategory
 from .ToolboxScrollArea import ToolboxScrollArea
@@ -25,6 +22,7 @@ from .....cfg.toolbox.CfgToolbox import CfgToolbox
 from .....cfg.toolbox.CfgToolboxItem import CfgToolboxItem
 from .....cfg.toolbox.CfgToolboxSubItem import CfgToolboxSubItem
 from .....cfg.toolbox.CfgToolboxCategory import CfgToolboxCategory
+from ....pyqt.widgets.QResizableWidget import QResizableWidget
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -70,7 +68,7 @@ TOOLBOX_ITEMS: dict[str, str] = {
         "ZoomTool": "ZoomTool"
 }
 
-class ToolboxWidget(QWidget):
+class ToolboxWidget(QResizableWidget):
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
 

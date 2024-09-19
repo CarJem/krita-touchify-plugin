@@ -1,14 +1,11 @@
-from enum import Enum
-from PyQt5.QtWidgets import QWidget, QDockWidget, QVBoxLayout, QScrollArea
-from PyQt5.QtCore import Qt, QSize, QPoint
+from PyQt5.QtWidgets import QVBoxLayout, QScrollArea
 
-from ....ext.KritaSettings import KritaSettings
 
+from ...pyqt.widgets.QResizableWidget import QResizableWidget
 from ....settings.TouchifyConfig import *
-from ....ext.PyQtExtensions import PyQtExtensions as Ext
 
 
-class NtScrollAreaContainer(QWidget):
+class NtScrollAreaContainer(QResizableWidget):
 
     def __init__(self, scrollArea = None, parent=None):
         super(NtScrollAreaContainer, self).__init__(parent)
@@ -26,6 +23,10 @@ class NtScrollAreaContainer(QWidget):
             return self.sa.widget().sizeHint()
 
         return super().sizeHint()
+    
+    
+    
+
 
 
     def setScrollArea(self, scrollArea):
