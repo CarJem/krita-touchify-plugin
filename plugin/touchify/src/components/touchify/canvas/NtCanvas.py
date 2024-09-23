@@ -39,7 +39,7 @@ class NtCanvas(QWidget):
         self.toolboxOptions = None
         self.toolOptions = None
 
-        self.presetsMenu = QMenu("Presets...")
+        self.presetsMenu = QMenu("Layouts...")
         self.presetsMenu.aboutToShow.connect(self.buildPresetMenu)
 
         self.canvasLayout = QGridLayout(self)
