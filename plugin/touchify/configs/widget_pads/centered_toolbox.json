@@ -1,11 +1,15 @@
 {
     "preset_name": "Centered Toolbox",
     "toolbox": {
-        "position_x": 1,
-        "position_y": 0,
+        "position_x": 0,
+        "position_y": 1,
         "alignment_x": "center",
         "alignment_y": "bottom",
-        "horizontal_mode": true
+        "horizontal_mode": true,
+        "span_x": 3,
+        "span_y": 1,
+        "stretch_x": 0,
+        "stretch_y": 0
     },
     "toolshelf": {
         "position_x": 2,
@@ -17,6 +21,10 @@
         "position_x": 0,
         "position_y": 0,
         "alignment_x": "left",
-        "alignment_y": "top"
+        "alignment_y": "top",
+        "span_x": -1,
+        "span_y": -1,
+        "stretch_y": 0,
+        "stretch_x": 0
     }
 }

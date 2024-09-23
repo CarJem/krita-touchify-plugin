@@ -1,8 +1,5 @@
-from ...ext.types.TypedList import TypedList
 from ...ext.JsonExtensions import JsonExtensions as Extensions
 from .CfgWidgetPadOptions import CfgWidgetPadOptions
-from ...ext.types.StrEnum import StrEnum
-from PyQt5.QtCore import Qt
 
 class CfgWidgetPadToolboxOptions:
 
@@ -14,6 +11,9 @@ class CfgWidgetPadToolboxOptions:
 
     stretch_x: int = 0
     stretch_y: int = 0
+
+    span_x: int = -1
+    span_y: int = -1
 
     horizontal_mode: bool = False
 
@@ -27,7 +27,9 @@ class CfgWidgetPadToolboxOptions:
             "alignment_x",
             "alignment_y",
             "stretch_x",
-            "stretch_y"
+            "stretch_y",
+            "span_x",
+            "span_y"
 
         ]
 
@@ -39,6 +41,8 @@ class CfgWidgetPadToolboxOptions:
         labels["alignment_y"] = "Vertical Alignment"
         labels["stretch_x"] = "Horizontal Stretch"
         labels["stretch_y"] = "Vertical Stretch"
+        labels["span_x"] = "Horizontal Span"
+        labels["span_y"] = "Vertical Span"
         labels["horizontal_mode"] = "Horizontal Mode"
         return labels
 
@@ -48,6 +52,8 @@ class CfgWidgetPadToolboxOptions:
         restrictions["position_y"] = {"type": "range", "min": 0}
         restrictions["stretch_x"] = {"type": "range", "min": 0}
         restrictions["stretch_y"] = {"type": "range", "min": 0}
+        restrictions["span_x"] = {"type": "range", "min": -1}
+        restrictions["span_y"] = {"type": "range", "min": -1}
         restrictions["alignment_x"] = {"type": "values", "entries": CfgWidgetPadOptions.HorizontalAlignment.values()}
         restrictions["alignment_y"] = {"type": "values", "entries": CfgWidgetPadOptions.VerticalAlignment.values()}
         return restrictions

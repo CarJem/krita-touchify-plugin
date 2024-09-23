@@ -1,8 +1,7 @@
-from PyQt5.QtWidgets import QMdiArea, QDockWidget
+from PyQt5.QtWidgets import QMdiArea
 
 
 
-from ....ext.KritaExtensions import KritaExtensions
 
 from .NtSubWinFilter import NtSubWinFilter
 
@@ -13,7 +12,7 @@ from .NtToolshelf import NtToolshelf
 from ....settings.TouchifySettings import TouchifySettings
 from ....settings.TouchifyConfig import TouchifyConfig
 from krita import *
-from PyQt5.QtCore import QObject, QEvent, QPoint
+from PyQt5.QtCore import QObject
 from ....variables import *
 from .NtWidgetPad import NtWidgetPad
 from ....ext.KritaSettings import KritaSettings
@@ -22,7 +21,6 @@ from ....cfg.widget_pad.CfgWidgetPadOptions import CfgWidgetPadOptions
 from ....cfg.widget_pad.CfgWidgetPadToolboxOptions import CfgWidgetPadToolboxOptions
 from ....cfg.CfgWidgetPadRegistry import CfgWidgetPadRegistry
 
-from ..special.DockerContainer import DockerContainer
 
 class NtCanvas(QWidget):
     def __init__(self, parent: QObject, window: Window):
@@ -243,7 +241,10 @@ class NtCanvas(QWidget):
             alignment_y = CfgWidgetPadOptions.VerticalAlignment.toAlignmentFlag(padOptions.alignment_y)
             pad.setLayoutAlignmentX(alignment_x)
             pad.setLayoutAlignmentY(alignment_y)
-            self.canvasLayout.addWidget(pad, padOptions.position_y, padOptions.position_x, alignment_x | alignment_y)
+            if padOptions.span_x != -1 and padOptions.span_y != -1:
+                self.canvasLayout.addWidget(pad, padOptions.position_y, padOptions.position_x, padOptions.span_y, padOptions.span_x, alignment_x | alignment_y)
+            else:
+                self.canvasLayout.addWidget(pad, padOptions.position_y, padOptions.position_x, alignment_x | alignment_y)
             self.canvasLayout.setColumnStretch(padOptions.position_x, padOptions.stretch_x)
             self.canvasLayout.setRowStretch(padOptions.position_y, padOptions.stretch_y)
             

@@ -1,16 +1,34 @@
 {
     "preset_name": "Sidepads",
-    "toolbox": {},
+    "toolbox": {
+        "span_x": 1,
+        "span_y": 1,
+        "position_x": 0,
+        "position_y": 0,
+        "alignment_x": "left",
+        "alignment_y": "top",
+        "stretch_x": 0,
+        "stretch_y": 0,
+        "horizontal_mode": false
+    },
     "toolshelf_alt": {
         "position_x": 1,
         "position_y": 1,
         "alignment_x": "right",
-        "alignment_y": "bottom"
+        "alignment_y": "bottom",
+        "span_x": -1,
+        "span_y": -1,
+        "stretch_y": 0,
+        "stretch_x": 0
     },
     "toolshelf": {
         "position_x": 1,
         "position_y": 0,
         "alignment_x": "right",
-        "alignment_y": "top"
+        "alignment_y": "top",
+        "span_x": -1,
+        "span_y": -1,
+        "stretch_y": 0,
+        "stretch_x": 0
     }
 }
