@@ -11,20 +11,10 @@
                     "items": [],
                     "name": "edit_redo",
                     "open_on_click": false
-                },
-                {
-                    "items": [],
-                    "name": "select_all",
-                    "open_on_click": false
-                },
-                {
-                    "items": [],
-                    "name": "deselect",
-                    "open_on_click": false
                 }
             ],
             "column_count": 0,
-            "id": "QuickSelection"
+            "id": "UndoRedo"
         },
         {
             "items": [
@@ -190,7 +180,8 @@
                     "name": "KisToolSelectMagnetic"
                 }
             ],
-            "id": "Select"
+            "id": "Select",
+            "column_count": 0
         },
         {
             "items": [

@@ -1,11 +1,8 @@
-from PyQt5 import QtWidgets, QtGui, QtSvg, QtCore
-import os
+from PyQt5 import QtSvg
 
-import xml
 
 
 from ....settings.TouchifyConfig import *
-from zipfile import ZipFile
 
 from krita import *
 
@@ -27,10 +24,16 @@ class QSvgIconEngine(QIconEngine):
 
         self.currentColor = None
         self.renderer = QtSvg.QSvgRenderer()
+
+    def iconColor(self):
+        background = qApp.palette().window().color()
+        is_dark = background.value() > 100
+        if is_dark: return QColor(55,55,55) # dark icons
+        else: return QColor(202, 202, 202) # light icons
  
     def updateData(self):
         if self.autoColorMode:
-            color = qApp.palette().color(QPalette.ColorRole.ButtonText).name().split("#")[1]
+            color = self.iconColor().name().split("#")[1]
             for child in self.svgData:
                 if child.get("ignore-krita-style") == "false":
                     child.set("style", f"fill:#{color};fill-opacity:1")

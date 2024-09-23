@@ -7,7 +7,6 @@ from krita import *
 
 from .....variables import *
 
-from .....ext.KritaExtensions import KritaExtensions as KE
 from .....ext.KritaSettings import KritaSettings
 
 
@@ -23,6 +22,7 @@ from .....cfg.toolbox.CfgToolboxItem import CfgToolboxItem
 from .....cfg.toolbox.CfgToolboxSubItem import CfgToolboxSubItem
 from .....cfg.toolbox.CfgToolboxCategory import CfgToolboxCategory
 from ....pyqt.widgets.QResizableWidget import QResizableWidget
+from touchify.src.resources import ResourceManager
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -387,21 +387,21 @@ class ToolboxWidget(QResizableWidget):
     def buildCategoryAction(self, tool: CfgToolboxItem, icon_size: int):
         ac = Krita.instance().action(tool.name)
         if ac:
-            actionText = KE.formatActionText(ac.text())
+            actionText = ac.toolTip()
             btn: ToolboxButton = ToolboxButton(tool.name)
             btn.setWindowOpacity(self.OPACITY_LEVEL)
             btn.setObjectName(tool.name)
             btn.setText(actionText)
-            btn.setIcon(ac.icon())
+            btn.setIcon(self.buildActionIcon(tool.name, tool.icon))
             btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             btn.setIconSize(QSize(icon_size, icon_size))
             btn.setToolTip(actionText)
             btn.setStyle(ToolboxStyle("fusion", self.config.submenu_delay))
 
             if len(tool.items) >= 1:
-                btn.released.connect(self.activateTool) # Activate when clicked
+                btn.released.connect(self.activateTool) # Activate when released
             else:
-                btn.pressed.connect(self.activateTool) # Activate when clicked
+                btn.pressed.connect(self.activateTool) # Activate when pressed
 
             if tool.name in TOOLBOX_ITEMS:
                 self.buttonGroup.addButton(btn)
@@ -420,19 +420,19 @@ class ToolboxWidget(QResizableWidget):
         return None
 
     def buildMenu(self, subMenu: ToolboxMenu):
-        self.buildMenuAction(subMenu, subMenu.tool.name)
+        self.buildMenuAction(subMenu, subMenu.tool.name, subMenu.tool.icon)
         for toolItem in subMenu.items: # iterate through all the tools in the category
             toolItem: CfgToolboxSubItem
-            self.buildMenuAction(subMenu, toolItem.name)
+            self.buildMenuAction(subMenu, toolItem.name, toolItem.icon)
 
         for action in subMenu.actions(): # show tool icons in submenu
             action.setIconVisibleInMenu(True)
 
-    def buildMenuAction(self, subMenu: ToolboxMenu, actionName: str):
+    def buildMenuAction(self, subMenu: ToolboxMenu, actionName: str, iconName: str):
         act = Krita.instance().action(actionName)
         if act:
-            toolIcon = QIcon(act.icon())
-            toolText = KE.formatActionText(act.text())
+            toolIcon = self.buildActionIcon(actionName, iconName)
+            toolText = act.toolTip()
             toolName = actionName
             toolAction = QAction(toolIcon, toolText, subMenu) # set up initial toolAction
 
@@ -452,6 +452,17 @@ class ToolboxWidget(QResizableWidget):
             toolAction.triggered.connect(self.swapToolButton) # activate menu tool on click
             toolAction.triggered.connect(self.activateTool) # activate menu tool on click
             subMenu.addAction(toolAction) # add the button for this tool in the menu
+
+    def buildActionIcon(self, actionName: str, iconName: str):
+        act = Krita.instance().action(actionName)
+
+        if iconName and iconName != "":
+            customIcon = ResourceManager.iconLoader(iconName)
+            if customIcon: return QIcon(customIcon)
+        elif act: return QIcon(act.icon())
+        else: return QIcon()
+
+
 
     #endregion
 

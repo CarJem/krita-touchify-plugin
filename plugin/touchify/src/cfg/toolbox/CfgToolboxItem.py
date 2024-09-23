@@ -6,6 +6,7 @@ class CfgToolboxItem:
 
     name: str = ""
     items: TypedList[CfgToolboxSubItem] = []
+    icon: str = ""
     open_on_click: bool = False
 
 
@@ -28,10 +29,12 @@ class CfgToolboxItem:
         labels = {}
         labels["name"] = "Action ID"
         labels["items"] = "Subitems"
+        labels["icon"] = "Custom Icon"
         labels["open_on_click"] = "Open Submenu on Click"
         return labels
 
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["name"] = {"type": "action_selection"}
+        restrictions["icon"] = {"type": "icon_selection"}
         return restrictions
