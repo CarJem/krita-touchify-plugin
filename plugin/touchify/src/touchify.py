@@ -21,7 +21,7 @@ from .components.touchify.dockers.color_options.ColorOptionsDocker import ColorO
 from .components.touchify.dockers.brush_options.BrushOptionsDocker import BrushOptionsDocker
 from .components.touchify.dockers.toolshelf.ToolshelfDocker import ToolshelfDocker
 from .components.touchify.dockers.reference_tabs.ReferenceTabsDocker import ReferenceTabsDocker
-from .components.touchify.dockers.touchify_toolbox.ToolboxDocker import ToolboxDocker
+from .components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
 
 WINDOW_ID: int = 0
 

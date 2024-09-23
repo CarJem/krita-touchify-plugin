@@ -1,12 +1,10 @@
-from PyQt5.QtWidgets import QMdiArea, QDockWidget
+from PyQt5.QtWidgets import QDockWidget
 
-from ....settings.TouchifySettings import TouchifySettings
-from ..dockers.touchify_toolbox.ToolboxDocker import ToolboxDocker
+from ..dockers.toolbox.ToolboxDocker import ToolboxDocker
 
-from ....stylesheet import Stylesheet
 from .NtWidgetPad import NtWidgetPad
 from krita import *
-from PyQt5.QtWidgets import QMdiArea, QDockWidget
+from PyQt5.QtWidgets import QDockWidget
 from ....variables import *
 
 from typing import TYPE_CHECKING
