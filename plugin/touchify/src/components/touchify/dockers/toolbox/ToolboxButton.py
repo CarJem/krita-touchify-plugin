@@ -1,8 +1,6 @@
 from PyQt5.QtWidgets import QToolButton
 from PyQt5.QtGui import QPalette, QColor
 
-from .....stylesheet import Stylesheet
-from .....ext.KritaExtensions import KritaExtensions as KE
 
 from krita import *
 
@@ -37,7 +35,6 @@ class ToolboxButton(QToolButton):
                     opacity: 0.65;
                 }}
         """)
-
 
     def setMenu(self, menu: QMenu):
         self.__hasMenu = True if menu else False

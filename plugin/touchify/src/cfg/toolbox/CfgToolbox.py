@@ -20,6 +20,9 @@ class CfgToolbox:
     categories: TypedList[CfgToolboxCategory] = [] 
 
 
+    json_version: int = 1
+
+
 
 
 

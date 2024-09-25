@@ -46,6 +46,8 @@ class CfgWidgetPadOptions:
     alignment_y: str = "top"
     alignment_x: str = "left"
 
+    json_version: int = 1
+
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
 

@@ -33,6 +33,8 @@ class CfgToolshelfHeaderOptions:
     stack_alignment: str = "default"
     stack_actions: TypedList[CfgTouchifyActionCollection] = []
 
+    json_version: int = 1
+
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
 

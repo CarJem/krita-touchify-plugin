@@ -21,6 +21,8 @@ class CfgToolshelf:
     header_options: CfgToolshelfHeaderOptions = CfgToolshelfHeaderOptions()
     preset_name: str = "New Toolshelf Preset"
 
+    json_version: int = 1
+
     def __init__(self, **args) -> None:
         args = CfgBackwardsCompat.CfgToolshelf(args)
         Extensions.dictToObject(self, args, [CfgToolshelfHeaderOptions])

@@ -184,5 +184,6 @@
     "icon_size": 16,
     "background_opacity": 128,
     "button_opacity": 175,
-    "preset_name": "Krita Default"
+    "preset_name": "Krita Default",
+    "json_version": 1
 }

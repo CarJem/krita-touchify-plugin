@@ -17,6 +17,8 @@ class CfgWidgetPadToolboxOptions:
 
     horizontal_mode: bool = False
 
+    json_version: int = 1
+
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
 

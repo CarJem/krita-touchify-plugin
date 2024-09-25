@@ -202,5 +202,6 @@
     "preset_name": "Developer's Pick",
     "submenu_delay": 200,
     "background_opacity": 255,
-    "button_opacity": 255
+    "button_opacity": 255,
+    "json_version": 1
 }

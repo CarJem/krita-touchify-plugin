@@ -262,7 +262,8 @@
             "size_x": 0,
             "size_y": 0,
             "row": 0,
-            "action_height": 20
+            "action_height": 20,
+            "json_version": 1
         },
         {
             "icon": "material:history",
@@ -289,7 +290,8 @@
             "size_y": 0,
             "actions": [],
             "row": 0,
-            "action_height": 10
+            "action_height": 10,
+            "json_version": 1
         },
         {
             "sections": [
@@ -607,7 +609,8 @@
             "size_y": 0,
             "row": 0,
             "tab_type": "buttons",
-            "action_height": 10
+            "action_height": 10,
+            "json_version": 1
         },
         {
             "sections": [
@@ -712,7 +715,8 @@
             "size_x": 0,
             "size_y": 0,
             "row": 0,
-            "action_height": 10
+            "action_height": 10,
+            "json_version": 1
         }
     ],
     "actions": [],
@@ -763,5 +767,6 @@
         "stack_alignment": "default"
     },
     "action_height": 20,
-    "preset_name": "Developer's Pick"
+    "preset_name": "Developer's Pick",
+    "json_version": 1
 }

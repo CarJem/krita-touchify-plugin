@@ -151,7 +151,8 @@
             "row": 0,
             "size_x": 0,
             "size_y": 0,
-            "action_height": 10
+            "action_height": 10,
+            "json_version": 1
         },
         {
             "sections": [
@@ -185,7 +186,8 @@
             "row": 0,
             "size_x": 0,
             "size_y": 0,
-            "action_height": 10
+            "action_height": 10,
+            "json_version": 1
         },
         {
             "sections": [
@@ -219,7 +221,8 @@
             "row": 0,
             "size_x": 0,
             "size_y": 0,
-            "action_height": 10
+            "action_height": 10,
+            "json_version": 1
         },
         {
             "sections": [
@@ -253,7 +256,8 @@
             "row": 0,
             "size_x": 0,
             "size_y": 0,
-            "action_height": 10
+            "action_height": 10,
+            "json_version": 1
         },
         {
             "sections": [
@@ -287,7 +291,8 @@
             "row": 0,
             "size_x": 0,
             "size_y": 0,
-            "action_height": 10
+            "action_height": 10,
+            "json_version": 1
         }
     ],
     "header_options": {
@@ -299,5 +304,6 @@
         "stack_actions": []
     },
     "action_height": 16,
-    "preset_name": "KanvasBuddy"
+    "preset_name": "KanvasBuddy",
+    "json_version": 1
 }

@@ -7,6 +7,8 @@ from .action.CfgTouchifyAction import *
 class CfgActionRegistry:
     actions_registry: TypedList[CfgTouchifyAction] = []
 
+    json_version: int = 1
+
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
         actions_registry = Extensions.default_assignment(args, "actions_registry", [])

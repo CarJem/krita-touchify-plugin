@@ -12,5 +12,6 @@
         "stack_actions": []
     },
     "action_height": 16,
-    "preset_name": "Empty"
+    "preset_name": "Empty",
+    "json_version": 1
 }

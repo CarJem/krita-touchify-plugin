@@ -1,6 +1,7 @@
 from ...ext.types.TypedList import TypedList
 from ...ext.JsonExtensions import JsonExtensions as Extensions
 from .CfgToolboxSubItem import CfgToolboxSubItem
+from ..CfgBackwardsCompat import CfgBackwardsCompat
 
 class CfgToolboxItem:
 
@@ -9,9 +10,10 @@ class CfgToolboxItem:
     icon: str = ""
     open_on_click: bool = False
 
-
+    json_version: int = 1
 
     def __init__(self, **args) -> None:
+        args = CfgBackwardsCompat.CfgToolboxItem(args)
         Extensions.dictToObject(self, args)
 
         items = Extensions.default_assignment(args, "items", [])

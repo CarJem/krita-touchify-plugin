@@ -46,6 +46,9 @@ class CfgToolshelfSection:
     action_section_btn_height: int = 0
     action_section_icon_size: int = 0
 
+
+    json_version: int = 1
+
     special_item_type: str = "none"
 
     def __init__(self, **args) -> None:

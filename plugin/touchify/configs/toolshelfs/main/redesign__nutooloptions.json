@@ -36,5 +36,6 @@
         "stack_actions": []
     },
     "action_height": 16,
-    "preset_name": "Redesign / NuToolOptions"
+    "preset_name": "Redesign / NuToolOptions",
+    "json_version": 1
 }

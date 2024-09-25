@@ -1,7 +1,6 @@
 import string
 from .CfgWidgetPadOptions import CfgWidgetPadOptions
 from .CfgWidgetPadToolboxOptions import CfgWidgetPadToolboxOptions
-from ...ext.types.TypedList import TypedList
 from ...ext.JsonExtensions import JsonExtensions as Extensions
    
 class CfgWidgetPadPreset:
@@ -11,7 +10,7 @@ class CfgWidgetPadPreset:
     toolshelf_alt: CfgWidgetPadOptions = CfgWidgetPadOptions()
     toolshelf: CfgWidgetPadOptions = CfgWidgetPadOptions()
 
-    
+    json_version: int = 1
 
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args, [CfgWidgetPadOptions, CfgWidgetPadToolboxOptions])

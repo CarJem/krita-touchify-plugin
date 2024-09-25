@@ -17,6 +17,8 @@ class CfgToolshelfPanel:
     tab_type: str = "buttons"
     action_height: int = 10
 
+    json_version: int = 1
+
     def __init__(self, **args) -> None:
         args = CfgBackwardsCompat.CfgToolshelfPanel(args)
         Extensions.dictToObject(self, args)

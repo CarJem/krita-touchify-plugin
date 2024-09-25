@@ -5,6 +5,8 @@ class CfgToolboxSubItem:
     name: str = ""
     icon: str = ""
 
+    json_version: int = 1
+
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
     

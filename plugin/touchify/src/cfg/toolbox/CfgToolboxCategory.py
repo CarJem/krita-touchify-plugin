@@ -7,6 +7,8 @@ class CfgToolboxCategory:
     items: TypedList[CfgToolboxItem] = []
     column_count: int = 0
 
+    json_version: int = 1
+
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
 

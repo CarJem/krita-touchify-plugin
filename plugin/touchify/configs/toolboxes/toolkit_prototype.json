@@ -163,5 +163,6 @@
     ],
     "column_count": 2,
     "icon_size": 16,
-    "preset_name": "Toolkit Prototype"
+    "preset_name": "Toolkit Prototype",
+    "json_version": 1
 }

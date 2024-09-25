@@ -365,5 +365,6 @@
         "stack_alignment": "default"
     },
     "action_height": 20,
-    "preset_name": "Developer's Pick"
+    "preset_name": "Developer's Pick",
+    "json_version": 1
 }
