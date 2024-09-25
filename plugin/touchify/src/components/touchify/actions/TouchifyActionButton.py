@@ -1,5 +1,3 @@
-import uuid
-from ....resources import ResourceManager
 from ....variables import *
 from ....ext.KritaExtensions import *
 from krita import *
@@ -9,10 +7,11 @@ from PyQt5.QtGui import *
 
 class TouchifyActionButton(QToolButton):
 
+    timer_interval_triggered = pyqtSignal()
+
     def __init__(self, parent = None):
         super(TouchifyActionButton, self).__init__(parent)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
-        self.intervalTimer = QTimer(self)
         self.setFocusPolicy(Qt.NoFocus)
         self.toggled.connect(self.highlight)
         self._resizing = False

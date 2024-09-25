@@ -1,22 +1,38 @@
 
+
+
 class Helpers:
     def setVersion(args: dict[str, any], ver: int):
         args["json_version"] = ver
+
+    def getVersion(args: dict[str, any]):
+        if "json_version" not in args: return -1
+        else: 
+            try:
+                return int(args["json_version"])
+            except:
+                return -1
 
     def changeVarName(args: dict[str, any], oldName: str, newName: str):
         if oldName in args: args[newName] = args[oldName]
 
     def isLegacyConfig(args: dict[str, any]):
-        return "json_version" not in args
+        return Helpers.getVersion(args) == -1
 
 class CfgBackwardsCompat:
     def CfgToolboxItem(args: dict[str, any]):
+
         if not args: return args
+        if Helpers.isLegacyConfig(args):
+            Helpers.setVersion(args, 1)
+
+        print(args)
+
         return args
 
     def CfgTouchifyAction(args: dict[str, any]):
         if not args: return args
-        if "json_version" not in args:
+        if Helpers.isLegacyConfig(args):
             Helpers.changeVarName(args, "showText", "show_text")
             Helpers.changeVarName(args, "showIcon", "show_icon")
             Helpers.setVersion(args, 1)
@@ -24,7 +40,7 @@ class CfgBackwardsCompat:
 
     def CfgTouchifyActionDockerGroup(args: dict[str, any]):
         if not args: return args
-        if "json_version" not in args:
+        if Helpers.isLegacyConfig(args):
             Helpers.changeVarName(args, "groupId", "group_id")
             Helpers.changeVarName(args, "tabsMode", "tabs_mode")
             Helpers.setVersion(args, 1)

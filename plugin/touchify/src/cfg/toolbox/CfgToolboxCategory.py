@@ -24,7 +24,8 @@ class CfgToolboxCategory:
         return self.id.replace("\n", "\\n")
 
     def forceLoad(self):
-        pass
+        self.items = TypedList(self.items, CfgToolboxItem)
+
 
     def propertygrid_ismodel(self):
         return True

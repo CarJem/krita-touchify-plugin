@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     
 class TouchifyActions(object):
     
-    def __init__(self, instance: "Touchify"):
+    def __init__(self, instance: "Touchify.TouchifyWindow"):
         self.appEngine = instance  
 
     def buildMenu(self, menu: QMenu):

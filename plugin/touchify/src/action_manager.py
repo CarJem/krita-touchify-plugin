@@ -17,7 +17,7 @@ from .components.touchify.popups.PopupDialog_Docker import *
 if TYPE_CHECKING:
     from .touchify import Touchify
 
-class ActionManager:
+class ActionManager(QObject):
     
     class TriggerConstants:
         KNOWN_UNCHECKABLES = [
@@ -28,11 +28,59 @@ class ActionManager:
             "expanding_spacer1",
             "expanding_spacer2"
         ]
+
+        TOOLBOX_ITEMS: dict[str, str] = {
+            "KisToolTransform": "KisToolTransform",
+            "KritaTransform/KisToolMove": "KritaTransform/KisToolMove",
+            "KisToolCrop": "KisToolCrop",
+            "InteractionTool": "InteractionTool",
+            "SvgTextTool": "SvgTextTool",
+            "PathTool": "PathTool",
+            "KarbonCalligraphyTool": "KarbonCalligraphyTool",
+            "KritaShape/KisToolBrush": "KritaShape/KisToolBrush",
+            "KritaShape/KisToolDyna": "KritaShape/KisToolDyna",
+            "KritaShape/KisToolMultiBrush": "KritaShape/KisToolMultiBrush",
+            "KritaShape/KisToolSmartPatch": "KritaShape/KisToolSmartPatch",
+            "KisToolPencil": "KisToolPencil",
+            "KritaFill/KisToolFill": "KritaFill/KisToolFill",
+            "KritaSelected/KisToolColorSampler": "KritaSelected/KisToolColorPicker",
+            "KritaShape/KisToolLazyBrush": "KritaShape/KisToolLazyBrush",
+            "KritaFill/KisToolGradient": "KritaFill/KisToolGradient",
+            "KritaShape/KisToolRectangle": "KritaShape/KisToolRectangle",
+            "KritaShape/KisToolLine": "KritaShape/KisToolLine",
+            "KritaShape/KisToolEllipse": "KritaShape/KisToolEllipse",
+            "KisToolPolygon": "KisToolPolygon",
+            "KisToolPolyline": "KisToolPolyline",
+            "KisToolPath": "KisToolPath",
+            "KisToolEncloseAndFill": "KisToolEncloseAndFill",
+            "KisToolSelectRectangular": "KisToolSelectRectangular",
+            "KisToolSelectElliptical": "KisToolSelectElliptical",
+            "KisToolSelectPolygonal": "KisToolSelectPolygonal",
+            "KisToolSelectPath": "KisToolSelectPath",
+            "KisToolSelectOutline": "KisToolSelectOutline",
+            "KisToolSelectContiguous": "KisToolSelectContiguous",
+            "KisToolSelectSimilar": "KisToolSelectSimilar",
+            "KisToolSelectMagnetic": "KisToolSelectMagnetic",
+            "ToolReferenceImages": "ToolReferenceImages",
+            "KisAssistantTool": "KisAssistantTool",
+            "KritaShape/KisToolMeasure": "KritaShape/KisToolMeasure",
+            "PanTool": "PanTool",
+            "ZoomTool": "ZoomTool"
+    }
         
     def __init__(self, instance: "Touchify.TouchifyWindow"):
+        super().__init__()
         self.appEngine = instance
         self.custom_docker_states = {}
         self.registeredActions = {}
+
+
+        self.__lastToolboxTool: str = ""
+        self.__lastBrushPreset: Resource = None
+
+        self.intervalTimer = QTimer(self)
+        self.intervalTimer.timeout.connect(self.__onTimerTick)
+        self.intervalTimer.start(150)
 
         
     def executeAction(self, data: CfgTouchifyAction, action: QAction):
@@ -84,8 +132,6 @@ class ActionManager:
             action.setIcon(icon)
          
         return action
-
-
    
     def __getActionSource(self, action: QAction):
         _sender: QObject = action
@@ -115,7 +161,7 @@ class ActionManager:
             fallback_text = True
         return (use_icon, icon, fallback_text)
     
-    def __getActionDisplay(self, data: CfgTouchifyAction) -> tuple[bool, QIcon, bool, str]:   
+    def __getActionDisplay(self, data: CfgTouchifyAction) -> tuple[bool, str, bool, QIcon]:   
       
         text: str = data.text  
         icon_loader_index = 0
@@ -165,20 +211,76 @@ class ActionManager:
             
         btn.setMetadata(text, icon)
 
-    def __brushButtonUpdate(self, __btn: TouchifyActionButton, id: str):
-        win = self.appEngine.windowSource
-        if not win: return
-        view = win.activeView()
-        if not view: return
-        currentPreset: Resource = view.currentBrushPreset()
-        if not currentPreset: return
+    def __onTimerTick(self):
+                
+        def getCurrentBrush():
+            try:
+                win = self.appEngine.windowSource
+                if not win: return None
+                view = win.activeView()
+                if not view: return None
+                currentPreset: Resource = view.currentBrushPreset()
+                if not currentPreset: return None
+
+                return currentPreset
+            except:
+                pass
+            return None
+
+        def getCurrentTool():
+            try:
+                win = self.appEngine.windowSource
+                if not win: return ""
+
+                if win != None:   
+                    mobj = next((w for w in win.qwindow().findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
+                    for q_obj in mobj.findChildren(QToolButton):
+                        if q_obj.metaObject().className() == "KoToolBoxButton":
+                            if q_obj.isChecked():
+                                name = q_obj.objectName()
+                                name = name.replace("\n", "")
+                                return name
+            except:
+                pass
+            return ""
+    
+        queue_update = False
+
+        currentTool = getCurrentTool()
+        currentPreset: Resource = getCurrentBrush()
+
+        if currentPreset != self.__lastBrushPreset:
+            queue_update = True
+            self.__lastBrushPreset = currentPreset
+
+        if currentTool != self.__lastToolboxTool:
+            queue_update = True
+            self.__lastToolboxTool = currentTool
+
+        if queue_update:
+            src = self.appEngine.windowSource
+            if not src: return
+
+            win = src.qwindow()
+            if not win: return
         
+            btns = win.findChildren(TouchifyActionButton)
+            for btn in btns: btn.timer_interval_triggered.emit()
+
+
+
+    def __brushButtonUpdate(self, __btn: TouchifyActionButton, id: str):
+
         __brush_presets = ResourceManager.getBrushPresets()
         if id not in __brush_presets: return
         btn_preset = __brush_presets[id]
         
-        if currentPreset != btn_preset: __btn.setBrushSelected(False)
+        if self.__lastBrushPreset != btn_preset: __btn.setBrushSelected(False)
         else: __btn.setBrushSelected(True)
+
+    def __toolboxToolUpdate(self, __btn: TouchifyActionButton, id: str):
+        if self.__lastToolboxTool != id: __btn.setChecked(False)
+        else: __btn.setChecked(True)
 
        
     def button_main(self, onClick: any, toolTip: str, checkable: bool):
@@ -199,8 +301,7 @@ class ActionManager:
         if id in brush_presets:
             preset = brush_presets[id]
             btn = self.button_main(lambda: self.action_brush(id), preset.name(), False)
-            btn.intervalTimer.timeout.connect(lambda: self.__brushButtonUpdate(btn, id))
-            btn.intervalTimer.start(250)
+            btn.timer_interval_triggered.connect(lambda: self.__brushButtonUpdate(btn, id))
             self.__setButtonDisplay(act, btn)
         return btn
                    
@@ -212,7 +313,7 @@ class ActionManager:
         btn.setMenu(contextMenu)
         btn.clicked.connect(btn.showMenu)
         return btn
-    
+
     def button_generic(self, data: CfgTouchifyAction):
         btn: TouchifyActionButton | None = None
         
@@ -239,8 +340,15 @@ class ActionManager:
             checkable = action.isCheckable()
             if act.action_id in ActionManager.TriggerConstants.KNOWN_UNCHECKABLES:
                 checkable = False
-                  
+            
+            if act.action_id in ActionManager.TriggerConstants.TOOLBOX_ITEMS:
+                checkable = True
+            
             btn = self.button_main(action.trigger, action.toolTip(), checkable)
+
+            if act.action_id in ActionManager.TriggerConstants.TOOLBOX_ITEMS:
+                btn.timer_interval_triggered.connect(lambda: self.__toolboxToolUpdate(btn, act.action_id))
+
             self.__setButtonDisplay(act, btn)
 
             if checkable:
