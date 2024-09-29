@@ -39,15 +39,15 @@ class CfgToolshelfRegistry:
         if self.HAS_ALREADY_LOADED:
             return
 
-        presetList = []
+        presetList = {}
         files = [f for f in os.listdir(self.ROOT_DIRECTORY) if os.path.isfile(os.path.join(self.ROOT_DIRECTORY, f))]
         for file in files:
             if file.lower().endswith(".json"):
                 item: CfgToolshelf = self.loadClass(file, CfgToolshelf)
-                presetList.append(item.__dict__)
+                presetList[item.preset_name] = item.__dict__
 
         obj = {
-            "presets": presetList
+            "presets":   [presetList[key] for key in sorted(presetList.keys(), reverse=True)]
         }
 
         mappings = json.loads(json.dumps(obj, default=lambda o: o.__dict__, indent=4))

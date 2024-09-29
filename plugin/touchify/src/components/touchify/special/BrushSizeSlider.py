@@ -1,12 +1,9 @@
-from math import e
-from PyQt5.QtWidgets import QWidget
 from krita import *
 from PyQt5.QtCore import *
 
-from ....stylesheet import Stylesheet
 from ....ext.KritaSettings import *
 from ...krita.KisSliderSpinBox import KisSliderSpinBox
-
+from ....variables import *
 
 class BrushSizeSlider(KisSliderSpinBox):
 
@@ -20,11 +17,15 @@ class BrushSizeSlider(KisSliderSpinBox):
 
         self.timer_pulse = QTimer(self)
         self.timer_pulse.timeout.connect(self.synchronizeView)
-        self.timer_pulse.start(100)
+        self.timer_pulse.start(TOUCHIFY_TIMER_BRUSH_SLIDER_INTERVAL)
 
     def showEvent(self, event):
         self.timer_pulse.start()
         super().showEvent(event)
+
+    def hideEvent(self, event):
+        self.timer_pulse.stop()
+        super().hideEvent(event)
 
     def closeEvent(self, event):
         self.timer_pulse.stop()

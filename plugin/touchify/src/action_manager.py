@@ -80,7 +80,24 @@ class ActionManager(QObject):
 
         self.intervalTimer = QTimer(self)
         self.intervalTimer.timeout.connect(self.__onTimerTick)
-        self.intervalTimer.start(150)
+        self.intervalTimer.start(TOUCHIFY_TIMER_ACTION_MANAGER_INTERVAL)
+
+
+    def onWindowCreated(self):
+        def initToolboxHook():
+            def onButtonToggled(obj: QAbstractButton):
+                if obj:
+                    toolboxTool = obj.objectName()
+                    if toolboxTool != self.__lastToolboxTool:
+                        self.__lastToolboxTool = toolboxTool
+                        self.__updateActionToggleStates()
+                        
+            qwin = Krita.instance().activeWindow().qwindow()
+            mobj = next((w for w in qwin.findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
+            wobj = mobj.findChild(QButtonGroup)
+            wobj.buttonToggled.connect(onButtonToggled)
+        
+        initToolboxHook()
 
         
     def executeAction(self, data: CfgTouchifyAction, action: QAction):
@@ -226,47 +243,26 @@ class ActionManager(QObject):
             except:
                 pass
             return None
-
-        def getCurrentTool():
-            try:
-                win = self.appEngine.windowSource
-                if not win: return ""
-
-                if win != None:   
-                    mobj = next((w for w in win.qwindow().findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
-                    for q_obj in mobj.findChildren(QToolButton):
-                        if q_obj.metaObject().className() == "KoToolBoxButton":
-                            if q_obj.isChecked():
-                                name = q_obj.objectName()
-                                name = name.replace("\n", "")
-                                return name
-            except:
-                pass
-            return ""
     
         queue_update = False
-
-        currentTool = getCurrentTool()
         currentPreset: Resource = getCurrentBrush()
 
         if currentPreset != self.__lastBrushPreset:
             queue_update = True
             self.__lastBrushPreset = currentPreset
 
-        if currentTool != self.__lastToolboxTool:
-            queue_update = True
-            self.__lastToolboxTool = currentTool
-
         if queue_update:
-            src = self.appEngine.windowSource
-            if not src: return
+            self.__updateActionToggleStates()
 
-            win = src.qwindow()
-            if not win: return
-        
-            btns = win.findChildren(TouchifyActionButton)
-            for btn in btns: btn.timer_interval_triggered.emit()
+    def __updateActionToggleStates(self):
+        src = self.appEngine.windowSource
+        if not src: return
 
+        win = src.qwindow()
+        if not win: return
+    
+        btns = win.findChildren(TouchifyActionButton)
+        for btn in btns: btn.timer_interval_triggered.emit()
 
 
     def __brushButtonUpdate(self, __btn: TouchifyActionButton, id: str):

@@ -2,6 +2,8 @@
 from krita import *
 from PyQt5.QtCore import *
 
+from .....variables import *
+
 from ....pyqt.widgets.ColorFramedButton import ColorFramedButton
 from .....resources import ResourceManager
 
@@ -22,7 +24,7 @@ class ColorSourceToggle(QWidget):
 
         self.timer_pulse = QTimer(self)
         self.timer_pulse.timeout.connect(self.updateColors)
-        self.timer_pulse.setInterval(100)
+        self.timer_pulse.setInterval(TOUCHIFY_TIMER_MAIN_INTERVAL)
         self.timer_pulse.start()
 
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)

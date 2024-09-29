@@ -1,7 +1,7 @@
 from krita import *
-from PyQt5.QtWidgets import QHBoxLayout,QComboBox
+from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtGui import QIcon,QPixmap
-
+from ....variables import *
 
 def getCurrentLayer():
     app = Krita.instance()
@@ -46,9 +46,8 @@ class LayerLabelBox(QComboBox):
         self.setObjectName('colorLabelBox')
 
         self.timer = QTimer(self)
-        self.timer.setInterval(500)
+        self.timer.setInterval(TOUCHIFY_TIMER_MAIN_INTERVAL)
         self.timer.timeout.connect(self.updateInterface)
-        self.timer.start()
         self.setMinimumHeight(35)
 
         # generates an array to automatize the process of creating icons 
@@ -76,7 +75,18 @@ class LayerLabelBox(QComboBox):
             self.addItem(colorIcon,'')
             
         self.activated.connect(lambda index: self.updateLayerColorLabel(index))
+        
+    def showEvent(self, event):
+        self.timer.start()
+        super().showEvent(event)
 
+    def hideEvent(self, event):
+        self.timer.stop()
+        super().hideEvent(event)
+        
+    def closeEvent(self, event):
+        self.timer.stop()
+        super().closeEvent(event)
 
     def updateInterface(self):
         selectedLayers = getSelectedLayers()

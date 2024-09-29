@@ -1,7 +1,4 @@
-from ..ext.KritaSettings import KritaSettings, KS_Color, KS_AlphaColor
-import json
-from ..ext.JsonExtensions import JsonExtensions
-from ..cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
+from ..ext.KritaSettings import KritaSettings
 
 class TouchifySettings:
 
@@ -30,36 +27,8 @@ class TouchifySettings:
         self.DockerUtils_HiddenDockersRight: str = ""
         self.DockerUtils_HiddenDockersUp: str = ""
         self.DockerUtils_HiddenDockersDown: str = ""
-        
-        self.CanvasPresets_Items: dict[int, CfgTouchifyActionCanvasPreset] = dict()
 
         self.loadSettings()
-        
-    def private_readCanvasPresets(self, name: str):
-        result = dict()
-        
-        try:
-            json_data = KritaSettings.readSetting("Touchify", name, "[]")
-            json_object = json.loads(json_data)
-            
-            index = 0
-
-            if isinstance(json_object, list):
-                json_list: list = json_object
-                for dict_item in json_list:
-                    if isinstance(dict_item, dict):
-                        presetItem = CfgTouchifyActionCanvasPreset()
-                        JsonExtensions.dictToObject(presetItem, dict_item, [KS_AlphaColor, KS_Color])
-                        result[str(index)] = presetItem
-                        index += 1
-        except:
-            pass
-        
-        return result
-    
-    def private_writeCanvasPresets(self, name: str, values: dict):
-        output = json.dumps(list(values.values()), default=vars)
-        self.private_writeSetting(name, output, "[]")
 
     def private_readSetting(self, name: str, defaultValue: str) -> str:
         return KritaSettings.readSetting("Touchify", name, defaultValue)
@@ -94,8 +63,6 @@ class TouchifySettings:
         self.DockerUtils_HiddenDockersRight = self.private_readSetting("DockerUtils_HiddenRight", "")
         self.DockerUtils_HiddenDockersUp = self.private_readSetting("DockerUtils_HiddenUp", "")
         self.DockerUtils_HiddenDockersDown = self.private_readSetting("DockerUtils_HiddenDown", "")
-        
-        self.CanvasPresets_Items = self.private_readCanvasPresets("CanvasPresets_Items")
 
     def saveSettings(self):
         self.private_writeSettingBool("usesBorderlessToolbar", self.Styles_BorderlessToolbar, False)
@@ -115,5 +82,3 @@ class TouchifySettings:
         self.private_writeSetting("DockerUtils_HiddenRight", self.DockerUtils_HiddenDockersRight, "")
         self.private_writeSetting("DockerUtils_HiddenUp", self.DockerUtils_HiddenDockersUp, "")
         self.private_writeSetting("DockerUtils_HiddenDown", self.DockerUtils_HiddenDockersDown, "")
-        
-        self.private_writeCanvasPresets("CanvasPresets_Items", self.CanvasPresets_Items)

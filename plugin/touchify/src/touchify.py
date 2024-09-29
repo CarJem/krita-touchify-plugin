@@ -39,8 +39,6 @@ class Touchify(Extension):
             self.touchify_canvas = TouchifyCanvas(self)
             self.touchify_hotkeys = TouchifyHotkeys(self)
             
-            self.timer: QTimer = None
-            
             self.action_management = ActionManager(self)
             
             self.settings_dlg: SettingsDialog | None = None
@@ -115,11 +113,7 @@ class Touchify(Extension):
                 elif docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLBOX:
                     toolboxDocker: ToolboxDocker = docker
                     toolboxDocker.setup(self)
-                    
-        def startTimer(self, window: Window):
-            self.timer = QTimer(window.qwindow())
-            self.timer.setInterval(500)
-            self.timer.start()
+                
 
         def onWindowCreated(self, window: Window):
             self.setParent(window.qwindow())
@@ -127,13 +121,14 @@ class Touchify(Extension):
             self.docker_management = DockerManager(self)     
             self.setupDockers()
 
-            self.startTimer(self.windowSource)
-
             seperator = QAction("", self.mainMenuBar)
             seperator.setText(f"Instance: #{self.windowUUID}")
             seperator.setEnabled(False)
             seperator.setSeparator(True)
             self.mainMenuBar.addAction(seperator)
+
+
+            self.action_management.onWindowCreated()
             
             self.touchify_hotkeys.windowCreated()
             self.touchify_looks.windowCreated()

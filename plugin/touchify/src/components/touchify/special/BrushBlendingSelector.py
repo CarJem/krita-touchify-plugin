@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import *
+from ....variables import *
 from touchify.src.docker_manager import *
 from krita import *
 
@@ -83,7 +84,7 @@ class BrushBlendingSelector(QPushButton):
         self.modeActions: list[BrushBlendingOption] = []
 
         self.timer = QTimer(self)
-        self.timer.setInterval(500)
+        self.timer.setInterval(TOUCHIFY_TIMER_MAIN_INTERVAL)
         self.timer.timeout.connect(self.updateInterface)
         self.setMinimumHeight(30)
 
@@ -110,6 +111,18 @@ class BrushBlendingSelector(QPushButton):
                 
         self.setMenu(self.menu)
         self.timer.start()
+
+    def showEvent(self, event):
+        if self.HAS_LOADED: self.timer.start()
+        super().showEvent(event)
+
+    def hideEvent(self, event):
+        if self.HAS_LOADED: self.timer.stop()
+        super().hideEvent(event)
+        
+    def closeEvent(self, event):
+        if self.HAS_LOADED: self.timer.stop()
+        super().closeEvent(event)
 
     def beforeShow(self):
         self.updateFavs()

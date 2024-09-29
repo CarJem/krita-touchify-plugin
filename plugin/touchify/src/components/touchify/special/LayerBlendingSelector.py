@@ -1,7 +1,7 @@
-from PyQt5.QtCore import QObject
 from PyQt5.QtWidgets import *
 from ....docker_manager import *
 from krita import *
+from ....variables import *
 
 try:
     from shortcut_composer.api_krita.enums.blending_mode import BlendingMode, PRETTY_NAMES
@@ -78,13 +78,25 @@ class LayerBlendingSelector(QPushButton):
         else:
             self.HAS_LOADED = False
 
+    def showEvent(self, event):
+        if self.HAS_LOADED: self.timer.start()
+        super().showEvent(event)
+
+    def hideEvent(self, event):
+        if self.HAS_LOADED: self.timer.stop()
+        super().hideEvent(event)
+        
+    def closeEvent(self, event):
+        if self.HAS_LOADED: self.timer.stop()
+        super().closeEvent(event)
+
     def constructLayout(self):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.modeActions: list[LayerBlendingOption] = []
 
         self.timer = QTimer(self)
-        self.timer.setInterval(500)
+        self.timer.setInterval(TOUCHIFY_TIMER_MAIN_INTERVAL)
         self.timer.timeout.connect(self.updateInterface)
         self.setMinimumHeight(30)
 
