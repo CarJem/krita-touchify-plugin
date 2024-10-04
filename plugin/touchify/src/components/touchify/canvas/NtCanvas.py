@@ -221,7 +221,7 @@ class NtCanvas(QWidget):
         if self.toolOptions == None and usesNuToolOptions:
             self.toolOptions = NtToolshelf(self, self.krita_window, True, self.dockerManager, self.actions_manager)
             self.installEventFilters(self.toolOptions)
-            self.canvasLayout.addWidget(self.toolboxOptions)
+            self.canvasLayout.addWidget(self.toolOptions)
             self.toolOptions.show()
         elif self.toolOptions and not usesNuToolOptions:
             self.removeEventFilters(self.toolOptions)
