@@ -25,7 +25,7 @@ from .components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
 
 WINDOW_ID: int = 0
 
-class Touchify(Extension):
+class TouchifyExtension(Extension):
 
     class TouchifyWindow(QObject):
         def __init__(self, parent: QObject):
@@ -168,7 +168,7 @@ class Touchify(Extension):
             return window
     
     def onWindowDestroyed(self, windowId: str):
-        item: Touchify.TouchifyWindow = self.instances[windowId]
+        item: TouchifyExtension.TouchifyWindow = self.instances[windowId]
         item.unload()
         item.deleteLater()
         del self.instances[windowId]
@@ -182,14 +182,13 @@ class Touchify(Extension):
             self.instances[new_window_id].onWindowCreated(new_window)
             self.instance_generate = False
 
-
     def createActions(self, window: Window):
         self.instance_generate = True
-        self.instance_generated = Touchify.TouchifyWindow(self)
+        self.instance_generated = TouchifyExtension.TouchifyWindow(self)
         self.instance_generated.createActions(window)
 
 
-Krita.instance().addExtension(Touchify(Krita.instance()))
+Krita.instance().addExtension(TouchifyExtension(Krita.instance()))
 Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_COLOROPTIONSDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ColorOptionsDocker))
 Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, BrushOptionsDocker))
 Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ToolshelfDocker))

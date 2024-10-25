@@ -1,1 +1,1 @@
-from touchify.src.touchify import *
+from touchify.src.extension import *

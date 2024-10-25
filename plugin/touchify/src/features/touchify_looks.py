@@ -1,20 +1,19 @@
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 from ..settings.TouchifySettings import TouchifySettings
 from ..variables import *
 from ..settings.TouchifyConfig import *
 from ..stylesheet import Stylesheet
-from PyQt5.QtWidgets import QMessageBox
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..touchify import Touchify
+    from ..extension import TouchifyExtension
 
 
 from krita import *
     
 class TouchifyLooks(object):
 
-    def __init__(self, instance: "Touchify"):
+    def __init__(self, instance: "TouchifyExtension"):
         self.appEngine = instance
         self.qWin: QMainWindow | None = None
 

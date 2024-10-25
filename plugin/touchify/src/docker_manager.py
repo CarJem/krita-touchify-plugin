@@ -11,7 +11,7 @@ from .settings.TouchifyConfig import *
 
 from typing import TYPE_CHECKING, Callable
 if TYPE_CHECKING:
-    from .touchify import Touchify
+    from .extension import TouchifyExtension
 
 class DockerManager(QObject):
     class BorrowData:
@@ -81,7 +81,7 @@ class DockerManager(QObject):
     onStealDockerSignal = pyqtSignal(str)
     onLoadDockerSignal = pyqtSignal(str)
 
-    def __init__(self, touchify: "Touchify.TouchifyWindow"):
+    def __init__(self, touchify: "TouchifyExtension.TouchifyWindow"):
         
         super().__init__(touchify)
 

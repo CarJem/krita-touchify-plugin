@@ -15,7 +15,7 @@ from .components.touchify.popups.PopupDialog_Actions import *
 from .components.touchify.popups.PopupDialog_Docker import *
 
 if TYPE_CHECKING:
-    from .touchify import Touchify
+    from .extension import TouchifyExtension
 
 class ActionManager(QObject):
     
@@ -68,7 +68,7 @@ class ActionManager(QObject):
             "ZoomTool": "ZoomTool"
     }
         
-    def __init__(self, instance: "Touchify.TouchifyWindow"):
+    def __init__(self, instance: "TouchifyExtension.TouchifyWindow"):
         super().__init__()
         self.appEngine = instance
         self.custom_docker_states = {}

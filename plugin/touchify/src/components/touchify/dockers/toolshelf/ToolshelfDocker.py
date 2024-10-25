@@ -7,11 +7,10 @@ from typing import TYPE_CHECKING
 from .....docker_manager import DockerManager
 from .....action_manager import ActionManager
 if TYPE_CHECKING:
-    from .....touchify import Touchify
+    from .....extension import TouchifyExtension
 
 from .ToolshelfWidget import ToolshelfWidget
 
-from .....resources import ResourceManager
 
 DOCKER_TITLE = 'Touchify Toolshelf'
 
@@ -27,7 +26,7 @@ class ToolshelfDocker(DockWidget):
         self._last_pinned: bool = False
         self.setWindowTitle(DOCKER_TITLE)
       
-    def setup(self, instance: "Touchify.TouchifyWindow"):
+    def setup(self, instance: "TouchifyExtension.TouchifyWindow"):
         self.docker_manager = instance.docker_management
         self.actions_manager = instance.action_management
         self.onLoaded()

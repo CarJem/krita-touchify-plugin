@@ -74,8 +74,7 @@ class ReferenceView(QGraphicsView):
             self.parent().setZoom(newValue)
         else:
             self.pinching = False
-    
-    
+     
     def viewportEvent(self, event: QEvent):
         match event.type():
             case QEvent.Type.TouchBegin:

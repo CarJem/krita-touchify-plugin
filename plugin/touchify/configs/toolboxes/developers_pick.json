@@ -5,12 +5,14 @@
                 {
                     "items": [],
                     "name": "edit_undo",
-                    "open_on_click": false
+                    "open_on_click": false,
+                    "json_version": 1
                 },
                 {
                     "items": [],
                     "name": "edit_redo",
-                    "open_on_click": false
+                    "open_on_click": false,
+                    "json_version": 1
                 }
             ],
             "column_count": 0,
@@ -20,19 +22,23 @@
             "items": [
                 {
                     "items": [],
-                    "name": "InteractionTool"
+                    "name": "InteractionTool",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "SvgTextTool"
+                    "name": "SvgTextTool",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "PathTool"
+                    "name": "PathTool",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KarbonCalligraphyTool"
+                    "name": "KarbonCalligraphyTool",
+                    "json_version": 1
                 }
             ],
             "id": "Vector"
@@ -41,15 +47,18 @@
             "items": [
                 {
                     "items": [],
-                    "name": "KisToolTransform"
+                    "name": "KisToolTransform",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KritaTransform/KisToolMove"
+                    "name": "KritaTransform/KisToolMove",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KisToolCrop"
+                    "name": "KisToolCrop",
+                    "json_version": 1
                 }
             ],
             "id": "Transform"
@@ -58,43 +67,53 @@
             "items": [
                 {
                     "items": [],
-                    "name": "KisToolPencil"
+                    "name": "KisToolPencil",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KritaShape/KisToolLine"
+                    "name": "KritaShape/KisToolLine",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KritaShape/KisToolRectangle"
+                    "name": "KritaShape/KisToolRectangle",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KritaShape/KisToolEllipse"
+                    "name": "KritaShape/KisToolEllipse",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KisToolPolygon"
+                    "name": "KisToolPolygon",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KisToolPolyline"
+                    "name": "KisToolPolyline",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KisToolPath"
+                    "name": "KisToolPath",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KritaShape/KisToolBrush"
+                    "name": "KritaShape/KisToolBrush",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KritaShape/KisToolDyna"
+                    "name": "KritaShape/KisToolDyna",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KritaShape/KisToolMultiBrush"
+                    "name": "KritaShape/KisToolMultiBrush",
+                    "json_version": 1
                 }
             ],
             "id": "Paint"
@@ -103,27 +122,33 @@
             "items": [
                 {
                     "items": [],
-                    "name": "KritaFill/KisToolGradient"
+                    "name": "KritaFill/KisToolGradient",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KritaSelected/KisToolColorSampler"
+                    "name": "KritaSelected/KisToolColorSampler",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KritaShape/KisToolLazyBrush"
+                    "name": "KritaShape/KisToolLazyBrush",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KritaShape/KisToolSmartPatch"
+                    "name": "KritaShape/KisToolSmartPatch",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KritaFill/KisToolFill"
+                    "name": "KritaFill/KisToolFill",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KisToolEncloseAndFill"
+                    "name": "KisToolEncloseAndFill",
+                    "json_version": 1
                 }
             ],
             "id": "Color"
@@ -132,15 +157,18 @@
             "items": [
                 {
                     "items": [],
-                    "name": "KisAssistantTool"
+                    "name": "KisAssistantTool",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KritaShape/KisToolMeasure"
+                    "name": "KritaShape/KisToolMeasure",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "ToolReferenceImages"
+                    "name": "ToolReferenceImages",
+                    "json_version": 1
                 }
             ],
             "id": "Measure"
@@ -149,35 +177,43 @@
             "items": [
                 {
                     "items": [],
-                    "name": "KisToolSelectRectangular"
+                    "name": "KisToolSelectRectangular",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KisToolSelectElliptical"
+                    "name": "KisToolSelectElliptical",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KisToolSelectPolygonal"
+                    "name": "KisToolSelectPolygonal",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KisToolSelectOutline"
+                    "name": "KisToolSelectOutline",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KisToolSelectContiguous"
+                    "name": "KisToolSelectContiguous",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KisToolSelectSimilar"
+                    "name": "KisToolSelectSimilar",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KisToolSelectPath"
+                    "name": "KisToolSelectPath",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "KisToolSelectMagnetic"
+                    "name": "KisToolSelectMagnetic",
+                    "json_version": 1
                 }
             ],
             "id": "Select",
@@ -187,11 +223,13 @@
             "items": [
                 {
                     "items": [],
-                    "name": "PanTool"
+                    "name": "PanTool",
+                    "json_version": 1
                 },
                 {
                     "items": [],
-                    "name": "ZoomTool"
+                    "name": "ZoomTool",
+                    "json_version": 1
                 }
             ],
             "id": "Navigation"

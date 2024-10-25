@@ -11,7 +11,7 @@ DOCKER_TITLE = 'Color Options'
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .....touchify import Touchify
+    from .....extension import TouchifyExtension
 
 class ColorSourceToggle(QWidget):
     def __init__(self, parent: QWidget | None = None, cubeSize: int = 25):
@@ -61,7 +61,7 @@ class ColorSourceToggle(QWidget):
         self.gridLayout.addWidget(self.resetBtn)
 
 
-    def setup(self, instance: "Touchify.TouchifyWindow"):
+    def setup(self, instance: "TouchifyExtension.TouchifyWindow"):
         self.sourceWindow = instance.windowSource
 
     def setForegroundColor(self):
@@ -116,7 +116,7 @@ class ColorOptionsDocker(DockWidget):
         self.setFixedHeight(50)
         self.colorToggle.onCanvasChanged(self.canvas())
 
-    def setup(self, instance: "Touchify.TouchifyWindow"):
+    def setup(self, instance: "TouchifyExtension.TouchifyWindow"):
         self.colorToggle.setup(instance)
 
     def showEvent(self, event):

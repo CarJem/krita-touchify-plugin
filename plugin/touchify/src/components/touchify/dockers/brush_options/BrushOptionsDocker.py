@@ -1,5 +1,4 @@
 
-from math import e
 from PyQt5.QtWidgets import QWidget
 from krita import *
 from PyQt5.QtCore import *
@@ -18,7 +17,7 @@ DOCKER_TITLE = 'Brush Options'
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .....touchify import Touchify
+    from .....extension import TouchifyExtension
 
 class BrushOptionsDockerCfg:
 
@@ -79,7 +78,7 @@ class BrushOptionsWidget(QWidget):
 
         self.updateSliders()
 
-    def setup(self, instance: "Touchify.TouchifyWindow"):
+    def setup(self, instance: "TouchifyExtension.TouchifyWindow"):
         self.sourceWindow = instance.windowSource
         
         self.sizeSlider.setSourceWindow(self.sourceWindow)
@@ -158,7 +157,7 @@ class BrushOptionsDocker(DockWidget):
         self.brushOptions = BrushOptionsWidget(self)
         self.setWidget(self.brushOptions)
 
-    def setup(self, instance: "Touchify.TouchifyWindow"):
+    def setup(self, instance: "TouchifyExtension.TouchifyWindow"):
         self.brushOptions.setup(instance)
 
     def showEvent(self, event):

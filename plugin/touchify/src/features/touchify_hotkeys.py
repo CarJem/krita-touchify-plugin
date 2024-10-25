@@ -1,27 +1,24 @@
-from re import L
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 
 from ..variables import *
 from ..settings.TouchifyConfig import *
-from ..stylesheet import Stylesheet
-from PyQt5.QtWidgets import QMessageBox
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..touchify import Touchify
+    from ..extension import TouchifyExtension
 
 from krita import *
     
 class TouchifyHotkeys(object):
 
 
-    def __init__(self, instance: "Touchify.TouchifyWindow"):
+    def __init__(self, instance: "TouchifyExtension.TouchifyWindow"):
         self.appEngine = instance
         self.hotkeys_storage = {}
         self.hotkey_options_storage = {}
 
-    def onAppEngineStart(self, instance: "Touchify.TouchifyWindow"):
+    def onAppEngineStart(self, instance: "TouchifyExtension.TouchifyWindow"):
         self.appEngine = instance
 
     def windowCreated(self):
