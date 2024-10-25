@@ -10,7 +10,7 @@ from touchify.src.resources import *
 from krita import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.touchify import Touchify
+    from touchify.src.extension import Touchify
     
 class TouchifyActions(object):
     

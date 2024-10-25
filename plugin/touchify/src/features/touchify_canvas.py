@@ -8,7 +8,7 @@ from touchify.src.variables import *
 from touchify.src.settings.TouchifyConfig import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.touchify import Touchify
+    from touchify.src.extension import Touchify
 
 
 from krita import *
