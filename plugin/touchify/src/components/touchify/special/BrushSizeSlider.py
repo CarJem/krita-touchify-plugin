@@ -40,6 +40,9 @@ class BrushSizeSlider(KisSliderSpinBox):
         self.view.setBrushSize(value)
 
     def synchronizeView(self):
+        if self.isVisible() == False:
+            return
+        
         active_window = self.sourceWindow
         if active_window == None: return
 

@@ -46,6 +46,9 @@ class BrushRotationSlider(KisAngleSelector):
         self.view.setBrushRotation(self.spinBox.value())
 
     def synchronizeView(self):
+        if self.isVisible() == False:
+            return
+        
         active_window = self.sourceWindow
         if active_window == None: return
 

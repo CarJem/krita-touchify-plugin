@@ -40,6 +40,9 @@ class BrushOpacitySlider(KisSliderSpinBox):
         self.view.setPaintingOpacity(self.value()/100)
 
     def synchronizeView(self):
+        if self.isVisible() == False:
+            return
+        
         active_window = self.sourceWindow
         if active_window == None: return
 

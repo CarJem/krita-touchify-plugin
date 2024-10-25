@@ -128,6 +128,9 @@ class LayerBlendingSelector(QPushButton):
         self.updateFavs()
 
     def updateInterface(self):
+        if self.isVisible() == False:
+            return
+        
         activeWindow = Krita.instance().activeDocument()
         if not activeWindow: return
 

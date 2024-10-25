@@ -89,6 +89,9 @@ class LayerLabelBox(QComboBox):
         super().closeEvent(event)
 
     def updateInterface(self):
+        if self.isVisible() == False:
+            return
+        
         selectedLayers = getSelectedLayers()
         if selectedLayers == None: return
         
