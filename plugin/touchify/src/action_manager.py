@@ -15,7 +15,7 @@ from .components.touchify.popups.PopupDialog_Actions import *
 from .components.touchify.popups.PopupDialog_Docker import *
 
 if TYPE_CHECKING:
-    from .extension import TouchifyExtension
+    from .window import TouchifyWindow
 
 class ActionManager(QObject):
     
@@ -68,7 +68,7 @@ class ActionManager(QObject):
             "ZoomTool": "ZoomTool"
     }
         
-    def __init__(self, instance: "TouchifyExtension.TouchifyWindow"):
+    def __init__(self, instance: "TouchifyWindow"):
         super().__init__()
         self.appEngine = instance
         self.custom_docker_states = {}
@@ -78,9 +78,8 @@ class ActionManager(QObject):
         self.__lastToolboxTool: str = ""
         self.__lastBrushPreset: Resource = None
 
-        self.intervalTimer = QTimer(self)
-        self.intervalTimer.timeout.connect(self.__onTimerTick)
-        self.intervalTimer.start(TOUCHIFY_TIMER_ACTION_MANAGER_INTERVAL)
+    def onTimerTick(self):
+        self.__onTimerTick()
 
 
     def onWindowCreated(self):

@@ -10,7 +10,7 @@ from .ToolboxWidget import ToolboxWidget
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .....extension import TouchifyExtension
+    from .....window import TouchifyWindow
 
 TOOLBOX_ITEMS: dict[str, str] = {
         "KisToolTransform": "KisToolTransform",
@@ -71,5 +71,5 @@ class ToolboxDocker(QDockWidget):
     def onConfigUpdated(self):
         self.toolboxWidget.reload()
 
-    def setup(self, instance: "TouchifyExtension.TouchifyWindow"):
+    def setup(self, instance: "TouchifyWindow"):
         self.toolboxWidget.setup(instance)

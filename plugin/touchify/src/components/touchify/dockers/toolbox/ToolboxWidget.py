@@ -26,7 +26,7 @@ from touchify.src.resources import ResourceManager
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .....extension import TouchifyExtension
+    from .....window import TouchifyWindow
 
 
 TOOLBOX_ITEMS: dict[str, str] = {
@@ -121,7 +121,7 @@ class ToolboxWidget(QResizableWidget):
         self.scrollArea.setWidget(self.viewportWidget)
 
 
-    def setup(self, instance: "TouchifyExtension.TouchifyWindow"):
+    def setup(self, instance: "TouchifyWindow"):
         self.sourceWindow = instance.windowSource
         self.reload()
     

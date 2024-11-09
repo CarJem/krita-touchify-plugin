@@ -75,16 +75,6 @@
                         "icon": "edit-paste"
                     },
                     {
-                        "text": "Undo",
-                        "action": "edit_undo",
-                        "icon": "edit-undo"
-                    },
-                    {
-                        "text": "Redo",
-                        "action": "edit_redo",
-                        "icon": "edit-redo"
-                    },
-                    {
                         "text": "Copy\n (Merged)",
                         "action": "copy_merged",
                         "icon": "edit-copy"
@@ -351,5 +341,6 @@
             "show_text": false,
             "show_icon": true
         }
-    ]
+    ],
+    "json_version": 1
 }

@@ -2,6 +2,7 @@ from krita import *
 from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtGui import QIcon,QPixmap
 from ....variables import *
+from ....helpers import TouchifyHelpers
 
 def getCurrentLayer():
     app = Krita.instance()
@@ -40,14 +41,12 @@ purpleColor = QColor(191,106,209) #7
 greyColor = QColor(118,119,114) #8
 
 class LayerLabelBox(QComboBox):
-    def __init__(self, parent):
+    def __init__(self, parent: QWidget = None):
         super().__init__(parent)
+        self.timerActive = False
         self.setAccessibleName('colorLabelBox')
         self.setObjectName('colorLabelBox')
-
-        self.timer = QTimer(self)
-        self.timer.setInterval(TOUCHIFY_TIMER_MAIN_INTERVAL)
-        self.timer.timeout.connect(self.updateInterface)
+        self.setupTimer()
         self.setMinimumHeight(35)
 
         # generates an array to automatize the process of creating icons 
@@ -75,17 +74,26 @@ class LayerLabelBox(QComboBox):
             self.addItem(colorIcon,'')
             
         self.activated.connect(lambda index: self.updateLayerColorLabel(index))
+
+    def setupTimer(self):
+        parentExtension = TouchifyHelpers.getExtension()
+        if parentExtension:
+            parentExtension.intervalTimerTicked.connect(self.onTimerTick)
+
+    def onTimerTick(self):
+        if self.timerActive:
+            self.updateInterface()
         
     def showEvent(self, event):
-        self.timer.start()
+        self.timerActive = True
         super().showEvent(event)
 
     def hideEvent(self, event):
-        self.timer.stop()
+        self.timerActive = False
         super().hideEvent(event)
         
     def closeEvent(self, event):
-        self.timer.stop()
+        self.timerActive = False
         super().closeEvent(event)
 
     def updateInterface(self):

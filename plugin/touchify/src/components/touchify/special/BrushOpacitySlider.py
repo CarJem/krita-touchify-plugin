@@ -4,6 +4,7 @@ from ....variables import *
 
 from ....ext.KritaSettings import *
 from ...krita.KisSliderSpinBox import KisSliderSpinBox
+from ....helpers import TouchifyHelpers
 
 
 class BrushOpacitySlider(KisSliderSpinBox):
@@ -14,21 +15,29 @@ class BrushOpacitySlider(KisSliderSpinBox):
         self.sourceWindow: Window = window
         self.setAffixes('Opacity: ', '%')
         self.connectValueChanged(self.valueChanged)
+        self.timerActive = False
+        self.setupTimer()
 
-        self.timer_pulse = QTimer(self)
-        self.timer_pulse.timeout.connect(self.synchronizeView)
-        self.timer_pulse.start(TOUCHIFY_TIMER_BRUSH_SLIDER_INTERVAL)
+    def setupTimer(self):
+        parentExtension = TouchifyHelpers.getExtension()
+        if parentExtension:
+            parentExtension.intervalTimerTicked.connect(self.onTimerTick)
+            self.timerActive = True
+
+    def onTimerTick(self):
+        if self.timerActive:
+            self.synchronizeView()
 
     def showEvent(self, event):
-        self.timer_pulse.start()
+        self.timerActive = True
         super().showEvent(event)
 
     def hideEvent(self, event):
-        self.timer_pulse.stop()
+        self.timerActive = False
         super().hideEvent(event)
 
     def closeEvent(self, event):
-        self.timer_pulse.stop()
+        self.timerActive = False
         super().closeEvent(event)
     
     def setSourceWindow(self, window: Window):

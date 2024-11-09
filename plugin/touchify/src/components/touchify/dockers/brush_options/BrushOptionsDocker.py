@@ -18,6 +18,7 @@ DOCKER_TITLE = 'Brush Options'
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .....extension import TouchifyExtension
+    from .....window import TouchifyWindow
 
 class BrushOptionsDockerCfg:
 
@@ -78,7 +79,7 @@ class BrushOptionsWidget(QWidget):
 
         self.updateSliders()
 
-    def setup(self, instance: "TouchifyExtension.TouchifyWindow"):
+    def setup(self, instance: "TouchifyWindow"):
         self.sourceWindow = instance.windowSource
         
         self.sizeSlider.setSourceWindow(self.sourceWindow)
@@ -157,7 +158,7 @@ class BrushOptionsDocker(DockWidget):
         self.brushOptions = BrushOptionsWidget(self)
         self.setWidget(self.brushOptions)
 
-    def setup(self, instance: "TouchifyExtension.TouchifyWindow"):
+    def setup(self, instance: "TouchifyWindow"):
         self.brushOptions.setup(instance)
 
     def showEvent(self, event):

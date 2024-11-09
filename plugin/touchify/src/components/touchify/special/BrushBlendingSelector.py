@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 from ....variables import *
 from touchify.src.docker_manager import *
 from krita import *
+from ....helpers import TouchifyHelpers
 
 try:
     from shortcut_composer.api_krita.enums.blending_mode import BlendingMode, PRETTY_NAMES
@@ -70,8 +71,11 @@ class BrushBlendingSelector(QPushButton):
 
 
 
-    def __init__(self, parent=None):
+    def __init__(self, parent: QWidget=None):
         super().__init__(parent)
+
+        self.timerActive = False
+
         if SHORTCUT_COMPOSER_LOADED:
             self.HAS_LOADED = True
             self.constructLayout()
@@ -82,10 +86,7 @@ class BrushBlendingSelector(QPushButton):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.modeActions: list[BrushBlendingOption] = []
-
-        self.timer = QTimer(self)
-        self.timer.setInterval(TOUCHIFY_TIMER_MAIN_INTERVAL)
-        self.timer.timeout.connect(self.updateInterface)
+        self.setupTimer()
         self.setMinimumHeight(30)
 
         self.clicked.connect(self.showMenu)  
@@ -110,18 +111,28 @@ class BrushBlendingSelector(QPushButton):
         self.updateFavs()
                 
         self.setMenu(self.menu)
-        self.timer.start()
+        self.timerActive = True
+
+
+    def setupTimer(self):
+        parentExtension = TouchifyHelpers.getExtension()
+        if parentExtension:
+            parentExtension.intervalTimerTicked.connect(self.onTimerTick)
+
+    def onTimerTick(self):
+        if self.timerActive:
+            self.updateInterface()
 
     def showEvent(self, event):
-        if self.HAS_LOADED: self.timer.start()
+        if self.HAS_LOADED: self.timerActive = True
         super().showEvent(event)
 
     def hideEvent(self, event):
-        if self.HAS_LOADED: self.timer.stop()
+        if self.HAS_LOADED: self.timerActive = False
         super().hideEvent(event)
         
     def closeEvent(self, event):
-        if self.HAS_LOADED: self.timer.stop()
+        if self.HAS_LOADED: self.timerActive = False
         super().closeEvent(event)
 
     def beforeShow(self):

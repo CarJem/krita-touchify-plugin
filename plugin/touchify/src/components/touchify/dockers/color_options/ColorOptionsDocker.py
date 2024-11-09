@@ -6,26 +6,24 @@ from .....variables import *
 
 from ....pyqt.widgets.ColorFramedButton import ColorFramedButton
 from .....resources import ResourceManager
+from .....helpers import TouchifyHelpers
 
 DOCKER_TITLE = 'Color Options'
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .....extension import TouchifyExtension
+    from .....window import TouchifyWindow
 
 class ColorSourceToggle(QWidget):
     def __init__(self, parent: QWidget | None = None, cubeSize: int = 25):
         super(ColorSourceToggle, self).__init__(parent)
         self.canvas: Canvas = None
         self.setContentsMargins(2,2,2,2)
+
+        self.instance: TouchifyWindow = None
         self.sourceWindow: Window = None
 
         self.cubeSize = cubeSize
-
-        self.timer_pulse = QTimer(self)
-        self.timer_pulse.timeout.connect(self.updateColors)
-        self.timer_pulse.setInterval(TOUCHIFY_TIMER_MAIN_INTERVAL)
-        self.timer_pulse.start()
 
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
@@ -61,8 +59,11 @@ class ColorSourceToggle(QWidget):
         self.gridLayout.addWidget(self.resetBtn)
 
 
-    def setup(self, instance: "TouchifyExtension.TouchifyWindow"):
-        self.sourceWindow = instance.windowSource
+    def setup(self, instance: "TouchifyWindow"):
+        self.sourceWindow: Window = instance.windowSource
+        parentExtension = TouchifyHelpers.getExtension()
+        if parentExtension:
+            parentExtension.intervalTimerTicked.connect(self.updateColors)
 
     def setForegroundColor(self):
         Krita.instance().action("chooseForegroundColor").trigger()
@@ -79,11 +80,9 @@ class ColorSourceToggle(QWidget):
         self.updateColors()
 
     def showEvent(self, event):
-        self.timer_pulse.start()
         super().showEvent(event)
 
     def closeEvent(self, event):
-        self.timer_pulse.stop()
         super().closeEvent(event)
 
     def krita_to_qcolor(self, source: ManagedColor):
@@ -116,7 +115,7 @@ class ColorOptionsDocker(DockWidget):
         self.setFixedHeight(50)
         self.colorToggle.onCanvasChanged(self.canvas())
 
-    def setup(self, instance: "TouchifyExtension.TouchifyWindow"):
+    def setup(self, instance: "TouchifyWindow"):
         self.colorToggle.setup(instance)
 
     def showEvent(self, event):

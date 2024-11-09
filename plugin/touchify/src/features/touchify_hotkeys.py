@@ -6,19 +6,19 @@ from ..settings.TouchifyConfig import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..extension import TouchifyExtension
+    from ..window import TouchifyWindow
 
 from krita import *
     
 class TouchifyHotkeys(object):
 
 
-    def __init__(self, instance: "TouchifyExtension.TouchifyWindow"):
+    def __init__(self, instance: "TouchifyWindow"):
         self.appEngine = instance
         self.hotkeys_storage = {}
         self.hotkey_options_storage = {}
 
-    def onAppEngineStart(self, instance: "TouchifyExtension.TouchifyWindow"):
+    def onAppEngineStart(self, instance: "TouchifyWindow"):
         self.appEngine = instance
 
     def windowCreated(self):

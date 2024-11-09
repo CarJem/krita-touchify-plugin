@@ -56,7 +56,7 @@ class ToolboxButton(QToolButton):
 
             painter = QPainter(self)
             path = QPainterPath()
-            painter.begin(self)
+            #painter.begin(self)
             painter.setRenderHint(QPainter.RenderHint.Antialiasing)
             path.moveTo(point1)
             path.lineTo(point2)
