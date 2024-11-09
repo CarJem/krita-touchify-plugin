@@ -73,6 +73,7 @@ class ActionManager(QObject):
         self.appEngine = instance
         self.custom_docker_states = {}
         self.registeredActions = {}
+        self.registeredActionsData = {}
 
 
         self.__lastToolboxTool: str = ""
@@ -119,11 +120,18 @@ class ActionManager(QObject):
                 self.action_trigger(data)
             
     def createButton(self, parent: QWidget, data: CfgTouchifyAction):
+
+        if data.variant == CfgTouchifyAction.Variants.Action:
+            if data.action_id and data.action_id in self.registeredActions:
+                data = self.registeredActionsData[data.action_id]
+
         match data.variant:
             case CfgTouchifyAction.Variants.Brush:
                 result = self.button_brush(data)
             case CfgTouchifyAction.Variants.Menu:
                 result = self.button_menu(data)
+            case CfgTouchifyAction.Variants.Popup:
+                result = self.button_popup(data)
             case CfgTouchifyAction.Variants.Action:
                 result = self.button_trigger(data)
             case _:
@@ -139,6 +147,7 @@ class ActionManager(QObject):
 
         action = window.createAction(actionIdentifier, displayName, actionPath)
         self.registeredActions[actionIdentifier] = action
+        self.registeredActionsData[actionIdentifier] = data
            
         TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.executeAction, {'data': data, 'action': action})      
         action.triggered.connect(lambda: self.executeAction(data, action))
@@ -277,6 +286,15 @@ class ActionManager(QObject):
         if self.__lastToolboxTool != id: __btn.setChecked(False)
         else: __btn.setChecked(True)
 
+    def __triggerPopup(self, data: CfgTouchifyActionPopup, _parent: QWidget = None):
+        if data.type == "actions":
+            popup = PopupDialog_Actions(self.appEngine.windowSource.qwindow().window(), data, self)
+        elif data.type == "docker":
+            popup = PopupDialog_Docker(self.appEngine.windowSource.qwindow().window(), data, self.appEngine.docker_management)
+        else:
+            popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
+        popup.triggerPopup(_parent)
+
        
     def button_main(self, onClick: any, toolTip: str, checkable: bool):
         btn = TouchifyActionButton()
@@ -308,6 +326,13 @@ class ActionManager(QObject):
         btn.setMenu(contextMenu)
         btn.clicked.connect(btn.showMenu)
         return btn
+    
+    def button_popup(self, data: CfgTouchifyAction):
+        btn: TouchifyActionButton | None = None
+        btn = self.button_main(None, data.text, False)
+        btn.clicked.connect((lambda: self.__triggerPopup(data.popup_data, btn)))
+        self.__setButtonDisplay(data, btn)
+        return btn
 
     def button_generic(self, data: CfgTouchifyAction):
         btn: TouchifyActionButton | None = None
@@ -319,8 +344,6 @@ class ActionManager(QObject):
                 onClick = (lambda: self.action_docker(data.docker_id))
             case CfgTouchifyAction.Variants.Workspace:
                 onClick = (lambda: self.action_workspace(data.workspace_id))
-            case CfgTouchifyAction.Variants.Popup:
-                onClick = (lambda: self.action_popup(None, data.popup_data))
             case CfgTouchifyAction.Variants.DockerGroup:
                 onClick = (lambda: self.action_dockergroup(data.docker_group_data))
 
@@ -427,13 +450,7 @@ class ActionManager(QObject):
                             
     def action_popup(self, action: QAction, data: CfgTouchifyActionPopup):    
         _parent = self.__getActionSource(action)            
-        if data.type == "actions":
-            popup = PopupDialog_Actions(self.appEngine.windowSource.qwindow().window(), data, self)
-        elif data.type == "docker":
-            popup = PopupDialog_Docker(self.appEngine.windowSource.qwindow().window(), data, self.appEngine.docker_management)
-        else:
-            popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
-        popup.triggerPopup(_parent)
+        self.__triggerPopup(data, _parent)
     
     def action_canvas(self, data: CfgTouchifyActionCanvasPreset):
         def slotConfigChanged(obj: QObject):
