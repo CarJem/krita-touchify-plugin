@@ -2,9 +2,20 @@ from .CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
 from ...ext.JsonExtensions import JsonExtensions as Extensions
 from ...ext.types.TypedList import TypedList
 from ..CfgBackwardsCompat import CfgBackwardsCompat
+from touchify.src.ext.types.StrEnum import StrEnum
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
 
 class CfgTouchifyActionPopup:
+
+    class Variants(StrEnum):
+        Actions = "actions"
+        Docker = "docker"
+        Toolshelf = "toolshelf"
+
+
     id: str = ""
     display_name: str = ""
     window_type: str = "popup"
@@ -45,23 +56,32 @@ class CfgTouchifyActionPopup:
             "docker_id"
         ]
 
+        toolshelf_mode_settings = [
+            "toolshelf_data"
+        ]
+
         popup_type_settings = [
             "popup_close_on_trigger"
         ]
 
         result = []
-        if self.type != "docker":
+        if self.type != CfgTouchifyActionPopup.Variants.Docker:
             for item in docker_mode_settings:
                 result.append(item)
-        if self.type != "actions":
+        if self.type != CfgTouchifyActionPopup.Variants.Actions:
             for item in action_mode_settings:
+                result.append(item)
+        if self.type != CfgTouchifyActionPopup.Variants.Toolshelf:
+            for item in toolshelf_mode_settings:
                 result.append(item)
 
         return result
 
     def __init__(self, **args) -> None:
-        args = CfgBackwardsCompat.CfgTouchifyActionPopup(args)
-        Extensions.dictToObject(self, args)
+        from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
+        self.toolshelf_data: CfgToolshelf = CfgToolshelf()
+        args = CfgBackwardsCompat.CfgTouchifyActionPopup(args)        
+        Extensions.dictToObject(self, args, [CfgToolshelf])
         items = Extensions.default_assignment(args, "actions_items", [])
         self.actions_items = Extensions.list_assignment(items, CfgTouchifyActionPopupItem)
 
@@ -95,7 +115,8 @@ class CfgTouchifyActionPopup:
         restrictions = {}
         restrictions["icon"] = {"type": "icon_selection"}
         restrictions["docker_id"] = {"type": "docker_selection"}
-        restrictions["type"] = {"type": "values", "entries": ["actions", "docker"]}
+        restrictions["type"] = {"type": "values", "entries": self.Variants.values()}
         restrictions["window_type"] = {"type": "values", "entries": ["popup", "window"]}
         restrictions["opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
+        restrictions["toolshelf_data"] = {"type": "expandable"}
         return restrictions

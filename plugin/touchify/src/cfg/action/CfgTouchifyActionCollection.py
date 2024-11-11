@@ -1,17 +1,23 @@
-from touchify.src.cfg.action.CfgTouchifyAction import *
+
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
 
 class CfgTouchifyActionCollection:
-    actions: TypedList["CfgTouchifyAction"] = []
+    
     row_name: str = "Actions Row"
 
     def __init__(self, **args) -> None:
+        from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
+        self.actions: TypedList[CfgTouchifyAction] = []
         Extensions.dictToObject(self, args)
         actions = Extensions.default_assignment(args, "actions", [])
         self.actions = Extensions.list_assignment(actions, CfgTouchifyAction)
 
     def forceLoad(self):
+        from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
         self.actions = TypedList(self.actions, CfgTouchifyAction)
 
     def __str__(self):

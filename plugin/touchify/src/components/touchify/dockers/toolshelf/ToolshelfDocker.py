@@ -4,6 +4,8 @@ from PyQt5.QtCore import *
 
 from typing import TYPE_CHECKING
 
+from touchify.src.settings.TouchifyConfig import TouchifyConfig
+
 from .....docker_manager import DockerManager
 from .....action_manager import ActionManager
 if TYPE_CHECKING:
@@ -35,7 +37,7 @@ class ToolshelfDocker(DockWidget):
         pass
     
     def onLoaded(self):              
-        self.mainWidget = ToolshelfWidget(self, self.PanelIndex)
+        self.mainWidget = ToolshelfWidget(self, TouchifyConfig.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
         self.setWidget(self.mainWidget)
         self.mainWidget.restorePreviousState(self._last_pinned, self._last_panel_id)
 

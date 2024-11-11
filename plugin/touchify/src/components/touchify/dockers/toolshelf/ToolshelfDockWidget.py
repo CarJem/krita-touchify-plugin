@@ -1,5 +1,3 @@
-from PyQt5.QtWidgets import QSizePolicy, QStackedWidget
-import uuid
 from krita import *
 from PyQt5.QtWidgets import *
 
@@ -10,10 +8,7 @@ from .....variables import *
 from .....docker_manager import *
 from .ToolshelfWidget import *
 
-from .....cfg.toolshelf.CfgToolshelfPanel import CfgToolshelfPanel
-from .....cfg.toolshelf.CfgToolshelf import CfgToolshelf
 
-from .ToolshelfPageMain import ToolshelfPageMain
 from .....action_manager import ActionManager
 
  
@@ -56,7 +51,7 @@ class ToolshelfDockWidget(QDockWidget):
         self.sizeChanged.emit()
     
     def onLoaded(self):              
-        self.mainWidget = ToolshelfWidget(self, self.PanelIndex)
+        self.mainWidget = ToolshelfWidget(self, TouchifyConfig.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
         self.scrollArea.setWidget(self.mainWidget)
         self.mainWidget.restorePreviousState(self._last_pinned, self._last_panel_id)
 

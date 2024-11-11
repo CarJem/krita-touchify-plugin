@@ -1,5 +1,4 @@
-from ..action.CfgTouchifyAction import *
-from ..action.CfgTouchifyActionCollection import *
+from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
 from ...ext.types.TypedList import TypedList
 from ...ext.JsonExtensions import JsonExtensions as Extensions
 from ...ext.types.StrEnum import StrEnum

@@ -1,21 +1,16 @@
 from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QPushButton, QSizePolicy, QStackedWidget
+from PyQt5.QtWidgets import QPushButton, QSizePolicy
 from krita import *
-from functools import partial
 from PyQt5.QtWidgets import *
 
-from ...actions.TouchifyActionPanel import TouchifyActionPanel
 
 from .ToolshelfMenu import ToolshelfMenu
-from .ToolshelfTabList import ToolshelfTabItem, ToolshelfTabList
+from .ToolshelfTabList import ToolshelfTabList
 
-from .....cfg.toolshelf.CfgToolshelfPanel import CfgToolshelfPanel
 from .....cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
 from .....cfg.toolshelf.CfgToolshelf import CfgToolshelf
 
-from .....settings.TouchifyConfig import TouchifyConfig
 from .....variables import *
-from .....docker_manager import DockerManager
 from .....stylesheet import Stylesheet
 from .....resources import ResourceManager
 
@@ -105,11 +100,12 @@ class ToolshelfHeader(QWidget):
     #region Actions
 
     def openSettings(self):
-        self.mainButton.setMenu(self.optionsMenu)
-        if self.is_menu_preloaded == False:
-            self.optionsMenu.setup()
-            self.is_menu_preloaded = True
-        self.mainButton.showMenu()
+        if self.registry_index != -1:
+            self.mainButton.setMenu(self.optionsMenu)
+            if self.is_menu_preloaded == False:
+                self.optionsMenu.setup()
+                self.is_menu_preloaded = True
+            self.mainButton.showMenu()
     
     def openRootPage(self):
         if self.parent_toolshelf:

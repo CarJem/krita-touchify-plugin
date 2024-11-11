@@ -1,23 +1,15 @@
-from PyQt5.QtWidgets import QSizePolicy, QStackedWidget
-import uuid
+from PyQt5.QtWidgets import QSizePolicy
 from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
 from .ToolshelfHeader import ToolshelfHeader
-from ...actions.TouchifyActionPanel import TouchifyActionPanel
-from .ToolshelfPage import ToolshelfPage
-from ...special.DockerContainer import DockerContainer
 
 from .....settings.TouchifyConfig import *
 from .....variables import *
 from .....docker_manager import *
 
-from .....cfg.toolshelf.CfgToolshelf import CfgToolshelf
-from .....cfg.toolshelf.CfgToolshelfPanel import CfgToolshelfPanel
 from .....cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
-from .ToolshelfPageMain import ToolshelfPageMain
-from .ToolshelfPage import ToolshelfPage
 from .ToolshelfPageStack import ToolshelfPageStack
 from .extras.MouseListener import MouseListener
 
@@ -25,16 +17,17 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ToolshelfDockWidget import ToolshelfDockWidget
     from .ToolshelfDocker import ToolshelfDocker
+    from ...popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
 class ToolshelfWidget(QWidget):
-    def __init__(self, parent: "ToolshelfDockWidget", registry_index: int):
+    def __init__(self, parent: "ToolshelfDockWidget", cfg: CfgToolshelf, registry_index: int = -1):
         super(ToolshelfWidget, self).__init__(parent)
 
         self.mouse_listener = MouseListener()
         self.pinned = False
-        self.parent_docker: "ToolshelfDockWidget" | "ToolshelfDocker"  = parent
+        self.parent_docker: "ToolshelfDockWidget" | "ToolshelfDocker" | "PopupDialog_Toolshelf"  = parent
         self.registry_index = registry_index
-        self.cfg = TouchifyConfig.instance().getActiveToolshelf(self.registry_index)
+        self.cfg = cfg
 
         self.mouse_listener.mouseReleased.connect(self.onMouseRelease)
         QApplication.instance().installEventFilter(self.mouse_listener)

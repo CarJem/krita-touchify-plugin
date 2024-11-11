@@ -22,6 +22,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
                                 "actions_grid_width": 3,
@@ -58,6 +64,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
                                 "actions_grid_width": 3,
@@ -94,6 +106,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
                                 "actions_grid_width": 3,
@@ -186,6 +204,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": []
                             },
                             "canvas_preset_data": {}
@@ -239,6 +263,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
                                 "actions_grid_width": 3,
@@ -275,6 +305,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
                                 "actions_grid_width": 3,
@@ -311,6 +347,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
                                 "actions_grid_width": 3,
@@ -347,6 +389,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
                                 "actions_grid_width": 3,
@@ -371,9 +419,9 @@
                             "id": "BrushPresetsPopup",
                             "icon": "all-layers",
                             "text": "Layers...",
-                            "variant": "popup",
+                            "variant": "action",
                             "show_text": false,
-                            "action_id": "",
+                            "action_id": "TouchifyAction_CustomLayerPopup",
                             "action_use_icon": false,
                             "brush_name": "",
                             "brush_override_icon": false,
@@ -383,6 +431,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
                                 "actions_grid_width": 3,
@@ -396,7 +450,7 @@
                                 "docker_id": "KisLayerBox",
                                 "icon": "",
                                 "id": "",
-                                "type": "docker",
+                                "type": "toolshelf",
                                 "window_type": "popup"
                             },
                             "canvas_preset_data": {}
@@ -419,6 +473,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": []
                             },
                             "canvas_preset_data": {}
@@ -497,6 +557,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
                                 "actions_grid_width": 3,
@@ -538,6 +604,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
                                 "actions_grid_width": 3,
@@ -805,6 +877,12 @@
                                                 "docker_names": []
                                             },
                                             "popup_data": {
+                                                "toolshelf_data": {
+                                                    "panels": [],
+                                                    "actions": [],
+                                                    "sections": [],
+                                                    "json_version": 1
+                                                },
                                                 "actions_items": []
                                             },
                                             "canvas_preset_data": {}
@@ -827,6 +905,12 @@
                                                 "docker_names": []
                                             },
                                             "popup_data": {
+                                                "toolshelf_data": {
+                                                    "panels": [],
+                                                    "actions": [],
+                                                    "sections": [],
+                                                    "json_version": 1
+                                                },
                                                 "actions_items": []
                                             },
                                             "canvas_preset_data": {}
@@ -848,6 +932,12 @@
                                         "docker_names": []
                                     },
                                     "popup_data": {
+                                        "toolshelf_data": {
+                                            "panels": [],
+                                            "actions": [],
+                                            "sections": [],
+                                            "json_version": 1
+                                        },
                                         "actions_items": []
                                     },
                                     "canvas_preset_data": {}
@@ -870,6 +960,12 @@
                                         "docker_names": []
                                     },
                                     "popup_data": {
+                                        "toolshelf_data": {
+                                            "panels": [],
+                                            "actions": [],
+                                            "sections": [],
+                                            "json_version": 1
+                                        },
                                         "actions_items": []
                                     },
                                     "canvas_preset_data": {}
@@ -892,6 +988,12 @@
                                         "docker_names": []
                                     },
                                     "popup_data": {
+                                        "toolshelf_data": {
+                                            "panels": [],
+                                            "actions": [],
+                                            "sections": [],
+                                            "json_version": 1
+                                        },
                                         "actions_items": []
                                     },
                                     "canvas_preset_data": {}
@@ -914,6 +1016,12 @@
                                         "docker_names": []
                                     },
                                     "popup_data": {
+                                        "toolshelf_data": {
+                                            "panels": [],
+                                            "actions": [],
+                                            "sections": [],
+                                            "json_version": 1
+                                        },
                                         "actions_items": []
                                     },
                                     "canvas_preset_data": {}
@@ -936,6 +1044,12 @@
                                         "docker_names": []
                                     },
                                     "popup_data": {
+                                        "toolshelf_data": {
+                                            "panels": [],
+                                            "actions": [],
+                                            "sections": [],
+                                            "json_version": 1
+                                        },
                                         "actions_items": []
                                     },
                                     "canvas_preset_data": {}
@@ -1014,6 +1128,12 @@
                                         "docker_names": []
                                     },
                                     "popup_data": {
+                                        "toolshelf_data": {
+                                            "panels": [],
+                                            "actions": [],
+                                            "sections": [],
+                                            "json_version": 1
+                                        },
                                         "actions_items": [],
                                         "actions_grid_padding": 2,
                                         "actions_grid_width": 3,
@@ -1083,6 +1203,12 @@
                                         "docker_names": []
                                     },
                                     "popup_data": {
+                                        "toolshelf_data": {
+                                            "panels": [],
+                                            "actions": [],
+                                            "sections": [],
+                                            "json_version": 1
+                                        },
                                         "actions_items": [],
                                         "actions_grid_padding": 2,
                                         "actions_grid_width": 3,
@@ -1163,6 +1289,12 @@
                                         "docker_names": []
                                     },
                                     "popup_data": {
+                                        "toolshelf_data": {
+                                            "panels": [],
+                                            "actions": [],
+                                            "sections": [],
+                                            "json_version": 1
+                                        },
                                         "actions_items": [],
                                         "actions_grid_padding": 2,
                                         "actions_grid_width": 3,
@@ -1276,6 +1408,12 @@
                             "tabs_mode": false
                         },
                         "popup_data": {
+                            "toolshelf_data": {
+                                "panels": [],
+                                "actions": [],
+                                "sections": [],
+                                "json_version": 1
+                            },
                             "actions_items": []
                         },
                         "show_text": false,

@@ -1,11 +1,6 @@
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-import os
-import json
-from functools import partial
-import sys
-import importlib.util
 
 from ....cfg.action.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
 
@@ -29,8 +24,6 @@ class PopupDialog_Actions(PopupDialog):
         self.actions_manager = actions_manager
         self.grid = self.generateActionsLayout()
         self.allowOpacity = True
-        if self.isSizeGripEnabled():
-            self.setSizeGripEnabled(False)
         self.initLayout()
 
 

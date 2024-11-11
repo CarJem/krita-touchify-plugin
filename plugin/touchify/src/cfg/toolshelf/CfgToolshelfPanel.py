@@ -1,4 +1,3 @@
-from ..action.CfgTouchifyAction import *
 from ...ext.types.TypedList import TypedList
 from ...ext.JsonExtensions import JsonExtensions as Extensions
 from .CfgToolshelfSection import CfgToolshelfSection

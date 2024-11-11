@@ -44,6 +44,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": []
                             },
                             "show_text": false,
@@ -65,6 +71,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": []
                             },
                             "show_text": false,
@@ -86,6 +98,12 @@
                                 "docker_names": []
                             },
                             "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
                                 "actions_items": []
                             },
                             "show_text": false,

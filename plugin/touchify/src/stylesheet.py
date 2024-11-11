@@ -145,13 +145,13 @@ class Stylesheet:
         if opacityAllowed:
             styleData = f"""opacity: {opacityValue};"""
         else:
-            styleData = "opacity: 1"
+            styleData = "opacity: 1;"
         return f"""QFrame#popupFrame {styleData}"""
 
     def touchify_popup_titlebar(self, opacityAllowed: bool, opacityValue: float) -> str:
         if opacityAllowed:
             styleData = f"""opacity: {opacityValue};"""
         else:
-            styleData = "opacity: 1"
+            styleData = "opacity: 1;"
         return f"""QWidget#popupFrameTitlebar {styleData}"""
     

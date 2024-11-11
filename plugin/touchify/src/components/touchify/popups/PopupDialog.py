@@ -1,27 +1,22 @@
-from json import tool
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-import os
-import json
-from functools import partial
-import sys
-import importlib.util
+
+from ....stylesheet import Stylesheet
 
 from .PopupDialog_Titlebar import PopupDialog_Titlebar
 
 from ....cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from ....settings.TouchifyConfig import *
 from ....resources import *
-from ....stylesheet import Stylesheet
 
 from krita import *
 
 POPUP_BTN_IDENTIFIER = " [Popup]"
 
 
-class PopupDialog(QDialog):
+class PopupDialog(QDockWidget):
 
 
     
@@ -42,15 +37,6 @@ class PopupDialog(QDialog):
         self.popupType = self.metadata.type
 
         qApp.installEventFilter(self)
-
-
-        self.winMargin = 3
-        self._cursor = QCursor()
-        self.resizeTop = False
-        self.resizeBottom = False
-        self.resizeLeft = False
-        self.resizeRight = False
-        self.isResizing = False
 
     #region Helper Methods
 
@@ -106,6 +92,8 @@ class PopupDialog(QDialog):
     def initLayout(self):
         self.setAutoFillBackground(True)
         self.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
 
         if self.windowMode == "popup":
             self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
@@ -120,24 +108,22 @@ class PopupDialog(QDialog):
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
             self.setWindowOpacity(self.metadata.opacity)
 
-        self.rootLayout = QVBoxLayout(self)
-        self.rootLayout.setContentsMargins(0, 0, 0, 0)
-        self.rootLayout.setSpacing(0)
-        self.setLayout(self.rootLayout)
-
         if self.windowMode == "window":
             self.titlebarEnabled = True
             self._toolbar = PopupDialog_Titlebar(self)
-            self.rootLayout.addWidget(self._toolbar)
+            self.setTitleBarWidget(self._toolbar)
+            
+        else:
+            self.setTitleBarWidget(QWidget(self))
     
-        self.frameWidget = QFrame(self)
+        self.frameWidget = QFrame(self)      
         self.frameWidget.setFrameShape(QFrame.Box)
         self.frameWidget.setFrameShadow(QFrame.Plain)
-        self.frameWidget.setLineWidth(0 if self.titlebarEnabled else 1)
+        self.frameWidget.setLineWidth(1)
         self.frameWidget.setObjectName("popupFrame")
         self.frameWidget.setStyleSheet(Stylesheet.instance().touchify_popup_frame(self.allowOpacity, self.metadata.opacity))
-        self.rootLayout.addWidget(self.frameWidget)
-
+        self.frameWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.setWidget(self.frameWidget)
 
         self.frameLayout = QVBoxLayout(self)
         self.frameLayout.setSpacing(0)
@@ -145,7 +131,9 @@ class PopupDialog(QDialog):
         self.frameWidget.setLayout(self.frameLayout)
 
         self.containerWidget = QWidget(self)
+        self.containerWidget.setContentsMargins(0,0,0,0)
         self.containerWidget.setLayout(self.grid)
+        self.containerWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.frameLayout.addWidget(self.containerWidget)
 
     def generateSize(self):
@@ -171,6 +159,7 @@ class PopupDialog(QDialog):
         self.show()
 
         if self.windowMode == "popup":
+            self.setFixedSize(dialog_width, dialog_height)
             self.activateWindow()
 
     def shutdownWidget(self):
@@ -195,91 +184,14 @@ class PopupDialog(QDialog):
                 self.containerWidget.setVisible(False)
                 self.isCollapsed = True
 
-    def resizeWindow(self, e: QMouseEvent):
-        window = self.window().windowHandle()
-        # reshape cursor for resize
-        if self._cursor.shape() == Qt.CursorShape.SizeHorCursor:
-            if self.resizeLeft:
-                window.startSystemResize(Qt.Edge.LeftEdge)
-            elif self.resizeRight:
-                window.startSystemResize(Qt.Edge.RightEdge)
-        elif self._cursor.shape() == Qt.CursorShape.SizeVerCursor:
-            if self.resizeTop:
-                window.startSystemResize(Qt.Edge.TopEdge)
-            elif self.resizeBottom:
-                window.startSystemResize(Qt.Edge.BottomEdge)
-        elif self._cursor.shape() == Qt.CursorShape.SizeBDiagCursor:
-            if self.resizeTop and self.resizeRight:
-                window.startSystemResize(Qt.Edge.TopEdge | Qt.Edge.RightEdge)
-            elif self.resizeBottom and self.resizeLeft:
-                window.startSystemResize(Qt.Edge.BottomEdge | Qt.Edge.LeftEdge)
-        elif self._cursor.shape() == Qt.CursorShape.SizeFDiagCursor:
-            if self.resizeTop and self.resizeLeft:
-                window.startSystemResize(Qt.Edge.TopEdge | Qt.Edge.LeftEdge)
-            elif self.resizeBottom and self.resizeRight:
-                window.startSystemResize(Qt.Edge.BottomEdge | Qt.Edge.RightEdge)
-
-    def updateCursor(self, p: QPoint):
-        # give the margin to reshape cursor shape
-        rect = self.rect()
-        rect.setX(self.rect().x() + self.winMargin)
-        rect.setY(self.rect().y() + self.winMargin)
-        rect.setWidth(self.rect().width() - self.winMargin * 2)
-        rect.setHeight(self.rect().height() - self.winMargin * 2)
-
-        self.isResizing = rect.contains(p)
-        if self.isResizing:
-            # resize end
-            self.unsetCursor()
-            self._cursor = self.cursor()
-            self.resizeTop = False
-            self.resizeBottom = False
-            self.resizeLeft = False
-            self.resizeRight = False
-        else:
-            # resize start
-            x = p.x()
-            y = p.y()
-
-            x1 = self.rect().x()
-            y1 = self.rect().y()
-            x2 = self.rect().width()
-            y2 = self.rect().height()
-
-            self.resizeLeft = abs(x - x1) <= self.winMargin # if mouse cursor is at the almost far left
-            self.resizeTop = abs(y - y1) <= self.winMargin # far top
-            self.resizeRight = abs(x - (x2 + x1)) <= self.winMargin # far right
-            self.resizeBottom = abs(y - (y2 + y1)) <= self.winMargin # far bottom
-
-            # set the cursor shape based on flag above
-            if self.resizeTop and self.resizeLeft:
-                self._cursor.setShape(Qt.CursorShape.SizeFDiagCursor)
-            elif self.resizeTop and self.resizeRight:
-                self._cursor.setShape(Qt.CursorShape.SizeBDiagCursor)
-            elif self.resizeBottom and self.resizeLeft:
-                self._cursor.setShape(Qt.CursorShape.SizeBDiagCursor)
-            elif self.resizeBottom and self.resizeRight:
-                self._cursor.setShape(Qt.CursorShape.SizeFDiagCursor)
-            elif self.resizeLeft:
-                self._cursor.setShape(Qt.CursorShape.SizeHorCursor)
-            elif self.resizeTop:
-                self._cursor.setShape(Qt.CursorShape.SizeVerCursor)
-            elif self.resizeRight:
-                self._cursor.setShape(Qt.CursorShape.SizeHorCursor)
-            elif self.resizeBottom:
-                self._cursor.setShape(Qt.CursorShape.SizeVerCursor)
-            self.setCursor(self._cursor)
-
-        self.isResizing = not self.isResizing
 
     #endregion
     
     #region Events 
     
     def eventFilter(self, source: QObject, event: QEvent) -> bool:
-        if event.type() == QEvent.Type.MouseMove:
-            if self.titlebarEnabled:
-                self.updateCursor(event.pos())
+        #if event.type() == QEvent.Type.MouseMove:
+            #pass
         return super().eventFilter(source, event)
 
     def event(self, event: QEvent):
@@ -301,14 +213,9 @@ class PopupDialog(QDialog):
             painter.drawRect(self.rect())
 
     def mousePressEvent(self, e: QMouseEvent):
-        if self.titlebarEnabled:
-            if e.button() == Qt.MouseButton.LeftButton and self.isResizing:
-                self.resizeWindow(e)
         return super().mousePressEvent(e)
 
     def enterEvent(self, e: QEnterEvent):
-        if self.titlebarEnabled:
-            self.updateCursor(e.pos())
         return super().enterEvent(e)
     
     #endregion

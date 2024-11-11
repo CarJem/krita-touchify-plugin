@@ -2,6 +2,12 @@ from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from .components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
+
+from .components.touchify.actions.TouchifyActionMenu import TouchifyActionMenu
+
+from .components.touchify.actions.TouchifyActionButton import TouchifyActionButton
+
 from .variables import *
 
 from .cfg.action.CfgTouchifyAction import CfgTouchifyAction
@@ -10,9 +16,12 @@ from .cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from .cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
 from .ext.KritaExtensions import *
 
-from .components.touchify.popups.PopupDialog import *
-from .components.touchify.popups.PopupDialog_Actions import *
-from .components.touchify.popups.PopupDialog_Docker import *
+from touchify.src.settings.TouchifyConfig import TouchifyConfig
+from touchify.src.resources import ResourceManager
+
+from .components.touchify.popups.PopupDialog import PopupDialog
+from .components.touchify.popups.PopupDialog_Actions import PopupDialog_Actions
+from .components.touchify.popups.PopupDialog_Docker import PopupDialog_Docker
 
 if TYPE_CHECKING:
     from .window import TouchifyWindow
@@ -287,10 +296,12 @@ class ActionManager(QObject):
         else: __btn.setChecked(True)
 
     def __triggerPopup(self, data: CfgTouchifyActionPopup, _parent: QWidget = None):
-        if data.type == "actions":
+        if data.type == CfgTouchifyActionPopup.Variants.Actions:
             popup = PopupDialog_Actions(self.appEngine.windowSource.qwindow().window(), data, self)
-        elif data.type == "docker":
+        elif data.type == CfgTouchifyActionPopup.Variants.Docker:
             popup = PopupDialog_Docker(self.appEngine.windowSource.qwindow().window(), data, self.appEngine.docker_management)
+        elif data.type == CfgTouchifyActionPopup.Variants.Toolshelf:
+            popup = PopupDialog_Toolshelf(self.appEngine.windowSource.qwindow().window(), data, self, self.appEngine.docker_management)
         else:
             popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
         popup.triggerPopup(_parent)
