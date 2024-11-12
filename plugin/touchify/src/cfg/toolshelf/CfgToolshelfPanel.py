@@ -1,8 +1,8 @@
-from ...ext.types.TypedList import TypedList
-from ...ext.JsonExtensions import JsonExtensions as Extensions
-from .CfgToolshelfSection import CfgToolshelfSection
-from ..action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
-from ..CfgBackwardsCompat import CfgBackwardsCompat
+from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
+from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
+from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 
 
 class CfgToolshelfPanel:

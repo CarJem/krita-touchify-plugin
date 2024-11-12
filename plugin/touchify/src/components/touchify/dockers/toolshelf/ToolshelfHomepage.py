@@ -2,18 +2,15 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from .....resources import ResourceManager
-from .....settings.TouchifyConfig import TouchifyConfig
-from .ToolshelfPage import ToolshelfPage
-from .....cfg.toolshelf.CfgToolshelfPanel import CfgToolshelfPanel
-from .....cfg.toolshelf.CfgToolshelf import CfgToolshelf
-from .....stylesheet import Stylesheet
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfPage import ToolshelfPage
+from touchify.src.cfg.toolshelf.CfgToolshelfPanel import CfgToolshelfPanel
+from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ToolshelfPageStack import ToolshelfPageStack
 
-class ToolshelfPageMain(ToolshelfPage):
+class ToolshelfHomepage(ToolshelfPage):
     def __init__(self, parent: "ToolshelfPageStack", cfg: CfgToolshelf):
 
         self.dockerWidgets: dict = {}
@@ -26,14 +23,13 @@ class ToolshelfPageMain(ToolshelfPage):
         pageCfg.actions = self.rootCfg.actions
         pageCfg.sections = self.rootCfg.sections
 
-        super(ToolshelfPageMain, self).__init__(parent, 'ROOT', pageCfg)
+        super(ToolshelfHomepage, self).__init__(parent, 'ROOT', pageCfg)
         
-        self.splitter.setAutoFillBackground(False)
+        self.panel.splitter.setAutoFillBackground(False)
            
 
     def loadPage(self):
-        for host_id in self.dockerWidgets:
-            self.dockerWidgets[host_id].loadWidget(True)
+        self.panel.loadPage()
     
 
     

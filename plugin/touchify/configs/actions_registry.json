@@ -400,6 +400,11 @@
                     "actions": [],
                     "sections": [
                         {
+                            "subpanel_data": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 1
+                            },
                             "action_section_contents": [],
                             "action_section_name": "Layer Tag",
                             "json_version": 1,
@@ -425,6 +430,11 @@
                             "special_item_type": "layer_label_box"
                         },
                         {
+                            "subpanel_data": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 1
+                            },
                             "action_section_contents": [
                                 {
                                     "actions": [
@@ -653,6 +663,11 @@
                             "json_version": 1
                         },
                         {
+                            "subpanel_data": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 1
+                            },
                             "action_section_contents": [],
                             "action_section_name": "Panel",
                             "id": "KisLayerBox",
@@ -678,6 +693,11 @@
                             "json_version": 1
                         },
                         {
+                            "subpanel_data": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 1
+                            },
                             "action_section_contents": [
                                 {
                                     "actions": [

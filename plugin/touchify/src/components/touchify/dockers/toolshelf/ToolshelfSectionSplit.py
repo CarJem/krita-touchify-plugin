@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-class ToolshelfSplitter(QWidget):
+class ToolshelfSectionSplit(QWidget):
     def __init__(self, orientation: Qt.Orientation, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.orientation = orientation

@@ -1,19 +1,18 @@
-from typing import Callable
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy, QFrame
-from PyQt5.QtCore import QSize, QEvent
-from .....cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
-from .....docker_manager import *
-from ...special.BrushBlendingSelector import BrushBlendingSelector
-from ...special.LayerBlendingSelector import LayerBlendingSelector
-from ...special.LayerLabelBox import LayerLabelBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtCore import QSize
+from touchify.src.cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
+from touchify.src.docker_manager import *
+from touchify.src.components.touchify.special.BrushBlendingSelector import BrushBlendingSelector
+from touchify.src.components.touchify.special.LayerBlendingSelector import LayerBlendingSelector
+from touchify.src.components.touchify.special.LayerLabelBox import LayerLabelBox
 from krita import *
     
 
 
-class ToolshelfSpecialWidget(QWidget):
+class ToolshelfSpecialSection(QWidget):
   
     def __init__(self, parent: QWidget | None, actionInfo: CfgToolshelfSection):
-        super(ToolshelfSpecialWidget, self).__init__(parent)
+        super(ToolshelfSpecialSection, self).__init__(parent)
         self.actionInfo = actionInfo
 
         self.size = None

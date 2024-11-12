@@ -1,11 +1,11 @@
 from PyQt5.QtWidgets import *
-from ....variables import *
+from touchify.src.variables import *
 from touchify.src.docker_manager import *
 from krita import *
-from ....helpers import TouchifyHelpers
+from touchify.src.helpers import TouchifyHelpers
 
 try:
-    from shortcut_composer.api_krita.enums.blending_mode import BlendingMode, PRETTY_NAMES
+    from api_krita.enums.blending_mode import BlendingMode, PRETTY_NAMES
     SHORTCUT_COMPOSER_LOADED = True
 except:
     SHORTCUT_COMPOSER_LOADED = False

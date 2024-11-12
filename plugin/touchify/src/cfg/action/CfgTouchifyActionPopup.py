@@ -1,7 +1,7 @@
-from .CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
-from ...ext.JsonExtensions import JsonExtensions as Extensions
-from ...ext.types.TypedList import TypedList
-from ..CfgBackwardsCompat import CfgBackwardsCompat
+from touchify.src.cfg.action.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 from touchify.src.ext.types.StrEnum import StrEnum
 
 from typing import TYPE_CHECKING
@@ -109,6 +109,7 @@ class CfgTouchifyActionPopup:
         labels["actions_icon_height"] = "Action Icon Height"
         labels["actions_items"] = "Actions"
         labels["actions_close_on_click"] = "Close on Click"
+        labels["toolshelf_data"] = "Toolshelf Data"
         return labels
 
     def propertygrid_restrictions(self):

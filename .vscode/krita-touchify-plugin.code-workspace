@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"name": "Root",
+			"path": ".."
+		},
+		{
+			"name": "Testscripts",
+			"path": "../testscripts"
+		},
+		{
+			"name": "Plugin",
+			"path": "../plugin"
+		}
+	],
+	"settings": {
+		"python.languageServer": "Default"
+	}
+}

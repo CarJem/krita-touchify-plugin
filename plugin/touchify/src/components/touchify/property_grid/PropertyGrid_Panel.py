@@ -1,21 +1,15 @@
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from PyQt5 import QtGui
-import sys
-import xml.etree.ElementTree as ET
 
-from .PropertyGrid import PropertyGrid
-from .utils.PropertyUtils_Extensions import *
-from .utils.PropertyUtils_Praser import *
-from .dialogs.PropertyGrid_SelectorDialog import *
+from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
+from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
+from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Praser import *
+from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_SelectorDialog import *
 
-from ...pyqt.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from ....ext.types.TypedList import *
-from ....resources import *
-from ....ext.KritaExtensions import KritaExtensions
-from ...pyqt.widgets.CollapsibleBox import CollapsibleBox
+from touchify.src.ext.types.TypedList import *
+from touchify.src.resources import *
 
 
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
@@ -134,6 +128,7 @@ class PropertyGrid_Panel(QScrollArea):
             return
         
         hiddenItems = PropertyUtils_Extensions.getHidden(self.currentData())
+        hiddenItems.append("json_version")
         for field in self.fields:     
             if field.variable_name in hiddenItems:
                 field.setHidden(True)

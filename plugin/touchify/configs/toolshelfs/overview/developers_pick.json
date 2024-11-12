@@ -1,6 +1,11 @@
 {
     "sections": [
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "action_section_contents": [
                 {
                     "actions": [
@@ -62,6 +67,11 @@
             "size_y": 0
         },
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "action_section_contents": [
                 {
                     "actions": [
@@ -146,6 +156,11 @@
             "action_section_icon_size": 16
         },
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "id": "OverviewDocker",
             "size_x": 300,
             "size_y": 200,
@@ -153,6 +168,11 @@
             "action_section_contents": []
         },
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "id": "Touchify/ReferenceTabsDocker",
             "docker_nesting_mode": "normal",
             "size_x": 300,
@@ -178,6 +198,11 @@
             "special_item_type": "none"
         },
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "action_section_contents": [],
             "action_section_name": "Panel",
             "json_version": 1,

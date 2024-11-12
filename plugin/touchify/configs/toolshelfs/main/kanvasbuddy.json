@@ -2,6 +2,11 @@
     "actions": [],
     "sections": [
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "action_section_contents": [],
             "action_section_name": "Panel",
             "action_section_alignment_x": "none",
@@ -25,6 +30,11 @@
             "size_y": 1
         },
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "action_section_contents": [
                 {
                     "actions": [
@@ -132,7 +142,9 @@
             "panel_y": 1,
             "section_type": "actions",
             "size_x": 0,
-            "size_y": 0
+            "size_y": 0,
+            "json_version": 1,
+            "special_item_type": "none"
         }
     ],
     "tab_type": "buttons",
@@ -140,6 +152,11 @@
         {
             "sections": [
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Panel",
                     "action_section_alignment_x": "none",
@@ -175,6 +192,11 @@
         {
             "sections": [
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Panel",
                     "action_section_alignment_x": "none",
@@ -210,6 +232,11 @@
         {
             "sections": [
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Panel",
                     "action_section_alignment_x": "none",
@@ -245,6 +272,11 @@
         {
             "sections": [
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Panel",
                     "action_section_alignment_x": "none",
@@ -280,6 +312,11 @@
         {
             "sections": [
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Panel",
                     "action_section_alignment_x": "none",

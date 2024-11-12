@@ -1,6 +1,11 @@
 {
     "sections": [
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "action_section_contents": [
                 {
                     "actions": [
@@ -158,6 +163,11 @@
             "special_item_type": "none"
         },
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "action_section_contents": [],
             "action_section_name": "Brush Blending",
             "json_version": 1,
@@ -183,6 +193,11 @@
             "special_item_type": "brush_blending_options"
         },
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "action_section_contents": [
                 {
                     "actions": [
@@ -242,6 +257,11 @@
             "json_version": 1
         },
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "action_section_contents": [
                 {
                     "actions": [
@@ -511,6 +531,11 @@
             "special_item_type": "none"
         },
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "action_section_contents": [],
             "action_section_name": "Panel",
             "json_version": 1,
@@ -536,6 +561,11 @@
             "special_item_type": "none"
         },
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "action_section_contents": [
                 {
                     "actions": [
@@ -656,29 +686,102 @@
             "special_item_type": "none"
         },
         {
-            "id": "sharedtooldocker",
-            "docker_unloaded_visibility": "hidden",
-            "panel_y": 5,
-            "size_x": 0,
-            "size_y": 0,
-            "docker_loading_priority": "normal",
+            "subpanel_data": {
+                "sections": [
+                    {
+                        "subpanel_data": {
+                            "sections": [],
+                            "actions": [],
+                            "json_version": 1
+                        },
+                        "action_section_contents": [],
+                        "action_section_name": "Panel",
+                        "json_version": 1,
+                        "section_type": "docker",
+                        "min_size_x": 0,
+                        "min_size_y": 0,
+                        "max_size_x": 0,
+                        "max_size_y": 0,
+                        "size_x": 0,
+                        "size_y": 0,
+                        "panel_x": 0,
+                        "panel_y": 0,
+                        "id": "sharedtooldocker",
+                        "docker_nesting_mode": "normal",
+                        "docker_unloaded_visibility": "normal",
+                        "docker_loading_priority": "normal",
+                        "action_section_display_mode": "normal",
+                        "action_section_alignment_x": "none",
+                        "action_section_alignment_y": "none",
+                        "action_section_btn_width": 0,
+                        "action_section_btn_height": 0,
+                        "action_section_icon_size": 0,
+                        "special_item_type": "none"
+                    },
+                    {
+                        "subpanel_data": {
+                            "sections": [],
+                            "actions": [],
+                            "json_version": 1
+                        },
+                        "action_section_contents": [],
+                        "action_section_name": "Panel",
+                        "json_version": 1,
+                        "section_type": "docker",
+                        "min_size_x": 0,
+                        "min_size_y": 0,
+                        "max_size_x": 0,
+                        "max_size_y": 0,
+                        "size_x": 0,
+                        "size_y": 0,
+                        "panel_x": 0,
+                        "panel_y": 0,
+                        "id": "KisLayerBox",
+                        "docker_nesting_mode": "normal",
+                        "docker_unloaded_visibility": "normal",
+                        "docker_loading_priority": "normal",
+                        "action_section_display_mode": "normal",
+                        "action_section_alignment_x": "none",
+                        "action_section_alignment_y": "none",
+                        "action_section_btn_width": 0,
+                        "action_section_btn_height": 0,
+                        "action_section_icon_size": 0,
+                        "special_item_type": "none"
+                    }
+                ],
+                "actions": [],
+                "action_height": 10,
+                "json_version": 1,
+                "id": "Root Group",
+                "icon": "",
+                "row": 0,
+                "size_x": 0,
+                "size_y": 0,
+                "tab_type": "tabs"
+            },
             "action_section_contents": [],
             "action_section_name": "Panel",
+            "json_version": 1,
+            "section_type": "subpanel",
+            "min_size_x": 0,
+            "min_size_y": 0,
+            "max_size_x": 0,
+            "max_size_y": 0,
+            "size_x": 0,
+            "size_y": 0,
+            "panel_x": 0,
+            "panel_y": 5,
+            "id": "",
+            "docker_nesting_mode": "normal",
+            "docker_unloaded_visibility": "normal",
+            "docker_loading_priority": "normal",
+            "action_section_display_mode": "normal",
             "action_section_alignment_x": "none",
             "action_section_alignment_y": "none",
             "action_section_btn_width": 0,
             "action_section_btn_height": 0,
-            "action_section_display_mode": "normal",
             "action_section_icon_size": 0,
-            "docker_nesting_mode": "normal",
-            "max_size_x": 0,
-            "max_size_y": 0,
-            "min_size_x": 0,
-            "min_size_y": 0,
-            "panel_x": 0,
-            "section_type": "docker",
-            "special_item_type": "none",
-            "json_version": 1
+            "special_item_type": "none"
         }
     ],
     "tab_type": "buttons",
@@ -686,6 +789,11 @@
         {
             "sections": [
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Panel",
                     "id": "Touchify/ColorOptionsDocker",
@@ -703,6 +811,11 @@
                     "action_section_btn_height": 0
                 },
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Panel",
                     "json_version": 1,
@@ -728,6 +841,11 @@
                     "special_item_type": "none"
                 },
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Panel",
                     "id": "PaletteDocker",
@@ -766,6 +884,11 @@
         {
             "sections": [
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Panel",
                     "json_version": 1,
@@ -791,6 +914,11 @@
                     "special_item_type": "none"
                 },
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Panel",
                     "json_version": 1,
@@ -829,6 +957,11 @@
         {
             "sections": [
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Layer Tag",
                     "json_version": 1,
@@ -854,6 +987,11 @@
                     "special_item_type": "layer_label_box"
                 },
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [
                         {
                             "actions": [
@@ -1082,6 +1220,11 @@
                     "json_version": 1
                 },
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Panel",
                     "id": "KisLayerBox",
@@ -1107,6 +1250,11 @@
                     "json_version": 1
                 },
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [
                         {
                             "actions": [
@@ -1268,6 +1416,11 @@
         {
             "sections": [
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [
                         {
                             "actions": [
@@ -1341,6 +1494,11 @@
                     "special_item_type": "none"
                 },
                 {
+                    "subpanel_data": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 1
+                    },
                     "action_section_contents": [],
                     "action_section_name": "Panel",
                     "json_version": 1,

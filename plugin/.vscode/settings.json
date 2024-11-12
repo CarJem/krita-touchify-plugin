@@ -1,0 +1,26 @@
+{
+    "files.exclude": {
+        ".vscode\\PythonImportHelper-v2-Completion.json": true,
+        "**/__pycache__": true,
+        "**/.conda": true,
+        "**/.venv": true
+    },
+    "python.analysis.extraPaths": [    
+        "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs",
+        "~/.var/app/org.kde.krita/data/krita/pykrita/shortcut_composer"
+    ],
+    "python.analysis.fixAll" : ["source.unusedImports", "source.convertImportFormat"],
+    "python.REPL.enableREPLSmartSend": false,
+    "python.analysis.importFormat": "absolute",
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.stubPath": "typings",
+    "python.analysis.indexing": true,
+    "python.analysis.inlayHints.functionReturnTypes": false,
+    "editor.codeActionsOnSave": {
+        "source.unusedImports": "explicit",
+        "source.organizeImports": "explicit",
+        "source.convertImportFormat": "explicit",
+    },
+    "python.analysis.autoImportCompletions": false,
+    "python.analysis.diagnosticSeverityOverrides": {},
+}

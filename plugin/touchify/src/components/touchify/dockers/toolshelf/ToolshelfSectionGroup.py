@@ -1,17 +1,16 @@
-from uuid import uuid4
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from krita import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .ToolshelfPage import ToolshelfPage
+    from .ToolshelfPanel import ToolshelfPanel
 
 class ToolshelfSectionGroup(QWidget):
-    def __init__(self, parent: "ToolshelfPage") -> None:
+    def __init__(self, parent: "ToolshelfPanel") -> None:
         super().__init__(parent)
         
-        self.page: "ToolshelfPage" = parent
+        self.panel: "ToolshelfPanel" = parent
         self.tabTitles: dict[int, str] = {}
 
         self.setAutoFillBackground(True)
@@ -21,7 +20,7 @@ class ToolshelfSectionGroup(QWidget):
         self.__layout.setContentsMargins(0,0,0,0)
         self.setLayout(self.__layout)
         
-        self.mode = self.page.tabType
+        self.mode = self.panel.tabType
 
         if self.mode == "buttons":
             self.tabButton = QPushButton(self)
@@ -80,6 +79,6 @@ class ToolshelfSectionGroup(QWidget):
         else:
             pass
 
-        self.stackPanel.adjustSize()
         self.adjustSize()
-        self.page.toolshelf.rootWidget.onSizeChanged()
+        self.stackPanel.adjustSize()
+        self.panel.adjustSize()

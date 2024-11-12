@@ -1,21 +1,19 @@
 from PyQt5.QtWidgets import QSizePolicy, QStackedWidget
-import uuid
 from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from ...actions.TouchifyActionPanel import TouchifyActionPanel
-from .ToolshelfPage import ToolshelfPage
-from ...special.DockerContainer import DockerContainer
+from touchify.src.components.touchify.actions.TouchifyActionPanel import TouchifyActionPanel
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfPage import ToolshelfPage
+from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 
-from .....settings.TouchifyConfig import *
-from .....variables import *
-from .....docker_manager import *
+from touchify.src.settings.TouchifyConfig import *
+from touchify.src.variables import *
+from touchify.src.docker_manager import *
 
-from .....cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
-from .ToolshelfPageMain import ToolshelfPageMain
-from .ToolshelfPage import ToolshelfPage
-from .extras.MouseListener import MouseListener
+from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfHomepage import ToolshelfHomepage
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfPage import ToolshelfPage
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -43,7 +41,7 @@ class ToolshelfPageStack(QStackedWidget):
         self.changePanel('ROOT')
 
     def addMainPanel(self):
-        self._mainWidget = ToolshelfPageMain(self, self.cfg)
+        self._mainWidget = ToolshelfHomepage(self, self.cfg)
         self._panels['ROOT'] = self._mainWidget
         super().addWidget(self._mainWidget)
 

@@ -1,8 +1,8 @@
 from krita import *
 from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtGui import QIcon,QPixmap
-from ....variables import *
-from ....helpers import TouchifyHelpers
+from touchify.src.variables import *
+from touchify.src.helpers import TouchifyHelpers
 
 def getCurrentLayer():
     app = Krita.instance()

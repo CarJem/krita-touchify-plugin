@@ -1,7 +1,7 @@
-from ...ext.types.TypedList import TypedList
-from ...ext.JsonExtensions import JsonExtensions as Extensions
-from ...ext.types.StrEnum import StrEnum
-from ..action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
+from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.ext.types.StrEnum import StrEnum
+from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
 
 class CfgToolshelfHeaderOptions:
     class StackPreview(StrEnum):

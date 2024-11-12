@@ -2,6 +2,11 @@
     "actions": [],
     "sections": [
         {
+            "subpanel_data": {
+                "sections": [],
+                "actions": [],
+                "json_version": 1
+            },
             "action_section_contents": [],
             "action_section_name": "Panel",
             "action_section_alignment_x": "none",

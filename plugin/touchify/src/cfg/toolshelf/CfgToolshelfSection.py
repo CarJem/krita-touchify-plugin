@@ -1,7 +1,7 @@
 from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
-from ...ext.types.TypedList import TypedList
-from ...ext.JsonExtensions import JsonExtensions as Extensions
-from ...ext.types.StrEnum import StrEnum
+from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.ext.types.StrEnum import StrEnum
 
 class CfgToolshelfSection:
 
@@ -9,6 +9,7 @@ class CfgToolshelfSection:
         Actions = "actions"
         Docker = "docker"
         Special = "special"
+        Subpanel = "subpanel"
 
     class SpecialItemType(StrEnum):
         Nothing = "none"
@@ -45,13 +46,14 @@ class CfgToolshelfSection:
     action_section_btn_height: int = 0
     action_section_icon_size: int = 0
 
+    special_item_type: str = "none"
 
     json_version: int = 1
 
-    special_item_type: str = "none"
-
     def __init__(self, **args) -> None:
-        Extensions.dictToObject(self, args)
+        from .CfgToolshelfPanel import CfgToolshelfPanel
+        self.subpanel_data: CfgToolshelfPanel = CfgToolshelfPanel()
+        Extensions.dictToObject(self, args, [CfgToolshelfPanel])
         action_section_contents = Extensions.default_assignment(args, "action_section_contents", [])
         self.action_section_contents = Extensions.list_assignment(action_section_contents, CfgTouchifyActionCollection)
 
@@ -61,8 +63,12 @@ class CfgToolshelfSection:
     def __str__(self):
         if self.section_type == CfgToolshelfSection.SectionType.Actions:
             name = self.action_section_name.replace("\n", "\\n") + " (Actions)"
+        elif self.section_type == CfgToolshelfSection.SectionType.Subpanel:
+            name = self.subpanel_data.id.replace("\n", "\\n") + " (Subpanel)"
         elif self.section_type == CfgToolshelfSection.SectionType.Special:
-            name = self.action_section_name.replace("\n", "\\n") + " (Special)"
+            name = self.special_item_type.replace("\n", "\\n") + " (Special)"
+        elif self.section_type == CfgToolshelfSection.SectionType.Docker:
+            name = self.id.replace("\n", "\\n") + " (Docker)"
         else:
             name = self.id.replace("\n", "\\n")
             
@@ -110,7 +116,11 @@ class CfgToolshelfSection:
             "special_item_type"
         ]
 
-        return global_groups + docker_groups + action_groups + special_groups
+        subgroup_groups = [
+            "subpanel_data",
+        ]
+
+        return global_groups + docker_groups + action_groups + special_groups + subgroup_groups
     
     def propertygrid_hidden(self):
         action_groups = [
@@ -135,12 +145,19 @@ class CfgToolshelfSection:
             "special_item_type"
         ]
 
+        subgroup_groups = [
+            "subpanel_data",
+        ]
+
         result = []
         if self.section_type != CfgToolshelfSection.SectionType.Docker:
             for item in docker_groups:
                 result.append(item)
         if self.section_type != CfgToolshelfSection.SectionType.Actions:
             for item in action_groups:
+                result.append(item)
+        if self.section_type != CfgToolshelfSection.SectionType.Subpanel:
+            for item in subgroup_groups:
                 result.append(item)
         if self.section_type != CfgToolshelfSection.SectionType.Special:
             for item in special_groups:
@@ -175,6 +192,8 @@ class CfgToolshelfSection:
         labels["action_section_icon_size"] = "Icon Size"
 
         labels["special_item_type"] = "Component Type"
+
+        labels["subpanel_data"] = "Panel Data"
         return labels
     
     def propertygrid_sisters(self):
@@ -212,4 +231,6 @@ class CfgToolshelfSection:
         restrictions["action_section_icon_size"] = {"type": "range", "min": 0}
 
         restrictions["special_item_type"] = {"type": "values", "entries": self.SpecialItemType.values()}
+
+        restrictions["subpanel_data"] = {"type": "expandable"}
         return restrictions
