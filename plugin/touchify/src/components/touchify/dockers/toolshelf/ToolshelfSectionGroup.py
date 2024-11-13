@@ -3,6 +3,8 @@ from PyQt5.QtCore import *
 from krita import *
 
 from typing import TYPE_CHECKING
+
+from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 if TYPE_CHECKING:
     from .ToolshelfPanel import ToolshelfPanel
 
@@ -61,15 +63,22 @@ class ToolshelfSectionGroup(QWidget):
 
             widget = self.stackPanel.widget(i)
             if i == index:
+                if isinstance(widget, DockerContainer):  
+                    if widget.isEnabled() == False: widget.loadWidget()
+
+
                 policy = QSizePolicy.Policy.Preferred
                 widget.setSizePolicy(policy, policy)
                 widget.setEnabled(True)
                 widget.updateGeometry()
                 widget.adjustSize()
             else:
+                if isinstance(widget, DockerContainer): 
+                    if widget.isEnabled(): widget.unloadWidget()
+
                 policy = QSizePolicy.Policy.Ignored
                 widget.setSizePolicy(policy, policy)
-                widget.setDisabled(False)
+                widget.setDisabled(True)
                 widget.updateGeometry()
                 widget.adjustSize()
 
@@ -82,3 +91,4 @@ class ToolshelfSectionGroup(QWidget):
         self.adjustSize()
         self.stackPanel.adjustSize()
         self.panel.adjustSize()
+        self.panel.page_stack.rootWidget.requestViewUpdate()

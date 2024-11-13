@@ -6,12 +6,12 @@ from typing import TYPE_CHECKING
 
 from touchify.src.settings.TouchifyConfig import TouchifyConfig
 
-from .....docker_manager import DockerManager
-from .....action_manager import ActionManager
+from touchify.src.docker_manager import DockerManager
+from touchify.src.action_manager import ActionManager
 if TYPE_CHECKING:
     from .....window import TouchifyWindow
 
-from .ToolshelfWidget import ToolshelfWidget
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import ToolshelfWidget
 
 
 DOCKER_TITLE = 'Touchify Toolshelf'
@@ -51,15 +51,15 @@ class ToolshelfDocker(DockWidget):
     def onConfigUpdated(self):
         self.onUnload()
         self.onLoaded()
+
+    def requestViewUpdate(self):
+        pass
         
     def showEvent(self, event):
         super().showEvent(event)
 
     def closeEvent(self, event):
         super().closeEvent(event)
-        
-    def onSizeChanged(self):
-        pass
 
     # notifies when views are added or removed
     # 'pass' means do not do anything

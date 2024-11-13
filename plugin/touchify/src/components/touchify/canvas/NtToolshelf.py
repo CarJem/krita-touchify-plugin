@@ -1,20 +1,14 @@
-from PyQt5.QtWidgets import QMdiArea, QDockWidget
-from PyQt5.QtCore import QObject, QEvent, QPoint
-
-from ....ext.KritaSettings import KritaSettings
-
-from ....docker_manager import DockerManager
-from ....action_manager import ActionManager
 
 
-from ....ext.KritaExtensions import KritaExtensions
-from ....settings.TouchifySettings import TouchifySettings
-from ....settings.TouchifyConfig import TouchifyConfig
-from ....stylesheet import Stylesheet
-from .NtWidgetPad import NtWidgetPad
+from touchify.src.docker_manager import DockerManager
+from touchify.src.action_manager import ActionManager
+
+
+from touchify.src.settings.TouchifyConfig import TouchifyConfig
+from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from krita import *
-from ....variables import *
-from ..dockers.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget
+from touchify.src.variables import *
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -27,8 +21,8 @@ class NtToolshelf(NtWidgetPad):
         panel_index = 0 if isPrimaryPanel else 1
 
         self.toolshelf = ToolshelfDockWidget(panel_index, docker_manager, actions_manager)
+        self.toolshelf.updateViewRequested.connect(self.onUpdateViewRequested)
         self.toolshelf.installEventFilter(self.adjustFilter)
-        self.toolshelf.sizeChanged.connect(self.onSizeChanged)
 
         self.setObjectName("toolshelfPad")
         self.borrowDocker(self.toolshelf)
@@ -39,11 +33,11 @@ class NtToolshelf(NtWidgetPad):
                 if toolshelf_cfg.header_options.default_to_resize_mode == True:
                     self.toggleResizing()
 
-    def onSizeChanged(self):
+    def onUpdateViewRequested(self):
         self.canvas.updateView()
     
     def close(self):
-        self.toolshelf.sizeChanged.disconnect(self.onSizeChanged)
+        self.toolshelf.updateViewRequested.disconnect(self.onUpdateViewRequested)
         self.toolshelf.removeEventFilter(self.adjustFilter)
         self.toolshelf.onUnload()
         result = super().close()

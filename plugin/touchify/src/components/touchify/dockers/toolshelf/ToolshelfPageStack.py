@@ -50,10 +50,6 @@ class ToolshelfPageStack(QStackedWidget):
         self._panels[ID] = panel
         super().addWidget(panel)
 
-    def resizeEvent(self, event: QResizeEvent):
-        self.rootWidget.onSizeChanged()
-        super().resizeEvent(event)
-
     def goHome(self):
         if self.currentWidget() != self._mainWidget:
             self.changePanel('ROOT')

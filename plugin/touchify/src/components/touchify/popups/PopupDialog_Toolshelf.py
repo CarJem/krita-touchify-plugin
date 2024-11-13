@@ -4,10 +4,10 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import ToolshelfWidget
 
-from ....cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from ....settings.TouchifyConfig import *
-from ....resources import *
-from .PopupDialog import *
+from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.settings.TouchifyConfig import *
+from touchify.src.resources import *
+from touchify.src.components.touchify.popups.PopupDialog import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -51,8 +51,8 @@ class PopupDialog_Toolshelf(PopupDialog):
             if self.mainWidget:
                 return True
         return False
-
-    def onSizeChanged(self):
+    
+    def requestViewUpdate(self):
         pass
 
     def shutdownWidget(self):

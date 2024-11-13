@@ -3,18 +3,18 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
-from .....settings.TouchifyConfig import *
-from .....variables import *
-from .....docker_manager import *
-from .ToolshelfWidget import *
+from touchify.src.settings.TouchifyConfig import *
+from touchify.src.variables import *
+from touchify.src.docker_manager import *
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import *
 
 
-from .....action_manager import ActionManager
+from touchify.src.action_manager import ActionManager
 
  
 class ToolshelfDockWidget(QDockWidget):
 
-    sizeChanged = pyqtSignal()
+    updateViewRequested = pyqtSignal()
 
     def __init__(self, panel_index: int, docker_manager: DockerManager, actions_manager: ActionManager):
         super().__init__()
@@ -47,8 +47,8 @@ class ToolshelfDockWidget(QDockWidget):
     def onKritaConfigUpdate(self):
         pass
 
-    def onSizeChanged(self):
-        self.sizeChanged.emit()
+    def requestViewUpdate(self):
+        self.updateViewRequested.emit()
     
     def onLoaded(self):              
         self.mainWidget = ToolshelfWidget(self, TouchifyConfig.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)

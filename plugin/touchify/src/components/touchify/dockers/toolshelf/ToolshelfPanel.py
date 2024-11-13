@@ -139,7 +139,7 @@ class ToolshelfPanel(QWidget):
                 elif isinstance(item, TouchifyActionPanel):
                     tabBar.addTab(item, item.title)
                 elif isinstance(item, ToolshelfPanel):
-                    tabBar.addTab(item, )
+                    tabBar.addTab(item, item.panelProperties.id)
                 else:
                     tabBar.addTab(item, "Unknown")
             tabBar.setCurrentIndex(0)
@@ -263,13 +263,6 @@ class ToolshelfPanel(QWidget):
 
     def adjustSize(self):
         super().adjustSize()
-        self.page_stack.adjustSize()
-        self.page_stack.rootWidget.onSizeChanged()
-        
-
-    def resizeEvent(self, event: QResizeEvent):
-        self.page_stack.rootWidget.onSizeChanged()
-        super().resizeEvent(event)
 
     def unloadPage(self):
         self.pageUnloadSignal.emit()

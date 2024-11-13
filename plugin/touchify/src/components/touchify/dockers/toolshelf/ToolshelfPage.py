@@ -34,12 +34,10 @@ class ToolshelfPage(QWidget):
     def sizeHint(self):
         return self.panel.sizeHint()
     
-
     def activate(self):
         self.toolshelf.changePanel(self.ID)
 
     def resizeEvent(self, event: QResizeEvent):
-        self.toolshelf.rootWidget.onSizeChanged()
         super().resizeEvent(event)
 
     def unloadPage(self):

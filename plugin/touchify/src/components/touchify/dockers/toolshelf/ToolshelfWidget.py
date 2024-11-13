@@ -3,15 +3,15 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from .ToolshelfHeader import ToolshelfHeader
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfHeader import ToolshelfHeader
 
-from .....settings.TouchifyConfig import *
-from .....variables import *
-from .....docker_manager import *
+from touchify.src.settings.TouchifyConfig import *
+from touchify.src.variables import *
+from touchify.src.docker_manager import *
 
-from .....cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
-from .ToolshelfPageStack import ToolshelfPageStack
-from .extras.MouseListener import MouseListener
+from touchify.src.cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfPageStack import ToolshelfPageStack
+from touchify.src.components.touchify.dockers.toolshelf.extras.MouseListener import MouseListener
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -112,11 +112,12 @@ class ToolshelfWidget(QWidget):
     #region Signals
     
     def onPageChanged(self, current_panel_id: str):
+        self.requestViewUpdate()
         if hasattr(self, 'header'):
             self.header.onPageChanged(current_panel_id)
 
-    def onSizeChanged(self):
-        self.parent_docker.onSizeChanged()
+    def requestViewUpdate(self):
+        QTimer.singleShot(250, self.parent_docker.requestViewUpdate)
 
     def onMouseRelease(self):
         cursor_pos = QCursor.pos()

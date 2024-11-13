@@ -1,7 +1,6 @@
-from typing import Callable
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QSizePolicy, QFrame
-from PyQt5.QtCore import QSize, QEvent
-from ....docker_manager import *
+from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtCore import QSize
+from touchify.src.docker_manager import *
 from krita import *
 
     
@@ -19,19 +18,36 @@ class DockerContainer(QWidget):
         self.isLoaded = False
         self.docker_id = docker_id
         self.borrowedDocker = None
-        self.setAutoFillBackground(True)
+        self.setAutoFillBackground(False)
         self.size = None
-        self.baseLayout = QVBoxLayout(self)
-        self.setLayout(self.baseLayout)
-        self.baseLayout.setContentsMargins(0, 0, 0, 0)
-        self.baseLayout.setSpacing(0)
+
+        self.setLayout(QVBoxLayout())
+        self.layout().setContentsMargins(0,0,0,0)
+        self.layout().setSpacing(0)
+
+        self.container = QWidget(self)
+        self.layout().addWidget(self.container)
+
+        self.container_layout = QVBoxLayout(self)
+        self.container_layout.setContentsMargins(0, 0, 0, 0)
+        self.container_layout.setSpacing(0)
+        self.container.setLayout(self.container_layout)
         
         self.hiddenMode = False
         self.dockMode = False
         self.passiveMode = False
         
-        self.unloadedLabel = None
-        self.unloadedButton = None
+        self.unloaded_label = QLabel(self.container)
+        self.unloaded_label.setText("Docker is currently in use elsewhere, click here to move it here")
+        self.unloaded_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.unloaded_label.setWordWrap(True)
+        self.unloaded_label.setVisible(False)
+
+        self.unloaded_button = QPushButton(self.container)
+        self.unloaded_button.setText("Load Docker")
+        self.unloaded_button.clicked.connect(self._stealDocker)
+        self.unloaded_button.setVisible(False)
+
         self._updateEmptySpace(True)
 
         self.docker_manager.registerListener(DockerManager.SignalType.OnReleaseDocker, self.onDockerReleased)
@@ -67,10 +83,11 @@ class DockerContainer(QWidget):
         shareArgs = DockerManager.LoadArguments(self.dockMode)
         dockerLoaded: QWidget | None = self.docker_manager.loadDocker(self.docker_id, shareArgs)
         if not dockerLoaded: 
-            self._updateEmptySpace(True)
+            if not self.borrowedDocker:
+                self._updateEmptySpace(True)
             return
         self.borrowedDocker = dockerLoaded
-        self.baseLayout.addWidget(self.borrowedDocker)
+        self.container_layout.addWidget(self.borrowedDocker)
         self._updateEmptySpace(False)
         if self.dockMode: self.borrowedDocker.show()
 
@@ -79,39 +96,29 @@ class DockerContainer(QWidget):
         self.docker_manager.unloadDocker(self.docker_id, invokeRelease)
 
     def _updateEmptySpace(self, state: bool):
-        if self.unloadedLabel == None and self.unloadedButton == None:
-            self.unloadedLabel = QLabel()
-            self.unloadedLabel.setText("Docker is currently in use elsewhere, click here to move it here")
-            self.unloadedLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            self.unloadedLabel.setWordWrap(True)
-
-            self.unloadedButton = QPushButton()
-            self.unloadedButton.setText("Load Docker")
-            self.unloadedButton.clicked.connect(self._stealDocker)
-
-
         if self.emptySpaceState != state:
             if state:
-                self.baseLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-                self.baseLayout.addWidget(self.unloadedLabel)
-                self.baseLayout.addWidget(self.unloadedButton)
+                self.container_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                self.container_layout.addWidget(self.unloaded_label)
+                self.container_layout.addWidget(self.unloaded_button)
                 if self.hiddenMode:
-                    self.setVisible(False)
-                    self.setAutoFillBackground(False)
+                    self.container.setVisible(False)
+                    self.container.setAutoFillBackground(False)
             else:
-                self.baseLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-                self.baseLayout.removeWidget(self.unloadedLabel)
-                self.baseLayout.removeWidget(self.unloadedButton)
+                self.container_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+                self.container_layout.removeWidget(self.unloaded_label)
+                self.container_layout.removeWidget(self.unloaded_button)
                 if self.hiddenMode:
-                    self.setVisible(True)
-                    self.setAutoFillBackground(True)
+                    self.container.setVisible(True)
+                    self.container.setAutoFillBackground(True)
 
             self.docker_busy = state
-            self.unloadedButton.setVisible(state)
-            self.unloadedButton.setEnabled(state)
-            self.unloadedLabel.setVisible(state)
-            self.unloadedLabel.setEnabled(state)
             self.emptySpaceState = state
+            self.unloaded_button.setVisible(state)
+            self.unloaded_button.setEnabled(state)
+            self.unloaded_label.setVisible(state)
+            self.unloaded_label.setEnabled(state)
+
     #endregion
 
     #region Event Functions
