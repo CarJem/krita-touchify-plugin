@@ -1,24 +1,29 @@
 import uuid
 from krita import *
+from touchify.src.ext.types.StrEnum import StrEnum
 
-from .TouchifyActionButton import *
-from .TouchifyActionMenu import TouchifyActionMenu
-from .TouchifyActionToolbar import TouchifyActionToolbar
+from touchify.src.components.touchify.actions.TouchifyActionButton import *
+from touchify.src.components.touchify.actions.TouchifyActionToolbar import TouchifyActionToolbar
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-from ....cfg.action.CfgTouchifyAction import CfgTouchifyAction
-from ....cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
-from ....resources import ResourceManager
-from ....stylesheet import Stylesheet
-from ....variables import *
-from ....settings.TouchifyConfig import *
+from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
+from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
+from touchify.src.stylesheet import Stylesheet
+from touchify.src.variables import *
+from touchify.src.settings.TouchifyConfig import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ....action_manager import ActionManager
 
 class TouchifyActionPanel(QWidget):
+
+
+    class DisplayType(StrEnum):
+        Toolbar = "toolbar"
+        ToolbarFlat = "toolbar_flat"
+        Popup = "popup"
 
     action_triggered = pyqtSignal()
 

@@ -1,3 +1,4 @@
+from touchify.src.ext.types.StrEnum import StrEnum
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
@@ -6,7 +7,14 @@ from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 
 
 class CfgToolshelfPanel:
+
+
+    class TabType(StrEnum):
+        Buttons = "buttons"
+        Tabs = "tabs"
+    
     id: str = ""
+    display_name: str = ""
     icon: str = ""
     size_x: int = 0
     size_y: int = 0
@@ -26,6 +34,9 @@ class CfgToolshelfPanel:
         self.sections = Extensions.list_assignment(sections, CfgToolshelfSection)
         self.actions = Extensions.list_assignment(actions, CfgTouchifyActionCollection)
 
+    def hasDisplayName(self):
+        return self.display_name != None and self.display_name != "" and self.display_name.isspace() == False
+
     def forceLoad(self):
         self.sections = TypedList(self.sections, CfgToolshelfSection)
         self.actions = TypedList(self.actions, CfgTouchifyActionCollection)
@@ -42,6 +53,7 @@ class CfgToolshelfPanel:
     def propertygrid_sorted(self):
         return [
             "id",
+            "display_name",
             "icon",
             "sections",
             "actions"
@@ -49,7 +61,8 @@ class CfgToolshelfPanel:
 
     def propertygrid_labels(self):
         labels = {}
-        labels["id"] = "Panel ID (must be unique)"
+        labels["id"] = "Panel ID"
+        labels["display_name"] = "Display Name"
         labels["icon"] = "Display Icon"
         labels["size_x"] = "Panel Width"
         labels["size_y"] = "Panel Height"
@@ -63,5 +76,5 @@ class CfgToolshelfPanel:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["icon"] = {"type": "icon_selection"}
-        restrictions["tab_type"] = {"type": "values", "entries": ["buttons", "tabs"]}
+        restrictions["tab_type"] = {"type": "values", "entries": self.TabType.values()}
         return restrictions

@@ -1,19 +1,14 @@
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-import os
-import json
-from functools import partial
-import sys
-import importlib.util
 
-from ..special.DockerContainer import DockerContainer
+from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 
-from ....cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from ....settings.TouchifyConfig import *
-from ....resources import *
-from .PopupDialog import *
-from ....docker_manager import *
+from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.settings.TouchifyConfig import *
+from touchify.src.resources import *
+from touchify.src.components.touchify.popups.PopupDialog import *
+from touchify.src.docker_manager import *
 
 from krita import *
 
@@ -38,8 +33,8 @@ class PopupDialog_Docker(PopupDialog):
         self.docker_panel.setHiddenMode(True)
         self.grid.addWidget(self.docker_panel)
 
-        dialog_width = self.metadata.actions_item_width - 20
-        dialog_height = self.metadata.actions_item_height - 20
+        dialog_width = self.metadata.docker_width - 20
+        dialog_height = self.metadata.docker_height - 20
         self.docker_panel.setSizeHint([dialog_width, dialog_height])
 
 
@@ -53,8 +48,8 @@ class PopupDialog_Docker(PopupDialog):
         self.updateDocker(True)
    
     def generateSize(self):
-        dialog_width = self.metadata.actions_item_width
-        dialog_height = self.metadata.actions_item_height
+        dialog_width = self.metadata.docker_width
+        dialog_height = self.metadata.docker_height
         return [int(dialog_width), int(dialog_height)]
 
     def triggerPopup(self, parent: QWidget | None):

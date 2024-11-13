@@ -4,6 +4,6 @@
 - [x] Fix JSON Not Found Preventing Plugin Load
 - [x] Fix Theming Issues when Changing Themes (Not a priority)
 - [x] Fix Brush Actions Not Highlighting when in use
-- [ ] Implement the Rest of the Actions for Toolshelfs
+- [x] Implement the Rest of the Actions for Toolshelfs
 - [ ] Add Compact Brush Toggles to Touchify
-- [ ] Finalize Config Naming System
+- [x] Finalize Config Naming System

@@ -1,6 +1,6 @@
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.ext.types.TypedList import TypedList
-from .CfgTouchifyActionDockerGroupItem import CfgTouchifyActionDockerGroupItem
+from touchify.src.cfg.action.CfgTouchifyActionDockerGroupItem import CfgTouchifyActionDockerGroupItem
 from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 
 class CfgTouchifyActionDockerGroup:
@@ -20,7 +20,7 @@ class CfgTouchifyActionDockerGroup:
     
     def propertygrid_labels(self):
         labels = {}
-        labels["id"] = "Group ID (should be unique)"
+        labels["id"] = "Group ID"
         labels["tabs_mode"] = "Tab Mode"
         labels["group_id"] = "Tab Mode Group ID"
         labels["docker_names"] = "Dockers"

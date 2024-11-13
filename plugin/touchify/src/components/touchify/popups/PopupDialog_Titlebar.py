@@ -3,7 +3,7 @@ from krita import Krita
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-from ....stylesheet import Stylesheet
+from touchify.src.stylesheet import Stylesheet
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -35,7 +35,7 @@ class PopupDialog_Titlebar(QFrame):
 
         self.titlebarText = QLabel(self)
         self.titlebarText.setFont(self.getTitleFont(textSize))
-        self.titlebarText.setText(self.parentDialog.metadata.display_name)
+        self.titlebarText.setText(self.parentDialog.metadata.window_title)
         self.ourLayout.addWidget(self.titlebarText)
 
         self.minimizeBtn = QPushButton(self)

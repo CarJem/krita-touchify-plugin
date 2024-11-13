@@ -133,15 +133,10 @@ class ToolshelfPanel(QWidget):
         else:
             tabBar = ToolshelfSectionGroup(self)
             for item in widget_groups[y][x]:
-                if isinstance(item, DockerContainer):
-                    title = self.docker_manager.dockerWindowTitle(item.docker_id)
-                    tabBar.addTab(item, title)
-                elif isinstance(item, TouchifyActionPanel):
-                    tabBar.addTab(item, item.title)
-                elif isinstance(item, ToolshelfPanel):
-                    tabBar.addTab(item, item.panelProperties.id)
-                else:
-                    tabBar.addTab(item, "Unknown")
+                if isinstance(item, DockerContainer): tabBar.addTab(item, self.docker_manager.dockerWindowTitle(item.docker_id))
+                elif isinstance(item, TouchifyActionPanel): tabBar.addTab(item, item.title)
+                elif isinstance(item, ToolshelfPanel): tabBar.addTab(item, item.title())
+                else: tabBar.addTab(item, "Unknown")
             tabBar.setCurrentIndex(0)
             splitter.addWidget(tabBar)
     
@@ -151,20 +146,21 @@ class ToolshelfPanel(QWidget):
 
     def _createActionSection(self, actionInfo: CfgToolshelfSection):
         
-        display_type = "toolbar"
-        if actionInfo.action_section_display_mode == "flat":
-            display_type = "toolbar_flat"
+        display_type = TouchifyActionPanel.DisplayType.Toolbar
+        if actionInfo.action_section_display_mode == CfgToolshelfSection.ActionSectionDisplayMode.Flat:
+            display_type = TouchifyActionPanel.DisplayType.ToolbarFlat
         
         icon_size = actionInfo.action_section_icon_size
         fixed_width = actionInfo.action_section_btn_width
         fixed_height = actionInfo.action_section_btn_height
                
         actionWidget = TouchifyActionPanel(cfg=actionInfo.action_section_contents, parent=self, actions_manager=self.actions_manager, type=display_type, icon_width=icon_size, icon_height=icon_size, item_height=fixed_height, item_width=fixed_width)
-        actionWidget.setTitle(actionInfo.action_section_name)
         actionWidget.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
-        #region ActionContainer Setup    
 
-        if actionInfo.action_section_alignment_x != "none" or actionInfo.action_section_alignment_y != "none":
+        if actionInfo.hasDisplayName(): actionWidget.setTitle(actionInfo.display_name)
+        else: actionWidget.setTitle(actionInfo.action_section_id)
+
+        if actionInfo.action_section_alignment_x != CfgToolshelfSection.SectionAlignmentX.Nothing or actionInfo.action_section_alignment_y != CfgToolshelfSection.SectionAlignmentY.Nothing:
             align_x = actionInfo.action_section_alignment_x
             align_y = actionInfo.action_section_alignment_y
 
@@ -174,86 +170,77 @@ class ToolshelfPanel(QWidget):
             expand_x = QSizePolicy.Policy.Preferred
             expand_y = QSizePolicy.Policy.Preferred
 
-            if align_y == "top": alignment_y = Qt.AlignmentFlag.AlignTop
-            elif align_y == "center": alignment_y = Qt.AlignmentFlag.AlignVCenter
-            elif align_y == "center": alignment_y = Qt.AlignmentFlag.AlignVCenter
-            elif align_y == "bottom": alignment_y = Qt.AlignmentFlag.AlignBottom
-            elif align_y == "expanding": expand_y = QSizePolicy.Policy.Expanding
+            if align_y == CfgToolshelfSection.SectionAlignmentY.Top: alignment_y = Qt.AlignmentFlag.AlignTop
+            elif align_y == CfgToolshelfSection.SectionAlignmentY.Center: alignment_y = Qt.AlignmentFlag.AlignVCenter
+            elif align_y == CfgToolshelfSection.SectionAlignmentY.Bottom: alignment_y = Qt.AlignmentFlag.AlignBottom
+            elif align_y == CfgToolshelfSection.SectionAlignmentY.Expanding: expand_y = QSizePolicy.Policy.Expanding
 
-            if align_x == "left": alignment_x = Qt.AlignmentFlag.AlignLeft
-            elif align_x == "center": alignment_x = Qt.AlignmentFlag.AlignHCenter
-            elif align_x == "right": alignment_x = Qt.AlignmentFlag.AlignRight
-            elif align_x == "expanding": expand_x = QSizePolicy.Policy.Expanding
+            if align_x == CfgToolshelfSection.SectionAlignmentX.Left: alignment_x = Qt.AlignmentFlag.AlignLeft
+            elif align_x == CfgToolshelfSection.SectionAlignmentX.Center: alignment_x = Qt.AlignmentFlag.AlignHCenter
+            elif align_x == CfgToolshelfSection.SectionAlignmentX.Right: alignment_x = Qt.AlignmentFlag.AlignRight
+            elif align_x == CfgToolshelfSection.SectionAlignmentX.Expanding: expand_x = QSizePolicy.Policy.Expanding
 
             actionWidget.layout().setAlignment(alignment_x | alignment_y)
-            if expand_x:
-                actionWidget.setSizePolicy(expand_x, expand_y)
+            if expand_x: actionWidget.setSizePolicy(expand_x, expand_y)
 
         if actionInfo.size_x != 0 or actionInfo.size_y != 0:
-            if actionInfo.size_x != 0:
-                actionWidget.setFixedWidth(actionInfo.size_x)
-            if actionInfo.size_y != 0:
-                actionWidget.setFixedHeight(actionInfo.size_y)
+            if actionInfo.size_x != 0: actionWidget.setFixedWidth(actionInfo.size_x)
+            if actionInfo.size_y != 0: actionWidget.setFixedHeight(actionInfo.size_y)
         else:
-            if actionInfo.min_size_x != 0:
-                actionWidget.setMinimumWidth(actionInfo.min_size_x)
-            if actionInfo.min_size_y != 0:
-                actionWidget.setMinimumHeight(actionInfo.min_size_y)
-            if actionInfo.max_size_x != 0:
-                actionWidget.setMaximumWidth(actionInfo.max_size_x)
-            if actionInfo.max_size_y != 0:
-                actionWidget.setMaximumHeight(actionInfo.max_size_y)
-        #endregion
+            if actionInfo.min_size_x != 0: actionWidget.setMinimumWidth(actionInfo.min_size_x)
+            if actionInfo.min_size_y != 0: actionWidget.setMinimumHeight(actionInfo.min_size_y)
+            if actionInfo.max_size_x != 0: actionWidget.setMaximumWidth(actionInfo.max_size_x)
+            if actionInfo.max_size_y != 0: actionWidget.setMaximumHeight(actionInfo.max_size_y)
+
         return actionWidget
     
     def _createDockerSection(self, actionInfo: CfgToolshelfSection):
-        actionWidget = DockerContainer(self, actionInfo.id, self.docker_manager)
-        if actionInfo.docker_nesting_mode == "docking":
+        actionWidget = DockerContainer(self, actionInfo.docker_id, self.docker_manager)
+        if actionInfo.docker_nesting_mode == CfgToolshelfSection.DockerNestingMode.Docking:
             actionWidget.setDockMode(True)
 
-        if actionInfo.docker_unloaded_visibility == "hidden":
+        if actionInfo.docker_unloaded_visibility == CfgToolshelfSection.DockerUnloadedVisibility.Hidden:
             actionWidget.setHiddenMode(True)
         
-        if actionInfo.docker_loading_priority == "passive":
+        if actionInfo.docker_loading_priority == CfgToolshelfSection.DockerLoadingPriority.Passive:
             actionWidget.setPassiveMode(True)
             
         if actionInfo.size_x != 0 and actionInfo.size_y != 0:
-            size = [actionInfo.size_x, actionInfo.size_y]
-            actionWidget.setSizeHint(size)
-        if actionInfo.min_size_x != 0:
-            actionWidget.setMinimumWidth(actionInfo.min_size_x)
-        if actionInfo.min_size_y != 0:
-            actionWidget.setMinimumHeight(actionInfo.min_size_y)
-        if actionInfo.max_size_x != 0:
-            actionWidget.setMaximumWidth(actionInfo.max_size_x)
-        if actionInfo.max_size_y != 0:
-            actionWidget.setMaximumHeight(actionInfo.max_size_y)
+            actionWidget.setSizeHint([actionInfo.size_x, actionInfo.size_y])
 
+        if actionInfo.min_size_x != 0: actionWidget.setMinimumWidth(actionInfo.min_size_x)
+        if actionInfo.min_size_y != 0: actionWidget.setMinimumHeight(actionInfo.min_size_y)
+        if actionInfo.max_size_x != 0: actionWidget.setMaximumWidth(actionInfo.max_size_x)
+        if actionInfo.max_size_y != 0: actionWidget.setMaximumHeight(actionInfo.max_size_y)
 
-        self.dockerWidgets[actionInfo.id] = actionWidget
+        self.dockerWidgets[actionInfo.docker_id] = actionWidget
         self.pageLoadedSignal.connect(actionWidget.loadWidget)
         self.pageUnloadSignal.connect(actionWidget.unloadWidget)
+
         return actionWidget
     
     def _createSpecialSection(self, actionInfo: CfgToolshelfSection):
         actionWidget = ToolshelfSpecialSection(self, actionInfo)
             
-        if actionInfo.size_x != 0 and actionInfo.size_y != 0:
-            size = [actionInfo.size_x, actionInfo.size_y]
-            actionWidget.setSizeHint(size)
-        if actionInfo.min_size_x != 0:
-            actionWidget.setMinimumWidth(actionInfo.min_size_x)
-        if actionInfo.min_size_y != 0:
-            actionWidget.setMinimumHeight(actionInfo.min_size_y)
-        if actionInfo.max_size_x != 0:
-            actionWidget.setMaximumWidth(actionInfo.max_size_x)
-        if actionInfo.max_size_y != 0:
-            actionWidget.setMaximumHeight(actionInfo.max_size_y)
+        if actionInfo.size_x != 0 and actionInfo.size_y != 0: 
+            actionWidget.setSizeHint([actionInfo.size_x, actionInfo.size_y])
+
+        if actionInfo.min_size_x != 0: actionWidget.setMinimumWidth(actionInfo.min_size_x)
+        if actionInfo.min_size_y != 0: actionWidget.setMinimumHeight(actionInfo.min_size_y)
+        if actionInfo.max_size_x != 0: actionWidget.setMaximumWidth(actionInfo.max_size_x)
+        if actionInfo.max_size_y != 0: actionWidget.setMaximumHeight(actionInfo.max_size_y)
         return actionWidget
 
     def _createSubpageSection(self, actionInfo: CfgToolshelfSection):
         actionWidget = ToolshelfPanel(self, self.page_stack, actionInfo.subpanel_data)
-        actionWidget.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+
+        if actionInfo.size_x != 0 and actionInfo.size_y != 0: 
+            actionWidget.setSizeHint([actionInfo.size_x, actionInfo.size_y])
+
+        if actionInfo.min_size_x != 0: actionWidget.setMinimumWidth(actionInfo.min_size_x)
+        if actionInfo.min_size_y != 0: actionWidget.setMinimumHeight(actionInfo.min_size_y)
+        if actionInfo.max_size_x != 0: actionWidget.setMaximumWidth(actionInfo.max_size_x)
+        if actionInfo.max_size_y != 0: actionWidget.setMaximumHeight(actionInfo.max_size_y)
         
         self.pageLoadedSignal.connect(actionWidget.loadPage)
         self.pageUnloadSignal.connect(actionWidget.unloadPage)
@@ -261,8 +248,14 @@ class ToolshelfPanel(QWidget):
     
     #endregion
 
-    def adjustSize(self):
-        super().adjustSize()
+    def title(self):
+        if self.panelProperties:
+            if self.panelProperties.hasDisplayName(): 
+                return self.panelProperties.display_name
+            else:
+                return self.panelProperties.id
+        else:
+            return "Unknown Panel"
 
     def unloadPage(self):
         self.pageUnloadSignal.emit()

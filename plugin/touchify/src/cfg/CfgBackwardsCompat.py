@@ -61,11 +61,27 @@ class CfgBackwardsCompat:
             Helpers.setVersion(args, 1)
         return args
     
+    def CfgToolshelfSection(args: dict[str, any]):
+        if not args: return args
+        if Helpers.isLegacyConfig(args) or Helpers.getVersion(args) == 1:
+            Helpers.changeVarName(args, "id", "docker_id")
+            Helpers.changeVarName(args, "action_section_name", "action_section_id")
+            Helpers.setVersion(args, 2)
+        return args
+
+    
     def CfgTouchifyActionPopup(args: dict[str, any]):
         if not args: return args
         if Helpers.isLegacyConfig(args):
             Helpers.changeVarName(args, "btnName", "display_name")
             Helpers.setVersion(args, 1)
+        if Helpers.getVersion(args) == 1:
+            Helpers.changeVarName(args, "display_name", "window_title")
+            if "type" in args:
+                if args["type"] == "docker":
+                    Helpers.changeVarName(args, "actions_item_width", "docker_width")
+                    Helpers.changeVarName(args, "actions_item_height", "docker_height")
+            Helpers.setVersion(args, 2)
         return args
 
     def CfgToolbox(args: dict[str, any]):

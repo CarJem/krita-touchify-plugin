@@ -3,13 +3,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from ....stylesheet import Stylesheet
+from touchify.src.stylesheet import Stylesheet
 
-from .PopupDialog_Titlebar import PopupDialog_Titlebar
+from touchify.src.components.touchify.popups.PopupDialog_Titlebar import PopupDialog_Titlebar
 
-from ....cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from ....settings.TouchifyConfig import *
-from ....resources import *
+from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.settings.TouchifyConfig import *
+from touchify.src.resources import *
 
 from krita import *
 
@@ -17,6 +17,7 @@ POPUP_BTN_IDENTIFIER = " [Popup]"
 
 
 class PopupDialog(QDockWidget):
+
 
 
     
@@ -29,6 +30,7 @@ class PopupDialog(QDockWidget):
         self.titlebarEnabled = False
         self.isCollapsed = False
         self.oldSize = None
+        self.oldMinSize = None
         self.autoConceal = False
 
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
@@ -81,7 +83,7 @@ class PopupDialog(QDockWidget):
                 actions = qobj.actions()
                 if actions:
                     for action in actions:
-                        if action.text() == self.metadata.display_name + POPUP_BTN_IDENTIFIER:
+                        if action.text() == self.metadata.id + POPUP_BTN_IDENTIFIER:
                             return self.getGeometry(qobj.mapToGlobal(QPoint(0,0)), qobj.width(), qobj.height())
             return 0, 0, 0, 0
 
@@ -95,11 +97,11 @@ class PopupDialog(QDockWidget):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
 
-        if self.windowMode == "popup":
+        if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
             self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
             self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, True)
             self.autoConceal = True
-        elif self.windowMode == "window":
+        elif self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
             self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
             self.setMouseTracking(True)
             self.autoConceal = False
@@ -108,7 +110,7 @@ class PopupDialog(QDockWidget):
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
             self.setWindowOpacity(self.metadata.opacity)
 
-        if self.windowMode == "window":
+        if self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
             self.titlebarEnabled = True
             self._toolbar = PopupDialog_Titlebar(self)
             self.setTitleBarWidget(self._toolbar)
@@ -136,13 +138,17 @@ class PopupDialog(QDockWidget):
         self.containerWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.frameLayout.addWidget(self.containerWidget)
 
+    def generateMaxMinSize(self):
+        return [0, 0, 0, 0]
+
+
     def generateSize(self):
         return [0, 0]
     
     def triggerPopup(self, parent: QWidget | None):
         if self.isVisible():
             self.close()
-            if not self.windowMode == "popup":
+            if not self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
                 return
         
         actual_x = 0
@@ -158,9 +164,11 @@ class PopupDialog(QDockWidget):
         self.setGeometry(actual_x, actual_y, dialog_width, dialog_height)
         self.show()
 
-        if self.windowMode == "popup":
+        if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
             self.setFixedSize(dialog_width, dialog_height)
             self.activateWindow()
+        elif self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
+            self.setMinimumSize(dialog_width, dialog_height)
 
     def shutdownWidget(self):
         qApp.removeEventFilter(self)
@@ -170,19 +178,22 @@ class PopupDialog(QDockWidget):
     #region Window Methods
 
     def toggleMinimized(self):
-        if self._toolbar:
-            if self.isCollapsed:
-                self.setMinimumSize(0, 0)
-                self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
-                self.resize(self.oldSize)
-                self.containerWidget.setVisible(True)
-                self.oldSize = None
-                self.isCollapsed = False
-            else:
-                self.oldSize = self.size()
-                self.setFixedSize(self._toolbar.width(), self._toolbar.height())
-                self.containerWidget.setVisible(False)
-                self.isCollapsed = True
+        if self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
+            if self._toolbar:
+                if self.isCollapsed:
+                    self.setMinimumSize(self.oldMinSize)
+                    self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
+                    self.resize(self.oldSize)
+                    self.containerWidget.setVisible(True)
+                    self.oldSize = None
+                    self.oldMinSize = None
+                    self.isCollapsed = False
+                else:
+                    self.oldSize = self.size()
+                    self.oldMinSize = self.minimumSize()
+                    self.setFixedSize(self._toolbar.width(), self._toolbar.height())
+                    self.containerWidget.setVisible(False)
+                    self.isCollapsed = True
 
 
     #endregion

@@ -1,3 +1,4 @@
+from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
@@ -17,7 +18,41 @@ class CfgToolshelfSection:
         LayerBlendingMode = "layer_blending_options"
         LayerLabelBox = "layer_label_box"
 
-    id: str = ""
+    class SectionAlignmentX(StrEnum):
+        Nothing = "none"
+        Left = "left"
+        Center = "center"
+        Right = "right"
+        Expanding = "expanding"
+    
+    class SectionAlignmentY(StrEnum):
+        Nothing = "none"
+        Top = "top"
+        Center = "center"
+        Bottom = "bottom"
+        Expanding = "expanding"
+
+    class ActionSectionDisplayMode(StrEnum):
+        Normal = "normal"
+        Flat = "flat"
+
+    class DockerNestingMode(StrEnum):
+        Normal = "normal"
+        Docking = "docking"
+
+    class DockerUnloadedVisibility(StrEnum):
+        Normal = "normal"
+        Hidden = "hidden"
+
+    class DockerLoadingPriority(StrEnum):
+        Normal = "normal"
+        Passive = "passive"
+
+
+
+    display_name: str = ""
+
+    docker_id: str = ""
 
     size_x: int = 0
     size_y: int = 0
@@ -37,8 +72,8 @@ class CfgToolshelfSection:
     docker_unloaded_visibility: str = "normal"
     docker_loading_priority: str = "normal"
 
+    action_section_id: str = "Panel"
     action_section_display_mode: str = "normal"
-    action_section_name: str = "Panel"
     action_section_contents: TypedList[CfgTouchifyActionCollection] = []
     action_section_alignment_x: str = "none"
     action_section_alignment_y: str = "none"
@@ -48,9 +83,10 @@ class CfgToolshelfSection:
 
     special_item_type: str = "none"
 
-    json_version: int = 1
+    json_version: int = 2
 
     def __init__(self, **args) -> None:
+        args = CfgBackwardsCompat.CfgToolshelfSection(args)
         from .CfgToolshelfPanel import CfgToolshelfPanel
         self.subpanel_data: CfgToolshelfPanel = CfgToolshelfPanel()
         Extensions.dictToObject(self, args, [CfgToolshelfPanel])
@@ -60,20 +96,30 @@ class CfgToolshelfSection:
     def forceLoad(self):
         self.action_section_contents = TypedList(self.action_section_contents, CfgTouchifyActionCollection)
 
+    def hasDisplayName(self):
+        return self.display_name != None and self.display_name != "" and self.display_name.isspace() == False
+
     def __str__(self):
         if self.section_type == CfgToolshelfSection.SectionType.Actions:
-            name = self.action_section_name.replace("\n", "\\n") + " (Actions)"
+            name = self.action_section_id.replace("\n", "\\n")
+            suffix = "(Actions)"
         elif self.section_type == CfgToolshelfSection.SectionType.Subpanel:
-            name = self.subpanel_data.id.replace("\n", "\\n") + " (Subpanel)"
+            name = self.subpanel_data.id.replace("\n", "\\n")
+            suffix = "(Subpanel)"
         elif self.section_type == CfgToolshelfSection.SectionType.Special:
-            name = self.special_item_type.replace("\n", "\\n") + " (Special)"
+            name = self.special_item_type.replace("\n", "\\n")
+            suffix = "(Special)"
         elif self.section_type == CfgToolshelfSection.SectionType.Docker:
-            name = self.id.replace("\n", "\\n") + " (Docker)"
+            name = self.docker_id.replace("\n", "\\n")
+            suffix = "(Docker)"
         else:
-            name = self.id.replace("\n", "\\n")
+            name = self.display_name.replace("\n", "\\n")
+            suffix = "(Unknown)"
+
+        if self.hasDisplayName():
+            name = self.display_name
             
-        name += f" [{self.panel_x}, {self.panel_y}]"
-        return name
+        return f"{name} {suffix} [{self.panel_x}, {self.panel_y}]"
     
     def propertygrid_hints(self):
         hints = {}
@@ -83,7 +129,7 @@ class CfgToolshelfSection:
     
     def propertygrid_sorted(self):
         global_groups = [
-            "section_type",
+            "display_name",
             "min_size_x",
             "min_size_y",
             "max_size_x",
@@ -91,18 +137,19 @@ class CfgToolshelfSection:
             "size_x",
             "size_y",
             "panel_x",
-            "panel_y"
+            "panel_y",
+            "section_type"
         ]
 
         docker_groups = [
-            "id", 
+            "docker_id", 
             "docker_nesting_mode", 
             "docker_unloaded_visibility", 
             "docker_loading_priority"
         ]
 
         action_groups = [
-            "action_section_name", 
+            "action_section_id", 
             "action_section_display_mode",
             "action_section_alignment_x", 
             "action_section_alignment_y", 
@@ -124,7 +171,7 @@ class CfgToolshelfSection:
     
     def propertygrid_hidden(self):
         action_groups = [
-            "action_section_name", 
+            "action_section_id", 
             "action_section_display_mode",
             "action_section_alignment_x", 
             "action_section_alignment_y", 
@@ -135,7 +182,7 @@ class CfgToolshelfSection:
         ]
 
         docker_groups = [
-            "id", 
+            "docker_id", 
             "docker_nesting_mode", 
             "docker_unloaded_visibility", 
             "docker_loading_priority"
@@ -167,7 +214,9 @@ class CfgToolshelfSection:
 
     def propertygrid_labels(self):
         labels = {}
-        labels["id"] = "Docker ID"
+
+        labels["display_name"] = "Display Name"
+
         labels["size_x"] = "Base Width"
         labels["size_y"] = "Base Height"
         labels["max_size_x"] = "Max Width"
@@ -178,12 +227,13 @@ class CfgToolshelfSection:
         labels["panel_x"] = "Panel Column"
         labels["section_type"] = "Section Type"
 
+        labels["docker_id"] = "Docker ID"
         labels["docker_nesting_mode"] = "Nesting Mode"
         labels["docker_unloaded_visibility"] = "Unloaded Visibility"
         labels["docker_loading_priority"] = "Loading Priority"
 
         labels["action_section_display_mode"] = "Display Mode"
-        labels["action_section_name"] = "Section Name"
+        labels["action_section_id"] = "Section ID"
         labels["action_section_contents"] = "Actions"
         labels["action_section_alignment_x"] = "Horizontal Alignment"
         labels["action_section_alignment_y"] = "Vertical Alignment"
@@ -208,7 +258,6 @@ class CfgToolshelfSection:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["id"] = {"type": "docker_selection"}
         restrictions["panel_x"] = {"type": "range", "min": 0}
         restrictions["panel_y"] = {"type": "range", "min": 0}
         restrictions["size_x"] = {"type": "range", "min": 0}
@@ -219,15 +268,16 @@ class CfgToolshelfSection:
         restrictions["max_size_y"] = {"type": "range", "min": 0}
         restrictions["section_type"] = {"type": "values", "entries": self.SectionType.values()}
 
-        restrictions["docker_nesting_mode"] = {"type": "values", "entries": ["normal", "docking"]}
-        restrictions["docker_unloaded_visibility"] = {"type": "values", "entries": ["normal", "hidden"]}
-        restrictions["docker_loading_priority"] = {"type": "values", "entries": ["normal", "passive"]}
+        restrictions["docker_id"] = {"type": "docker_selection"}
+        restrictions["docker_nesting_mode"] = {"type": "values", "entries": self.DockerNestingMode.values()}
+        restrictions["docker_unloaded_visibility"] = {"type": "values", "entries": self.DockerUnloadedVisibility.values()}
+        restrictions["docker_loading_priority"] = {"type": "values", "entries": self.DockerLoadingPriority.values()}
 
-        restrictions["action_section_display_mode"] = {"type": "values", "entries": ["normal", "flat"]}
+        restrictions["action_section_display_mode"] = {"type": "values", "entries": self.ActionSectionDisplayMode.values()}
         restrictions["action_section_btn_width"] = {"type": "range", "min": 0}
         restrictions["action_section_btn_height"] = {"type": "range", "min": 0}
-        restrictions["action_section_alignment_x"] = {"type": "values", "entries": ["none", "left", "center", "right", "expanding"]}
-        restrictions["action_section_alignment_y"] = {"type": "values", "entries": ["none", "top", "center", "bottom", "expanding"]}
+        restrictions["action_section_alignment_x"] = {"type": "values", "entries": self.SectionAlignmentX.values()}
+        restrictions["action_section_alignment_y"] = {"type": "values", "entries": self.SectionAlignmentY.values()}
         restrictions["action_section_icon_size"] = {"type": "range", "min": 0}
 
         restrictions["special_item_type"] = {"type": "values", "entries": self.SpecialItemType.values()}

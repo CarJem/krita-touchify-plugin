@@ -2,26 +2,26 @@ from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from .components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
+from touchify.src.components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
-from .components.touchify.actions.TouchifyActionMenu import TouchifyActionMenu
+from touchify.src.components.touchify.actions.TouchifyActionMenu import TouchifyActionMenu
 
-from .components.touchify.actions.TouchifyActionButton import TouchifyActionButton
+from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
 
-from .variables import *
+from touchify.src.variables import *
 
-from .cfg.action.CfgTouchifyAction import CfgTouchifyAction
-from .cfg.action.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
-from .cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from .cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
-from .ext.KritaExtensions import *
+from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
+from touchify.src.cfg.action.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
+from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
+from touchify.src.ext.KritaExtensions import *
 
 from touchify.src.settings.TouchifyConfig import TouchifyConfig
 from touchify.src.resources import ResourceManager
 
-from .components.touchify.popups.PopupDialog import PopupDialog
-from .components.touchify.popups.PopupDialog_Actions import PopupDialog_Actions
-from .components.touchify.popups.PopupDialog_Docker import PopupDialog_Docker
+from touchify.src.components.touchify.popups.PopupDialog import PopupDialog
+from touchify.src.components.touchify.popups.PopupDialog_Actions import PopupDialog_Actions
+from touchify.src.components.touchify.popups.PopupDialog_Docker import PopupDialog_Docker
 
 if TYPE_CHECKING:
     from .window import TouchifyWindow
@@ -83,6 +83,7 @@ class ActionManager(QObject):
         self.custom_docker_states = {}
         self.registeredActions = {}
         self.registeredActionsData = {}
+        self.active_popups: dict[str, PopupDialog] = {}
 
 
         self.__lastToolboxTool: str = ""
@@ -296,14 +297,29 @@ class ActionManager(QObject):
         else: __btn.setChecked(True)
 
     def __triggerPopup(self, data: CfgTouchifyActionPopup, _parent: QWidget = None):
-        if data.type == CfgTouchifyActionPopup.Variants.Actions:
-            popup = PopupDialog_Actions(self.appEngine.windowSource.qwindow().window(), data, self)
-        elif data.type == CfgTouchifyActionPopup.Variants.Docker:
-            popup = PopupDialog_Docker(self.appEngine.windowSource.qwindow().window(), data, self.appEngine.docker_management)
-        elif data.type == CfgTouchifyActionPopup.Variants.Toolshelf:
-            popup = PopupDialog_Toolshelf(self.appEngine.windowSource.qwindow().window(), data, self, self.appEngine.docker_management)
-        else:
-            popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
+        is_dead = True
+        if data.id in self.active_popups:
+            is_dead = False
+            popup = self.active_popups[data.id]
+            try: 
+                popup.isVisible()
+            except:
+                is_dead = True
+
+        if is_dead:
+            if data.id in self.active_popups: 
+                del self.active_popups[data.id]
+
+            if data.type == CfgTouchifyActionPopup.Variants.Actions:
+                popup = PopupDialog_Actions(self.appEngine.windowSource.qwindow().window(), data, self)
+            elif data.type == CfgTouchifyActionPopup.Variants.Docker:
+                popup = PopupDialog_Docker(self.appEngine.windowSource.qwindow().window(), data, self.appEngine.docker_management)
+            elif data.type == CfgTouchifyActionPopup.Variants.Toolshelf:
+                popup = PopupDialog_Toolshelf(self.appEngine.windowSource.qwindow().window(), data, self, self.appEngine.docker_management)
+            else:
+                popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
+            self.active_popups[data.id] = popup
+
         popup.triggerPopup(_parent)
 
        
@@ -357,6 +373,8 @@ class ActionManager(QObject):
                 onClick = (lambda: self.action_workspace(data.workspace_id))
             case CfgTouchifyAction.Variants.DockerGroup:
                 onClick = (lambda: self.action_dockergroup(data.docker_group_data))
+            case CfgTouchifyAction.Variants.CanvasPreset:
+                onClick = (lambda: self.action_canvas(data.canvas_preset_data))
 
         btn = self.button_main(onClick, data.text, False)
         self.__setButtonDisplay(data, btn)

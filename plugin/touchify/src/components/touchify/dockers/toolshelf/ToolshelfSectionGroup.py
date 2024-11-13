@@ -4,6 +4,7 @@ from krita import *
 
 from typing import TYPE_CHECKING
 
+from touchify.src.cfg.toolshelf.CfgToolshelfPanel import CfgToolshelfPanel
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 if TYPE_CHECKING:
     from .ToolshelfPanel import ToolshelfPanel
@@ -24,7 +25,7 @@ class ToolshelfSectionGroup(QWidget):
         
         self.mode = self.panel.tabType
 
-        if self.mode == "buttons":
+        if self.mode == CfgToolshelfPanel.TabType.Buttons:
             self.tabButton = QPushButton(self)
             self.tabButtonMenu = QMenu(self)
             self.tabButton.setMenu(self.tabButtonMenu)
@@ -82,7 +83,7 @@ class ToolshelfSectionGroup(QWidget):
                 widget.updateGeometry()
                 widget.adjustSize()
 
-        if self.mode == "buttons":
+        if self.mode == CfgToolshelfPanel.TabType.Buttons:
             if index in self.tabTitles:
                 self.tabButton.setText(self.tabTitles[index])
         else:

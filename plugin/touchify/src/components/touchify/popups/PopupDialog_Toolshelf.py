@@ -26,9 +26,11 @@ class PopupDialog_Toolshelf(PopupDialog):
 
         self.docker_manager: "DockerManager" = docker_manager
         self.actions_manager: "ActionManager" = action_manager
+        self.toolshelf_data = args.toolshelf_data
 
         self.grid = QHBoxLayout(self)
-        self.toolshelf_data = args.toolshelf_data
+        self.grid.setContentsMargins(0,0,0,0)
+        self.grid.setSpacing(0)
         self.initLayout()
 
         stylesheet = f"""QScrollArea {{ background: transparent; }}

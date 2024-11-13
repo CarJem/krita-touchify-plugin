@@ -45,7 +45,6 @@
                     ]
                 }
             ],
-            "action_section_name": "Actions (Left)",
             "action_section_alignment_x": "left",
             "action_section_alignment_y": "none",
             "action_section_btn_width": 22,
@@ -55,7 +54,6 @@
             "docker_loading_priority": "normal",
             "docker_nesting_mode": "normal",
             "docker_unloaded_visibility": "normal",
-            "id": "",
             "max_size_x": 0,
             "max_size_y": 0,
             "min_size_x": 0,
@@ -64,7 +62,10 @@
             "panel_y": 1,
             "section_type": "actions",
             "size_x": 0,
-            "size_y": 0
+            "size_y": 0,
+            "docker_id": "",
+            "action_section_id": "Actions (Left)",
+            "json_version": 2
         },
         {
             "subpanel_data": {
@@ -125,7 +126,8 @@
                                     "sections": [],
                                     "json_version": 1
                                 },
-                                "actions_items": []
+                                "actions_items": [],
+                                "json_version": 2
                             },
                             "show_text": false,
                             "show_icon": true
@@ -134,7 +136,6 @@
                     "row_name": "Actions Row"
                 }
             ],
-            "action_section_name": "Actions (Right)",
             "section_type": "actions",
             "panel_x": 1,
             "panel_y": 1,
@@ -144,7 +145,6 @@
             "min_size_y": 0,
             "size_x": 0,
             "size_y": 0,
-            "id": "",
             "docker_nesting_mode": "normal",
             "docker_unloaded_visibility": "normal",
             "docker_loading_priority": "normal",
@@ -153,7 +153,10 @@
             "action_section_alignment_y": "none",
             "action_section_btn_width": 22,
             "action_section_btn_height": 22,
-            "action_section_icon_size": 16
+            "action_section_icon_size": 16,
+            "docker_id": "",
+            "action_section_id": "Actions (Right)",
+            "json_version": 2
         },
         {
             "subpanel_data": {
@@ -161,11 +164,12 @@
                 "actions": [],
                 "json_version": 1
             },
-            "id": "OverviewDocker",
             "size_x": 300,
             "size_y": 200,
             "docker_nesting_mode": "docking",
-            "action_section_contents": []
+            "action_section_contents": [],
+            "docker_id": "OverviewDocker",
+            "json_version": 2
         },
         {
             "subpanel_data": {
@@ -173,12 +177,10 @@
                 "actions": [],
                 "json_version": 1
             },
-            "id": "Touchify/ReferenceTabsDocker",
             "docker_nesting_mode": "normal",
             "size_x": 300,
             "size_y": 200,
             "action_section_contents": [],
-            "action_section_name": "Panel",
             "action_section_alignment_x": "none",
             "action_section_alignment_y": "none",
             "action_section_btn_width": 0,
@@ -194,8 +196,10 @@
             "panel_x": 0,
             "panel_y": 0,
             "section_type": "docker",
-            "json_version": 1,
-            "special_item_type": "none"
+            "json_version": 2,
+            "special_item_type": "none",
+            "docker_id": "Touchify/ReferenceTabsDocker",
+            "action_section_id": "Panel"
         },
         {
             "subpanel_data": {
@@ -204,8 +208,7 @@
                 "json_version": 1
             },
             "action_section_contents": [],
-            "action_section_name": "Panel",
-            "json_version": 1,
+            "json_version": 2,
             "section_type": "docker",
             "min_size_x": 0,
             "min_size_y": 0,
@@ -215,7 +218,6 @@
             "size_y": 0,
             "panel_x": 0,
             "panel_y": 0,
-            "id": "pykrita_imagine_board_docker",
             "docker_nesting_mode": "normal",
             "docker_unloaded_visibility": "normal",
             "docker_loading_priority": "normal",
@@ -225,7 +227,9 @@
             "action_section_btn_width": 0,
             "action_section_btn_height": 0,
             "action_section_icon_size": 0,
-            "special_item_type": "none"
+            "special_item_type": "none",
+            "docker_id": "pykrita_imagine_board_docker",
+            "action_section_id": "Panel"
         }
     ],
     "actions": [
@@ -266,12 +270,13 @@
                                 "actions_item_height": 300,
                                 "opacity": 1.0,
                                 "actions_close_on_click": false,
-                                "display_name": "",
                                 "docker_id": "PatternDocker",
-                                "icon": "",
                                 "id": "",
                                 "type": "docker",
-                                "window_type": "popup"
+                                "window_type": "popup",
+                                "json_version": 2,
+                                "docker_width": 300,
+                                "docker_height": 300
                             },
                             "canvas_preset_data": {}
                         },
@@ -308,12 +313,13 @@
                                 "actions_item_height": 300,
                                 "opacity": 1.0,
                                 "actions_close_on_click": false,
-                                "display_name": "",
                                 "docker_id": "PatternDocker",
-                                "icon": "",
                                 "id": "",
                                 "type": "docker",
-                                "window_type": "popup"
+                                "window_type": "popup",
+                                "json_version": 2,
+                                "docker_width": 300,
+                                "docker_height": 300
                             },
                             "canvas_preset_data": {}
                         },
@@ -350,12 +356,13 @@
                                 "actions_item_height": 300,
                                 "opacity": 1.0,
                                 "actions_close_on_click": false,
-                                "display_name": "",
                                 "docker_id": "PatternDocker",
-                                "icon": "",
                                 "id": "",
                                 "type": "docker",
-                                "window_type": "popup"
+                                "window_type": "popup",
+                                "json_version": 2,
+                                "docker_width": 300,
+                                "docker_height": 300
                             },
                             "canvas_preset_data": {}
                         },
@@ -383,7 +390,8 @@
                                     "sections": [],
                                     "json_version": 1
                                 },
-                                "actions_items": []
+                                "actions_items": [],
+                                "json_version": 2
                             },
                             "canvas_preset_data": {}
                         },
@@ -411,7 +419,8 @@
                                     "sections": [],
                                     "json_version": 1
                                 },
-                                "actions_items": []
+                                "actions_items": [],
+                                "json_version": 2
                             },
                             "canvas_preset_data": {}
                         }
@@ -447,12 +456,13 @@
                         "actions_item_height": 300,
                         "opacity": 1.0,
                         "actions_close_on_click": false,
-                        "display_name": "",
                         "docker_id": "PatternDocker",
-                        "icon": "",
                         "id": "",
                         "type": "docker",
-                        "window_type": "popup"
+                        "window_type": "popup",
+                        "json_version": 2,
+                        "docker_width": 300,
+                        "docker_height": 300
                     },
                     "canvas_preset_data": {}
                 },
@@ -477,7 +487,8 @@
                             "sections": [],
                             "json_version": 1
                         },
-                        "actions_items": []
+                        "actions_items": [],
+                        "json_version": 2
                     },
                     "workspace_id": "",
                     "show_text": false,
@@ -505,7 +516,8 @@
                             "sections": [],
                             "json_version": 1
                         },
-                        "actions_items": []
+                        "actions_items": [],
+                        "json_version": 2
                     },
                     "workspace_id": "",
                     "show_text": false,
@@ -533,7 +545,8 @@
                             "sections": [],
                             "json_version": 1
                         },
-                        "actions_items": []
+                        "actions_items": [],
+                        "json_version": 2
                     },
                     "workspace_id": "",
                     "show_text": false,
@@ -561,7 +574,8 @@
                             "sections": [],
                             "json_version": 1
                         },
-                        "actions_items": []
+                        "actions_items": [],
+                        "json_version": 2
                     },
                     "workspace_id": "",
                     "show_text": false,
@@ -594,7 +608,8 @@
                             "sections": [],
                             "json_version": 1
                         },
-                        "actions_items": []
+                        "actions_items": [],
+                        "json_version": 2
                     },
                     "show_text": false,
                     "show_icon": true
@@ -621,7 +636,8 @@
                             "sections": [],
                             "json_version": 1
                         },
-                        "actions_items": []
+                        "actions_items": [],
+                        "json_version": 2
                     },
                     "show_text": false,
                     "show_icon": true
