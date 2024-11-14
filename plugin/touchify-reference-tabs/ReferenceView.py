@@ -14,15 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import Qt, QPointF, QRectF, QEvent, qDebug, qWarning, qCritical, QLineF
-from PyQt5.QtGui import QImage, QPixmap, QPalette, QPainter, QWheelEvent, QNativeGestureEvent, QTouchEvent, QTransform
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QMessageBox, \
-                            QSpinBox, QToolButton, QPushButton, \
-                            QColorDialog, QDialog, QSizePolicy, \
-                            QGraphicsView, QGraphicsScene, QGraphicsPixmapItem, QScroller, \
-                            qApp
+from PyQt5.QtCore import Qt, QEvent, QLineF
+from PyQt5.QtGui import QImage, QPainter, QWheelEvent, QTouchEvent
+from PyQt5.QtWidgets import QSizePolicy, \
+                            QGraphicsView
                             
-from .....ext.KritaExtensions import *
+from touchify.src.ext.KritaExtensions import *
 from krita import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

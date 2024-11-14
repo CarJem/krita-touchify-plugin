@@ -206,7 +206,7 @@
                 "actions_icon_width": 30,
                 "actions_icon_height": 30,
                 "type": "docker",
-                "docker_id": "pykrita_compactbrushtoggler",
+                "docker_id": "Touchify/CompactBrushToggler",
                 "id": "brushOptionsPopup",
                 "window_type": "popup",
                 "json_version": 2,

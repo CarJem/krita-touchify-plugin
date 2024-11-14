@@ -39,13 +39,11 @@ TOUCHIFY_ID_ACTION_DOCKERUTILS_TOGGLERIGHT="touchify_dockerutils_toggleright"
 TOUCHIFY_ID_ACTION_OTHER_SHOWPOPUPPALETTE="touchify_showPopupPalette"
 TOUCHIFY_ID_ACTION_OTHER_SHOWMENUBARPOPUP="touchify_showPopupMenu"
 TOUCHIFY_ID_ACTION_CONFIGURE="touchify_configure"
-TOUCHIFY_ID_ACTION_CANVAS_DECORATION_PRESETS="touchify_canvasDecoPopup"
 #-----------------#
 # Docker IDs
 TOUCHIFY_ID_DOCKER_COLOROPTIONSDOCKER="Touchify/ColorOptionsDocker"
 TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER="Touchify/BrushOptionsDocker"
 TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER="Touchify/ToolshelfDocker"
-TOUCHIFY_ID_DOCKER_REFERENCETABSDOCKER="Touchify/ReferenceTabsDocker"
 TOUCHIFY_ID_DOCKER_TOOLBOX="Touchify/TouchifyToolbox"
 #-----------------#
 # Setting Sections

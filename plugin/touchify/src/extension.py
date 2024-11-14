@@ -2,20 +2,19 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
 
-from .variables import *
+from touchify.src.variables import *
 
-from .settings.TouchifyConfig import TouchifyConfig
+from touchify.src.settings.TouchifyConfig import TouchifyConfig
 
 
-from .ext.KritaSettings import KritaSettings
+from touchify.src.ext.KritaSettings import KritaSettings
 
-from .components.touchify.dockers.color_options.ColorOptionsDocker import ColorOptionsDocker
-from .components.touchify.dockers.brush_options.BrushOptionsDocker import BrushOptionsDocker
-from .components.touchify.dockers.toolshelf.ToolshelfDocker import ToolshelfDocker
-from .components.touchify.dockers.reference_tabs.ReferenceTabsDocker import ReferenceTabsDocker
-from .components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
+from touchify.src.components.touchify.dockers.color_options.ColorOptionsDocker import ColorOptionsDocker
+from touchify.src.components.touchify.dockers.brush_options.BrushOptionsDocker import BrushOptionsDocker
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDocker import ToolshelfDocker
+from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
 
-from .window import TouchifyWindow
+from touchify.src.window import TouchifyWindow
 
 class TouchifyExtension(Extension):
 
@@ -84,5 +83,4 @@ Krita.instance().addExtension(TouchifyExtension(Krita.instance()))
 Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_COLOROPTIONSDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ColorOptionsDocker))
 Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, BrushOptionsDocker))
 Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ToolshelfDocker))
-Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_REFERENCETABSDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ReferenceTabsDocker))
 Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_TOOLBOX, DockWidgetFactoryBase.DockPosition.DockRight, ToolboxDocker))

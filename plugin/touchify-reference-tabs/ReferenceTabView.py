@@ -14,13 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import Qt, QPointF, QRectF, QEvent, qDebug, qWarning, qCritical, QLineF
-from PyQt5.QtGui import QImage, QPixmap, QPalette, QPainter, QWheelEvent, QNativeGestureEvent, QTouchEvent, QTransform
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QMessageBox, \
-                            QSpinBox, QToolButton, QPushButton, \
-                            QColorDialog, QDialog, QSizePolicy, \
-                            QGraphicsView, QGraphicsScene, QGraphicsPixmapItem, QScroller, \
-                            qApp
+from PyQt5.QtCore import Qt, QPointF, QRectF
+from PyQt5.QtGui import QImage, QPixmap, QPalette
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QSpinBox, QToolButton, QPushButton, \
+                            QColorDialog, QDialog, QGraphicsScene, QGraphicsPixmapItem, qApp
 from math import radians, sin, cos
 from krita import *
  
@@ -31,7 +28,7 @@ ZOOM_STEP = 10
 
 useAngleSelector = True
 
-from ....krita.KisAngleSelector import KisAngleSelector as AngleSelector
+from touchify.src.components.krita.KisAngleSelector import KisAngleSelector as AngleSelector
 from .ReferenceView import ReferenceView
 
 

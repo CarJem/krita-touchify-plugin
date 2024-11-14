@@ -17,16 +17,11 @@
 
 from krita import Krita, DockWidget, DockWidgetFactory, DockWidgetFactoryBase
 
-from PyQt5.QtCore import QFileInfo, QMimeDatabase, pyqtSignal
-from PyQt5.QtGui import QImage, QImageReader
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QMenuBar, QTabWidget, \
-                            QAction, QActionGroup, QFileDialog
 
 from .ReferenceTabsWidget import ReferenceTabsWidget
 
 # constant string for the config group in kritarc
 PLUGIN_CONFIG = "Touchify/ReferenceTabsDocker"
-
 
 
 class ReferenceTabsDocker(DockWidget):
@@ -49,4 +44,6 @@ class ReferenceTabsDocker(DockWidget):
 
 def writeCurrentFolderToConfig(currentFolder):
     Krita.instance().writeSetting(PLUGIN_CONFIG, "currentFolder", currentFolder)
+
+Krita.instance().addDockWidgetFactory(DockWidgetFactory(PLUGIN_CONFIG, DockWidgetFactoryBase.DockPosition.DockRight, ReferenceTabsDocker))
 

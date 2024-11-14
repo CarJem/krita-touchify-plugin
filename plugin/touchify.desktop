@@ -4,5 +4,5 @@ ServiceTypes=Krita/PythonPlugin
 X-KDE-Library=touchify
 X-Python-2-Compatible=false
 X-Krita-Manual=manual.html
-Name=Touchify Tweaks
-Comment=Tweaks and QOL Addons for Krita
+Name=Touchify
+Comment=A Plugin that expands and enhances your workspace, ideal for touchscreens and tablets

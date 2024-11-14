@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=touchify-reference-tabs
+X-Python-2-Compatible=false
+X-Krita-Manual=manual.html
+Name=Touchify - Reference Tabs
+Comment=[Requires Touchify] Docker for viewing reference images in tabs.
