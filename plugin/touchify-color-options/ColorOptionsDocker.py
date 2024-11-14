@@ -2,17 +2,18 @@
 from krita import *
 from PyQt5.QtCore import *
 
-from .....variables import *
+from touchify.src.variables import *
 
-from ....pyqt.widgets.ColorFramedButton import ColorFramedButton
-from .....resources import ResourceManager
-from .....helpers import TouchifyHelpers
+from touchify.src.components.pyqt.widgets.ColorFramedButton import ColorFramedButton
+from touchify.src.resources import ResourceManager
+from touchify.src.helpers import TouchifyHelpers
 
-DOCKER_TITLE = 'Color Options'
+DOCKER_TITLE = 'Touchify Addon: Color Options'
+DOCKER_ID="Touchify/ColorOptionsDocker"
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .....window import TouchifyWindow
+    from touchify.src.window import TouchifyWindow
 
 class ColorSourceToggle(QWidget):
     def __init__(self, parent: QWidget | None = None, cubeSize: int = 25):
@@ -115,7 +116,7 @@ class ColorOptionsDocker(DockWidget):
         self.setFixedHeight(50)
         self.colorToggle.onCanvasChanged(self.canvas())
 
-    def setup(self, instance: "TouchifyWindow"):
+    def addonSetup(self, instance: "TouchifyWindow"):
         self.colorToggle.setup(instance)
 
     def showEvent(self, event):
@@ -128,3 +129,5 @@ class ColorOptionsDocker(DockWidget):
     # 'pass' means do not do anything
     def canvasChanged(self, canvas):
         self.colorToggle.onCanvasChanged(canvas)
+
+Krita.instance().addDockWidgetFactory(DockWidgetFactory(DOCKER_ID, DockWidgetFactoryBase.DockPosition.DockRight, ColorOptionsDocker))

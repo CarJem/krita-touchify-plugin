@@ -3,30 +3,30 @@ from PyQt5.QtWidgets import QWidget
 from krita import *
 from PyQt5.QtCore import *
 
-from ...special.BrushFlowSlider import BrushFlowSlider
-from ...special.BrushOpacitySlider import BrushOpacitySlider
-from ...special.BrushRotationSlider import BrushRotationSlider
-from ...special.BrushSizeSlider import BrushSizeSlider
-from .....variables import *
+from touchify.src.components.touchify.special.BrushFlowSlider import BrushFlowSlider
+from touchify.src.components.touchify.special.BrushOpacitySlider import BrushOpacitySlider
+from touchify.src.components.touchify.special.BrushRotationSlider import BrushRotationSlider
+from touchify.src.components.touchify.special.BrushSizeSlider import BrushSizeSlider
+from touchify.src.variables import *
 
-from .....stylesheet import Stylesheet
-from .....ext.KritaSettings import *
-from ....krita.KisSliderSpinBox import KisSliderSpinBox
+from touchify.src.stylesheet import Stylesheet
+from touchify.src.ext.KritaSettings import *
+from touchify.src.components.krita.KisSliderSpinBox import KisSliderSpinBox
 
-DOCKER_TITLE = 'Brush Options'
+DOCKER_TITLE = 'Touchify Addon: Brush Options'
+DOCKER_ID = "Touchify/BrushOptionsDocker"
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .....extension import TouchifyExtension
-    from .....window import TouchifyWindow
+    from touchify.src.window import TouchifyWindow
 
 class BrushOptionsDockerCfg:
 
     def __init__(self):
-        self.ShowFlowSlider = KritaSettings.readSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowFlowSlider", True)
-        self.ShowOpacitySlider = KritaSettings.readSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowOpacitySlider", True)
-        self.ShowSizeSlider = KritaSettings.readSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowSizeSlider", True)
-        self.ShowRotationSlider = KritaSettings.readSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowRotationSlider", True)
+        self.ShowFlowSlider = KritaSettings.readSettingBool(DOCKER_ID, "ShowFlowSlider", True)
+        self.ShowOpacitySlider = KritaSettings.readSettingBool(DOCKER_ID, "ShowOpacitySlider", True)
+        self.ShowSizeSlider = KritaSettings.readSettingBool(DOCKER_ID, "ShowSizeSlider", True)
+        self.ShowRotationSlider = KritaSettings.readSettingBool(DOCKER_ID, "ShowRotationSlider", True)
 
     def toggle(self, setting: str):
         if hasattr(self, setting):
@@ -37,10 +37,10 @@ class BrushOptionsDockerCfg:
 
 
     def save(self):
-        KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowFlowSlider", self.ShowFlowSlider)
-        KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowOpacitySlider", self.ShowOpacitySlider)
-        KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowSizeSlider", self.ShowSizeSlider)
-        KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER, "ShowRotationSlider", self.ShowRotationSlider)
+        KritaSettings.writeSettingBool(DOCKER_ID, "ShowFlowSlider", self.ShowFlowSlider)
+        KritaSettings.writeSettingBool(DOCKER_ID, "ShowOpacitySlider", self.ShowOpacitySlider)
+        KritaSettings.writeSettingBool(DOCKER_ID, "ShowSizeSlider", self.ShowSizeSlider)
+        KritaSettings.writeSettingBool(DOCKER_ID, "ShowRotationSlider", self.ShowRotationSlider)
 
 class BrushOptionsWidget(QWidget):
     def __init__(self, parent: QWidget | None = None):
@@ -158,7 +158,7 @@ class BrushOptionsDocker(DockWidget):
         self.brushOptions = BrushOptionsWidget(self)
         self.setWidget(self.brushOptions)
 
-    def setup(self, instance: "TouchifyWindow"):
+    def addonSetup(self, instance: "TouchifyWindow"):
         self.brushOptions.setup(instance)
 
     def showEvent(self, event):
@@ -171,3 +171,5 @@ class BrushOptionsDocker(DockWidget):
     # 'pass' means do not do anything
     def canvasChanged(self, canvas):
         self.brushOptions.onCanvasChanged(canvas)
+
+Krita.instance().addDockWidgetFactory(DockWidgetFactory(DOCKER_ID, DockWidgetFactoryBase.DockPosition.DockRight, BrushOptionsDocker))

@@ -4,5 +4,5 @@ ServiceTypes=Krita/PythonPlugin
 X-KDE-Library=touchify-compact-brush-toggler
 X-Python-2-Compatible=false
 X-Krita-Manual=Manual.html
-Name=Touchify - Compact Brush Toggler
+Name=Touchify Addon - Compact Brush Toggler
 Comment=[Requires Touchify] This is docker that provides toggle button for 10 different brush properties and a slider for brush fade.

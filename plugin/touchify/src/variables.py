@@ -41,8 +41,6 @@ TOUCHIFY_ID_ACTION_OTHER_SHOWMENUBARPOPUP="touchify_showPopupMenu"
 TOUCHIFY_ID_ACTION_CONFIGURE="touchify_configure"
 #-----------------#
 # Docker IDs
-TOUCHIFY_ID_DOCKER_COLOROPTIONSDOCKER="Touchify/ColorOptionsDocker"
-TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER="Touchify/BrushOptionsDocker"
 TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER="Touchify/ToolshelfDocker"
 TOUCHIFY_ID_DOCKER_TOOLBOX="Touchify/TouchifyToolbox"
 #-----------------#

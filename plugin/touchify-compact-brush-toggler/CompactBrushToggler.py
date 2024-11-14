@@ -46,7 +46,7 @@ from .CBT_Icons import *
 from .CBT_Toggler import * 
 
 
-DOCKER_NAME = 'CompactBrushToggler'
+DOCKER_NAME = 'Touchify Addon: Compact Brush Toggler'
 DOCKER_ID = 'Touchify/CompactBrushToggler'
 
 
@@ -75,7 +75,7 @@ class CompactBrushToggler(DockWidget):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Compact Brush Toggler") 
+        self.setWindowTitle(DOCKER_NAME) 
         instance.notifier().windowCreated.connect(self.createActions)
 
         self.baseWidget = QWidget()

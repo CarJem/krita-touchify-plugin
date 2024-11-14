@@ -2,23 +2,21 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
 
-from .variables import *
-from .docker_manager import DockerManager
-from .action_manager import ActionManager
+from touchify.src.variables import *
+from touchify.src.docker_manager import DockerManager
+from touchify.src.action_manager import ActionManager
 
-from .settings_dialog import SettingsDialog
+from touchify.src.settings_dialog import SettingsDialog
 
-from .features.touchify_canvas import TouchifyCanvas
-from .features.touchify_hotkeys import TouchifyHotkeys
-from .features.touchify_looks import TouchifyLooks
-from .features.touchify_actions import TouchifyActions
+from touchify.src.features.touchify_canvas import TouchifyCanvas
+from touchify.src.features.touchify_hotkeys import TouchifyHotkeys
+from touchify.src.features.touchify_looks import TouchifyLooks
+from touchify.src.features.touchify_actions import TouchifyActions
 
-from .ext.PyQtExtensions import PyQtExtensions
+from touchify.src.ext.PyQtExtensions import PyQtExtensions
 
-from .components.touchify.dockers.color_options.ColorOptionsDocker import ColorOptionsDocker
-from .components.touchify.dockers.brush_options.BrushOptionsDocker import BrushOptionsDocker
-from .components.touchify.dockers.toolshelf.ToolshelfDocker import ToolshelfDocker
-from .components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDocker import ToolshelfDocker
+from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
 
 WINDOW_ID: int = 0
 
@@ -103,15 +101,13 @@ class TouchifyWindow(QObject):
             if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER:
                 toolshelfDocker: ToolshelfDocker = docker
                 toolshelfDocker.setup(self)
-            elif docker.objectName() == TOUCHIFY_ID_DOCKER_BRUSHOPTIONSDOCKER:
-                brushDocker: BrushOptionsDocker = docker
-                brushDocker.setup(self)
-            elif docker.objectName() == TOUCHIFY_ID_DOCKER_COLOROPTIONSDOCKER:
-                colorDocker: ColorOptionsDocker = docker
-                colorDocker.setup(self)
             elif docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLBOX:
                 toolboxDocker: ToolboxDocker = docker
                 toolboxDocker.setup(self)
+            elif docker.objectName().startswith("Touchify/"):
+                addonSetupFn = getattr(docker, "addonSetup", None)
+                if callable(addonSetupFn):
+                    addonSetupFn(self)
             
 
     def onWindowCreated(self, window: Window):
@@ -119,6 +115,7 @@ class TouchifyWindow(QObject):
         self.windowSource = window
         self.docker_management = DockerManager(self)     
         self.setupDockers()
+        self.setupAddons(window)
 
         seperator = QAction("", self.mainMenuBar)
         seperator.setText(f"Instance: #{self.windowUUID}")
@@ -135,6 +132,47 @@ class TouchifyWindow(QObject):
 
         self.touchify_hotkeys.buildMenu(self.mainMenuBar)
         self.touchify_actions.buildMenu(self.mainMenuBar)
+
+
+    def setupAddons(self, window: Window):   
+        def setupDockerMenu():
+            dockerMenu = None
+            for m in window.qwindow().actions():
+                if m.objectName() == "settings_dockers_menu":
+                    dockerMenu = m
+
+            if dockerMenu == None: return
+
+            addonPrefix = 'Touchify Addon:'
+            normalPrefix = 'Touchify'
+
+            addon_dockers: list[QAction] = []
+            normal_dockers: list[QAction] = []
+
+            for a in dockerMenu.menu().actions():
+                if a.text().startswith(normalPrefix) and not a.text().startswith(addonPrefix):
+                    normal_dockers.append(a)
+                elif a.text().startswith(addonPrefix):
+                    a.setText(a.text().strip(addonPrefix))
+                    addon_dockers.append(a)
+
+            normalSection = dockerMenu.menu().addSection("Touchify")
+            for docker in normal_dockers:
+                dockerMenu.menu().addAction(docker)
+
+            addonSection = dockerMenu.menu().addSection("Touchify Addons")
+            for docker in addon_dockers:
+                dockerMenu.menu().addAction(docker)
+
+        def setupDockerTitles():
+            docker_title_prefix = "Touchify Addon: "
+
+            for docker in Krita.instance().dockers():
+                if docker.windowTitle().startswith(docker_title_prefix):
+                    docker.setWindowTitle(docker.windowTitle().strip(docker_title_prefix))
+
+        setupDockerMenu()
+        setupDockerTitles()
 
     def unload(self):
         pass

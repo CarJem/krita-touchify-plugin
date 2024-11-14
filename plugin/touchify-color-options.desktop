@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=touchify-color-options
+X-Python-2-Compatible=false
+X-Krita-Manual=manual.html
+Name=Touchify Addon - Color Options Docker
+Comment=[Requires Touchify] Docker for managing foreground and background colors.

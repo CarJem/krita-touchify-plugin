@@ -35,7 +35,7 @@ class ReferenceTabsDocker(DockWidget):
         widget.currentFolder = Krita.instance().readSetting(PLUGIN_CONFIG, "currentFolder", "")
         widget.currentFolderChanged.connect(writeCurrentFolderToConfig)
 
-        self.setWindowTitle("Reference Tabs")
+        self.setWindowTitle("Touchify Addon: Reference Tabs")
         self.setWidget(widget)
 
     # This override is required.

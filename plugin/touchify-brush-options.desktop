@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=touchify-brush-options
+X-Python-2-Compatible=false
+X-Krita-Manual=manual.html
+Name=Touchify Addon - Brush Options Docker
+Comment=[Requires Touchify] Docker for editing various brush values using sliders.
