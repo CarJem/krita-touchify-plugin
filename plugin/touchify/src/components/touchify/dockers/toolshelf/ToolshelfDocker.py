@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 
 from typing import TYPE_CHECKING
 
-from touchify.src.settings.TouchifyConfig import TouchifyConfig
+from touchify.src.settings import TouchifyConfig
 
 from touchify.src.docker_manager import DockerManager
 from touchify.src.action_manager import ActionManager

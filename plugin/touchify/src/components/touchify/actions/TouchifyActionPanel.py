@@ -12,7 +12,7 @@ from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
 from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
 from touchify.src.stylesheet import Stylesheet
 from touchify.src.variables import *
-from touchify.src.settings.TouchifyConfig import *
+from touchify.src.settings import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ....action_manager import ActionManager

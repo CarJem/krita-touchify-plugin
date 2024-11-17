@@ -1,12 +1,8 @@
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-import os
 from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
-from touchify.src.settings.TouchifyConfig import TouchifyConfig
-from touchify.src.resources import ResourceManager
-from touchify.src.ext.Extensions import Extensions
-from touchify.src.components.touchify.property_grid.PropertyGrid_Panel import PropertyGrid_Panel
+from touchify.src.settings import TouchifyConfig
 import copy
 
 from krita import *
@@ -22,9 +18,10 @@ class SettingsDialog(QDialog):
         super().__init__(qwin.qwindow().window())
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.qwin = qwin.qwindow()
+
+        
+
         self.editableConfig = copy.copy(TouchifyConfig.instance().getConfig())
-
-
         self.propertyGrid = PropertyGrid()
         self.propertyGrid.updateDataObject(self.editableConfig)
 

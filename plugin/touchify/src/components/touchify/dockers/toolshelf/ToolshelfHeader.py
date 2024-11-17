@@ -14,6 +14,7 @@ from touchify.src.components.touchify.dockers.toolshelf.ToolshelfMenu import Too
 from touchify.src.cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
 from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
 
+from touchify.src.settings import TouchifyConfig
 from touchify.src.variables import *
 from touchify.src.stylesheet import Stylesheet
 from touchify.src.resources import ResourceManager
@@ -78,7 +79,7 @@ class ToolshelfHeader(QWidget):
             self.actions_manager = self.parent_header.parent_toolshelf.parent_docker.actions_manager
             
             self.orientation = orientation
-            self.tab_size = self.header_options.button_size
+            self.tab_size = int(self.header_options.button_size * TouchifyConfig.instance().preferences().Interface_ToolshelfTabBarScale)
             
             self.ourLayout = QHBoxLayout(self) if self.orientation == Qt.Orientation.Vertical else QVBoxLayout(self)
             self.ourLayout.setSpacing(1)
@@ -266,7 +267,7 @@ class ToolshelfHeader(QWidget):
         self.orientation = orientation
         self.cfg = cfg
 
-        self.button_size = self.cfg.header_options.header_size
+        self.button_size = int(self.cfg.header_options.header_size * TouchifyConfig.instance().preferences().Interface_ToolshelfHeaderScale)
         self.icon_size = self.button_size - 4
 
         self.setObjectName("toolshelf-header")

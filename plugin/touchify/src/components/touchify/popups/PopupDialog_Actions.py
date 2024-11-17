@@ -2,13 +2,13 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from ....cfg.action.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
+from touchify.src.cfg.action.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
 
-from ....cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from ....settings.TouchifyConfig import *
-from ..actions.TouchifyActionPanel import *
-from ....resources import *
-from .PopupDialog import *
+from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.settings import *
+from touchify.src.components.touchify.actions.TouchifyActionPanel import *
+from touchify.src.resources import *
+from touchify.src.components.touchify.popups.PopupDialog import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

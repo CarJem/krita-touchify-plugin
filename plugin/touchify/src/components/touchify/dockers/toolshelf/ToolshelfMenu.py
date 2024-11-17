@@ -1,16 +1,12 @@
-from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QPushButton, QSizePolicy, QStackedWidget
 from krita import *
 from PyQt5.QtWidgets import *
-from ...canvas.NtWidgetPad import NtWidgetPad
+from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 
 from krita import *
 
-from .....settings.TouchifyConfig import *
-from .....variables import *
-from .....docker_manager import *
-from .....stylesheet import Stylesheet
-from .....ext.KritaExtensions import KritaExtensions
+from touchify.src.settings import *
+from touchify.src.variables import *
+from touchify.src.docker_manager import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

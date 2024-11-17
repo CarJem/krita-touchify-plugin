@@ -2,6 +2,7 @@
 from krita import *
 from PyQt5.QtCore import *
 
+from touchify.src.settings import TouchifyConfig
 from touchify.src.variables import *
 
 from touchify.src.components.pyqt.widgets.ColorFramedButton import ColorFramedButton
@@ -19,7 +20,7 @@ class ColorSourceToggle(QWidget):
     def __init__(self, parent: QWidget | None = None, cubeSize: int = 25):
         super(ColorSourceToggle, self).__init__(parent)
         self.canvas: Canvas = None
-        self.setContentsMargins(2,2,2,2)
+        self.setContentsMargins(0,0,0,0)
 
         self.instance: TouchifyWindow = None
         self.sourceWindow: Window = None
@@ -36,28 +37,41 @@ class ColorSourceToggle(QWidget):
         self.setFgBtn = ColorFramedButton(self)
         self.setFgBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.setFgBtn.clicked.connect(self.setForegroundColor)
-        self.setFgBtn.setFixedHeight(self.cubeSize)
         self.gridLayout.addWidget(self.setFgBtn)
 
         self.toggleBtn = QPushButton(self)
         self.toggleBtn.setIcon(ResourceManager.materialIcon("swap-horizontal"))
         self.toggleBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.toggleBtn.clicked.connect(self.toggleColors)
-        self.toggleBtn.setFixedSize(self.cubeSize, self.cubeSize)
         self.gridLayout.addWidget(self.toggleBtn)
 
         self.setBgBtn = ColorFramedButton(self)
         self.setBgBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.setBgBtn.clicked.connect(self.setBackgroundColor)
-        self.setBgBtn.setFixedHeight(self.cubeSize)
         self.gridLayout.addWidget(self.setBgBtn)
 
         self.resetBtn = QPushButton(self)
         self.resetBtn.setIcon(ResourceManager.kritaIcon("color-to-alpha"))
         self.resetBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.resetBtn.clicked.connect(self.resetColors)
-        self.resetBtn.setFixedSize(self.cubeSize, self.cubeSize)
+        
         self.gridLayout.addWidget(self.resetBtn)
+
+        self.updateStyle()
+
+    def updateStyle(self):
+        cubeSize = int(self.cubeSize * TouchifyConfig.instance().preferences().Interface_ColorOptionsDockerScale)
+        iconSize = int(cubeSize - 8)
+
+        self.toggleBtn.setFixedSize(cubeSize, cubeSize)
+        self.toggleBtn.setIconSize(QSize(iconSize, iconSize))
+
+        self.resetBtn.setFixedSize(cubeSize, cubeSize)
+        self.resetBtn.setIconSize(QSize(iconSize, iconSize))
+
+        self.setFgBtn.setFixedHeight(cubeSize)
+        self.setBgBtn.setFixedHeight(cubeSize)
+        
 
 
     def setup(self, instance: "TouchifyWindow"):
@@ -113,11 +127,17 @@ class ColorOptionsDocker(DockWidget):
         self.setWindowTitle(DOCKER_TITLE)
         self.colorToggle = ColorSourceToggle(self, 25)
         self.setWidget(self.colorToggle)
-        self.setFixedHeight(50)
         self.colorToggle.onCanvasChanged(self.canvas())
+        self.addonUpdateStyle()
 
     def addonSetup(self, instance: "TouchifyWindow"):
         self.colorToggle.setup(instance)
+        instance.connectNotify
+
+    def addonUpdateStyle(self):
+        widgetHeight = int(50 * TouchifyConfig.instance().preferences().Interface_ColorOptionsDockerScale)
+        self.setFixedHeight(widgetHeight)
+        self.colorToggle.updateStyle()
 
     def showEvent(self, event):
         super().showEvent(event)

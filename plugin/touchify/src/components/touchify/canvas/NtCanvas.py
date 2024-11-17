@@ -3,23 +3,22 @@ from PyQt5.QtWidgets import QMdiArea
 
 
 
-from .NtSubWinFilter import NtSubWinFilter
+from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
 
-from ....docker_manager import DockerManager
-from ....action_manager import ActionManager
-from .NtToolbox import NtToolbox
-from .NtToolshelf import NtToolshelf
-from ....settings.TouchifySettings import TouchifySettings
-from ....settings.TouchifyConfig import TouchifyConfig
+from touchify.src.docker_manager import DockerManager
+from touchify.src.action_manager import ActionManager
+from touchify.src.components.touchify.canvas.NtToolbox import NtToolbox
+from touchify.src.components.touchify.canvas.NtToolshelf import NtToolshelf
+from touchify.src.settings import TouchifyConfig
 from krita import *
 from PyQt5.QtCore import QObject
-from ....variables import *
-from .NtWidgetPad import NtWidgetPad
-from ....ext.KritaSettings import KritaSettings
-from ....cfg.widget_pad.CfgWidgetPadPreset import CfgWidgetPadPreset
-from ....cfg.widget_pad.CfgWidgetPadOptions import CfgWidgetPadOptions
-from ....cfg.widget_pad.CfgWidgetPadToolboxOptions import CfgWidgetPadToolboxOptions
-from ....cfg.CfgWidgetPadRegistry import CfgWidgetPadRegistry
+from touchify.src.variables import *
+from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
+from touchify.src.ext.KritaSettings import KritaSettings
+from touchify.src.cfg.widget_pad.CfgWidgetPadPreset import CfgWidgetPadPreset
+from touchify.src.cfg.widget_pad.CfgWidgetPadOptions import CfgWidgetPadOptions
+from touchify.src.cfg.widget_pad.CfgWidgetPadToolboxOptions import CfgWidgetPadToolboxOptions
+from touchify.src.cfg.CfgWidgetPadRegistry import CfgWidgetPadRegistry
 
 
 class NtCanvas(QWidget):
@@ -143,7 +142,7 @@ class NtCanvas(QWidget):
         
         if self.toolbox:
             self.toolbox.toolbox.toolboxWidget.setHorizontalMode(self.active_preset.toolbox.horizontal_mode)
-        elif TouchifySettings.instance().CanvasWidgets_EnableToolbox:
+        elif TouchifyConfig.instance().preferences().CanvasWidgets_EnableToolbox:
             KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_TOOLBOX, "IsHorizontal", self.active_preset.toolbox.horizontal_mode)
 
         self.updateElements()
@@ -174,15 +173,26 @@ class NtCanvas(QWidget):
         super().paintEvent(e)
 
     def onConfigUpdate(self):
-        if self.toolboxOptions: self.toolboxOptions.toolshelf.onConfigUpdated()
-        if self.toolOptions: self.toolOptions.toolshelf.onConfigUpdated()
+        if self.toolbox: self.toolbox.updateStyle()
+
+        if self.toolboxOptions: 
+            self.toolboxOptions.toolshelf.onConfigUpdated()
+            self.toolboxOptions.updateStyle()
+        if self.toolOptions: 
+            self.toolOptions.toolshelf.onConfigUpdated()
+            self.toolOptions.updateStyle()
     
     def onKritaConfigUpdate(self):        
         self.updateElements()
         self.updateView()
 
-        if self.toolboxOptions: self.toolboxOptions.toolshelf.onKritaConfigUpdate()
-        if self.toolOptions: self.toolOptions.toolshelf.onKritaConfigUpdate()
+        if self.toolbox: self.toolbox.updateStyle()
+        if self.toolboxOptions: 
+            self.toolboxOptions.toolshelf.onKritaConfigUpdate()
+            self.toolboxOptions.updateStyle()
+        if self.toolOptions: 
+            self.toolOptions.toolshelf.onKritaConfigUpdate()
+            self.toolOptions.updateStyle()
             
     #endregion
 
@@ -192,9 +202,9 @@ class NtCanvas(QWidget):
         if self.windowLoaded == False:
             return
         
-        usesNuToolbox = TouchifySettings.instance().CanvasWidgets_EnableToolbox
-        usesNuToolOptionsAlt = TouchifySettings.instance().CanvasWidgets_EnableAltToolshelf
-        usesNuToolOptions = TouchifySettings.instance().CanvasWidgets_EnableToolshelf
+        usesNuToolbox = TouchifyConfig.instance().preferences().CanvasWidgets_EnableToolbox
+        usesNuToolOptionsAlt = TouchifyConfig.instance().preferences().CanvasWidgets_EnableAltToolshelf
+        usesNuToolOptions = TouchifyConfig.instance().preferences().CanvasWidgets_EnableToolshelf
 
         if self.toolbox == None and usesNuToolbox:
             self.toolbox = NtToolbox(self, self.krita_window)

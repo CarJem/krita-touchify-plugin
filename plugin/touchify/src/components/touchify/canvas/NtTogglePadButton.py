@@ -1,12 +1,8 @@
-from enum import Enum
-from PyQt5.QtWidgets import QWidget, QDockWidget, QVBoxLayout, QScrollArea
-from PyQt5.QtCore import Qt, QSize, QPoint
+from PyQt5.QtCore import Qt, QSize
 
-from ....ext.KritaSettings import KritaSettings
 
-from ....settings.TouchifyConfig import *
-from ....ext.PyQtExtensions import PyQtExtensions as Ext
-from ....stylesheet import Stylesheet
+from touchify.src.settings import *
+from touchify.src.stylesheet import Stylesheet
 
 
 from PyQt5.QtCore import QSize, Qt
@@ -18,12 +14,12 @@ class NtTogglePadButton(QToolButton):
     def __init__(self, parent = None):
         super(NtTogglePadButton, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
-        self.setIconSize(QSize(11, 11))
-
         qApp.paletteChanged.connect(self.updateStyleSheet)
         self.updateStyleSheet()
 
     def updateStyleSheet(self):
+        iconSize: int = int(11 * TouchifyConfig.instance().preferences().Interface_CanvasToggleScale)
+        self.setIconSize(QSize(iconSize, iconSize))
         self.setStyleSheet(Stylesheet.instance().touchify_toggle_button)
 
     def mousePressEvent(self, e: QMouseEvent):

@@ -5,23 +5,23 @@ from PyQt5.QtCore import *
 from krita import *
 
 
-from .....variables import *
+from touchify.src.variables import *
 
-from .....ext.KritaSettings import KritaSettings
+from touchify.src.ext.KritaSettings import KritaSettings
 
 
-from .ToolboxCategory import ToolboxCategory
-from .ToolboxScrollArea import ToolboxScrollArea
-from .ToolboxStyle import ToolboxStyle
-from .ToolboxMenu import ToolboxMenu
-from .ToolboxButton import ToolboxButton
-from .....settings.TouchifyConfig import TouchifyConfig
-from .....cfg.CfgToolboxRegistry import CfgToolboxRegistry
-from .....cfg.toolbox.CfgToolbox import CfgToolbox
-from .....cfg.toolbox.CfgToolboxItem import CfgToolboxItem
-from .....cfg.toolbox.CfgToolboxSubItem import CfgToolboxSubItem
-from .....cfg.toolbox.CfgToolboxCategory import CfgToolboxCategory
-from ....pyqt.widgets.QResizableWidget import QResizableWidget
+from touchify.src.components.touchify.dockers.toolbox.ToolboxCategory import ToolboxCategory
+from touchify.src.components.touchify.dockers.toolbox.ToolboxScrollArea import ToolboxScrollArea
+from touchify.src.components.touchify.dockers.toolbox.ToolboxStyle import ToolboxStyle
+from touchify.src.components.touchify.dockers.toolbox.ToolboxMenu import ToolboxMenu
+from touchify.src.components.touchify.dockers.toolbox.ToolboxButton import ToolboxButton
+from touchify.src.settings import TouchifyConfig
+from touchify.src.cfg.CfgToolboxRegistry import CfgToolboxRegistry
+from touchify.src.cfg.toolbox.CfgToolbox import CfgToolbox
+from touchify.src.cfg.toolbox.CfgToolboxItem import CfgToolboxItem
+from touchify.src.cfg.toolbox.CfgToolboxSubItem import CfgToolboxSubItem
+from touchify.src.cfg.toolbox.CfgToolboxCategory import CfgToolboxCategory
+from touchify.src.components.pyqt.widgets.QResizableWidget import QResizableWidget
 from touchify.src.resources import ResourceManager
 
 from typing import TYPE_CHECKING
@@ -343,7 +343,7 @@ class ToolboxWidget(QResizableWidget):
         y = 0
 
         col_max = self.config.column_count
-        icon_size = self.config.icon_size
+        icon_size = int(self.config.icon_size * TouchifyConfig.instance().preferences().Interface_ToolboxIconScale)
 
         toolbox_item_alignment = Qt.AlignmentFlag.AlignTop if self.horizontalMode else Qt.AlignmentFlag.AlignLeft
 

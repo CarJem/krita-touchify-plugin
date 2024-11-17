@@ -680,7 +680,9 @@
                             "special_item_type": "none",
                             "json_version": 2,
                             "docker_id": "",
-                            "action_section_id": "Layer Options"
+                            "action_section_id": "Layer Options",
+                            "display_name": "",
+                            "ignore_scaling": true
                         },
                         {
                             "subpanel_data": {
@@ -865,7 +867,9 @@
                             "special_item_type": "none",
                             "json_version": 2,
                             "docker_id": "",
-                            "action_section_id": "Layer Actions"
+                            "action_section_id": "Layer Actions",
+                            "display_name": "",
+                            "ignore_scaling": true
                         }
                     ],
                     "preset_name": "New Toolshelf Preset",
@@ -889,7 +893,10 @@
                 "id": "ToolshelfPopup",
                 "type": "toolshelf",
                 "window_type": "popup",
-                "json_version": 2
+                "json_version": 2,
+                "docker_width": 0,
+                "docker_height": 0,
+                "window_title": ""
             },
             "canvas_preset_data": {}
         },

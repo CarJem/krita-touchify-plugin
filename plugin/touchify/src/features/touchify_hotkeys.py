@@ -1,8 +1,8 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 
-from ..variables import *
-from ..settings.TouchifyConfig import *
+from touchify.src.variables import *
+from touchify.src.settings import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

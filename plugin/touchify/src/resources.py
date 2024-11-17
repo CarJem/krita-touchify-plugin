@@ -1,12 +1,12 @@
 
-from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5 import QtGui
 import os
 
 
-from .components.pyqt.icon_engines.QSvgIconEngine import QSvgIconEngine
+from touchify.src.components.pyqt.icon_engines.QSvgIconEngine import QSvgIconEngine
 
 
-from .settings.TouchifyConfig import *
+from touchify.src.settings import *
 from zipfile import ZipFile
 
 from krita import *

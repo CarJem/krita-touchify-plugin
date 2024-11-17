@@ -8,6 +8,7 @@ from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
 from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelfSection
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfSpecialSection import ToolshelfSpecialSection
+from touchify.src.settings import TouchifyConfig
 from touchify.src.stylesheet import Stylesheet
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfSectionSplit import ToolshelfSectionSplit
 
@@ -60,7 +61,7 @@ class ToolshelfPanel(QWidget):
 
     def _initPageActions(self):
         actionsList = self.panelProperties.actions
-        actionHeight = self.panelProperties.action_height
+        actionHeight = int(self.panelProperties.action_height * TouchifyConfig.instance().preferences().Interface_ToolshelfActionBarScale)
 
         self.quickActions = TouchifyActionPanel(actionsList, self, self.actions_manager)
         self.quickActions.setAutoFillBackground(True)
@@ -149,10 +150,26 @@ class ToolshelfPanel(QWidget):
         display_type = TouchifyActionPanel.DisplayType.Toolbar
         if actionInfo.action_section_display_mode == CfgToolshelfSection.ActionSectionDisplayMode.Flat:
             display_type = TouchifyActionPanel.DisplayType.ToolbarFlat
+
+        if actionInfo.ignore_scaling:
+            scale = 1
+        else:
+            scale = TouchifyConfig.instance().preferences().Interface_ToolshelfActionSectionScale
+
         
-        icon_size = actionInfo.action_section_icon_size
-        fixed_width = actionInfo.action_section_btn_width
-        fixed_height = actionInfo.action_section_btn_height
+        icon_size = int(actionInfo.action_section_icon_size * scale)
+        fixed_width = int(actionInfo.action_section_btn_width * scale)
+        fixed_height = int(actionInfo.action_section_btn_height * scale)
+
+        min_size_x = int(actionInfo.min_size_x * scale)
+        min_size_y = int(actionInfo.min_size_y * scale)
+        max_size_x = int(actionInfo.max_size_x * scale)
+        max_size_y = int(actionInfo.max_size_y * scale)
+        size_x = int(actionInfo.size_x * scale)
+        size_y = int(actionInfo.size_y * scale)
+
+        
+
                
         actionWidget = TouchifyActionPanel(cfg=actionInfo.action_section_contents, parent=self, actions_manager=self.actions_manager, type=display_type, icon_width=icon_size, icon_height=icon_size, item_height=fixed_height, item_width=fixed_width)
         actionWidget.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -183,14 +200,14 @@ class ToolshelfPanel(QWidget):
             actionWidget.layout().setAlignment(alignment_x | alignment_y)
             if expand_x: actionWidget.setSizePolicy(expand_x, expand_y)
 
-        if actionInfo.size_x != 0 or actionInfo.size_y != 0:
-            if actionInfo.size_x != 0: actionWidget.setFixedWidth(actionInfo.size_x)
-            if actionInfo.size_y != 0: actionWidget.setFixedHeight(actionInfo.size_y)
+        if size_x != 0 or size_y != 0:
+            if size_x != 0: actionWidget.setFixedWidth(size_x)
+            if size_y != 0: actionWidget.setFixedHeight(size_y)
         else:
-            if actionInfo.min_size_x != 0: actionWidget.setMinimumWidth(actionInfo.min_size_x)
-            if actionInfo.min_size_y != 0: actionWidget.setMinimumHeight(actionInfo.min_size_y)
-            if actionInfo.max_size_x != 0: actionWidget.setMaximumWidth(actionInfo.max_size_x)
-            if actionInfo.max_size_y != 0: actionWidget.setMaximumHeight(actionInfo.max_size_y)
+            if min_size_x != 0: actionWidget.setMinimumWidth(min_size_x)
+            if min_size_y != 0: actionWidget.setMinimumHeight(min_size_y)
+            if max_size_x != 0: actionWidget.setMaximumWidth(max_size_x)
+            if max_size_y != 0: actionWidget.setMaximumHeight(max_size_y)
 
         return actionWidget
     

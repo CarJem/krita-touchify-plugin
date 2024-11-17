@@ -1,11 +1,10 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 
-from touchify.src.settings.TouchifySettings import TouchifySettings
 from touchify.src.components.touchify.canvas.NtCanvas import NtCanvas
 
 from touchify.src.variables import *
-from touchify.src.settings.TouchifyConfig import *
+from touchify.src.settings import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from touchify.src.extension import Touchify
@@ -37,7 +36,7 @@ class TouchifyCanvas(QObject):
 
     def createActions(self, window: Window, mainMenuBar: QMenuBar):
 
-        config = TouchifySettings.instance()
+        config = TouchifyConfig.instance().preferences()
 
         sublocation_name = "On-Canvas Widgets"
         sublocation_path = TOUCHIFY_ID_MENU_ROOT + "/" + sublocation_name
@@ -62,13 +61,13 @@ class TouchifyCanvas(QObject):
             self.ntCanvas.onConfigUpdate()
 
     def nuToolboxToggled(self, toggled):
-        TouchifySettings.instance().CanvasWidgets_EnableToolbox = toggled
-        TouchifySettings.instance().saveSettings()
+        TouchifyConfig.instance().preferences().CanvasWidgets_EnableToolbox = toggled
+        TouchifyConfig.instance().preferences().save()
 
     def nuToolOptionsToggled(self, toggled):
-        TouchifySettings.instance().CanvasWidgets_EnableToolshelf = toggled
-        TouchifySettings.instance().saveSettings()
+        TouchifyConfig.instance().preferences().CanvasWidgets_EnableToolshelf = toggled
+        TouchifyConfig.instance().preferences().save()
     
     def nuToolOptionsAltToggled(self, toggled):
-        TouchifySettings.instance().CanvasWidgets_EnableAltToolshelf = toggled
-        TouchifySettings.instance().saveSettings()
+        TouchifyConfig.instance().preferences().CanvasWidgets_EnableAltToolshelf = toggled
+        TouchifyConfig.instance().preferences().save()

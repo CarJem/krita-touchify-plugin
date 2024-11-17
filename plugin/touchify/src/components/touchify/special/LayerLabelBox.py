@@ -47,7 +47,8 @@ class LayerLabelBox(QComboBox):
         self.setAccessibleName('colorLabelBox')
         self.setObjectName('colorLabelBox')
         self.setupTimer()
-        self.setMinimumHeight(35)
+        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        #self.setMinimumHeight(35)
 
         # generates an array to automatize the process of creating icons 
         colors = [blueColor,greenColor,yellowColor,orangeColor,brownColor,redColor,purpleColor,greyColor]

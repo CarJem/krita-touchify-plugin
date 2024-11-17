@@ -26,6 +26,7 @@ class DockerContainer(QWidget):
         self.layout().setSpacing(0)
 
         self.container = QWidget(self)
+        self.container.setContentsMargins(0,0,0,0)
         self.layout().addWidget(self.container)
 
         self.container_layout = QVBoxLayout(self)

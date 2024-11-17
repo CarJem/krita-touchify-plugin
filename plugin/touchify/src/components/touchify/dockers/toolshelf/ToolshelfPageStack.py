@@ -7,7 +7,7 @@ from touchify.src.components.touchify.actions.TouchifyActionPanel import Touchif
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfPage import ToolshelfPage
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 
-from touchify.src.settings.TouchifyConfig import *
+from touchify.src.settings import *
 from touchify.src.variables import *
 from touchify.src.docker_manager import *
 

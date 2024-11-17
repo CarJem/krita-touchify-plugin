@@ -66,6 +66,7 @@ class CfgToolshelfSection:
     panel_y: int = 0
     panel_x: int = 0
 
+    ignore_scaling: bool = False
     section_type: str = "docker"
 
     docker_nesting_mode: str = "normal"
@@ -138,6 +139,7 @@ class CfgToolshelfSection:
             "size_y",
             "panel_x",
             "panel_y",
+            "ignore_scaling"
             "section_type"
         ]
 
@@ -225,6 +227,7 @@ class CfgToolshelfSection:
         labels["min_size_y"] = "Min Height"
         labels["panel_y"] = "Panel Row"
         labels["panel_x"] = "Panel Column"
+        labels["ignore_scaling"] = "Ignore Scaling"
         labels["section_type"] = "Section Type"
 
         labels["docker_id"] = "Docker ID"

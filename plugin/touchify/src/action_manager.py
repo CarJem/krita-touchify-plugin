@@ -16,7 +16,7 @@ from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopu
 from touchify.src.cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
 from touchify.src.ext.KritaExtensions import *
 
-from touchify.src.settings.TouchifyConfig import TouchifyConfig
+from touchify.src.settings import TouchifyConfig
 from touchify.src.resources import ResourceManager
 
 from touchify.src.components.touchify.popups.PopupDialog import PopupDialog

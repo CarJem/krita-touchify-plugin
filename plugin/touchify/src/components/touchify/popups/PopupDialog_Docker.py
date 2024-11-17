@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 
 from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from touchify.src.settings.TouchifyConfig import *
+from touchify.src.settings import *
 from touchify.src.resources import *
 from touchify.src.components.touchify.popups.PopupDialog import *
 from touchify.src.docker_manager import *

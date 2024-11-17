@@ -20,13 +20,13 @@
 from PyQt5.QtWidgets import QWidget, QDockWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import Qt, QSize, QPoint
 
-from .NtScrollAreaContainer import NtScrollAreaContainer
-from .NtTogglePadButton import NtTogglePadButton
+from touchify.src.components.touchify.canvas.NtScrollAreaContainer import NtScrollAreaContainer
+from touchify.src.components.touchify.canvas.NtTogglePadButton import NtTogglePadButton
 
-from .NtSubWinFilter import NtSubWinFilter
+from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
 
-from ....settings.TouchifyConfig import *
-from ....ext.PyQtExtensions import PyQtExtensions as Ext
+from touchify.src.settings import *
+from touchify.src.ext.PyQtExtensions import PyQtExtensions as Ext
 
 from krita import *
 
@@ -320,6 +320,9 @@ class NtWidgetPad(QWidget):
 
         self.updateArrow()
         self.adjustToView()  
+    
+    def updateStyle(self):
+        self.btnHide.updateStyleSheet()
     #endregion
     
     #region Signals

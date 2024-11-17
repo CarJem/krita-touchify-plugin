@@ -4,17 +4,19 @@ import json
 import os
 
 
-from ..cfg.CfgHotkeyRegistry import CfgHotkeyRegistry
-from ..ext.JsonExtensions import JsonExtensions
-from ..cfg.toolshelf.CfgToolshelf import CfgToolshelf
-from ..variables import *
+from touchify.src.cfg.CfgHotkeyRegistry import CfgHotkeyRegistry
+from touchify.src.ext.JsonExtensions import JsonExtensions
+from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
+from touchify.src.cfg.CfgPreferences import CfgPreferences
+from touchify.src.variables import *
 
-from ..cfg.CfgToolshelfRegistry import CfgToolshelfRegistry
-from ..cfg.CfgActionRegistry import CfgActionRegistry
-from ..cfg.CfgToolboxRegistry import CfgToolboxRegistry
-from ..cfg.CfgWidgetPadRegistry import CfgWidgetPadRegistry
-from ..ext.Extensions import *
-from ...paths import BASE_DIR
+from touchify.src.cfg.CfgToolshelfRegistry import CfgToolshelfRegistry
+from touchify.src.cfg.CfgActionRegistry import CfgActionRegistry
+from touchify.src.cfg.CfgToolboxRegistry import CfgToolboxRegistry
+from touchify.src.cfg.CfgWidgetPadRegistry import CfgWidgetPadRegistry
+
+from touchify.src.ext.Extensions import *
+from touchify.paths import BASE_DIR
 
 import json
 
@@ -32,6 +34,7 @@ class TouchifyConfig:
             self.toolshelf_docker: CfgToolshelfRegistry = CfgToolshelfRegistry("docker")
             self.toolbox_settings: CfgToolboxRegistry = CfgToolboxRegistry()
             self.widget_pads: CfgWidgetPadRegistry = CfgWidgetPadRegistry()
+            self.preferences: CfgPreferences = CfgPreferences()
             self.load()
 
         def loadClass(self, configName, type):
@@ -71,6 +74,7 @@ class TouchifyConfig:
             labels["hotkeys"] = "Hotkeys"
             labels["widget_pads"] = "Widget Pads"
             labels["toolbox_settings"] = "Touchify Toolbox"
+            labels["preferences"] = "Preferences"
             return labels
         
         def propertygrid_sisters(self):
@@ -87,6 +91,7 @@ class TouchifyConfig:
             restrictions["actions_registry"] = {"type": "expandable"}
             restrictions["toolbox_settings"] = {"type": "expandable"}
             restrictions["widget_pads"] = {"type": "expandable"}
+            restrictions["preferences"] = {"type": "expandable"}
             return restrictions
         
         def save(self):
@@ -97,6 +102,7 @@ class TouchifyConfig:
             self.toolshelf_docker.save()
             self.toolbox_settings.save()
             self.widget_pads.save()
+            self.preferences.save()
 
         def load(self):
             self.actions_registry = self.loadClass("actions_registry", CfgActionRegistry)
@@ -106,6 +112,7 @@ class TouchifyConfig:
             self.toolshelf_docker.load()
             self.toolbox_settings.load()
             self.widget_pads.load()
+            self.preferences.load()
             
     def instance():
         try:
@@ -119,6 +126,9 @@ class TouchifyConfig:
         self.hotkey_options_storage = {}
         self.cfg = TouchifyConfig.ConfigFile()
         
+    def preferences(self) -> CfgPreferences:
+        return self.cfg.preferences
+
     def getConfig(self) -> ConfigFile:
         return self.cfg
     
@@ -150,9 +160,6 @@ class TouchifyConfig:
         elif registry_index == 2: cfg.toolshelf_docker.setActive(index)
 
         self.notifyUpdate()
-
-    
-
 
     def addHotkeyOption(self, actionName, displayName, action, parameters):
         self.hotkey_options_storage[actionName] = {

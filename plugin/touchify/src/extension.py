@@ -4,7 +4,7 @@ from krita import *
 
 from touchify.src.variables import *
 
-from touchify.src.settings.TouchifyConfig import TouchifyConfig
+from touchify.src.settings import TouchifyConfig
 
 
 from touchify.src.ext.KritaSettings import KritaSettings

@@ -3,11 +3,10 @@ from krita import *
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import *
 
-from touchify.src.settings.TouchifySettings import TouchifySettings
 
 
 from touchify.src.ext.Extensions import *
-from touchify.src.settings.TouchifyConfig import *
+from touchify.src.settings import *
 
 from typing import TYPE_CHECKING, Callable
 if TYPE_CHECKING:
@@ -91,10 +90,10 @@ class DockerManager(QObject):
         self._listeners: dict[DockerManager.SignalType, list] = {}
         self._hiddenDockers: dict[Qt.DockWidgetArea, list[str]] = {}
 
-        self._hiddenDockers[1] = TouchifySettings.instance().DockerUtils_HiddenDockersLeft.split(",")
-        self._hiddenDockers[2] = TouchifySettings.instance().DockerUtils_HiddenDockersRight.split(",")
-        self._hiddenDockers[4] = TouchifySettings.instance().DockerUtils_HiddenDockersUp.split(",")
-        self._hiddenDockers[8] = TouchifySettings.instance().DockerUtils_HiddenDockersDown.split(",")
+        self._hiddenDockers[1] = TouchifyConfig.instance().preferences().DockerUtils_HiddenDockersLeft.split(",")
+        self._hiddenDockers[2] = TouchifyConfig.instance().preferences().DockerUtils_HiddenDockersRight.split(",")
+        self._hiddenDockers[4] = TouchifyConfig.instance().preferences().DockerUtils_HiddenDockersUp.split(",")
+        self._hiddenDockers[8] = TouchifyConfig.instance().preferences().DockerUtils_HiddenDockersDown.split(",")
         self.mainWindow = self.touchify.windowSource
         self.qWin = self.touchify.windowSource.qwindow()
 
@@ -177,14 +176,14 @@ class DockerManager(QObject):
 
         match area:
             case 1:
-                TouchifySettings.instance().DockerUtils_HiddenDockersLeft = ",".join(self._hiddenDockers[area])
+                TouchifyConfig.instance().preferences().DockerUtils_HiddenDockersLeft = ",".join(self._hiddenDockers[area])
             case 2:
-                TouchifySettings.instance().DockerUtils_HiddenDockersRight = ",".join(self._hiddenDockers[area])
+                TouchifyConfig.instance().preferences().DockerUtils_HiddenDockersRight = ",".join(self._hiddenDockers[area])
             case 4:
-                TouchifySettings.instance().DockerUtils_HiddenDockersUp = ",".join(self._hiddenDockers[area])
+                TouchifyConfig.instance().preferences().DockerUtils_HiddenDockersUp = ",".join(self._hiddenDockers[area])
             case 8:
-                TouchifySettings.instance().DockerUtils_HiddenDockersDown = ",".join(self._hiddenDockers[area])
-        TouchifySettings.instance().saveSettings()
+                TouchifyConfig.instance().preferences().DockerUtils_HiddenDockersDown = ",".join(self._hiddenDockers[area])
+        TouchifyConfig.instance().preferences().save()
 
     def dockerWindowTitle(self, docker_id: str):
         docker = self.findDocker(docker_id)

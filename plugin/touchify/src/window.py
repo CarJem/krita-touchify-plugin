@@ -1,3 +1,4 @@
+from typing import Callable
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
@@ -27,6 +28,9 @@ class TouchifyWindow(QObject):
         global WINDOW_ID
         self.windowUUID = WINDOW_ID
         WINDOW_ID += 1
+
+
+        self.update_style_calls: list[Callable] = []
 
         self.touchify_actions = TouchifyActions(self)
         self.touchify_looks = TouchifyLooks(self)
@@ -73,6 +77,9 @@ class TouchifyWindow(QObject):
         
         self.touchify_canvas.onKritaConfigUpdated()
 
+        for call in self.update_style_calls:
+            call()
+
     def onConfigUpdated(self):
         toolshelf_docker = self.getToolshelfDocker()
         if toolshelf_docker: toolshelf_docker.onConfigUpdated()
@@ -81,6 +88,9 @@ class TouchifyWindow(QObject):
         if toolbox_docker: toolbox_docker.onConfigUpdated()
         
         self.touchify_canvas.onConfigUpdated()    
+
+        for call in self.update_style_calls:
+            call()
 
     def getToolshelfDocker(self):
         for docker in self.windowSource.dockers():
@@ -106,8 +116,12 @@ class TouchifyWindow(QObject):
                 toolboxDocker.setup(self)
             elif docker.objectName().startswith("Touchify/"):
                 addonSetupFn = getattr(docker, "addonSetup", None)
+                addonUpdateStyleFn = getattr(docker, "addonUpdateStyle", None)
                 if callable(addonSetupFn):
                     addonSetupFn(self)
+                if callable(addonUpdateStyleFn):
+                    self.update_style_calls.append(addonUpdateStyleFn)
+                    
             
 
     def onWindowCreated(self, window: Window):

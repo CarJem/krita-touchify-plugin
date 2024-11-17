@@ -4,7 +4,7 @@ from touchify.src.docker_manager import DockerManager
 from touchify.src.action_manager import ActionManager
 
 
-from touchify.src.settings.TouchifyConfig import TouchifyConfig
+from touchify.src.settings import TouchifyConfig
 from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from krita import *
 from touchify.src.variables import *

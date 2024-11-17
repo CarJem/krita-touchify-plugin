@@ -4,7 +4,7 @@ from touchify.src.ext.KritaExtensions import *
 from touchify.src.variables import *
 
 from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
-from touchify.src.settings.TouchifyConfig import *
+from touchify.src.settings import *
 from touchify.src.resources import *
 
 from krita import *

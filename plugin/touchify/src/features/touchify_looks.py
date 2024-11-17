@@ -1,9 +1,8 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
-from ..settings.TouchifySettings import TouchifySettings
-from ..variables import *
-from ..settings.TouchifyConfig import *
-from ..stylesheet import Stylesheet
+from touchify.src.variables import *
+from touchify.src.settings import *
+from touchify.src.stylesheet import Stylesheet
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..extension import TouchifyExtension
@@ -31,7 +30,7 @@ class TouchifyLooks(object):
         return result
 
     def createActions(self, window: Window, mainMenuBar: QMenuBar):
-        config = TouchifySettings.instance()
+        config = TouchifyConfig.instance().preferences()
         
         sublocation_name = "Styles and Tweaks"
         sublocation_path = TOUCHIFY_ID_MENU_ROOT + "/" + sublocation_name
@@ -44,26 +43,26 @@ class TouchifyLooks(object):
         nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_TABHEIGHT, "Thin Document Tabs", sublocation_path, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
 
     def toolbarBorderToggled(self, toggled):
-        TouchifySettings.instance().Styles_BorderlessToolbar = toggled
-        TouchifySettings.instance().saveSettings()
+        TouchifyConfig.instance().preferences().Styles_BorderlessToolbar = toggled
+        TouchifyConfig.instance().preferences().save()
         
         self.qWin.themeChanged.emit()
 
     def tabHeightToggled(self, toggled):
-        TouchifySettings.instance().Styles_ThinDocumentTabs = toggled
-        TouchifySettings.instance().saveSettings()
+        TouchifyConfig.instance().preferences().Styles_ThinDocumentTabs = toggled
+        TouchifyConfig.instance().preferences().save()
         self.qWin.themeChanged.emit()
         
     def privacyModeToggled(self, toggled):
-        TouchifySettings.instance().Styles_PrivacyMode = toggled
-        TouchifySettings.instance().saveSettings()
+        TouchifyConfig.instance().preferences().Styles_PrivacyMode = toggled
+        TouchifyConfig.instance().preferences().save()
         self.qWin.themeChanged.emit()
 
     def rebuildStyleSheet(self):
         if self.qWin == None:
             return
 
-        config = TouchifySettings.instance()
+        config = TouchifyConfig.instance().preferences()
 
         # region No Toolbar Borders
         full_style_sheet = ""

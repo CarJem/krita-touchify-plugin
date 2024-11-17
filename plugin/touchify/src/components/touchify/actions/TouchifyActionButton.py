@@ -1,7 +1,7 @@
-from ....variables import *
-from ....ext.KritaExtensions import *
+from touchify.src.variables import *
+from touchify.src.ext.KritaExtensions import *
 from krita import *
-from ....settings.TouchifyConfig import *
+from touchify.src.settings import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 

@@ -163,7 +163,9 @@
             "action_section_icon_size": 0,
             "special_item_type": "none",
             "docker_id": "",
-            "action_section_id": "Brush Actions"
+            "action_section_id": "Brush Actions",
+            "display_name": "",
+            "ignore_scaling": false
         },
         {
             "subpanel_data": {
@@ -194,7 +196,8 @@
             "special_item_type": "brush_blending_options",
             "docker_id": "",
             "action_section_id": "Brush Blending",
-            "display_name": ""
+            "display_name": "",
+            "ignore_scaling": false
         },
         {
             "subpanel_data": {
@@ -259,7 +262,9 @@
             "special_item_type": "none",
             "json_version": 2,
             "docker_id": "Touchify/ColorOptionsDocker",
-            "action_section_id": "LayerHeader"
+            "action_section_id": "LayerHeader",
+            "display_name": "",
+            "ignore_scaling": false
         },
         {
             "subpanel_data": {
@@ -544,7 +549,8 @@
             "special_item_type": "none",
             "docker_id": "",
             "action_section_id": "Quick Actions",
-            "display_name": ""
+            "display_name": "",
+            "ignore_scaling": false
         },
         {
             "subpanel_data": {
@@ -575,7 +581,8 @@
             "special_item_type": "none",
             "docker_id": "Touchify/BrushOptionsDocker",
             "action_section_id": "Panel",
-            "display_name": ""
+            "display_name": "",
+            "ignore_scaling": false
         },
         {
             "subpanel_data": {
@@ -703,7 +710,8 @@
             "special_item_type": "none",
             "docker_id": "",
             "action_section_id": "Brush Options",
-            "display_name": ""
+            "display_name": "",
+            "ignore_scaling": true
         },
         {
             "subpanel_data": {
@@ -880,7 +888,7 @@
             "action_section_contents": [],
             "json_version": 2,
             "section_type": "docker",
-            "min_size_x": 0,
+            "min_size_x": 250,
             "min_size_y": 0,
             "max_size_x": 0,
             "max_size_y": 0,
@@ -900,7 +908,8 @@
             "special_item_type": "none",
             "docker_id": "sharedtooldocker",
             "action_section_id": "Panel",
-            "display_name": ""
+            "display_name": "",
+            "ignore_scaling": false
         }
     ],
     "tab_type": "buttons",
@@ -1104,7 +1113,9 @@
                     "action_section_icon_size": 0,
                     "special_item_type": "layer_label_box",
                     "docker_id": "",
-                    "action_section_id": "Layer Tag"
+                    "action_section_id": "Layer Tag",
+                    "display_name": "",
+                    "ignore_scaling": false
                 },
                 {
                     "subpanel_data": {
@@ -1344,7 +1355,9 @@
                     "special_item_type": "none",
                     "json_version": 2,
                     "docker_id": "",
-                    "action_section_id": "Layer Options"
+                    "action_section_id": "Layer Options",
+                    "display_name": "",
+                    "ignore_scaling": false
                 },
                 {
                     "subpanel_data": {
@@ -1529,7 +1542,9 @@
                     "special_item_type": "none",
                     "json_version": 2,
                     "docker_id": "",
-                    "action_section_id": "Layer Actions"
+                    "action_section_id": "Layer Actions",
+                    "display_name": "",
+                    "ignore_scaling": true
                 }
             ],
             "actions": [],
@@ -1540,7 +1555,8 @@
             "row": 0,
             "tab_type": "tabs",
             "action_height": 10,
-            "json_version": 1
+            "json_version": 1,
+            "display_name": ""
         },
         {
             "sections": [
