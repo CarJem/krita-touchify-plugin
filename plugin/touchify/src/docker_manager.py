@@ -3,11 +3,11 @@ from krita import *
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import *
 
-from .settings.TouchifySettings import TouchifySettings
+from touchify.src.settings.TouchifySettings import TouchifySettings
 
 
-from .ext.Extensions import *
-from .settings.TouchifyConfig import *
+from touchify.src.ext.Extensions import *
+from touchify.src.settings.TouchifyConfig import *
 
 from typing import TYPE_CHECKING, Callable
 if TYPE_CHECKING:
@@ -141,7 +141,7 @@ class DockerManager(QObject):
 
         docker = self.findDocker(docker_id)
         # Does requested widget exist?
-        if isinstance(docker, QDockWidget) and docker.widget():
+        if isinstance(docker, QDockWidget) and QDockWidget.widget(docker):
             self._shareData[docker_id] = DockerManager.BorrowData(args.dockMode, docker.isVisible(), self.qWin, self.qWin.dockWidgetArea(docker))
             self._shareData[docker_id].setWidgetData(docker)
             self.invokeListeners(docker_id, DockerManager.SignalType.OnLoadDocker)

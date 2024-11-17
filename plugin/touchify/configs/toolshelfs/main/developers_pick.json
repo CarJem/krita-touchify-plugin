@@ -193,7 +193,8 @@
             "action_section_icon_size": 0,
             "special_item_type": "brush_blending_options",
             "docker_id": "",
-            "action_section_id": "Brush Blending"
+            "action_section_id": "Brush Blending",
+            "display_name": ""
         },
         {
             "subpanel_data": {
@@ -469,7 +470,56 @@
                             "canvas_preset_data": {}
                         }
                     ],
-                    "row_name": "Actions Row"
+                    "row_name": "Row 1"
+                },
+                {
+                    "actions": [
+                        {
+                            "context_menu_actions": [],
+                            "show_icon": true,
+                            "id": "ShowBrushSizesPopup",
+                            "icon": "material:toolbox-outline",
+                            "text": "Brush Sizes...",
+                            "variant": "popup",
+                            "show_text": false,
+                            "action_id": "",
+                            "action_use_icon": false,
+                            "brush_name": "",
+                            "brush_override_icon": false,
+                            "docker_id": "",
+                            "workspace_id": "",
+                            "docker_group_data": {
+                                "docker_names": []
+                            },
+                            "popup_data": {
+                                "toolshelf_data": {
+                                    "panels": [],
+                                    "actions": [],
+                                    "sections": [],
+                                    "json_version": 1
+                                },
+                                "actions_items": [],
+                                "actions_grid_padding": 2,
+                                "actions_grid_width": 3,
+                                "actions_icon_width": 30,
+                                "actions_icon_height": 30,
+                                "actions_item_width": 100,
+                                "actions_item_height": 100,
+                                "json_version": 2,
+                                "opacity": 1.0,
+                                "actions_close_on_click": false,
+                                "docker_id": "pykrita_brushSizeDocker",
+                                "docker_width": 300,
+                                "docker_height": 300,
+                                "id": "pykrita_brushSizeDockerPopup",
+                                "type": "docker",
+                                "window_title": "",
+                                "window_type": "popup"
+                            },
+                            "canvas_preset_data": {}
+                        }
+                    ],
+                    "row_name": "Row 2"
                 }
             ],
             "json_version": 2,
@@ -512,7 +562,7 @@
             "size_x": 0,
             "size_y": 0,
             "panel_x": 0,
-            "panel_y": 4,
+            "panel_y": 6,
             "docker_nesting_mode": "normal",
             "docker_unloaded_visibility": "normal",
             "docker_loading_priority": "normal",
@@ -524,7 +574,8 @@
             "action_section_icon_size": 0,
             "special_item_type": "none",
             "docker_id": "Touchify/BrushOptionsDocker",
-            "action_section_id": "Panel"
+            "action_section_id": "Panel",
+            "display_name": ""
         },
         {
             "subpanel_data": {
@@ -639,7 +690,7 @@
             "size_x": 0,
             "size_y": 0,
             "panel_x": 1,
-            "panel_y": 4,
+            "panel_y": 6,
             "docker_nesting_mode": "normal",
             "docker_unloaded_visibility": "normal",
             "docker_loading_priority": "normal",
@@ -836,7 +887,7 @@
             "size_x": 0,
             "size_y": 0,
             "panel_x": 0,
-            "panel_y": 5,
+            "panel_y": 7,
             "docker_nesting_mode": "normal",
             "docker_unloaded_visibility": "normal",
             "docker_loading_priority": "normal",
@@ -848,7 +899,8 @@
             "action_section_icon_size": 0,
             "special_item_type": "none",
             "docker_id": "sharedtooldocker",
-            "action_section_id": "Panel"
+            "action_section_id": "Panel",
+            "display_name": ""
         }
     ],
     "tab_type": "buttons",

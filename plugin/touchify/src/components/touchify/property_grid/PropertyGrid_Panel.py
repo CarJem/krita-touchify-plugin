@@ -15,8 +15,6 @@ from touchify.src.resources import *
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
 ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
-LABEL_ALIGNMENT = Qt.AlignmentFlag.AlignLeft
-
 
 class PropertyGrid_Panel(QScrollArea):
 
@@ -34,7 +32,8 @@ class PropertyGrid_Panel(QScrollArea):
         self.formLayout = QFormLayout()
         self.formLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.formLayout.setSpacing(0)
-        self.formLayout.setLabelAlignment(LABEL_ALIGNMENT)
+        self.formLayout.setLabelAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.formLayout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapAllRows)
         self.formLayout.setContentsMargins(0, 0, 0, 0)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.setWidgetResizable(True)

@@ -4,14 +4,14 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import QtGui
 
-from ..dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
+from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 
-from .....ext.types.TypedList import *
-from .....resources import *
+from touchify.src.ext.types.TypedList import *
+from touchify.src.resources import *
 
-from ..utils.PropertyUtils_Extensions import *
-from .PropertyField import *
-from .PropertyField_TempValue import *
+from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
+from touchify.src.components.touchify.property_grid.fields.PropertyField import *
+from touchify.src.components.touchify.property_grid.fields.PropertyField_TempValue import *
 
 import copy
 
@@ -165,6 +165,7 @@ class PropertyField_TypedList(PropertyField):
 
     def list_modify(self, mode: Literal['edit', 'add'] = 'add'):
         self.dlg = PropertyGrid_Dialog(self)
+        self.dlg.setWindowTitle(self.labelText + ' - ' + str(self.selectedItem))
         self.dlg.setWindowFlags(Qt.WindowType.Widget)
         self.container = QVBoxLayout(self)
         self.dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)

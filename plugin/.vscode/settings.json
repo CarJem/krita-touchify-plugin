@@ -21,6 +21,6 @@
         "source.organizeImports": "explicit",
         "source.convertImportFormat": "explicit",
     },
-    "python.analysis.autoImportCompletions": false,
+    "python.analysis.autoImportCompletions": true,
     "python.analysis.diagnosticSeverityOverrides": {},
 }

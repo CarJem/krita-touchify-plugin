@@ -3,14 +3,13 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
-from .....resources import ResourceManager
 
-from .....ext.KritaExtensions import KritaExtensions
 
 class PropertyGrid_Dialog(QDialog):
 
     def __init__(self, parent: QStackedWidget):
         super().__init__(parent)
+        self.setWindowTitle("EDITOR")
         self.canReject = False
 
     def actual_reject(self):
