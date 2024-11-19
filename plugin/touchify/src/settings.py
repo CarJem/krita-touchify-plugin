@@ -5,7 +5,6 @@ import os
 
 
 from touchify.src.cfg.CfgHotkeyRegistry import CfgHotkeyRegistry
-from touchify.src.ext.JsonExtensions import JsonExtensions
 from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
 from touchify.src.cfg.CfgPreferences import CfgPreferences
 from touchify.src.variables import *
@@ -49,27 +48,10 @@ class TouchifyConfig:
             CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
             with open(CONFIG_FILE, "w") as f:
                 json.dump(cfg, f, default=lambda o: o.__dict__, indent=4)
-            
-        def load_chunk(self, configName, type):
-            try:
-                CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
-                with open(CONFIG_FILE) as f:
-                    jsonData = json.load(f)
-                    return JsonExtensions.tryGetListAssignment(jsonData, "items", type, [])
-            except:
-                return type()
-
-        def save_chunk(self, cfg, configName):
-            CONFIG_FILE = os.path.join(self.__base_dir__, 'configs', configName + ".json")
-            jsonData = { "items": cfg }
-            with open(CONFIG_FILE, "w") as f:
-                json.dump(jsonData, f, default=lambda o: o.__dict__, indent=4)
 
         def propertygrid_labels(self):
             labels = {}
-            labels["toolshelf_alt"] = "Toolbox Shelf"
-            labels["toolshelf_main"] = "Sidebar Shelf"
-            labels["toolshelf_docker"] = "Docker Shelf"
+            labels["toolshelfs"] = "Toolshelf Settings"
             labels["actions_registry"] = "Registry"
             labels["hotkeys"] = "Hotkeys"
             labels["widget_pads"] = "Widget Pads"
@@ -79,7 +61,7 @@ class TouchifyConfig:
         
         def propertygrid_sisters(self):
             row: dict[str, list[str]] = {}
-            row["toolshelfs"] = {"name": "Toolshelf Settings", "items": ["toolshelf_main", "toolshelf_alt", "toolshelf_docker"]}
+            row["toolshelfs"] = {"items": ["toolshelf_main", "toolshelf_alt", "toolshelf_docker"]}
             return row
         
         def propertygrid_restrictions(self):

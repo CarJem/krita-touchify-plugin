@@ -48,6 +48,8 @@ class CfgPreferences:
         self.Interface_ToolshelfActionSectionScale: float = 1.0
         self.Interface_ColorOptionsDockerScale: float = 1.0
 
+        self.Canvas_RightClickAction: str = ""
+
         self.load()
 
     def propertygrid_hidden(self):
@@ -76,7 +78,8 @@ class CfgPreferences:
             "Interface_ToolshelfActionBarScale": "Toolshelf Action Bar Scale",
             "Interface_ToolshelfHeaderScale": "Toolshelf Header Scale",
             "Interface_ToolshelfActionSectionScale": "Toolshelf Action Section Scale",
-            "Interface_ColorOptionsDockerScale": "Color Options Docker Scale"
+            "Interface_ColorOptionsDockerScale": "Color Options Docker Scale",
+            "Canvas_RightClickAction": "Canvas Right Click Action"
         }
         
 
@@ -89,6 +92,7 @@ class CfgPreferences:
         restrictions["Interface_ToolshelfHeaderScale"] = {"type": "range", "min": 1}
         restrictions["Interface_ToolshelfActionSectionScale"] = {"type": "range", "min": 1}
         restrictions["Interface_ColorOptionsDockerScale"] = {"type": "range", "min": 1}
+        restrictions["Canvas_RightClickAction"] = {"type": "action_selection"}
         return restrictions
 
     def load(self):
@@ -116,6 +120,8 @@ class CfgPreferences:
         self.Interface_ToolshelfActionSectionScale = CfgPreferences.IO.readFloat("Interface_ToolshelfActionSectionScale", 1.0)
         self.Interface_ColorOptionsDockerScale = CfgPreferences.IO.readFloat("Interface_ColorOptionsDockerScale", 1.0)
 
+        self.Canvas_RightClickAction = CfgPreferences.IO.readStr("Canvas_RightClickAction", "")
+
     def save(self):
         CfgPreferences.IO.writeBool("usesBorderlessToolbar", self.Styles_BorderlessToolbar, False)
         CfgPreferences.IO.writeBool("usesThinDocumentTabs", self.Styles_ThinDocumentTabs, False)
@@ -140,4 +146,6 @@ class CfgPreferences:
         CfgPreferences.IO.writeFloat("Interface_ToolshelfHeaderScale", self.Interface_ToolshelfHeaderScale, 1.0)
         CfgPreferences.IO.writeFloat("Interface_ToolshelfActionSectionScale", self.Interface_ToolshelfActionSectionScale, 1.0)
         CfgPreferences.IO.writeFloat("Interface_ColorOptionsDockerScale", self.Interface_ColorOptionsDockerScale, 1.0)
+
+        CfgPreferences.IO.writeStr("Canvas_RightClickAction", self.Canvas_RightClickAction, "")
         

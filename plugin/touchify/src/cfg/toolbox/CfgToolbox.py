@@ -1,9 +1,9 @@
 import string
-from .CfgToolboxItem import *
-from .CfgToolboxCategory import *
-from ...ext.types.TypedList import TypedList
-from ...ext.JsonExtensions import JsonExtensions as Extensions
-from ..CfgBackwardsCompat import CfgBackwardsCompat
+from touchify.src.cfg.toolbox.CfgToolboxItem import *
+from touchify.src.cfg.toolbox.CfgToolboxCategory import *
+from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 
 
    
@@ -29,9 +29,7 @@ class CfgToolbox:
     def __init__(self, **args) -> None:
         args = CfgBackwardsCompat.CfgToolbox(args)
         Extensions.dictToObject(self, args)
-
-        categories = Extensions.default_assignment(args, "categories", [])
-        self.categories = Extensions.list_assignment(categories, CfgToolboxCategory)
+        self.categories = Extensions.init_list(args, "categories", CfgToolboxCategory)
 
     def __str__(self):
         return self.preset_name.replace("\n", "\\n")

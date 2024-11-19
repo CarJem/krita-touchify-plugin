@@ -44,9 +44,9 @@ class CfgTouchifyActionPopup:
 
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
-        row["action_item_size"] = {"name": "Item Size", "items": ["actions_item_width","actions_item_height"]}
-        row["docker_item_size"] = {"name": "Docker Size", "items": ["docker_width","docker_height"]}
-        row["action_icon_size"] = {"name": "Icon Size", "items": ["actions_icon_width","actions_icon_height"]}
+        row["actions_item_size"] = {"items": ["actions_item_width","actions_item_height"]}
+        row["docker_item_size"] = {"items": ["docker_width","docker_height"]}
+        row["actions_icon_size"] = {"items": ["actions_icon_width","actions_icon_height"]}
         return row
     
     def propertygrid_hidden(self):
@@ -92,8 +92,7 @@ class CfgTouchifyActionPopup:
         self.toolshelf_data: CfgToolshelf = CfgToolshelf()
         args = CfgBackwardsCompat.CfgTouchifyActionPopup(args)        
         Extensions.dictToObject(self, args, [CfgToolshelf])
-        items = Extensions.default_assignment(args, "actions_items", [])
-        self.actions_items = Extensions.list_assignment(items, CfgTouchifyActionPopupItem)
+        self.actions_items = Extensions.init_list(args, "actions_items", CfgTouchifyActionPopupItem)
 
     def __str__(self):
         return self.id.replace("\n", "\\n")
@@ -107,16 +106,13 @@ class CfgTouchifyActionPopup:
         labels["id"] = "Popup ID"
         labels["window_type"] = "Window Type"
         labels["type"] = "Popup Type"
-        labels["docker_id"] = "Docker ID"
         labels["opacity"] = "Popup Opacity"
+        labels["docker_id"] = "Docker ID"
+        labels["docker_item_size"] = "Docker Size"
         labels["actions_grid_width"] = "Action Grid Width"
         labels["actions_grid_padding"] = "Action Grid Padding"
-        labels["docker_width"] = "Docker Width"
-        labels["docker_height"] = "Docker Height"
-        labels["actions_item_width"] = "Action Item Width"
-        labels["actions_item_height"] = "Action Item Height"
-        labels["actions_icon_width"] = "Action Icon Width"
-        labels["actions_icon_height"] = "Action Icon Height"
+        labels["actions_item_size"] = "Item Size"
+        labels["actions_icon_size"] = "Icon Size"
         labels["actions_items"] = "Actions"
         labels["actions_close_on_click"] = "Close on Click"
         labels["toolshelf_data"] = "Toolshelf Data"

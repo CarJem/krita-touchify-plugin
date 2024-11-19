@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMdiArea
 
 
 
+from touchify.src.components.touchify.canvas import NtCanvasAction
 from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
 
 from touchify.src.docker_manager import DockerManager
@@ -19,6 +20,7 @@ from touchify.src.cfg.widget_pad.CfgWidgetPadPreset import CfgWidgetPadPreset
 from touchify.src.cfg.widget_pad.CfgWidgetPadOptions import CfgWidgetPadOptions
 from touchify.src.cfg.widget_pad.CfgWidgetPadToolboxOptions import CfgWidgetPadToolboxOptions
 from touchify.src.cfg.CfgWidgetPadRegistry import CfgWidgetPadRegistry
+from touchify.src.components.touchify.canvas.NtCanvasAction import NtCanvasAction
 
 
 class NtCanvas(QWidget):
@@ -48,6 +50,7 @@ class NtCanvas(QWidget):
 
         self.reloadActivePreset()
 
+
     #region Setup Stuff
     def setManagers(self, manager: DockerManager, actionsManager: ActionManager):
         self.dockerManager = manager
@@ -59,6 +62,9 @@ class NtCanvas(QWidget):
         self.krita_window = window
         self.qWin = self.krita_window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
+
+        self.action_handler = NtCanvasAction(self.qWin)
+        self.qWin.installEventFilter(self.action_handler)
 
         self.adjustFilter = NtSubWinFilter(self.mdiArea)
         self.adjustFilter.setTargetWidget(self)

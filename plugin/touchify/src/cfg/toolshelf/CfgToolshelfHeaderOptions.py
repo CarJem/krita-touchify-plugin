@@ -37,9 +37,8 @@ class CfgToolshelfHeaderOptions:
 
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
-
-        stack_actions = Extensions.default_assignment(args, "stack_actions", [])
-        self.stack_actions = Extensions.list_assignment(stack_actions, CfgTouchifyActionCollection)
+        
+        self.stack_actions = Extensions.init_list(args, "stack_actions", CfgTouchifyActionCollection)
     
     def forceLoad(self):
         self.stack_actions = TypedList(self.stack_actions, CfgTouchifyActionCollection)

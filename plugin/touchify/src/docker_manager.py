@@ -97,6 +97,9 @@ class DockerManager(QObject):
         self.mainWindow = self.touchify.windowSource
         self.qWin = self.touchify.windowSource.qwindow()
 
+    def onTimerTick(self):
+        pass
+
     def registerListener(self, type: SignalType, source: Callable):
         if type not in self._listeners:
             self._listeners[type] = list()

@@ -70,6 +70,7 @@ class TouchifyWindow(QObject):
 
     def onActionTick(self):
         self.action_management.onTimerTick()
+        self.docker_management.onTimerTick()
 
     def onKritaConfigUpdated(self):
         toolshelf_docker = self.getToolshelfDocker()

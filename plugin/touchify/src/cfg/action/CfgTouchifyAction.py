@@ -1,6 +1,6 @@
-from .CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
-from .CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from .CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
+from touchify.src.cfg.action.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
+from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
 from touchify.src.ext.types.StrEnum import StrEnum
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
@@ -56,8 +56,7 @@ class CfgTouchifyAction:
         args = CfgBackwardsCompat.CfgTouchifyAction(args)
         Extensions.dictToObject(self, args, [CfgTouchifyActionPopup, CfgTouchifyActionDockerGroup, CfgTouchifyActionCanvasPreset])
         
-        context_menu_actions = Extensions.default_assignment(args, "context_menu_actions", [])
-        self.context_menu_actions = Extensions.list_assignment(context_menu_actions, CfgTouchifyAction)
+        self.context_menu_actions = Extensions.init_list(args, "context_menu_actions", CfgTouchifyAction)
         
 
     def __str__(self):

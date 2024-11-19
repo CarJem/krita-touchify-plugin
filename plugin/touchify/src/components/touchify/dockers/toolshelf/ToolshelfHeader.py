@@ -111,7 +111,7 @@ class ToolshelfHeader(QWidget):
             homeProps.icon = "material:home"
             self.homeButton = self.createTab(homeProps, self.parent_header.openRootPage, "Home")
 
-            panels = self.cfg.panels
+            panels = self.cfg.pages
             for properties in panels:
                 properties: CfgToolshelfPanel
                 self.createTab(properties, partial(self.parent_header.openPage, properties.id), properties.id)

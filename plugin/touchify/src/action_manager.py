@@ -10,6 +10,8 @@ from touchify.src.components.touchify.actions.TouchifyActionButton import Touchi
 
 from touchify.src.variables import *
 
+from functools import partial
+
 from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
 from touchify.src.cfg.action.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
 from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
@@ -160,7 +162,8 @@ class ActionManager(QObject):
         self.registeredActionsData[actionIdentifier] = data
            
         TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.executeAction, {'data': data, 'action': action})      
-        action.triggered.connect(lambda: self.executeAction(data, action))
+
+        action.triggered.connect(partial(self.executeAction, data, action))
         
         (use_text, text, use_icon, icon) = self.__getActionDisplay(data)
         if use_icon:

@@ -33,7 +33,7 @@ class ToolshelfPageStack(QStackedWidget):
         super().currentChanged.connect(self.onCurrentChanged)
         
         self.addMainPanel()
-        panels = self.cfg.panels
+        panels = self.cfg.pages
         for entry in panels:
             properties: CfgToolshelfPanel = entry
             self.addPanel(properties.id, properties)

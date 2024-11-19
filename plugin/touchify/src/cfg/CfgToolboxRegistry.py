@@ -45,8 +45,7 @@ class CfgToolboxRegistry:
         }
 
         mappings = json.loads(json.dumps(obj, default=lambda o: o.__dict__, indent=4))
-        presets_real = Extensions.default_assignment(mappings, "presets", [])
-        self.presets = Extensions.list_assignment(presets_real, CfgToolbox)
+        self.presets = Extensions.init_list(mappings, "presets", CfgToolbox)
 
         HAS_ALREADY_LOADED = True
 

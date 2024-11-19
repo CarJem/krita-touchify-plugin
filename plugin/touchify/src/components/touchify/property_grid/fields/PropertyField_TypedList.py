@@ -165,7 +165,7 @@ class PropertyField_TypedList(PropertyField):
 
     def list_modify(self, mode: Literal['edit', 'add'] = 'add'):
         self.dlg = PropertyGrid_Dialog(self)
-        self.dlg.setWindowTitle(self.labelText + ' - ' + str(self.selectedItem))
+        self.dlg.setWindowTitle(self.variable_name + ' - ' + str(self.selectedItem))
         self.dlg.setWindowFlags(Qt.WindowType.Widget)
         self.container = QVBoxLayout(self)
         self.dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)

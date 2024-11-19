@@ -1,8 +1,8 @@
-from .action.CfgTouchifyActionDockerGroup import *
-from .action.CfgTouchifyActionPopup import *
-from ..ext.types.TypedList import TypedList
-from ..ext.JsonExtensions import JsonExtensions as Extensions
-from .action.CfgTouchifyAction import *
+from touchify.src.cfg.action.CfgTouchifyActionDockerGroup import *
+from touchify.src.cfg.action.CfgTouchifyActionPopup import *
+from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.cfg.action.CfgTouchifyAction import *
     
 class CfgActionRegistry:
     actions_registry: TypedList[CfgTouchifyAction] = []
@@ -11,8 +11,7 @@ class CfgActionRegistry:
 
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
-        actions_registry = Extensions.default_assignment(args, "actions_registry", [])
-        self.actions_registry = Extensions.list_assignment(actions_registry, CfgTouchifyAction)
+        self.actions_registry = Extensions.init_list(args, "actions_registry", CfgTouchifyAction)
 
     def forceLoad(self):
         self.actions_registry = TypedList(self.actions_registry, CfgTouchifyAction)

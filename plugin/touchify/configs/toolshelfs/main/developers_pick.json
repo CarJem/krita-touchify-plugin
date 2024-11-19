@@ -28,10 +28,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -71,10 +71,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -114,10 +114,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -227,10 +227,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "json_version": 2
@@ -294,10 +294,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -337,10 +337,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -380,10 +380,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -423,10 +423,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -464,10 +464,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "json_version": 2
@@ -498,10 +498,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -612,10 +612,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -660,10 +660,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -913,7 +913,66 @@
         }
     ],
     "tab_type": "buttons",
-    "panels": [
+    "actions": [],
+    "header_options": {
+        "stack_actions": [
+            {
+                "actions": [
+                    {
+                        "context_menu_actions": [],
+                        "id": "AnimationDockers",
+                        "icon": "addblankframe",
+                        "text": "Animation",
+                        "variant": "docker_group",
+                        "action_id": "",
+                        "action_use_icon": false,
+                        "brush_name": "",
+                        "brush_override_icon": false,
+                        "docker_id": "RecorderDocker",
+                        "workspace_id": "",
+                        "docker_group_data": {
+                            "docker_names": [
+                                {
+                                    "id": "TimelineDocker"
+                                },
+                                {
+                                    "id": "OnionSkinsDocker"
+                                }
+                            ],
+                            "id": "AnimationsDocker",
+                            "group_id": "",
+                            "tabs_mode": false
+                        },
+                        "popup_data": {
+                            "toolshelf_data": {
+                                "actions": [],
+                                "sections": [],
+                                "json_version": 2,
+                                "pages": []
+                            },
+                            "actions_items": [],
+                            "json_version": 2
+                        },
+                        "show_text": false,
+                        "show_icon": true,
+                        "canvas_preset_data": {}
+                    }
+                ],
+                "row_name": "Dockers Toggles"
+            }
+        ],
+        "stack_preview": "tabbed",
+        "position": "top",
+        "default_to_resize_mode": false,
+        "button_size": 32,
+        "header_size": 16,
+        "stack_alignment": "default",
+        "json_version": 1
+    },
+    "action_height": 20,
+    "preset_name": "Developer's Pick",
+    "json_version": 2,
+    "pages": [
         {
             "sections": [
                 {
@@ -1147,10 +1206,10 @@
                                             },
                                             "popup_data": {
                                                 "toolshelf_data": {
-                                                    "panels": [],
                                                     "actions": [],
                                                     "sections": [],
-                                                    "json_version": 1
+                                                    "json_version": 2,
+                                                    "pages": []
                                                 },
                                                 "actions_items": [],
                                                 "json_version": 2
@@ -1176,10 +1235,10 @@
                                             },
                                             "popup_data": {
                                                 "toolshelf_data": {
-                                                    "panels": [],
                                                     "actions": [],
                                                     "sections": [],
-                                                    "json_version": 1
+                                                    "json_version": 2,
+                                                    "pages": []
                                                 },
                                                 "actions_items": [],
                                                 "json_version": 2
@@ -1204,10 +1263,10 @@
                                     },
                                     "popup_data": {
                                         "toolshelf_data": {
-                                            "panels": [],
                                             "actions": [],
                                             "sections": [],
-                                            "json_version": 1
+                                            "json_version": 2,
+                                            "pages": []
                                         },
                                         "actions_items": [],
                                         "json_version": 2
@@ -1233,10 +1292,10 @@
                                     },
                                     "popup_data": {
                                         "toolshelf_data": {
-                                            "panels": [],
                                             "actions": [],
                                             "sections": [],
-                                            "json_version": 1
+                                            "json_version": 2,
+                                            "pages": []
                                         },
                                         "actions_items": [],
                                         "json_version": 2
@@ -1262,10 +1321,10 @@
                                     },
                                     "popup_data": {
                                         "toolshelf_data": {
-                                            "panels": [],
                                             "actions": [],
                                             "sections": [],
-                                            "json_version": 1
+                                            "json_version": 2,
+                                            "pages": []
                                         },
                                         "actions_items": [],
                                         "json_version": 2
@@ -1291,10 +1350,10 @@
                                     },
                                     "popup_data": {
                                         "toolshelf_data": {
-                                            "panels": [],
                                             "actions": [],
                                             "sections": [],
-                                            "json_version": 1
+                                            "json_version": 2,
+                                            "pages": []
                                         },
                                         "actions_items": [],
                                         "json_version": 2
@@ -1320,10 +1379,10 @@
                                     },
                                     "popup_data": {
                                         "toolshelf_data": {
-                                            "panels": [],
                                             "actions": [],
                                             "sections": [],
-                                            "json_version": 1
+                                            "json_version": 2,
+                                            "pages": []
                                         },
                                         "actions_items": [],
                                         "json_version": 2
@@ -1417,10 +1476,10 @@
                                     },
                                     "popup_data": {
                                         "toolshelf_data": {
-                                            "panels": [],
                                             "actions": [],
                                             "sections": [],
-                                            "json_version": 1
+                                            "json_version": 2,
+                                            "pages": []
                                         },
                                         "actions_items": [],
                                         "actions_grid_padding": 2,
@@ -1493,10 +1552,10 @@
                                     },
                                     "popup_data": {
                                         "toolshelf_data": {
-                                            "panels": [],
                                             "actions": [],
                                             "sections": [],
-                                            "json_version": 1
+                                            "json_version": 2,
+                                            "pages": []
                                         },
                                         "actions_items": [],
                                         "actions_grid_padding": 2,
@@ -1588,10 +1647,10 @@
                                     },
                                     "popup_data": {
                                         "toolshelf_data": {
-                                            "panels": [],
                                             "actions": [],
                                             "sections": [],
-                                            "json_version": 1
+                                            "json_version": 2,
+                                            "pages": []
                                         },
                                         "actions_items": [],
                                         "actions_grid_padding": 2,
@@ -1680,64 +1739,5 @@
             "size_y": 0,
             "tab_type": "buttons"
         }
-    ],
-    "actions": [],
-    "header_options": {
-        "stack_actions": [
-            {
-                "actions": [
-                    {
-                        "context_menu_actions": [],
-                        "id": "AnimationDockers",
-                        "icon": "addblankframe",
-                        "text": "Animation",
-                        "variant": "docker_group",
-                        "action_id": "",
-                        "action_use_icon": false,
-                        "brush_name": "",
-                        "brush_override_icon": false,
-                        "docker_id": "RecorderDocker",
-                        "workspace_id": "",
-                        "docker_group_data": {
-                            "docker_names": [
-                                {
-                                    "id": "TimelineDocker"
-                                },
-                                {
-                                    "id": "OnionSkinsDocker"
-                                }
-                            ],
-                            "id": "AnimationsDocker",
-                            "group_id": "",
-                            "tabs_mode": false
-                        },
-                        "popup_data": {
-                            "toolshelf_data": {
-                                "panels": [],
-                                "actions": [],
-                                "sections": [],
-                                "json_version": 1
-                            },
-                            "actions_items": [],
-                            "json_version": 2
-                        },
-                        "show_text": false,
-                        "show_icon": true,
-                        "canvas_preset_data": {}
-                    }
-                ],
-                "row_name": "Dockers Toggles"
-            }
-        ],
-        "stack_preview": "tabbed",
-        "position": "top",
-        "default_to_resize_mode": false,
-        "button_size": 32,
-        "header_size": 16,
-        "stack_alignment": "default",
-        "json_version": 1
-    },
-    "action_height": 20,
-    "preset_name": "Developer's Pick",
-    "json_version": 1
+    ]
 }

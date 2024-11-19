@@ -35,7 +35,6 @@ class PropertyField(QWidget):
         self.variable_data = variable_data
         self.variable_source = variable_source
 
-        self.labelText = self.variable_name
         self.setContentsMargins(0, 0, 0, 0)
         self.setSizePolicy(ROW_SIZE_POLICY_X, ROW_SIZE_POLICY_Y)
 
@@ -72,7 +71,7 @@ class PropertyField(QWidget):
 
     def nested_edit(self):
         self.nested_dlg = PropertyGrid_Dialog(self)
-        self.nested_dlg.setWindowTitle(str(self.labelText))
+        self.nested_dlg.setWindowTitle(str(self.variable_name))
         self.nested_dlg.setWindowFlags(Qt.WindowType.Widget)
         self.nested_container = QVBoxLayout(self)
         self.nested_dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)

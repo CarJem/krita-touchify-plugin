@@ -13,8 +13,7 @@ class CfgTouchifyActionCollection:
         from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
         self.actions: TypedList[CfgTouchifyAction] = []
         Extensions.dictToObject(self, args)
-        actions = Extensions.default_assignment(args, "actions", [])
-        self.actions = Extensions.list_assignment(actions, CfgTouchifyAction)
+        self.actions = Extensions.init_list(args, "actions", CfgTouchifyAction)
 
     def forceLoad(self):
         from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction

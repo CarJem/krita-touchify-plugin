@@ -14,24 +14,22 @@ from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 class CfgToolshelf:
     actions: TypedList[CfgTouchifyActionCollection] = []
     sections: TypedList[CfgToolshelfSection] = []
+    pages: TypedList[CfgToolshelfPanel] = []
+
     action_height: int = 16
     tab_type: str = "buttons"
     
-    panels: TypedList[CfgToolshelfPanel] = []
     header_options: CfgToolshelfHeaderOptions = CfgToolshelfHeaderOptions()
     preset_name: str = "New Toolshelf Preset"
 
-    json_version: int = 1
+    json_version: int = 2
 
     def __init__(self, **args) -> None:
         args = CfgBackwardsCompat.CfgToolshelf(args)
         Extensions.dictToObject(self, args, [CfgToolshelfHeaderOptions])
-        panels = Extensions.default_assignment(args, "panels", [])
-        self.panels = Extensions.list_assignment(panels, CfgToolshelfPanel)
-        actions = Extensions.default_assignment(args, "actions", [])
-        self.actions = Extensions.list_assignment(actions, CfgTouchifyActionCollection)
-        sections = Extensions.default_assignment(args, "sections", [])
-        self.sections = Extensions.list_assignment(sections, CfgToolshelfSection)
+        self.pages = Extensions.init_list(args, "pages", CfgToolshelfPanel)
+        self.actions = Extensions.init_list(args, "actions", CfgTouchifyActionCollection)
+        self.sections = Extensions.init_list(args, "sections", CfgToolshelfSection)
 
     def getFileName(self):
         valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
@@ -43,14 +41,14 @@ class CfgToolshelf:
         return self.preset_name.replace("\n", "\\n")
 
     def forceLoad(self):
-        self.panels = TypedList(self.panels, CfgToolshelfPanel)
+        self.pages = TypedList(self.pages, CfgToolshelfPanel)
         self.actions = TypedList(self.actions, CfgTouchifyActionCollection)
         self.sections = TypedList(self.sections, CfgToolshelfSection)
 
     def propertygrid_sorted(self):
         return [
             "preset_name",
-            "panels",
+            "pages",
             "actions",
             "sections",
             "header_options",
@@ -61,7 +59,7 @@ class CfgToolshelf:
     def propertygrid_labels(self):
         labels = {}
         labels["preset_name"] = "Preset Name"
-        labels["panels"] = "Panels"
+        labels["pages"] = "Pages"
         labels["actions"] = "Actions"
         labels["sections"] = "Sections"
         labels["tab_type"] = "Tab Type"

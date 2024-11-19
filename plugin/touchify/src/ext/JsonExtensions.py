@@ -27,6 +27,7 @@ class JsonExtensions:
         else:
             return JsonExtensions.list_assignment(defaultValue, type)
 
+
     def tryGetEntry(jsonData, key, type, defaultValue):
         if not jsonData:
             return defaultValue
@@ -46,15 +47,13 @@ class JsonExtensions:
                         for cls in extraTypes:
                             if isinstance(getattr(obj, key), cls):
                                 setattr(obj, key, cls(**value))
-                            
-    def default_assignment(args, attributeName, defaultValue):
+
+    def init_list(args: dict[str, any], attributeName: str, classSrc: type):
+        val = []
         if attributeName in args:
-            return args[attributeName]
-        else:
-            return defaultValue
-        
-    def list_assignment(array, classSrc):
+            val = args[attributeName]
+
         arraySrc = TypedList(None, classSrc)
-        for i in array:
+        for i in val:
             arraySrc.append(classSrc(**i))
         return arraySrc

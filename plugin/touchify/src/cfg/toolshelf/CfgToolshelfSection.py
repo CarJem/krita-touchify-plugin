@@ -91,8 +91,7 @@ class CfgToolshelfSection:
         from .CfgToolshelfPanel import CfgToolshelfPanel
         self.subpanel_data: CfgToolshelfPanel = CfgToolshelfPanel()
         Extensions.dictToObject(self, args, [CfgToolshelfPanel])
-        action_section_contents = Extensions.default_assignment(args, "action_section_contents", [])
-        self.action_section_contents = Extensions.list_assignment(action_section_contents, CfgTouchifyActionCollection)
+        self.action_section_contents = Extensions.init_list(args, "action_section_contents", CfgTouchifyActionCollection)
 
     def forceLoad(self):
         self.action_section_contents = TypedList(self.action_section_contents, CfgTouchifyActionCollection)
@@ -124,8 +123,9 @@ class CfgToolshelfSection:
     
     def propertygrid_hints(self):
         hints = {}
-        hints["size_x"] = "leave set to 0 for automatic sizing"
-        hints["size_y"] = "leave set to 0 for automatic sizing"
+        hints["size"] = "the base size of this section; leave set to 0 for automatic sizing"
+        hints["min_size"] = "the minimum size of this section; leave set to 0 for automatic sizing"
+        hints["max_size"] = "the maximum size of this section; leave set to 0 for automatic sizing"
         return hints
     
     def propertygrid_sorted(self):
@@ -219,14 +219,10 @@ class CfgToolshelfSection:
 
         labels["display_name"] = "Display Name"
 
-        labels["size_x"] = "Base Width"
-        labels["size_y"] = "Base Height"
-        labels["max_size_x"] = "Max Width"
-        labels["max_size_y"] = "Max Height"
-        labels["min_size_x"] = "Min Width"
-        labels["min_size_y"] = "Min Height"
-        labels["panel_y"] = "Panel Row"
-        labels["panel_x"] = "Panel Column"
+        labels["size"] = "Base Width / Height"
+        labels["max_size"] = "Max Width / Height"
+        labels["min_size"] = "Min Width / Height"
+        labels["panel_location"] = "Panel Position"
         labels["ignore_scaling"] = "Ignore Scaling"
         labels["section_type"] = "Section Type"
 
@@ -238,10 +234,8 @@ class CfgToolshelfSection:
         labels["action_section_display_mode"] = "Display Mode"
         labels["action_section_id"] = "Section ID"
         labels["action_section_contents"] = "Actions"
-        labels["action_section_alignment_x"] = "Horizontal Alignment"
-        labels["action_section_alignment_y"] = "Vertical Alignment"
-        labels["action_section_btn_width"] = "Button Width"
-        labels["action_section_btn_height"] = "Button Height"
+        labels["action_section_alignment"] = "Horizontal / Vertical Alignment"
+        labels["action_section_btn_size"] = "Button Width / Height"
         labels["action_section_icon_size"] = "Icon Size"
 
         labels["special_item_type"] = "Component Type"
@@ -251,12 +245,12 @@ class CfgToolshelfSection:
     
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
-        row["action_section_btn_size"] = {"name": "Button Width / Height", "items": ["action_section_btn_width", "action_section_btn_height"]}
-        row["action_section_alignment"] = {"name": "Horizontal / Vertical Alignment", "items": ["action_section_alignment_x","action_section_alignment_y"]}
-        row["size"] = {"name": "Base Width / Height", "items": ["size_x","size_y"]}
-        row["min_size"] = {"name": "Min Width / Height", "items": ["min_size_x","min_size_y"]}
-        row["max_size"] = {"name": "Max Width / Height", "items": ["max_size_x","max_size_y"]}
-        row["panel_location"] = {"name": "Panel Position", "items": ["panel_x", "panel_y"]}
+        row["action_section_btn_size"] = {"items": ["action_section_btn_width", "action_section_btn_height"]}
+        row["action_section_alignment"] = {"items": ["action_section_alignment_x","action_section_alignment_y"]}
+        row["size"] = {"items": ["size_x","size_y"]}
+        row["min_size"] = {"items": ["min_size_x","min_size_y"]}
+        row["max_size"] = {"items": ["max_size_x","max_size_y"]}
+        row["panel_location"] = {"items": ["panel_x", "panel_y"]}
         return row
 
     def propertygrid_restrictions(self):

@@ -12,8 +12,7 @@ class CfgTouchifyActionDockerGroup:
     def __init__(self, **args) -> None:
         args = CfgBackwardsCompat.CfgTouchifyActionDockerGroup(args)
         Extensions.dictToObject(self, args)
-        docker_names = Extensions.default_assignment(args, "docker_names", [])
-        self.docker_names = Extensions.list_assignment(docker_names, CfgTouchifyActionDockerGroupItem)
+        self.docker_names = Extensions.init_list(args, "docker_names", CfgTouchifyActionDockerGroupItem)
 
     def forceLoad(self):
         self.docker_names = TypedList(self.docker_names, CfgTouchifyActionDockerGroupItem)

@@ -29,10 +29,8 @@ class CfgToolshelfPanel:
     def __init__(self, **args) -> None:
         args = CfgBackwardsCompat.CfgToolshelfPanel(args)
         Extensions.dictToObject(self, args)
-        sections = Extensions.default_assignment(args, "sections", [])
-        actions = Extensions.default_assignment(args, "actions", [])
-        self.sections = Extensions.list_assignment(sections, CfgToolshelfSection)
-        self.actions = Extensions.list_assignment(actions, CfgTouchifyActionCollection)
+        self.sections = Extensions.init_list(args, "sections", CfgToolshelfSection)
+        self.actions = Extensions.init_list(args, "actions", CfgTouchifyActionCollection)
 
     def hasDisplayName(self):
         return self.display_name != None and self.display_name != "" and self.display_name.isspace() == False
@@ -45,9 +43,17 @@ class CfgToolshelfPanel:
         name = self.id.replace("\n", "\\n")
         return name
     
+    def propertygrid_hints(self):
+        hints = {}
+        hints["id"] = "The internal ID for this panel; best that it be something unique"
+        hints["display_name"] = "The display text used for this panel when needed"
+        hints["icon"] = "The custom icon used when this panel is used as a page for a toolshelf or when needed"
+        hints["size"] = "the size of this panel; leave set to 0 for automatic sizing"
+        return hints
+    
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
-        row["size"] = {"name": "Panel Width / Height", "items": ["size_x","size_y"]}
+        row["size"] = {"items": ["size_x","size_y"]}
         return row
     
     def propertygrid_sorted(self):
@@ -64,8 +70,7 @@ class CfgToolshelfPanel:
         labels["id"] = "Panel ID"
         labels["display_name"] = "Display Name"
         labels["icon"] = "Display Icon"
-        labels["size_x"] = "Panel Width"
-        labels["size_y"] = "Panel Height"
+        labels["size"] = "Panel Width / Height"
         labels["row"] = "Tab Row"
         labels["tab_type"] = "Tab Type"
         labels["sections"] = "Sections"
@@ -75,6 +80,8 @@ class CfgToolshelfPanel:
 
     def propertygrid_restrictions(self):
         restrictions = {}
+        restrictions["size_x"] = {"type": "range", "min": 0}
+        restrictions["size_y"] = {"type": "range", "min": 0}
         restrictions["icon"] = {"type": "icon_selection"}
         restrictions["tab_type"] = {"type": "values", "entries": self.TabType.values()}
         return restrictions

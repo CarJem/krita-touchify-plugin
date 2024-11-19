@@ -2,7 +2,6 @@
     "actions": [],
     "sections": [],
     "tab_type": "buttons",
-    "panels": [],
     "header_options": {
         "stack_preview": "default",
         "position": "top",
@@ -13,5 +12,6 @@
     },
     "action_height": 16,
     "preset_name": "Empty",
-    "json_version": 1
+    "json_version": 2,
+    "pages": []
 }

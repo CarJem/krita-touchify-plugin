@@ -57,6 +57,11 @@ class PropertyUtils_Extensions:
             return dict(obj.propertygrid_labels())
         else: return {}
 
+    def getHints(obj):
+        if hasattr(obj, "propertygrid_hints"):
+            return dict(obj.propertygrid_hints())
+        else: return {}
+
     def isClassModel(obj):
         return hasattr(obj, "propertygrid_ismodel")
 

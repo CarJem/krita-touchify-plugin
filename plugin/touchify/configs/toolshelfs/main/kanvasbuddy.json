@@ -56,10 +56,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "json_version": 2
@@ -84,10 +84,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "json_version": 2
@@ -112,10 +112,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "json_version": 2
@@ -152,7 +152,18 @@
         }
     ],
     "tab_type": "buttons",
-    "panels": [
+    "header_options": {
+        "stack_preview": "default",
+        "position": "top",
+        "default_to_resize_mode": false,
+        "button_size": 32,
+        "header_size": 16,
+        "stack_actions": []
+    },
+    "action_height": 16,
+    "preset_name": "KanvasBuddy",
+    "json_version": 2,
+    "pages": [
         {
             "sections": [
                 {
@@ -358,16 +369,5 @@
             "action_height": 10,
             "json_version": 1
         }
-    ],
-    "header_options": {
-        "stack_preview": "default",
-        "position": "top",
-        "default_to_resize_mode": false,
-        "button_size": 32,
-        "header_size": 16,
-        "stack_actions": []
-    },
-    "action_height": 16,
-    "preset_name": "KanvasBuddy",
-    "json_version": 1
+    ]
 }

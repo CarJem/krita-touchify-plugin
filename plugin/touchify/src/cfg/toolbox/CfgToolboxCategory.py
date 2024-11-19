@@ -1,6 +1,6 @@
-from ...ext.JsonExtensions import JsonExtensions as Extensions
-from ...ext.types.TypedList import TypedList
-from .CfgToolboxItem import *
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.cfg.toolbox.CfgToolboxItem import *
 
 class CfgToolboxCategory:
     id: str=""
@@ -11,9 +11,7 @@ class CfgToolboxCategory:
 
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args)
-
-        items = Extensions.default_assignment(args, "items", [])
-        self.items = Extensions.list_assignment(items, CfgToolboxItem)
+        self.items = Extensions.init_list(args, "items", CfgToolboxItem)
 
     def addAction(self, action_id: str):
         newItem = CfgToolboxItem()

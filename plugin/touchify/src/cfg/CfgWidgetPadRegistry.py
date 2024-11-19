@@ -1,10 +1,10 @@
-from ..variables import TOUCHIFY_ID_SETTINGS_WIDGETPAD
-from ..ext.KritaSettings import KritaSettings
-from .widget_pad.CfgWidgetPadPreset import *
-from ..ext.types.TypedList import TypedList
-from ..ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.variables import TOUCHIFY_ID_SETTINGS_WIDGETPAD
+from touchify.src.ext.KritaSettings import KritaSettings
+from touchify.src.cfg.widget_pad.CfgWidgetPadPreset import *
+from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 import os, json
-from ...paths import BASE_DIR
+from touchify.paths import BASE_DIR
 
 
    
@@ -50,8 +50,7 @@ class CfgWidgetPadRegistry:
         }
 
         mappings = json.loads(json.dumps(obj, default=lambda o: o.__dict__, indent=4))
-        presets_real = Extensions.default_assignment(mappings, "presets", [])
-        self.presets = Extensions.list_assignment(presets_real, CfgWidgetPadPreset)
+        self.presets = Extensions.init_list(mappings, "presets", CfgWidgetPadPreset)
 
         self.HAS_ALREADY_LOADED = True
     

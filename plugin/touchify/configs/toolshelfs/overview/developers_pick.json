@@ -95,10 +95,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "json_version": 2
@@ -124,10 +124,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "json_version": 2
@@ -155,10 +155,10 @@
                                     },
                                     "popup_data": {
                                         "toolshelf_data": {
-                                            "panels": [],
                                             "actions": [],
                                             "sections": [],
-                                            "json_version": 1
+                                            "json_version": 2,
+                                            "pages": []
                                         },
                                         "actions_items": [],
                                         "json_version": 2
@@ -184,10 +184,10 @@
                                     },
                                     "popup_data": {
                                         "toolshelf_data": {
-                                            "panels": [],
                                             "actions": [],
                                             "sections": [],
-                                            "json_version": 1
+                                            "json_version": 2,
+                                            "pages": []
                                         },
                                         "actions_items": [],
                                         "json_version": 2
@@ -226,10 +226,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "json_version": 2
@@ -364,10 +364,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -407,10 +407,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -450,10 +450,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "actions_grid_padding": 2,
@@ -493,10 +493,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "json_version": 2
@@ -522,10 +522,10 @@
                             },
                             "popup_data": {
                                 "toolshelf_data": {
-                                    "panels": [],
                                     "actions": [],
                                     "sections": [],
-                                    "json_version": 1
+                                    "json_version": 2,
+                                    "pages": []
                                 },
                                 "actions_items": [],
                                 "json_version": 2
@@ -550,10 +550,10 @@
                     },
                     "popup_data": {
                         "toolshelf_data": {
-                            "panels": [],
                             "actions": [],
                             "sections": [],
-                            "json_version": 1
+                            "json_version": 2,
+                            "pages": []
                         },
                         "actions_items": [],
                         "actions_grid_padding": 2,
@@ -590,10 +590,10 @@
                     "id": "",
                     "popup_data": {
                         "toolshelf_data": {
-                            "panels": [],
                             "actions": [],
                             "sections": [],
-                            "json_version": 1
+                            "json_version": 2,
+                            "pages": []
                         },
                         "actions_items": [],
                         "json_version": 2
@@ -619,10 +619,10 @@
                     "id": "",
                     "popup_data": {
                         "toolshelf_data": {
-                            "panels": [],
                             "actions": [],
                             "sections": [],
-                            "json_version": 1
+                            "json_version": 2,
+                            "pages": []
                         },
                         "actions_items": [],
                         "json_version": 2
@@ -648,10 +648,10 @@
                     "id": "",
                     "popup_data": {
                         "toolshelf_data": {
-                            "panels": [],
                             "actions": [],
                             "sections": [],
-                            "json_version": 1
+                            "json_version": 2,
+                            "pages": []
                         },
                         "actions_items": [],
                         "json_version": 2
@@ -677,10 +677,10 @@
                     "id": "",
                     "popup_data": {
                         "toolshelf_data": {
-                            "panels": [],
                             "actions": [],
                             "sections": [],
-                            "json_version": 1
+                            "json_version": 2,
+                            "pages": []
                         },
                         "actions_items": [],
                         "json_version": 2
@@ -711,10 +711,10 @@
                     },
                     "popup_data": {
                         "toolshelf_data": {
-                            "panels": [],
                             "actions": [],
                             "sections": [],
-                            "json_version": 1
+                            "json_version": 2,
+                            "pages": []
                         },
                         "actions_items": [],
                         "json_version": 2
@@ -739,10 +739,10 @@
                     },
                     "popup_data": {
                         "toolshelf_data": {
-                            "panels": [],
                             "actions": [],
                             "sections": [],
-                            "json_version": 1
+                            "json_version": 2,
+                            "pages": []
                         },
                         "actions_items": [],
                         "json_version": 2
@@ -755,7 +755,6 @@
         }
     ],
     "tab_type": "tabs",
-    "panels": [],
     "header_options": {
         "stack_preview": "default",
         "position": "top",
@@ -768,5 +767,6 @@
     },
     "action_height": 20,
     "preset_name": "Developer's Pick",
-    "json_version": 1
+    "json_version": 2,
+    "pages": []
 }

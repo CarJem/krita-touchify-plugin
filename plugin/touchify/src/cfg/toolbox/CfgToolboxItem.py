@@ -1,7 +1,7 @@
-from ...ext.types.TypedList import TypedList
-from ...ext.JsonExtensions import JsonExtensions as Extensions
-from .CfgToolboxSubItem import CfgToolboxSubItem
-from ..CfgBackwardsCompat import CfgBackwardsCompat
+from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.cfg.toolbox.CfgToolboxSubItem import CfgToolboxSubItem
+from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 
 class CfgToolboxItem:
 
@@ -15,9 +15,7 @@ class CfgToolboxItem:
     def __init__(self, **args) -> None:
         args = CfgBackwardsCompat.CfgToolboxItem(args)
         Extensions.dictToObject(self, args)
-
-        items = Extensions.default_assignment(args, "items", [])
-        self.items = Extensions.list_assignment(items, CfgToolboxSubItem)
+        self.items = Extensions.init_list(args, "items", CfgToolboxSubItem)
 
     def __str__(self):
         return self.name.replace("\n", "\\n")

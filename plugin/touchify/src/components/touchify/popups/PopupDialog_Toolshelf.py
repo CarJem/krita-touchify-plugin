@@ -72,9 +72,11 @@ class PopupDialog_Toolshelf(PopupDialog):
         super().closeEvent(event)
    
     def generateSize(self):
-        dialog_width = self.mainWidget.sizeHint().width()
-        dialog_height = self.mainWidget.sizeHint().height()
-        return [int(dialog_width), int(dialog_height)]
+        if self.mainWidget:
+            dialog_width = self.mainWidget.sizeHint().width()
+            dialog_height = self.mainWidget.sizeHint().height()
+            return [int(dialog_width), int(dialog_height)]
+        else: return [0,0]
 
     def triggerPopup(self, parent: QWidget | None):
         super().triggerPopup(parent)
