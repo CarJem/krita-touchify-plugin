@@ -1,37 +1,4 @@
 {
-    "actions": [],
-    "sections": [
-        {
-            "subpanel_data": {
-                "sections": [],
-                "actions": [],
-                "json_version": 1
-            },
-            "action_section_contents": [],
-            "action_section_alignment_x": "none",
-            "action_section_alignment_y": "none",
-            "action_section_btn_width": 0,
-            "action_section_btn_height": 0,
-            "action_section_display_mode": "normal",
-            "action_section_icon_size": 0,
-            "docker_loading_priority": "normal",
-            "docker_nesting_mode": "normal",
-            "docker_unloaded_visibility": "normal",
-            "max_size_x": 0,
-            "max_size_y": 0,
-            "min_size_x": 0,
-            "min_size_y": 0,
-            "panel_x": 0,
-            "panel_y": 0,
-            "section_type": "docker",
-            "size_x": 0,
-            "size_y": 0,
-            "docker_id": "sharedtooldocker",
-            "action_section_id": "Panel",
-            "json_version": 2
-        }
-    ],
-    "tab_type": "buttons",
     "header_options": {
         "stack_preview": "default",
         "position": "top",
@@ -40,8 +7,44 @@
         "header_size": 16,
         "stack_actions": []
     },
-    "action_height": 16,
     "preset_name": "Redesign / NuToolOptions",
-    "json_version": 2,
-    "pages": []
+    "json_version": 3,
+    "pages": [],
+    "homepage": {
+        "sections": [
+            {
+                "subpanel_data": {
+                    "sections": [],
+                    "actions": [],
+                    "json_version": 1
+                },
+                "action_section_contents": [],
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none",
+                "action_section_btn_width": 0,
+                "action_section_btn_height": 0,
+                "action_section_display_mode": "normal",
+                "action_section_icon_size": 0,
+                "docker_loading_priority": "normal",
+                "docker_nesting_mode": "normal",
+                "docker_unloaded_visibility": "normal",
+                "max_size_x": 0,
+                "max_size_y": 0,
+                "min_size_x": 0,
+                "min_size_y": 0,
+                "panel_x": 0,
+                "panel_y": 0,
+                "section_type": "docker",
+                "size_x": 0,
+                "size_y": 0,
+                "docker_id": "sharedtooldocker",
+                "action_section_id": "Panel",
+                "json_version": 2
+            }
+        ],
+        "actions": [],
+        "tab_type": "buttons",
+        "action_height": 16,
+        "json_version": 1
+    }
 }

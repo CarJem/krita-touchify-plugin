@@ -33,6 +33,8 @@ class PopupDialog(QDockWidget):
         self.oldMinSize = None
         self.autoConceal = False
 
+        self.closing_method = args.closing_method
+
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         
         self.windowMode = self.metadata.window_type
@@ -61,6 +63,10 @@ class PopupDialog(QDockWidget):
         if not isMouse:
             offset_x += (width // 2) - (dialog_width // 2)
             offset_y += (height)
+
+        if self.metadata.popup_position == CfgTouchifyActionPopup.PopupPosition.Center:
+            offset_x -= (dialog_width // 2) 
+            offset_y -= (dialog_height // 2)
 
         actual_x = offset_x
         actual_y = offset_y
@@ -100,11 +106,9 @@ class PopupDialog(QDockWidget):
         if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
             self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
             self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, True)
-            self.autoConceal = True
         elif self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
             self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
             self.setMouseTracking(True)
-            self.autoConceal = False
 
         if self.allowOpacity:
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
@@ -148,7 +152,7 @@ class PopupDialog(QDockWidget):
     def triggerPopup(self, parent: QWidget | None):
         if self.isVisible():
             self.close()
-            if not self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
+            if not self.windowMode == CfgTouchifyActionPopup.WindowType.Popup: 
                 return
         
         actual_x = 0
@@ -201,13 +205,25 @@ class PopupDialog(QDockWidget):
     #region Events 
     
     def eventFilter(self, source: QObject, event: QEvent) -> bool:
-        #if event.type() == QEvent.Type.MouseMove:
-            #pass
+        if (event.type() == QEvent.Type.MouseButtonRelease) or (event.type() == QEvent.Type.TabletPress):
+            cursor_pos = QCursor.pos()
+            widget_under_cursor = QApplication.widgetAt(cursor_pos)
+        
+            if isinstance(widget_under_cursor, QOpenGLWidget):
+                if widget_under_cursor.metaObject().className() == "KisOpenGLCanvas2":
+                    if self.closing_method == CfgTouchifyActionPopup.ClosingMethod.CanvasFocus:
+                        qApp.removeEventFilter(self)
+                        self.close()
+                        return False
+
         return super().eventFilter(source, event)
 
     def event(self, event: QEvent):
         if event.type() == QEvent.Type.WindowDeactivate:
-            if self.autoConceal:
+            if self.closing_method == CfgTouchifyActionPopup.ClosingMethod.Default:
+                if self.windowMode != CfgTouchifyActionPopup.WindowType.Window:
+                    self.close()
+            elif self.closing_method == CfgTouchifyActionPopup.ClosingMethod.Deactivation:
                 self.close()
         return super().event(event)
 

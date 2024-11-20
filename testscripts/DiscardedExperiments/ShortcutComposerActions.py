@@ -6,6 +6,12 @@ from PyQt5.QtWidgets import *
 
 from touchify.src.settings import TouchifyConfig
 
+try:
+    from input_adapter import ActionManager
+    SHORTCUT_COMPOSER_LOADED = True
+except:
+    SHORTCUT_COMPOSER_LOADED = False
+
 
 class NtCanvasAction(QObject):
     mouseReleased = pyqtSignal()
@@ -22,6 +28,32 @@ class NtCanvasAction(QObject):
         if not widget_under_cursor.metaObject().className() == "KisOpenGLCanvas2": return False
 
         return True
+    
+    #def findShortcutComposer(self):
+    #    sc = None
+    #    for ext in Krita.instance().extensions():
+    #        if str(ext.metaObject().className()) == "ShortcutComposer":
+    #            sc = ext
+    #            break
+    #    return sc
+    
+    #def runAction(self, actionName: str, isRelease: bool = False):
+        #actionRan = False
+        #if SHORTCUT_COMPOSER_LOADED:
+        #    sc = self.findShortcutComposer()
+        #    if sc:
+        #        for protector in sc._protectors:
+        #            actionManager: ActionManager = protector.action_manager
+        #            desiredAction = actionName
+        #            if desiredAction in actionManager._stored_actions:
+        #                action = actionManager._stored_actions[desiredAction]
+        #                if isRelease: 
+        #                    action.core_action.on_every_key_release()
+        #                    action.core_action.on_short_key_release()
+        #                    action.core_action.on_long_key_release()
+        #                else: 
+        #                    action.core_action.on_key_press()
+        #                actionRan = True
 
     def runAction(self, actionName: str):
         if self.isFocused():             

@@ -11,7 +11,7 @@ from touchify.src.docker_manager import *
 
 from touchify.src.cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfPageStack import ToolshelfPageStack
-from touchify.src.components.touchify.dockers.toolshelf.extras.MouseListener import MouseListener
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfCanvasListener import ToolshelfCanvasListener
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -23,7 +23,7 @@ class ToolshelfWidget(QWidget):
     def __init__(self, parent: "ToolshelfDockWidget", cfg: CfgToolshelf, registry_index: int = -1):
         super(ToolshelfWidget, self).__init__(parent)
 
-        self.mouse_listener = MouseListener()
+        self.mouse_listener = ToolshelfCanvasListener()
         self.pinned = False
         self.parent_docker: "ToolshelfDockWidget" | "ToolshelfDocker" | "PopupDialog_Toolshelf"  = parent
         self.registry_index = registry_index
@@ -35,8 +35,7 @@ class ToolshelfWidget(QWidget):
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.setContentsMargins(0,0,0,0)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-
-        
+     
         headerOrientation = Qt.Orientation.Horizontal
         headerBeforePages = True
 
@@ -117,7 +116,7 @@ class ToolshelfWidget(QWidget):
             self.header.onPageChanged(current_panel_id)
 
     def requestViewUpdate(self):
-        QTimer.singleShot(250, self.parent_docker.requestViewUpdate)
+        QTimer.singleShot(150, self.parent_docker.requestViewUpdate)
 
     def onMouseRelease(self):
         cursor_pos = QCursor.pos()
@@ -128,5 +127,13 @@ class ToolshelfWidget(QWidget):
         
         if self.pinned == False:
             self.goHome()
+
+    #endregion
+
+    #region Overrides
+
+    def sizeHint(self):
+        resultingsize = super().sizeHint()
+        return resultingsize.grownBy(QMargins(1,1,1,1))
 
     #endregion

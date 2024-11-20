@@ -2,6 +2,7 @@ from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from touchify.src.components.pyqt.event_filters.MouseReleaseListener import MouseReleaseListener
 from touchify.src.components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
 from touchify.src.components.touchify.actions.TouchifyActionMenu import TouchifyActionMenu
@@ -87,6 +88,11 @@ class ActionManager(QObject):
         self.registeredActionsData = {}
         self.active_popups: dict[str, PopupDialog] = {}
 
+        self.composer_action_down: bool = False
+        self.composer_listener = MouseReleaseListener()
+        self.composer_listener.mouseReleased.connect(self.onMouseRelease)
+        qApp.installEventFilter(self.composer_listener)
+
 
         self.__lastToolboxTool: str = ""
         self.__lastBrushPreset: Resource = None
@@ -111,6 +117,13 @@ class ActionManager(QObject):
         
         initToolboxHook()
 
+    def onActionBtnPressed(self):
+        self.composer_action_down = True
+
+    def onMouseRelease(self):
+        if self.composer_action_down == True:
+            QApplication.instance().sendEvent(Krita.instance().activeWindow().qwindow(), QKeyEvent(QEvent.Type.KeyRelease, Qt.Key.Key_Escape, Qt.KeyboardModifier.NoModifier))
+            self.composer_action_down = False
         
     def executeAction(self, data: CfgTouchifyAction, action: QAction):
         match data.variant:
@@ -150,7 +163,10 @@ class ActionManager(QObject):
                 result = self.button_generic(data)
 
         if result and result != None:
+            if data.closes_popup == True:
+                result.clicked.connect(lambda: self.__closePopup(result))
             result.setParent(parent)
+
         return result
     
     def createAction(self, data: CfgTouchifyAction, window: Window, actionPath: str):
@@ -285,6 +301,17 @@ class ActionManager(QObject):
         btns = win.findChildren(TouchifyActionButton)
         for btn in btns: btn.timer_interval_triggered.emit()
 
+    def __closePopup(self, btn: TouchifyActionButton):
+        if btn:
+            parent: QWidget | None = btn.parentWidget()
+            while parent:
+                if isinstance(parent, PopupDialog):
+                    parent.close()
+                    return
+                else:
+                    parent = parent.parentWidget()
+            return
+                
 
     def __brushButtonUpdate(self, __btn: TouchifyActionButton, id: str):
 
@@ -324,13 +351,16 @@ class ActionManager(QObject):
             self.active_popups[data.id] = popup
 
         popup.triggerPopup(_parent)
-
        
-    def button_main(self, onClick: any, toolTip: str, checkable: bool):
+    def button_main(self, onClick: any, toolTip: str, checkable: bool, composerMode: bool = False):
         btn = TouchifyActionButton()
         
         if onClick:
-            btn.clicked.connect(onClick) # collect and disconnect all when closing
+            if composerMode:
+                btn.pressed.connect(onClick)
+                btn.pressed.connect(self.onActionBtnPressed)
+            else:
+                btn.clicked.connect(onClick) # collect and disconnect all when closing
         btn.setToolTip(toolTip)
         btn.setContentsMargins(0,0,0,0)
         btn.setCheckable(checkable)
@@ -388,13 +418,16 @@ class ActionManager(QObject):
         btn: TouchifyActionButton | None = None
         if action:
             checkable = action.isCheckable()
+            toolbox_item = False
             if act.action_id in ActionManager.TriggerConstants.KNOWN_UNCHECKABLES:
                 checkable = False
             
             if act.action_id in ActionManager.TriggerConstants.TOOLBOX_ITEMS:
                 checkable = True
+                toolbox_item = True
+
             
-            btn = self.button_main(action.trigger, action.toolTip(), checkable)
+            btn = self.button_main(action.trigger, action.toolTip(), checkable, act.action_composer_mode)
 
             if act.action_id in ActionManager.TriggerConstants.TOOLBOX_ITEMS:
                 btn.timer_interval_triggered.connect(lambda: self.__toolboxToolUpdate(btn, act.action_id))
@@ -402,8 +435,12 @@ class ActionManager(QObject):
             self.__setButtonDisplay(act, btn)
 
             if checkable:
-                btn.setChecked(action.isChecked())
                 btn.setCheckable(True)
+                if toolbox_item:
+                    if self.__lastToolboxTool == act.action_id:
+                        btn.setChecked(True)
+                else:
+                    btn.setChecked(action.isChecked())
         return btn
 
     

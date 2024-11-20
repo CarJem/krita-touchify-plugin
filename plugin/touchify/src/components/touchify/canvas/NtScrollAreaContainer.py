@@ -10,6 +10,7 @@ class NtScrollAreaContainer(QResizableWidget):
     def __init__(self, scrollArea = None, parent=None):
         super(NtScrollAreaContainer, self).__init__(parent)
         self.setLayout(QVBoxLayout(self))
+        self.layout().setSpacing(0)
         self.layout().setContentsMargins(0,0,0,0)
         self.sa = None
 
@@ -23,11 +24,6 @@ class NtScrollAreaContainer(QResizableWidget):
             return self.sa.widget().sizeHint()
 
         return super().sizeHint()
-    
-    
-    
-
-
 
     def setScrollArea(self, scrollArea):
         """

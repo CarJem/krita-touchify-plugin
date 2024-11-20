@@ -62,6 +62,13 @@ class CfgBackwardsCompat:
         if Helpers.getVersion(args) == 1:
             Helpers.changeVarName(args, "panels", "pages")
             Helpers.setVersion(args, 2)
+        if Helpers.getVersion(args) == 2:
+            args["homepage"] = {}
+            if "sections" in args: args["homepage"]["sections"] = args["sections"]
+            if "actions" in args: args["homepage"]["actions"] = args["actions"]
+            if "tab_type" in args: args["homepage"]["tab_type"] = args["tab_type"]
+            if "action_height" in args: args["homepage"]["action_height"] = args["action_height"]
+            Helpers.setVersion(args, 3)
         return args
     
     def CfgToolshelfSection(args: dict[str, any]):

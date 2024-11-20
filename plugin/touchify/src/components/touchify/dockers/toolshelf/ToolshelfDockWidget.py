@@ -29,6 +29,8 @@ class ToolshelfDockWidget(QDockWidget):
         self._last_panel_id: str | None = None
         self._last_pinned: bool = False
         self.scrollArea = QScrollArea(self)
+        self.scrollArea.setContentsMargins(0,0,0,0)
+        self.scrollArea.setViewportMargins(0,0,0,0)
         self.scrollArea.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)

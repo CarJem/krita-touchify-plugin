@@ -30,8 +30,9 @@ class DockerContainer(QWidget):
         self.layout().addWidget(self.container)
 
         self.container_layout = QVBoxLayout(self)
-        self.container_layout.setContentsMargins(0, 0, 0, 0)
+        self.container_layout.setContentsMargins(2, 2, 2, 2)
         self.container_layout.setSpacing(0)
+        self.container_layout.removeWidget
         self.container.setLayout(self.container_layout)
         
         self.hiddenMode = False
@@ -39,20 +40,15 @@ class DockerContainer(QWidget):
         self.passiveMode = False
         
         self.unloaded_label = QLabel(self.container)
-        self.unloaded_label.setText("Docker is currently in use elsewhere, click here to move it here")
+        self.unloaded_label.linkActivated.connect(self._stealDocker)
+        self.unloaded_label.setContentsMargins(0,0,0,0)
+        self.unloaded_label.setText("Docker is open elsewhere. Close it to show here or <a href=\"clickable\">click here</a> to move it here.")
         self.unloaded_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.unloaded_label.setWordWrap(True)
         self.unloaded_label.setVisible(False)
 
-        self.unloaded_button = QPushButton(self.container)
-        self.unloaded_button.setText("Load Docker")
-        self.unloaded_button.clicked.connect(self._stealDocker)
-        self.unloaded_button.setVisible(False)
-
-        self._updateEmptySpace(True)
-
         self.docker_manager.registerListener(DockerManager.SignalType.OnReleaseDocker, self.onDockerReleased)
-        self.docker_manager.registerListener(DockerManager.SignalType.OnStealDocker, self.onDockerStolen)
+        self.docker_manager.registerListener(DockerManager.SignalType.OnLoadDocker, self.onDockerLoaded)
 
         self.dockerShouldBeActive = False
         self.isLoaded = True
@@ -64,72 +60,53 @@ class DockerContainer(QWidget):
     def loadWidget(self, force: bool = False):
         self.dockerShouldBeActive = True
         if force:
-            if not self.passiveMode: self.docker_manager.unloadDocker(self.docker_id, False)
+            if not self.passiveMode: self.docker_manager.unloadDocker(self.docker_id)
             self._loadDocker()
-        else:
-            self._loadDocker()
+        else: self._loadDocker()
 
     def shutdownWidget(self):
         self.docker_manager.removeListener(DockerManager.SignalType.OnReleaseDocker, self.onDockerReleased)
-        self.docker_manager.removeListener(DockerManager.SignalType.OnStealDocker, self.onDockerStolen)
-        self.docker_manager.unloadDocker(self.docker_id, False)
+        self.docker_manager.unloadDocker(self.docker_id)
+
+    def updateVisibility(self):
+        if self.borrowedDocker != None and self.borrowedDocker.parentWidget() == self.container:
+            self.unloaded_label.setVisible(False)
+            self.container_layout.removeWidget(self.unloaded_label)
+        else:
+            self.container_layout.addWidget(self.unloaded_label)
+            self.unloaded_label.setVisible(True)
 
     #region Private Functions
     def _stealDocker(self):
         if self.dockerShouldBeActive:
-            self.docker_manager.unloadDocker(self.docker_id, False)
+            self.docker_manager.unloadDocker(self.docker_id)
             self._loadDocker()
+        self.updateVisibility()
 
     def _loadDocker(self):
         shareArgs = DockerManager.LoadArguments(self.dockMode)
         dockerLoaded: QWidget | None = self.docker_manager.loadDocker(self.docker_id, shareArgs)
-        if not dockerLoaded: 
-            if not self.borrowedDocker:
-                self._updateEmptySpace(True)
-            return
+        if not dockerLoaded: return
         self.borrowedDocker = dockerLoaded
         self.container_layout.addWidget(self.borrowedDocker)
-        self._updateEmptySpace(False)
         if self.dockMode: self.borrowedDocker.show()
+        self.updateVisibility()
 
-    def _unloadDocker(self, invokeRelease: bool = True):
-        if self.borrowedDocker: self._updateEmptySpace(True)
-        self.docker_manager.unloadDocker(self.docker_id, invokeRelease)
-
-    def _updateEmptySpace(self, state: bool):
-        if self.emptySpaceState != state:
-            if state:
-                self.container_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-                self.container_layout.addWidget(self.unloaded_label)
-                self.container_layout.addWidget(self.unloaded_button)
-                if self.hiddenMode:
-                    self.container.setVisible(False)
-                    self.container.setAutoFillBackground(False)
-            else:
-                self.container_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-                self.container_layout.removeWidget(self.unloaded_label)
-                self.container_layout.removeWidget(self.unloaded_button)
-                if self.hiddenMode:
-                    self.container.setVisible(True)
-                    self.container.setAutoFillBackground(True)
-
-            self.docker_busy = state
-            self.emptySpaceState = state
-            self.unloaded_button.setVisible(state)
-            self.unloaded_button.setEnabled(state)
-            self.unloaded_label.setVisible(state)
-            self.unloaded_label.setEnabled(state)
+    def _unloadDocker(self):
+        self.docker_manager.unloadDocker(self.docker_id)
+        self.updateVisibility()
 
     #endregion
 
     #region Event Functions
-    def onDockerStolen(self, ID: any):
-        if self.docker_id == ID:
-            self._updateEmptySpace(True)
-
     def onDockerReleased(self, ID: any):
         if self.dockerShouldBeActive and self.docker_id == ID:
             self._loadDocker()
+            self.updateVisibility()
+
+    def onDockerLoaded(self, ID: any):
+        self.updateVisibility()
+
     #endregion
 
     #region Setters
@@ -148,21 +125,10 @@ class DockerContainer(QWidget):
 
     #region Overrides
     
-    
-    def minimumSize(self) -> QSize:
-        baseSize: QSize = QSize()
-        if self.borrowedDocker:
-            baseSize = self.borrowedDocker.minimumSize()
-        else:
-            baseSize = super().minimumSize()
-        return baseSize
-    
     def sizeHint(self):
         baseSize: QSize = QSize()
         if self.size:
             baseSize = self.size
-        elif self.borrowedDocker:
-            baseSize = self.borrowedDocker.sizeHint()
         else:
             baseSize = super().sizeHint()
             

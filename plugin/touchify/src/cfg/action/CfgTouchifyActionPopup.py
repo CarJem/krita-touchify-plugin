@@ -19,6 +19,15 @@ class CfgTouchifyActionPopup:
         Popup = "popup"
         Window = "window"
 
+    class ClosingMethod(StrEnum):
+        Default = "default"
+        CanvasFocus = "canvas_focus"
+        Deactivation = "deactivation"
+
+    class PopupPosition(StrEnum):
+        Default = "default"
+        Center = "center"
+
 
     id: str = ""
     window_type: str = "popup"
@@ -38,6 +47,10 @@ class CfgTouchifyActionPopup:
     docker_id: str = ""
     docker_width: int = 0
     docker_height: int = 0
+
+
+    closing_method: str = "default"
+    popup_position: str = "default"
 
     json_version: int = 2
 
@@ -117,6 +130,8 @@ class CfgTouchifyActionPopup:
         labels["actions_close_on_click"] = "Close on Click"
         labels["toolshelf_data"] = "Toolshelf Data"
         labels["window_title"] = "Window Title"
+        labels["closing_method"] = "Closing Method"
+        labels["popup_position"] = "Popup Position"
         return labels
 
     def propertygrid_restrictions(self):
@@ -124,6 +139,8 @@ class CfgTouchifyActionPopup:
         restrictions["docker_id"] = {"type": "docker_selection"}
         restrictions["type"] = {"type": "values", "entries": self.Variants.values()}
         restrictions["window_type"] = {"type": "values", "entries": self.WindowType.values()}
+        restrictions["popup_position"] = {"type": "values", "entries": self.PopupPosition.values()}
+        restrictions["closing_method"] = {"type": "values", "entries": self.ClosingMethod.values()}
         restrictions["opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
         restrictions["toolshelf_data"] = {"type": "expandable"}
         return restrictions

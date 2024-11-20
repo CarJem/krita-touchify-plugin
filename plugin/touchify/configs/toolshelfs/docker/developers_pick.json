@@ -1,7 +1,4 @@
 {
-    "actions": [],
-    "sections": [],
-    "tab_type": "buttons",
     "header_options": {
         "stack_preview": "default",
         "position": "top",
@@ -10,8 +7,15 @@
         "header_size": 16,
         "stack_actions": []
     },
-    "action_height": 16,
     "preset_name": "Developer's Pick",
-    "json_version": 2,
-    "pages": []
+    "json_version": 3,
+    "pages": [],
+    "homepage": {
+        "sections": [],
+        "actions": [],
+        "tab_type": "buttons",
+        "action_height": 16,
+        "json_version": 1,
+        "id": "ROOT"
+    }
 }

@@ -1,9 +1,7 @@
-from PyQt5.QtWidgets import QSizePolicy, QStackedWidget
-import uuid
 from krita import *
 from PyQt5.QtWidgets import *
 
-class MouseListener(QObject):
+class ToolshelfCanvasListener(QObject):
     mouseReleased = pyqtSignal()
 
     def __init__(self):

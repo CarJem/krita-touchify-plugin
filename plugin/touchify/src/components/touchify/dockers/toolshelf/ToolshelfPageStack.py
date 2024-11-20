@@ -36,23 +36,46 @@ class ToolshelfPageStack(QStackedWidget):
         panels = self.cfg.pages
         for entry in panels:
             properties: CfgToolshelfPanel = entry
-            self.addPanel(properties.id, properties)
+            self.addPanel(properties)
 
         self.changePanel('ROOT')
+        self.evaluateSize()
+
+    def evaluateSize(self):
+        for i in range(0, self.count()):
+            widget = self.widget(i)
+            policy = QSizePolicy.Policy.Ignored
+            widget.setSizePolicy(policy, policy)
+            widget.setDisabled(False)
+            widget.updateGeometry()
+            widget.adjustSize()
+        self.adjustSize()
+
+        currentPage = self.currentWidget()
+        currentPage.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        currentPage.setEnabled(True)
+        currentPage.updateGeometry()
+        currentPage.adjustSize()
+        self.adjustSize()
+
 
     def addMainPanel(self):
         self._mainWidget = ToolshelfHomepage(self, self.cfg)
         self._panels['ROOT'] = self._mainWidget
         super().addWidget(self._mainWidget)
 
-    def addPanel(self, ID, data: CfgToolshelfPanel):
-        panel = ToolshelfPage(self, ID, data)
-        self._panels[ID] = panel
+    def addPanel(self, data: CfgToolshelfPanel):
+        panel = ToolshelfPage(self, data)
+        self._panels[data.id] = panel
         super().addWidget(panel)
 
     def goHome(self):
         if self.currentWidget() != self._mainWidget:
             self.changePanel('ROOT')
+
+    def sizeHint(self):
+        resultingSize = super().sizeHint()
+        return resultingSize
 
     def changePanel(self, panel_id: str):
         new_panel = self.panel(panel_id)

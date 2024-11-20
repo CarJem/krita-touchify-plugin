@@ -24,10 +24,12 @@ class CfgTouchifyAction:
     variant: str = "action"
     show_text: bool = False
     show_icon: bool = True
+    closes_popup: bool = False
 
     #Action Params
     action_id: str = ""
     action_use_icon: bool = False
+    action_composer_mode: bool = False
 
     #Menu Params
     context_menu_actions: TypedList["CfgTouchifyAction"] = []
@@ -105,6 +107,8 @@ class CfgTouchifyAction:
             "variant",
             "show_text",
             "show_icon",
+            "closes_popup",
+            "action_composer_mode"
             #Action Params
             "action_id",
             "action_use_icon",
@@ -145,6 +149,11 @@ class CfgTouchifyAction:
             result.append("canvas_preset_data")
 
         return result
+    
+    def propertygrid_hints(self):
+        hints = {}
+        hints["closes_popup"] = "If the action is contained within a Touchify popup, toggling this will make it close when you trigger it"
+        return hints
 
     def propertygrid_labels(self):
         labels = {}
@@ -155,6 +164,8 @@ class CfgTouchifyAction:
         labels["variant"] = "Action Type"
         labels["show_text"] = "Show Text"
         labels["show_icon"] = "Show Icon"
+        labels["closes_popup"] = "Close popup on click"
+        labels["action_composer_mode"] = "Shortcut Composer Compat"
 
         labels["action_id"] = "Action ID"
         labels["action_use_icon"] = "Use Action Icon"

@@ -69,7 +69,6 @@ class DockerManager(QObject):
 
     class SignalType(Enum):
         OnReleaseDocker = 1,
-        OnStealDocker = 2,
         OnLoadDocker = 3
 
     class LoadArguments:
@@ -105,10 +104,8 @@ class DockerManager(QObject):
             self._listeners[type] = list()
     
         self._listeners[type].append(source)
-        
-        if type == DockerManager.SignalType.OnStealDocker:
-            self.onStealDockerSignal.connect(source)
-        elif type == DockerManager.SignalType.OnReleaseDocker:
+    
+        if type == DockerManager.SignalType.OnReleaseDocker:
             self.onReleaseDockerSignal.connect(source)
         elif type == DockerManager.SignalType.OnLoadDocker:
             self.onLoadDockerSignal.connect(source)
@@ -116,18 +113,14 @@ class DockerManager(QObject):
     def removeListener(self, type: SignalType, source: Callable):
         if type in self._listeners:
             self._listeners[type].remove(source)
-            if type == DockerManager.SignalType.OnStealDocker:
-                self.onStealDockerSignal.disconnect(source)
-            elif type == DockerManager.SignalType.OnReleaseDocker:
+            if type == DockerManager.SignalType.OnReleaseDocker:
                 self.onReleaseDockerSignal.disconnect(source)
             elif type == DockerManager.SignalType.OnLoadDocker:
                 self.onLoadDockerSignal.disconnect(source)
 
     def invokeListeners(self, docker_id: str, type: SignalType):
         if type in self._listeners:
-            if type == DockerManager.SignalType.OnStealDocker:
-                self.onStealDockerSignal.emit(docker_id)
-            elif type == DockerManager.SignalType.OnReleaseDocker:
+            if type == DockerManager.SignalType.OnReleaseDocker:
                 self.onReleaseDockerSignal.emit(docker_id)
             elif type == DockerManager.SignalType.OnLoadDocker:
                 self.onLoadDockerSignal.emit(docker_id)
@@ -136,10 +129,11 @@ class DockerManager(QObject):
         return self.qWin.findChild(QDockWidget, docker_id)
 
     def loadDocker(self, docker_id: str, args: LoadArguments):
-        # Already in Use, don't borrow twice
+        # Already in Use, don't borrow twice; unload previous docker
         if docker_id in self._shareData:
             if self._shareData[docker_id].isDead == False:
-                return None
+                self._shareData[docker_id].clearWidgetData()
+                del self._shareData[docker_id]
 
         docker = self.findDocker(docker_id)
         # Does requested widget exist?
@@ -150,13 +144,12 @@ class DockerManager(QObject):
             return self._shareData[docker_id].dockerWidget
         return None
          
-    def unloadDocker(self, docker_id: str, invokeRelease: bool = True):
+    def unloadDocker(self, docker_id: str):
         # Ensure there's a widget to return
         if docker_id in self._shareData:
             self._shareData[docker_id].clearWidgetData()
             del self._shareData[docker_id]
-            if invokeRelease: self.invokeListeners(docker_id, DockerManager.SignalType.OnReleaseDocker)
-            else: self.invokeListeners(docker_id, DockerManager.SignalType.OnStealDocker)
+            self.invokeListeners(docker_id, DockerManager.SignalType.OnReleaseDocker)
 
     def toggleDockersPerArea(self, area: int):
         dockers = self.mainWindow.dockers()

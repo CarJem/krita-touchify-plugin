@@ -1,3 +1,54 @@
+# alpha.0.0.5
+## Additions:
+- **Versioned JSON Configurations**
+    > To reduce configuration breaking, data now may have a hidden version number that automatically will adapt older config versions to newer ones, as such no configurations have broken since alpha.0.0.5
+- **Addon System**
+    > Addons allow for certain functionality of Touchify to be seperated depending on the needs of a user, these addons are seperated into multiple extensions and utilize Touchify as a dependency to run. Features moved to addons include:
+    > - Color Options Docker
+    > - Brush Options Docker
+    > - Reference Tabs Docker
+    > - Compact Brush Toggler (New Arrival)
+    >
+    > Depending on an addon's importance or need, it may or may not be dropped in the future. Additionally, more extensions may become addons under the Touchify umbrella through this system in the future or even existing Touchify features themselves (like the Toolshelf Docker)
+- **PropertyGrid / Settings Overhaul**
+    > This includes:
+    > - **Hint Text** - To provide additional information about what configuration variables do
+    > - **Navigation Bar** - To provide the user an idea of where they are within the configuration files
+    > - And many other smaller adjustments to the UI and logic
+- **New Toolshelf Feature - Nested Toolshelf Sections**
+    > - Allows you to nest a toolshelf within a section without having tabs, useful if you want two dockers in one section tab for instance.
+- **New Popup Feature - Toolshelf Popups**
+    > - Allows you to have your very own toolshelf-grade customizable popups.
+- **New Popup Features**
+    > These include the following:
+    > - **Close Behavior** - Changes what causes the Popup to close
+    > - **Popup Position** - Changes what the inital position of the popup is
+    > - Toolshelf Actions can now optionally close the source popup on trigger (configurable through the actions themselves)
+- **Shortcut Composer Compat Option for Toolshelf Actions**
+    > - If a toolshelf action button has this option enabled, the action will be triggered on button press, and when you release the mouse or tablet stylus it will send the escape key to make it possible to use Shortcut Composer's features without any keyboard keys
+- **New Scaling Options**
+    > Various user interface elements managed by Touchify can now be scaled independently of their actual scale via configuration or hardcoded value using various scale multipliers found in the new "Preferences" section in Touchify's Settings
+- **Experimental: Canvas Mouse Interaction Triggers**
+    > Right, Left and Middle Mouse Clicks can now be setup to trigger krita actions when these events happen on the canvas. They do not override Krita's own Canvas Input Settings/Logic so be advised that there may be some overlap you'll have to disable (such as right click to open the Popup Palette)
+## Bug Fixes / Improvements:
+- **Various Configuration Reworks**
+    > A number on numerous changes to improve consistency and reduce redundancy with the code that uses it
+- **Better Popup Dialogs**
+    > Reworked to iron out some oddities with scaling, performance and such
+- **Toolshelf Sizing Optimization**
+    > Automatic / Manual Size Adjustments should be far more reliable now
+- **Improved Docker Containers**
+    > Loading and Unloading of Dockers should now be far more consistent
+- **Replaced all Timers with Central Timer**
+    > Improves performance and scalability of the extension
+## Planned Future Deprications:
+- **Popup Types**
+    > With the new addition of the Toolshelf Type for Popups, the existing modes now slightly redundant in terms of functionality they offer compared to toolshelfs. Existing functionality of Docker and Action Popups will be carried over in due time to Toolshelves
+- **Toolshelf Docker**
+    > With the arrival of popup toolshelfs, they could be adjusted to work as Dockers as well. This change will likely happen in due time
+- **Docker Groups / Docker / Workspace Triggers**
+    > Ideally, I'd like to consildate these legacy features to something better and more usable for the current system
+
 # alpha.0.0.4
 
 ## Breaking Changes:

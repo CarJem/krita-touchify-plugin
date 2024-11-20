@@ -18,6 +18,10 @@ class CfgToolshelfPanel:
     icon: str = ""
     size_x: int = 0
     size_y: int = 0
+    min_size_x: int = 0
+    min_size_y: int = 0
+    max_size_x: int = 0
+    max_size_y: int = 0
     row: int = 0
     actions: TypedList[CfgTouchifyActionCollection] = []
     sections: TypedList[CfgToolshelfSection] = []
@@ -49,11 +53,15 @@ class CfgToolshelfPanel:
         hints["display_name"] = "The display text used for this panel when needed"
         hints["icon"] = "The custom icon used when this panel is used as a page for a toolshelf or when needed"
         hints["size"] = "the size of this panel; leave set to 0 for automatic sizing"
+        hints["max_size"] = "the maximum size of this panel; leave set to 0 for automatic sizing"
+        hints["min_size"] = "the minimum size of this panel; leave set to 0 for automatic sizing"
         return hints
     
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
         row["size"] = {"items": ["size_x","size_y"]}
+        row["max_size"] = {"items": ["max_size_x","max_size_y"]}
+        row["min_size"] = {"items": ["min_size_x","min_size_y"]}
         return row
     
     def propertygrid_sorted(self):
@@ -71,6 +79,8 @@ class CfgToolshelfPanel:
         labels["display_name"] = "Display Name"
         labels["icon"] = "Display Icon"
         labels["size"] = "Panel Width / Height"
+        labels["max_size"] = "Panel Max Width / Height"
+        labels["min_size"] = "Panel Min Width / Height"
         labels["row"] = "Tab Row"
         labels["tab_type"] = "Tab Type"
         labels["sections"] = "Sections"
@@ -82,6 +92,10 @@ class CfgToolshelfPanel:
         restrictions = {}
         restrictions["size_x"] = {"type": "range", "min": 0}
         restrictions["size_y"] = {"type": "range", "min": 0}
+        restrictions["max_size_x"] = {"type": "range", "min": 0}
+        restrictions["max_size_y"] = {"type": "range", "min": 0}
+        restrictions["min_size_x"] = {"type": "range", "min": 0}
+        restrictions["min_size_y"] = {"type": "range", "min": 0}
         restrictions["icon"] = {"type": "icon_selection"}
         restrictions["tab_type"] = {"type": "values", "entries": self.TabType.values()}
         return restrictions

@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfSectionGroup import ToolshelfSectionGroup
 from touchify.src.components.touchify.actions.TouchifyActionPanel import TouchifyActionPanel
 from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
-from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelfSection
+from touchify.src.cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfSpecialSection import ToolshelfSpecialSection
 from touchify.src.settings import TouchifyConfig
@@ -281,24 +281,16 @@ class ToolshelfPanel(QWidget):
         self.pageLoadedSignal.emit()
 
     def setSizeHint(self, size):
-        self.size = QSize(size[0] + 20, size[1] + 20)
-
-    def getDefaultSizeHint(self):
-        width_padding = 20
-        height_padding = 20
-
-        sizeHint = super().sizeHint()
-
-        container_width = sizeHint.width() + width_padding
-        container_height = sizeHint.height() + height_padding
-
-        return QSize(container_width, container_height)
+        self.size = QSize(size[0], size[1])
     
     def updateStyleSheet(self):
         self.quickActions.setStyleSheet(Stylesheet.instance().touchify_toolshelf_header)
 
     def sizeHint(self):
-        if self.size:
-            return self.size
-        else:
-            return self.getDefaultSizeHint()
+        resultingSize = super().sizeHint()
+        if self.size: resultingSize = self.size
+
+        resultingSize.setWidth(resultingSize.width())
+        resultingSize.setHeight(resultingSize.height())
+
+        return resultingSize

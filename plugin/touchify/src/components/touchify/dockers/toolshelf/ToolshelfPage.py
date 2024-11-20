@@ -15,12 +15,14 @@ if TYPE_CHECKING:
 
 class ToolshelfPage(QWidget):
     
-    def __init__(self, parent: "ToolshelfPageStack", ID: any, data: CfgToolshelfPanel):
+    def __init__(self, parent: "ToolshelfPageStack", data: CfgToolshelfPanel):
         super(ToolshelfPage, self).__init__(parent)
         self.setAutoFillBackground(True)
         self.setLayout(QVBoxLayout(self))
         self.layout().setSpacing(0)
         self.layout().setContentsMargins(0,0,0,0)
+
+        self.ID = data.id
 
         self.toolshelf: "ToolshelfPageStack" = parent
         self.docker_manager = self.toolshelf.rootWidget.parent_docker.docker_manager

@@ -33,8 +33,8 @@ class TouchifyHotkeys(object):
             parentWidget = mobj.parentWidget()
             center_x = int(parentWidget.width() / 2) - int(mobj.width() / 2)
             center_y = int(parentWidget.height() / 2) - int(mobj.height() / 2)
-            mobj.show()
             mobj.move(center_x, center_y)
+            mobj.show()
         else:
             mobj.hide()
 

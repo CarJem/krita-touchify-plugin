@@ -1,10 +1,8 @@
 import string
 
 from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
-from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
 from touchify.src.cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
 from touchify.src.cfg.toolshelf.CfgToolshelfPanel import CfgToolshelfPanel
-from touchify.src.cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
@@ -12,24 +10,17 @@ from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
    
 class CfgToolshelf:
-    actions: TypedList[CfgTouchifyActionCollection] = []
-    sections: TypedList[CfgToolshelfSection] = []
     pages: TypedList[CfgToolshelfPanel] = []
-
-    action_height: int = 16
-    tab_type: str = "buttons"
-    
+    homepage: CfgToolshelfPanel = CfgToolshelfPanel() 
     header_options: CfgToolshelfHeaderOptions = CfgToolshelfHeaderOptions()
     preset_name: str = "New Toolshelf Preset"
 
-    json_version: int = 2
+    json_version: int = 3
 
     def __init__(self, **args) -> None:
         args = CfgBackwardsCompat.CfgToolshelf(args)
-        Extensions.dictToObject(self, args, [CfgToolshelfHeaderOptions])
+        Extensions.dictToObject(self, args, [CfgToolshelfHeaderOptions, CfgToolshelfPanel])
         self.pages = Extensions.init_list(args, "pages", CfgToolshelfPanel)
-        self.actions = Extensions.init_list(args, "actions", CfgTouchifyActionCollection)
-        self.sections = Extensions.init_list(args, "sections", CfgToolshelfSection)
 
     def getFileName(self):
         valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
@@ -42,34 +33,27 @@ class CfgToolshelf:
 
     def forceLoad(self):
         self.pages = TypedList(self.pages, CfgToolshelfPanel)
-        self.actions = TypedList(self.actions, CfgTouchifyActionCollection)
-        self.sections = TypedList(self.sections, CfgToolshelfSection)
 
     def propertygrid_sorted(self):
         return [
             "preset_name",
+            "homepage",
             "pages",
-            "actions",
-            "sections",
-            "header_options",
-            "tab_type",
-            "action_height"
+            "header_options"
         ]
 
     def propertygrid_labels(self):
         labels = {}
         labels["preset_name"] = "Preset Name"
+        labels["homepage"] = "Home Page"
         labels["pages"] = "Pages"
-        labels["actions"] = "Actions"
-        labels["sections"] = "Sections"
-        labels["tab_type"] = "Tab Type"
         labels["header_options"] = "Header Options"
-        labels["action_height"] = "Action Button Height"
         return labels
 
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["tab_type"] = {"type": "values", "entries": ["buttons", "tabs"]}
+        restrictions["homepage"] = {"type": "expandable"}
         restrictions["header_options"] = {"type": "expandable"}
         return restrictions
 

@@ -49,6 +49,8 @@ class CfgPreferences:
         self.Interface_ColorOptionsDockerScale: float = 1.0
 
         self.Canvas_RightClickAction: str = ""
+        self.Canvas_LeftClickAction: str = ""
+        self.Canvas_MiddleClickAction: str = ""
 
         self.load()
 
@@ -79,7 +81,9 @@ class CfgPreferences:
             "Interface_ToolshelfHeaderScale": "Toolshelf Header Scale",
             "Interface_ToolshelfActionSectionScale": "Toolshelf Action Section Scale",
             "Interface_ColorOptionsDockerScale": "Color Options Docker Scale",
-            "Canvas_RightClickAction": "Canvas Right Click Action"
+            "Canvas_RightClickAction": "Canvas Right Click Action",
+            "Canvas_LeftClickAction": "Canvas Left Click Action",
+            "Canvas_MiddleClickAction": "Canvas Middle Click Action"
         }
         
 
@@ -93,6 +97,8 @@ class CfgPreferences:
         restrictions["Interface_ToolshelfActionSectionScale"] = {"type": "range", "min": 1}
         restrictions["Interface_ColorOptionsDockerScale"] = {"type": "range", "min": 1}
         restrictions["Canvas_RightClickAction"] = {"type": "action_selection"}
+        restrictions["Canvas_LeftClickAction"] = {"type": "action_selection"}
+        restrictions["Canvas_MiddleClickAction"] = {"type": "action_selection"}
         return restrictions
 
     def load(self):
@@ -121,6 +127,8 @@ class CfgPreferences:
         self.Interface_ColorOptionsDockerScale = CfgPreferences.IO.readFloat("Interface_ColorOptionsDockerScale", 1.0)
 
         self.Canvas_RightClickAction = CfgPreferences.IO.readStr("Canvas_RightClickAction", "")
+        self.Canvas_LeftClickAction = CfgPreferences.IO.readStr("Canvas_LeftClickAction", "")
+        self.Canvas_MiddleClickAction = CfgPreferences.IO.readStr("Canvas_MiddleClickAction", "")
 
     def save(self):
         CfgPreferences.IO.writeBool("usesBorderlessToolbar", self.Styles_BorderlessToolbar, False)
@@ -148,4 +156,7 @@ class CfgPreferences:
         CfgPreferences.IO.writeFloat("Interface_ColorOptionsDockerScale", self.Interface_ColorOptionsDockerScale, 1.0)
 
         CfgPreferences.IO.writeStr("Canvas_RightClickAction", self.Canvas_RightClickAction, "")
+        CfgPreferences.IO.writeStr("Canvas_LeftClickAction", self.Canvas_LeftClickAction, "")
+        CfgPreferences.IO.writeStr("Canvas_MiddleClickAction", self.Canvas_MiddleClickAction, "")
+
         
