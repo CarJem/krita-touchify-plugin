@@ -19,7 +19,7 @@ class PopupDialog_Titlebar(QFrame):
         self.setFrameShadow(QFrame.Plain)
         self.setLineWidth(1)
         self.setObjectName("popupFrameTitlebar")
-        self.setStyleSheet(Stylesheet.instance().touchify_popup_titlebar(self.parentDialog.allowOpacity, self.parentDialog.metadata.opacity))
+        self.setStyleSheet(Stylesheet.instance().touchify_popup_titlebar(self.parentDialog.allowOpacity, self.parentDialog.metadata.actions_opacity))
 
         buttonSize = 16
         iconSize = 13

@@ -112,7 +112,7 @@ class PopupDialog(QDockWidget):
 
         if self.allowOpacity:
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
-            self.setWindowOpacity(self.metadata.opacity)
+            self.setWindowOpacity(self.metadata.actions_opacity)
 
         if self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
             self.titlebarEnabled = True
@@ -127,7 +127,7 @@ class PopupDialog(QDockWidget):
         self.frameWidget.setFrameShadow(QFrame.Plain)
         self.frameWidget.setLineWidth(1)
         self.frameWidget.setObjectName("popupFrame")
-        self.frameWidget.setStyleSheet(Stylesheet.instance().touchify_popup_frame(self.allowOpacity, self.metadata.opacity))
+        self.frameWidget.setStyleSheet(Stylesheet.instance().touchify_popup_frame(self.allowOpacity, self.metadata.actions_opacity))
         self.frameWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setWidget(self.frameWidget)
 
@@ -234,7 +234,7 @@ class PopupDialog(QDockWidget):
         if self.allowOpacity:
             painter = QPainter(self)
             baseColor = self.palette().brush(QPalette.ColorRole.Window)
-            painter.setOpacity(self.metadata.opacity)
+            painter.setOpacity(self.metadata.actions_opacity)
             painter.setBrush(baseColor)
             painter.setPen(baseColor.color())   
             painter.drawRect(self.rect())

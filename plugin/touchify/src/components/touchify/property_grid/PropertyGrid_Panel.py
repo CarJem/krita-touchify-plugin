@@ -29,11 +29,11 @@ class PropertyGrid_Panel(QScrollArea):
         self.stackHost = parentStack
         self.formWidget = QWidget(self)
         self.formWidget.setContentsMargins(0,0,0,0)
+
         self.formLayout = QFormLayout()
         self.formLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.formLayout.setSpacing(0)
-        self.formLayout.setLabelAlignment(Qt.AlignmentFlag.AlignLeft)
-        self.formLayout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapAllRows)
+        self.formLayout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
         self.formLayout.setContentsMargins(0, 0, 0, 0)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.setWidgetResizable(True)
@@ -97,43 +97,52 @@ class PropertyGrid_Panel(QScrollArea):
                 QToolTip.showText(hintLabel.mapToGlobal(QPoint(0,0)), hintText)
 
             header = QWidget()
-            header.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+            header.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+            header.setFixedWidth(200)
             header.setContentsMargins(0,0,0,0)
 
-            layout = QHBoxLayout(header)
-            layout.setSpacing(0)
-            layout.setContentsMargins(0,0,0,0)
-
-            leadingLine = QFrame(header)
-            leadingLine.setLineWidth(1)
-            leadingLine.setMaximumWidth(10)
-            leadingLine.setContentsMargins(2,0,2,0)
-            leadingLine.setFrameShape(QFrame.Shape.HLine)
-            leadingLine.setFrameShadow(QFrame.Shadow.Sunken)
-            layout.addWidget(leadingLine, 1)
+            titleSection = QHBoxLayout()
+            titleSection.setSpacing(0)
+            titleSection.setContentsMargins(0,0,0,0)
 
             label = QLabel(header)
             label.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
             label.setMargin(0)
+            label.setWordWrap(True)
             label.setContentsMargins(2,0,2,0)
             label.setText(resultText)
-            layout.addWidget(label)
-
-            trailingLine = QFrame(header)
-            trailingLine.setLineWidth(1)
-            trailingLine.setContentsMargins(2,0,2,0)
-            trailingLine.setFrameShape(QFrame.Shape.HLine)
-            trailingLine.setFrameShadow(QFrame.Shadow.Sunken)
-            layout.addWidget(trailingLine, 1)
+            titleSection.addWidget(label)
 
             if hintText != "":
                 hintLabel = QPushButton(header)
+                hintLabel.setContentsMargins(0,0,0,0)
                 hintLabel.setFlat(True)
                 hintLabel.clicked.connect(showHint)
                 hintLabel.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
                 hintLabel.setIcon(ResourceManager.iconLoader("material:information-variant"))
                 hintLabel.setToolTip(hintText)
-                layout.addWidget(hintLabel)
+                titleSection.addWidget(hintLabel, 1, Qt.AlignmentFlag.AlignRight)
+
+            labelSection = QVBoxLayout(header)
+            labelSection.setSpacing(0)
+            labelSection.setContentsMargins(0,0,0,0)
+
+            aboveLine = QFrame(header)
+            aboveLine.setLineWidth(1)
+            aboveLine.setContentsMargins(2,0,2,0)
+            aboveLine.setFrameShape(QFrame.Shape.HLine)
+            aboveLine.setFrameShadow(QFrame.Shadow.Sunken)
+            labelSection.addWidget(aboveLine)
+
+            labelSection.addLayout(titleSection)
+
+            belowLine = QFrame(header)
+            belowLine.setLineWidth(1)
+            belowLine.setContentsMargins(2,0,2,0)
+            belowLine.setFixedHeight(2)
+            belowLine.setFrameShape(QFrame.Shape.HLine)
+            belowLine.setFrameShadow(QFrame.Shadow.Sunken)
+            labelSection.addWidget(belowLine)
 
 
             return header
@@ -154,15 +163,13 @@ class PropertyGrid_Panel(QScrollArea):
             if len(sisters) == 0:
                 header = createLabelRow(getDisplayText(varName), getHintText(varName))
                 self.labels[field.variable_name] = header
-                layout.addRow(header)
-                layout.addRow(field)
+                layout.addRow(header, field)
             else:
                 sister_id = sisterData[varName]["sister_id"]
                 header = createLabelRow(getDisplayText(sister_id), getHintText(sister_id))
                 self.labels[field.variable_name] = header
                 sister_field = createSisDataRow(field, sisters)
-                layout.addRow(header)
-                layout.addRow(sister_field)
+                layout.addRow(header, sister_field)
 
     def updateVisibility(self):
         if self.item == None:

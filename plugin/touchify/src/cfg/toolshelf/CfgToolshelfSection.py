@@ -17,6 +17,12 @@ class CfgToolshelfSection:
         BrushBlendingMode = "brush_blending_options"
         LayerBlendingMode = "layer_blending_options"
         LayerLabelBox = "layer_label_box"
+        BrushSizeSlider = "brush_size_slider"
+        BrushOpacitySlider = "brush_opacity_slider"
+        BrushFlowSlider = "brush_flow_slider"
+        BrushRotationSlider = "brush_rotation_slider"
+        ForegroundColorBox = "foreground_color_box"
+        BackgroundColorBox = "background_color_box"
 
     class SectionAlignmentX(StrEnum):
         Nothing = "none"

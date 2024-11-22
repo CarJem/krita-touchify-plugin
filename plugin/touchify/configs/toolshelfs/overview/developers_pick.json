@@ -118,7 +118,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 2
+                                    "json_version": 3
                                 },
                                 "canvas_preset_data": {}
                             },
@@ -150,7 +150,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 2
+                                    "json_version": 3
                                 },
                                 "canvas_preset_data": {}
                             },
@@ -184,7 +184,7 @@
                                                 }
                                             },
                                             "actions_items": [],
-                                            "json_version": 2
+                                            "json_version": 3
                                         },
                                         "canvas_preset_data": {}
                                     },
@@ -216,7 +216,7 @@
                                                 }
                                             },
                                             "actions_items": [],
-                                            "json_version": 2
+                                            "json_version": 3
                                         },
                                         "canvas_preset_data": {}
                                     },
@@ -261,7 +261,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 2
+                                    "json_version": 3
                                 },
                                 "show_text": false,
                                 "show_icon": true,
@@ -408,15 +408,15 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 300,
                                     "actions_item_height": 300,
-                                    "opacity": 1.0,
                                     "actions_close_on_click": false,
                                     "docker_id": "PatternDocker",
                                     "id": "",
                                     "type": "docker",
                                     "window_type": "popup",
-                                    "json_version": 2,
+                                    "json_version": 3,
                                     "docker_width": 300,
-                                    "docker_height": 300
+                                    "docker_height": 300,
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             },
@@ -454,15 +454,15 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 300,
                                     "actions_item_height": 300,
-                                    "opacity": 1.0,
                                     "actions_close_on_click": false,
                                     "docker_id": "PatternDocker",
                                     "id": "",
                                     "type": "docker",
                                     "window_type": "popup",
-                                    "json_version": 2,
+                                    "json_version": 3,
                                     "docker_width": 300,
-                                    "docker_height": 300
+                                    "docker_height": 300,
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             },
@@ -500,15 +500,15 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 300,
                                     "actions_item_height": 300,
-                                    "opacity": 1.0,
                                     "actions_close_on_click": false,
                                     "docker_id": "PatternDocker",
                                     "id": "",
                                     "type": "docker",
                                     "window_type": "popup",
-                                    "json_version": 2,
+                                    "json_version": 3,
                                     "docker_width": 300,
-                                    "docker_height": 300
+                                    "docker_height": 300,
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             },
@@ -540,7 +540,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 2
+                                    "json_version": 3
                                 },
                                 "canvas_preset_data": {}
                             },
@@ -572,7 +572,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 2
+                                    "json_version": 3
                                 },
                                 "canvas_preset_data": {}
                             }
@@ -609,15 +609,15 @@
                             "actions_icon_height": 30,
                             "actions_item_width": 300,
                             "actions_item_height": 300,
-                            "opacity": 1.0,
                             "actions_close_on_click": false,
                             "docker_id": "PatternDocker",
                             "id": "",
                             "type": "docker",
                             "window_type": "popup",
-                            "json_version": 2,
+                            "json_version": 3,
                             "docker_width": 300,
-                            "docker_height": 300
+                            "docker_height": 300,
+                            "actions_opacity": 1.0
                         },
                         "canvas_preset_data": {}
                     },
@@ -646,7 +646,7 @@
                                 }
                             },
                             "actions_items": [],
-                            "json_version": 2
+                            "json_version": 3
                         },
                         "workspace_id": "",
                         "show_text": false,
@@ -678,7 +678,7 @@
                                 }
                             },
                             "actions_items": [],
-                            "json_version": 2
+                            "json_version": 3
                         },
                         "workspace_id": "",
                         "show_text": false,
@@ -710,7 +710,7 @@
                                 }
                             },
                             "actions_items": [],
-                            "json_version": 2
+                            "json_version": 3
                         },
                         "workspace_id": "",
                         "show_text": false,
@@ -742,7 +742,7 @@
                                 }
                             },
                             "actions_items": [],
-                            "json_version": 2
+                            "json_version": 3
                         },
                         "workspace_id": "",
                         "show_text": false,
@@ -779,7 +779,7 @@
                                 }
                             },
                             "actions_items": [],
-                            "json_version": 2
+                            "json_version": 3
                         },
                         "show_text": false,
                         "show_icon": true
@@ -810,7 +810,7 @@
                                 }
                             },
                             "actions_items": [],
-                            "json_version": 2
+                            "json_version": 3
                         },
                         "show_text": false,
                         "show_icon": true

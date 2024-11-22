@@ -14,7 +14,7 @@ from ....pyqt.widgets.CollapsibleBox import CollapsibleBox
 from ..utils.PropertyUtils_Extensions import *
 from ..PropertyGrid import *
 from ..dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
-from .PropertyField import *
+from ..fields.PropertyField import *
 from .....ext.KritaSettings import KS_Color
 from ....pyqt.widgets.ColorButton import ColorButton
 

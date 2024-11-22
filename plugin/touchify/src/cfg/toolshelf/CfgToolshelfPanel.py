@@ -69,6 +69,15 @@ class CfgToolshelfPanel:
             "id",
             "display_name",
             "icon",
+            "row",
+            "action_height",
+            "size_x",
+            "size_y",
+            "min_size_x",
+            "min_size_y",
+            "max_size_x",
+            "max_size_y",
+            "tab_type",
             "sections",
             "actions"
         ]

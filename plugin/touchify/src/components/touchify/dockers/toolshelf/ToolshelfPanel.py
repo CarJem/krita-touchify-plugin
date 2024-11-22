@@ -237,7 +237,7 @@ class ToolshelfPanel(QWidget):
         return actionWidget
     
     def _createSpecialSection(self, actionInfo: CfgToolshelfSection):
-        actionWidget = ToolshelfSpecialSection(self, actionInfo)
+        actionWidget = ToolshelfSpecialSection(self, actionInfo, self.actions_manager)
             
         if actionInfo.size_x != 0 and actionInfo.size_y != 0: 
             actionWidget.setSizeHint([actionInfo.size_x, actionInfo.size_y])

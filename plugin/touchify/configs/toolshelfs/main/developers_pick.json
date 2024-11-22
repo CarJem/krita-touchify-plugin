@@ -39,7 +39,7 @@
                                 }
                             },
                             "actions_items": [],
-                            "json_version": 2
+                            "json_version": 3
                         },
                         "show_text": false,
                         "show_icon": true,
@@ -302,7 +302,7 @@
                                                     }
                                                 },
                                                 "actions_items": [],
-                                                "json_version": 2
+                                                "json_version": 3
                                             },
                                             "canvas_preset_data": {}
                                         },
@@ -334,7 +334,7 @@
                                                     }
                                                 },
                                                 "actions_items": [],
-                                                "json_version": 2
+                                                "json_version": 3
                                             },
                                             "canvas_preset_data": {}
                                         }
@@ -365,7 +365,7 @@
                                             }
                                         },
                                         "actions_items": [],
-                                        "json_version": 2
+                                        "json_version": 3
                                     },
                                     "canvas_preset_data": {}
                                 },
@@ -397,7 +397,7 @@
                                             }
                                         },
                                         "actions_items": [],
-                                        "json_version": 2
+                                        "json_version": 3
                                     },
                                     "canvas_preset_data": {}
                                 },
@@ -429,7 +429,7 @@
                                             }
                                         },
                                         "actions_items": [],
-                                        "json_version": 2
+                                        "json_version": 3
                                     },
                                     "canvas_preset_data": {}
                                 },
@@ -461,7 +461,7 @@
                                             }
                                         },
                                         "actions_items": [],
-                                        "json_version": 2
+                                        "json_version": 3
                                     },
                                     "canvas_preset_data": {}
                                 },
@@ -493,7 +493,7 @@
                                             }
                                         },
                                         "actions_items": [],
-                                        "json_version": 2
+                                        "json_version": 3
                                     },
                                     "canvas_preset_data": {}
                                 }
@@ -554,7 +554,9 @@
                     "special_item_type": "none",
                     "json_version": 2,
                     "docker_id": "KisLayerBox",
-                    "action_section_id": "Panel"
+                    "action_section_id": "Panel",
+                    "display_name": "",
+                    "ignore_scaling": false
                 },
                 {
                     "subpanel_data": {
@@ -599,15 +601,15 @@
                                         "actions_icon_height": 30,
                                         "actions_item_width": 300,
                                         "actions_item_height": 300,
-                                        "opacity": 1.0,
                                         "actions_close_on_click": false,
                                         "docker_id": "PatternDocker",
                                         "id": "",
                                         "type": "docker",
                                         "window_type": "popup",
-                                        "json_version": 2,
+                                        "json_version": 3,
                                         "docker_width": 300,
-                                        "docker_height": 300
+                                        "docker_height": 300,
+                                        "actions_opacity": 1.0
                                     },
                                     "canvas_preset_data": {}
                                 },
@@ -678,15 +680,15 @@
                                         "actions_icon_height": 30,
                                         "actions_item_width": 300,
                                         "actions_item_height": 300,
-                                        "opacity": 1.0,
                                         "actions_close_on_click": false,
                                         "docker_id": "PatternDocker",
                                         "id": "",
                                         "type": "docker",
                                         "window_type": "popup",
-                                        "json_version": 2,
+                                        "json_version": 3,
                                         "docker_width": 300,
-                                        "docker_height": 300
+                                        "docker_height": 300,
+                                        "actions_opacity": 1.0
                                     },
                                     "canvas_preset_data": {}
                                 }
@@ -729,7 +731,11 @@
             "tab_type": "tabs",
             "action_height": 10,
             "json_version": 1,
-            "display_name": ""
+            "display_name": "",
+            "max_size_x": 0,
+            "max_size_y": 0,
+            "min_size_x": 0,
+            "min_size_y": 0
         },
         {
             "sections": [
@@ -776,15 +782,15 @@
                                         "actions_icon_height": 30,
                                         "actions_item_width": 300,
                                         "actions_item_height": 300,
-                                        "opacity": 1.0,
                                         "actions_close_on_click": false,
                                         "docker_id": "PatternDocker",
                                         "id": "",
                                         "type": "docker",
                                         "window_type": "popup",
-                                        "json_version": 2,
+                                        "json_version": 3,
                                         "docker_width": 300,
-                                        "docker_height": 300
+                                        "docker_height": 300,
+                                        "actions_opacity": 1.0
                                     },
                                     "canvas_preset_data": {}
                                 }
@@ -902,15 +908,15 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 300,
                                     "actions_item_height": 300,
-                                    "opacity": 1.0,
                                     "actions_close_on_click": false,
                                     "docker_id": "PatternDocker",
                                     "id": "",
                                     "type": "docker",
                                     "window_type": "popup",
-                                    "json_version": 2,
+                                    "json_version": 3,
                                     "docker_width": 300,
-                                    "docker_height": 300
+                                    "docker_height": 300,
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             },
@@ -948,15 +954,15 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 300,
                                     "actions_item_height": 300,
-                                    "opacity": 1.0,
                                     "actions_close_on_click": false,
                                     "docker_id": "PatternDocker",
                                     "id": "",
                                     "type": "docker",
                                     "window_type": "popup",
-                                    "json_version": 2,
+                                    "json_version": 3,
                                     "docker_width": 300,
-                                    "docker_height": 300
+                                    "docker_height": 300,
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             },
@@ -994,15 +1000,15 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 300,
                                     "actions_item_height": 300,
-                                    "opacity": 1.0,
                                     "actions_close_on_click": false,
                                     "docker_id": "PatternDocker",
                                     "id": "",
                                     "type": "docker",
                                     "window_type": "popup",
-                                    "json_version": 2,
+                                    "json_version": 3,
                                     "docker_width": 300,
-                                    "docker_height": 300
+                                    "docker_height": 300,
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             }
@@ -1104,7 +1110,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 2
+                                    "json_version": 3
                                 },
                                 "canvas_preset_data": {}
                             }
@@ -1180,15 +1186,15 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 300,
                                     "actions_item_height": 300,
-                                    "opacity": 1.0,
                                     "actions_close_on_click": false,
                                     "docker_id": "PaletteDocker",
                                     "id": "",
                                     "type": "docker",
                                     "window_type": "popup",
-                                    "json_version": 2,
+                                    "json_version": 3,
                                     "docker_width": 300,
-                                    "docker_height": 300
+                                    "docker_height": 300,
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             },
@@ -1226,15 +1232,15 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 300,
                                     "actions_item_height": 400,
-                                    "opacity": 1.0,
                                     "actions_close_on_click": false,
                                     "docker_id": "WideGamutColorSelector",
                                     "id": "",
                                     "type": "docker",
                                     "window_type": "popup",
-                                    "json_version": 2,
+                                    "json_version": 3,
                                     "docker_width": 300,
-                                    "docker_height": 400
+                                    "docker_height": 400,
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             },
@@ -1272,15 +1278,15 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 300,
                                     "actions_item_height": 400,
-                                    "opacity": 1.0,
                                     "actions_close_on_click": false,
                                     "docker_id": "PresetDocker",
                                     "id": "",
                                     "type": "docker",
                                     "window_type": "popup",
-                                    "json_version": 2,
+                                    "json_version": 3,
                                     "docker_width": 300,
-                                    "docker_height": 400
+                                    "docker_height": 400,
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             },
@@ -1318,13 +1324,13 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 300,
                                     "actions_item_height": 400,
-                                    "opacity": 1.0,
                                     "actions_close_on_click": false,
                                     "docker_id": "KisLayerBox",
                                     "id": "",
                                     "type": "toolshelf",
                                     "window_type": "popup",
-                                    "json_version": 2
+                                    "json_version": 3,
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             },
@@ -1356,7 +1362,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 2
+                                    "json_version": 3
                                 },
                                 "canvas_preset_data": {}
                             }
@@ -1399,8 +1405,7 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 100,
                                     "actions_item_height": 100,
-                                    "json_version": 2,
-                                    "opacity": 1.0,
+                                    "json_version": 3,
                                     "actions_close_on_click": false,
                                     "docker_id": "pykrita_brushSizeDocker",
                                     "docker_width": 300,
@@ -1408,7 +1413,8 @@
                                     "id": "pykrita_brushSizeDockerPopup",
                                     "type": "docker",
                                     "window_title": "",
-                                    "window_type": "popup"
+                                    "window_type": "popup",
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             }
@@ -1443,13 +1449,91 @@
             },
             {
                 "subpanel_data": {
-                    "sections": [],
+                    "sections": [
+                        {
+                            "subpanel_data": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 1
+                            },
+                            "action_section_contents": [],
+                            "action_section_id": "Panel",
+                            "json_version": 2,
+                            "display_name": "",
+                            "min_size_x": 0,
+                            "min_size_y": 0,
+                            "max_size_x": 0,
+                            "max_size_y": 0,
+                            "size_x": 0,
+                            "size_y": 0,
+                            "panel_x": 0,
+                            "panel_y": 0,
+                            "docker_id": "",
+                            "docker_nesting_mode": "normal",
+                            "docker_unloaded_visibility": "normal",
+                            "docker_loading_priority": "normal",
+                            "action_section_display_mode": "normal",
+                            "action_section_alignment_x": "none",
+                            "action_section_alignment_y": "none",
+                            "action_section_btn_width": 0,
+                            "action_section_btn_height": 0,
+                            "action_section_icon_size": 0,
+                            "special_item_type": "brush_size_slider",
+                            "ignore_scaling": false,
+                            "section_type": "special"
+                        },
+                        {
+                            "subpanel_data": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 1
+                            },
+                            "action_section_contents": [],
+                            "action_section_id": "Panel",
+                            "json_version": 2,
+                            "display_name": "",
+                            "min_size_x": 0,
+                            "min_size_y": 0,
+                            "max_size_x": 0,
+                            "max_size_y": 0,
+                            "size_x": 0,
+                            "size_y": 0,
+                            "panel_x": 0,
+                            "panel_y": 1,
+                            "docker_id": "",
+                            "docker_nesting_mode": "normal",
+                            "docker_unloaded_visibility": "normal",
+                            "docker_loading_priority": "normal",
+                            "action_section_display_mode": "normal",
+                            "action_section_alignment_x": "none",
+                            "action_section_alignment_y": "none",
+                            "action_section_btn_width": 0,
+                            "action_section_btn_height": 0,
+                            "action_section_icon_size": 0,
+                            "special_item_type": "brush_opacity_slider",
+                            "ignore_scaling": false,
+                            "section_type": "special"
+                        }
+                    ],
                     "actions": [],
-                    "json_version": 1
+                    "action_height": 10,
+                    "json_version": 1,
+                    "id": "",
+                    "display_name": "",
+                    "icon": "",
+                    "max_size_x": 0,
+                    "max_size_y": 0,
+                    "min_size_x": 0,
+                    "min_size_y": 0,
+                    "row": 0,
+                    "size_x": 0,
+                    "size_y": 0,
+                    "tab_type": "buttons"
                 },
                 "action_section_contents": [],
+                "action_section_id": "Panel",
                 "json_version": 2,
-                "section_type": "docker",
+                "display_name": "Brush Sliders",
                 "min_size_x": 0,
                 "min_size_y": 0,
                 "max_size_x": 0,
@@ -1458,6 +1542,7 @@
                 "size_y": 0,
                 "panel_x": 0,
                 "panel_y": 6,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -1468,10 +1553,8 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
-                "docker_id": "Touchify/BrushOptionsDocker",
-                "action_section_id": "Panel",
-                "display_name": "",
-                "ignore_scaling": false
+                "ignore_scaling": false,
+                "section_type": "subpanel"
             },
             {
                 "subpanel_data": {
@@ -1516,15 +1599,15 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 300,
                                     "actions_item_height": 300,
-                                    "opacity": 1.0,
                                     "actions_close_on_click": false,
                                     "docker_id": "PatternDocker",
                                     "id": "",
                                     "type": "docker",
                                     "window_type": "popup",
-                                    "json_version": 2,
+                                    "json_version": 3,
                                     "docker_width": 300,
-                                    "docker_height": 300
+                                    "docker_height": 300,
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             }
@@ -1567,15 +1650,15 @@
                                     "actions_icon_height": 30,
                                     "actions_item_width": 300,
                                     "actions_item_height": 300,
-                                    "opacity": 1.0,
                                     "actions_close_on_click": false,
                                     "docker_id": "PatternDocker",
                                     "id": "",
                                     "type": "docker",
                                     "window_type": "popup",
-                                    "json_version": 2,
+                                    "json_version": 3,
                                     "docker_width": 300,
-                                    "docker_height": 300
+                                    "docker_height": 300,
+                                    "actions_opacity": 1.0
                                 },
                                 "canvas_preset_data": {}
                             }
@@ -1811,6 +1894,15 @@
         "tab_type": "buttons",
         "action_height": 20,
         "json_version": 1,
-        "id": "ROOT"
+        "id": "ROOT",
+        "display_name": "",
+        "icon": "",
+        "max_size_x": 0,
+        "max_size_y": 0,
+        "min_size_x": 0,
+        "min_size_y": 0,
+        "row": 0,
+        "size_x": 0,
+        "size_y": 0
     }
 }

@@ -45,6 +45,7 @@
         "actions": [],
         "tab_type": "buttons",
         "action_height": 16,
-        "json_version": 1
+        "json_version": 1,
+        "id": "ROOT"
     }
 }

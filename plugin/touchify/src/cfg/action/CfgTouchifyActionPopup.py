@@ -33,9 +33,11 @@ class CfgTouchifyActionPopup:
     window_type: str = "popup"
     window_title: str = ""
     type: str = "actions"
-    opacity: float = 1.0
+    closing_method: str = "default"
+    popup_position: str = "default"
     
     actions_grid_width: int = 3
+    actions_opacity: float = 1.0
     actions_grid_padding: int = 2
     actions_item_width: int = 100
     actions_item_height: int = 100
@@ -49,11 +51,24 @@ class CfgTouchifyActionPopup:
     docker_height: int = 0
 
 
-    closing_method: str = "default"
-    popup_position: str = "default"
 
-    json_version: int = 2
+    json_version: int = 3
 
+
+
+    def __init__(self, **args) -> None:
+        from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
+        self.toolshelf_data: CfgToolshelf = CfgToolshelf()
+        args = CfgBackwardsCompat.CfgTouchifyActionPopup(args)        
+        Extensions.dictToObject(self, args, [CfgToolshelf])
+        self.actions_items = Extensions.init_list(args, "actions_items", CfgTouchifyActionPopupItem)
+
+    def __str__(self):
+        return self.id.replace("\n", "\\n")
+
+    def forceLoad(self):
+        self.actions_items = TypedList(self.actions_items, CfgTouchifyActionPopupItem)
+        pass
 
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
@@ -61,10 +76,18 @@ class CfgTouchifyActionPopup:
         row["docker_item_size"] = {"items": ["docker_width","docker_height"]}
         row["actions_icon_size"] = {"items": ["actions_icon_width","actions_icon_height"]}
         return row
-    
-    def propertygrid_hidden(self):
+     
+    def propertygrid_sorted(self):
+        common_settings = [
+            "id",
+            "window_title",
+            "window_type",
+            "closing_method",
+            "popup_position",
+            "type"
+        ]
         action_mode_settings = [
-            "opacity",
+            "actions_opacity",
             "actions_grid_width",
             "actions_grid_padding",
             "actions_icon_width",
@@ -87,7 +110,44 @@ class CfgTouchifyActionPopup:
             "toolshelf_data"
         ]
 
+
+        return common_settings + action_mode_settings + docker_mode_settings + toolshelf_mode_settings
+    
+    def propertygrid_hidden(self):
         result = []
+
+        common_settings = [
+            "id",
+            "window_title",
+            "window_type",
+            "closing_method",
+            "popup_position",
+            "type"
+        ]
+        action_mode_settings = [
+            "actions_opacity",
+            "actions_grid_width",
+            "actions_grid_padding",
+            "actions_icon_width",
+            "actions_icon_height",
+            "actions_items",
+            "actions_item_width",
+            "actions_item_height",
+            "actions_close_on_click",
+            "action_item_size"
+        ]
+
+        docker_mode_settings = [
+            "docker_id",
+            "docker_width",
+            "docker_height",
+            "docker_item_size"
+        ]
+
+        toolshelf_mode_settings = [
+            "toolshelf_data"
+        ]
+
         if self.type != CfgTouchifyActionPopup.Variants.Docker:
             for item in docker_mode_settings:
                 result.append(item)
@@ -100,26 +160,11 @@ class CfgTouchifyActionPopup:
 
         return result
 
-    def __init__(self, **args) -> None:
-        from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
-        self.toolshelf_data: CfgToolshelf = CfgToolshelf()
-        args = CfgBackwardsCompat.CfgTouchifyActionPopup(args)        
-        Extensions.dictToObject(self, args, [CfgToolshelf])
-        self.actions_items = Extensions.init_list(args, "actions_items", CfgTouchifyActionPopupItem)
-
-    def __str__(self):
-        return self.id.replace("\n", "\\n")
-
-    def forceLoad(self):
-        self.actions_items = TypedList(self.actions_items, CfgTouchifyActionPopupItem)
-        pass
-
     def propertygrid_labels(self):
         labels = {}
         labels["id"] = "Popup ID"
         labels["window_type"] = "Window Type"
         labels["type"] = "Popup Type"
-        labels["opacity"] = "Popup Opacity"
         labels["docker_id"] = "Docker ID"
         labels["docker_item_size"] = "Docker Size"
         labels["actions_grid_width"] = "Action Grid Width"
@@ -128,6 +173,7 @@ class CfgTouchifyActionPopup:
         labels["actions_icon_size"] = "Icon Size"
         labels["actions_items"] = "Actions"
         labels["actions_close_on_click"] = "Close on Click"
+        labels["actions_opacity"] = "Actions Opacity"
         labels["toolshelf_data"] = "Toolshelf Data"
         labels["window_title"] = "Window Title"
         labels["closing_method"] = "Closing Method"
@@ -141,6 +187,6 @@ class CfgTouchifyActionPopup:
         restrictions["window_type"] = {"type": "values", "entries": self.WindowType.values()}
         restrictions["popup_position"] = {"type": "values", "entries": self.PopupPosition.values()}
         restrictions["closing_method"] = {"type": "values", "entries": self.ClosingMethod.values()}
-        restrictions["opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
+        restrictions["actions_opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
         restrictions["toolshelf_data"] = {"type": "expandable"}
         return restrictions

@@ -16,6 +16,14 @@ class CfgTouchifyActionDockerGroup:
 
     def forceLoad(self):
         self.docker_names = TypedList(self.docker_names, CfgTouchifyActionDockerGroupItem)
+
+    def propertygrid_sorted(self):
+        return [
+            "id",
+            "group_id",
+            "tabs_mode",
+            "docker_names"
+        ]
     
     def propertygrid_labels(self):
         labels = {}

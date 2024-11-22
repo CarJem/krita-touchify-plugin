@@ -104,27 +104,25 @@ class CfgTouchifyAction:
             "id",
             "icon",
             "text",
-            "variant",
             "show_text",
             "show_icon",
             "closes_popup",
-            "action_composer_mode"
+            "variant",
             #Action Params
             "action_id",
             "action_use_icon",
+            "action_composer_mode"
             #Menu Params
             "context_menu_actions",
             #Brush Params
             "brush_name",
             "brush_override_icon",       
-            #Docker Params
-            "docker_id",       
-            #Workspace Params
+
+            "docker_id",
             "workspace_id",
-            #Docker Group Params
             "docker_group_data",
-            #Popup Params
-            "popup_data"
+            "popup_data",
+            "canvas_preset_data"
         ]
 
     def propertygrid_hidden(self):
@@ -132,6 +130,7 @@ class CfgTouchifyAction:
         if self.variant != CfgTouchifyAction.Variants.Action:
             result.append("action_id")
             result.append("action_use_icon")
+            result.append("action_composer_mode")
         if self.variant != CfgTouchifyAction.Variants.Menu:
             result.append("context_menu_actions")            
         if self.variant != CfgTouchifyAction.Variants.Brush:

@@ -1,4 +1,4 @@
-from ...ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 class CfgToolboxSubItem:
 
@@ -15,6 +15,13 @@ class CfgToolboxSubItem:
     
     def propertygrid_ismodel(self):
         return True
+    
+
+    def propertygrid_sorted(self):
+        return [
+            "name",
+            "icon"
+        ]
     
     def propertygrid_labels(self):
         labels = {}

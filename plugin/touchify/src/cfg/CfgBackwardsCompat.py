@@ -92,6 +92,9 @@ class CfgBackwardsCompat:
                     Helpers.changeVarName(args, "actions_item_width", "docker_width")
                     Helpers.changeVarName(args, "actions_item_height", "docker_height")
             Helpers.setVersion(args, 2)
+        if Helpers.getVersion(args) == 2:
+            Helpers.changeVarName(args, "opacity", "actions_opacity")
+            Helpers.setVersion(args, 3)
         return args
 
     def CfgToolbox(args: dict[str, any]):

@@ -27,6 +27,13 @@ class CfgToolboxCategory:
 
     def propertygrid_ismodel(self):
         return True
+    
+    def propertygrid_sorted(self):
+        return [
+            "id",
+            "column_count",
+            "items"
+        ]
 
     def propertygrid_labels(self):
         labels = {}

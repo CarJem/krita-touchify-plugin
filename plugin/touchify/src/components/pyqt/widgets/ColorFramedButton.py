@@ -1,7 +1,6 @@
 from PyQt5.QtCore import *
 from PyQt5.QtGui  import *
 from PyQt5.QtWidgets  import *
-from PyQt5.QtCore import Qt, pyqtSignal
 
 class ColorFramedButton(QPushButton):
     
@@ -23,8 +22,9 @@ class ColorFramedButton(QPushButton):
         width = (r.width()) - (padding * 2)
         height = (r.height()) - (padding * 2)
         
-        frame_color = self.palette().color(QPalette.ColorRole.AlternateBase)
-        fill_color = QColor(self.__color)
+        if self.__color:
+            frame_color = self.palette().color(QPalette.ColorRole.AlternateBase)
+            fill_color = QColor(self.__color)
         
         if not self.isEnabled():
             fill_color.setAlpha(128)

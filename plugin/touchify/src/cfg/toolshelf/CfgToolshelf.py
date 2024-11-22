@@ -37,9 +37,9 @@ class CfgToolshelf:
     def propertygrid_sorted(self):
         return [
             "preset_name",
+            "header_options",
             "homepage",
-            "pages",
-            "header_options"
+            "pages"
         ]
 
     def propertygrid_labels(self):

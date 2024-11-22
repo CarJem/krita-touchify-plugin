@@ -45,7 +45,7 @@ class CfgToolbox:
 
     def propertygrid_sorted(self):
         return [
-            "preset_name"
+            "preset_name",
             # Layout
             "column_count",
             "icon_size",

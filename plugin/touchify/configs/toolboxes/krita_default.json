@@ -80,7 +80,9 @@
                 {
                     "items": [],
                     "name": "KisToolPath",
-                    "json_version": 1
+                    "json_version": 1,
+                    "icon": "",
+                    "open_on_click": false
                 },
                 {
                     "items": [],
@@ -98,7 +100,9 @@
                     "json_version": 1
                 }
             ],
-            "id": "Paint"
+            "id": "Paint",
+            "json_version": 1,
+            "column_count": 0
         },
         {
             "items": [
@@ -221,5 +225,6 @@
     "background_opacity": 128,
     "button_opacity": 175,
     "preset_name": "Krita Default",
-    "json_version": 1
+    "json_version": 1,
+    "submenu_delay": 200
 }

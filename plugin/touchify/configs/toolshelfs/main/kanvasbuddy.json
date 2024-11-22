@@ -282,7 +282,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 2
+                                    "json_version": 3
                                 },
                                 "show_text": false,
                                 "show_icon": true
@@ -313,7 +313,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 2
+                                    "json_version": 3
                                 },
                                 "show_text": false,
                                 "show_icon": true
@@ -344,7 +344,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 2
+                                    "json_version": 3
                                 },
                                 "show_text": false,
                                 "show_icon": true

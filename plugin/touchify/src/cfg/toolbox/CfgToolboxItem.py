@@ -25,6 +25,14 @@ class CfgToolboxItem:
         result.name = self.name
         return result
     
+    def propertygrid_sorted(self):
+        return [
+            "name",
+            "icon",
+            "open_on_click",
+            "items"
+        ]
+    
     def propertygrid_labels(self):
         labels = {}
         labels["name"] = "Action ID"

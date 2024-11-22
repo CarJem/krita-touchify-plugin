@@ -15,6 +15,14 @@
     > - **Hint Text** - To provide additional information about what configuration variables do
     > - **Navigation Bar** - To provide the user an idea of where they are within the configuration files
     > - And many other smaller adjustments to the UI and logic
+- **New Toolshelf Widgets - Existing Docker Components**
+    > These include the following (avaliable via the special section type for toolshelves):
+    > - **Brush Size Slider**
+    > - **Brush Opacity Slider**
+    > - **Brush Flow Slider**
+    > - **Brush Rotation Slider**
+    > - **Canvas Background Picker**
+    > - **Canvas Foreground Picker**
 - **New Toolshelf Feature - Nested Toolshelf Sections**
     > - Allows you to nest a toolshelf within a section without having tabs, useful if you want two dockers in one section tab for instance.
 - **New Popup Feature - Toolshelf Popups**

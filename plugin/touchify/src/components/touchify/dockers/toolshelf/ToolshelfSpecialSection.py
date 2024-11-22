@@ -1,19 +1,30 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtCore import QSize
+
 from touchify.src.cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
+from touchify.src.components.touchify.special.CanvasColorPicker import CanvasColorPicker
 from touchify.src.docker_manager import *
 from touchify.src.components.touchify.special.BrushBlendingSelector import BrushBlendingSelector
 from touchify.src.components.touchify.special.LayerBlendingSelector import LayerBlendingSelector
 from touchify.src.components.touchify.special.LayerLabelBox import LayerLabelBox
+from touchify.src.components.touchify.special.BrushRotationSlider import BrushRotationSlider
+from touchify.src.components.touchify.special.BrushFlowSlider import BrushFlowSlider
+from touchify.src.components.touchify.special.BrushOpacitySlider import BrushOpacitySlider
+from touchify.src.components.touchify.special.BrushSizeSlider import BrushSizeSlider
 from krita import *
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from touchify.src.action_manager import ActionManager
     
 
 
 class ToolshelfSpecialSection(QWidget):
   
-    def __init__(self, parent: QWidget | None, actionInfo: CfgToolshelfSection):
+    def __init__(self, parent: QWidget | None, actionInfo: CfgToolshelfSection, action_manager: "ActionManager"):
         super(ToolshelfSpecialSection, self).__init__(parent)
         self.actionInfo = actionInfo
+        self.action_manager = action_manager
 
         self.size = None
         self.ourWidget = None
@@ -31,6 +42,28 @@ class ToolshelfSpecialSection(QWidget):
             self.ourLayout.addWidget(self.ourWidget)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.LayerLabelBox:
             self.ourWidget = LayerLabelBox(self)
+            self.ourLayout.addWidget(self.ourWidget)
+        if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushSizeSlider:
+            self.ourWidget = BrushSizeSlider(self)
+            self.ourWidget.setSourceWindow(self.action_manager.appEngine.windowSource)
+            self.ourLayout.addWidget(self.ourWidget)
+        if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushOpacitySlider:
+            self.ourWidget = BrushOpacitySlider(self)
+            self.ourWidget.setSourceWindow(self.action_manager.appEngine.windowSource)
+            self.ourLayout.addWidget(self.ourWidget)
+        if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushFlowSlider:
+            self.ourWidget = BrushFlowSlider(self)
+            self.ourWidget.setSourceWindow(self.action_manager.appEngine.windowSource)
+            self.ourLayout.addWidget(self.ourWidget)
+        if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushRotationSlider:
+            self.ourWidget = BrushRotationSlider(self)
+            self.ourWidget.setSourceWindow(self.action_manager.appEngine.windowSource)
+            self.ourLayout.addWidget(self.ourWidget)
+        if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BackgroundColorBox:
+            self.ourWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Background)
+            self.ourLayout.addWidget(self.ourWidget)
+        if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.ForegroundColorBox:
+            self.ourWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Foreground)
             self.ourLayout.addWidget(self.ourWidget)
 
 

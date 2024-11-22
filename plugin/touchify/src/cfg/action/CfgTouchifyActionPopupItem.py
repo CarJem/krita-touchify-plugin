@@ -1,4 +1,4 @@
-from ...ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 
 class CfgTouchifyActionPopupItem:
@@ -6,6 +6,12 @@ class CfgTouchifyActionPopupItem:
     action: str = ""
     icon: str = ""
 
+    def propertygrid_sorted(self):
+        return [
+            "action",
+            "text",
+            "icon"
+        ]
 
     def propertygrid_labels(self):
         labels = {}

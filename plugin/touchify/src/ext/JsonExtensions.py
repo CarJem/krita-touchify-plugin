@@ -18,15 +18,6 @@ class JsonExtensions:
             result = jsonData
             return result
 
-    def tryGetListAssignment(jsonData, key, type, defaultValue):
-        if not jsonData:
-            return JsonExtensions.list_assignment(defaultValue, type)
-        if key in jsonData:
-            result = jsonData[key]
-            return JsonExtensions.list_assignment(result, type)
-        else:
-            return JsonExtensions.list_assignment(defaultValue, type)
-
 
     def tryGetEntry(jsonData, key, type, defaultValue):
         if not jsonData:

@@ -9,7 +9,8 @@
         "alignment_y": "top",
         "stretch_x": 0,
         "stretch_y": 0,
-        "horizontal_mode": false
+        "horizontal_mode": false,
+        "json_version": 1
     },
     "toolshelf_alt": {
         "position_x": 1,
@@ -30,5 +31,6 @@
         "span_y": -1,
         "stretch_y": 0,
         "stretch_x": 0
-    }
+    },
+    "json_version": 1
 }
