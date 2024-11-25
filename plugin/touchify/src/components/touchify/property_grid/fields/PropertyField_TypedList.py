@@ -26,7 +26,6 @@ class PropertyField_TypedList(PropertyField):
         else: restrictions = PropertyUtils_Extensions.getRestrictions(self.variable_source)
 
         self.nested_list_id = ""
-        self.variable_list_nested_type = None
         self.has_sub_array = False
 
         if variable_name in restrictions:
@@ -217,18 +216,18 @@ class PropertyField_TypedList(PropertyField):
 
         if mode == 'edit':
             if self.selectedIndex != -1:
-                #self.subwindowMode = "edit"
+                self.subwindowMode = "edit"
                 if self.selectedSubIndex != -1:
-                    #self.subwindowItem = "subitem"
+                    self.subwindowItem = "subitem"
                     self.subwindowPropGrid.updateDataObject(self.selectedSubItem)
                 else:
-                    #self.subwindowItem = "normal"
+                    self.subwindowItem = "normal"
                     self.subwindowPropGrid.updateDataObject(self.selectedItem)
                 self.stackHost.goForward(self.dlg)
                 self.dlg.show()
         elif mode == 'add':
             if self.selectedSubIndex != -1:
-                editableValue = self.getEditableValue(self.variable_list_nested_type())
+                editableValue = self.getEditableValue(type(self.selectedSubItem)())
                 self.getNestedList(self.selectedItem).append(editableValue)
                 self.updateList()
             else:
@@ -245,7 +244,7 @@ class PropertyField_TypedList(PropertyField):
         if self.selectedIndex != -1:
             if self.selectedSubIndex != -1:
                 variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
-                item_type = self.variable_list_nested_type
+                item_type = type(self.selectedSubItem)
                 item_data = copy.deepcopy(self.getNestedList(variable[self.selectedIndex])[self.selectedSubIndex])
             else:
                 variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
@@ -261,7 +260,7 @@ class PropertyField_TypedList(PropertyField):
         
         if self.selectedIndex != -1:
             if self.selectedSubIndex != -1: 
-                item_type = self.variable_list_nested_type
+                item_type = type(self.selectedSubItem)
             else: 
                 item_type = self.variable_list_type
 

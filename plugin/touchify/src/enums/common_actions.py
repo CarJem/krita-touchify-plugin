@@ -4,8 +4,12 @@ class CommonActions:
     ]
 
     EXPANDING_SPACERS = [
+        "expanding_spacer0",
         "expanding_spacer1",
-        "expanding_spacer2"
+        "expanding_spacer2",
+        "expanding_spacer_0",
+        "expanding_spacer_1",
+        "expanding_spacer_2",
     ]
 
     TOOLBOX_ITEMS: dict[str, str] = {

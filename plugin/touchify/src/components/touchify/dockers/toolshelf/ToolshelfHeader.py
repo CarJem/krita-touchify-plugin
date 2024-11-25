@@ -87,8 +87,8 @@ class ToolshelfHeader(QWidget):
             self.setLayout(self.ourLayout)
 
             self._rows: dict[int, QWidget] = {}
-            self._buttons: dict[any, ToolshelfHeader.TabList.HeaderTab] = {}
-            self._actions: dict[any, TouchifyActionButton] = {}
+            self._buttons: dict[str, ToolshelfHeader.TabList.HeaderTab] = {}
+            self._actions: dict[str, TouchifyActionButton] = {}
 
             self.button_size_policy = QSizePolicy()
             if self.orientation == Qt.Orientation.Vertical:
@@ -162,7 +162,14 @@ class ToolshelfHeader(QWidget):
             btn.setToolTip(toolTip)
             btn.setContentsMargins(0,0,0,0)
             btn.setCheckable(True)
-            self._buttons[properties.id] = btn
+
+            actual_id = properties.id
+            actual_id_num = 0
+            while actual_id in self._buttons:
+                actual_id = f"{properties.id}{actual_id_num}"
+                actual_id_num += 1
+
+            self._buttons[actual_id] = btn
 
             if properties.row not in self._rows:
                 self.createRow(properties.row)
@@ -183,7 +190,14 @@ class ToolshelfHeader(QWidget):
         def createAction(self, properties: CfgTouchifyAction, action_row: int):
             btn = self.actions_manager.createButton(self, properties)
             btn.setContentsMargins(0,0,0,0)
-            self._actions[properties.id] = btn
+            
+            actual_id = properties.id
+            actual_id_num = 0
+            while actual_id in self._actions:
+                actual_id = f"{properties.id}{actual_id_num}"
+                actual_id_num += 1
+
+            self._actions[actual_id] = btn
 
             if action_row not in self._rows:
                 self.createRow(action_row)

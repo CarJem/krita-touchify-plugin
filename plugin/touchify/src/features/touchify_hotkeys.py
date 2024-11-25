@@ -30,6 +30,7 @@ class TouchifyHotkeys(object):
         pobj = self.qWin.findChild(QWidget,'view_' + str(viewIndex))
         mobj = next((w for w in pobj.findChildren(QWidget) if w.metaObject().className() == 'KisPopupPalette'), None)
         if not mobj.isVisible():
+            
             parentWidget = mobj.parentWidget()
             center_x = int(parentWidget.width() / 2) - int(mobj.width() / 2)
             center_y = int(parentWidget.height() / 2) - int(mobj.height() / 2)

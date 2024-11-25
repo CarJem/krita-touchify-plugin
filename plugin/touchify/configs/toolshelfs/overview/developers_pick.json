@@ -684,69 +684,6 @@
                         "show_text": false,
                         "show_icon": true,
                         "canvas_preset_data": {}
-                    },
-                    {
-                        "context_menu_actions": [],
-                        "action_id": "TouchifyAction_SelectionPopup",
-                        "variant": "action",
-                        "action_use_icon": true,
-                        "brush_name": "",
-                        "brush_override_icon": false,
-                        "text": "",
-                        "icon": "",
-                        "docker_group_data": {
-                            "docker_names": []
-                        },
-                        "docker_id": "",
-                        "id": "",
-                        "popup_data": {
-                            "toolshelf_data": {
-                                "json_version": 3,
-                                "pages": [],
-                                "homepage": {
-                                    "sections": [],
-                                    "actions": [],
-                                    "json_version": 1
-                                }
-                            },
-                            "actions_items": [],
-                            "json_version": 3
-                        },
-                        "workspace_id": "",
-                        "show_text": false,
-                        "show_icon": true,
-                        "canvas_preset_data": {}
-                    },
-                    {
-                        "context_menu_actions": [],
-                        "action_id": "touchify_showPopupMenu",
-                        "variant": "action",
-                        "action_use_icon": false,
-                        "brush_name": "",
-                        "brush_override_icon": false,
-                        "text": "",
-                        "icon": "material:menu",
-                        "docker_group_data": {
-                            "docker_names": []
-                        },
-                        "docker_id": "",
-                        "id": "",
-                        "popup_data": {
-                            "toolshelf_data": {
-                                "json_version": 3,
-                                "pages": [],
-                                "homepage": {
-                                    "sections": [],
-                                    "actions": [],
-                                    "json_version": 1
-                                }
-                            },
-                            "actions_items": [],
-                            "json_version": 3
-                        },
-                        "workspace_id": "",
-                        "show_text": false,
-                        "show_icon": true
                     }
                 ],
                 "row_name": "File Row"
@@ -814,6 +751,37 @@
                         },
                         "show_text": false,
                         "show_icon": true
+                    },
+                    {
+                        "context_menu_actions": [],
+                        "action_id": "touchify_showPopupMenu",
+                        "variant": "action",
+                        "action_use_icon": false,
+                        "brush_name": "",
+                        "brush_override_icon": false,
+                        "text": "",
+                        "icon": "material:menu",
+                        "docker_group_data": {
+                            "docker_names": []
+                        },
+                        "docker_id": "",
+                        "id": "",
+                        "popup_data": {
+                            "toolshelf_data": {
+                                "json_version": 3,
+                                "pages": [],
+                                "homepage": {
+                                    "sections": [],
+                                    "actions": [],
+                                    "json_version": 1
+                                }
+                            },
+                            "actions_items": [],
+                            "json_version": 3
+                        },
+                        "workspace_id": "",
+                        "show_text": false,
+                        "show_icon": true
                     }
                 ],
                 "row_name": "Undo / Redo Row"
@@ -822,6 +790,15 @@
         "tab_type": "tabs",
         "action_height": 20,
         "json_version": 1,
-        "id": "ROOT"
+        "id": "ROOT",
+        "display_name": "",
+        "icon": "",
+        "row": 0,
+        "size_x": 0,
+        "size_y": 0,
+        "min_size_x": 0,
+        "min_size_y": 0,
+        "max_size_x": 0,
+        "max_size_y": 0
     }
 }
