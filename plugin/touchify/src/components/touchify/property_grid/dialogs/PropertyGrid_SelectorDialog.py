@@ -3,11 +3,10 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 from touchify.src.stylesheet import Stylesheet
-from .PropertyGrid_Dialog import PropertyGrid_Dialog
+from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 
-from .....resources import ResourceManager
+from touchify.src.resources import ResourceManager
 
-from .....ext.KritaExtensions import KritaExtensions
 
 DATA_INDEX = 3
 
@@ -19,11 +18,14 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
     def __init__(self, parent: QStackedWidget):
         super().__init__(parent)
 
+
+
         self.listView = QListWidget()
         self.listView.setResizeMode(QListView.ResizeMode.Adjust)
         self.listView.setMovement(QListView.Movement.Static)
         self.listView.setSelectionMode(QListView.SelectionMode.SingleSelection)
         self.listView.itemSelectionChanged.connect(self.updateSelected)
+        self.listView.itemClicked.connect(self.updateSelected)
 
         self.selected_item = "null"
 
@@ -31,8 +33,29 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         self.filterBar.setPlaceholderText("Filter...")
         self.filterBar.textChanged.connect(self.onFilterUpdate)
 
+        self.list_info_layout = QHBoxLayout()
+        self.list_info_layout.setContentsMargins(0,0,0,0)
+        self.list_info_layout.setSpacing(0)
+
+        self.list_info = QFrame(self)
+        self.list_info.setContentsMargins(0,0,0,0)
+        self.list_info.setLayout(self.list_info_layout)
+
+        self.list_info_text = QLabel(self.list_info)
+        self.list_info_text.setContentsMargins(0,0,0,0)
+
+        self.list_info_icon = QPushButton(self.list_info)
+        self.list_info_icon.setContentsMargins(0,0,0,0)
+        self.list_info_icon.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        self.list_info_icon.setFlat(True)
+
+
+        self.list_info_layout.addWidget(self.list_info_icon)
+        self.list_info_layout.addWidget(self.list_info_text, 1)
+
         self.dlgLayout = QVBoxLayout(self)
         self.dlgLayout.addWidget(self.listView)
+        self.dlgLayout.addWidget(self.list_info)
         self.dlgLayout.addWidget(self.filterBar)
 
         self.setLayout(self.dlgLayout)
@@ -55,8 +78,12 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         currentItem = self.listView.currentItem()
         if currentItem:
             self.selected_item = str(currentItem.data(DATA_INDEX))
+            self.list_info_icon.setIcon(currentItem.icon())
+            self.list_info_text.setText(self.selected_item)
         else: 
             self.selected_item = "null"
+            self.list_info_icon.setIcon(QIcon())
+            self.list_info_text.setText("")
 
 
     def selectedResult(self):

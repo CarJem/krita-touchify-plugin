@@ -1,4 +1,6 @@
-from PyQt5.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QTabBar, QSizePolicy
+from PyQt5.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QTabBar, QSizePolicy,QPushButton
+
+from touchify.src.resources import ResourceManager
 
 
 class PropertyGrid(QWidget):
@@ -12,13 +14,27 @@ class PropertyGrid(QWidget):
 
         self.navi_connection = None
 
-        self.naviTabBar = QTabBar(self)
+        self.naviBarRow = QWidget(self)
+        self.naviBarRow.setContentsMargins(0,0,0,0)
+        self.naviBarRow.setLayout(QHBoxLayout(self))
+        self.naviBarRow.layout().setSpacing(0)
+        self.naviBarRow.layout().setContentsMargins(0,0,0,0)
+        self.layout().addWidget(self.naviBarRow)
+
+        self.naviBarBackBtn = QPushButton(self.naviBarRow)
+        self.naviBarBackBtn.setContentsMargins(0,0,0,0)
+        self.naviBarBackBtn.setFlat(True)
+        self.naviBarBackBtn.setIcon(ResourceManager.materialIcon("arrow-left"))
+        self.naviBarBackBtn.clicked.connect(self.goBack)
+        self.naviBarRow.layout().addWidget(self.naviBarBackBtn)
+
+        self.naviTabBar = QTabBar(self.naviBarRow)
         self.naviTabBar.setExpanding(False)
         self.naviTabBar.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         self.naviTabBar.setMovable(False)
         self.naviTabBar.setUsesScrollButtons(False)
         self.naviTabBar.setTabsClosable(False)
-        self.layout().addWidget(self.naviTabBar)
+        self.naviBarRow.layout().addWidget(self.naviTabBar, 1)
 
         from .PropertyGrid_Panel import PropertyGrid_Panel
         self.rootPropertyGrid = PropertyGrid_Panel(self)
@@ -83,12 +99,20 @@ class PropertyGrid(QWidget):
         self.setCurrentIndex(self.addWidget(newPage))
         self.updateNavigationTabs()
 
+    def sync(self):
+        pass
+
+
     def goBack(self, amount: int = 1):
+        if self.stackWidget.count() == 1: return
+
         if amount < 1: amount = 1
         self.setNavigationConnection(False)
         for i in range(0, amount):
             lastIndex = self.currentIndex() - 1
             currentWidget = self.currentWidget()
+            if hasattr(currentWidget, "dlg_updateItem"):
+                currentWidget.dlg_updateItem()
             self.setCurrentIndex(lastIndex)
             self.stackWidget.removeWidget(currentWidget)
         self.updateNavigationTabs()

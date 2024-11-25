@@ -231,6 +231,7 @@ class ToolshelfPanel(QWidget):
         if actionInfo.max_size_y != 0: actionWidget.setMaximumHeight(actionInfo.max_size_y)
 
         self.dockerWidgets[actionInfo.docker_id] = actionWidget
+        actionWidget.dockerChanged.connect(self.onDockerUpdate)
         self.pageLoadedSignal.connect(actionWidget.loadWidget)
         self.pageUnloadSignal.connect(actionWidget.unloadWidget)
 
@@ -264,6 +265,9 @@ class ToolshelfPanel(QWidget):
         return actionWidget
     
     #endregion
+
+    def onDockerUpdate(self):
+        self.page_stack.onDockerUpdate()
 
     def title(self):
         if self.panelProperties:

@@ -67,10 +67,6 @@ class BrushBlendingOption(QWidgetAction):
             self.toggled.emit(self)
 
 class BrushBlendingSelector(QPushButton):
-
-
-
-
     def __init__(self, parent: QWidget=None):
         super().__init__(parent)
 

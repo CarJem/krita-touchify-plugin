@@ -20,6 +20,8 @@ if TYPE_CHECKING:
     from ...popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
 class ToolshelfWidget(QWidget):
+    sizeChanged=pyqtSignal()
+
     def __init__(self, parent: "ToolshelfDockWidget", cfg: CfgToolshelf, registry_index: int = -1):
         super(ToolshelfWidget, self).__init__(parent)
 
@@ -71,6 +73,9 @@ class ToolshelfWidget(QWidget):
             self.mainLayout.setDirection(QHBoxLayout.Direction.LeftToRight if headerBeforePages else QHBoxLayout.Direction.RightToLeft)
 
 
+    def resizeEvent(self, event: QResizeEvent):
+        self.sizeChanged.emit()
+        super().resizeEvent(event)
     
     #region Getters / Setters
 

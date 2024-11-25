@@ -9,6 +9,7 @@ class PropertyGrid_Dialog(QDialog):
 
     def __init__(self, parent: QStackedWidget):
         super().__init__(parent)
+        self.setContentsMargins(0,0,0,0)
         self.setWindowTitle("EDITOR")
         self.canReject = False
 

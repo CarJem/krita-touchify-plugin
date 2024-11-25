@@ -8,6 +8,8 @@ from krita import *
 
 class DockerContainer(QWidget):
   
+    dockerChanged=pyqtSignal()
+
     def __init__(self, parent: QWidget | None, docker_id: str, docker_manager: DockerManager):
         super(DockerContainer, self).__init__(parent)
 
@@ -72,9 +74,11 @@ class DockerContainer(QWidget):
         if self.borrowedDocker != None and self.borrowedDocker.parentWidget() == self.container:
             self.unloaded_label.setVisible(False)
             self.container_layout.removeWidget(self.unloaded_label)
+            self.adjustSize()
         else:
             self.container_layout.addWidget(self.unloaded_label)
             self.unloaded_label.setVisible(True)
+            self.adjustSize()
 
     #region Private Functions
     def _stealDocker(self):
@@ -88,12 +92,14 @@ class DockerContainer(QWidget):
         dockerLoaded: QWidget | None = self.docker_manager.loadDocker(self.docker_id, shareArgs)
         if not dockerLoaded: return
         self.borrowedDocker = dockerLoaded
+        self.dockerChanged.emit()
         self.container_layout.addWidget(self.borrowedDocker)
         if self.dockMode: self.borrowedDocker.show()
         self.updateVisibility()
 
     def _unloadDocker(self):
         self.docker_manager.unloadDocker(self.docker_id)
+        self.dockerChanged.emit()
         self.updateVisibility()
 
     #endregion

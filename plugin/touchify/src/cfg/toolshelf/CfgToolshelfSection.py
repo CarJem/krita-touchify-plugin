@@ -145,7 +145,7 @@ class CfgToolshelfSection:
             "size_y",
             "panel_x",
             "panel_y",
-            "ignore_scaling"
+            "ignore_scaling",
             "section_type"
         ]
 

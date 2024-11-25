@@ -76,6 +76,9 @@ class ToolshelfPageStack(QStackedWidget):
     def sizeHint(self):
         resultingSize = super().sizeHint()
         return resultingSize
+    
+    def onDockerUpdate(self):
+        pass
 
     def changePanel(self, panel_id: str):
         new_panel = self.panel(panel_id)

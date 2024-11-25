@@ -223,7 +223,8 @@
             {
                 "subpanel_data": {
                     "sections": [],
-                    "actions": []
+                    "actions": [],
+                    "json_version": 1
                 },
                 "action_section_contents": [],
                 "action_section_id": "Panel",
@@ -254,7 +255,8 @@
             {
                 "subpanel_data": {
                     "sections": [],
-                    "actions": []
+                    "actions": [],
+                    "json_version": 1
                 },
                 "action_section_contents": [],
                 "action_section_id": "Panel",

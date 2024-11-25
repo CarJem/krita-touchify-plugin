@@ -14,6 +14,7 @@
     > This includes:
     > - **Hint Text** - To provide additional information about what configuration variables do
     > - **Navigation Bar** - To provide the user an idea of where they are within the configuration files
+    > - **Copy and Paste Functionality** - You can now copy/paste many data models with complex setups wherever you like (like popup data and toolshelf sections)
     > - And many other smaller adjustments to the UI and logic
 - **New Toolshelf Widgets - Existing Docker Components**
     > These include the following (avaliable via the special section type for toolshelves):

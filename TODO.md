@@ -5,5 +5,5 @@
 - [x] Fix Theming Issues when Changing Themes (Not a priority)
 - [x] Fix Brush Actions Not Highlighting when in use
 - [x] Implement the Rest of the Actions for Toolshelfs
-- [ ] Add Compact Brush Toggles to Touchify
+- [x] Add Compact Brush Toggles to Touchify
 - [x] Finalize Config Naming System

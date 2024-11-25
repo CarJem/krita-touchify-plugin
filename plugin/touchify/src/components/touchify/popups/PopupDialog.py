@@ -149,6 +149,12 @@ class PopupDialog(QDockWidget):
     def generateSize(self):
         return [0, 0]
     
+    def updateSize(self, dialog_width: int, dialog_height: int):
+        if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
+            self.setFixedSize(dialog_width, dialog_height)
+        elif self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
+            self.setMinimumSize(dialog_width, dialog_height)
+    
     def triggerPopup(self, parent: QWidget | None):
         if self.isVisible():
             self.close()
@@ -169,10 +175,10 @@ class PopupDialog(QDockWidget):
         self.show()
 
         if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
-            self.setFixedSize(dialog_width, dialog_height)
+            self.updateSize(dialog_width, dialog_height)
             self.activateWindow()
         elif self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
-            self.setMinimumSize(dialog_width, dialog_height)
+            self.updateSize(dialog_width, dialog_height)
 
     def shutdownWidget(self):
         qApp.removeEventFilter(self)

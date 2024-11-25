@@ -31,58 +31,69 @@ class ToolshelfSpecialSection(QWidget):
 
         self.ourLayout = QVBoxLayout(self)
         self.setContentsMargins(0,0,0,0)
+        self.ourLayout.setSpacing(0)
         self.ourLayout.setContentsMargins(0,0,0,0)
         self.setLayout(self.ourLayout)
 
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushBlendingMode:
             self.ourWidget = BrushBlendingSelector(self)
-            self.ourLayout.addWidget(self.ourWidget)
+            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.LayerBlendingMode:
             self.ourWidget = LayerBlendingSelector(self)
-            self.ourLayout.addWidget(self.ourWidget)
+            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.LayerLabelBox:
             self.ourWidget = LayerLabelBox(self)
-            self.ourLayout.addWidget(self.ourWidget)
+            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushSizeSlider:
             self.ourWidget = BrushSizeSlider(self)
             self.ourWidget.setSourceWindow(self.action_manager.appEngine.windowSource)
-            self.ourLayout.addWidget(self.ourWidget)
+            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushOpacitySlider:
             self.ourWidget = BrushOpacitySlider(self)
             self.ourWidget.setSourceWindow(self.action_manager.appEngine.windowSource)
-            self.ourLayout.addWidget(self.ourWidget)
+            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushFlowSlider:
             self.ourWidget = BrushFlowSlider(self)
             self.ourWidget.setSourceWindow(self.action_manager.appEngine.windowSource)
-            self.ourLayout.addWidget(self.ourWidget)
+            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushRotationSlider:
             self.ourWidget = BrushRotationSlider(self)
             self.ourWidget.setSourceWindow(self.action_manager.appEngine.windowSource)
-            self.ourLayout.addWidget(self.ourWidget)
+            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BackgroundColorBox:
             self.ourWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Background)
-            self.ourLayout.addWidget(self.ourWidget)
+            self.ourWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.ForegroundColorBox:
             self.ourWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Foreground)
-            self.ourLayout.addWidget(self.ourWidget)
+            self.ourWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+            self.ourLayout.addWidget(self.ourWidget, 1)
+
+    def setMinimumHeight(self, val:int):
+        if self.ourWidget: self.ourWidget.setMinimumHeight(val)
+        super().setMinimumHeight(val)
+        
+    def setMaximumHeight(self, val:int):
+        if self.ourWidget: self.ourWidget.setMaximumHeight(val)
+        super().setMaximumHeight(val)
+        
+    def setMinimumWidth(self, val:int):
+        if self.ourWidget: self.ourWidget.setMinimumWidth(val)
+        super().setMinimumWidth(val)
+        
+    def setMaximumWidth(self, val:int):
+        if self.ourWidget: self.ourWidget.setMaximumWidth(val)
+        super().setMaximumWidth(val)
 
 
     def setSizeHint(self, size):
         self.size = QSize(size[0], size[1])
-
-    def minimumSize(self) -> QSize:
-        baseSize: QSize = QSize()
-        if self.ourWidget:
-            baseSize = self.ourWidget.minimumSize()
-        else:
-            baseSize = super().minimumSize()
-        return baseSize
     
     def sizeHint(self):
         baseSize: QSize = QSize()
         if self.size:
             baseSize = self.size
-        elif self.ourWidget:
+        elif self.ourWidget: 
             baseSize = self.ourWidget.sizeHint()
         else:
             baseSize = super().sizeHint()

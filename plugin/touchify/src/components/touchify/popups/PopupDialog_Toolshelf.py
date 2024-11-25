@@ -39,6 +39,8 @@ class PopupDialog_Toolshelf(PopupDialog):
 
         self.scrollArea = QScrollArea(self)
         self.scrollArea.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.scrollArea.setContentsMargins(0,0,0,0)
+        self.scrollArea.setViewportMargins(0,0,0,0)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
@@ -46,6 +48,7 @@ class PopupDialog_Toolshelf(PopupDialog):
         self.grid.addWidget(self.scrollArea)
 
         self.mainWidget = ToolshelfWidget(self, self.toolshelf_data)
+        self.mainWidget.sizeChanged.connect(self.requestViewUpdate)
         self.scrollArea.setWidget(self.mainWidget)
 
     def hasPanelStack(self):
@@ -55,7 +58,8 @@ class PopupDialog_Toolshelf(PopupDialog):
         return False
     
     def requestViewUpdate(self):
-        pass
+        size = self.generateSize()
+        self.updateSize(size[0], size[1])
 
     def shutdownWidget(self):
         self.mainWidget.shutdownWidget()
@@ -72,9 +76,14 @@ class PopupDialog_Toolshelf(PopupDialog):
         super().closeEvent(event)
    
     def generateSize(self):
-        dialog_width = self.sizeHint().width()
-        dialog_height = self.sizeHint().height()
-        return [int(dialog_width), int(dialog_height)]
+        if self.mainWidget != None:
+            dialog_width = self.scrollArea.viewportSizeHint().width()
+            dialog_height = self.scrollArea.viewportSizeHint().height()
+            return [int(dialog_width + 14), int(dialog_height + 14)]
+        else:
+            dialog_width = self.sizeHint().width()
+            dialog_height = self.sizeHint().height()
+            return [int(dialog_width), int(dialog_height)]
 
     def triggerPopup(self, parent: QWidget | None):
         super().triggerPopup(parent)

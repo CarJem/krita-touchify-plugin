@@ -1,3 +1,4 @@
+import copy
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -8,6 +9,7 @@ from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensio
 from touchify.src.components.touchify.property_grid.PropertyGrid import *
 
 from touchify.src.ext.types.TypedList import *
+from touchify.src.helpers import TouchifyHelpers
 from touchify.src.resources import *
 
 
@@ -54,7 +56,8 @@ class PropertyField(QWidget):
                 self.setupExpandable(restrictions[self.variable_name])
 
     def setupExpandable(self, variableData: dict[str, any]):
-        self.editor = QPushButton()
+        self.editor = QToolButton()
+        self.editor.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         btnText = "Edit..."
 
         if "text" in variableData:
@@ -62,6 +65,14 @@ class PropertyField(QWidget):
 
         self.editor.clicked.connect(self.nested_edit)
         self.editor.setText(btnText)
+
+        moreMenu = QMenu(self.editor)
+        copyAct = moreMenu.addAction("Copy")
+        copyAct.triggered.connect(self.nested_copy)
+        pateAct = moreMenu.addAction("Paste")
+        pateAct.triggered.connect(self.nested_paste)
+        self.editor.menu
+        self.editor.setMenu(moreMenu)
         
         editorLayout = QHBoxLayout(self)
         editorLayout.setSpacing(0)
@@ -69,33 +80,37 @@ class PropertyField(QWidget):
         editorLayout.addWidget(self.editor)
         self.setLayout(editorLayout)
 
+    def nested_paste(self):
+        item_type: type | None = type(self.variable_data)
+        
+        clipboard_data = TouchifyHelpers.getExtension().getSettingsClipboard(item_type)
+        if clipboard_data != None:
+            pastable_data = copy.deepcopy(clipboard_data)
+            self.variable_data = pastable_data
+            self.setVariable(self.variable_source, self.variable_name, pastable_data)
+
+    def nested_copy(self):
+        item_type: type | None = type(self.variable_data)
+        item_data: any | None = copy.deepcopy(self.variable_data)
+
+        if item_data != None and item_type != None:
+            TouchifyHelpers.getExtension().setSettingsClipboard(item_type, item_data)
+
     def nested_edit(self):
         self.nested_dlg = PropertyGrid_Dialog(self)
         self.nested_dlg.setWindowTitle(str(self.variable_name))
         self.nested_dlg.setWindowFlags(Qt.WindowType.Widget)
         self.nested_container = QVBoxLayout(self)
-        self.nested_dlg.btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        self.nested_dlg.btns.accepted.connect(lambda: self.nested_dlg_accept())
-        self.nested_dlg.btns.rejected.connect(lambda: self.nested_dlg_reject())
+        self.nested_container.setContentsMargins(0,0,0,0)
+        self.nested_container.setSpacing(0)
 
         from ..PropertyGrid_Panel import PropertyGrid_Panel
         self.nested_subwindowPropGrid = PropertyGrid_Panel(self.stackHost)
         self.nested_container.addWidget(self.nested_subwindowPropGrid)
-        self.nested_container.addWidget(self.nested_dlg.btns)
         self.nested_dlg.setLayout(self.nested_container)
 
         self.nested_subwindowPropGrid.updateDataObject(self.variable_data)
         self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.nested_dlg))
         self.nested_dlg.show()
-
-    def nested_dlg_accept(self):
-        self.nested_dlg.accept()
-        self.stackHost.goBack()
-        self.nested_subwindowPropGrid.deleteLater()
-    
-    def nested_dlg_reject(self):
-        self.nested_dlg.reject()
-        self.stackHost.goBack()
-        self.nested_subwindowPropGrid.deleteLater()
 
     #endregion

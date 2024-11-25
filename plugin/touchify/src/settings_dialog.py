@@ -41,6 +41,7 @@ class SettingsDialog(QDialog):
         return buttonBox
     
     def _saveFile(self):
+        self.propertyGrid.sync()
         self.editableConfig.save()
         TouchifyConfig.instance().notifyUpdate()
         self.propertyGrid.forceUpdate()
