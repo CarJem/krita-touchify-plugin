@@ -50,50 +50,6 @@ class ActionManager(QObject):
         self.__lastToolboxTool: str = ""
         self.__lastBrushPreset: Resource = None
 
-    def onWindowCreated(self):
-        def initToolboxHook():
-            def onButtonToggled(obj: QAbstractButton):
-                if obj:
-                    toolboxTool = obj.objectName()
-                    if toolboxTool != self.__lastToolboxTool:
-                        self.__lastToolboxTool = toolboxTool
-                        self.__updateActionToggleStates()
-                        
-            qwin = Krita.instance().activeWindow().qwindow()
-            mobj = next((w for w in qwin.findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
-            wobj = mobj.findChild(QButtonGroup)
-            wobj.buttonToggled.connect(onButtonToggled)
-        
-        initToolboxHook()
-
-    def onActionBtnPressed(self):
-        self.composer_action_down = True
-
-    def onConfigUpdated(self):
-        registered_ids: list[str] = []
-        for data in self.registeredActions:
-            registered_ids.append(data)
-
-        cfg = TouchifyConfig.instance().getConfig()
-        for action in cfg.actions_registry.actions_registry:
-            action: CfgTouchifyAction
-            actionIdentifier ='TouchifyAction_{0}'.format(action.id)
-
-            if actionIdentifier in self.registeredActionsData:
-                self.registeredActionsData[actionIdentifier] = action
-
-
-    def onMouseRelease(self):
-        if self.composer_action_down == True:
-            QApplication.instance().sendEvent(Krita.instance().activeWindow().qwindow(), QKeyEvent(QEvent.Type.KeyRelease, Qt.Key.Key_Escape, Qt.KeyboardModifier.NoModifier))
-            self.composer_action_down = False
-        
-    def registeredAction(self, identifier: str, action: QAction):
-        if identifier in self.registeredActions:
-            data: CfgTouchifyAction = self.registeredActionsData[identifier]
-            if isinstance(data, CfgTouchifyAction):
-                self.runAction(data, action)
-
     def runAction(self, data: CfgTouchifyAction, action: QAction):
         match data.variant:
             case CfgTouchifyAction.Variants.CanvasPreset:
@@ -133,12 +89,89 @@ class ActionManager(QObject):
 
         if result and result != None:
             if data.closes_popup == True:
-                result.clicked.connect(lambda: self.__closePopup(result))
+                result.clicked.connect(lambda: self.__btn_closePopup(result))
             result.setParent(parent)
 
         return result
     
-    def createAction(self, data: CfgTouchifyAction, window: Window, actionPath: str):
+    def openPopup(self, data: CfgTouchifyActionPopup, _parent: QWidget = None):
+        is_dead = True
+        if data.id in self.active_popups:
+            is_dead = False
+            popup = self.active_popups[data.id]
+            try: 
+                popup.isVisible()
+            except:
+                is_dead = True
+
+        if is_dead:
+            if data.id in self.active_popups: 
+                del self.active_popups[data.id]
+
+            if data.type == CfgTouchifyActionPopup.Variants.Actions:
+                popup = PopupDialog_Actions(self.appEngine.windowSource.qwindow().window(), data, self)
+            elif data.type == CfgTouchifyActionPopup.Variants.Docker:
+                popup = PopupDialog_Docker(self.appEngine.windowSource.qwindow().window(), data, self.appEngine.docker_management)
+            elif data.type == CfgTouchifyActionPopup.Variants.Toolshelf:
+                popup = PopupDialog_Toolshelf(self.appEngine.windowSource.qwindow().window(), data, self, self.appEngine.docker_management)
+            else:
+                popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
+            self.active_popups[data.id] = popup
+
+        popup.triggerPopup(_parent)
+
+    #region Event Functions
+    def onWindowCreated(self):
+        def initToolboxHook():
+            def onButtonToggled(obj: QAbstractButton):
+                if obj:
+                    toolboxTool = obj.objectName()
+                    if toolboxTool != self.__lastToolboxTool:
+                        self.__lastToolboxTool = toolboxTool
+                        self.__updateActionToggleStates()
+                        
+            qwin = Krita.instance().activeWindow().qwindow()
+            mobj = next((w for w in qwin.findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
+            wobj = mobj.findChild(QButtonGroup)
+            wobj.buttonToggled.connect(onButtonToggled)
+        
+        initToolboxHook()
+
+    def onActionBtnPressed(self):
+        self.composer_action_down = True
+
+    def onConfigUpdated(self):
+        registered_ids: list[str] = []
+        for data in self.registeredActions:
+            registered_ids.append(data)
+
+        cfg = TouchifyConfig.instance().getConfig()
+        for action in cfg.actions_registry.actions_registry:
+            action: CfgTouchifyAction
+            actionIdentifier ='TouchifyAction_{0}'.format(action.id)
+
+            if actionIdentifier in self.registeredActionsData:
+                self.registeredActionsData[actionIdentifier] = action
+
+    def onMouseRelease(self):
+        if self.composer_action_down == True:
+            QApplication.instance().sendEvent(Krita.instance().activeWindow().qwindow(), QKeyEvent(QEvent.Type.KeyRelease, Qt.Key.Key_Escape, Qt.KeyboardModifier.NoModifier))
+            self.composer_action_down = False
+
+    def onTimerTick(self):
+        self.__updateActionButtons()
+
+    #endregion
+        
+    #region Registered Actions
+
+    def runRegisteredAction(self, identifier: str, action: QAction):
+        if identifier in self.registeredActions:
+            data: CfgTouchifyAction = self.registeredActionsData[identifier]
+            if isinstance(data, CfgTouchifyAction):
+                self.runAction(data, action)
+
+    def createRegisteredAction(self, data: CfgTouchifyAction, window: Window, actionPath: str):
         actionIdentifier ='TouchifyAction_{0}'.format(data.id)
         displayName = data.text
 
@@ -146,16 +179,31 @@ class ActionManager(QObject):
         self.registeredActions[actionIdentifier] = action
         self.registeredActionsData[actionIdentifier] = data
            
-        TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.registeredAction, {'identifier': actionIdentifier, 'action': action})      
+        TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.runRegisteredAction, {'identifier': actionIdentifier, 'action': action})      
 
-        action.triggered.connect(partial(self.registeredAction, actionIdentifier, action))
+        action.triggered.connect(partial(self.runRegisteredAction, actionIdentifier, action))
         
         (use_text, text, use_icon, icon) = self.__getActionDisplay(data)
         if use_icon:
             action.setIcon(icon)
          
         return action
-   
+
+    def createRegisteredActions(self, window: Window, actionPath: str):
+        subItemPath = actionPath + "/" + "registered"
+        cfg = TouchifyConfig.instance().getConfig()
+        root_menu = QtWidgets.QMenu("Registered Actions")
+
+        for data in cfg.actions_registry.actions_registry:
+            action = self.appEngine.action_management.createRegisteredAction(data, window, subItemPath)
+            root_menu.addAction(action)
+
+        return root_menu
+
+    #endregion
+
+    #region Helper Functions
+
     def __getActionSource(self, action: QAction):
         _sender: QObject = action
         _parent: QWidget | None = None  
@@ -234,8 +282,39 @@ class ActionManager(QObject):
             
         btn.setMetadata(text, icon)
 
-    def onTimerTick(self):
+    #endregion    
+    
+    #region Button Callbacks
+
+    def __btn_closePopup(self, btn: TouchifyActionButton):
+        if btn:
+            parent: QWidget | None = btn.parentWidget()
+            while parent:
+                if isinstance(parent, PopupDialog):
+                    parent.close()
+                    return
+                else:
+                    parent = parent.parentWidget()
+            return
                 
+    def __btn_brushButtonUpdate(self, __btn: TouchifyActionButton, id: str):
+
+        __brush_presets = ResourceManager.getBrushPresets()
+        if id not in __brush_presets: return
+        btn_preset = __brush_presets[id]
+        
+        if self.__lastBrushPreset != btn_preset: __btn.setBrushSelected(False)
+        else: __btn.setBrushSelected(True)
+
+    def __btn_toolboxToolUpdate(self, __btn: TouchifyActionButton, id: str):
+        if self.__lastToolboxTool != id: __btn.setChecked(False)
+        else: __btn.setChecked(True)
+
+    #endregion
+
+    #region Button Update Functions
+
+    def __updateActionButtons(self):
         def getCurrentBrush():
             try:
                 win = self.appEngine.windowSource
@@ -270,57 +349,9 @@ class ActionManager(QObject):
         btns = win.findChildren(TouchifyActionButton)
         for btn in btns: btn.timer_interval_triggered.emit()
 
-    def __closePopup(self, btn: TouchifyActionButton):
-        if btn:
-            parent: QWidget | None = btn.parentWidget()
-            while parent:
-                if isinstance(parent, PopupDialog):
-                    parent.close()
-                    return
-                else:
-                    parent = parent.parentWidget()
-            return
-                
+    #endregion
 
-    def __brushButtonUpdate(self, __btn: TouchifyActionButton, id: str):
-
-        __brush_presets = ResourceManager.getBrushPresets()
-        if id not in __brush_presets: return
-        btn_preset = __brush_presets[id]
-        
-        if self.__lastBrushPreset != btn_preset: __btn.setBrushSelected(False)
-        else: __btn.setBrushSelected(True)
-
-    def __toolboxToolUpdate(self, __btn: TouchifyActionButton, id: str):
-        if self.__lastToolboxTool != id: __btn.setChecked(False)
-        else: __btn.setChecked(True)
-
-    def __triggerPopup(self, data: CfgTouchifyActionPopup, _parent: QWidget = None):
-        is_dead = True
-        if data.id in self.active_popups:
-            is_dead = False
-            popup = self.active_popups[data.id]
-            try: 
-                popup.isVisible()
-            except:
-                is_dead = True
-
-        if is_dead:
-            if data.id in self.active_popups: 
-                del self.active_popups[data.id]
-
-            if data.type == CfgTouchifyActionPopup.Variants.Actions:
-                popup = PopupDialog_Actions(self.appEngine.windowSource.qwindow().window(), data, self)
-            elif data.type == CfgTouchifyActionPopup.Variants.Docker:
-                popup = PopupDialog_Docker(self.appEngine.windowSource.qwindow().window(), data, self.appEngine.docker_management)
-            elif data.type == CfgTouchifyActionPopup.Variants.Toolshelf:
-                popup = PopupDialog_Toolshelf(self.appEngine.windowSource.qwindow().window(), data, self, self.appEngine.docker_management)
-            else:
-                popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
-            self.active_popups[data.id] = popup
-
-        popup.triggerPopup(_parent)
-       
+    #region Button Constructors
     def button_main(self, onClick: any, toolTip: str, checkable: bool, composerMode: bool = False):
         btn = TouchifyActionButton()
         
@@ -343,7 +374,7 @@ class ActionManager(QObject):
         if id in brush_presets:
             preset = brush_presets[id]
             btn = self.button_main(lambda: self.action_brush(id), preset.name(), False)
-            btn.timer_interval_triggered.connect(lambda: self.__brushButtonUpdate(btn, id))
+            btn.timer_interval_triggered.connect(lambda: self.__btn_brushButtonUpdate(btn, id))
             self.__setButtonDisplay(act, btn)
         return btn
                    
@@ -359,7 +390,7 @@ class ActionManager(QObject):
     def button_popup(self, data: CfgTouchifyAction):
         btn: TouchifyActionButton | None = None
         btn = self.button_main(None, data.text, False)
-        btn.clicked.connect((lambda: self.__triggerPopup(data.popup_data, btn)))
+        btn.clicked.connect((lambda: self.openPopup(data.popup_data, btn)))
         self.__setButtonDisplay(data, btn)
         return btn
 
@@ -399,7 +430,7 @@ class ActionManager(QObject):
             btn = self.button_main(action.trigger, action.toolTip(), checkable, act.action_composer_mode)
 
             if act.action_id in CommonActions.TOOLBOX_ITEMS:
-                btn.timer_interval_triggered.connect(lambda: self.__toolboxToolUpdate(btn, act.action_id))
+                btn.timer_interval_triggered.connect(lambda: self.__btn_toolboxToolUpdate(btn, act.action_id))
 
             self.__setButtonDisplay(act, btn)
 
@@ -411,8 +442,9 @@ class ActionManager(QObject):
                 else:
                     btn.setChecked(action.isChecked())
         return btn
+    #endregion
 
-    
+    #region Action Functions    
     def action_trigger(self, data: CfgTouchifyAction):
         if data.action_id in self.registeredActions:
             act: QAction = self.registeredActions[data.action_id]
@@ -488,7 +520,7 @@ class ActionManager(QObject):
                             
     def action_popup(self, action: QAction, data: CfgTouchifyActionPopup):    
         _parent = self.__getActionSource(action)            
-        self.__triggerPopup(data, _parent)
+        self.openPopup(data, _parent)
     
     def action_canvas(self, data: CfgTouchifyActionCanvasPreset):
         def slotConfigChanged(obj: QObject):
@@ -510,3 +542,4 @@ class ActionManager(QObject):
         for docker in self.appEngine.windowSource.dockers():
             if (docker.objectName() == "KisLayerBox"):
                 slotConfigChanged(docker)
+    #endregion

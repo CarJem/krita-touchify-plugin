@@ -80,15 +80,11 @@ class TouchifyExtension(Extension):
         self.instance_generated.setupActions(window)
 
     def getSettingsClipboard(self, requested_type: type):
-        print(f"Requested Clipboard Type:{str(requested_type)}")
-        print(f"Current Clipboard Type:{str(self.settings_clipboard_type)}")
         if self.settings_clipboard_type == requested_type:
             return self.settings_clipboard_data
         else: return None
 
     def setSettingsClipboard(self, item_type: type, item_data: any):
-        print(f"New Clipboard Type:{str(item_type)}")
-        print(f"New Clipboard Data:{str(item_data)}")
         self.settings_clipboard_type = item_type
         self.settings_clipboard_data = item_data
 

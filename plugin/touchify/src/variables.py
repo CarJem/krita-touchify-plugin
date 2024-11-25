@@ -1,12 +1,6 @@
 # Action Groups
 TOUCHIFY_ID_MENU_ROOT="Touchify"
 #-----------------#
-# Action Subgroups
-TOUCHIFY_ID_ACTIONS_WORKSPACE="workspace"
-TOUCHIFY_ID_ACTIONS_DOCKER="docker"
-TOUCHIFY_ID_ACTIONS_POPUP="popup"
-TOUCHIFY_ID_ACTIONS_DOCKER_GROUP="docker_group"
-#-----------------#
 # Action Prefix IDs
 TOUCHIFY_ID_ACTION_PREFIX_HOTKEY="touchify_hotkey"
 TOUCHIFY_ID_ACTION_PREFIX_WORKSPACE="touchify_workspace"
