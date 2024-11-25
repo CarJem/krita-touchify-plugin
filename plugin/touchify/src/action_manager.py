@@ -50,10 +50,6 @@ class ActionManager(QObject):
         self.__lastToolboxTool: str = ""
         self.__lastBrushPreset: Resource = None
 
-    def onTimerTick(self):
-        self.__onTimerTick()
-
-
     def onWindowCreated(self):
         def initToolboxHook():
             def onButtonToggled(obj: QAbstractButton):
@@ -73,12 +69,32 @@ class ActionManager(QObject):
     def onActionBtnPressed(self):
         self.composer_action_down = True
 
+    def onConfigUpdated(self):
+        registered_ids: list[str] = []
+        for data in self.registeredActions:
+            registered_ids.append(data)
+
+        cfg = TouchifyConfig.instance().getConfig()
+        for action in cfg.actions_registry.actions_registry:
+            action: CfgTouchifyAction
+            actionIdentifier ='TouchifyAction_{0}'.format(action.id)
+
+            if actionIdentifier in self.registeredActionsData:
+                self.registeredActionsData[actionIdentifier] = action
+
+
     def onMouseRelease(self):
         if self.composer_action_down == True:
             QApplication.instance().sendEvent(Krita.instance().activeWindow().qwindow(), QKeyEvent(QEvent.Type.KeyRelease, Qt.Key.Key_Escape, Qt.KeyboardModifier.NoModifier))
             self.composer_action_down = False
         
-    def executeAction(self, data: CfgTouchifyAction, action: QAction):
+    def registeredAction(self, identifier: str, action: QAction):
+        if identifier in self.registeredActions:
+            data: CfgTouchifyAction = self.registeredActionsData[identifier]
+            if isinstance(data, CfgTouchifyAction):
+                self.runAction(data, action)
+
+    def runAction(self, data: CfgTouchifyAction, action: QAction):
         match data.variant:
             case CfgTouchifyAction.Variants.CanvasPreset:
                 self.action_canvas(data.canvas_preset_data)
@@ -130,9 +146,9 @@ class ActionManager(QObject):
         self.registeredActions[actionIdentifier] = action
         self.registeredActionsData[actionIdentifier] = data
            
-        TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.executeAction, {'data': data, 'action': action})      
+        TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.registeredAction, {'identifier': actionIdentifier, 'action': action})      
 
-        action.triggered.connect(partial(self.executeAction, data, action))
+        action.triggered.connect(partial(self.registeredAction, actionIdentifier, action))
         
         (use_text, text, use_icon, icon) = self.__getActionDisplay(data)
         if use_icon:
@@ -218,7 +234,7 @@ class ActionManager(QObject):
             
         btn.setMetadata(text, icon)
 
-    def __onTimerTick(self):
+    def onTimerTick(self):
                 
         def getCurrentBrush():
             try:

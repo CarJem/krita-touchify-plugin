@@ -10,11 +10,11 @@ from touchify.src.resources import *
 from krita import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.extension import Touchify
+    from touchify.src.window import TouchifyWindow
     
 class TouchifyActions(object):
     
-    def __init__(self, instance: "Touchify.TouchifyWindow"):
+    def __init__(self, instance: "TouchifyWindow"):
         self.appEngine = instance  
 
     def buildMenu(self, menu: QMenu):
