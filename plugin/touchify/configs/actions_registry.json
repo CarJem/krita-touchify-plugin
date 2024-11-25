@@ -1204,7 +1204,7 @@
                                                 "id": "",
                                                 "icon": "config-popup-palette",
                                                 "text": "",
-                                                "variant": "virtual_keys",
+                                                "variant": "action",
                                                 "show_text": false,
                                                 "action_id": "touchify_showPopupPalette",
                                                 "action_use_icon": false,

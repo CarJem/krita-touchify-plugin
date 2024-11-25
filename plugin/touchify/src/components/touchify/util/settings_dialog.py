@@ -21,7 +21,7 @@ class SettingsDialog(QDialog):
 
         
 
-        self.editableConfig = copy.copy(TouchifyConfig.instance().getConfig())
+        self.editableConfig = copy.deepcopy(TouchifyConfig.instance().getConfig())
         self.propertyGrid = PropertyGrid()
         self.propertyGrid.updateDataObject(self.editableConfig)
 

@@ -26,60 +26,13 @@ from touchify.src.components.touchify.popups.PopupDialog import PopupDialog
 from touchify.src.components.touchify.popups.PopupDialog_Actions import PopupDialog_Actions
 from touchify.src.components.touchify.popups.PopupDialog_Docker import PopupDialog_Docker
 
+from touchify.src.enums.common_actions import CommonActions
+
 if TYPE_CHECKING:
     from .window import TouchifyWindow
 
 class ActionManager(QObject):
     
-    class TriggerConstants:
-        KNOWN_UNCHECKABLES = [
-            "show_brush_editor"
-        ]
-
-        EXPANDING_SPACERS = [
-            "expanding_spacer1",
-            "expanding_spacer2"
-        ]
-
-        TOOLBOX_ITEMS: dict[str, str] = {
-            "KisToolTransform": "KisToolTransform",
-            "KritaTransform/KisToolMove": "KritaTransform/KisToolMove",
-            "KisToolCrop": "KisToolCrop",
-            "InteractionTool": "InteractionTool",
-            "SvgTextTool": "SvgTextTool",
-            "PathTool": "PathTool",
-            "KarbonCalligraphyTool": "KarbonCalligraphyTool",
-            "KritaShape/KisToolBrush": "KritaShape/KisToolBrush",
-            "KritaShape/KisToolDyna": "KritaShape/KisToolDyna",
-            "KritaShape/KisToolMultiBrush": "KritaShape/KisToolMultiBrush",
-            "KritaShape/KisToolSmartPatch": "KritaShape/KisToolSmartPatch",
-            "KisToolPencil": "KisToolPencil",
-            "KritaFill/KisToolFill": "KritaFill/KisToolFill",
-            "KritaSelected/KisToolColorSampler": "KritaSelected/KisToolColorPicker",
-            "KritaShape/KisToolLazyBrush": "KritaShape/KisToolLazyBrush",
-            "KritaFill/KisToolGradient": "KritaFill/KisToolGradient",
-            "KritaShape/KisToolRectangle": "KritaShape/KisToolRectangle",
-            "KritaShape/KisToolLine": "KritaShape/KisToolLine",
-            "KritaShape/KisToolEllipse": "KritaShape/KisToolEllipse",
-            "KisToolPolygon": "KisToolPolygon",
-            "KisToolPolyline": "KisToolPolyline",
-            "KisToolPath": "KisToolPath",
-            "KisToolEncloseAndFill": "KisToolEncloseAndFill",
-            "KisToolSelectRectangular": "KisToolSelectRectangular",
-            "KisToolSelectElliptical": "KisToolSelectElliptical",
-            "KisToolSelectPolygonal": "KisToolSelectPolygonal",
-            "KisToolSelectPath": "KisToolSelectPath",
-            "KisToolSelectOutline": "KisToolSelectOutline",
-            "KisToolSelectContiguous": "KisToolSelectContiguous",
-            "KisToolSelectSimilar": "KisToolSelectSimilar",
-            "KisToolSelectMagnetic": "KisToolSelectMagnetic",
-            "ToolReferenceImages": "ToolReferenceImages",
-            "KisAssistantTool": "KisAssistantTool",
-            "KritaShape/KisToolMeasure": "KritaShape/KisToolMeasure",
-            "PanTool": "PanTool",
-            "ZoomTool": "ZoomTool"
-    }
-        
     def __init__(self, instance: "TouchifyWindow"):
         super().__init__()
         self.appEngine = instance
@@ -419,17 +372,17 @@ class ActionManager(QObject):
         if action:
             checkable = action.isCheckable()
             toolbox_item = False
-            if act.action_id in ActionManager.TriggerConstants.KNOWN_UNCHECKABLES:
+            if act.action_id in CommonActions.KNOWN_UNCHECKABLES:
                 checkable = False
             
-            if act.action_id in ActionManager.TriggerConstants.TOOLBOX_ITEMS:
+            if act.action_id in CommonActions.TOOLBOX_ITEMS:
                 checkable = True
                 toolbox_item = True
 
             
             btn = self.button_main(action.trigger, action.toolTip(), checkable, act.action_composer_mode)
 
-            if act.action_id in ActionManager.TriggerConstants.TOOLBOX_ITEMS:
+            if act.action_id in CommonActions.TOOLBOX_ITEMS:
                 btn.timer_interval_triggered.connect(lambda: self.__toolboxToolUpdate(btn, act.action_id))
 
             self.__setButtonDisplay(act, btn)

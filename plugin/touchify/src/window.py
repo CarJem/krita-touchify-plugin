@@ -7,7 +7,7 @@ from touchify.src.variables import *
 from touchify.src.docker_manager import DockerManager
 from touchify.src.action_manager import ActionManager
 
-from touchify.src.settings_dialog import SettingsDialog
+from touchify.src.components.touchify.util.settings_dialog import SettingsDialog
 
 from touchify.src.features.touchify_canvas import TouchifyCanvas
 from touchify.src.features.touchify_hotkeys import TouchifyHotkeys
