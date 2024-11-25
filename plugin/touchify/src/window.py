@@ -45,12 +45,74 @@ class TouchifyWindow(QObject):
         if self.settings_dlg != None:
             if PyQtExtensions.isDeleted(self.settings_dlg) == False:
                 return
-        
-        
+          
         self.settings_dlg = SettingsDialog(self.windowSource)
         self.settings_dlg.show()
 
-    def createActions(self, window: Window):
+    def unload(self):
+        pass
+
+    #region Signal Callbacks
+
+    def onWindowCreated(self, window: Window):
+        self.setParent(window.qwindow())
+        self.windowSource = window
+        self.docker_management = DockerManager(self)
+        self.setupAddons(window)
+        self.setupWindow()
+        self.setupSoftActions()
+        
+    def onKritaConfigUpdated(self):
+        toolshelf_docker = self.getToolshelfDocker()
+        if toolshelf_docker: toolshelf_docker.onKritaConfigUpdate()
+        
+        self.touchify_canvas.onKritaConfigUpdated()
+
+        for call in self.update_style_calls:
+            call()
+
+    def onTimerTick(self):
+        self.action_management.onTimerTick()
+        self.docker_management.onTimerTick()
+
+    def onTouchifyConfigUpdated(self):
+        toolshelf_docker = self.getToolshelfDocker()
+        if toolshelf_docker: toolshelf_docker.onConfigUpdated()
+        
+        toolbox_docker = self.getToolboxDocker()
+        if toolbox_docker: toolbox_docker.onConfigUpdated()
+        
+        self.touchify_canvas.onConfigUpdated()    
+
+        for call in self.update_style_calls:
+            call()
+
+    #endregion
+
+    #region Event Handlers
+
+    def event_findContextMenus(self):
+        actions = self.windowSource.qwindow().findChildren(QAction)
+        for act in actions:
+            if act.text().find("Selection") != -1:
+                print("Found IT!!!")
+
+    def eventFilter(self, source: QObject, event: QEvent) -> bool:
+        if (event.type() == QEvent.Type.ContextMenu):
+            print("Context Test")
+            QTimer.singleShot(1000, self.event_findContextMenus)
+
+        return super().eventFilter(source, event)
+
+    #endregion
+
+    #region Setup Functions
+
+    def setupWindow(self):
+        window = self.windowSource.qwindow()
+        window.installEventFilter(self)
+
+    def setupActions(self, window: Window):
         self.mainMenuBar = window.qwindow().menuBar().addMenu(TOUCHIFY_ID_MENU_ROOT)
 
         subItemPath = TOUCHIFY_ID_MENU_ROOT
@@ -68,70 +130,7 @@ class TouchifyWindow(QObject):
         self.touchify_looks.createActions(window, self.mainMenuBar)
         self.touchify_canvas.createActions(window, self.mainMenuBar)
 
-    def onActionTick(self):
-        self.action_management.onTimerTick()
-        self.docker_management.onTimerTick()
-
-    def onKritaConfigUpdated(self):
-        toolshelf_docker = self.getToolshelfDocker()
-        if toolshelf_docker: toolshelf_docker.onKritaConfigUpdate()
-        
-        self.touchify_canvas.onKritaConfigUpdated()
-
-        for call in self.update_style_calls:
-            call()
-
-    def onConfigUpdated(self):
-        toolshelf_docker = self.getToolshelfDocker()
-        if toolshelf_docker: toolshelf_docker.onConfigUpdated()
-        
-        toolbox_docker = self.getToolboxDocker()
-        if toolbox_docker: toolbox_docker.onConfigUpdated()
-        
-        self.touchify_canvas.onConfigUpdated()    
-
-        for call in self.update_style_calls:
-            call()
-
-    def getToolshelfDocker(self):
-        for docker in self.windowSource.dockers():
-            if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER:
-                toolshelfDocker: ToolshelfDocker = docker
-                return toolshelfDocker
-        return None
-    
-    def getToolboxDocker(self):
-        for docker in self.windowSource.dockers():
-            if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLBOX:
-                result: ToolboxDocker = docker
-                return result
-        return None
-        
-    def setupDockers(self):
-        for docker in self.windowSource.dockers():
-            if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER:
-                toolshelfDocker: ToolshelfDocker = docker
-                toolshelfDocker.setup(self)
-            elif docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLBOX:
-                toolboxDocker: ToolboxDocker = docker
-                toolboxDocker.setup(self)
-            elif docker.objectName().startswith("Touchify/"):
-                addonSetupFn = getattr(docker, "addonSetup", None)
-                addonUpdateStyleFn = getattr(docker, "addonUpdateStyle", None)
-                if callable(addonSetupFn):
-                    addonSetupFn(self)
-                if callable(addonUpdateStyleFn):
-                    self.update_style_calls.append(addonUpdateStyleFn)
-                    
-            
-
-    def onWindowCreated(self, window: Window):
-        self.setParent(window.qwindow())
-        self.windowSource = window
-        self.docker_management = DockerManager(self)     
-        self.setupDockers()
-        self.setupAddons(window)
-
+    def setupSoftActions(self):
         seperator = QAction("", self.mainMenuBar)
         seperator.setText(f"Instance: #{self.windowUUID}")
         seperator.setEnabled(False)
@@ -147,9 +146,25 @@ class TouchifyWindow(QObject):
 
         self.touchify_hotkeys.buildMenu(self.mainMenuBar)
         self.touchify_actions.buildMenu(self.mainMenuBar)
-
-
+            
     def setupAddons(self, window: Window):   
+
+        def setupDockers():
+            for docker in self.windowSource.dockers():
+                if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER:
+                    toolshelfDocker: ToolshelfDocker = docker
+                    toolshelfDocker.setup(self)
+                elif docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLBOX:
+                    toolboxDocker: ToolboxDocker = docker
+                    toolboxDocker.setup(self)
+                elif docker.objectName().startswith("Touchify/"):
+                    addonSetupFn = getattr(docker, "addonSetup", None)
+                    addonUpdateStyleFn = getattr(docker, "addonUpdateStyle", None)
+                    if callable(addonSetupFn):
+                        addonSetupFn(self)
+                    if callable(addonUpdateStyleFn):
+                        self.update_style_calls.append(addonUpdateStyleFn)
+
         def setupDockerMenu():
             dockerMenu = None
             for m in window.qwindow().actions():
@@ -186,8 +201,26 @@ class TouchifyWindow(QObject):
                 if docker.windowTitle().startswith(docker_title_prefix):
                     docker.setWindowTitle(docker.windowTitle().strip(docker_title_prefix))
 
+        setupDockers()
         setupDockerMenu()
         setupDockerTitles()
 
-    def unload(self):
-        pass
+    #endregion
+
+    #region Helper Functions
+
+    def getToolshelfDocker(self):
+        for docker in self.windowSource.dockers():
+            if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER:
+                toolshelfDocker: ToolshelfDocker = docker
+                return toolshelfDocker
+        return None
+    
+    def getToolboxDocker(self):
+        for docker in self.windowSource.dockers():
+            if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLBOX:
+                result: ToolboxDocker = docker
+                return result
+        return None
+    
+    #endregion

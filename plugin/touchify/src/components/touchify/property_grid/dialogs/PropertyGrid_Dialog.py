@@ -11,12 +11,3 @@ class PropertyGrid_Dialog(QDialog):
         super().__init__(parent)
         self.setContentsMargins(0,0,0,0)
         self.setWindowTitle("EDITOR")
-        self.canReject = False
-
-    def actual_reject(self):
-        self.canReject = True
-        self.reject()
-
-    def reject(self):
-        if self.canReject:
-            super().reject()

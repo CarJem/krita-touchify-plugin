@@ -32,7 +32,7 @@ class TouchifyExtension(Extension):
 
     def setup(self):
         Krita.instance().notifier().windowCreated.connect(self.onWindowCreated)
-        TouchifyConfig.instance().notifyConnect(self.onConfigUpdated)
+        TouchifyConfig.instance().notifyConnect(self.onTouchifyConfigUpdated)
         Krita.instance().notifier().configurationChanged.connect(self.onKritaConfigUpdated)
         KritaSettings.notifyConnect(self.onKritaConfigUpdated)
 
@@ -43,15 +43,15 @@ class TouchifyExtension(Extension):
     def onTimerTick(self):
         self.intervalTimerTicked.emit()
         for id in self.instances:    
-            self.instances[id].onActionTick()
+            self.instances[id].onTimerTick()
 
     def onKritaConfigUpdated(self):
         for id in self.instances:
             self.instances[id].onKritaConfigUpdated()
 
-    def onConfigUpdated(self):
+    def onTouchifyConfigUpdated(self):
         for id in self.instances:
-            self.instances[id].onConfigUpdated()
+            self.instances[id].onTouchifyConfigUpdated()
 
     def getNewWindow(self):
         window = Krita.instance().activeWindow()
@@ -77,7 +77,7 @@ class TouchifyExtension(Extension):
     def createActions(self, window: Window):
         self.instance_generate = True
         self.instance_generated = TouchifyWindow(self)
-        self.instance_generated.createActions(window)
+        self.instance_generated.setupActions(window)
 
     def getSettingsClipboard(self, requested_type: type):
         print(f"Requested Clipboard Type:{str(requested_type)}")

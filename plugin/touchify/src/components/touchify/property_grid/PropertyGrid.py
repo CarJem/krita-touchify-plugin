@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QTabBar, QSizePolicy,QPushButton
+from PyQt5.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QTabBar, QSizePolicy, QPushButton, QDialog
 
 from touchify.src.resources import ResourceManager
 
@@ -111,8 +111,8 @@ class PropertyGrid(QWidget):
         for i in range(0, amount):
             lastIndex = self.currentIndex() - 1
             currentWidget = self.currentWidget()
-            if hasattr(currentWidget, "dlg_updateItem"):
-                currentWidget.dlg_updateItem()
+            if isinstance(currentWidget, QDialog):
+                currentWidget.reject()
             self.setCurrentIndex(lastIndex)
             self.stackWidget.removeWidget(currentWidget)
         self.updateNavigationTabs()

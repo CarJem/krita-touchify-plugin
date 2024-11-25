@@ -12,7 +12,6 @@ from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.helpers import TouchifyHelpers
 from touchify.src.resources import *
 
-from touchify.src.components.touchify.property_grid.fields.PropertyField_TempValue import PropertyField_TempValue
 
 
 class PropertyField_TypedList(PropertyField):
@@ -120,28 +119,6 @@ class PropertyField_TypedList(PropertyField):
 
         self.setLayout(field)
 
-    #region Dialog
-
-    def dlg_updateItem(self):
-        if (self.subwindowMode == "edit"):
-            if self.subwindowItem == "subitem":
-                variableType = type(self.selectedSubItem)
-                if variableType == PropertyField_TempValue:
-                    self.selectedSubItem.updateData()
-                self.updateList()
-            else:
-                variableType = type(self.selectedItem)
-                if variableType == PropertyField_TempValue:
-                    self.selectedItem.updateData()
-                self.updateList()
-
-        self.subwindowEditable = None
-        self.subwindowPropGrid.deleteLater()
-        self.subwindowMode = ""
-        self.subwindowItem = ""
-
-    #endregion
-
     #region List Actions
 
     def list_moveUp(self):
@@ -221,10 +198,13 @@ class PropertyField_TypedList(PropertyField):
     def list_edit(self):
         self.list_modify("edit")
     
+    
     def list_modify(self, mode: Literal['edit', 'add'] = 'add'):
         self.dlg = PropertyGrid_Dialog(self)
+        self.dlg.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
         self.dlg.setWindowTitle(self.variable_name + ' - ' + str(self.selectedItem))
         self.dlg.setWindowFlags(Qt.WindowType.Widget)
+        self.dlg.rejected.connect(self.updateList)
         
         self.container = QVBoxLayout(self)
         self.container.setContentsMargins(0,0,0,0)
@@ -237,12 +217,12 @@ class PropertyField_TypedList(PropertyField):
 
         if mode == 'edit':
             if self.selectedIndex != -1:
-                self.subwindowMode = "edit"
+                #self.subwindowMode = "edit"
                 if self.selectedSubIndex != -1:
-                    self.subwindowItem = "subitem"
+                    #self.subwindowItem = "subitem"
                     self.subwindowPropGrid.updateDataObject(self.selectedSubItem)
                 else:
-                    self.subwindowItem = "normal"
+                    #self.subwindowItem = "normal"
                     self.subwindowPropGrid.updateDataObject(self.selectedItem)
                 self.stackHost.goForward(self.dlg)
                 self.dlg.show()
