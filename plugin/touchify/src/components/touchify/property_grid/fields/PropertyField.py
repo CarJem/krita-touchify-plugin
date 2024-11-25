@@ -56,7 +56,7 @@ class PropertyField(QWidget):
                 self.setupExpandable(restrictions[self.variable_name])
 
     def setupExpandable(self, variableData: dict[str, any]):
-        self.editor = QToolButton()
+        self.editor = QPushButton()
         self.editor.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         btnText = "Edit..."
 
@@ -66,18 +66,24 @@ class PropertyField(QWidget):
         self.editor.clicked.connect(self.nested_edit)
         self.editor.setText(btnText)
 
-        moreMenu = QMenu(self.editor)
+
+        self.editor_button = QPushButton()
+        self.editor_button.setMaximumWidth(16)
+        self.editor_button.setContentsMargins(0,0,0,0)
+        self.editor_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+
+        moreMenu = QMenu(self.editor_button)
         copyAct = moreMenu.addAction("Copy")
         copyAct.triggered.connect(self.nested_copy)
         pateAct = moreMenu.addAction("Paste")
         pateAct.triggered.connect(self.nested_paste)
-        self.editor.menu
-        self.editor.setMenu(moreMenu)
+        self.editor_button.setMenu(moreMenu)
         
         editorLayout = QHBoxLayout(self)
         editorLayout.setSpacing(0)
         editorLayout.setContentsMargins(0,0,0,0)
-        editorLayout.addWidget(self.editor)
+        editorLayout.addWidget(self.editor, 1)
+        editorLayout.addWidget(self.editor_button)
         self.setLayout(editorLayout)
 
     def nested_paste(self):
