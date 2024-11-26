@@ -65,7 +65,7 @@ Some of the Features/Addons used in this Plugin are ethier inspired or modified 
         - [[GitHub]](https://github.com/hellozee/CoolBox/)
     - ToolKit 
         - [[Forums]](https://krita-artists.org/t/toolkit-1-0-1/9273/6) 
-    - [[GitHub]](https://github.com/tubaca/ToolKit/releases/tag/v1.0.1)
+        - [[GitHub]](https://github.com/tubaca/ToolKit/releases/tag/v1.0.1)
 - **Revived/Ported**
     - Compact Brush Toggler 
         - [[GitHub]](https://github.com/kaichi1342/CompactBrushToggler)
