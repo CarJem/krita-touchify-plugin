@@ -114,10 +114,6 @@ class TouchifyConfig:
     def getConfig(self) -> ConfigFile:
         return self.cfg
     
-    def setConfig(self, cfg: ConfigFile):
-        self.cfg = cfg
-        self.notifyUpdate()
-    
     def getToolshelfRegistry(self, registry_index: int) -> CfgToolshelfRegistry | None:
         cfg = self.getConfig()
         if registry_index == 0: return cfg.toolshelf_main

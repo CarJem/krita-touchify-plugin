@@ -1,20 +1,13 @@
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from PyQt5 import QtGui
-import sys
-import xml.etree.ElementTree as ET
-from ....pyqt.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from .....ext.types.TypedList import *
-from .....resources import *
-from .....ext.KritaExtensions import KritaExtensions
-from ....pyqt.widgets.CollapsibleBox import CollapsibleBox
+from touchify.src.ext.types.TypedList import *
+from touchify.src.resources import *
 
-from ..utils.PropertyUtils_Extensions import *
-from ..PropertyGrid import *
-from ..dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
-from .PropertyField import *
+from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
+from touchify.src.components.touchify.property_grid.PropertyGrid import *
+from touchify.src.components.touchify.property_grid.fields.PropertyField import *
 
 
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored

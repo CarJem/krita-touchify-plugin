@@ -68,6 +68,8 @@ class TouchifyWindow(QObject):
         
         self.touchify_canvas.onKritaConfigUpdated()
 
+        self.action_management.onConfigUpdated()
+
         for call in self.update_style_calls:
             call()
 

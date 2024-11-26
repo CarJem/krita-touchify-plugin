@@ -36,6 +36,8 @@ class PropertyGrid(QWidget):
         self.naviTabBar.setTabsClosable(False)
         self.naviBarRow.layout().addWidget(self.naviTabBar, 1)
 
+        self.variable_path: list[str] = []
+
         from .PropertyGrid_Panel import PropertyGrid_Panel
         self.rootPropertyGrid = PropertyGrid_Panel(self)
         self.rootPropertyGrid.setWindowTitle("ROOT")
@@ -45,9 +47,6 @@ class PropertyGrid(QWidget):
         self.layout().addWidget(self.stackWidget)
 
         self.updateNavigationTabs()
-
-    def forceUpdate(self):
-        pass
 
     def navigationIndexChanged(self):
         tabIndex = self.naviTabBar.currentIndex()
@@ -98,9 +97,6 @@ class PropertyGrid(QWidget):
         self.setNavigationConnection(False)
         self.setCurrentIndex(self.addWidget(newPage))
         self.updateNavigationTabs()
-
-    def sync(self):
-        pass
 
 
     def goBack(self, amount: int = 1):
