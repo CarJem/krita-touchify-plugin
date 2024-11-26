@@ -77,6 +77,10 @@ class CfgBackwardsCompat:
             Helpers.changeVarName(args, "id", "docker_id")
             Helpers.changeVarName(args, "action_section_name", "action_section_id")
             Helpers.setVersion(args, 2)
+        if Helpers.getVersion(args) == 2:
+            Helpers.changeVarName(args, "action_section_alignment_x", "section_alignment_x")
+            Helpers.changeVarName(args, "action_section_alignment_y", "section_alignment_y")
+            Helpers.setVersion(args, 3)
         return args
 
     
@@ -95,6 +99,10 @@ class CfgBackwardsCompat:
         if Helpers.getVersion(args) == 2:
             Helpers.changeVarName(args, "opacity", "actions_opacity")
             Helpers.setVersion(args, 3)
+        if Helpers.getVersion(args) == 3:
+            Helpers.changeVarName(args, "popup_position", "popup_position_x")
+            if "popup_position_x" in args: args["popup_position_y"] = args["popup_position_x"]
+            Helpers.setVersion(args, 4)
         return args
 
     def CfgToolbox(args: dict[str, any]):

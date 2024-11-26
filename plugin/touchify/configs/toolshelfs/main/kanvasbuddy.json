@@ -21,8 +21,6 @@
                         "json_version": 1
                     },
                     "action_section_contents": [],
-                    "action_section_alignment_x": "none",
-                    "action_section_alignment_y": "none",
                     "action_section_btn_width": 0,
                     "action_section_btn_height": 0,
                     "action_section_display_mode": "normal",
@@ -41,7 +39,9 @@
                     "size_y": 300,
                     "docker_id": "PresetDocker",
                     "action_section_id": "Panel",
-                    "json_version": 2
+                    "json_version": 3,
+                    "section_alignment_x": "none",
+                    "section_alignment_y": "none"
                 }
             ],
             "actions": [],
@@ -62,8 +62,6 @@
                         "json_version": 1
                     },
                     "action_section_contents": [],
-                    "action_section_alignment_x": "none",
-                    "action_section_alignment_y": "none",
                     "action_section_btn_width": 0,
                     "action_section_btn_height": 0,
                     "action_section_display_mode": "normal",
@@ -82,7 +80,9 @@
                     "size_y": 0,
                     "docker_id": "PaletteDocker",
                     "action_section_id": "Panel",
-                    "json_version": 2
+                    "json_version": 3,
+                    "section_alignment_x": "none",
+                    "section_alignment_y": "none"
                 }
             ],
             "actions": [],
@@ -103,8 +103,6 @@
                         "json_version": 1
                     },
                     "action_section_contents": [],
-                    "action_section_alignment_x": "none",
-                    "action_section_alignment_y": "none",
                     "action_section_btn_width": 0,
                     "action_section_btn_height": 0,
                     "action_section_display_mode": "normal",
@@ -123,7 +121,9 @@
                     "size_y": 300,
                     "docker_id": "KisLayerBox",
                     "action_section_id": "Panel",
-                    "json_version": 2
+                    "json_version": 3,
+                    "section_alignment_x": "none",
+                    "section_alignment_y": "none"
                 }
             ],
             "actions": [],
@@ -144,8 +144,6 @@
                         "json_version": 1
                     },
                     "action_section_contents": [],
-                    "action_section_alignment_x": "none",
-                    "action_section_alignment_y": "none",
                     "action_section_btn_width": 0,
                     "action_section_btn_height": 0,
                     "action_section_display_mode": "normal",
@@ -164,7 +162,9 @@
                     "size_y": 300,
                     "docker_id": "ColorSelectorNg",
                     "action_section_id": "Panel",
-                    "json_version": 2
+                    "json_version": 3,
+                    "section_alignment_x": "none",
+                    "section_alignment_y": "none"
                 }
             ],
             "actions": [],
@@ -185,8 +185,6 @@
                         "json_version": 1
                     },
                     "action_section_contents": [],
-                    "action_section_alignment_x": "none",
-                    "action_section_alignment_y": "none",
                     "action_section_btn_width": 0,
                     "action_section_btn_height": 0,
                     "action_section_display_mode": "normal",
@@ -205,7 +203,9 @@
                     "size_y": 300,
                     "docker_id": "OverviewDocker",
                     "action_section_id": "Panel",
-                    "json_version": 2
+                    "json_version": 3,
+                    "section_alignment_x": "none",
+                    "section_alignment_y": "none"
                 }
             ],
             "actions": [],
@@ -228,7 +228,7 @@
                 },
                 "action_section_contents": [],
                 "action_section_id": "Panel",
-                "json_version": 2,
+                "json_version": 3,
                 "display_name": "",
                 "min_size_x": 300,
                 "min_size_y": 0,
@@ -243,14 +243,14 @@
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
                 "action_section_display_mode": "normal",
-                "action_section_alignment_x": "none",
-                "action_section_alignment_y": "none",
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_size_slider",
                 "ignore_scaling": false,
-                "section_type": "special"
+                "section_type": "special",
+                "section_alignment_x": "none",
+                "section_alignment_y": "none"
             },
             {
                 "subpanel_data": {
@@ -260,7 +260,7 @@
                 },
                 "action_section_contents": [],
                 "action_section_id": "Panel",
-                "json_version": 2,
+                "json_version": 3,
                 "display_name": "",
                 "min_size_x": 300,
                 "min_size_y": 0,
@@ -275,14 +275,14 @@
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
                 "action_section_display_mode": "normal",
-                "action_section_alignment_x": "none",
-                "action_section_alignment_y": "none",
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_opacity_slider",
                 "ignore_scaling": false,
-                "section_type": "special"
+                "section_type": "special",
+                "section_alignment_x": "none",
+                "section_alignment_y": "none"
             },
             {
                 "subpanel_data": {
@@ -319,7 +319,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 3
+                                    "json_version": 4
                                 },
                                 "show_text": false,
                                 "show_icon": true
@@ -350,7 +350,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 3
+                                    "json_version": 4
                                 },
                                 "show_text": false,
                                 "show_icon": true
@@ -381,7 +381,7 @@
                                         }
                                     },
                                     "actions_items": [],
-                                    "json_version": 3
+                                    "json_version": 4
                                 },
                                 "show_text": false,
                                 "show_icon": true
@@ -390,8 +390,6 @@
                         "row_name": "Actions Row"
                     }
                 ],
-                "action_section_alignment_x": "none",
-                "action_section_alignment_y": "none",
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_display_mode": "normal",
@@ -408,12 +406,14 @@
                 "section_type": "actions",
                 "size_x": 0,
                 "size_y": 0,
-                "json_version": 2,
+                "json_version": 3,
                 "special_item_type": "none",
                 "docker_id": "",
                 "action_section_id": "Panel",
                 "display_name": "",
-                "ignore_scaling": false
+                "ignore_scaling": false,
+                "section_alignment_x": "none",
+                "section_alignment_y": "none"
             }
         ],
         "actions": [],

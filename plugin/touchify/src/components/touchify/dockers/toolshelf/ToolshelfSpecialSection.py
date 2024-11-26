@@ -27,46 +27,41 @@ class ToolshelfSpecialSection(QWidget):
         self.action_manager = action_manager
 
         self.size = None
-        self.ourWidget = None
+        self.ourWidget: QWidget | None = None
+
+        self.setContentsMargins(0,0,0,0)
 
         self.ourLayout = QVBoxLayout(self)
-        self.setContentsMargins(0,0,0,0)
         self.ourLayout.setSpacing(0)
         self.ourLayout.setContentsMargins(0,0,0,0)
         self.setLayout(self.ourLayout)
 
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushBlendingMode:
             self.ourWidget = BrushBlendingSelector(self)
-            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.LayerBlendingMode:
             self.ourWidget = LayerBlendingSelector(self)
-            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.LayerLabelBox:
             self.ourWidget = LayerLabelBox(self)
-            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushSizeSlider:
             self.ourWidget = BrushSizeSlider(self)
             self.ourWidget.setSourceWindow(self.action_manager.appEngine.windowSource)
-            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushOpacitySlider:
             self.ourWidget = BrushOpacitySlider(self)
             self.ourWidget.setSourceWindow(self.action_manager.appEngine.windowSource)
-            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushFlowSlider:
             self.ourWidget = BrushFlowSlider(self)
             self.ourWidget.setSourceWindow(self.action_manager.appEngine.windowSource)
-            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushRotationSlider:
             self.ourWidget = BrushRotationSlider(self)
             self.ourWidget.setSourceWindow(self.action_manager.appEngine.windowSource)
-            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BackgroundColorBox:
             self.ourWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Background)
             self.ourWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-            self.ourLayout.addWidget(self.ourWidget, 1)
         if self.actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.ForegroundColorBox:
             self.ourWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Foreground)
             self.ourWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+
+        if self.ourWidget != None:
             self.ourLayout.addWidget(self.ourWidget, 1)
 
     def setMinimumHeight(self, val:int):
@@ -93,8 +88,6 @@ class ToolshelfSpecialSection(QWidget):
         baseSize: QSize = QSize()
         if self.size:
             baseSize = self.size
-        elif self.ourWidget: 
-            baseSize = self.ourWidget.sizeHint()
         else:
             baseSize = super().sizeHint()
             

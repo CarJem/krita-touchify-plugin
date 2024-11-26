@@ -19,8 +19,6 @@
                     "json_version": 1
                 },
                 "action_section_contents": [],
-                "action_section_alignment_x": "none",
-                "action_section_alignment_y": "none",
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_display_mode": "normal",
@@ -39,7 +37,9 @@
                 "size_y": 0,
                 "docker_id": "sharedtooldocker",
                 "action_section_id": "Panel",
-                "json_version": 2
+                "json_version": 3,
+                "section_alignment_x": "none",
+                "section_alignment_y": "none"
             }
         ],
         "actions": [],

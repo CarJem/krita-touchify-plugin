@@ -28,28 +28,29 @@ class PopupDialog_Toolshelf(PopupDialog):
         self.actions_manager: "ActionManager" = action_manager
         self.toolshelf_data = args.toolshelf_data
 
-        self.grid = QHBoxLayout(self)
+        self.window_allow_resize = self.toolshelf_data.header_options.default_to_resize_mode
+
+        self.grid = QVBoxLayout(self)
         self.grid.setContentsMargins(0,0,0,0)
         self.grid.setSpacing(0)
         self.initLayout()
 
-        stylesheet = f"""QScrollArea {{ background: transparent; }}
-        QScrollArea > QWidget > ToolshelfContainer {{ background: transparent; }}
-        """
-
-        self.scrollArea = QScrollArea(self)
-        self.scrollArea.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
-        self.scrollArea.setContentsMargins(0,0,0,0)
-        self.scrollArea.setViewportMargins(0,0,0,0)
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        self.scrollArea.setStyleSheet(stylesheet)
-        self.grid.addWidget(self.scrollArea)
-
         self.mainWidget = ToolshelfWidget(self, self.toolshelf_data)
         self.mainWidget.sizeChanged.connect(self.requestViewUpdate)
-        self.scrollArea.setWidget(self.mainWidget)
+        self.grid.addWidget(self.mainWidget)
+        self.createActions()
+
+    def allowResizingChanged(self):
+        self.window_allow_resize = self.action_toggleResize.isChecked()
+        self.requestViewUpdate()
+
+    def createActions(self):
+        self.action_toggleResize = QAction(self)
+        self.action_toggleResize.setText("Allow resizing")
+        self.action_toggleResize.setCheckable(True)
+        self.action_toggleResize.setChecked(self.window_allow_resize)
+        self.action_toggleResize.setEnabled(self.windowMode == CfgTouchifyActionPopup.WindowType.Window)
+        self.action_toggleResize.changed.connect(self.allowResizingChanged)
 
     def hasPanelStack(self):
         if hasattr(self, "panelStack"):
@@ -62,28 +63,29 @@ class PopupDialog_Toolshelf(PopupDialog):
         self.updateSize(size[0], size[1])
 
     def shutdownWidget(self):
-        self.mainWidget.shutdownWidget()
-        self.scrollArea.takeWidget()
-        self.mainWidget.deleteLater()
-        self.mainWidget = None
+        if self.mainWidget:
+            self.mainWidget.shutdownWidget()
+            self.mainWidget.deleteLater()
+            self.mainWidget = None
         super().shutdownWidget()
     
     def closeEvent(self, event):
-        self.mainWidget.shutdownWidget()
-        self.scrollArea.takeWidget()
-        self.mainWidget.deleteLater()
-        self.mainWidget = None
+        if self.mainWidget:
+            self.mainWidget.shutdownWidget()
+            self.mainWidget.deleteLater()
+            self.mainWidget = None
         super().closeEvent(event)
    
     def generateSize(self):
-        if self.mainWidget != None:
-            dialog_width = self.scrollArea.viewportSizeHint().width()
-            dialog_height = self.scrollArea.viewportSizeHint().height()
-            return [int(dialog_width + 14), int(dialog_height + 14)]
+        if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup and self.mainWidget:
+            dialog_width = self.mainWidget.sizeHint().width()
+            dialog_height = self.mainWidget.sizeHint().height()
         else:
-            dialog_width = self.sizeHint().width()
-            dialog_height = self.sizeHint().height()
-            return [int(dialog_width), int(dialog_height)]
+            dialog_width = self.minimumSizeHint().width()
+            dialog_height = self.minimumSizeHint().height()
+
+        return [int(dialog_width), int(dialog_height)]
+
 
     def triggerPopup(self, parent: QWidget | None):
         super().triggerPopup(parent)

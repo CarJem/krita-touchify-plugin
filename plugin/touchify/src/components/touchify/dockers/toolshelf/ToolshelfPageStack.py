@@ -72,10 +72,6 @@ class ToolshelfPageStack(QStackedWidget):
     def goHome(self):
         if self.currentWidget() != self._mainWidget:
             self.changePanel('ROOT')
-
-    def sizeHint(self):
-        resultingSize = super().sizeHint()
-        return resultingSize
     
     def onDockerUpdate(self):
         pass

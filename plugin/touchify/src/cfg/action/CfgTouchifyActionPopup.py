@@ -26,7 +26,9 @@ class CfgTouchifyActionPopup:
 
     class PopupPosition(StrEnum):
         Default = "default"
+        Start = "start"
         Center = "center"
+        End = "end"
 
 
     id: str = ""
@@ -34,7 +36,8 @@ class CfgTouchifyActionPopup:
     window_title: str = ""
     type: str = "actions"
     closing_method: str = "default"
-    popup_position: str = "default"
+    popup_position_x: str = "default"
+    popup_position_y: str = "default"
     
     actions_grid_width: int = 3
     actions_opacity: float = 1.0
@@ -52,7 +55,7 @@ class CfgTouchifyActionPopup:
 
 
 
-    json_version: int = 3
+    json_version: int = 4
 
 
 
@@ -75,6 +78,7 @@ class CfgTouchifyActionPopup:
         row["actions_item_size"] = {"items": ["actions_item_width","actions_item_height"]}
         row["docker_item_size"] = {"items": ["docker_width","docker_height"]}
         row["actions_icon_size"] = {"items": ["actions_icon_width","actions_icon_height"]}
+        row["popup_position"] = {"items": ["popup_position_x","popup_position_y"]}
         return row
      
     def propertygrid_sorted(self):
@@ -83,7 +87,9 @@ class CfgTouchifyActionPopup:
             "window_title",
             "window_type",
             "closing_method",
-            "popup_position",
+            "popup_position_x",
+            "popup_position_y",
+            "popup_position"
             "type"
         ]
         action_mode_settings = [
@@ -121,7 +127,8 @@ class CfgTouchifyActionPopup:
             "window_title",
             "window_type",
             "closing_method",
-            "popup_position",
+            "popup_position_x",
+            "popup_position_y"
             "type"
         ]
         action_mode_settings = [
@@ -185,7 +192,8 @@ class CfgTouchifyActionPopup:
         restrictions["docker_id"] = {"type": "docker_selection"}
         restrictions["type"] = {"type": "values", "entries": self.Variants.values()}
         restrictions["window_type"] = {"type": "values", "entries": self.WindowType.values()}
-        restrictions["popup_position"] = {"type": "values", "entries": self.PopupPosition.values()}
+        restrictions["popup_position_x"] = {"type": "values", "entries": self.PopupPosition.values()}
+        restrictions["popup_position_y"] = {"type": "values", "entries": self.PopupPosition.values()}
         restrictions["closing_method"] = {"type": "values", "entries": self.ClosingMethod.values()}
         restrictions["actions_opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
         restrictions["toolshelf_data"] = {"type": "expandable"}

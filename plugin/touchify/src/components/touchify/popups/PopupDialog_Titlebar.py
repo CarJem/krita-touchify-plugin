@@ -15,8 +15,8 @@ class PopupDialog_Titlebar(QFrame):
     def __init__(self, parentDialog: "PopupDialog"):
         super(PopupDialog_Titlebar, self).__init__(parentDialog)
         self.parentDialog = parentDialog
-        self.setFrameShape(QFrame.Box)
-        self.setFrameShadow(QFrame.Plain)
+        self.setFrameShape(QFrame.Shape.Box)
+        self.setFrameShadow(QFrame.Shadow.Plain)
         self.setLineWidth(1)
         self.setObjectName("popupFrameTitlebar")
         self.setStyleSheet(Stylesheet.instance().touchify_popup_titlebar(self.parentDialog.allowOpacity, self.parentDialog.metadata.actions_opacity))

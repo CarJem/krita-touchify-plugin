@@ -64,7 +64,11 @@ class TouchifyActionPanel(QWidget):
         if self.hinted_size:
             return self.hinted_size
         else:
-            return self.minimumSize()
+            return super().sizeHint()
+        
+    def minimumSizeHint(self):
+        hint = super().minimumSizeHint()
+        return hint
         
     def updateButton(self, btn: TouchifyActionButton, action: QAction, useIcon: bool):
         btn.setChecked(action.isChecked())

@@ -32,6 +32,7 @@ class PopupDialog(QDockWidget):
         self.oldSize = None
         self.oldMinSize = None
         self.autoConceal = False
+        self.time_since_opening = QTime()
 
         self.closing_method = args.closing_method
 
@@ -39,6 +40,7 @@ class PopupDialog(QDockWidget):
         
         self.windowMode = self.metadata.window_type
         self.popupType = self.metadata.type
+        self.window_allow_resize = True
 
         qApp.installEventFilter(self)
 
@@ -64,9 +66,26 @@ class PopupDialog(QDockWidget):
             offset_x += (width // 2) - (dialog_width // 2)
             offset_y += (height)
 
-        if self.metadata.popup_position == CfgTouchifyActionPopup.PopupPosition.Center:
-            offset_x -= (dialog_width // 2) 
-            offset_y -= (dialog_height // 2)
+
+        match self.metadata.popup_position_x:
+            case CfgTouchifyActionPopup.PopupPosition.Start:
+                offset_x -= 0 
+            case CfgTouchifyActionPopup.PopupPosition.Center:
+                offset_x -= (dialog_width // 2) 
+            case CfgTouchifyActionPopup.PopupPosition.End:
+                offset_x -= dialog_width
+            case _:
+                offset_x -= 0 
+
+        match self.metadata.popup_position_y:
+            case CfgTouchifyActionPopup.PopupPosition.Start:
+                offset_y -= 0 
+            case CfgTouchifyActionPopup.PopupPosition.Center:
+                offset_y -= (dialog_height // 2) 
+            case CfgTouchifyActionPopup.PopupPosition.End:
+                offset_y -= dialog_height
+            case _:
+                offset_y -= 0 
 
         actual_x = offset_x
         actual_y = offset_y
@@ -153,7 +172,10 @@ class PopupDialog(QDockWidget):
         if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
             self.setFixedSize(dialog_width, dialog_height)
         elif self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
-            self.setMinimumSize(dialog_width, dialog_height)
+            if self.isCollapsed == False:
+                self.setMinimumSize(dialog_width, dialog_height)
+                if self.window_allow_resize == False:
+                    self.resize(dialog_width, dialog_height)
     
     def triggerPopup(self, parent: QWidget | None):
         if self.isVisible():
@@ -173,6 +195,7 @@ class PopupDialog(QDockWidget):
         
         self.setGeometry(actual_x, actual_y, dialog_width, dialog_height)
         self.show()
+        self.time_since_opening = QTime.currentTime()
 
         if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
             self.updateSize(dialog_width, dialog_height)
@@ -201,7 +224,7 @@ class PopupDialog(QDockWidget):
                 else:
                     self.oldSize = self.size()
                     self.oldMinSize = self.minimumSize()
-                    self.setFixedSize(self._toolbar.width(), self._toolbar.height())
+                    self.setFixedSize(self._toolbar.width(), self._toolbar.height() + 1)
                     self.containerWidget.setVisible(False)
                     self.isCollapsed = True
 
@@ -217,7 +240,8 @@ class PopupDialog(QDockWidget):
         
             if isinstance(widget_under_cursor, QOpenGLWidget):
                 if widget_under_cursor.metaObject().className() == "KisOpenGLCanvas2":
-                    if self.closing_method == CfgTouchifyActionPopup.ClosingMethod.CanvasFocus:
+                    if self.closing_method == CfgTouchifyActionPopup.ClosingMethod.CanvasFocus and \
+                        self.time_since_opening.addSecs(1) < QTime.currentTime():
                         qApp.removeEventFilter(self)
                         self.close()
                         return False

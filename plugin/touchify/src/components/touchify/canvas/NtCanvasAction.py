@@ -29,7 +29,7 @@ class NtCanvasAction(QObject):
             if action: action.trigger()
 
     def isCanvasEvent(self, event: QEvent, btn: Qt.MouseButton):
-        return (event.type() == QEvent.Type.MouseButtonPress and event.button() == btn) or (event.type() == QEvent.Type.TabletPress and event.button() == btn)
+        return (event.type() == QEvent.Type.MouseButtonPress and event.button() == btn)
 
     def eventFilter(self, obj, event):
         if self.isCanvasEvent(event, Qt.MouseButton.LeftButton):

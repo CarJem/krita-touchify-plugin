@@ -177,9 +177,9 @@ class ToolshelfPanel(QWidget):
         if actionInfo.hasDisplayName(): actionWidget.setTitle(actionInfo.display_name)
         else: actionWidget.setTitle(actionInfo.action_section_id)
 
-        if actionInfo.action_section_alignment_x != CfgToolshelfSection.SectionAlignmentX.Nothing or actionInfo.action_section_alignment_y != CfgToolshelfSection.SectionAlignmentY.Nothing:
-            align_x = actionInfo.action_section_alignment_x
-            align_y = actionInfo.action_section_alignment_y
+        if actionInfo.section_alignment_x != CfgToolshelfSection.SectionAlignmentX.Nothing or actionInfo.section_alignment_y != CfgToolshelfSection.SectionAlignmentY.Nothing:
+            align_x = actionInfo.section_alignment_x
+            align_y = actionInfo.section_alignment_y
 
             alignment_x = Qt.AlignmentFlag.AlignLeft
             alignment_y = Qt.AlignmentFlag.AlignTop

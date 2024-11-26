@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QTabBar, QSizePolicy, QPushButton, QDialog
+from PyQt5.QtCore import QEvent
 
 from touchify.src.resources import ResourceManager
 
@@ -32,7 +33,8 @@ class PropertyGrid(QWidget):
         self.naviTabBar.setExpanding(False)
         self.naviTabBar.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         self.naviTabBar.setMovable(False)
-        self.naviTabBar.setUsesScrollButtons(False)
+        self.naviTabBar.setUsesScrollButtons(True)
+        self.naviTabBar.installEventFilter(self)
         self.naviTabBar.setTabsClosable(False)
         self.naviBarRow.layout().addWidget(self.naviTabBar, 1)
 
@@ -47,6 +49,13 @@ class PropertyGrid(QWidget):
         self.layout().addWidget(self.stackWidget)
 
         self.updateNavigationTabs()
+
+
+    def eventFilter(self, obj, event):
+        if obj is self.naviTabBar and event.type() == QEvent.Type.Wheel:
+            return True
+        return super(PropertyGrid, self).eventFilter(obj, event)
+
 
     def navigationIndexChanged(self):
         tabIndex = self.naviTabBar.currentIndex()
@@ -73,6 +82,7 @@ class PropertyGrid(QWidget):
             self.naviTabBar.addTab(item.windowTitle())
 
         self.naviTabBar.setCurrentIndex(self.stackWidget.currentIndex())
+        self.naviTabBar.scroll(self.naviTabBar.width(), 0)
         self.setNavigationConnection(True)
 
     def currentIndex(self):

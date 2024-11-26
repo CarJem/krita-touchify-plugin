@@ -32,9 +32,6 @@ class ToolshelfPage(QWidget):
         self.layout().addWidget(self.panel)
 
         self.updateStyleSheet()
-
-    def sizeHint(self):
-        return self.panel.sizeHint()
     
     def activate(self):
         self.toolshelf.changePanel(self.ID)

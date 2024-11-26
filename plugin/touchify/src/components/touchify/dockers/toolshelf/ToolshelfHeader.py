@@ -353,12 +353,11 @@ class ToolshelfHeader(QWidget):
     #region Actions
 
     def openSettings(self):
-        if self.registry_index != -1:
-            self.mainButton.setMenu(self.optionsMenu)
-            if self.is_menu_preloaded == False:
-                self.optionsMenu.setup()
-                self.is_menu_preloaded = True
-            self.mainButton.showMenu()
+        self.mainButton.setMenu(self.optionsMenu)
+        if self.is_menu_preloaded == False:
+            self.optionsMenu.setup()
+            self.is_menu_preloaded = True
+        self.mainButton.showMenu()
     
     def openRootPage(self):
         if self.parent_toolshelf:

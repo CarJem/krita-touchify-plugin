@@ -125,7 +125,7 @@
                 ],
                 "window_type": "popup",
                 "actions_close_on_click": true,
-                "json_version": 3,
+                "json_version": 4,
                 "docker_width": 0,
                 "docker_height": 0,
                 "window_title": "Selection Popup",
@@ -174,7 +174,7 @@
                 "window_title": "Grid and Guides Popup",
                 "actions_items": [],
                 "window_type": "popup",
-                "json_version": 3,
+                "json_version": 4,
                 "docker_width": 300,
                 "docker_height": 400,
                 "actions_opacity": 0.5
@@ -219,7 +219,7 @@
                 "docker_id": "Touchify/CompactBrushToggler",
                 "id": "brushOptionsPopup",
                 "window_type": "popup",
-                "json_version": 3,
+                "json_version": 4,
                 "docker_width": 200,
                 "docker_height": 300,
                 "actions_opacity": 1.0
@@ -264,14 +264,15 @@
                 "actions_icon_height": 30,
                 "actions_items": [],
                 "window_type": "popup",
-                "json_version": 3,
+                "json_version": 4,
                 "docker_width": 310,
                 "docker_height": 400,
                 "actions_close_on_click": false,
                 "window_title": "",
                 "actions_opacity": 1.0,
                 "closing_method": "default",
-                "popup_position": "default"
+                "popup_position_x": "default",
+                "popup_position_y": "default"
             },
             "text": "Quick Settings Popup",
             "workspace_id": "",
@@ -308,7 +309,7 @@
                     }
                 },
                 "actions_items": [],
-                "json_version": 3
+                "json_version": 4
             },
             "canvas_preset_data": {
                 "checkers_size": 32,
@@ -374,7 +375,7 @@
                     }
                 },
                 "actions_items": [],
-                "json_version": 3
+                "json_version": 4
             },
             "canvas_preset_data": {
                 "checkers_size": 32,
@@ -448,7 +449,7 @@
                                     "json_version": 1
                                 },
                                 "action_section_contents": [],
-                                "json_version": 2,
+                                "json_version": 3,
                                 "section_type": "special",
                                 "min_size_x": 0,
                                 "min_size_y": 0,
@@ -462,8 +463,6 @@
                                 "docker_unloaded_visibility": "normal",
                                 "docker_loading_priority": "normal",
                                 "action_section_display_mode": "normal",
-                                "action_section_alignment_x": "none",
-                                "action_section_alignment_y": "none",
                                 "action_section_btn_width": 0,
                                 "action_section_btn_height": 0,
                                 "action_section_icon_size": 0,
@@ -471,7 +470,9 @@
                                 "docker_id": "",
                                 "action_section_id": "Layer Tag",
                                 "display_name": "",
-                                "ignore_scaling": false
+                                "ignore_scaling": false,
+                                "section_alignment_x": "none",
+                                "section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
@@ -512,7 +513,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {}
                                                     },
@@ -544,7 +545,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {}
                                                     }
@@ -575,7 +576,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             },
@@ -607,7 +608,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             },
@@ -639,7 +640,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             },
@@ -671,7 +672,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             },
@@ -703,7 +704,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             }
@@ -724,17 +725,17 @@
                                 "docker_unloaded_visibility": "normal",
                                 "docker_loading_priority": "normal",
                                 "action_section_display_mode": "normal",
-                                "action_section_alignment_x": "none",
-                                "action_section_alignment_y": "none",
                                 "action_section_btn_width": 0,
                                 "action_section_btn_height": 35,
                                 "action_section_icon_size": 0,
                                 "special_item_type": "none",
-                                "json_version": 2,
+                                "json_version": 3,
                                 "docker_id": "",
                                 "action_section_id": "Layer Options",
                                 "display_name": "",
-                                "ignore_scaling": false
+                                "ignore_scaling": false,
+                                "section_alignment_x": "none",
+                                "section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
@@ -751,8 +752,6 @@
                                 "docker_nesting_mode": "docking",
                                 "docker_unloaded_visibility": "hidden",
                                 "docker_loading_priority": "normal",
-                                "action_section_alignment_x": "none",
-                                "action_section_alignment_y": "none",
                                 "action_section_btn_width": 0,
                                 "action_section_btn_height": 0,
                                 "action_section_display_mode": "normal",
@@ -762,11 +761,13 @@
                                 "min_size_x": 0,
                                 "min_size_y": 0,
                                 "special_item_type": "none",
-                                "json_version": 2,
+                                "json_version": 3,
                                 "docker_id": "KisLayerBox",
                                 "action_section_id": "Panel",
                                 "display_name": "",
-                                "ignore_scaling": false
+                                "ignore_scaling": false,
+                                "section_alignment_x": "none",
+                                "section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
@@ -816,7 +817,7 @@
                                                     "id": "",
                                                     "type": "docker",
                                                     "window_type": "popup",
-                                                    "json_version": 3,
+                                                    "json_version": 4,
                                                     "docker_width": 300,
                                                     "docker_height": 300,
                                                     "actions_opacity": 1.0
@@ -895,7 +896,7 @@
                                                     "id": "",
                                                     "type": "docker",
                                                     "window_type": "popup",
-                                                    "json_version": 3,
+                                                    "json_version": 4,
                                                     "docker_width": 300,
                                                     "docker_height": 300,
                                                     "actions_opacity": 1.0
@@ -919,17 +920,17 @@
                                 "docker_unloaded_visibility": "normal",
                                 "docker_loading_priority": "normal",
                                 "action_section_display_mode": "flat",
-                                "action_section_alignment_x": "none",
-                                "action_section_alignment_y": "none",
                                 "action_section_btn_width": 0,
                                 "action_section_btn_height": 32,
                                 "action_section_icon_size": 24,
                                 "special_item_type": "none",
-                                "json_version": 2,
+                                "json_version": 3,
                                 "docker_id": "",
                                 "action_section_id": "Layer Actions",
                                 "display_name": "",
-                                "ignore_scaling": true
+                                "ignore_scaling": true,
+                                "section_alignment_x": "none",
+                                "section_alignment_y": "none"
                             }
                         ],
                         "actions": [],
@@ -960,13 +961,14 @@
                 "id": "ToolshelfPopup",
                 "type": "toolshelf",
                 "window_type": "popup",
-                "json_version": 3,
+                "json_version": 4,
                 "docker_width": 0,
                 "docker_height": 0,
                 "window_title": "",
                 "actions_opacity": 1.0,
                 "closing_method": "default",
-                "popup_position": "default"
+                "popup_position_x": "default",
+                "popup_position_y": "default"
             },
             "canvas_preset_data": {},
             "closes_popup": false,
@@ -1007,7 +1009,7 @@
                                 },
                                 "action_section_contents": [],
                                 "action_section_id": "Panel",
-                                "json_version": 2,
+                                "json_version": 3,
                                 "display_name": "",
                                 "min_size_x": 0,
                                 "min_size_y": 0,
@@ -1023,13 +1025,13 @@
                                 "docker_unloaded_visibility": "normal",
                                 "docker_loading_priority": "normal",
                                 "action_section_display_mode": "normal",
-                                "action_section_alignment_x": "none",
-                                "action_section_alignment_y": "none",
                                 "action_section_btn_width": 0,
                                 "action_section_btn_height": 0,
                                 "action_section_icon_size": 0,
                                 "special_item_type": "none",
-                                "ignore_scaling": false
+                                "ignore_scaling": false,
+                                "section_alignment_x": "none",
+                                "section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
@@ -1039,7 +1041,7 @@
                                 },
                                 "action_section_contents": [],
                                 "action_section_id": "Panel",
-                                "json_version": 2,
+                                "json_version": 3,
                                 "display_name": "",
                                 "min_size_x": 0,
                                 "min_size_y": 300,
@@ -1055,13 +1057,13 @@
                                 "docker_unloaded_visibility": "normal",
                                 "docker_loading_priority": "normal",
                                 "action_section_display_mode": "normal",
-                                "action_section_alignment_x": "none",
-                                "action_section_alignment_y": "none",
                                 "action_section_btn_width": 0,
                                 "action_section_btn_height": 0,
                                 "action_section_icon_size": 0,
                                 "special_item_type": "none",
-                                "ignore_scaling": false
+                                "ignore_scaling": false,
+                                "section_alignment_x": "none",
+                                "section_alignment_y": "none"
                             }
                         ],
                         "actions": [],
@@ -1092,13 +1094,14 @@
                 "id": "CustomBrushesPopup",
                 "type": "toolshelf",
                 "window_type": "popup",
-                "json_version": 3,
+                "json_version": 4,
                 "window_title": "",
                 "docker_width": 0,
                 "docker_height": 0,
                 "actions_opacity": 1.0,
                 "closing_method": "default",
-                "popup_position": "default"
+                "popup_position_x": "default",
+                "popup_position_y": "default"
             },
             "canvas_preset_data": {},
             "closes_popup": false,
@@ -1134,7 +1137,7 @@
                                     },
                                     "action_section_contents": [],
                                     "action_section_id": "Panel",
-                                    "json_version": 2,
+                                    "json_version": 3,
                                     "display_name": "",
                                     "min_size_x": 0,
                                     "min_size_y": 0,
@@ -1151,12 +1154,12 @@
                                     "docker_unloaded_visibility": "normal",
                                     "docker_loading_priority": "normal",
                                     "action_section_display_mode": "normal",
-                                    "action_section_alignment_x": "none",
-                                    "action_section_alignment_y": "none",
                                     "action_section_btn_width": 0,
                                     "action_section_btn_height": 0,
                                     "action_section_icon_size": 0,
-                                    "special_item_type": "none"
+                                    "special_item_type": "none",
+                                    "section_alignment_x": "none",
+                                    "section_alignment_y": "none"
                                 }
                             ],
                             "actions": [],
@@ -1212,7 +1215,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1246,7 +1249,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1280,7 +1283,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1314,7 +1317,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1348,7 +1351,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1382,7 +1385,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1416,7 +1419,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1450,7 +1453,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1484,7 +1487,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1518,7 +1521,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1552,7 +1555,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1588,7 +1591,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -1622,7 +1625,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -1656,7 +1659,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -1690,7 +1693,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -1724,7 +1727,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -1758,7 +1761,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -1792,7 +1795,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -1826,7 +1829,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -1859,7 +1862,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1893,7 +1896,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1927,7 +1930,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1961,7 +1964,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -1995,7 +1998,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2029,7 +2032,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2062,7 +2065,7 @@
                                                 }
                                             },
                                             "actions_items": [],
-                                            "json_version": 3
+                                            "json_version": 4
                                         },
                                         "canvas_preset_data": {},
                                         "action_composer_mode": false
@@ -2100,7 +2103,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -2134,7 +2137,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -2168,7 +2171,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -2202,7 +2205,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -2236,7 +2239,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -2270,7 +2273,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -2304,7 +2307,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -2338,7 +2341,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -2371,7 +2374,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2405,7 +2408,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2439,7 +2442,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2473,7 +2476,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2507,7 +2510,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2541,7 +2544,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2575,7 +2578,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2609,7 +2612,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2643,7 +2646,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2677,7 +2680,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2711,7 +2714,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2745,7 +2748,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2778,7 +2781,7 @@
                                                 }
                                             },
                                             "actions_items": [],
-                                            "json_version": 3
+                                            "json_version": 4
                                         },
                                         "canvas_preset_data": {},
                                         "action_composer_mode": false
@@ -2814,7 +2817,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2848,7 +2851,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2882,7 +2885,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2916,7 +2919,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2950,7 +2953,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -2984,7 +2987,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -3018,7 +3021,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -3052,7 +3055,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": true
@@ -3086,7 +3089,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": true
@@ -3120,7 +3123,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -3154,7 +3157,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -3187,7 +3190,7 @@
                                                 }
                                             },
                                             "actions_items": [],
-                                            "json_version": 3
+                                            "json_version": 4
                                         },
                                         "canvas_preset_data": {},
                                         "action_composer_mode": false
@@ -3221,7 +3224,7 @@
                                                 }
                                             },
                                             "actions_items": [],
-                                            "json_version": 3
+                                            "json_version": 4
                                         },
                                         "canvas_preset_data": {},
                                         "action_composer_mode": false
@@ -3277,7 +3280,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "action_composer_mode": false,
                                                 "action_id": "eraser_preset_action",
@@ -3311,7 +3314,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "action_composer_mode": false,
                                                 "action_id": "preserve_alpha",
@@ -3345,7 +3348,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "action_composer_mode": false,
                                                 "action_id": "reload_preset_action",
@@ -3385,7 +3388,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -3419,7 +3422,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3,
+                                                    "json_version": 4,
                                                     "actions_opacity": 1.0,
                                                     "actions_grid_width": 3,
                                                     "actions_grid_padding": 2,
@@ -3431,12 +3434,13 @@
                                                     "window_title": "",
                                                     "window_type": "popup",
                                                     "closing_method": "default",
-                                                    "popup_position": "default",
                                                     "type": "docker",
                                                     "actions_close_on_click": false,
                                                     "docker_id": "History",
                                                     "docker_width": 300,
-                                                    "docker_height": 300
+                                                    "docker_height": 300,
+                                                    "popup_position_x": "default",
+                                                    "popup_position_y": "default"
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -3470,7 +3474,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -3480,7 +3484,7 @@
                                     }
                                 ],
                                 "action_section_id": "Panel",
-                                "json_version": 2,
+                                "json_version": 3,
                                 "display_name": "Primary Actions",
                                 "min_size_x": 0,
                                 "min_size_y": 0,
@@ -3497,12 +3501,12 @@
                                 "docker_unloaded_visibility": "normal",
                                 "docker_loading_priority": "normal",
                                 "action_section_display_mode": "normal",
-                                "action_section_alignment_x": "none",
-                                "action_section_alignment_y": "none",
                                 "action_section_btn_width": 0,
                                 "action_section_btn_height": 0,
                                 "action_section_icon_size": 0,
-                                "special_item_type": "none"
+                                "special_item_type": "none",
+                                "section_alignment_x": "none",
+                                "section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
@@ -3515,7 +3519,7 @@
                                             },
                                             "action_section_contents": [],
                                             "action_section_id": "Panel",
-                                            "json_version": 2,
+                                            "json_version": 3,
                                             "display_name": "",
                                             "min_size_x": 0,
                                             "min_size_y": 0,
@@ -3532,12 +3536,12 @@
                                             "docker_unloaded_visibility": "normal",
                                             "docker_loading_priority": "normal",
                                             "action_section_display_mode": "normal",
-                                            "action_section_alignment_x": "none",
-                                            "action_section_alignment_y": "none",
                                             "action_section_btn_width": 0,
                                             "action_section_btn_height": 0,
                                             "action_section_icon_size": 0,
-                                            "special_item_type": "foreground_color_box"
+                                            "special_item_type": "foreground_color_box",
+                                            "section_alignment_x": "none",
+                                            "section_alignment_y": "none"
                                         },
                                         {
                                             "subpanel_data": {
@@ -3577,7 +3581,7 @@
                                                                     }
                                                                 },
                                                                 "actions_items": [],
-                                                                "json_version": 3
+                                                                "json_version": 4
                                                             },
                                                             "canvas_preset_data": {},
                                                             "action_composer_mode": false
@@ -3587,7 +3591,7 @@
                                                 }
                                             ],
                                             "action_section_id": "Panel",
-                                            "json_version": 2,
+                                            "json_version": 3,
                                             "display_name": "",
                                             "min_size_x": 0,
                                             "min_size_y": 28,
@@ -3604,12 +3608,12 @@
                                             "docker_unloaded_visibility": "normal",
                                             "docker_loading_priority": "normal",
                                             "action_section_display_mode": "normal",
-                                            "action_section_alignment_x": "none",
-                                            "action_section_alignment_y": "none",
                                             "action_section_btn_width": 0,
                                             "action_section_btn_height": 28,
                                             "action_section_icon_size": 0,
-                                            "special_item_type": "foreground_color_box"
+                                            "special_item_type": "foreground_color_box",
+                                            "section_alignment_x": "none",
+                                            "section_alignment_y": "none"
                                         },
                                         {
                                             "subpanel_data": {
@@ -3619,7 +3623,7 @@
                                             },
                                             "action_section_contents": [],
                                             "action_section_id": "Panel",
-                                            "json_version": 2,
+                                            "json_version": 3,
                                             "display_name": "",
                                             "min_size_x": 0,
                                             "min_size_y": 0,
@@ -3636,12 +3640,12 @@
                                             "docker_unloaded_visibility": "normal",
                                             "docker_loading_priority": "normal",
                                             "action_section_display_mode": "normal",
-                                            "action_section_alignment_x": "none",
-                                            "action_section_alignment_y": "none",
                                             "action_section_btn_width": 0,
                                             "action_section_btn_height": 0,
                                             "action_section_icon_size": 0,
-                                            "special_item_type": "background_color_box"
+                                            "special_item_type": "background_color_box",
+                                            "section_alignment_x": "none",
+                                            "section_alignment_y": "none"
                                         },
                                         {
                                             "subpanel_data": {
@@ -3681,7 +3685,7 @@
                                                                     }
                                                                 },
                                                                 "actions_items": [],
-                                                                "json_version": 3
+                                                                "json_version": 4
                                                             },
                                                             "canvas_preset_data": {},
                                                             "action_composer_mode": false
@@ -3691,7 +3695,7 @@
                                                 }
                                             ],
                                             "action_section_id": "Panel",
-                                            "json_version": 2,
+                                            "json_version": 3,
                                             "display_name": "",
                                             "min_size_x": 0,
                                             "min_size_y": 28,
@@ -3708,12 +3712,12 @@
                                             "docker_unloaded_visibility": "normal",
                                             "docker_loading_priority": "normal",
                                             "action_section_display_mode": "normal",
-                                            "action_section_alignment_x": "none",
-                                            "action_section_alignment_y": "none",
                                             "action_section_btn_width": 0,
                                             "action_section_btn_height": 28,
                                             "action_section_icon_size": 0,
-                                            "special_item_type": "foreground_color_box"
+                                            "special_item_type": "foreground_color_box",
+                                            "section_alignment_x": "none",
+                                            "section_alignment_y": "none"
                                         }
                                     ],
                                     "actions": [],
@@ -3733,7 +3737,7 @@
                                 },
                                 "action_section_contents": [],
                                 "action_section_id": "Panel",
-                                "json_version": 2,
+                                "json_version": 3,
                                 "display_name": "Color Picker",
                                 "min_size_x": 0,
                                 "min_size_y": 28,
@@ -3750,12 +3754,12 @@
                                 "docker_unloaded_visibility": "normal",
                                 "docker_loading_priority": "normal",
                                 "action_section_display_mode": "normal",
-                                "action_section_alignment_x": "none",
-                                "action_section_alignment_y": "none",
                                 "action_section_btn_width": 0,
                                 "action_section_btn_height": 0,
                                 "action_section_icon_size": 0,
-                                "special_item_type": "none"
+                                "special_item_type": "none",
+                                "section_alignment_x": "none",
+                                "section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
@@ -3768,7 +3772,7 @@
                                             },
                                             "action_section_contents": [],
                                             "action_section_id": "Panel",
-                                            "json_version": 2,
+                                            "json_version": 3,
                                             "display_name": "",
                                             "min_size_x": 0,
                                             "min_size_y": 0,
@@ -3783,14 +3787,97 @@
                                             "docker_unloaded_visibility": "normal",
                                             "docker_loading_priority": "normal",
                                             "action_section_display_mode": "normal",
-                                            "action_section_alignment_x": "none",
-                                            "action_section_alignment_y": "none",
                                             "action_section_btn_width": 0,
                                             "action_section_btn_height": 0,
                                             "action_section_icon_size": 0,
                                             "special_item_type": "brush_size_slider",
                                             "ignore_scaling": false,
-                                            "section_type": "special"
+                                            "section_type": "special",
+                                            "section_alignment_x": "none",
+                                            "section_alignment_y": "none"
+                                        },
+                                        {
+                                            "subpanel_data": {
+                                                "sections": [],
+                                                "actions": []
+                                            },
+                                            "action_section_contents": [
+                                                {
+                                                    "actions": [
+                                                        {
+                                                            "context_menu_actions": [],
+                                                            "show_icon": true,
+                                                            "id": "",
+                                                            "icon": "",
+                                                            "text": "",
+                                                            "variant": "action",
+                                                            "show_text": false,
+                                                            "action_id": "TouchifyAction_QuickSettingsPopup",
+                                                            "action_use_icon": true,
+                                                            "brush_name": "",
+                                                            "brush_override_icon": false,
+                                                            "docker_id": "",
+                                                            "workspace_id": "",
+                                                            "docker_group_data": {
+                                                                "docker_names": []
+                                                            },
+                                                            "popup_data": {
+                                                                "toolshelf_data": {
+                                                                    "json_version": 3,
+                                                                    "pages": [],
+                                                                    "homepage": {
+                                                                        "sections": [],
+                                                                        "actions": [],
+                                                                        "json_version": 1
+                                                                    }
+                                                                },
+                                                                "actions_items": [],
+                                                                "actions_grid_padding": 2,
+                                                                "actions_grid_width": 3,
+                                                                "actions_icon_width": 30,
+                                                                "actions_icon_height": 30,
+                                                                "actions_item_width": 300,
+                                                                "actions_item_height": 300,
+                                                                "actions_close_on_click": false,
+                                                                "docker_id": "PatternDocker",
+                                                                "id": "",
+                                                                "type": "docker",
+                                                                "window_type": "popup",
+                                                                "json_version": 4,
+                                                                "docker_width": 300,
+                                                                "docker_height": 300,
+                                                                "actions_opacity": 1.0
+                                                            },
+                                                            "canvas_preset_data": {}
+                                                        }
+                                                    ],
+                                                    "row_name": "Actions Row"
+                                                }
+                                            ],
+                                            "action_section_id": "Panel",
+                                            "json_version": 2,
+                                            "display_name": "",
+                                            "min_size_x": 28,
+                                            "min_size_y": 28,
+                                            "max_size_x": 28,
+                                            "max_size_y": 28,
+                                            "size_x": 28,
+                                            "size_y": 28,
+                                            "panel_x": 1,
+                                            "panel_y": 0,
+                                            "section_alignment_x": "none",
+                                            "section_alignment_y": "none",
+                                            "ignore_scaling": true,
+                                            "section_type": "actions",
+                                            "docker_id": "",
+                                            "docker_nesting_mode": "normal",
+                                            "docker_unloaded_visibility": "normal",
+                                            "docker_loading_priority": "normal",
+                                            "action_section_display_mode": "normal",
+                                            "action_section_btn_width": 0,
+                                            "action_section_btn_height": 28,
+                                            "action_section_icon_size": 0,
+                                            "special_item_type": "none"
                                         },
                                         {
                                             "subpanel_data": {
@@ -3800,7 +3887,7 @@
                                             },
                                             "action_section_contents": [],
                                             "action_section_id": "Panel",
-                                            "json_version": 2,
+                                            "json_version": 3,
                                             "display_name": "",
                                             "min_size_x": 0,
                                             "min_size_y": 0,
@@ -3815,14 +3902,99 @@
                                             "docker_unloaded_visibility": "normal",
                                             "docker_loading_priority": "normal",
                                             "action_section_display_mode": "normal",
-                                            "action_section_alignment_x": "none",
-                                            "action_section_alignment_y": "none",
                                             "action_section_btn_width": 0,
                                             "action_section_btn_height": 0,
                                             "action_section_icon_size": 0,
                                             "special_item_type": "brush_opacity_slider",
                                             "ignore_scaling": false,
-                                            "section_type": "special"
+                                            "section_type": "special",
+                                            "section_alignment_x": "none",
+                                            "section_alignment_y": "none"
+                                        },
+                                        {
+                                            "subpanel_data": {
+                                                "sections": [],
+                                                "actions": []
+                                            },
+                                            "action_section_contents": [
+                                                {
+                                                    "actions": [
+                                                        {
+                                                            "context_menu_actions": [],
+                                                            "show_icon": true,
+                                                            "id": "",
+                                                            "icon": "",
+                                                            "text": "",
+                                                            "variant": "action",
+                                                            "show_text": false,
+                                                            "action_id": "TouchifyAction_brushOptionsPopup",
+                                                            "action_use_icon": true,
+                                                            "brush_name": "",
+                                                            "brush_override_icon": false,
+                                                            "docker_id": "",
+                                                            "workspace_id": "",
+                                                            "docker_group_data": {
+                                                                "docker_names": []
+                                                            },
+                                                            "popup_data": {
+                                                                "toolshelf_data": {
+                                                                    "json_version": 3,
+                                                                    "pages": [],
+                                                                    "homepage": {
+                                                                        "sections": [],
+                                                                        "actions": [],
+                                                                        "json_version": 1
+                                                                    }
+                                                                },
+                                                                "actions_items": [],
+                                                                "actions_grid_padding": 2,
+                                                                "actions_grid_width": 3,
+                                                                "actions_icon_width": 30,
+                                                                "actions_icon_height": 30,
+                                                                "actions_item_width": 300,
+                                                                "actions_item_height": 300,
+                                                                "actions_close_on_click": false,
+                                                                "docker_id": "PatternDocker",
+                                                                "id": "",
+                                                                "type": "docker",
+                                                                "window_type": "popup",
+                                                                "json_version": 4,
+                                                                "docker_width": 300,
+                                                                "docker_height": 300,
+                                                                "actions_opacity": 1.0
+                                                            },
+                                                            "canvas_preset_data": {},
+                                                            "closes_popup": false,
+                                                            "action_composer_mode": false
+                                                        }
+                                                    ],
+                                                    "row_name": "Actions Row"
+                                                }
+                                            ],
+                                            "action_section_id": "Panel",
+                                            "json_version": 2,
+                                            "display_name": "",
+                                            "min_size_x": 28,
+                                            "min_size_y": 28,
+                                            "max_size_x": 28,
+                                            "max_size_y": 28,
+                                            "size_x": 28,
+                                            "size_y": 28,
+                                            "panel_x": 1,
+                                            "panel_y": 1,
+                                            "section_alignment_x": "none",
+                                            "section_alignment_y": "none",
+                                            "ignore_scaling": true,
+                                            "section_type": "actions",
+                                            "docker_id": "",
+                                            "docker_nesting_mode": "normal",
+                                            "docker_unloaded_visibility": "normal",
+                                            "docker_loading_priority": "normal",
+                                            "action_section_display_mode": "normal",
+                                            "action_section_btn_width": 0,
+                                            "action_section_btn_height": 28,
+                                            "action_section_icon_size": 0,
+                                            "special_item_type": "none"
                                         }
                                     ],
                                     "actions": [],
@@ -3842,7 +4014,7 @@
                                 },
                                 "action_section_contents": [],
                                 "action_section_id": "Panel",
-                                "json_version": 2,
+                                "json_version": 3,
                                 "display_name": "Brush Sliders",
                                 "min_size_x": 0,
                                 "min_size_y": 60,
@@ -3857,149 +4029,14 @@
                                 "docker_unloaded_visibility": "normal",
                                 "docker_loading_priority": "normal",
                                 "action_section_display_mode": "normal",
-                                "action_section_alignment_x": "none",
-                                "action_section_alignment_y": "none",
                                 "action_section_btn_width": 0,
                                 "action_section_btn_height": 0,
                                 "action_section_icon_size": 0,
                                 "special_item_type": "none",
                                 "ignore_scaling": false,
-                                "section_type": "subpanel"
-                            },
-                            {
-                                "subpanel_data": {
-                                    "sections": [],
-                                    "actions": [],
-                                    "json_version": 1
-                                },
-                                "action_section_contents": [
-                                    {
-                                        "actions": [
-                                            {
-                                                "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "variant": "action",
-                                                "show_text": false,
-                                                "action_id": "TouchifyAction_QuickSettingsPopup",
-                                                "action_use_icon": true,
-                                                "brush_name": "",
-                                                "brush_override_icon": false,
-                                                "docker_id": "",
-                                                "workspace_id": "",
-                                                "docker_group_data": {
-                                                    "docker_names": []
-                                                },
-                                                "popup_data": {
-                                                    "toolshelf_data": {
-                                                        "json_version": 3,
-                                                        "pages": [],
-                                                        "homepage": {
-                                                            "sections": [],
-                                                            "actions": [],
-                                                            "json_version": 1
-                                                        }
-                                                    },
-                                                    "actions_items": [],
-                                                    "actions_grid_padding": 2,
-                                                    "actions_grid_width": 3,
-                                                    "actions_icon_width": 30,
-                                                    "actions_icon_height": 30,
-                                                    "actions_item_width": 300,
-                                                    "actions_item_height": 300,
-                                                    "actions_close_on_click": false,
-                                                    "docker_id": "PatternDocker",
-                                                    "id": "",
-                                                    "type": "docker",
-                                                    "window_type": "popup",
-                                                    "json_version": 3,
-                                                    "docker_width": 300,
-                                                    "docker_height": 300,
-                                                    "actions_opacity": 1.0
-                                                },
-                                                "canvas_preset_data": {}
-                                            }
-                                        ],
-                                        "row_name": "Actions Row"
-                                    },
-                                    {
-                                        "actions": [
-                                            {
-                                                "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "variant": "action",
-                                                "show_text": false,
-                                                "action_id": "TouchifyAction_brushOptionsPopup",
-                                                "action_use_icon": true,
-                                                "brush_name": "",
-                                                "brush_override_icon": false,
-                                                "docker_id": "",
-                                                "workspace_id": "",
-                                                "docker_group_data": {
-                                                    "docker_names": []
-                                                },
-                                                "popup_data": {
-                                                    "toolshelf_data": {
-                                                        "json_version": 3,
-                                                        "pages": [],
-                                                        "homepage": {
-                                                            "sections": [],
-                                                            "actions": [],
-                                                            "json_version": 1
-                                                        }
-                                                    },
-                                                    "actions_items": [],
-                                                    "actions_grid_padding": 2,
-                                                    "actions_grid_width": 3,
-                                                    "actions_icon_width": 30,
-                                                    "actions_icon_height": 30,
-                                                    "actions_item_width": 300,
-                                                    "actions_item_height": 300,
-                                                    "actions_close_on_click": false,
-                                                    "docker_id": "PatternDocker",
-                                                    "id": "",
-                                                    "type": "docker",
-                                                    "window_type": "popup",
-                                                    "json_version": 3,
-                                                    "docker_width": 300,
-                                                    "docker_height": 300,
-                                                    "actions_opacity": 1.0
-                                                },
-                                                "canvas_preset_data": {}
-                                            }
-                                        ],
-                                        "row_name": "Actions Row"
-                                    }
-                                ],
-                                "json_version": 2,
-                                "section_type": "actions",
-                                "min_size_x": 0,
-                                "min_size_y": 0,
-                                "max_size_x": 30,
-                                "max_size_y": 60,
-                                "size_x": 0,
-                                "size_y": 0,
-                                "panel_x": 1,
-                                "panel_y": 2,
-                                "docker_nesting_mode": "normal",
-                                "docker_unloaded_visibility": "normal",
-                                "docker_loading_priority": "normal",
-                                "action_section_display_mode": "normal",
-                                "action_section_alignment_x": "none",
-                                "action_section_alignment_y": "none",
-                                "action_section_btn_width": 30,
-                                "action_section_btn_height": 30,
-                                "action_section_icon_size": 0,
-                                "special_item_type": "none",
-                                "docker_id": "",
-                                "action_section_id": "Brush Options",
-                                "display_name": "",
-                                "ignore_scaling": true
+                                "section_type": "subpanel",
+                                "section_alignment_x": "none",
+                                "section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
@@ -4038,7 +4075,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             },
@@ -4070,7 +4107,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             },
@@ -4102,7 +4139,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             },
@@ -4136,7 +4173,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {}
                                                     },
@@ -4168,7 +4205,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {}
                                                     },
@@ -4200,7 +4237,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {}
                                                     },
@@ -4232,7 +4269,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {}
                                                     }
@@ -4263,7 +4300,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "closes_popup": false,
@@ -4302,7 +4339,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             },
@@ -4334,7 +4371,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             },
@@ -4366,7 +4403,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             },
@@ -4401,7 +4438,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -4433,7 +4470,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "closes_popup": false,
@@ -4472,7 +4509,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "closes_popup": false,
@@ -4509,7 +4546,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -4543,7 +4580,7 @@
                                                                 }
                                                             },
                                                             "actions_items": [],
-                                                            "json_version": 3
+                                                            "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
                                                         "action_composer_mode": false
@@ -4576,7 +4613,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -4586,7 +4623,7 @@
                                     }
                                 ],
                                 "action_section_id": "Panel",
-                                "json_version": 2,
+                                "json_version": 3,
                                 "display_name": "Common Actions",
                                 "min_size_x": 0,
                                 "min_size_y": 0,
@@ -4601,14 +4638,14 @@
                                 "docker_unloaded_visibility": "normal",
                                 "docker_loading_priority": "normal",
                                 "action_section_display_mode": "normal",
-                                "action_section_alignment_x": "none",
-                                "action_section_alignment_y": "none",
                                 "action_section_btn_width": 0,
                                 "action_section_btn_height": 20,
                                 "action_section_icon_size": 0,
                                 "special_item_type": "none",
                                 "ignore_scaling": false,
-                                "section_type": "actions"
+                                "section_type": "actions",
+                                "section_alignment_x": "none",
+                                "section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
@@ -4648,7 +4685,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": true
@@ -4693,13 +4730,14 @@
                                                     "id": "",
                                                     "type": "docker",
                                                     "window_type": "popup",
-                                                    "json_version": 3,
+                                                    "json_version": 4,
                                                     "docker_width": 300,
                                                     "docker_height": 300,
                                                     "actions_opacity": 1.0,
                                                     "window_title": "",
                                                     "closing_method": "default",
-                                                    "popup_position": "default"
+                                                    "popup_position_x": "default",
+                                                    "popup_position_y": "default"
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -4744,13 +4782,14 @@
                                                     "id": "",
                                                     "type": "docker",
                                                     "window_type": "popup",
-                                                    "json_version": 3,
+                                                    "json_version": 4,
                                                     "docker_width": 300,
                                                     "docker_height": 400,
                                                     "actions_opacity": 1.0,
                                                     "window_title": "",
                                                     "closing_method": "default",
-                                                    "popup_position": "default"
+                                                    "popup_position_x": "default",
+                                                    "popup_position_y": "default"
                                                 },
                                                 "canvas_preset_data": {},
                                                 "action_composer_mode": false
@@ -4790,7 +4829,7 @@
                                                     "actions_icon_height": 30,
                                                     "actions_item_width": 100,
                                                     "actions_item_height": 100,
-                                                    "json_version": 3,
+                                                    "json_version": 4,
                                                     "actions_close_on_click": false,
                                                     "docker_id": "PaletteDocker",
                                                     "docker_width": 300,
@@ -4839,7 +4878,7 @@
                                                     "actions_icon_height": 30,
                                                     "actions_item_width": 100,
                                                     "actions_item_height": 100,
-                                                    "json_version": 3,
+                                                    "json_version": 4,
                                                     "actions_close_on_click": false,
                                                     "docker_id": "PaletteDocker",
                                                     "docker_width": 300,
@@ -4887,7 +4926,7 @@
                                                     "actions_icon_height": 30,
                                                     "actions_item_width": 100,
                                                     "actions_item_height": 100,
-                                                    "json_version": 3,
+                                                    "json_version": 4,
                                                     "actions_close_on_click": false,
                                                     "docker_id": "PaletteDocker",
                                                     "docker_width": 300,
@@ -4905,7 +4944,7 @@
                                     }
                                 ],
                                 "action_section_id": "Panel",
-                                "json_version": 2,
+                                "json_version": 3,
                                 "display_name": "Quick Popups",
                                 "min_size_x": 0,
                                 "min_size_y": 0,
@@ -4920,14 +4959,14 @@
                                 "docker_unloaded_visibility": "normal",
                                 "docker_loading_priority": "normal",
                                 "action_section_display_mode": "normal",
-                                "action_section_alignment_x": "none",
-                                "action_section_alignment_y": "none",
                                 "action_section_btn_width": 0,
                                 "action_section_btn_height": 30,
                                 "action_section_icon_size": 0,
                                 "special_item_type": "none",
                                 "ignore_scaling": false,
-                                "section_type": "actions"
+                                "section_type": "actions",
+                                "section_alignment_x": "none",
+                                "section_alignment_y": "none"
                             }
                         ],
                         "actions": [
@@ -4974,7 +5013,7 @@
                                                     "id": "",
                                                     "type": "docker",
                                                     "window_type": "popup",
-                                                    "json_version": 3,
+                                                    "json_version": 4,
                                                     "docker_width": 300,
                                                     "docker_height": 300,
                                                     "actions_opacity": 1.0
@@ -5020,7 +5059,7 @@
                                                     "id": "",
                                                     "type": "docker",
                                                     "window_type": "popup",
-                                                    "json_version": 3,
+                                                    "json_version": 4,
                                                     "docker_width": 300,
                                                     "docker_height": 300,
                                                     "actions_opacity": 1.0
@@ -5066,7 +5105,7 @@
                                                     "id": "",
                                                     "type": "docker",
                                                     "window_type": "popup",
-                                                    "json_version": 3,
+                                                    "json_version": 4,
                                                     "docker_width": 300,
                                                     "docker_height": 300,
                                                     "actions_opacity": 1.0
@@ -5101,7 +5140,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             },
@@ -5133,7 +5172,7 @@
                                                         }
                                                     },
                                                     "actions_items": [],
-                                                    "json_version": 3
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {}
                                             }
@@ -5175,7 +5214,7 @@
                                             "id": "",
                                             "type": "docker",
                                             "window_type": "popup",
-                                            "json_version": 3,
+                                            "json_version": 4,
                                             "docker_width": 300,
                                             "docker_height": 300,
                                             "actions_opacity": 1.0
@@ -5207,7 +5246,7 @@
                                                 }
                                             },
                                             "actions_items": [],
-                                            "json_version": 3
+                                            "json_version": 4
                                         },
                                         "workspace_id": "",
                                         "show_text": false,
@@ -5239,7 +5278,7 @@
                                                 }
                                             },
                                             "actions_items": [],
-                                            "json_version": 3
+                                            "json_version": 4
                                         },
                                         "workspace_id": "",
                                         "show_text": false,
@@ -5274,7 +5313,7 @@
                                                 }
                                             },
                                             "actions_items": [],
-                                            "json_version": 3
+                                            "json_version": 4
                                         },
                                         "canvas_preset_data": {}
                                     },
@@ -5306,7 +5345,7 @@
                                                 }
                                             },
                                             "actions_items": [],
-                                            "json_version": 3
+                                            "json_version": 4
                                         },
                                         "canvas_preset_data": {}
                                     }
@@ -5336,7 +5375,7 @@
                 "actions_icon_height": 30,
                 "actions_item_width": 100,
                 "actions_item_height": 100,
-                "json_version": 3,
+                "json_version": 4,
                 "actions_close_on_click": false,
                 "docker_id": "",
                 "docker_width": 0,
@@ -5344,10 +5383,11 @@
                 "id": "TouchifyQuickCanvasPopup",
                 "type": "toolshelf",
                 "window_title": "Quick Canvas Popup",
-                "window_type": "popup",
+                "window_type": "window",
                 "closing_method": "canvas_focus",
-                "popup_position": "center",
-                "actions_opacity": 1.0
+                "actions_opacity": 1.0,
+                "popup_position_x": "center",
+                "popup_position_y": "start"
             },
             "canvas_preset_data": {},
             "closes_popup": false,
