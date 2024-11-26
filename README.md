@@ -51,26 +51,26 @@ TODO
 
 Some of the Features/Addons used in this Plugin are ethier inspired or modified continuations of their respective author's work:
 
-### Heavily Modified
-- Krita Redesign 
-    - [[GitHub]](https://github.com/veryprofessionaldodo/Krita-UI-Redesign)
-- KanvasBuddy
-    - [[Forums]](https://krita-artists.org/t/kanvasbuddy-a-minimalist-toolbar/549)
-### Inspired Features
-- Summon Docker
-    - [[Forums]](https://krita-artists.org/t/plugin-prototype-summon-docker-extension/87102/9)
-    - [[GitLab]](https://invent.kde.org/freyalupen/summon-docker-extension)
-- Coolbox 
-    - [[Forums]](https://krita-artists.org/t/coolbox-1-0-a-blender-like-toolbox-for-krita/9133/3) 
-    - [[GitHub]](https://github.com/hellozee/CoolBox/)
-- ToolKit 
-    - [[Forums]](https://krita-artists.org/t/toolkit-1-0-1/9273/6) 
+- **Heavily Modified**
+    - Krita Redesign 
+        - [[GitHub]](https://github.com/veryprofessionaldodo/Krita-UI-Redesign)
+    - KanvasBuddy
+        - [[Forums]](https://krita-artists.org/t/kanvasbuddy-a-minimalist-toolbar/549)
+- **Inspired Features**
+    - Summon Docker
+        - [[Forums]](https://krita-artists.org/t/plugin-prototype-summon-docker-extension/87102/9)
+        - [[GitLab]](https://invent.kde.org/freyalupen/summon-docker-extension)
+    - Coolbox 
+        - [[Forums]](https://krita-artists.org/t/coolbox-1-0-a-blender-like-toolbox-for-krita/9133/3) 
+        - [[GitHub]](https://github.com/hellozee/CoolBox/)
+    - ToolKit 
+        - [[Forums]](https://krita-artists.org/t/toolkit-1-0-1/9273/6) 
     - [[GitHub]](https://github.com/tubaca/ToolKit/releases/tag/v1.0.1)
-### Revived/Ported
-- Compact Brush Toggler 
-    - [[GitHub]](https://github.com/kaichi1342/CompactBrushToggler)
-    - [[Forums]](https://krita-artists.org/t/compact-brush-toggler/33798)
-- Reference Tabs 
-    - [[GitLab]](https://invent.kde.org/freyalupen/reference-tabs-docker)
-    - [[Forums]](https://krita-artists.org/t/plugin-reference-tabs-docker/47732)
+- **Revived/Ported**
+    - Compact Brush Toggler 
+        - [[GitHub]](https://github.com/kaichi1342/CompactBrushToggler)
+        - [[Forums]](https://krita-artists.org/t/compact-brush-toggler/33798)
+    - Reference Tabs 
+        - [[GitLab]](https://invent.kde.org/freyalupen/reference-tabs-docker)
+        - [[Forums]](https://krita-artists.org/t/plugin-reference-tabs-docker/47732)
 
