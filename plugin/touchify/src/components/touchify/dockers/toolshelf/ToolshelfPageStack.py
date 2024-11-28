@@ -74,7 +74,7 @@ class ToolshelfPageStack(QStackedWidget):
             self.changePanel('ROOT')
     
     def onDockerUpdate(self):
-        pass
+        self.adjustSize()
 
     def changePanel(self, panel_id: str):
         new_panel = self.panel(panel_id)

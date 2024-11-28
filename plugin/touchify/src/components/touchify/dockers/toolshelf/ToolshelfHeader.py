@@ -189,29 +189,30 @@ class ToolshelfHeader(QWidget):
         
         def createAction(self, properties: CfgTouchifyAction, action_row: int):
             btn = self.actions_manager.createButton(self, properties)
-            btn.setContentsMargins(0,0,0,0)
-            
-            actual_id = properties.id
-            actual_id_num = 0
-            while actual_id in self._actions:
-                actual_id = f"{properties.id}{actual_id_num}"
-                actual_id_num += 1
+            if btn:
+                btn.setContentsMargins(0,0,0,0)
+                
+                actual_id = properties.id
+                actual_id_num = 0
+                while actual_id in self._actions:
+                    actual_id = f"{properties.id}{actual_id_num}"
+                    actual_id_num += 1
 
-            self._actions[actual_id] = btn
+                self._actions[actual_id] = btn
 
-            if action_row not in self._rows:
-                self.createRow(action_row)
+                if action_row not in self._rows:
+                    self.createRow(action_row)
 
-            self._rows[action_row].layout().addWidget(btn)
+                self._rows[action_row].layout().addWidget(btn)
 
-            if self.orientation == Qt.Orientation.Vertical:
-                btn.setMinimumHeight(self.tab_size)
-                btn.setFixedWidth(self.tab_size)
-            else:
-                btn.setFixedHeight(self.tab_size)
-                btn.setMinimumWidth(self.tab_size)
+                if self.orientation == Qt.Orientation.Vertical:
+                    btn.setMinimumHeight(self.tab_size)
+                    btn.setFixedWidth(self.tab_size)
+                else:
+                    btn.setFixedHeight(self.tab_size)
+                    btn.setMinimumWidth(self.tab_size)
 
-            btn.setSizePolicy(self.button_size_policy)  
+                btn.setSizePolicy(self.button_size_policy)  
         
 
         def applyButtonRules(self, btn: HeaderTab, btn_id: str, page_id: str):

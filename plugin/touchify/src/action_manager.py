@@ -2,6 +2,7 @@ from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from touchify.src.cfg.CfgResourcesRegistry import CfgResourcePack
 from touchify.src.components.pyqt.event_filters.MouseReleaseListener import MouseReleaseListener
 from touchify.src.components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
@@ -150,8 +151,16 @@ class ActionManager(QObject):
             action: CfgTouchifyAction
             actionIdentifier ='TouchifyAction_{0}'.format(action.id)
 
-            if actionIdentifier in self.registeredActionsData:
+            if actionIdentifier in self.registeredActions:
                 self.registeredActionsData[actionIdentifier] = action
+
+        for pack in cfg.resources.presets:
+            pack: CfgResourcePack
+            for data in pack.actions_registry:
+                subActionIdentifier = 'Touchify_Res_{0}_{1}'.format(pack.registry_id, data.id)
+                if subActionIdentifier in self.registeredActions:
+                    self.registeredActionsData[subActionIdentifier] = data
+        
 
     def onMouseRelease(self):
         if self.composer_action_down == True:
@@ -171,8 +180,7 @@ class ActionManager(QObject):
             if isinstance(data, CfgTouchifyAction):
                 self.runAction(data, action)
 
-    def createRegisteredAction(self, data: CfgTouchifyAction, window: Window, actionPath: str):
-        actionIdentifier ='TouchifyAction_{0}'.format(data.id)
+    def createRegisteredAction(self, actionIdentifier: str, data: CfgTouchifyAction, window: Window, actionPath: str):
         displayName = data.text
 
         action = window.createAction(actionIdentifier, displayName, actionPath)
@@ -194,9 +202,20 @@ class ActionManager(QObject):
         cfg = TouchifyConfig.instance().getConfig()
         root_menu = QtWidgets.QMenu("Registered Actions")
 
+        core_menu = root_menu.addMenu("Core")
+
         for data in cfg.actions_registry.actions_registry:
-            action = self.appEngine.action_management.createRegisteredAction(data, window, subItemPath)
-            root_menu.addAction(action)
+            id = 'TouchifyAction_{0}'.format(data.id)
+            action = self.appEngine.action_management.createRegisteredAction(id, data, window, subItemPath)
+            core_menu.addAction(action)
+
+        for pack in cfg.resources.presets:
+            pack: CfgResourcePack
+            pack_menu = root_menu.addMenu(pack.registry_name)
+            for data in pack.actions_registry:
+                id = 'Touchify_Res_{0}_{1}'.format(pack.registry_id, data.id)
+                action = self.appEngine.action_management.createRegisteredAction(id, data, window, subItemPath)
+                pack_menu.addAction(action)
 
         return root_menu
 

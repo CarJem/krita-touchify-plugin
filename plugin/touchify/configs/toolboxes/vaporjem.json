@@ -4,24 +4,6 @@
             "items": [
                 {
                     "items": [],
-                    "name": "edit_undo",
-                    "open_on_click": false,
-                    "json_version": 1
-                },
-                {
-                    "items": [],
-                    "name": "edit_redo",
-                    "open_on_click": false,
-                    "json_version": 1
-                }
-            ],
-            "column_count": 0,
-            "id": "UndoRedo"
-        },
-        {
-            "items": [
-                {
-                    "items": [],
                     "name": "InteractionTool",
                     "json_version": 1
                 },
@@ -237,7 +219,7 @@
     ],
     "column_count": 2,
     "icon_size": 16,
-    "preset_name": "Developer's Pick",
+    "preset_name": "VaporJem",
     "submenu_delay": 200,
     "background_opacity": 255,
     "button_opacity": 255,

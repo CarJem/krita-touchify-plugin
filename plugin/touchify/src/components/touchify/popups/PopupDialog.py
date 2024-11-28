@@ -234,7 +234,7 @@ class PopupDialog(QDockWidget):
     #region Events 
     
     def eventFilter(self, source: QObject, event: QEvent) -> bool:
-        if (event.type() == QEvent.Type.MouseButtonRelease) or (event.type() == QEvent.Type.TabletPress):
+        if (event.type() == QEvent.Type.MouseButtonRelease) or (event.type() == QEvent.Type.TabletPress) or (event.type() == QEvent.Type.TouchBegin):
             cursor_pos = QCursor.pos()
             widget_under_cursor = QApplication.widgetAt(cursor_pos)
         

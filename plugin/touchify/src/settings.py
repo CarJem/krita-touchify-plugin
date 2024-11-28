@@ -5,6 +5,7 @@ import os
 
 
 from touchify.src.cfg.CfgHotkeyRegistry import CfgHotkeyRegistry
+from touchify.src.cfg.CfgResourcesRegistry import CfgResourcesRegistry
 from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
 from touchify.src.cfg.CfgPreferences import CfgPreferences
 from touchify.src.variables import *
@@ -27,6 +28,7 @@ class TouchifyConfig:
         def __init__(self):
             self.__base_dir__ = BASE_DIR            
             self.actions_registry: CfgActionRegistry = CfgActionRegistry()
+            self.resources: CfgResourcesRegistry = CfgResourcesRegistry()
             self.hotkeys: CfgHotkeyRegistry = CfgHotkeyRegistry()
             self.toolshelf_main: CfgToolshelfRegistry = CfgToolshelfRegistry("main")
             self.toolshelf_alt: CfgToolshelfRegistry = CfgToolshelfRegistry("overview")
@@ -51,6 +53,7 @@ class TouchifyConfig:
 
         def propertygrid_labels(self):
             labels = {}
+            labels["resources"] = "Resources"
             labels["toolshelfs"] = "Toolshelf Settings"
             labels["actions_registry"] = "Registry"
             labels["hotkeys"] = "Hotkeys"
@@ -66,6 +69,7 @@ class TouchifyConfig:
         
         def propertygrid_restrictions(self):
             restrictions = {}
+            restrictions["resources"] = {"type": "expandable"}
             restrictions["hotkeys"] = {"type": "expandable"}
             restrictions["toolshelf_main"] = {"type": "expandable", "text": "Main"}
             restrictions["toolshelf_alt"] = {"type": "expandable", "text": "Preview"}
@@ -79,6 +83,7 @@ class TouchifyConfig:
         def save(self):
             self.saveClass(self.actions_registry, "actions_registry")
             self.saveClass(self.hotkeys, "hotkeys")
+            self.resources.save()
             self.toolshelf_main.save() 
             self.toolshelf_alt.save()
             self.toolshelf_docker.save()
@@ -89,6 +94,7 @@ class TouchifyConfig:
         def load(self):
             self.actions_registry = self.loadClass("actions_registry", CfgActionRegistry)
             self.hotkeys = self.loadClass("hotkeys", CfgHotkeyRegistry)
+            self.resources.load()
             self.toolshelf_main.load()
             self.toolshelf_alt.load()
             self.toolshelf_docker.load()

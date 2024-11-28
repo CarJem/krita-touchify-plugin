@@ -179,5 +179,8 @@
     "column_count": 2,
     "icon_size": 16,
     "preset_name": "Toolkit Prototype",
-    "json_version": 1
+    "json_version": 1,
+    "submenu_delay": 200,
+    "background_opacity": 255,
+    "button_opacity": 255
 }

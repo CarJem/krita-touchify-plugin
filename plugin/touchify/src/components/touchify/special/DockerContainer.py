@@ -74,11 +74,11 @@ class DockerContainer(QWidget):
         if self.borrowedDocker != None and self.borrowedDocker.parentWidget() == self.container:
             self.unloaded_label.setVisible(False)
             self.container_layout.removeWidget(self.unloaded_label)
-            self.adjustSize()
+            #self.adjustSize()
         else:
             self.container_layout.addWidget(self.unloaded_label)
             self.unloaded_label.setVisible(True)
-            self.adjustSize()
+            #self.adjustSize()
 
     #region Private Functions
     def _stealDocker(self):
@@ -93,7 +93,7 @@ class DockerContainer(QWidget):
         if not dockerLoaded: return
         self.borrowedDocker = dockerLoaded
         self.dockerChanged.emit()
-        self.container_layout.addWidget(self.borrowedDocker)
+        self.container_layout.addWidget(self.borrowedDocker, 1)
         if self.dockMode: self.borrowedDocker.show()
         self.updateVisibility()
 
