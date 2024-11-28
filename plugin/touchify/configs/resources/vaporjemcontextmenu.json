@@ -3198,7 +3198,7 @@
                 "type": "toolshelf",
                 "window_title": "VaporJemContextMenu",
                 "window_type": "popup",
-                "closing_method": "deactivation",
+                "closing_method": "canvas_focus",
                 "actions_opacity": 1.0,
                 "popup_position_x": "center",
                 "popup_position_y": "start"

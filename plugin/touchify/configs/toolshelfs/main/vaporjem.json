@@ -517,7 +517,7 @@
                                             "text": "",
                                             "variant": "action",
                                             "show_text": false,
-                                            "action_id": "TouchifyAction_DarkCanvas",
+                                            "action_id": "Touchify_Res_TouchifyCanvasPresets_DarkCanvas",
                                             "action_use_icon": false,
                                             "brush_name": "",
                                             "brush_override_icon": false,
@@ -539,7 +539,9 @@
                                                 "actions_items": [],
                                                 "json_version": 4
                                             },
-                                            "canvas_preset_data": {}
+                                            "canvas_preset_data": {},
+                                            "closes_popup": false,
+                                            "action_composer_mode": false
                                         },
                                         {
                                             "context_menu_actions": [],
@@ -549,7 +551,7 @@
                                             "text": "",
                                             "variant": "action",
                                             "show_text": false,
-                                            "action_id": "TouchifyAction_LightCanvas",
+                                            "action_id": "Touchify_Res_TouchifyCanvasPresets_LightCanvas",
                                             "action_use_icon": false,
                                             "brush_name": "",
                                             "brush_override_icon": false,
@@ -571,7 +573,9 @@
                                                 "actions_items": [],
                                                 "json_version": 4
                                             },
-                                            "canvas_preset_data": {}
+                                            "canvas_preset_data": {},
+                                            "closes_popup": false,
+                                            "action_composer_mode": false
                                         }
                                     ],
                                     "show_icon": true,
@@ -602,7 +606,9 @@
                                         "actions_items": [],
                                         "json_version": 4
                                     },
-                                    "canvas_preset_data": {}
+                                    "canvas_preset_data": {},
+                                    "closes_popup": false,
+                                    "action_composer_mode": false
                                 },
                                 {
                                     "context_menu_actions": [],

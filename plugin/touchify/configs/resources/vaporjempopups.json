@@ -84,14 +84,21 @@
                 "json_version": 4,
                 "docker_width": 200,
                 "docker_height": 300,
-                "actions_opacity": 1.0
+                "actions_opacity": 1.0,
+                "window_title": "",
+                "closing_method": "default",
+                "popup_position_x": "default",
+                "popup_position_y": "default",
+                "actions_close_on_click": false
             },
             "text": "Brush Options Popup",
             "workspace_id": "",
             "id": "brushOptionsPopup",
             "show_text": false,
             "show_icon": true,
-            "canvas_preset_data": {}
+            "canvas_preset_data": {},
+            "closes_popup": false,
+            "action_composer_mode": false
         },
         {
             "context_menu_actions": [],
