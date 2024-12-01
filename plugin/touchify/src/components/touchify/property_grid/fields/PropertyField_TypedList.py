@@ -20,7 +20,7 @@ class PropertyField_TypedList(PropertyField):
         self.setup(variable_name, variable_data, variable_source)
         self.variable_list_type = variable_data.allowedTypes()
         self.variable_data: TypedList
-        print(self.variable_list_type)
+        #print(self.variable_list_type)
 
         if len(manual_restrictions) != 0: restrictions = manual_restrictions
         else: restrictions = PropertyUtils_Extensions.getRestrictions(self.variable_source)

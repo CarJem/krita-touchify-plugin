@@ -18,7 +18,7 @@
                 "subpanel_data": {
                     "sections": [],
                     "actions": [],
-                    "json_version": 1
+                    "json_version": 2
                 },
                 "action_section_contents": [
                     {
@@ -77,15 +77,15 @@
                 "size_y": 0,
                 "docker_id": "",
                 "action_section_id": "Actions (Left)",
-                "json_version": 3,
-                "section_alignment_x": "left",
-                "section_alignment_y": "none"
+                "json_version": 4,
+                "action_section_alignment_x": "left",
+                "action_section_alignment_y": "none"
             },
             {
                 "subpanel_data": {
                     "sections": [],
                     "actions": [],
-                    "json_version": 1
+                    "json_version": 2
                 },
                 "action_section_contents": [
                     {
@@ -114,7 +114,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -148,7 +148,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -182,7 +182,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -214,7 +214,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -259,7 +259,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -291,31 +291,31 @@
                 "action_section_icon_size": 16,
                 "docker_id": "",
                 "action_section_id": "Actions (Right)",
-                "json_version": 3,
+                "json_version": 4,
                 "display_name": "",
                 "special_item_type": "none",
-                "section_alignment_x": "right",
-                "section_alignment_y": "none",
-                "ignore_scaling": false
+                "ignore_scaling": false,
+                "action_section_alignment_x": "right",
+                "action_section_alignment_y": "none"
             },
             {
                 "subpanel_data": {
                     "sections": [],
                     "actions": [],
-                    "json_version": 1
+                    "json_version": 2
                 },
                 "size_x": 300,
                 "size_y": 200,
                 "docker_nesting_mode": "docking",
                 "action_section_contents": [],
                 "docker_id": "OverviewDocker",
-                "json_version": 3
+                "json_version": 4
             },
             {
                 "subpanel_data": {
                     "sections": [],
                     "actions": [],
-                    "json_version": 1
+                    "json_version": 2
                 },
                 "docker_nesting_mode": "normal",
                 "size_x": 300,
@@ -334,21 +334,21 @@
                 "panel_x": 0,
                 "panel_y": 0,
                 "section_type": "docker",
-                "json_version": 3,
+                "json_version": 4,
                 "special_item_type": "none",
                 "docker_id": "Touchify/ReferenceTabsDocker",
                 "action_section_id": "Panel",
-                "section_alignment_x": "none",
-                "section_alignment_y": "none"
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none"
             },
             {
                 "subpanel_data": {
                     "sections": [],
                     "actions": [],
-                    "json_version": 1
+                    "json_version": 2
                 },
                 "action_section_contents": [],
-                "json_version": 3,
+                "json_version": 4,
                 "section_type": "docker",
                 "min_size_x": 0,
                 "min_size_y": 0,
@@ -368,8 +368,8 @@
                 "special_item_type": "none",
                 "docker_id": "pykrita_imagine_board_docker",
                 "action_section_id": "Panel",
-                "section_alignment_x": "none",
-                "section_alignment_y": "none"
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none"
             }
         ],
         "actions": [
@@ -402,7 +402,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -436,7 +436,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -470,7 +470,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -504,7 +504,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -538,7 +538,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -572,7 +572,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -606,7 +606,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -640,7 +640,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -674,7 +674,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -708,7 +708,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -742,7 +742,7 @@
                                         "homepage": {
                                             "sections": [],
                                             "actions": [],
-                                            "json_version": 1
+                                            "json_version": 2
                                         }
                                     },
                                     "actions_items": [],
@@ -775,7 +775,7 @@
                                 "homepage": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 }
                             },
                             "actions_items": [],
@@ -809,7 +809,7 @@
                                 "homepage": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 }
                             },
                             "actions_items": [],
@@ -843,7 +843,7 @@
                                 "homepage": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 }
                             },
                             "actions_items": [],
@@ -877,7 +877,7 @@
                                 "homepage": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 }
                             },
                             "actions_items": [],
@@ -911,7 +911,7 @@
                                 "homepage": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 }
                             },
                             "actions_items": [],
@@ -945,7 +945,7 @@
                                 "homepage": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 }
                             },
                             "actions_items": [],
@@ -960,16 +960,16 @@
         ],
         "tab_type": "tabs",
         "action_height": 30,
-        "json_version": 1,
+        "json_version": 2,
         "id": "ROOT",
         "display_name": "",
         "icon": "",
-        "row": 0,
         "size_x": 0,
         "size_y": 0,
         "min_size_x": 0,
         "min_size_y": 0,
         "max_size_x": 0,
-        "max_size_y": 0
+        "max_size_y": 0,
+        "toolshelf_tab_row": 0
     }
 }

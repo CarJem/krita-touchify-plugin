@@ -16,7 +16,7 @@
                 "subpanel_data": {
                     "sections": [],
                     "actions": [],
-                    "json_version": 1
+                    "json_version": 2
                 },
                 "action_section_contents": [],
                 "action_section_btn_width": 0,
@@ -37,15 +37,15 @@
                 "size_y": 0,
                 "docker_id": "sharedtooldocker",
                 "action_section_id": "Panel",
-                "json_version": 3,
-                "section_alignment_x": "none",
-                "section_alignment_y": "none"
+                "json_version": 4,
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none"
             }
         ],
         "actions": [],
         "tab_type": "buttons",
         "action_height": 16,
-        "json_version": 1,
+        "json_version": 2,
         "id": "ROOT"
     }
 }

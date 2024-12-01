@@ -1,0 +1,13 @@
+{
+    "pages": [],
+    "preset_name": "Empty",
+    "json_version": 3,
+    "header_options": {
+        "stack_actions": []
+    },
+    "homepage": {
+        "sections": [],
+        "actions": [],
+        "id": "ROOT"
+    }
+}

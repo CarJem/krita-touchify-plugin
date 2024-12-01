@@ -16,7 +16,7 @@ from touchify.src.components.touchify.dockers.toolshelf.ToolshelfCanvasListener 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ToolshelfDockWidget import ToolshelfDockWidget
-    from .ToolshelfDocker import ToolshelfDocker
+    from .ToolshelfDockWidgetKrita import ToolshelfDockWidgetKrita
     from ...popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
 class ToolshelfWidget(QWidget):
@@ -27,13 +27,11 @@ class ToolshelfWidget(QWidget):
 
         self.mouse_listener = ToolshelfCanvasListener()
         self.pinned = False
-        self.parent_docker: "ToolshelfDockWidget" | "ToolshelfDocker" | "PopupDialog_Toolshelf"  = parent
+        self.parent_docker: "ToolshelfDockWidget" | "ToolshelfDockWidgetKrita" | "PopupDialog_Toolshelf"  = parent
         self.registry_index = registry_index
         self.cfg = cfg
 
-        self.mouse_listener.mouseReleased.connect(self.onMouseRelease)
-        QApplication.instance().installEventFilter(self.mouse_listener)
-
+        self.activateWidget()
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.setContentsMargins(0,0,0,0)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
@@ -72,15 +70,29 @@ class ToolshelfWidget(QWidget):
         else:
             self.mainLayout.setDirection(QHBoxLayout.Direction.LeftToRight if headerBeforePages else QHBoxLayout.Direction.RightToLeft)
 
+        if self.cfg.header_options.default_to_pinned:
+            self.setPinned(True)
+
 
     def resizeEvent(self, event: QResizeEvent):
         self.sizeChanged.emit()
         super().resizeEvent(event)
+
+    def showEvent(self, event: QShowEvent):
+        self.activateWidget()
+        super().showEvent(event)
+
+    def hideEvent(self, event: QHideEvent):
+        self.deactivateWidget()
+        super().hideEvent(event)
     
     #region Getters / Setters
 
-    def setPinned(self, value):
-        self.pinned = not self.pinned
+    def setPinned(self, value: bool | None = None):
+        if value == None:
+            self.pinned = not self.pinned
+        else:
+            self.pinned = value
         self.header.pinButton.setChecked(self.pinned)
 
     #endregion
@@ -105,9 +117,27 @@ class ToolshelfWidget(QWidget):
     def backupPreviousState(self):
         return (self.pinned, self.pages._current_panel_id)
     
+    def deactivateWidget(self):
+        if self.is_active == True:
+            QApplication.instance().removeEventFilter(self.mouse_listener)
+            self.mouse_listener.mouseReleased.disconnect(self.onMouseRelease)
+            self.pages.deactivateWidget()
+            self.is_active = False
+
+    def activateWidget(self):
+        if not hasattr(self, "is_active"):
+            self.mouse_listener.mouseReleased.connect(self.onMouseRelease)
+            QApplication.instance().installEventFilter(self.mouse_listener)
+            self.is_active = True
+        else:
+            if self.is_active == False:
+                QApplication.instance().installEventFilter(self.mouse_listener)
+                self.mouse_listener.mouseReleased.connect(self.onMouseRelease)
+                self.pages.activateWidget()
+                self.is_active = True
+    
     def shutdownWidget(self):
-        QApplication.instance().removeEventFilter(self.mouse_listener)
-        self.mouse_listener.mouseReleased.disconnect(self.onMouseRelease)
+        self.deactivateWidget()
         self.pages.shutdownWidget()
         self.header.close()
 

@@ -82,15 +82,15 @@ class CfgToolshelfSection:
     action_section_id: str = "Panel"
     action_section_display_mode: str = "normal"
     action_section_contents: TypedList[CfgTouchifyActionCollection] = []
-    section_alignment_x: str = "none"
-    section_alignment_y: str = "none"
+    action_section_alignment_x: str = "none"
+    action_section_alignment_y: str = "none"
     action_section_btn_width: int = 0
     action_section_btn_height: int = 0
     action_section_icon_size: int = 0
 
     special_item_type: str = "none"
 
-    json_version: int = 2
+    json_version: int = 4
 
     def __init__(self, **args) -> None:
         args = CfgBackwardsCompat.CfgToolshelfSection(args)
@@ -145,8 +145,6 @@ class CfgToolshelfSection:
             "size_y",
             "panel_x",
             "panel_y",
-            "section_alignment_x", 
-            "section_alignment_y", 
             "ignore_scaling",
             "section_type"
         ]
@@ -163,6 +161,8 @@ class CfgToolshelfSection:
             "action_section_display_mode",
             "action_section_btn_width", 
             "action_section_btn_height",
+            "action_alignment_x", 
+            "action_alignment_y", 
             "action_section_icon_size",
             "action_section_contents", 
         ]
@@ -178,20 +178,22 @@ class CfgToolshelfSection:
         return global_groups + docker_groups + action_groups + special_groups + subgroup_groups
     
     def propertygrid_hidden(self):
-        action_groups = [
-            "action_section_id", 
-            "action_section_display_mode",
-            "action_section_btn_width", 
-            "action_section_btn_height",
-            "action_section_icon_size",
-            "action_section_contents", 
-        ]
-
         docker_groups = [
             "docker_id", 
             "docker_nesting_mode", 
             "docker_unloaded_visibility", 
             "docker_loading_priority"
+        ]
+
+        action_groups = [
+            "action_section_id", 
+            "action_section_display_mode",
+            "action_section_btn_width", 
+            "action_section_btn_height",
+            "action_alignment_x", 
+            "action_alignment_y", 
+            "action_section_icon_size",
+            "action_section_contents", 
         ]
 
         special_groups = [
@@ -229,7 +231,6 @@ class CfgToolshelfSection:
         labels["panel_location"] = "Panel Position"
         labels["ignore_scaling"] = "Ignore Scaling"
         labels["section_type"] = "Section Type"
-        labels["section_alignment"] = "Horizontal / Vertical Alignment"
 
         labels["docker_id"] = "Docker ID"
         labels["docker_nesting_mode"] = "Nesting Mode"
@@ -240,6 +241,7 @@ class CfgToolshelfSection:
         labels["action_section_id"] = "Section ID"
         labels["action_section_contents"] = "Actions"
         labels["action_section_btn_size"] = "Button Width / Height"
+        labels["action_section_alignment"] = "Horizontal / Vertical Alignment"
         labels["action_section_icon_size"] = "Icon Size"
 
         labels["special_item_type"] = "Component Type"
@@ -250,7 +252,7 @@ class CfgToolshelfSection:
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
         row["action_section_btn_size"] = {"items": ["action_section_btn_width", "action_section_btn_height"]}
-        row["section_alignment"] = {"items": ["section_alignment_x","section_alignment_y"]}
+        row["action_section_alignment"] = {"items": ["action_alignment_x","action_alignment_y"]}
         row["size"] = {"items": ["size_x","size_y"]}
         row["min_size"] = {"items": ["min_size_x","min_size_y"]}
         row["max_size"] = {"items": ["max_size_x","max_size_y"]}
@@ -267,8 +269,6 @@ class CfgToolshelfSection:
         restrictions["min_size_y"] = {"type": "range", "min": 0}
         restrictions["max_size_x"] = {"type": "range", "min": 0}
         restrictions["max_size_y"] = {"type": "range", "min": 0}
-        restrictions["section_alignment_x"] = {"type": "values", "entries": self.SectionAlignmentX.values()}
-        restrictions["section_alignment_y"] = {"type": "values", "entries": self.SectionAlignmentY.values()}
         restrictions["section_type"] = {"type": "values", "entries": self.SectionType.values()}
 
         restrictions["docker_id"] = {"type": "docker_selection"}
@@ -279,7 +279,8 @@ class CfgToolshelfSection:
         restrictions["action_section_display_mode"] = {"type": "values", "entries": self.ActionSectionDisplayMode.values()}
         restrictions["action_section_btn_width"] = {"type": "range", "min": 0}
         restrictions["action_section_btn_height"] = {"type": "range", "min": 0}
-
+        restrictions["action_alignment_x"] = {"type": "values", "entries": self.SectionAlignmentX.values()}
+        restrictions["action_alignment_y"] = {"type": "values", "entries": self.SectionAlignmentY.values()}
         restrictions["action_section_icon_size"] = {"type": "range", "min": 0}
 
         restrictions["special_item_type"] = {"type": "values", "entries": self.SpecialItemType.values()}

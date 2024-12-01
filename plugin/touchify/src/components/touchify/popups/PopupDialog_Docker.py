@@ -41,7 +41,6 @@ class PopupDialog_Docker(PopupDialog):
     def shutdownWidget(self):
         self.docker_panel.shutdownWidget()
         super().shutdownWidget()
-
     
     def closeEvent(self, event):
         super().closeEvent(event)

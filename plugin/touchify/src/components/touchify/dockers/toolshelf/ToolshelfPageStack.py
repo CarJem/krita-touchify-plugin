@@ -111,6 +111,16 @@ class ToolshelfPageStack(QStackedWidget):
             return self._panels[name]
         else:
             return None
+        
+    def deactivateWidget(self):
+        children = self.findChildren(DockerContainer)
+        for child in children:
+            child.unloadWidget()
+
+    def activateWidget(self):
+        children = self.findChildren(DockerContainer)
+        for child in children:
+            child.loadWidget()
     
     def shutdownWidget(self):
         super().currentChanged.disconnect(self.onCurrentChanged)

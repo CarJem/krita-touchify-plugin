@@ -70,10 +70,6 @@ class PopupDialog_Toolshelf(PopupDialog):
         super().shutdownWidget()
     
     def closeEvent(self, event):
-        if self.mainWidget:
-            self.mainWidget.shutdownWidget()
-            self.mainWidget.deleteLater()
-            self.mainWidget = None
         super().closeEvent(event)
    
     def generateSize(self):

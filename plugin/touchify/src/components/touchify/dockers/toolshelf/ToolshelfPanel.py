@@ -6,11 +6,18 @@ from touchify.src.components.touchify.dockers.toolshelf.ToolshelfSectionGroup im
 from touchify.src.components.touchify.actions.TouchifyActionPanel import TouchifyActionPanel
 from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
 from touchify.src.cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
+from touchify.src.components.touchify.special.BrushBlendingSelector import BrushBlendingSelector
+from touchify.src.components.touchify.special.BrushFlowSlider import BrushFlowSlider
+from touchify.src.components.touchify.special.BrushOpacitySlider import BrushOpacitySlider
+from touchify.src.components.touchify.special.BrushRotationSlider import BrushRotationSlider
+from touchify.src.components.touchify.special.BrushSizeSlider import BrushSizeSlider
+from touchify.src.components.touchify.special.CanvasColorPicker import CanvasColorPicker
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfSpecialSection import ToolshelfSpecialSection
+from touchify.src.components.touchify.special.LayerBlendingSelector import LayerBlendingSelector
+from touchify.src.components.touchify.special.LayerLabelBox import LayerLabelBox
 from touchify.src.settings import TouchifyConfig
 from touchify.src.stylesheet import Stylesheet
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfSectionSplit import ToolshelfSectionSplit
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfLayoutWidget import ToolshelfLayoutWidget
 
 
 from krita import *
@@ -34,11 +41,6 @@ class ToolshelfPanel(QWidget):
 
         self.setAutoFillBackground(True)
 
-        self.shelfLayout = QVBoxLayout(self)
-        self.shelfLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.shelfLayout.setContentsMargins(0, 0, 0, 0)
-        self.shelfLayout.setSpacing(0)
-        self.setLayout(self.shelfLayout)
 
 
         self.tabType = data.tab_type
@@ -49,6 +51,7 @@ class ToolshelfPanel(QWidget):
         self.dockerWidgets: dict[any, DockerContainer] = {}
         self.size = None
         self.panelProperties = data
+        self._initLayout()
         self._initPageActions()
         self._initSections()
 
@@ -58,6 +61,13 @@ class ToolshelfPanel(QWidget):
     
 
     #region Init
+
+    def _initLayout(self):
+        self.shelfLayout = QVBoxLayout(self)
+        self.shelfLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.shelfLayout.setContentsMargins(0, 0, 0, 0)
+        self.shelfLayout.setSpacing(0)
+        self.setLayout(self.shelfLayout)
 
     def _initPageActions(self):
         actionsList = self.panelProperties.actions
@@ -81,18 +91,58 @@ class ToolshelfPanel(QWidget):
         self.bgWidget.setAutoFillBackground(True)
         self.shelfLayout.addWidget(self.bgWidget)
 
-        self.splitter = ToolshelfSectionSplit(Qt.Orientation.Vertical)
-        self.bgWidget.layout().addWidget(self.splitter)
-
-
         data = self.panelProperties
         
         if data.size_x != 0 and data.size_y != 0:
             size = [data.size_x, data.size_y]
             self.setSizeHint(size)
 
+        if data.min_size_x != 0: self.setMinimumWidth(data.min_size_x)
+        if data.min_size_y != 0: self.setMinimumHeight(data.min_size_y)
+        if data.max_size_x != 0: self.setMaximumWidth(data.max_size_x)
+        if data.max_size_y != 0: self.setMaximumHeight(data.max_size_y)
+
+        widget_groups, rows, columns = self._createSectionWidgets()
+        self.splitter = ToolshelfLayoutWidget(Qt.Orientation.Vertical, columns, rows, "root")
+        self.bgWidget.layout().addWidget(self.splitter)
+
+
+        for row_key in sorted(widget_groups.keys()):
+            row_length = len(widget_groups[row_key].keys())
+            row_items = [widget_groups[row_key][ix] for ix in sorted(widget_groups[row_key].keys())]
+
+            iy = sorted(widget_groups.keys()).index(row_key)
+
+            if row_length == 1:
+                self._initSectionCell(0, iy, self.splitter, row_items[0])
+            else:
+                row_splitter = ToolshelfLayoutWidget(Qt.Orientation.Horizontal, row_length, 1, f"sub_root_{iy}")
+                row_splitter.setAutoFillBackground(True)
+                for ix in range(0, row_length):
+                    self._initSectionCell(ix, 0, row_splitter, row_items[ix])
+                self.splitter.addWidget(row_splitter, 0, iy)
+
+    def _initSectionCell(self, x: int, y: int, splitter: ToolshelfLayoutWidget, widgets: list[QWidget]):
+        if len(widgets) == 1:
+            splitter.addWidget(widgets[0], x, y)
+        else:
+            tabBar = ToolshelfSectionGroup(self)
+            for item in widgets:
+                if isinstance(item, DockerContainer): tabBar.addTab(item, self.docker_manager.dockerWindowTitle(item.docker_id))
+                elif isinstance(item, TouchifyActionPanel): tabBar.addTab(item, item.title)
+                elif isinstance(item, ToolshelfPanel): tabBar.addTab(item, item.title())
+                else: tabBar.addTab(item, "Unknown")
+            tabBar.setCurrentIndex(0)
+            splitter.addWidget(tabBar, x, y)
+    
+    #endregion
+
+    #region Section Construction
+
+
+    def _createSectionWidgets(self):
         widget_groups: Mapping[int, Mapping[int, list[QWidget]]] = {}
-        
+
         for actionInfo in self.panelProperties.sections:     
             actionInfo: CfgToolshelfSection
 
@@ -115,35 +165,16 @@ class ToolshelfPanel(QWidget):
                 widget_groups[actionInfo.panel_y][actionInfo.panel_x] = []
 
             widget_groups[actionInfo.panel_y][actionInfo.panel_x].append(actionWidget)
+        
+        columns = len(widget_groups.keys())
+        rows = 0
 
-        for panel_y in sorted(widget_groups.keys()):
-            columns = widget_groups[panel_y].keys()
-            if len(columns) == 1:
-                panel_x = list(columns)[0]
-                self._initSectionCell(panel_x, panel_y, self.splitter, widget_groups)
-            else:
-                subSplitter = ToolshelfSectionSplit(Qt.Orientation.Horizontal)
-                subSplitter.setAutoFillBackground(True)
-                for panel_x in sorted(columns):
-                    self._initSectionCell(panel_x, panel_y, subSplitter, widget_groups)
-                self.splitter.addWidget(subSplitter)
-
-    def _initSectionCell(self, x: int, y: int, splitter: QSplitter, widget_groups: Mapping[int, Mapping[int, list[QWidget]]]):
-        if len(widget_groups[y][x]) == 1:
-            splitter.addWidget(widget_groups[y][x][0])
-        else:
-            tabBar = ToolshelfSectionGroup(self)
-            for item in widget_groups[y][x]:
-                if isinstance(item, DockerContainer): tabBar.addTab(item, self.docker_manager.dockerWindowTitle(item.docker_id))
-                elif isinstance(item, TouchifyActionPanel): tabBar.addTab(item, item.title)
-                elif isinstance(item, ToolshelfPanel): tabBar.addTab(item, item.title())
-                else: tabBar.addTab(item, "Unknown")
-            tabBar.setCurrentIndex(0)
-            splitter.addWidget(tabBar)
-    
-    #endregion
-
-    #region Section Construction
+        for i in widget_groups.keys():
+            size = len(widget_groups[i])
+            if size > rows:
+                rows = size
+        
+        return widget_groups, columns, rows
 
     def _createActionSection(self, actionInfo: CfgToolshelfSection):
         
@@ -177,9 +208,9 @@ class ToolshelfPanel(QWidget):
         if actionInfo.hasDisplayName(): actionWidget.setTitle(actionInfo.display_name)
         else: actionWidget.setTitle(actionInfo.action_section_id)
 
-        if actionInfo.section_alignment_x != CfgToolshelfSection.SectionAlignmentX.Nothing or actionInfo.section_alignment_y != CfgToolshelfSection.SectionAlignmentY.Nothing:
-            align_x = actionInfo.section_alignment_x
-            align_y = actionInfo.section_alignment_y
+        if actionInfo.action_section_alignment_x != CfgToolshelfSection.SectionAlignmentX.Nothing or actionInfo.action_section_alignment_y != CfgToolshelfSection.SectionAlignmentY.Nothing:
+            align_x = actionInfo.action_section_alignment_x
+            align_y = actionInfo.action_section_alignment_y
 
             alignment_x = Qt.AlignmentFlag.AlignLeft
             alignment_y = Qt.AlignmentFlag.AlignTop
@@ -238,10 +269,30 @@ class ToolshelfPanel(QWidget):
         return actionWidget
     
     def _createSpecialSection(self, actionInfo: CfgToolshelfSection):
-        actionWidget = ToolshelfSpecialSection(self, actionInfo, self.actions_manager)
-            
-        if actionInfo.size_x != 0 and actionInfo.size_y != 0: 
-            actionWidget.setSizeHint([actionInfo.size_x, actionInfo.size_y])
+        if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushBlendingMode:
+            actionWidget = BrushBlendingSelector(self)
+        if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.LayerBlendingMode:
+            actionWidget = LayerBlendingSelector(self)
+        if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.LayerLabelBox:
+            actionWidget = LayerLabelBox(self)
+        if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushSizeSlider:
+            actionWidget = BrushSizeSlider(self)
+            actionWidget.setSourceWindow(self.actions_manager.appEngine.windowSource)
+        if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushOpacitySlider:
+            actionWidget = BrushOpacitySlider(self)
+            actionWidget.setSourceWindow(self.actions_manager.appEngine.windowSource)
+        if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushFlowSlider:
+            actionWidget = BrushFlowSlider(self)
+            actionWidget.setSourceWindow(self.actions_manager.appEngine.windowSource)
+        if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushRotationSlider:
+            actionWidget = BrushRotationSlider(self)
+            actionWidget.setSourceWindow(self.actions_manager.appEngine.windowSource)
+        if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BackgroundColorBox:
+            actionWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Background)
+            actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.ForegroundColorBox:
+            actionWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Foreground)
+            actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
         if actionInfo.min_size_x != 0: actionWidget.setMinimumWidth(actionInfo.min_size_x)
         if actionInfo.min_size_y != 0: actionWidget.setMinimumHeight(actionInfo.min_size_y)

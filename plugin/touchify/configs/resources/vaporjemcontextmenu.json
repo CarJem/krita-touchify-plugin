@@ -38,7 +38,7 @@
                                 "subpanel_data": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 },
                                 "action_section_contents": [
                                     {
@@ -67,7 +67,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -101,7 +101,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -135,7 +135,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -170,7 +170,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -184,7 +184,7 @@
                                     }
                                 ],
                                 "action_section_id": "Panel",
-                                "json_version": 3,
+                                "json_version": 4,
                                 "display_name": "Primary Actions",
                                 "min_size_x": 0,
                                 "min_size_y": 0,
@@ -205,18 +205,18 @@
                                 "action_section_btn_height": 30,
                                 "action_section_icon_size": 0,
                                 "special_item_type": "none",
-                                "section_alignment_x": "none",
-                                "section_alignment_y": "none"
+                                "action_section_alignment_x": "none",
+                                "action_section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 },
                                 "action_section_contents": [],
                                 "action_section_id": "Panel",
-                                "json_version": 3,
+                                "json_version": 4,
                                 "display_name": "",
                                 "min_size_x": 0,
                                 "min_size_y": 0,
@@ -237,8 +237,8 @@
                                 "action_section_btn_height": 0,
                                 "action_section_icon_size": 0,
                                 "special_item_type": "brush_blending_options",
-                                "section_alignment_x": "none",
-                                "section_alignment_y": "none"
+                                "action_section_alignment_x": "none",
+                                "action_section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
@@ -247,11 +247,11 @@
                                             "subpanel_data": {
                                                 "sections": [],
                                                 "actions": [],
-                                                "json_version": 1
+                                                "json_version": 2
                                             },
                                             "action_section_contents": [],
                                             "action_section_id": "Panel",
-                                            "json_version": 3,
+                                            "json_version": 4,
                                             "display_name": "",
                                             "min_size_x": 0,
                                             "min_size_y": 0,
@@ -272,14 +272,14 @@
                                             "action_section_btn_height": 0,
                                             "action_section_icon_size": 0,
                                             "special_item_type": "foreground_color_box",
-                                            "section_alignment_x": "none",
-                                            "section_alignment_y": "none"
+                                            "action_section_alignment_x": "none",
+                                            "action_section_alignment_y": "none"
                                         },
                                         {
                                             "subpanel_data": {
                                                 "sections": [],
                                                 "actions": [],
-                                                "json_version": 1
+                                                "json_version": 2
                                             },
                                             "action_section_contents": [
                                                 {
@@ -309,7 +309,7 @@
                                                                     "homepage": {
                                                                         "sections": [],
                                                                         "actions": [],
-                                                                        "json_version": 1
+                                                                        "json_version": 2
                                                                     }
                                                                 },
                                                                 "actions_items": [],
@@ -323,7 +323,7 @@
                                                 }
                                             ],
                                             "action_section_id": "Panel",
-                                            "json_version": 3,
+                                            "json_version": 4,
                                             "display_name": "",
                                             "min_size_x": 0,
                                             "min_size_y": 0,
@@ -344,18 +344,18 @@
                                             "action_section_btn_height": 30,
                                             "action_section_icon_size": 0,
                                             "special_item_type": "foreground_color_box",
-                                            "section_alignment_x": "none",
-                                            "section_alignment_y": "none"
+                                            "action_section_alignment_x": "none",
+                                            "action_section_alignment_y": "none"
                                         },
                                         {
                                             "subpanel_data": {
                                                 "sections": [],
                                                 "actions": [],
-                                                "json_version": 1
+                                                "json_version": 2
                                             },
                                             "action_section_contents": [],
                                             "action_section_id": "Panel",
-                                            "json_version": 3,
+                                            "json_version": 4,
                                             "display_name": "",
                                             "min_size_x": 0,
                                             "min_size_y": 0,
@@ -376,14 +376,14 @@
                                             "action_section_btn_height": 0,
                                             "action_section_icon_size": 0,
                                             "special_item_type": "background_color_box",
-                                            "section_alignment_x": "none",
-                                            "section_alignment_y": "none"
+                                            "action_section_alignment_x": "none",
+                                            "action_section_alignment_y": "none"
                                         },
                                         {
                                             "subpanel_data": {
                                                 "sections": [],
                                                 "actions": [],
-                                                "json_version": 1
+                                                "json_version": 2
                                             },
                                             "action_section_contents": [
                                                 {
@@ -413,7 +413,7 @@
                                                                     "homepage": {
                                                                         "sections": [],
                                                                         "actions": [],
-                                                                        "json_version": 1
+                                                                        "json_version": 2
                                                                     }
                                                                 },
                                                                 "actions_items": [],
@@ -427,7 +427,7 @@
                                                 }
                                             ],
                                             "action_section_id": "Panel",
-                                            "json_version": 3,
+                                            "json_version": 4,
                                             "display_name": "",
                                             "min_size_x": 0,
                                             "min_size_y": 0,
@@ -448,28 +448,28 @@
                                             "action_section_btn_height": 30,
                                             "action_section_icon_size": 0,
                                             "special_item_type": "foreground_color_box",
-                                            "section_alignment_x": "none",
-                                            "section_alignment_y": "none"
+                                            "action_section_alignment_x": "none",
+                                            "action_section_alignment_y": "none"
                                         }
                                     ],
                                     "actions": [],
                                     "action_height": 10,
-                                    "json_version": 1,
+                                    "json_version": 2,
                                     "id": "",
                                     "display_name": "",
                                     "icon": "",
-                                    "row": 0,
                                     "size_x": 0,
                                     "size_y": 0,
                                     "min_size_x": 0,
                                     "min_size_y": 0,
                                     "max_size_x": 0,
                                     "max_size_y": 0,
-                                    "tab_type": "buttons"
+                                    "tab_type": "buttons",
+                                    "toolshelf_tab_row": 0
                                 },
                                 "action_section_contents": [],
                                 "action_section_id": "Panel",
-                                "json_version": 3,
+                                "json_version": 4,
                                 "display_name": "Color Picker",
                                 "min_size_x": 0,
                                 "min_size_y": 30,
@@ -490,8 +490,8 @@
                                 "action_section_btn_height": 0,
                                 "action_section_icon_size": 0,
                                 "special_item_type": "none",
-                                "section_alignment_x": "none",
-                                "section_alignment_y": "none"
+                                "action_section_alignment_x": "none",
+                                "action_section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
@@ -500,11 +500,11 @@
                                             "subpanel_data": {
                                                 "sections": [],
                                                 "actions": [],
-                                                "json_version": 1
+                                                "json_version": 2
                                             },
                                             "action_section_contents": [],
                                             "action_section_id": "Panel",
-                                            "json_version": 3,
+                                            "json_version": 4,
                                             "display_name": "",
                                             "min_size_x": 0,
                                             "min_size_y": 0,
@@ -525,18 +525,18 @@
                                             "special_item_type": "brush_size_slider",
                                             "ignore_scaling": false,
                                             "section_type": "special",
-                                            "section_alignment_x": "none",
-                                            "section_alignment_y": "none"
+                                            "action_section_alignment_x": "none",
+                                            "action_section_alignment_y": "none"
                                         },
                                         {
                                             "subpanel_data": {
                                                 "sections": [],
                                                 "actions": [],
-                                                "json_version": 1
+                                                "json_version": 2
                                             },
                                             "action_section_contents": [],
                                             "action_section_id": "Panel",
-                                            "json_version": 3,
+                                            "json_version": 4,
                                             "display_name": "",
                                             "min_size_x": 0,
                                             "min_size_y": 0,
@@ -557,13 +557,13 @@
                                             "special_item_type": "brush_opacity_slider",
                                             "ignore_scaling": false,
                                             "section_type": "special",
-                                            "section_alignment_x": "none",
-                                            "section_alignment_y": "none"
+                                            "action_section_alignment_x": "none",
+                                            "action_section_alignment_y": "none"
                                         }
                                     ],
                                     "actions": [],
                                     "action_height": 10,
-                                    "json_version": 1,
+                                    "json_version": 2,
                                     "id": "",
                                     "display_name": "",
                                     "icon": "",
@@ -571,14 +571,14 @@
                                     "max_size_y": 0,
                                     "min_size_x": 0,
                                     "min_size_y": 0,
-                                    "row": 0,
                                     "size_x": 0,
                                     "size_y": 0,
-                                    "tab_type": "buttons"
+                                    "tab_type": "buttons",
+                                    "toolshelf_tab_row": 0
                                 },
                                 "action_section_contents": [],
                                 "action_section_id": "Panel",
-                                "json_version": 3,
+                                "json_version": 4,
                                 "display_name": "Brush Sliders",
                                 "min_size_x": 0,
                                 "min_size_y": 60,
@@ -599,14 +599,14 @@
                                 "special_item_type": "none",
                                 "ignore_scaling": false,
                                 "section_type": "subpanel",
-                                "section_alignment_x": "none",
-                                "section_alignment_y": "none"
+                                "action_section_alignment_x": "none",
+                                "action_section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 },
                                 "action_section_contents": [
                                     {
@@ -635,7 +635,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -688,7 +688,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -716,7 +716,7 @@
                                         "row_name": "Actions Row"
                                     }
                                 ],
-                                "json_version": 3,
+                                "json_version": 4,
                                 "section_type": "actions",
                                 "min_size_x": 30,
                                 "min_size_y": 60,
@@ -738,14 +738,14 @@
                                 "action_section_id": "Brush Options",
                                 "display_name": "",
                                 "ignore_scaling": true,
-                                "section_alignment_x": "none",
-                                "section_alignment_y": "none"
+                                "action_section_alignment_x": "none",
+                                "action_section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 },
                                 "action_section_contents": [
                                     {
@@ -775,7 +775,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -827,7 +827,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -879,7 +879,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -911,7 +911,7 @@
                                     }
                                 ],
                                 "action_section_id": "Panel",
-                                "json_version": 3,
+                                "json_version": 4,
                                 "display_name": "Quick Actions",
                                 "min_size_x": 0,
                                 "min_size_y": 0,
@@ -921,8 +921,6 @@
                                 "size_y": 0,
                                 "panel_x": 0,
                                 "panel_y": 4,
-                                "section_alignment_x": "none",
-                                "section_alignment_y": "none",
                                 "ignore_scaling": false,
                                 "section_type": "actions",
                                 "docker_id": "",
@@ -933,7 +931,9 @@
                                 "action_section_btn_width": 0,
                                 "action_section_btn_height": 30,
                                 "action_section_icon_size": 0,
-                                "special_item_type": "none"
+                                "special_item_type": "none",
+                                "action_section_alignment_x": "none",
+                                "action_section_alignment_y": "none"
                             }
                         ],
                         "actions": [
@@ -964,7 +964,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -1004,11 +1004,11 @@
                                                             "subpanel_data": {
                                                                 "sections": [],
                                                                 "actions": [],
-                                                                "json_version": 1
+                                                                "json_version": 2
                                                             },
                                                             "action_section_contents": [],
                                                             "action_section_id": "Panel",
-                                                            "json_version": 3,
+                                                            "json_version": 4,
                                                             "display_name": "",
                                                             "min_size_x": 0,
                                                             "min_size_y": 0,
@@ -1029,18 +1029,18 @@
                                                             "action_section_icon_size": 0,
                                                             "special_item_type": "none",
                                                             "ignore_scaling": false,
-                                                            "section_alignment_x": "none",
-                                                            "section_alignment_y": "none"
+                                                            "action_section_alignment_x": "none",
+                                                            "action_section_alignment_y": "none"
                                                         },
                                                         {
                                                             "subpanel_data": {
                                                                 "sections": [],
                                                                 "actions": [],
-                                                                "json_version": 1
+                                                                "json_version": 2
                                                             },
                                                             "action_section_contents": [],
                                                             "action_section_id": "Panel",
-                                                            "json_version": 3,
+                                                            "json_version": 4,
                                                             "display_name": "",
                                                             "min_size_x": 0,
                                                             "min_size_y": 300,
@@ -1061,24 +1061,24 @@
                                                             "action_section_icon_size": 0,
                                                             "special_item_type": "none",
                                                             "ignore_scaling": false,
-                                                            "section_alignment_x": "none",
-                                                            "section_alignment_y": "none"
+                                                            "action_section_alignment_x": "none",
+                                                            "action_section_alignment_y": "none"
                                                         }
                                                     ],
                                                     "actions": [],
                                                     "tab_type": "buttons",
                                                     "action_height": 16,
-                                                    "json_version": 1,
+                                                    "json_version": 2,
                                                     "id": "ROOT",
                                                     "display_name": "",
                                                     "icon": "",
-                                                    "row": 0,
                                                     "size_x": 0,
                                                     "size_y": 0,
                                                     "min_size_x": 0,
                                                     "min_size_y": 0,
                                                     "max_size_x": 0,
-                                                    "max_size_y": 0
+                                                    "max_size_y": 0,
+                                                    "toolshelf_tab_row": 0
                                                 }
                                             },
                                             "actions_items": [],
@@ -1131,7 +1131,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -1183,7 +1183,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -1235,7 +1235,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -1287,7 +1287,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -1339,7 +1339,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -1380,7 +1380,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1414,7 +1414,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1448,7 +1448,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1482,7 +1482,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1516,7 +1516,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1550,7 +1550,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1584,7 +1584,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1618,7 +1618,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1652,7 +1652,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1686,7 +1686,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1720,7 +1720,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1753,7 +1753,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -1789,7 +1789,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1823,7 +1823,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1857,7 +1857,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1891,7 +1891,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1925,7 +1925,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1959,7 +1959,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -1993,7 +1993,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2027,7 +2027,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2061,7 +2061,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2095,7 +2095,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2129,7 +2129,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2163,7 +2163,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2197,7 +2197,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2231,7 +2231,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2265,7 +2265,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2299,7 +2299,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2333,7 +2333,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2367,7 +2367,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2401,7 +2401,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2435,7 +2435,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2469,7 +2469,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2505,7 +2505,7 @@
                                                                 "homepage": {
                                                                     "sections": [],
                                                                     "actions": [],
-                                                                    "json_version": 1
+                                                                    "json_version": 2
                                                                 }
                                                             },
                                                             "actions_items": [],
@@ -2539,7 +2539,7 @@
                                                                 "homepage": {
                                                                     "sections": [],
                                                                     "actions": [],
-                                                                    "json_version": 1
+                                                                    "json_version": 2
                                                                 }
                                                             },
                                                             "actions_items": [],
@@ -2573,7 +2573,7 @@
                                                                 "homepage": {
                                                                     "sections": [],
                                                                     "actions": [],
-                                                                    "json_version": 1
+                                                                    "json_version": 2
                                                                 }
                                                             },
                                                             "actions_items": [],
@@ -2607,7 +2607,7 @@
                                                                 "homepage": {
                                                                     "sections": [],
                                                                     "actions": [],
-                                                                    "json_version": 1
+                                                                    "json_version": 2
                                                                 }
                                                             },
                                                             "actions_items": [],
@@ -2641,7 +2641,7 @@
                                                                 "homepage": {
                                                                     "sections": [],
                                                                     "actions": [],
-                                                                    "json_version": 1
+                                                                    "json_version": 2
                                                                 }
                                                             },
                                                             "actions_items": [],
@@ -2675,7 +2675,7 @@
                                                                 "homepage": {
                                                                     "sections": [],
                                                                     "actions": [],
-                                                                    "json_version": 1
+                                                                    "json_version": 2
                                                                 }
                                                             },
                                                             "actions_items": [],
@@ -2709,7 +2709,7 @@
                                                                 "homepage": {
                                                                     "sections": [],
                                                                     "actions": [],
-                                                                    "json_version": 1
+                                                                    "json_version": 2
                                                                 }
                                                             },
                                                             "actions_items": [],
@@ -2743,7 +2743,7 @@
                                                                 "homepage": {
                                                                     "sections": [],
                                                                     "actions": [],
-                                                                    "json_version": 1
+                                                                    "json_version": 2
                                                                 }
                                                             },
                                                             "actions_items": [],
@@ -2776,7 +2776,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2810,7 +2810,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2844,7 +2844,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2878,7 +2878,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2912,7 +2912,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2946,7 +2946,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -2979,7 +2979,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -3013,7 +3013,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -3047,7 +3047,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -3081,7 +3081,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -3120,7 +3120,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -3154,7 +3154,7 @@
                                                 "homepage": {
                                                     "sections": [],
                                                     "actions": [],
-                                                    "json_version": 1
+                                                    "json_version": 2
                                                 }
                                             },
                                             "actions_items": [],
@@ -3168,18 +3168,18 @@
                             }
                         ],
                         "action_height": 32,
-                        "json_version": 1,
+                        "json_version": 2,
                         "id": "ROOT",
                         "display_name": "",
                         "icon": "",
-                        "row": 0,
                         "size_x": 0,
                         "size_y": 0,
                         "min_size_x": 0,
                         "min_size_y": 0,
                         "max_size_x": 0,
                         "max_size_y": 0,
-                        "tab_type": "buttons"
+                        "tab_type": "buttons",
+                        "toolshelf_tab_row": 0
                     }
                 },
                 "actions_items": [],
@@ -3198,7 +3198,7 @@
                 "type": "toolshelf",
                 "window_title": "VaporJemContextMenu",
                 "window_type": "popup",
-                "closing_method": "canvas_focus",
+                "closing_method": "default",
                 "actions_opacity": 1.0,
                 "popup_position_x": "center",
                 "popup_position_y": "start"

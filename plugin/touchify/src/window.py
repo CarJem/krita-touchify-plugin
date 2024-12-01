@@ -3,6 +3,7 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
 
+from touchify.src.features.touchify_dev import TouchifyDev
 from touchify.src.variables import *
 from touchify.src.docker_manager import DockerManager
 from touchify.src.action_manager import ActionManager
@@ -16,7 +17,7 @@ from touchify.src.features.touchify_actions import TouchifyActions
 
 from touchify.src.ext.PyQtExtensions import PyQtExtensions
 
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDocker import ToolshelfDocker
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDockWidgetKrita import ToolshelfDockWidgetKrita
 from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
 
 WINDOW_ID: int = 0
@@ -36,6 +37,7 @@ class TouchifyWindow(QObject):
         self.touchify_looks = TouchifyLooks(self)
         self.touchify_canvas = TouchifyCanvas(self)
         self.touchify_hotkeys = TouchifyHotkeys(self)
+        self.touchify_dev = TouchifyDev(self)
         
         self.action_management = ActionManager(self)
         
@@ -99,11 +101,12 @@ class TouchifyWindow(QObject):
         actions = self.windowSource.qwindow().findChildren(QAction)
         for act in actions:
             if act.text().find("Selection") != -1:
-                print("Found IT!!!")
+                #print("Found IT!!!")
+                pass
 
     def eventFilter(self, source: QObject, event: QEvent) -> bool:
         if (event.type() == QEvent.Type.ContextMenu):
-            print("Context Test")
+            #print("Context Test")
             QTimer.singleShot(1000, self.event_findContextMenus)
 
         return super().eventFilter(source, event)
@@ -123,6 +126,7 @@ class TouchifyWindow(QObject):
 
         self.touchify_hotkeys.createActions(window, subItemPath)
         self.touchify_actions.createActions(window, subItemPath)  
+        self.touchify_dev.createActions(window, subItemPath)
 
 
         self.mainMenuBar.addSection("Touchify")
@@ -150,13 +154,14 @@ class TouchifyWindow(QObject):
 
         self.touchify_hotkeys.buildMenu(self.mainMenuBar)
         self.touchify_actions.buildMenu(self.mainMenuBar)
+        self.touchify_dev.buildMenu(self.mainMenuBar)
             
     def setupAddons(self, window: Window):   
 
         def setupDockers():
             for docker in self.windowSource.dockers():
                 if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER:
-                    toolshelfDocker: ToolshelfDocker = docker
+                    toolshelfDocker: ToolshelfDockWidgetKrita = docker
                     toolshelfDocker.setup(self)
                 elif docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLBOX:
                     toolboxDocker: ToolboxDocker = docker
@@ -216,7 +221,7 @@ class TouchifyWindow(QObject):
     def getToolshelfDocker(self):
         for docker in self.windowSource.dockers():
             if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER:
-                toolshelfDocker: ToolshelfDocker = docker
+                toolshelfDocker: ToolshelfDockWidgetKrita = docker
                 return toolshelfDocker
         return None
     

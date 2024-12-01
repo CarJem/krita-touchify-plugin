@@ -21,7 +21,6 @@ class CfgTouchifyActionPopup:
 
     class ClosingMethod(StrEnum):
         Default = "default"
-        CanvasFocus = "canvas_focus"
         Deactivation = "deactivation"
 
     class PopupPosition(StrEnum):

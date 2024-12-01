@@ -16,7 +16,7 @@ from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import T
 
 DOCKER_TITLE = 'Touchify Toolshelf'
 
-class ToolshelfDocker(DockWidget):
+class ToolshelfDockWidgetKrita(DockWidget):
 
     def __init__(self): 
         super().__init__()

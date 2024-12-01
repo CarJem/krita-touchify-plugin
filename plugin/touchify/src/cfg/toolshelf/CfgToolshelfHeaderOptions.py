@@ -26,6 +26,7 @@ class CfgToolshelfHeaderOptions:
     header_size: int = 16
 
     default_to_resize_mode: bool = False
+    default_to_pinned: bool = False
 
 
     position: str = "top"
@@ -45,20 +46,22 @@ class CfgToolshelfHeaderOptions:
 
     def propertygrid_sorted(self):
         return [
+            "default_to_resize_mode",
+            "default_to_pinned",
             "button_size",
             "header_size",
-            "default_to_resize_mode",
             "position",
+            "stack_actions",
             "stack_preview",
             "stack_alignment",
-            "stack_actions"
         ]
 
     def propertygrid_labels(self):
         labels = {}
         labels["button_size"] = "Button Size"
-        labels["header_size"] = "Button Size"
-        labels["default_to_resize_mode"] = "Default to Resize Mode"
+        labels["header_size"] = "Header Size"
+        labels["default_to_resize_mode"] = "Resizable by Default"
+        labels["default_to_pinned"] = "Pinned by Default"
         labels["position"] = "Header Position"
         labels["stack_preview"] = "Stack Preview"
         labels["stack_alignment"] = "Stack Alignment"

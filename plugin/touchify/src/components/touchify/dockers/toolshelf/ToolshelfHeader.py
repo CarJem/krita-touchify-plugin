@@ -106,7 +106,7 @@ class ToolshelfHeader(QWidget):
 
 
             homeProps = CfgToolshelfPanel()
-            homeProps.row = 0
+            homeProps.toolshelf_tab_row = 0
             homeProps.id = "ROOT"
             homeProps.icon = "material:home"
             self.homeButton = self.createTab(homeProps, self.parent_header.openRootPage, "Home")
@@ -171,10 +171,10 @@ class ToolshelfHeader(QWidget):
 
             self._buttons[actual_id] = btn
 
-            if properties.row not in self._rows:
-                self.createRow(properties.row)
+            if properties.toolshelf_tab_row not in self._rows:
+                self.createRow(properties.toolshelf_tab_row)
 
-            self._rows[properties.row].layout().addWidget(btn)
+            self._rows[properties.toolshelf_tab_row].layout().addWidget(btn)
 
             if self.orientation == Qt.Orientation.Vertical:
                 btn.setMinimumHeight(self.tab_size)

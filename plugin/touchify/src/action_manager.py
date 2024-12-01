@@ -71,7 +71,6 @@ class ActionManager(QObject):
                 self.action_trigger(data)
             
     def createButton(self, parent: QWidget, data: CfgTouchifyAction):
-
         if data.variant == CfgTouchifyAction.Variants.Action:
             if data.action_id and data.action_id in self.registeredActions:
                 data = self.registeredActionsData[data.action_id]
@@ -95,6 +94,29 @@ class ActionManager(QObject):
 
         return result
     
+    def createMenuItem(self, parent: TouchifyActionMenu, data: CfgTouchifyAction):
+        if data.variant == CfgTouchifyAction.Variants.Action:
+            if data.action_id and data.action_id in self.registeredActions:
+                data = self.registeredActionsData[data.action_id]
+
+        match data.variant:
+            case CfgTouchifyAction.Variants.Menu:
+                actual_menu = TouchifyActionMenu(data, parent, self)
+                actual_menu.setTitle(data.text)
+                parent.addMenu(actual_menu)
+            case CfgTouchifyAction.Variants.Action:
+                if data.action_id in CommonActions.EXPANDING_SPACERS:
+                    actual_action = QAction(parent)
+                    actual_action.setSeparator(True)
+                else:
+                    actual_action = parent.krita_instance.action(data.action_id)
+                if actual_action: parent.addAction(actual_action)
+            case _:
+                actual_action = QAction(parent)
+                actual_action.setText(data.text)
+                actual_action.triggered.connect(lambda: self.runAction(data, actual_action))
+                if actual_action: parent.addAction(actual_action)
+
     def openPopup(self, data: CfgTouchifyActionPopup, _parent: QWidget = None):
         is_dead = True
         if data.id in self.active_popups:
@@ -145,6 +167,12 @@ class ActionManager(QObject):
         registered_ids: list[str] = []
         for data in self.registeredActions:
             registered_ids.append(data)
+
+        for popup_id in self.active_popups:
+            try:
+                self.active_popups[popup_id].deletePopup()
+            except:
+                pass
 
         cfg = TouchifyConfig.instance().getConfig()
         for action in cfg.actions_registry.actions_registry:
@@ -310,7 +338,7 @@ class ActionManager(QObject):
             parent: QWidget | None = btn.parentWidget()
             while parent:
                 if isinstance(parent, PopupDialog):
-                    parent.close()
+                    parent.closePopup()
                     return
                 else:
                     parent = parent.parentWidget()
@@ -401,7 +429,7 @@ class ActionManager(QObject):
         btn: TouchifyActionButton = self.button_main(None, act.text, False)   
         self.__setButtonDisplay(act, btn)
         
-        contextMenu = TouchifyActionMenu(act, btn)
+        contextMenu = TouchifyActionMenu(act, btn, self)
         btn.setMenu(contextMenu)
         btn.clicked.connect(btn.showMenu)
         return btn
@@ -475,7 +503,7 @@ class ActionManager(QObject):
     
     def action_menu(self, action: QAction, data: CfgTouchifyAction):
         _parent = self.__getActionSource(action)
-        contextMenu = TouchifyActionMenu(data, _parent)
+        contextMenu = TouchifyActionMenu(data, _parent, self)
         contextMenu.show()
             
     def action_brush(self, id):

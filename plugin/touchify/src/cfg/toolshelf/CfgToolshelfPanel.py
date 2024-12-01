@@ -1,7 +1,7 @@
+from touchify.src.cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
 from touchify.src.ext.types.StrEnum import StrEnum
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
-from touchify.src.cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
 from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
 from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 
@@ -15,20 +15,22 @@ class CfgToolshelfPanel:
     
     id: str = ""
     display_name: str = ""
+    actions: TypedList[CfgTouchifyActionCollection] = []
+    sections: TypedList[CfgToolshelfSection] = []
+    tab_type: str = "buttons"
+    action_height: int = 10
+
     icon: str = ""
+    toolshelf_tab_row: int = 0
+
     size_x: int = 0
     size_y: int = 0
     min_size_x: int = 0
     min_size_y: int = 0
     max_size_x: int = 0
     max_size_y: int = 0
-    row: int = 0
-    actions: TypedList[CfgTouchifyActionCollection] = []
-    sections: TypedList[CfgToolshelfSection] = []
-    tab_type: str = "buttons"
-    action_height: int = 10
 
-    json_version: int = 1
+    json_version: int = 2
 
     def __init__(self, **args) -> None:
         args = CfgBackwardsCompat.CfgToolshelfPanel(args)
@@ -90,7 +92,7 @@ class CfgToolshelfPanel:
         labels["size"] = "Panel Width / Height"
         labels["max_size"] = "Panel Max Width / Height"
         labels["min_size"] = "Panel Min Width / Height"
-        labels["row"] = "Tab Row"
+        labels["toolshelf_tab_row"] = "Toolshelf Tab Row"
         labels["tab_type"] = "Tab Type"
         labels["sections"] = "Sections"
         labels["actions"] = "Actions"
@@ -99,6 +101,7 @@ class CfgToolshelfPanel:
 
     def propertygrid_restrictions(self):
         restrictions = {}
+        restrictions["toolshelf_tab_row"] = {"type": "range", "min": 0}
         restrictions["size_x"] = {"type": "range", "min": 0}
         restrictions["size_y"] = {"type": "range", "min": 0}
         restrictions["max_size_x"] = {"type": "range", "min": 0}

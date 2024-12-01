@@ -19,7 +19,7 @@
                     "homepage": {
                         "sections": [],
                         "actions": [],
-                        "json_version": 1
+                        "json_version": 2
                     }
                 },
                 "id": "GridDockerPopup",
@@ -67,7 +67,7 @@
                     "homepage": {
                         "sections": [],
                         "actions": [],
-                        "json_version": 1
+                        "json_version": 2
                     }
                 },
                 "actions_items": [],
@@ -119,7 +119,7 @@
                     "homepage": {
                         "sections": [],
                         "actions": [],
-                        "json_version": 1
+                        "json_version": 2
                     }
                 },
                 "id": "quick-settings",
@@ -183,10 +183,10 @@
                                 "subpanel_data": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 },
                                 "action_section_contents": [],
-                                "json_version": 3,
+                                "json_version": 4,
                                 "section_type": "special",
                                 "min_size_x": 0,
                                 "min_size_y": 0,
@@ -208,14 +208,14 @@
                                 "action_section_id": "Layer Tag",
                                 "display_name": "",
                                 "ignore_scaling": false,
-                                "section_alignment_x": "none",
-                                "section_alignment_y": "none"
+                                "action_section_alignment_x": "none",
+                                "action_section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 },
                                 "action_section_contents": [
                                     {
@@ -246,7 +246,7 @@
                                                                 "homepage": {
                                                                     "sections": [],
                                                                     "actions": [],
-                                                                    "json_version": 1
+                                                                    "json_version": 2
                                                                 }
                                                             },
                                                             "actions_items": [],
@@ -278,7 +278,7 @@
                                                                 "homepage": {
                                                                     "sections": [],
                                                                     "actions": [],
-                                                                    "json_version": 1
+                                                                    "json_version": 2
                                                                 }
                                                             },
                                                             "actions_items": [],
@@ -309,7 +309,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -341,7 +341,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -373,7 +373,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -405,7 +405,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -437,7 +437,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -466,19 +466,19 @@
                                 "action_section_btn_height": 35,
                                 "action_section_icon_size": 0,
                                 "special_item_type": "none",
-                                "json_version": 3,
+                                "json_version": 4,
                                 "docker_id": "",
                                 "action_section_id": "Layer Options",
                                 "display_name": "",
                                 "ignore_scaling": false,
-                                "section_alignment_x": "none",
-                                "section_alignment_y": "none"
+                                "action_section_alignment_x": "none",
+                                "action_section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 },
                                 "action_section_contents": [],
                                 "panel_x": 0,
@@ -498,19 +498,19 @@
                                 "min_size_x": 0,
                                 "min_size_y": 0,
                                 "special_item_type": "none",
-                                "json_version": 3,
+                                "json_version": 4,
                                 "docker_id": "KisLayerBox",
                                 "action_section_id": "Panel",
                                 "display_name": "",
                                 "ignore_scaling": false,
-                                "section_alignment_x": "none",
-                                "section_alignment_y": "none"
+                                "action_section_alignment_x": "none",
+                                "action_section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 },
                                 "action_section_contents": [
                                     {
@@ -539,7 +539,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -618,7 +618,7 @@
                                                         "homepage": {
                                                             "sections": [],
                                                             "actions": [],
-                                                            "json_version": 1
+                                                            "json_version": 2
                                                         }
                                                     },
                                                     "actions_items": [],
@@ -661,13 +661,13 @@
                                 "action_section_btn_height": 32,
                                 "action_section_icon_size": 24,
                                 "special_item_type": "none",
-                                "json_version": 3,
+                                "json_version": 4,
                                 "docker_id": "",
                                 "action_section_id": "Layer Actions",
                                 "display_name": "",
                                 "ignore_scaling": true,
-                                "section_alignment_x": "none",
-                                "section_alignment_y": "none"
+                                "action_section_alignment_x": "none",
+                                "action_section_alignment_y": "none"
                             }
                         ],
                         "actions": [],
@@ -675,15 +675,15 @@
                         "icon": "all-layers",
                         "size_x": 0,
                         "size_y": 0,
-                        "row": 0,
                         "tab_type": "tabs",
                         "action_height": 10,
-                        "json_version": 1,
+                        "json_version": 2,
                         "display_name": "",
                         "max_size_x": 0,
                         "max_size_y": 0,
                         "min_size_x": 0,
-                        "min_size_y": 0
+                        "min_size_y": 0,
+                        "toolshelf_tab_row": 0
                     }
                 },
                 "actions_items": [],
@@ -742,11 +742,11 @@
                                 "subpanel_data": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 },
                                 "action_section_contents": [],
                                 "action_section_id": "Panel",
-                                "json_version": 3,
+                                "json_version": 4,
                                 "display_name": "",
                                 "min_size_x": 0,
                                 "min_size_y": 0,
@@ -767,18 +767,18 @@
                                 "action_section_icon_size": 0,
                                 "special_item_type": "none",
                                 "ignore_scaling": false,
-                                "section_alignment_x": "none",
-                                "section_alignment_y": "none"
+                                "action_section_alignment_x": "none",
+                                "action_section_alignment_y": "none"
                             },
                             {
                                 "subpanel_data": {
                                     "sections": [],
                                     "actions": [],
-                                    "json_version": 1
+                                    "json_version": 2
                                 },
                                 "action_section_contents": [],
                                 "action_section_id": "Panel",
-                                "json_version": 3,
+                                "json_version": 4,
                                 "display_name": "",
                                 "min_size_x": 0,
                                 "min_size_y": 300,
@@ -799,24 +799,24 @@
                                 "action_section_icon_size": 0,
                                 "special_item_type": "none",
                                 "ignore_scaling": false,
-                                "section_alignment_x": "none",
-                                "section_alignment_y": "none"
+                                "action_section_alignment_x": "none",
+                                "action_section_alignment_y": "none"
                             }
                         ],
                         "actions": [],
                         "tab_type": "buttons",
                         "action_height": 16,
-                        "json_version": 1,
+                        "json_version": 2,
                         "id": "ROOT",
                         "display_name": "",
                         "icon": "",
-                        "row": 0,
                         "size_x": 0,
                         "size_y": 0,
                         "min_size_x": 0,
                         "min_size_y": 0,
                         "max_size_x": 0,
-                        "max_size_y": 0
+                        "max_size_y": 0,
+                        "toolshelf_tab_row": 0
                     }
                 },
                 "actions_items": [],

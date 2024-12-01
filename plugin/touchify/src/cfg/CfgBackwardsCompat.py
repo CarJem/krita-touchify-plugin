@@ -1,6 +1,8 @@
 
 
 
+
+
 class Helpers:
     def setVersion(args: dict[str, any], ver: int):
         args["json_version"] = ver
@@ -26,7 +28,7 @@ class CfgBackwardsCompat:
         if Helpers.isLegacyConfig(args):
             Helpers.setVersion(args, 1)
 
-        print(args)
+        #print(args)
 
         return args
 
@@ -51,6 +53,9 @@ class CfgBackwardsCompat:
         if Helpers.isLegacyConfig(args):
             Helpers.changeVarName(args, "actionHeight", "action_height")
             Helpers.setVersion(args, 1)
+        if Helpers.getVersion(args) == 1:
+            Helpers.changeVarName(args, "row", "toolshelf_tab_row")
+            Helpers.setVersion(args, 2)
         return args
 
     def CfgToolshelf(args: dict[str, any]):
@@ -81,6 +86,10 @@ class CfgBackwardsCompat:
             Helpers.changeVarName(args, "action_section_alignment_x", "section_alignment_x")
             Helpers.changeVarName(args, "action_section_alignment_y", "section_alignment_y")
             Helpers.setVersion(args, 3)
+        if Helpers.getVersion(args) == 3:
+            Helpers.changeVarName(args, "section_alignment_x", "action_section_alignment_x")
+            Helpers.changeVarName(args, "section_alignment_y", "action_section_alignment_y")
+            Helpers.setVersion(args, 4)
         return args
 
     

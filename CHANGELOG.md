@@ -2,6 +2,8 @@
 ## Additions:
 - **Versioned JSON Configurations**
     > To reduce configuration breaking, data now may have a hidden version number that automatically will adapt older config versions to newer ones, as such no configurations have broken since alpha.0.0.5
+- **Touchify Resource Packs**
+    > Basically sharable registry files, that contain touchify actions definable by the user. I plan to have this replace the actions registry at some point, but your registry actions are fully compatibile with these resource packs.
 - **Addon System**
     > Addons allow for certain functionality of Touchify to be seperated depending on the needs of a user, these addons are seperated into multiple extensions and utilize Touchify as a dependency to run. Features moved to addons include:
     > - Color Options Docker

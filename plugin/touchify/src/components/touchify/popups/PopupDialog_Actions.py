@@ -50,7 +50,7 @@ class PopupDialog_Actions(PopupDialog):
 
     def onActionTriggered(self):
         if self.metadata.actions_close_on_click:
-            self.close()
+            self.closePopup()
 
     def generateActionsLayout(self):   
         layout = QVBoxLayout(self)

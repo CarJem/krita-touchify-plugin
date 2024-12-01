@@ -30,8 +30,9 @@ class NtToolshelf(NtWidgetPad):
         toolshelf_cfg = TouchifyConfig.instance().getActiveToolshelf(panel_index)
         if toolshelf_cfg:
             if toolshelf_cfg.header_options:
-                if toolshelf_cfg.header_options.default_to_resize_mode == True:
-                    self.toggleResizing()
+                if toolshelf_cfg.header_options.default_to_pinned == True:
+                    self.toggle()
+        
 
     def onUpdateViewRequested(self):
         self.canvas.updateView()

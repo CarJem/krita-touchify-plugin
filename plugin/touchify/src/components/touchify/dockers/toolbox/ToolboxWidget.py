@@ -485,7 +485,7 @@ class ToolboxWidget(QResizableWidget):
         actionName = self.sender().objectName() # get ToolButton name
         ac = Krita.instance().action(actionName) # Search this name in Krita's action list
 
-        print(actionName, ac)
+        #print(actionName, ac)
         if ac:
             ac.trigger() # trigger the action in Krita
 

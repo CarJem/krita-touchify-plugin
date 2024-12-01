@@ -34,15 +34,16 @@ class PopupDialog(QDockWidget):
         self.autoConceal = False
         self.time_since_opening = QTime()
 
-        self.closing_method = args.closing_method
+        self.parent_popup: PopupDialog | None = None
+        self.child_popup_focused: bool = False
 
-        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+        self.isVisibleAction = self.toggleViewAction()
+
+        self.closing_method = args.closing_method
         
         self.windowMode = self.metadata.window_type
         self.popupType = self.metadata.type
         self.window_allow_resize = True
-
-        qApp.installEventFilter(self)
 
     #region Helper Methods
 
@@ -164,7 +165,6 @@ class PopupDialog(QDockWidget):
     def generateMaxMinSize(self):
         return [0, 0, 0, 0]
 
-
     def generateSize(self):
         return [0, 0]
     
@@ -176,10 +176,33 @@ class PopupDialog(QDockWidget):
                 self.setMinimumSize(dialog_width, dialog_height)
                 if self.window_allow_resize == False:
                     self.resize(dialog_width, dialog_height)
-    
-    def triggerPopup(self, parent: QWidget | None):
+
+    def tryFindParentPopup(self, source: QWidget):
+        from touchify.src.components.touchify.popups.PopupDialog import PopupDialog
+        try:
+            widget = source.parent()
+            while (widget):
+                foo = widget
+                if isinstance(foo, PopupDialog):
+                    return foo
+                widget = widget.parent()
+            return None
+        except:
+            return None
+
+    def closePopup(self):
+        if self.child_popup_focused: return
+
+        if self.isVisibleAction.isChecked():
+            self.isVisibleAction.trigger()
+
+            if self.parent_popup:
+                self.parent_popup.child_popup_focused = False
+                self.parent_popup.activateWindow()
+
+    def triggerPopup(self, parent: QWidget = None):
         if self.isVisible():
-            self.close()
+            self.closePopup()
             if not self.windowMode == CfgTouchifyActionPopup.WindowType.Popup: 
                 return
         
@@ -187,6 +210,12 @@ class PopupDialog(QDockWidget):
         actual_y = 0
         dialog_width = 0
         dialog_height = 0
+
+        if parent != None:
+            result = self.tryFindParentPopup(parent)
+            if result != None:
+                self.parent_popup = result
+                self.parent_popup.child_popup_focused = True
         
         if parent == None:
             actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(QCursor.pos(), 0, 0, True)
@@ -204,7 +233,8 @@ class PopupDialog(QDockWidget):
             self.updateSize(dialog_width, dialog_height)
 
     def shutdownWidget(self):
-        qApp.removeEventFilter(self)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
+        self.close()
 
     #endregion
 
@@ -232,29 +262,14 @@ class PopupDialog(QDockWidget):
     #endregion
     
     #region Events 
-    
-    def eventFilter(self, source: QObject, event: QEvent) -> bool:
-        if (event.type() == QEvent.Type.MouseButtonRelease) or (event.type() == QEvent.Type.TabletPress) or (event.type() == QEvent.Type.TouchBegin):
-            cursor_pos = QCursor.pos()
-            widget_under_cursor = QApplication.widgetAt(cursor_pos)
-        
-            if isinstance(widget_under_cursor, QOpenGLWidget):
-                if widget_under_cursor.metaObject().className() == "KisOpenGLCanvas2":
-                    if self.closing_method == CfgTouchifyActionPopup.ClosingMethod.CanvasFocus and \
-                        self.time_since_opening.addSecs(1) < QTime.currentTime():
-                        qApp.removeEventFilter(self)
-                        self.close()
-                        return False
-
-        return super().eventFilter(source, event)
 
     def event(self, event: QEvent):
         if event.type() == QEvent.Type.WindowDeactivate:
             if self.closing_method == CfgTouchifyActionPopup.ClosingMethod.Default:
                 if self.windowMode != CfgTouchifyActionPopup.WindowType.Window:
-                    self.close()
+                    self.closePopup()
             elif self.closing_method == CfgTouchifyActionPopup.ClosingMethod.Deactivation:
-                self.close()
+                self.closePopup()
         return super().event(event)
 
     def closeEvent(self, event):
