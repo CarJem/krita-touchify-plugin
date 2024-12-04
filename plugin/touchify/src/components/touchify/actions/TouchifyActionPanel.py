@@ -50,7 +50,7 @@ class TouchifyActionPanel(QWidget):
         self._buttons: dict[any, TouchifyActionButton] = {}
         
         self.hinted_size: QSize | None = None
-        self.registered_actions: dict[QAction, tuple[TouchifyActionButton, bool]] = {}
+        self.registered_actions: dict[QAction, TouchifyActionButton] = {}
         
         self.createPanel()
 
@@ -69,23 +69,17 @@ class TouchifyActionPanel(QWidget):
     def minimumSizeHint(self):
         hint = super().minimumSizeHint()
         return hint
-        
-    def updateButton(self, btn: TouchifyActionButton, action: QAction, useIcon: bool):
-        btn.setChecked(action.isChecked())
-        if useIcon:
-            btn.setIcon(action.icon())
     
     def updateButtonV2(self):
         action: QAction = self.sender()
         if action in self.registered_actions:
-            btn, useIcon = self.registered_actions[action]
+            btn = self.registered_actions[action]
             btn.setChecked(action.isChecked())
-            if useIcon: btn.setIcon(action.icon())
-            
+            btn.updateIcon(action)
     
-    def registerAction(self, btn: TouchifyActionButton, action: QAction, useIcon: bool):
+    def registerAction(self, btn: TouchifyActionButton, action: QAction):
         action.changed.connect(self.updateButtonV2)
-        self.registered_actions[action] = (btn, useIcon)
+        self.registered_actions[action] = (btn)
     
     def close(self):
         self.unregisterActions()
@@ -150,7 +144,7 @@ class TouchifyActionPanel(QWidget):
             action = Krita.instance().action(data.action_id)
             if action:
                 if action.isCheckable():
-                    self.registerAction(btn, action, data.action_use_icon)
+                    self.registerAction(btn, action)
                     
         self.addWidgetToRow(row, btn)
         

@@ -1,27 +1,15 @@
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from PyQt5 import QtGui
-import sys
-import xml.etree.ElementTree as ET
-from ....pyqt.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
+from touchify.src.components.pyqt.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from .....ext.types.TypedList import *
-from .....resources import *
-from .....ext.KritaExtensions import KritaExtensions
-from ....pyqt.widgets.CollapsibleBox import CollapsibleBox
+from touchify.src.ext.types.TypedList import *
+from touchify.src.resources import *
 
-from ..utils.PropertyUtils_Extensions import *
-from ..PropertyGrid import *
-from ..dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
-from .PropertyField import *
+from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
+from touchify.src.components.touchify.property_grid.PropertyGrid import *
+from touchify.src.components.touchify.property_grid.fields.PropertyField import *
 
-
-ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
-ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
-
-GROUP_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
-GROUP_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
 
 class PropertyField_Int(PropertyField):
@@ -37,7 +25,7 @@ class PropertyField_Int(PropertyField):
         self.editor.valueChanged.connect(self.updateValue)
         self.editor.setValue(self.variable_data)
 
-        restrictions = PropertyUtils_Extensions.getRestrictions(self.variable_source)
+        restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source)
         if variable_name in restrictions:
             if restrictions[variable_name]["type"] == "range":
                 if "min" in restrictions[variable_name]:

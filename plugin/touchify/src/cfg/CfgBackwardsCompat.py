@@ -38,6 +38,43 @@ class CfgBackwardsCompat:
             Helpers.changeVarName(args, "showText", "show_text")
             Helpers.changeVarName(args, "showIcon", "show_icon")
             Helpers.setVersion(args, 1)
+        if Helpers.getVersion(args) == 1:
+            Helpers.changeVarName(args, "id", "registry_id")
+
+            Helpers.changeVarName(args, "action_composer_mode", "extra_composer_mode")
+            Helpers.changeVarName(args, "closes_popup", "extra_closes_popup")
+
+            text: str = ""
+            icon: str = ""
+            show_text: bool = True
+            action_use_icon: bool = False
+            brush_override_icon: bool = False
+            custom_icon: bool = False
+            variant: str = "default"
+
+            if "variant" in args: variant = args["variant"]
+            if "text" in args: text = args["text"]
+            if "icon" in args: icon = args["icon"]
+            if "show_text" in args: show_text = args["show_text"]
+            if "action_use_icon" in args: action_use_icon = args["action_use_icon"]
+            if "brush_override_icon" in args: brush_override_icon = args["brush_override_icon"]
+
+            if variant == "brush":
+                custom_icon = brush_override_icon
+            elif variant == "action": 
+                custom_icon = not action_use_icon
+            elif icon != "": 
+                custom_icon = True
+
+            args["display_custom_icon_enabled"] = custom_icon
+            args["display_custom_text_enabled"] = text != ""
+
+            args["display_custom_text"] = text
+            args["display_custom_icon"] = icon
+
+            args["display_text_hide"] = not show_text
+            args["display_icon_hide"] = False
+            Helpers.setVersion(args, 2)
         return args
 
     def CfgTouchifyActionDockerGroup(args: dict[str, any]):

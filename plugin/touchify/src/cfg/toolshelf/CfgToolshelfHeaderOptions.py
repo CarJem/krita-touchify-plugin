@@ -51,17 +51,23 @@ class CfgToolshelfHeaderOptions:
             "button_size",
             "header_size",
             "position",
-            "stack_actions",
             "stack_preview",
             "stack_alignment",
+            "stack_actions",
         ]
+    
+    def propertygrid_sisters(self):
+        row: dict[str, list[str]] = {}
+        row["default_options"] = {"items": ["default_to_resize_mode","default_to_pinned"], "use_labels": True}
+        return row
 
     def propertygrid_labels(self):
         labels = {}
+        labels["default_options"] = "Defaults"
+        labels["default_to_resize_mode"] = "Resizable"
+        labels["default_to_pinned"] = "Pinned"
         labels["button_size"] = "Button Size"
         labels["header_size"] = "Header Size"
-        labels["default_to_resize_mode"] = "Resizable by Default"
-        labels["default_to_pinned"] = "Pinned by Default"
         labels["position"] = "Header Position"
         labels["stack_preview"] = "Stack Preview"
         labels["stack_alignment"] = "Stack Alignment"

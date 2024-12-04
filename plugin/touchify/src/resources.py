@@ -95,13 +95,13 @@ class ResourceManager:
                     ResourceManager.material_icons[actualName] = QIcon(QSvgIconEngine(iconBytes))
         ICON_PACKS_LOADED = True
 
-    def materialIcon(iconName):
+    def materialIcon(iconName: str):
         if iconName in ResourceManager.material_icons:
             return ResourceManager.material_icons[iconName]
         else:
             return ResourceManager.getFallbackIcon()
 
-    def customIcon(iconName):
+    def customIcon(iconName: str):
         PATH_RESOURCES = os.path.join(ResourceManager.getResourceFolder(), "custom")
 
         filename = '{0}.svg'.format(iconName)
@@ -115,8 +115,18 @@ class ResourceManager:
         
     def getBrushPresets():
         return Krita.instance().resources('preset')
+    
+    def actionText(action_id: str):
+        target_action = Krita.instance().action(action_id)
+        if target_action: return target_action.text()
+        else: return ""
+    
+    def actionIcon(action_id: str):
+        target_action = Krita.instance().action(action_id)
+        if target_action: return target_action.icon()
+        else: return QIcon()
         
-    def brushIcon(brushName):
+    def brushIcon(brushName: str):
         brush_presets = Krita.instance().resources('preset')
         if brushName in brush_presets:
             preset = brush_presets[brushName]
@@ -124,7 +134,7 @@ class ResourceManager:
         else:
             return ResourceManager.getFallbackIcon()
         
-    def iconLoader(iconName):
+    def iconLoader(iconName: str):
         if str(iconName).startswith("material:"):
             materialName = str(iconName)[len("material:"):]
             return ResourceManager.materialIcon(materialName)
@@ -134,7 +144,7 @@ class ResourceManager:
         else:
             return ResourceManager.kritaIcon(iconName)
             
-    def kritaIcon(iconName):
+    def kritaIcon(iconName: str):
         return Krita.instance().icon(iconName)
     
     def getFallbackIcon():

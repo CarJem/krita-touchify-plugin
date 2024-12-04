@@ -1,8 +1,11 @@
 from PyQt5 import *
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QWidget
 
 from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
+from touchify.src.components.touchify.property_grid.fields.PropertyLabel import PropertyLabel
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Praser import *
 from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_SelectorDialog import *
@@ -23,7 +26,7 @@ class PropertyGrid_Panel(QScrollArea):
         super().__init__()
 
         self.fields: list[PropertyField] = []
-        self.labels: dict[str, QWidget] = {}
+        self.labels: list[PropertyGrid_Panel.Label] = []
         
 
         self.stackHost = parentStack
@@ -50,142 +53,77 @@ class PropertyGrid_Panel(QScrollArea):
     
     def onPropertyChanged(self, value: bool):
         self.updateVisibility()
-    
-    def createRow(self, item: any, varName: str, layout: QFormLayout, labelData: dict, hintData: dict, sisterData: dict):
-
-        def getDisplayText(variable_name: str):
-            resultText = variable_name
-            if variable_name in labelData:
-                propData = labelData[variable_name]
-                if propData != None:
-                    resultText = propData
-            return resultText
-        
-        def getHintText(variable_name: str):
-            hintText = ""
-            if variable_name in hintData:
-                hintText = str(hintData[variable_name])
-            return hintText
-
-        def createDataRow(_varName: str):
-            variable = PropertyUtils_Extensions.getVariable(item, _varName)
-            field = PropertyUtils_Praser.getPropertyType(_varName, variable, item)
-            field.propertyChanged.connect(self.onPropertyChanged)
-            field.setStackHost(self.stackHost)
-            if field:
-                self.fields.append(field)
-                field.setSizePolicy(ROW_SIZE_POLICY_X, ROW_SIZE_POLICY_Y)
-                return field
-            return None
-        
-        def createSisDataRow(field: PropertyField, sister_fields: list[PropertyField]):
-            row_fields = QWidget(self)
-            row_fields.setContentsMargins(0,0,0,0)
-            
-            fields_layout = QHBoxLayout(self)
-            fields_layout.setContentsMargins(0,0,0,0)
-            fields_layout.setSpacing(0)
-            fields_layout.addWidget(field)
-            for sis_field in sister_fields:
-                fields_layout.addWidget(sis_field)
-            row_fields.setLayout(fields_layout)
-            return row_fields
-        
-        def createLabelRow(resultText: str, hintText: str):
-
-            def showHint():
-                QToolTip.showText(hintLabel.mapToGlobal(QPoint(0,0)), hintText)
-
-            header = QWidget()
-            header.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
-            header.setFixedWidth(200)
-            header.setContentsMargins(0,0,0,0)
-
-            titleSection = QHBoxLayout()
-            titleSection.setSpacing(0)
-            titleSection.setContentsMargins(0,0,0,0)
-
-            label = QLabel(header)
-            label.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-            label.setMargin(0)
-            label.setWordWrap(True)
-            label.setContentsMargins(2,0,2,0)
-            label.setText(resultText)
-            titleSection.addWidget(label)
-
-            if hintText != "":
-                hintLabel = QPushButton(header)
-                hintLabel.setContentsMargins(0,0,0,0)
-                hintLabel.setFlat(True)
-                hintLabel.clicked.connect(showHint)
-                hintLabel.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-                hintLabel.setIcon(ResourceManager.iconLoader("material:information-variant"))
-                hintLabel.setToolTip(hintText)
-                titleSection.addWidget(hintLabel, 1, Qt.AlignmentFlag.AlignRight)
-
-            labelSection = QVBoxLayout(header)
-            labelSection.setSpacing(0)
-            labelSection.setContentsMargins(0,0,0,0)
-
-            aboveLine = QFrame(header)
-            aboveLine.setLineWidth(1)
-            aboveLine.setContentsMargins(2,0,2,0)
-            aboveLine.setFrameShape(QFrame.Shape.HLine)
-            aboveLine.setFrameShadow(QFrame.Shadow.Sunken)
-            labelSection.addWidget(aboveLine)
-
-            labelSection.addLayout(titleSection)
-
-            belowLine = QFrame(header)
-            belowLine.setLineWidth(1)
-            belowLine.setContentsMargins(2,0,2,0)
-            belowLine.setFixedHeight(2)
-            belowLine.setFrameShape(QFrame.Shape.HLine)
-            belowLine.setFrameShadow(QFrame.Shadow.Sunken)
-            labelSection.addWidget(belowLine)
-
-
-            return header
-
-        def populateSisDataRows():
-            sister_fields = []
-            if varName in sisterData:
-                data = sisterData[varName]
-                for sisterName in list[str](data["items"]):
-                    sisterField = createDataRow(sisterName)
-                    if sisterField:
-                        sister_fields.append(sisterField)
-            return sister_fields
-
-        field = createDataRow(varName)
-        if field:
-            sisters = populateSisDataRows()
-            if len(sisters) == 0:
-                header = createLabelRow(getDisplayText(varName), getHintText(varName))
-                self.labels[field.variable_name] = header
-                layout.addRow(header, field)
-            else:
-                sister_id = sisterData[varName]["sister_id"]
-                header = createLabelRow(getDisplayText(sister_id), getHintText(sister_id))
-                self.labels[field.variable_name] = header
-                sister_field = createSisDataRow(field, sisters)
-                layout.addRow(header, sister_field)
 
     def updateVisibility(self):
         if self.item == None:
             return
         
-        hiddenItems = PropertyUtils_Extensions.getHidden(self.currentData())
+        hiddenItems = PropertyUtils_Extensions.classHiddenVariables(self.currentData())
         hiddenItems.append("json_version")
+
         for field in self.fields:     
-            if field.variable_name in hiddenItems:
-                field.setHidden(True)
-                if field.variable_name in self.labels:
-                    self.labels[field.variable_name].setHidden(True)
+            if field.variable_name in hiddenItems: field.setHidden(True)
+            else: field.setHidden(False)
+
+        for label in self.labels:     
+            if label.variable_name in hiddenItems: label.setHidden(True)
+            else: label.setHidden(False)
+
+    def createLabel(self, varName: str, labelData: dict, hintData: dict, is_nested: bool = False):
+        labelText = PropertyUtils_Extensions.getVariableLabel(labelData, varName)
+        hintText = PropertyUtils_Extensions.getVariableHint(hintData, varName)
+        header = PropertyLabel(varName, labelText, hintText, is_nested)
+        self.labels.append(header)
+        return header
+    
+    def createField(self, source: any, _varName: str):
+        variable = PropertyUtils_Extensions.getVariable(source, _varName)
+        field = PropertyUtils_Praser.getPropertyType(_varName, variable, source)
+        field.propertyChanged.connect(self.onPropertyChanged)
+        field.setStackHost(self.stackHost)
+        if field:
+            self.fields.append(field)
+            field.setSizePolicy(ROW_SIZE_POLICY_X, ROW_SIZE_POLICY_Y)
+            return field
+        return None
+
+    def createSisterField(self, source: any, sister_data: dict[str, any], labelData: dict, hintData: dict):
+        sister_items = list[str](sister_data["items"])
+
+        use_labels: bool = False
+        if "use_labels" in sister_data:
+            use_labels = bool(sister_data["use_labels"])
+        
+
+        sister_field = QWidget(self)
+        sister_field.setContentsMargins(0,0,0,0)
+        
+        if use_labels:
+            layout = QVBoxLayout(sister_field)
+            layout.setContentsMargins(0,0,0,0)
+            layout.setSpacing(0)
+        else:
+            layout = QHBoxLayout(sister_field)
+            layout.setContentsMargins(0,0,0,0)
+            layout.setSpacing(0)
+
+        for index, variable_name in enumerate(sister_items):
+            field = self.createField(source, variable_name)
+
+            if use_labels:
+                sub_layout = QHBoxLayout()
+                sub_layout.setContentsMargins(0,0,0,0)
+                sub_layout.setSpacing(0)
+                
+                header = self.createLabel(variable_name, labelData, hintData, True)
+                field.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+                sub_layout.addWidget(field)
+                sub_layout.addWidget(header,1)
+                layout.addLayout(sub_layout)
             else:
-                field.setHidden(False)
-                if field.variable_name in self.labels:
-                    self.labels[field.variable_name].setHidden(False)
+                layout.addWidget(field, 1)
+
+        return sister_field
 
     def updateDataObject(self, item):
         self.item = item
@@ -193,29 +131,36 @@ class PropertyGrid_Panel(QScrollArea):
         self.labels.clear()
         
         PropertyUtils_Extensions.clearLayout(self.formLayout)
-        sisterData = PropertyUtils_Extensions.getSisters(item)
-        labelData = PropertyUtils_Extensions.getLabels(item)
-        hintData = PropertyUtils_Extensions.getHints(item)
+        labelData = PropertyUtils_Extensions.classVariableLabels(item)
+        hintData = PropertyUtils_Extensions.classVariableHints(item)
 
-        claimedSections = []
-        claimedSisters = []
-        sisterParentData = {}
+        sister_data = PropertyUtils_Extensions.classSisters(item)
+        variable_data = PropertyUtils_Extensions.getClassVariables(item)
 
-        for sisterId in sisterData:
-            sisterItems = list[str](sisterData[sisterId]["items"])
-            
-            if len(sisterItems) >= 2:
-                firstItem = sisterItems.pop(0)
-                sisterParentData[firstItem] = {
-                    "items": sisterItems,
-                    "sister_id": sisterId
-                }
+        known_sisters = []
 
-                for varName in sisterItems:
-                    claimedSisters.append(varName)
+        for sister_id in sister_data:
+            sister_id: str
+            sister_items = list[str](sister_data[sister_id]["items"])
+            known_sisters.append(str(sister_id))
+            for sister_variable in sister_items:
+                if sister_id not in variable_data:
+                    index = variable_data.index(str(sister_variable))
+                    variable_data.insert(index, str(sister_id))
+                variable_data.remove(sister_variable)
 
-        for varName in PropertyUtils_Extensions.getClassVariables(item):
-            if varName not in claimedSections and varName not in claimedSisters:
-                self.createRow(item, varName, self.formLayout, labelData, hintData, sisterParentData)
+        for variable_id in variable_data:    
+            variable_id: str     
+            if variable_id in known_sisters:
+                sister_info = sister_data[variable_id]
+                header = self.createLabel(variable_id, labelData, hintData)
+                header.setFixedWidth(200)
+                field = self.createSisterField(item, sister_info, labelData, hintData)
+                self.formLayout.addRow(header, field)
+            else:
+                header = self.createLabel(variable_id, labelData, hintData)
+                header.setFixedWidth(200)
+                field = self.createField(item, variable_id)
+                self.formLayout.addRow(header, field)
 
         self.updateVisibility()

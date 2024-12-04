@@ -17,26 +17,30 @@ class CfgTouchifyAction:
         Workspace = "workspace"
         DockerGroup = "docker_group"
         CanvasPreset = "canvas_preset"
-        
-    id: str = ""      
-    icon: str = ""
-    text: str = ""
+
+    registry_id: str = ""      
     variant: str = "action"
-    show_text: bool = False
-    show_icon: bool = True
-    closes_popup: bool = False
+
+    #Display Params
+    display_icon_hide: bool = False
+    display_text_hide: bool = False
+    display_custom_icon_enabled: bool = False
+    display_custom_icon: str = ""
+    display_custom_text_enabled: bool = True
+    display_custom_text: str = ""
+
+    #Extras Params
+    extra_closes_popup: bool = False
+    extra_composer_mode: bool = False
 
     #Action Params
     action_id: str = ""
-    action_use_icon: bool = False
-    action_composer_mode: bool = False
 
     #Menu Params
     context_menu_actions: TypedList["CfgTouchifyAction"] = []
 
     #Brush Params
     brush_name: str = ""
-    brush_override_icon: bool = False
     
     #Docker Params
     docker_id: str = ""
@@ -52,15 +56,15 @@ class CfgTouchifyAction:
 
     #Canvas Preset Params
     canvas_preset_data: CfgTouchifyActionCanvasPreset = CfgTouchifyActionCanvasPreset()
+
+    json_version: int = 2
     
 
     def __init__(self, **args) -> None:
         args = CfgBackwardsCompat.CfgTouchifyAction(args)
         Extensions.dictToObject(self, args, [CfgTouchifyActionPopup, CfgTouchifyActionDockerGroup, CfgTouchifyActionCanvasPreset])
-        
         self.context_menu_actions = Extensions.init_list(args, "context_menu_actions", CfgTouchifyAction)
         
-
     def __str__(self):
         match self.variant:
             case CfgTouchifyAction.Variants.Action:
@@ -68,13 +72,13 @@ class CfgTouchifyAction:
                 suffix = self.action_id
             case CfgTouchifyAction.Variants.Menu:
                 prefix = "[Menu] "
-                suffix = self.text
+                suffix = self.display_custom_text
             case CfgTouchifyAction.Variants.Brush:
                 prefix = "[Brush] "
                 suffix = self.brush_name
             case CfgTouchifyAction.Variants.Popup:
                 prefix = "[Popup] "
-                suffix = self.text
+                suffix = self.display_custom_text
             case CfgTouchifyAction.Variants.Workspace:
                 prefix = "[Workspace] "
                 suffix = self.workspace_id
@@ -83,41 +87,47 @@ class CfgTouchifyAction:
                 suffix = self.docker_id
             case CfgTouchifyAction.Variants.DockerGroup:
                 prefix = "[Docker Group] "
-                suffix = self.text
+                suffix = self.display_custom_text
             case CfgTouchifyAction.Variants.CanvasPreset:
                 prefix = "[Canvas Preset] "
-                suffix = self.text
+                suffix = self.display_custom_text
             case _:
                 prefix = f"[{self.variant}] "
-                suffix = self.text
+                suffix = self.display_custom_text
                 
-        if self.text != "":
-            suffix = self.text
+        if self.display_custom_text != "":
+            suffix = self.display_custom_text
         
         return prefix + suffix
 
     def forceLoad(self):
         self.context_menu_actions = TypedList(self.context_menu_actions, CfgTouchifyAction)
-        
+
+    def propertygrid_sisters(self):
+        row: dict[str, list[str]] = {}
+        row["display_custom_text_opt"] = {"items": ["display_custom_text_enabled","display_custom_text"]}
+        row["display_custom_icon_opt"] = {"items": ["display_custom_icon_enabled","display_custom_icon"]}
+        row["display_opt"] = {"items": ["display_text_hide","display_icon_hide"], "use_labels": True}
+        row["extra_opt"] = {"items": ["extra_closes_popup","extra_composer_mode"], "use_labels": True}
+        return row
+
     def propertygrid_sorted(self):
         return [
-            "id",
-            "icon",
-            "text",
-            "show_text",
-            "show_icon",
-            "closes_popup",
+            "registry_id",
+            #Display Params
+            "display_custom_text_enabled",
+            "display_custom_icon_enabled",
+            #Special Options
+            "extra_closes_popup",
+            #Common Params
             "variant",
             #Action Params
             "action_id",
-            "action_use_icon",
-            "action_composer_mode"
             #Menu Params
             "context_menu_actions",
             #Brush Params
             "brush_name",
-            "brush_override_icon",       
-
+            #Others
             "docker_id",
             "workspace_id",
             "docker_group_data",
@@ -129,13 +139,10 @@ class CfgTouchifyAction:
         result = []
         if self.variant != CfgTouchifyAction.Variants.Action:
             result.append("action_id")
-            result.append("action_use_icon")
-            result.append("action_composer_mode")
         if self.variant != CfgTouchifyAction.Variants.Menu:
             result.append("context_menu_actions")            
         if self.variant != CfgTouchifyAction.Variants.Brush:
             result.append("brush_name")
-            result.append("brush_override_icon")
         if self.variant != CfgTouchifyAction.Variants.Workspace:
             result.append("workspace_id")
         if self.variant != CfgTouchifyAction.Variants.Docker:
@@ -151,28 +158,30 @@ class CfgTouchifyAction:
     
     def propertygrid_hints(self):
         hints = {}
-        hints["closes_popup"] = "If the action is contained within a Touchify popup, toggling this will make it close when you trigger it"
+        hints["extra_closes_popup"] = "If the action is contained within a Touchify popup, toggling this will make it close when you trigger it"
         return hints
 
     def propertygrid_labels(self):
         labels = {}
         
-        labels["id"] = "ID"
-        labels["icon"] = "Icon"
-        labels["text"] = "Text"
+        labels["registry_id"] = "Registry ID"
         labels["variant"] = "Action Type"
-        labels["show_text"] = "Show Text"
-        labels["show_icon"] = "Show Icon"
-        labels["closes_popup"] = "Close popup on click"
-        labels["action_composer_mode"] = "Shortcut Composer Compat"
+
+        labels["display_opt"] = "Display Options"
+        labels["display_custom_text_opt"] = "Custom Text"
+        labels["display_custom_icon_opt"] = "Custom Icon"
+        labels["display_text_hide"] = "Hide Text"
+        labels["display_icon_hide"] ="Hide Icon"
+
+        labels["extra_opt"] = "Extra Options"
+        labels["extra_closes_popup"] = "Close popup on click"
+        labels["extra_composer_mode"] = "Shortcut Composer Compat"
 
         labels["action_id"] = "Action ID"
-        labels["action_use_icon"] = "Use Action Icon"
 
         labels["context_menu_actions"] = "Menu Actions"
 
         labels["brush_name"] = "Brush"
-        labels["brush_override_icon"] = "Override Brush Icon"
         
         labels["workspace_id"] = "Workspace ID"
         labels["docker_id"] = "Docker ID"
@@ -186,9 +195,8 @@ class CfgTouchifyAction:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["icon"] = {"type": "icon_selection"}
+        restrictions["display_custom_icon"] = {"type": "icon_selection"}
         restrictions["variant"] = {"type": "values", "entries": self.Variants.values()}
-        
         restrictions["brush_name"] = {"type": "brush_selection"}
         restrictions["action_id"] = {"type": "action_selection"}
         restrictions["workspace_id"] = {"type": "workspace_selection"}

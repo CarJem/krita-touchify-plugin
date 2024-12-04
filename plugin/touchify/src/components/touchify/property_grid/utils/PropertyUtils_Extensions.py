@@ -1,3 +1,4 @@
+from copy import deepcopy
 from PyQt5.QtWidgets import QMessageBox
 
 
@@ -34,37 +35,48 @@ class PropertyUtils_Extensions:
                 sorted_results.append(item)
         return sorted_results
                 
-
-
-        
-    def getRestrictions(obj):
+    def classRestrictions(obj):
         if hasattr(obj, "propertygrid_restrictions"):
             return dict(obj.propertygrid_restrictions())
         else: return {}            
 
-    def getSisters(obj):
+    def classSisters(obj):
         if hasattr(obj, "propertygrid_sisters"):
-            return dict(obj.propertygrid_sisters())
-        else: return {}
+            return deepcopy(dict(obj.propertygrid_sisters()))
+        else: return deepcopy({})
 
-    def getHidden(obj) -> list[str]:
+    def classHiddenVariables(obj) -> list[str]:
         if hasattr(obj, "propertygrid_hidden"):
             return list(obj.propertygrid_hidden())
         else: return []
 
-    def getLabels(obj):
+    def classVariableLabels(obj):
         if hasattr(obj, "propertygrid_labels"):
-            return dict(obj.propertygrid_labels())
-        else: return {}
+            return deepcopy(dict(obj.propertygrid_labels()))
+        else: return deepcopy({})
 
-    def getHints(obj):
+    def classVariableHints(obj):
         if hasattr(obj, "propertygrid_hints"):
             return dict(obj.propertygrid_hints())
         else: return {}
 
-    def isClassModel(obj):
+    def classIsModel(obj):
         return hasattr(obj, "propertygrid_ismodel")
 
+
+    def getVariableLabel(labelData: dict[str,str], variable_name: str):
+        resultText = variable_name
+        if variable_name in labelData:
+            propData = labelData[variable_name]
+            if propData != None:
+                resultText = propData
+        return resultText
+    
+    def getVariableHint(hintData: dict[str,str], variable_name: str):
+        hintText = ""
+        if variable_name in hintData:
+            hintText = str(hintData[variable_name])
+        return hintText
 
     def quickDialog(parent, text):
         dlg = QMessageBox(parent)

@@ -13,11 +13,7 @@ from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Selecto
 from touchify.src.components.touchify.property_grid.fields.PropertyField import *
 
 
-ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
-ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
-GROUP_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
-GROUP_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
 
 class PropertyField_Str(PropertyField):
@@ -36,7 +32,7 @@ class PropertyField_Str(PropertyField):
         
         self.editorHelper: QPushButton | None = None
 
-        restrictions = PropertyUtils_Extensions.getRestrictions(self.variable_source)
+        restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source)
         if variable_name in restrictions:
             if restrictions[variable_name]["type"] == "values":
                 combobox_items =  list[tuple[str, str]]()

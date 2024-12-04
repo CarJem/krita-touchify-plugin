@@ -77,9 +77,9 @@ class PopupDialog_Actions(PopupDialog):
             
             newAction = CfgTouchifyAction()
             newAction.action_id = actionItem.action
-            newAction.text = actionItem.text
-            newAction.icon = actionItem.icon
-            newAction.show_text = True
+            newAction.display_custom_text = actionItem.text
+            newAction.display_custom_icon = actionItem.icon
+            newAction.display_custom_text_enabled = True
             converted_groups[current_y].actions.append(newAction)
             
             current_x += 1

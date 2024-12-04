@@ -88,7 +88,7 @@ class ActionManager(QObject):
                 result = self.button_generic(data)
 
         if result and result != None:
-            if data.closes_popup == True:
+            if data.extra_closes_popup == True:
                 result.clicked.connect(lambda: self.__btn_closePopup(result))
             result.setParent(parent)
 
@@ -102,7 +102,7 @@ class ActionManager(QObject):
         match data.variant:
             case CfgTouchifyAction.Variants.Menu:
                 actual_menu = TouchifyActionMenu(data, parent, self)
-                actual_menu.setTitle(data.text)
+                actual_menu.setTitle(data.display_custom_text)
                 parent.addMenu(actual_menu)
             case CfgTouchifyAction.Variants.Action:
                 if data.action_id in CommonActions.EXPANDING_SPACERS:
@@ -113,7 +113,7 @@ class ActionManager(QObject):
                 if actual_action: parent.addAction(actual_action)
             case _:
                 actual_action = QAction(parent)
-                actual_action.setText(data.text)
+                actual_action.setText(data.display_custom_text)
                 actual_action.triggered.connect(lambda: self.runAction(data, actual_action))
                 if actual_action: parent.addAction(actual_action)
 
@@ -180,7 +180,7 @@ class ActionManager(QObject):
         cfg = TouchifyConfig.instance().getConfig()
         for action in cfg.actions_registry.actions_registry:
             action: CfgTouchifyAction
-            actionIdentifier ='TouchifyAction_{0}'.format(action.id)
+            actionIdentifier ='TouchifyAction_{0}'.format(action.registry_id)
 
             if actionIdentifier in self.registeredActions:
                 self.registeredActionsData[actionIdentifier] = action
@@ -188,7 +188,8 @@ class ActionManager(QObject):
         for pack in cfg.resources.presets:
             pack: CfgResourcePack
             for data in pack.actions_registry:
-                subActionIdentifier = 'Touchify_Res_{0}_{1}'.format(pack.registry_id, data.id)
+                data: CfgTouchifyAction
+                subActionIdentifier = 'Touchify_Res_{0}_{1}'.format(pack.registry_id, data.registry_id)
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
         
@@ -212,20 +213,17 @@ class ActionManager(QObject):
                 self.runAction(data, action)
 
     def createRegisteredAction(self, actionIdentifier: str, data: CfgTouchifyAction, window: Window, actionPath: str):
-        displayName = data.text
-
+        displayName = data.display_custom_text
         action = window.createAction(actionIdentifier, displayName, actionPath)
+
         self.registeredActions[actionIdentifier] = action
         self.registeredActionsData[actionIdentifier] = data
            
         TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.runRegisteredAction, {'identifier': actionIdentifier, 'action': action})      
-
         action.triggered.connect(partial(self.runRegisteredAction, actionIdentifier, action))
-        
-        (use_text, text, use_icon, icon) = self.__getActionDisplay(data)
-        if use_icon:
-            action.setIcon(icon)
-         
+             
+        (has_text, text, has_icon, icon, using_action_icon) = self.__getTouchifyActionDisplay(data)
+        if has_icon: action.setIcon(icon)
         return action
 
     def createRegisteredActions(self, window: Window, actionPath: str):
@@ -236,7 +234,8 @@ class ActionManager(QObject):
         core_menu = root_menu.addMenu("Core")
 
         for data in cfg.actions_registry.actions_registry:
-            id = 'TouchifyAction_{0}'.format(data.id)
+            data: CfgTouchifyAction
+            id = 'TouchifyAction_{0}'.format(data.registry_id)
             action = self.appEngine.action_management.createRegisteredAction(id, data, window, subItemPath)
             core_menu.addAction(action)
 
@@ -244,7 +243,8 @@ class ActionManager(QObject):
             pack: CfgResourcePack
             pack_menu = root_menu.addMenu(pack.registry_name)
             for data in pack.actions_registry:
-                id = 'Touchify_Res_{0}_{1}'.format(pack.registry_id, data.id)
+                data: CfgTouchifyAction
+                id = 'Touchify_Res_{0}_{1}'.format(pack.registry_id, data.registry_id)
                 action = self.appEngine.action_management.createRegisteredAction(id, data, window, subItemPath)
                 pack_menu.addAction(action)
 
@@ -270,66 +270,43 @@ class ActionManager(QObject):
         else:
             return _sender
     
-    def __checkActionIcon(self, result_icon: QIcon) -> tuple[bool, QIcon, bool]:
-        icon: QIcon = None
-        use_icon: bool = False  
-        fallback_text: bool = False
-        
-        if not (result_icon == None or result_icon.isNull()):
-            use_icon = True
-            icon = result_icon
-        else:
-            fallback_text = True
-        return (use_icon, icon, fallback_text)
-    
-    def __getActionDisplay(self, data: CfgTouchifyAction) -> tuple[bool, str, bool, QIcon]:   
-      
-        text: str = data.text  
-        icon_loader_index = 0
-        
-        if data.variant == CfgTouchifyAction.Variants.Brush:
-            if data.show_icon:
-                if data.brush_override_icon and data.show_icon:
-                    icon_loader_index = 1
-                else:
-                    icon_loader_index = 3
-        elif data.variant == CfgTouchifyAction.Variants.Action:
-            if data.show_icon and data.action_use_icon:
-                icon_loader_index = 2
-            elif data.show_icon:
-                icon_loader_index = 1
-        elif data.show_icon:
-            icon_loader_index = 1
-            
-                
-        match icon_loader_index:        
-            case 1:
-                result_icon = ResourceManager.iconLoader(data.icon)
-                use_icon, icon, use_text = self.__checkActionIcon(result_icon)
-            case 2:
-                target_action = Krita.instance().action(data.action_id)
-                result_icon: QIcon = None     
-                if target_action: result_icon = target_action.icon()
-                use_icon, icon, use_text = self.__checkActionIcon(result_icon)
-            case 3:
-                result_icon = ResourceManager.brushIcon(data.brush_name)
-                use_icon, icon, use_text = self.__checkActionIcon(result_icon)
-            case _:
-                use_icon = False
-                icon = None
-                use_text = True
+    def __getTouchifyActionDisplay(self, data: CfgTouchifyAction):
+        use_custom_icon: bool = data.display_custom_icon_enabled
+        use_custom_text: bool = data.display_custom_text_enabled
+        is_brush: bool = data.variant == CfgTouchifyAction.Variants.Brush
+        is_action: bool = data.variant == CfgTouchifyAction.Variants.Action
+        using_action_icon: bool = False
 
-        return (use_text, text, use_icon, icon)
+        if use_custom_icon:
+            icon = ResourceManager.iconLoader(data.display_custom_icon)
+        else:
+            if is_brush: icon = ResourceManager.brushIcon(data.brush_name)
+            elif is_action: 
+                icon = ResourceManager.actionIcon(data.action_id)
+                using_action_icon = True
+            else: icon = QIcon()
+
+        if use_custom_text:
+            text: str = data.display_custom_text  
+        else:
+            if is_brush: text = data.brush_name
+            elif is_action: text = ResourceManager.actionText(data.action_id)
+            else: text = ""
+
+        has_icon = not icon.isNull()
+        has_text = text != ""
+
+        if data.display_text_hide: has_text = False
+        if data.display_icon_hide: has_icon = False
+
+        return (has_text, text, has_icon, icon, using_action_icon)
+
 
     def __setButtonDisplay(self, act: CfgTouchifyAction, btn: TouchifyActionButton):
-        (use_text, text, use_icon, icon) = self.__getActionDisplay(act)
-        
-        if use_text:
-            btn.setText(text)
-        
-        if use_icon: 
-            btn.setIcon(icon)
-            
+        (has_text, text, has_icon, icon, using_action_icon) = self.__getTouchifyActionDisplay(act)  
+        if has_text: btn.setText(text)      
+        if has_icon: btn.setIcon(icon) 
+        if using_action_icon: btn.useActionIcon()        
         btn.setMetadata(text, icon)
 
     #endregion    
@@ -429,7 +406,7 @@ class ActionManager(QObject):
         return btn
                    
     def button_menu(self, act: CfgTouchifyAction):
-        btn: TouchifyActionButton = self.button_main(None, act.text, False)   
+        btn: TouchifyActionButton = self.button_main(None, act.display_custom_text, False)   
         self.__setButtonDisplay(act, btn)
         
         contextMenu = TouchifyActionMenu(act, btn, self)
@@ -439,7 +416,7 @@ class ActionManager(QObject):
     
     def button_popup(self, data: CfgTouchifyAction):
         btn: TouchifyActionButton | None = None
-        btn = self.button_main(None, data.text, False)
+        btn = self.button_main(None, data.display_custom_text, False)
         btn.clicked.connect((lambda: self.openPopup(data.popup_data, btn)))
         self.__setButtonDisplay(data, btn)
         return btn
@@ -459,7 +436,7 @@ class ActionManager(QObject):
             case CfgTouchifyAction.Variants.CanvasPreset:
                 onClick = (lambda: self.action_canvas(data.canvas_preset_data))
 
-        btn = self.button_main(onClick, data.text, False)
+        btn = self.button_main(onClick, data.display_custom_text, False)
         self.__setButtonDisplay(data, btn)
         return btn
         
@@ -477,7 +454,7 @@ class ActionManager(QObject):
                 toolbox_item = True
 
             
-            btn = self.button_main(action.trigger, action.toolTip(), checkable, act.action_composer_mode)
+            btn = self.button_main(action.trigger, action.toolTip(), checkable, act.extra_composer_mode)
 
             if act.action_id in CommonActions.TOOLBOX_ITEMS:
                 btn.timer_interval_triggered.connect(lambda: self.__btn_toolboxToolUpdate(btn, act.action_id))

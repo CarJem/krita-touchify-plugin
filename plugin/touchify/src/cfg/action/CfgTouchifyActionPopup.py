@@ -88,7 +88,7 @@ class CfgTouchifyActionPopup:
             "closing_method",
             "popup_position_x",
             "popup_position_y",
-            "popup_position"
+            "popup_position",
             "type"
         ]
         action_mode_settings = [
@@ -101,7 +101,8 @@ class CfgTouchifyActionPopup:
             "actions_item_width",
             "actions_item_height",
             "actions_close_on_click",
-            "action_item_size"
+            "actions_icon_size",
+            "actions_item_size"
         ]
 
         docker_mode_settings = [
@@ -127,7 +128,7 @@ class CfgTouchifyActionPopup:
             "window_type",
             "closing_method",
             "popup_position_x",
-            "popup_position_y"
+            "popup_position_y",
             "type"
         ]
         action_mode_settings = [
@@ -140,7 +141,8 @@ class CfgTouchifyActionPopup:
             "actions_item_width",
             "actions_item_height",
             "actions_close_on_click",
-            "action_item_size"
+            "actions_icon_size",
+            "actions_item_size"
         ]
 
         docker_mode_settings = [

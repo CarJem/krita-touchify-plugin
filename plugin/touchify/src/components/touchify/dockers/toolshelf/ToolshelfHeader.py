@@ -88,7 +88,7 @@ class ToolshelfHeader(QWidget):
 
             self._rows: dict[int, QWidget] = {}
             self._buttons: dict[str, ToolshelfHeader.TabList.HeaderTab] = {}
-            self._actions: dict[str, TouchifyActionButton] = {}
+            self._actions: list[TouchifyActionButton] = []
 
             self.button_size_policy = QSizePolicy()
             if self.orientation == Qt.Orientation.Vertical:
@@ -191,14 +191,7 @@ class ToolshelfHeader(QWidget):
             btn = self.actions_manager.createButton(self, properties)
             if btn:
                 btn.setContentsMargins(0,0,0,0)
-                
-                actual_id = properties.id
-                actual_id_num = 0
-                while actual_id in self._actions:
-                    actual_id = f"{properties.id}{actual_id_num}"
-                    actual_id_num += 1
-
-                self._actions[actual_id] = btn
+                self._actions.append(btn)
 
                 if action_row not in self._rows:
                     self.createRow(action_row)
@@ -243,7 +236,7 @@ class ToolshelfHeader(QWidget):
                 btn.setChecked(False)
             
 
-        def applyActionRules(self, btn: TouchifyActionButton, act_id: str, page_id: str):
+        def applyActionRules(self, btn: TouchifyActionButton, page_id: str):
             preview_type = self.header_options.stack_preview
             should_hide = False
 
@@ -268,9 +261,8 @@ class ToolshelfHeader(QWidget):
 
             self.applyButtonRules(self.homeButton, "ROOT", page_id)
 
-            for act_id in self._actions:
-                act = self._actions[act_id]
-                self.applyActionRules(act, act_id, page_id)
+            for act in self._actions:
+                self.applyActionRules(act, page_id)
 
 
     def __init__(self, parent_toolshelf: "ToolshelfWidget", cfg: CfgToolshelf, registry_index: int, orientation: Qt.Orientation):

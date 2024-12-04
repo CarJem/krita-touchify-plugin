@@ -19,8 +19,17 @@ class TouchifyActionButton(QToolButton):
         self.meta_icon: QIcon = None
         self.meta_text: str = ""
 
+        self.use_action_icon = False
+
 
         self.brushSelected = False
+
+    def useActionIcon(self):
+        self.use_action_icon = True
+        
+    def updateIcon(self, action: QAction):
+        #TODO: Reimplement with Action Manager Logic
+        if self.use_action_icon: self.setIcon(action.icon())
         
     def setMetadata(self, text, icon):
         self.meta_text = text

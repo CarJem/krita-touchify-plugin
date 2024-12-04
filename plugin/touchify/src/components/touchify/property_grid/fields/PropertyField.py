@@ -13,13 +13,6 @@ from touchify.src.helpers import TouchifyHelpers
 from touchify.src.resources import *
 
 
-ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
-ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
-
-GROUP_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
-GROUP_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
-
-
 class PropertyField(QWidget):
 
     propertyChanged = pyqtSignal(bool)
@@ -38,7 +31,7 @@ class PropertyField(QWidget):
         self.variable_source = variable_source
 
         self.setContentsMargins(0, 0, 0, 0)
-        self.setSizePolicy(ROW_SIZE_POLICY_X, ROW_SIZE_POLICY_Y)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
     def setStackHost(self, host: PropertyGrid):
         self.stackHost = host
@@ -50,7 +43,7 @@ class PropertyField(QWidget):
     #region Nestables
 
     def testExpandability(self):
-        restrictions = PropertyUtils_Extensions.getRestrictions(self.variable_source)
+        restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source)
         if self.variable_name in restrictions:
             if restrictions[self.variable_name]["type"] == "expandable":
                 self.setupExpandable(restrictions[self.variable_name])

@@ -23,7 +23,7 @@ class PropertyField_TypedList(PropertyField):
         #print(self.variable_list_type)
 
         if len(manual_restrictions) != 0: restrictions = manual_restrictions
-        else: restrictions = PropertyUtils_Extensions.getRestrictions(self.variable_source)
+        else: restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source)
 
         self.nested_list_id = ""
         self.has_sub_array = False
