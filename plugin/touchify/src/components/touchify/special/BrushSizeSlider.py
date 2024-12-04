@@ -1,10 +1,11 @@
 from krita import *
 from PyQt5.QtCore import *
 
-from ....ext.KritaSettings import *
-from ...krita.KisSliderSpinBox import KisSliderSpinBox
-from ....variables import *
-from ....helpers import TouchifyHelpers
+
+from touchify.src.ext.KritaSettings import *
+from touchify.src.components.krita.KisSliderSpinBox import KisSliderSpinBox
+from touchify.src.variables import *
+from touchify.src.helpers import TouchifyHelpers
 
 class BrushSizeSlider(KisSliderSpinBox):
 

@@ -22,7 +22,7 @@
                         "json_version": 2
                     }
                 },
-                "id": "GridDockerPopup",
+                "id": "VaporJem_Popups_GridDocker",
                 "type": "docker",
                 "docker_id": "GridDocker",
                 "actions_grid_width": 3,
@@ -37,7 +37,11 @@
                 "json_version": 4,
                 "docker_width": 300,
                 "docker_height": 400,
-                "actions_opacity": 0.5
+                "actions_opacity": 0.5,
+                "closing_method": "default",
+                "popup_position_x": "default",
+                "popup_position_y": "default",
+                "actions_close_on_click": false
             },
             "text": "Grid and Guides Popup",
             "workspace_id": "",
@@ -79,7 +83,7 @@
                 "actions_icon_height": 30,
                 "type": "docker",
                 "docker_id": "Touchify/CompactBrushToggler",
-                "id": "brushOptionsPopup",
+                "id": "VaporJem_Popups_CompactBrushToggler",
                 "window_type": "popup",
                 "json_version": 4,
                 "docker_width": 200,
@@ -122,7 +126,7 @@
                         "json_version": 2
                     }
                 },
-                "id": "quick-settings",
+                "id": "VaporJem_Popups_QuickSettings",
                 "type": "docker",
                 "docker_id": "quick_settings_docker",
                 "actions_grid_width": 3,
@@ -695,7 +699,7 @@
                 "actions_item_height": 100,
                 "actions_close_on_click": false,
                 "docker_id": "",
-                "id": "ToolshelfPopup",
+                "id": "VaporJem_Popups_CustomLayerPopup",
                 "type": "toolshelf",
                 "window_type": "popup",
                 "json_version": 4,
@@ -828,7 +832,7 @@
                 "actions_item_height": 100,
                 "actions_close_on_click": false,
                 "docker_id": "",
-                "id": "CustomBrushesPopup",
+                "id": "VaporJem_Popups_CustomBrushesPopup",
                 "type": "toolshelf",
                 "window_type": "popup",
                 "json_version": 4,

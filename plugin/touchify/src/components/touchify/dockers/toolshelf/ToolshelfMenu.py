@@ -23,22 +23,35 @@ class ToolshelfMenu(QMenu):
         self.parentPopup: "PopupDialog_Toolshelf" = None
         self.setupWidgetPad = True
         self.setupPopup = True
+        self.setupGlobal = True
+
+        self.editMode: QAction = QAction("Edit Mode", self)
+        self.editMode.setCheckable(True)
+        self.editMode.setChecked(False)
+
+        
         if self.registry_index != -1:
             self.current_preset_index = TouchifyConfig.instance().getActiveToolshelfIndex(self.registry_index)
             self.loadPresets()
 
     def setup(self):
-        if self.setupWidgetPad == True:
+        if self.setupWidgetPad:
             self.parentNtWidget = self.findWidgetPad()
             if self.parentNtWidget != None:
                 if self.parentNtWidget.allowResizing:
                     self.addActions([self.parentNtWidget.action_toggleResize])
+                    self.addSeparator()
             self.setupWidgetPad = False
         if self.setupPopup:
             self.parentPopup = self.findPopup()
             if self.parentPopup != None:
                 self.addActions([self.parentPopup.action_toggleResize])
+                self.addSeparator()
             self.setupPopup = False
+        if self.setupGlobal:
+            #self.addAction(self.editMode)
+            self.setupGlobal = False
+        
 
 
     def findPopup(self):

@@ -3,6 +3,7 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfEditMode import ToolshelfEditMode
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfHeader import ToolshelfHeader
 
 from touchify.src.settings import *
@@ -35,6 +36,8 @@ class ToolshelfWidget(QWidget):
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.setContentsMargins(0,0,0,0)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+
+        self.edit_mode_connector = ToolshelfEditMode(self)
      
         headerOrientation = Qt.Orientation.Horizontal
         headerBeforePages = True
@@ -63,6 +66,8 @@ class ToolshelfWidget(QWidget):
 
         self.mainLayout.addWidget(self.header)
         self.mainLayout.addWidget(self.pages)
+
+        self.header.optionsMenu.editMode.changed.connect(self.editModeChanged)
 
 
         if headerOrientation == Qt.Orientation.Horizontal:
@@ -144,6 +149,10 @@ class ToolshelfWidget(QWidget):
     #endregion
 
     #region Signals
+
+    def editModeChanged(self):
+        self.edit_mode = self.header.optionsMenu.editMode.isChecked()
+        self.edit_mode_connector.setEnabled(self.edit_mode)
     
     def onPageChanged(self, current_panel_id: str):
         self.requestViewUpdate()

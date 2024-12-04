@@ -30,7 +30,8 @@
                         "default_to_resize_mode": false,
                         "position": "top",
                         "stack_preview": "default",
-                        "stack_alignment": "default"
+                        "stack_alignment": "default",
+                        "default_to_pinned": false
                     },
                     "homepage": {
                         "sections": [
@@ -1143,7 +1144,7 @@
                                             "actions_item_width": 100,
                                             "actions_item_height": 100,
                                             "json_version": 4,
-                                            "id": "",
+                                            "id": "VaporJem_ContextMenu_Popup_Layers",
                                             "window_title": "",
                                             "window_type": "popup",
                                             "closing_method": "default",
@@ -1195,7 +1196,7 @@
                                             "actions_item_width": 100,
                                             "actions_item_height": 100,
                                             "json_version": 4,
-                                            "id": "",
+                                            "id": "VaporJem_ContextMenu_Popup_Palette",
                                             "window_title": "",
                                             "window_type": "popup",
                                             "closing_method": "default",
@@ -1247,7 +1248,7 @@
                                             "actions_item_width": 100,
                                             "actions_item_height": 100,
                                             "json_version": 4,
-                                            "id": "",
+                                            "id": "VaporJem_ContextMenu_Popup_ColorSelect",
                                             "window_title": "",
                                             "window_type": "popup",
                                             "closing_method": "default",
@@ -1299,7 +1300,7 @@
                                             "actions_item_width": 100,
                                             "actions_item_height": 100,
                                             "json_version": 4,
-                                            "id": "",
+                                            "id": "VaporJem_ContextMenu_Popup_UndoHistory",
                                             "window_title": "",
                                             "window_type": "popup",
                                             "closing_method": "default",
@@ -3066,6 +3067,95 @@
                                         "closes_popup": false,
                                         "variant": "action",
                                         "action_id": "Touchify_Res_TouchifyKritaMenus_Context_PathEditing",
+                                        "action_use_icon": false,
+                                        "brush_name": "",
+                                        "brush_override_icon": false,
+                                        "docker_id": "",
+                                        "workspace_id": "",
+                                        "docker_group_data": {
+                                            "docker_names": []
+                                        },
+                                        "popup_data": {
+                                            "toolshelf_data": {
+                                                "pages": [],
+                                                "json_version": 3,
+                                                "homepage": {
+                                                    "sections": [],
+                                                    "actions": [],
+                                                    "json_version": 2
+                                                }
+                                            },
+                                            "actions_items": [],
+                                            "json_version": 4
+                                        },
+                                        "canvas_preset_data": {},
+                                        "action_composer_mode": false
+                                    },
+                                    {
+                                        "context_menu_actions": [
+                                            {
+                                                "context_menu_actions": [],
+                                                "show_icon": true,
+                                                "id": "",
+                                                "icon": "",
+                                                "text": "",
+                                                "show_text": false,
+                                                "closes_popup": false,
+                                                "variant": "action",
+                                                "action_id": "hmirror_action",
+                                                "action_use_icon": false,
+                                                "brush_name": "",
+                                                "brush_override_icon": false,
+                                                "docker_id": "",
+                                                "workspace_id": "",
+                                                "docker_group_data": {
+                                                    "docker_names": []
+                                                },
+                                                "popup_data": {
+                                                    "toolshelf_data": {
+                                                        "pages": []
+                                                    },
+                                                    "actions_items": []
+                                                },
+                                                "canvas_preset_data": {},
+                                                "action_composer_mode": false
+                                            },
+                                            {
+                                                "context_menu_actions": [],
+                                                "show_icon": true,
+                                                "id": "",
+                                                "icon": "",
+                                                "text": "",
+                                                "show_text": false,
+                                                "closes_popup": false,
+                                                "variant": "action",
+                                                "action_id": "vmirror_action",
+                                                "action_use_icon": false,
+                                                "brush_name": "",
+                                                "brush_override_icon": false,
+                                                "docker_id": "",
+                                                "workspace_id": "",
+                                                "docker_group_data": {
+                                                    "docker_names": []
+                                                },
+                                                "popup_data": {
+                                                    "toolshelf_data": {
+                                                        "pages": []
+                                                    },
+                                                    "actions_items": []
+                                                },
+                                                "canvas_preset_data": {},
+                                                "action_composer_mode": false
+                                            }
+                                        ],
+                                        "show_icon": true,
+                                        "id": "MiscActions",
+                                        "icon": "material:dots-horizontal",
+                                        "text": "More...",
+                                        "show_text": false,
+                                        "closes_popup": false,
+                                        "variant": "menu",
+                                        "action_id": "",
                                         "action_use_icon": false,
                                         "brush_name": "",
                                         "brush_override_icon": false,

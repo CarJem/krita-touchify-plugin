@@ -13,6 +13,7 @@ from touchify.src.components.touchify.special.BrushRotationSlider import BrushRo
 from touchify.src.components.touchify.special.BrushSizeSlider import BrushSizeSlider
 from touchify.src.components.touchify.special.CanvasColorPicker import CanvasColorPicker
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfEditableWidget import ToolshelfEditableWidget
 from touchify.src.components.touchify.special.LayerBlendingSelector import LayerBlendingSelector
 from touchify.src.components.touchify.special.LayerLabelBox import LayerLabelBox
 from touchify.src.settings import TouchifyConfig
@@ -159,6 +160,8 @@ class ToolshelfPanel(QWidget):
 
             if actionWidget == None: continue
 
+            ToolshelfEditableWidget.setup(actionWidget)
+
             if actionInfo.panel_y not in widget_groups:
                 widget_groups[actionInfo.panel_y] = {}
             if actionInfo.panel_x not in widget_groups[actionInfo.panel_y]:
@@ -204,6 +207,9 @@ class ToolshelfPanel(QWidget):
                
         actionWidget = TouchifyActionPanel(cfg=actionInfo.action_section_contents, parent=self, actions_manager=self.actions_manager, type=display_type, icon_width=icon_size, icon_height=icon_size, item_height=fixed_height, item_width=fixed_width)
         actionWidget.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
+
+        for item in actionWidget._buttons.values():
+            ToolshelfEditableWidget.setup(item)
 
         if actionInfo.hasDisplayName(): actionWidget.setTitle(actionInfo.display_name)
         else: actionWidget.setTitle(actionInfo.action_section_id)

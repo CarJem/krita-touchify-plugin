@@ -171,8 +171,11 @@ class ActionManager(QObject):
         for popup_id in self.active_popups:
             try:
                 self.active_popups[popup_id].deletePopup()
+                del self.active_popups[popup_id]
             except:
                 pass
+        self.active_popups.clear()
+        
 
         cfg = TouchifyConfig.instance().getConfig()
         for action in cfg.actions_registry.actions_registry:
