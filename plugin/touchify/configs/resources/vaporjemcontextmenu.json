@@ -2,16 +2,9 @@
     "actions_registry": [
         {
             "context_menu_actions": [],
-            "show_icon": true,
-            "id": "CustomContext",
-            "icon": "",
-            "text": "Context Menu",
             "variant": "popup",
-            "show_text": false,
             "action_id": "",
-            "action_use_icon": false,
             "brush_name": "",
-            "brush_override_icon": false,
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": {
@@ -46,16 +39,8 @@
                                         "actions": [
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
                                                 "variant": "action",
-                                                "show_text": false,
-                                                "closes_popup": false,
-                                                "action_use_icon": true,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -74,22 +59,23 @@
                                                     "actions_items": [],
                                                     "json_version": 4
                                                 },
-                                                "action_composer_mode": false,
                                                 "action_id": "eraser_preset_action",
-                                                "canvas_preset_data": {}
+                                                "canvas_preset_data": {},
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": false,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
                                                 "variant": "action",
-                                                "show_text": false,
-                                                "closes_popup": false,
-                                                "action_use_icon": true,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -108,22 +94,23 @@
                                                     "actions_items": [],
                                                     "json_version": 4
                                                 },
-                                                "action_composer_mode": false,
                                                 "action_id": "preserve_alpha",
-                                                "canvas_preset_data": {}
+                                                "canvas_preset_data": {},
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": false,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
                                                 "variant": "action",
-                                                "show_text": false,
-                                                "closes_popup": false,
-                                                "action_use_icon": true,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -142,23 +129,24 @@
                                                     "actions_items": [],
                                                     "json_version": 4
                                                 },
-                                                "action_composer_mode": false,
                                                 "action_id": "reload_preset_action",
-                                                "canvas_preset_data": {}
+                                                "canvas_preset_data": {},
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": false,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "disable_pressure",
-                                                "action_use_icon": true,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -178,7 +166,16 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": false,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             }
                                         ],
                                         "row_name": "Composer Actions"
@@ -287,17 +284,9 @@
                                                     "actions": [
                                                         {
                                                             "context_menu_actions": [],
-                                                            "show_icon": true,
-                                                            "id": "",
-                                                            "icon": "material:swap-horizontal",
-                                                            "text": "",
-                                                            "show_text": false,
-                                                            "closes_popup": false,
                                                             "variant": "action",
                                                             "action_id": "toggle_fg_bg",
-                                                            "action_use_icon": false,
                                                             "brush_name": "",
-                                                            "brush_override_icon": false,
                                                             "docker_id": "",
                                                             "workspace_id": "",
                                                             "docker_group_data": {
@@ -317,7 +306,16 @@
                                                                 "json_version": 4
                                                             },
                                                             "canvas_preset_data": {},
-                                                            "action_composer_mode": false
+                                                            "json_version": 2,
+                                                            "registry_id": "",
+                                                            "extra_composer_mode": false,
+                                                            "extra_closes_popup": false,
+                                                            "display_custom_icon_enabled": true,
+                                                            "display_custom_text_enabled": false,
+                                                            "display_custom_text": "",
+                                                            "display_custom_icon": "material:swap-horizontal",
+                                                            "display_text_hide": true,
+                                                            "display_icon_hide": false
                                                         }
                                                     ],
                                                     "row_name": "Actions Row"
@@ -391,17 +389,9 @@
                                                     "actions": [
                                                         {
                                                             "context_menu_actions": [],
-                                                            "show_icon": true,
-                                                            "id": "",
-                                                            "icon": "color-to-alpha",
-                                                            "text": "",
-                                                            "show_text": false,
-                                                            "closes_popup": false,
                                                             "variant": "action",
                                                             "action_id": "reset_fg_bg",
-                                                            "action_use_icon": false,
                                                             "brush_name": "",
-                                                            "brush_override_icon": false,
                                                             "docker_id": "",
                                                             "workspace_id": "",
                                                             "docker_group_data": {
@@ -421,7 +411,16 @@
                                                                 "json_version": 4
                                                             },
                                                             "canvas_preset_data": {},
-                                                            "action_composer_mode": false
+                                                            "json_version": 2,
+                                                            "registry_id": "",
+                                                            "extra_composer_mode": false,
+                                                            "extra_closes_popup": false,
+                                                            "display_custom_icon_enabled": true,
+                                                            "display_custom_text_enabled": false,
+                                                            "display_custom_text": "",
+                                                            "display_custom_icon": "color-to-alpha",
+                                                            "display_text_hide": true,
+                                                            "display_icon_hide": false
                                                         }
                                                     ],
                                                     "row_name": "Actions Row"
@@ -614,16 +613,9 @@
                                         "actions": [
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
                                                 "variant": "action",
-                                                "show_text": false,
                                                 "action_id": "Touchify_Res_VaporJemPopups_QuickSettingsPopup",
-                                                "action_use_icon": true,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -657,8 +649,16 @@
                                                     "actions_opacity": 1.0
                                                 },
                                                 "canvas_preset_data": {},
-                                                "closes_popup": false,
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": false,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             }
                                         ],
                                         "row_name": "Actions Row"
@@ -667,16 +667,9 @@
                                         "actions": [
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
                                                 "variant": "action",
-                                                "show_text": false,
                                                 "action_id": "Touchify_Res_VaporJemPopups_brushOptionsPopup",
-                                                "action_use_icon": true,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -710,8 +703,16 @@
                                                     "actions_opacity": 1.0
                                                 },
                                                 "canvas_preset_data": {},
-                                                "closes_popup": false,
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": false,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             }
                                         ],
                                         "row_name": "Actions Row"
@@ -753,17 +754,9 @@
                                         "actions": [
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "current-layer",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "Scroll isolated layers",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -801,21 +794,22 @@
                                                     "type": "docker"
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": true
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": true,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "current-layer",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "Pick brush presets (red)",
-                                                "action_use_icon": true,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -853,21 +847,22 @@
                                                     "type": "docker"
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": true
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": true,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": false,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "Pick misc tools",
-                                                "action_use_icon": true,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -905,7 +900,16 @@
                                                     "type": "docker"
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": true
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": true,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": false,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             }
                                         ],
                                         "row_name": "Actions Row"
@@ -942,17 +946,9 @@
                                 "actions": [
                                     {
                                         "context_menu_actions": [],
-                                        "show_icon": true,
-                                        "id": "",
-                                        "icon": "krita-branding",
-                                        "text": "",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "action",
                                         "action_id": "touchify_showPopupMenu",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -972,20 +968,22 @@
                                             "json_version": 4
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": false,
+                                        "display_custom_text": "",
+                                        "display_custom_icon": "krita-branding",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     },
                                     {
                                         "context_menu_actions": [],
-                                        "show_icon": true,
-                                        "id": "CustomBrushesPopup",
-                                        "icon": "material:brush",
-                                        "text": "Brushes Popup",
                                         "variant": "popup",
-                                        "show_text": false,
                                         "action_id": "",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -1104,22 +1102,22 @@
                                             "popup_position_y": "default"
                                         },
                                         "canvas_preset_data": {},
-                                        "closes_popup": false,
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "CustomBrushesPopup",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": true,
+                                        "display_custom_text": "Brushes Popup",
+                                        "display_custom_icon": "material:brush",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     },
                                     {
                                         "context_menu_actions": [],
-                                        "show_icon": true,
-                                        "id": "",
-                                        "icon": "material:layers",
-                                        "text": "Layers Popup",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "popup",
                                         "action_id": "Touchify_Res_VaporJemPopups_CustomBrushesPopup",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -1157,21 +1155,22 @@
                                             "type": "docker"
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": true,
+                                        "display_custom_text": "Layers Popup",
+                                        "display_custom_icon": "material:layers",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     },
                                     {
                                         "context_menu_actions": [],
-                                        "show_icon": true,
-                                        "id": "",
-                                        "icon": "material:palette",
-                                        "text": "Palette Popup",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "popup",
                                         "action_id": "Touchify_Res_VaporJemPopups_CustomBrushesPopup",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -1209,21 +1208,22 @@
                                             "type": "docker"
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": true,
+                                        "display_custom_text": "Palette Popup",
+                                        "display_custom_icon": "material:palette",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     },
                                     {
                                         "context_menu_actions": [],
-                                        "show_icon": true,
-                                        "id": "",
-                                        "icon": "material:invert-colors",
-                                        "text": "Color Popup",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "popup",
                                         "action_id": "Touchify_Res_VaporJemPopups_CustomBrushesPopup",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -1261,21 +1261,22 @@
                                             "type": "docker"
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": true,
+                                        "display_custom_text": "Color Popup",
+                                        "display_custom_icon": "material:invert-colors",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     },
                                     {
                                         "context_menu_actions": [],
-                                        "show_icon": true,
-                                        "id": "",
-                                        "icon": "material:history",
-                                        "text": "Undo History",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "popup",
                                         "action_id": "Touchify_Res_VaporJemPopups_CustomBrushesPopup",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -1313,21 +1314,22 @@
                                             "type": "docker"
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": true,
+                                        "display_custom_text": "Undo History",
+                                        "display_custom_icon": "material:history",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     },
                                     {
                                         "context_menu_actions": [],
-                                        "show_icon": true,
-                                        "id": "",
-                                        "icon": "material:apple-keyboard-command",
-                                        "text": "",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "action",
                                         "action_id": "command_bar_open",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -1347,7 +1349,16 @@
                                             "json_version": 4
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": false,
+                                        "display_custom_text": "",
+                                        "display_custom_icon": "material:apple-keyboard-command",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     }
                                 ],
                                 "row_name": "Popups"
@@ -1358,17 +1369,9 @@
                                         "context_menu_actions": [
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "file_new",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1388,21 +1391,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "expanding_spacer_0",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1422,21 +1426,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "file_open",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1456,21 +1461,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "file_open_recent",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1490,21 +1496,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "expanding_spacer_0",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1524,21 +1531,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "file_save",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1558,21 +1566,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "file_save_as",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1592,21 +1601,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "expanding_spacer_0",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1626,21 +1636,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "file_close",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1660,21 +1671,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "file_close_all",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1694,21 +1706,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "file_quit",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1728,20 +1741,21 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             }
                                         ],
-                                        "show_icon": true,
-                                        "id": "FileActions",
-                                        "icon": "material:file-document-outline",
-                                        "text": "File Actions",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "menu",
                                         "action_id": "",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -1761,23 +1775,24 @@
                                             "json_version": 4
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "FileActions",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": true,
+                                        "display_custom_text": "File Actions",
+                                        "display_custom_icon": "material:file-document-outline",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     },
                                     {
                                         "context_menu_actions": [
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "edit_cut",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1797,21 +1812,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "edit_copy",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1831,21 +1847,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "edit_paste",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1865,21 +1882,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "expanding_spacer_0",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1899,21 +1917,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "copy_merged",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1933,21 +1952,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "paste_into",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -1967,21 +1987,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "paste_new",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2001,21 +2022,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "expanding_spacer_0",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2035,21 +2057,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "select_all",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2069,21 +2092,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "deselect",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2103,21 +2127,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "reselect",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2137,21 +2162,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "invert_selection",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2171,21 +2197,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "expanding_spacer_0",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2205,21 +2232,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "clear",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2239,21 +2267,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "expanding_spacer_0",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2273,21 +2302,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "cut_selection_to_new_layer",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2307,21 +2337,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "copy_selection_to_new_layer",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2341,21 +2372,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "expanding_spacer_0",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2375,21 +2407,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "edit_selection",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2409,21 +2442,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "convert_to_raster_selection",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2443,21 +2477,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "convert_selection_to_shape",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2477,23 +2512,24 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [
                                                     {
                                                         "context_menu_actions": [],
-                                                        "show_icon": true,
-                                                        "id": "",
-                                                        "icon": "",
-                                                        "text": "",
-                                                        "show_text": false,
-                                                        "closes_popup": false,
                                                         "variant": "action",
                                                         "action_id": "KisToolTransform",
-                                                        "action_use_icon": false,
                                                         "brush_name": "",
-                                                        "brush_override_icon": false,
                                                         "docker_id": "",
                                                         "workspace_id": "",
                                                         "docker_group_data": {
@@ -2513,21 +2549,22 @@
                                                             "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
-                                                        "action_composer_mode": false
+                                                        "json_version": 2,
+                                                        "registry_id": "",
+                                                        "extra_composer_mode": false,
+                                                        "extra_closes_popup": false,
+                                                        "display_custom_icon_enabled": true,
+                                                        "display_custom_text_enabled": false,
+                                                        "display_custom_text": "",
+                                                        "display_custom_icon": "",
+                                                        "display_text_hide": true,
+                                                        "display_icon_hide": false
                                                     },
                                                     {
                                                         "context_menu_actions": [],
-                                                        "show_icon": true,
-                                                        "id": "",
-                                                        "icon": "",
-                                                        "text": "",
-                                                        "show_text": false,
-                                                        "closes_popup": false,
                                                         "variant": "action",
                                                         "action_id": "selectionscale",
-                                                        "action_use_icon": false,
                                                         "brush_name": "",
-                                                        "brush_override_icon": false,
                                                         "docker_id": "",
                                                         "workspace_id": "",
                                                         "docker_group_data": {
@@ -2547,21 +2584,22 @@
                                                             "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
-                                                        "action_composer_mode": false
+                                                        "json_version": 2,
+                                                        "registry_id": "",
+                                                        "extra_composer_mode": false,
+                                                        "extra_closes_popup": false,
+                                                        "display_custom_icon_enabled": true,
+                                                        "display_custom_text_enabled": false,
+                                                        "display_custom_text": "",
+                                                        "display_custom_icon": "",
+                                                        "display_text_hide": true,
+                                                        "display_icon_hide": false
                                                     },
                                                     {
                                                         "context_menu_actions": [],
-                                                        "show_icon": true,
-                                                        "id": "",
-                                                        "icon": "",
-                                                        "text": "",
-                                                        "show_text": false,
-                                                        "closes_popup": false,
                                                         "variant": "action",
                                                         "action_id": "growselection",
-                                                        "action_use_icon": false,
                                                         "brush_name": "",
-                                                        "brush_override_icon": false,
                                                         "docker_id": "",
                                                         "workspace_id": "",
                                                         "docker_group_data": {
@@ -2581,21 +2619,22 @@
                                                             "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
-                                                        "action_composer_mode": false
+                                                        "json_version": 2,
+                                                        "registry_id": "",
+                                                        "extra_composer_mode": false,
+                                                        "extra_closes_popup": false,
+                                                        "display_custom_icon_enabled": true,
+                                                        "display_custom_text_enabled": false,
+                                                        "display_custom_text": "",
+                                                        "display_custom_icon": "",
+                                                        "display_text_hide": true,
+                                                        "display_icon_hide": false
                                                     },
                                                     {
                                                         "context_menu_actions": [],
-                                                        "show_icon": true,
-                                                        "id": "",
-                                                        "icon": "",
-                                                        "text": "",
-                                                        "show_text": false,
-                                                        "closes_popup": false,
                                                         "variant": "action",
                                                         "action_id": "shrinkselection",
-                                                        "action_use_icon": false,
                                                         "brush_name": "",
-                                                        "brush_override_icon": false,
                                                         "docker_id": "",
                                                         "workspace_id": "",
                                                         "docker_group_data": {
@@ -2615,21 +2654,22 @@
                                                             "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
-                                                        "action_composer_mode": false
+                                                        "json_version": 2,
+                                                        "registry_id": "",
+                                                        "extra_composer_mode": false,
+                                                        "extra_closes_popup": false,
+                                                        "display_custom_icon_enabled": true,
+                                                        "display_custom_text_enabled": false,
+                                                        "display_custom_text": "",
+                                                        "display_custom_icon": "",
+                                                        "display_text_hide": true,
+                                                        "display_icon_hide": false
                                                     },
                                                     {
                                                         "context_menu_actions": [],
-                                                        "show_icon": true,
-                                                        "id": "",
-                                                        "icon": "",
-                                                        "text": "",
-                                                        "show_text": false,
-                                                        "closes_popup": false,
                                                         "variant": "action",
                                                         "action_id": "borderselection",
-                                                        "action_use_icon": false,
                                                         "brush_name": "",
-                                                        "brush_override_icon": false,
                                                         "docker_id": "",
                                                         "workspace_id": "",
                                                         "docker_group_data": {
@@ -2649,21 +2689,22 @@
                                                             "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
-                                                        "action_composer_mode": false
+                                                        "json_version": 2,
+                                                        "registry_id": "",
+                                                        "extra_composer_mode": false,
+                                                        "extra_closes_popup": false,
+                                                        "display_custom_icon_enabled": true,
+                                                        "display_custom_text_enabled": false,
+                                                        "display_custom_text": "",
+                                                        "display_custom_icon": "",
+                                                        "display_text_hide": true,
+                                                        "display_icon_hide": false
                                                     },
                                                     {
                                                         "context_menu_actions": [],
-                                                        "show_icon": true,
-                                                        "id": "",
-                                                        "icon": "",
-                                                        "text": "",
-                                                        "show_text": false,
-                                                        "closes_popup": false,
                                                         "variant": "action",
                                                         "action_id": "smoothselection",
-                                                        "action_use_icon": false,
                                                         "brush_name": "",
-                                                        "brush_override_icon": false,
                                                         "docker_id": "",
                                                         "workspace_id": "",
                                                         "docker_group_data": {
@@ -2683,21 +2724,22 @@
                                                             "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
-                                                        "action_composer_mode": false
+                                                        "json_version": 2,
+                                                        "registry_id": "",
+                                                        "extra_composer_mode": false,
+                                                        "extra_closes_popup": false,
+                                                        "display_custom_icon_enabled": true,
+                                                        "display_custom_text_enabled": false,
+                                                        "display_custom_text": "",
+                                                        "display_custom_icon": "",
+                                                        "display_text_hide": true,
+                                                        "display_icon_hide": false
                                                     },
                                                     {
                                                         "context_menu_actions": [],
-                                                        "show_icon": true,
-                                                        "id": "",
-                                                        "icon": "",
-                                                        "text": "",
-                                                        "show_text": false,
-                                                        "closes_popup": false,
                                                         "variant": "action",
                                                         "action_id": "featherselection",
-                                                        "action_use_icon": false,
                                                         "brush_name": "",
-                                                        "brush_override_icon": false,
                                                         "docker_id": "",
                                                         "workspace_id": "",
                                                         "docker_group_data": {
@@ -2717,21 +2759,22 @@
                                                             "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
-                                                        "action_composer_mode": false
+                                                        "json_version": 2,
+                                                        "registry_id": "",
+                                                        "extra_composer_mode": false,
+                                                        "extra_closes_popup": false,
+                                                        "display_custom_icon_enabled": true,
+                                                        "display_custom_text_enabled": false,
+                                                        "display_custom_text": "",
+                                                        "display_custom_icon": "",
+                                                        "display_text_hide": true,
+                                                        "display_icon_hide": false
                                                     },
                                                     {
                                                         "context_menu_actions": [],
-                                                        "show_icon": true,
-                                                        "id": "",
-                                                        "icon": "",
-                                                        "text": "",
-                                                        "show_text": false,
-                                                        "closes_popup": false,
                                                         "variant": "action",
                                                         "action_id": "stroke_selection",
-                                                        "action_use_icon": false,
                                                         "brush_name": "",
-                                                        "brush_override_icon": false,
                                                         "docker_id": "",
                                                         "workspace_id": "",
                                                         "docker_group_data": {
@@ -2751,20 +2794,21 @@
                                                             "json_version": 4
                                                         },
                                                         "canvas_preset_data": {},
-                                                        "action_composer_mode": false
+                                                        "json_version": 2,
+                                                        "registry_id": "",
+                                                        "extra_composer_mode": false,
+                                                        "extra_closes_popup": false,
+                                                        "display_custom_icon_enabled": true,
+                                                        "display_custom_text_enabled": false,
+                                                        "display_custom_text": "",
+                                                        "display_custom_icon": "",
+                                                        "display_text_hide": true,
+                                                        "display_icon_hide": false
                                                     }
                                                 ],
-                                                "show_icon": true,
-                                                "id": "TransformMenu",
-                                                "icon": "",
-                                                "text": "Transform",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "menu",
                                                 "action_id": "",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2784,21 +2828,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "TransformMenu",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": false,
+                                                "display_custom_text_enabled": true,
+                                                "display_custom_text": "Transform",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "expanding_spacer_0",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2818,21 +2863,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "resizeimagetoselection",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2852,21 +2898,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "expanding_spacer_0",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2886,21 +2933,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "toggle_display_selection",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2920,21 +2968,22 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "show-global-selection-mask",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -2954,20 +3003,21 @@
                                                     "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             }
                                         ],
-                                        "show_icon": true,
-                                        "id": "ClipboardActions",
-                                        "icon": "tool_rect_selection",
-                                        "text": "Selection Actions",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "menu",
                                         "action_id": "",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -2987,21 +3037,22 @@
                                             "json_version": 4
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "ClipboardActions",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": true,
+                                        "display_custom_text": "Selection Actions",
+                                        "display_custom_icon": "tool_rect_selection",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     },
                                     {
                                         "context_menu_actions": [],
-                                        "show_icon": true,
-                                        "id": "",
-                                        "icon": "",
-                                        "text": "",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "action",
                                         "action_id": "Touchify_Res_TouchifyKritaMenus_Context_Transform",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -3021,21 +3072,22 @@
                                             "json_version": 4
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": false,
+                                        "display_custom_text": "",
+                                        "display_custom_icon": "",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     },
                                     {
                                         "context_menu_actions": [],
-                                        "show_icon": true,
-                                        "id": "",
-                                        "icon": "",
-                                        "text": "",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "action",
                                         "action_id": "Touchify_Res_TouchifyKritaMenus_Context_Objects",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -3055,21 +3107,22 @@
                                             "json_version": 4
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": false,
+                                        "display_custom_text": "",
+                                        "display_custom_icon": "",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     },
                                     {
                                         "context_menu_actions": [],
-                                        "show_icon": true,
-                                        "id": "",
-                                        "icon": "",
-                                        "text": "",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "action",
                                         "action_id": "Touchify_Res_TouchifyKritaMenus_Context_PathEditing",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -3089,23 +3142,24 @@
                                             "json_version": 4
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": false,
+                                        "display_custom_text": "",
+                                        "display_custom_icon": "",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     },
                                     {
                                         "context_menu_actions": [
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "hmirror_action",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -3113,26 +3167,34 @@
                                                 },
                                                 "popup_data": {
                                                     "toolshelf_data": {
-                                                        "pages": []
+                                                        "pages": [],
+                                                        "json_version": 3,
+                                                        "homepage": {
+                                                            "sections": [],
+                                                            "actions": [],
+                                                            "json_version": 2
+                                                        }
                                                     },
-                                                    "actions_items": []
+                                                    "actions_items": [],
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             },
                                             {
                                                 "context_menu_actions": [],
-                                                "show_icon": true,
-                                                "id": "",
-                                                "icon": "",
-                                                "text": "",
-                                                "show_text": false,
-                                                "closes_popup": false,
                                                 "variant": "action",
                                                 "action_id": "vmirror_action",
-                                                "action_use_icon": false,
                                                 "brush_name": "",
-                                                "brush_override_icon": false,
                                                 "docker_id": "",
                                                 "workspace_id": "",
                                                 "docker_group_data": {
@@ -3140,25 +3202,33 @@
                                                 },
                                                 "popup_data": {
                                                     "toolshelf_data": {
-                                                        "pages": []
+                                                        "pages": [],
+                                                        "json_version": 3,
+                                                        "homepage": {
+                                                            "sections": [],
+                                                            "actions": [],
+                                                            "json_version": 2
+                                                        }
                                                     },
-                                                    "actions_items": []
+                                                    "actions_items": [],
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
-                                                "action_composer_mode": false
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "extra_composer_mode": false,
+                                                "extra_closes_popup": false,
+                                                "display_custom_icon_enabled": true,
+                                                "display_custom_text_enabled": false,
+                                                "display_custom_text": "",
+                                                "display_custom_icon": "",
+                                                "display_text_hide": true,
+                                                "display_icon_hide": false
                                             }
                                         ],
-                                        "show_icon": true,
-                                        "id": "MiscActions",
-                                        "icon": "material:dots-horizontal",
-                                        "text": "More...",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "menu",
                                         "action_id": "",
-                                        "action_use_icon": false,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -3178,7 +3248,16 @@
                                             "json_version": 4
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "MiscActions",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_text_enabled": true,
+                                        "display_custom_text": "More...",
+                                        "display_custom_icon": "material:dots-horizontal",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     }
                                 ],
                                 "row_name": "Context Menus"
@@ -3187,17 +3266,9 @@
                                 "actions": [
                                     {
                                         "context_menu_actions": [],
-                                        "show_icon": true,
-                                        "id": "",
-                                        "icon": "",
-                                        "text": "",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "action",
                                         "action_id": "edit_undo",
-                                        "action_use_icon": true,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -3217,21 +3288,22 @@
                                             "json_version": 4
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": false,
+                                        "display_custom_text_enabled": false,
+                                        "display_custom_text": "",
+                                        "display_custom_icon": "",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     },
                                     {
                                         "context_menu_actions": [],
-                                        "show_icon": true,
-                                        "id": "",
-                                        "icon": "",
-                                        "text": "",
-                                        "show_text": false,
-                                        "closes_popup": false,
                                         "variant": "action",
                                         "action_id": "edit_redo",
-                                        "action_use_icon": true,
                                         "brush_name": "",
-                                        "brush_override_icon": false,
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "docker_group_data": {
@@ -3251,7 +3323,16 @@
                                             "json_version": 4
                                         },
                                         "canvas_preset_data": {},
-                                        "action_composer_mode": false
+                                        "json_version": 2,
+                                        "registry_id": "",
+                                        "extra_composer_mode": false,
+                                        "extra_closes_popup": false,
+                                        "display_custom_icon_enabled": false,
+                                        "display_custom_text_enabled": false,
+                                        "display_custom_text": "",
+                                        "display_custom_icon": "",
+                                        "display_text_hide": true,
+                                        "display_icon_hide": false
                                     }
                                 ],
                                 "row_name": "Undo / Redo"
@@ -3294,8 +3375,16 @@
                 "popup_position_y": "start"
             },
             "canvas_preset_data": {},
-            "closes_popup": false,
-            "action_composer_mode": false
+            "json_version": 2,
+            "registry_id": "CustomContext",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": false,
+            "display_custom_text_enabled": true,
+            "display_custom_text": "Context Menu",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
         }
     ],
     "json_version": 1,

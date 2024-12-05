@@ -137,12 +137,16 @@ class CfgToolshelfSection:
     def propertygrid_sorted(self):
         global_groups = [
             "display_name",
+            "min_size",
             "min_size_x",
             "min_size_y",
+            "max_size",
             "max_size_x",
             "max_size_y",
+            "size",
             "size_x",
             "size_y",
+            "panel_location",
             "panel_x",
             "panel_y",
             "ignore_scaling",
@@ -161,8 +165,8 @@ class CfgToolshelfSection:
             "action_section_display_mode",
             "action_section_btn_width", 
             "action_section_btn_height",
-            "action_alignment_x", 
-            "action_alignment_y", 
+            "action_section_alignment_x", 
+            "action_section_alignment_y", 
             "action_section_icon_size",
             "action_section_contents", 
         ]
@@ -190,8 +194,10 @@ class CfgToolshelfSection:
             "action_section_display_mode",
             "action_section_btn_width", 
             "action_section_btn_height",
-            "action_alignment_x", 
-            "action_alignment_y", 
+            "action_section_btn_size",
+            "action_section_alignment_x", 
+            "action_section_alignment_y", 
+            "action_section_alignment",
             "action_section_icon_size",
             "action_section_contents", 
         ]
@@ -252,7 +258,7 @@ class CfgToolshelfSection:
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
         row["action_section_btn_size"] = {"items": ["action_section_btn_width", "action_section_btn_height"]}
-        row["action_section_alignment"] = {"items": ["action_alignment_x","action_alignment_y"]}
+        row["action_section_alignment"] = {"items": ["action_section_alignment_x","action_section_alignment_y"]}
         row["size"] = {"items": ["size_x","size_y"]}
         row["min_size"] = {"items": ["min_size_x","min_size_y"]}
         row["max_size"] = {"items": ["max_size_x","max_size_y"]}

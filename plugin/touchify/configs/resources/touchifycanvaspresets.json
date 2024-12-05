@@ -2,14 +2,9 @@
     "actions_registry": [
         {
             "context_menu_actions": [],
-            "id": "DarkCanvas",
-            "icon": "material:moon-waning-crescent",
-            "text": "Dark Canvas",
             "variant": "canvas_preset",
             "action_id": "",
-            "action_use_icon": false,
             "brush_name": "",
-            "brush_override_icon": false,
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": {
@@ -63,19 +58,20 @@
                     "b": 128
                 }
             },
-            "show_text": false,
-            "show_icon": true
+            "json_version": 2,
+            "registry_id": "DarkCanvas",
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": true,
+            "display_custom_text": "Dark Canvas",
+            "display_custom_icon": "material:moon-waning-crescent",
+            "display_text_hide": true,
+            "display_icon_hide": false
         },
         {
             "context_menu_actions": [],
-            "id": "LightCanvas",
-            "icon": "material:white-balance-sunny",
-            "text": "Light Canvas",
             "variant": "canvas_preset",
             "action_id": "",
-            "action_use_icon": false,
             "brush_name": "",
-            "brush_override_icon": false,
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": {
@@ -129,8 +125,14 @@
                     "b": 128
                 }
             },
-            "show_text": false,
-            "show_icon": true
+            "json_version": 2,
+            "registry_id": "LightCanvas",
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": true,
+            "display_custom_text": "Light Canvas",
+            "display_custom_icon": "material:white-balance-sunny",
+            "display_text_hide": true,
+            "display_icon_hide": false
         }
     ],
     "json_version": 1,

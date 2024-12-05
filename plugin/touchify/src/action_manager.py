@@ -33,6 +33,8 @@ if TYPE_CHECKING:
     from .window import TouchifyWindow
 
 class ActionManager(QObject):
+
+    onComposerEnd=pyqtSignal()
     
     def __init__(self, instance: "TouchifyWindow"):
         super().__init__()
@@ -119,17 +121,18 @@ class ActionManager(QObject):
 
     def openPopup(self, data: CfgTouchifyActionPopup, _parent: QWidget = None):
         is_dead = True
-        if data.id in self.active_popups:
+        popup_id = str(data.id)
+        if popup_id in self.active_popups:
             is_dead = False
-            popup = self.active_popups[data.id]
+            popup = self.active_popups[popup_id]
             try: 
                 popup.isVisible()
             except:
                 is_dead = True
 
         if is_dead:
-            if data.id in self.active_popups: 
-                del self.active_popups[data.id]
+            if popup_id in self.active_popups: 
+                del self.active_popups[popup_id]
 
             if data.type == CfgTouchifyActionPopup.Variants.Actions:
                 popup = PopupDialog_Actions(self.appEngine.windowSource.qwindow().window(), data, self)
@@ -139,7 +142,7 @@ class ActionManager(QObject):
                 popup = PopupDialog_Toolshelf(self.appEngine.windowSource.qwindow().window(), data, self, self.appEngine.docker_management)
             else:
                 popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
-            self.active_popups[data.id] = popup
+            self.active_popups[popup_id] = popup
 
         popup.triggerPopup(_parent)
 
@@ -160,7 +163,26 @@ class ActionManager(QObject):
         
         initToolboxHook()
 
-    def onActionBtnPressed(self):
+    def onComposerBtnPressed(self, btn: TouchifyActionButton, onClick: any):
+        def tryFindParentPopup(source: QWidget):
+            from touchify.src.components.touchify.popups.PopupDialog import PopupDialog
+            try:
+                widget = source.parent()
+                while (widget):
+                    foo = widget
+                    if isinstance(foo, PopupDialog):
+                        return foo
+                    widget = widget.parent()
+                return None
+            except:
+                return None
+            
+        parentPopup = tryFindParentPopup(btn)
+        if parentPopup: 
+            parentPopup.composer_work_around = True
+            self.onComposerEnd.connect(parentPopup.composerEndEvent)
+
+        onClick()
         self.composer_action_down = True
 
     def onConfigUpdated(self):
@@ -197,6 +219,8 @@ class ActionManager(QObject):
     def onMouseRelease(self):
         if self.composer_action_down == True:
             QApplication.instance().sendEvent(Krita.instance().activeWindow().qwindow(), QKeyEvent(QEvent.Type.KeyRelease, Qt.Key.Key_Escape, Qt.KeyboardModifier.NoModifier))
+            self.onComposerEnd.emit()
+            self.onComposerEnd.disconnect()
             self.composer_action_down = False
 
     def onTimerTick(self):
@@ -384,8 +408,7 @@ class ActionManager(QObject):
         
         if onClick:
             if composerMode:
-                btn.pressed.connect(onClick)
-                btn.pressed.connect(self.onActionBtnPressed)
+                btn.pressed.connect(lambda: self.onComposerBtnPressed(btn, onClick))
             else:
                 btn.clicked.connect(onClick) # collect and disconnect all when closing
         btn.setToolTip(toolTip)

@@ -34,6 +34,9 @@ class PopupDialog(QDockWidget):
         self.autoConceal = False
         self.time_since_opening = QTime()
 
+
+        self.composer_work_around = False
+
         self.parent_popup: PopupDialog | None = None
         self.child_popup_focused: bool = False
 
@@ -263,13 +266,20 @@ class PopupDialog(QDockWidget):
     
     #region Events 
 
+    def composerEndEvent(self):
+        self.composer_work_around = False
+
     def event(self, event: QEvent):
-        if event.type() == QEvent.Type.WindowDeactivate:
-            if self.closing_method == CfgTouchifyActionPopup.ClosingMethod.Default:
-                if self.windowMode != CfgTouchifyActionPopup.WindowType.Window:
-                    self.closePopup()
-            elif self.closing_method == CfgTouchifyActionPopup.ClosingMethod.Deactivation:
+        is_deactivation_event = event.type() == QEvent.Type.WindowDeactivate and not self.isActiveWindow()
+        if not is_deactivation_event: return super().event(event)
+        if self.composer_work_around: return super().event(event)
+        
+        if self.closing_method == CfgTouchifyActionPopup.ClosingMethod.Deactivation:
+            self.closePopup()
+        else:
+            if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
                 self.closePopup()
+
         return super().event(event)
 
     def closeEvent(self, event):

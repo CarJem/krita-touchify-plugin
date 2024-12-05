@@ -295,14 +295,9 @@
                         "actions": [
                             {
                                 "context_menu_actions": [],
-                                "id": "",
-                                "icon": "",
-                                "text": "",
                                 "variant": "action",
                                 "action_id": "view_show_canvas_only",
-                                "action_use_icon": true,
                                 "brush_name": "",
-                                "brush_override_icon": false,
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "docker_group_data": {
@@ -321,19 +316,20 @@
                                     "actions_items": [],
                                     "json_version": 4
                                 },
-                                "show_text": false,
-                                "show_icon": true
+                                "json_version": 2,
+                                "registry_id": "",
+                                "display_custom_icon_enabled": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "display_custom_icon": "",
+                                "display_text_hide": true,
+                                "display_icon_hide": false
                             },
                             {
                                 "context_menu_actions": [],
-                                "id": "",
-                                "icon": "",
-                                "text": "",
                                 "variant": "action",
                                 "action_id": "mirror_canvas",
-                                "action_use_icon": true,
                                 "brush_name": "",
-                                "brush_override_icon": false,
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "docker_group_data": {
@@ -352,19 +348,20 @@
                                     "actions_items": [],
                                     "json_version": 4
                                 },
-                                "show_text": false,
-                                "show_icon": true
+                                "json_version": 2,
+                                "registry_id": "",
+                                "display_custom_icon_enabled": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "display_custom_icon": "",
+                                "display_text_hide": true,
+                                "display_icon_hide": false
                             },
                             {
                                 "context_menu_actions": [],
-                                "id": "",
-                                "icon": "",
-                                "text": "",
                                 "variant": "action",
                                 "action_id": "fullscreen",
-                                "action_use_icon": true,
                                 "brush_name": "",
-                                "brush_override_icon": false,
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "docker_group_data": {
@@ -383,8 +380,14 @@
                                     "actions_items": [],
                                     "json_version": 4
                                 },
-                                "show_text": false,
-                                "show_icon": true
+                                "json_version": 2,
+                                "registry_id": "",
+                                "display_custom_icon_enabled": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "display_custom_icon": "",
+                                "display_text_hide": true,
+                                "display_icon_hide": false
                             }
                         ],
                         "row_name": "Actions Row"

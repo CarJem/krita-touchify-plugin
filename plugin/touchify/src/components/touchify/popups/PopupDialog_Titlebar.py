@@ -50,7 +50,7 @@ class PopupDialog_Titlebar(QFrame):
         self.closeButton.setIcon(Krita.instance().icon('docker_close'))
         self.closeButton.setFixedSize(buttonSize,buttonSize)
         self.closeButton.setIconSize(QSize(iconSize, iconSize))
-        self.closeButton.clicked.connect(self.parentDialog.close)
+        self.closeButton.clicked.connect(self.parentDialog.closePopup)
         self.closeButton.setStyleSheet(Stylesheet.instance().touchify_toggle_button)
         self.ourLayout.addWidget(self.closeButton)
 
