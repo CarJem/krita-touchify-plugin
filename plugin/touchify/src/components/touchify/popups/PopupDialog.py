@@ -46,7 +46,7 @@ class PopupDialog(QDockWidget):
         
         self.windowMode = self.metadata.window_type
         self.popupType = self.metadata.type
-        self.window_allow_resize = True
+        self.window_resizing_enabled = True
 
     #region Helper Methods
 
@@ -177,7 +177,7 @@ class PopupDialog(QDockWidget):
         elif self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
             if self.isCollapsed == False:
                 self.setMinimumSize(dialog_width, dialog_height)
-                if self.window_allow_resize == False:
+                if self.window_resizing_enabled == False:
                     self.resize(dialog_width, dialog_height)
 
     def tryFindParentPopup(self, source: QWidget):

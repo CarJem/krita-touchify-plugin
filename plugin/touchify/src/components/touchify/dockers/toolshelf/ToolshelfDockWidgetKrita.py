@@ -24,8 +24,7 @@ class ToolshelfDockWidgetKrita(DockWidget):
         self.docker_manager: DockerManager = None
         self.actions_manager: ActionManager = None
         self.PanelIndex = 2
-        self._last_panel_id: str | None = None
-        self._last_pinned: bool = False
+        self.previous_state: ToolshelfWidget.PreviousState = ToolshelfWidget.PreviousState()
         self.setWindowTitle(DOCKER_TITLE)
       
     def setup(self, instance: "TouchifyWindow"):
@@ -39,11 +38,11 @@ class ToolshelfDockWidgetKrita(DockWidget):
     def onLoaded(self):              
         self.mainWidget = ToolshelfWidget(self, TouchifyConfig.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
         self.setWidget(self.mainWidget)
-        self.mainWidget.restorePreviousState(self._last_pinned, self._last_panel_id)
+        self.mainWidget.restorePreviousState(self.previous_state)
 
     def onUnload(self):
         if hasattr(self, 'mainWidget'):
-            self._last_pinned, self._last_panel_id = self.mainWidget.backupPreviousState()
+            self.previous_state = self.mainWidget.backupPreviousState()
             self.mainWidget.shutdownWidget()
             self.mainWidget.deleteLater()
             self.mainWidget = None

@@ -29,6 +29,11 @@ class Menu(QMenu):
         self.editMode.setCheckable(True)
         self.editMode.setChecked(False)
 
+        self.toggleResizeAct: QAction = QAction("Allow Resizing", self)
+        self.toggleResizeAct.changed.connect(self.toggleResize)
+        self.toggleResizeAct.setCheckable(True)
+        self.toggleResizeAct.setChecked(cfg.header_options.default_to_resize_mode)
+
         
         if self.registry_index != -1:
             self.current_preset_index = TouchifyConfig.instance().getActiveToolshelfIndex(self.registry_index)
@@ -39,14 +44,17 @@ class Menu(QMenu):
             self.parentNtWidget = self.findWidgetPad()
             if self.parentNtWidget != None:
                 if self.parentNtWidget.allowResizing:
-                    self.addActions([self.parentNtWidget.action_toggleResize])
+                    self.parentNtWidget.updateResizingState(self.toggleResizeAct.isChecked())
+                    self.addActions([self.toggleResizeAct])
                     self.addSeparator()
             self.setupWidgetPad = False
         if self.setupPopup:
             self.parentPopup = self.findPopup()
             if self.parentPopup != None:
-                self.addActions([self.parentPopup.action_toggleResize])
-                self.addSeparator()
+                if self.parentPopup.toolshelf_allow_resizing:
+                    self.parentPopup.updateResizingState(self.toggleResizeAct.isChecked())
+                    self.addActions([self.toggleResizeAct])
+                    self.addSeparator()
             self.setupPopup = False
         if self.setupGlobal:
             self.addAction(self.editMode)
@@ -78,6 +86,14 @@ class Menu(QMenu):
             return None
         except:
             return None
+        
+    def toggleResize(self):
+        state = self.toggleResizeAct.isChecked()
+        if self.parentNtWidget != None:
+            self.parentNtWidget.updateResizingState(state)
+        elif self.parentPopup != None:
+            self.parentPopup.updateResizingState(state)
+        
 
     def loadPresets(self):
         self.clear()

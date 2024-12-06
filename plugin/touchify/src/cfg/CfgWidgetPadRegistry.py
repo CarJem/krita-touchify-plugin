@@ -35,8 +35,10 @@ class CfgWidgetPadRegistry:
             json.dump(cfg, f, default=lambda o: o.__dict__, indent=4)
 
     def load(self):
-        if self.HAS_ALREADY_LOADED:
-            return
+        #if self.HAS_ALREADY_LOADED:
+            #return
+        
+        self.presets.clear()
 
         presetList = {}
         files = [f for f in os.listdir(self.ROOT_DIRECTORY) if os.path.isfile(os.path.join(self.ROOT_DIRECTORY, f))]

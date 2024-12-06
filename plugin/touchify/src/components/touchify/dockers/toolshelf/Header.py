@@ -26,7 +26,6 @@ class Header(QWidget):
         super(Header, self).__init__(parent_toolshelf)
 
         self.parent_toolshelf: ToolshelfWidget = parent_toolshelf
-        self.registry_index = registry_index
         self.is_menu_preloaded = False
         self.orientation = orientation
         self.cfg = cfg
@@ -44,7 +43,7 @@ class Header(QWidget):
         self.setLayout(self.ourLayout)
 
 
-        self.optionsMenu = Menu(self, self.cfg, self.registry_index)
+        self.optionsMenu = Menu(self, self.cfg, registry_index)
         self.optionsMenu.aboutToHide.connect(self.onHideSettings)
 
         self.mainButton = QPushButton(self)

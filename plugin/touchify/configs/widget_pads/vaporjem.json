@@ -1,15 +1,16 @@
 {
-    "preset_name": "Developer's Pick",
+    "preset_name": "VaporJem",
     "toolbox": {
-        "position_x": 0,
+        "position_x": 3,
         "position_y": 0,
-        "alignment_x": "left",
+        "alignment_x": "right",
         "alignment_y": "top",
         "horizontal_mode": false,
         "span_x": -1,
         "span_y": -1,
         "stretch_x": 0,
-        "stretch_y": 0
+        "stretch_y": 0,
+        "json_version": 1
     },
     "toolshelf": {
         "position_x": 2,
@@ -30,5 +31,6 @@
         "stretch_y": 0,
         "span_x": -1,
         "span_y": -1
-    }
+    },
+    "json_version": 1
 }

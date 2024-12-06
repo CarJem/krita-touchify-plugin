@@ -34,6 +34,12 @@ class ToolshelfWidget(QWidget):
                 self.mouseReleased.emit()
             return super().eventFilter(obj, event)
 
+    class PreviousState:
+        def __init__(self):
+            self._last_toolshelf_id: str | None = None
+            self._last_pinned: bool = False
+            self._last_resizable: bool = False
+            self._last_panel_id: str | None = None
 
     def __init__(self, parent: "ToolshelfDockWidget", cfg: CfgToolshelf, registry_index: int = -1):
         super(ToolshelfWidget, self).__init__(parent)
@@ -43,6 +49,7 @@ class ToolshelfWidget(QWidget):
         self.parent_docker: "ToolshelfDockWidget" | "ToolshelfDockWidgetKrita" | "PopupDialog_Toolshelf"  = parent
         self.registry_index = registry_index
         self.cfg = cfg
+        self.toolshelf_id = cfg.preset_name
 
         self.activateWidget()
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
@@ -105,6 +112,13 @@ class ToolshelfWidget(QWidget):
     
     #region Getters / Setters
 
+    def setResizable(self, value: bool | None = None):
+        if value == None:
+            self.resizable = not self.resizable
+        else:
+            self.resizable = value
+        self.header.pinButton.setChecked(self.pinned)
+
     def setPinned(self, value: bool | None = None):
         if value == None:
             self.pinned = not self.pinned
@@ -124,15 +138,21 @@ class ToolshelfWidget(QWidget):
         self.pinned = not self.pinned
         self.header.pinButton.setChecked(self.pinned)
 
-    def restorePreviousState(self, _last_pinned: bool, _last_panel_id: str):
-        if _last_pinned:
-            self.setPinned(_last_pinned)
+    def restorePreviousState(self, previous_state: PreviousState):
+        if previous_state._last_toolshelf_id == self.toolshelf_id:            
+            self.header.optionsMenu.toggleResizeAct.setChecked(previous_state._last_resizable)
+            self.setPinned(previous_state._last_pinned)
 
-        if self.pages.panel(_last_panel_id) != None:
-            self.pages.changePanel(_last_panel_id)
+            if self.pages.panel(previous_state._last_panel_id) != None:
+                self.pages.changePanel(previous_state._last_panel_id)
 
     def backupPreviousState(self):
-        return (self.pinned, self.pages._current_panel_id)
+        state = ToolshelfWidget.PreviousState()
+        state._last_toolshelf_id = self.toolshelf_id
+        state._last_pinned = self.pinned
+        state._last_resizable = self.header.optionsMenu.toggleResizeAct.isChecked()
+        state._last_panel_id = self.pages._current_panel_id
+        return state
     
     def deactivateWidget(self):
         if self.is_active == True:

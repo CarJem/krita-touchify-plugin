@@ -28,7 +28,11 @@ class PopupDialog_Toolshelf(PopupDialog):
         self.actions_manager: "ActionManager" = action_manager
         self.toolshelf_data = args.toolshelf_data
 
-        self.window_allow_resize = self.toolshelf_data.header_options.default_to_resize_mode
+        self.toolshelf_allow_resizing = self.windowMode == CfgTouchifyActionPopup.WindowType.Window
+        if self.toolshelf_allow_resizing:
+            self.window_resizing_enabled = self.toolshelf_data.header_options.default_to_resize_mode
+        else:
+            self.window_resizing_enabled = False
 
         self.grid = QVBoxLayout(self)
         self.grid.setContentsMargins(0,0,0,0)
@@ -38,19 +42,11 @@ class PopupDialog_Toolshelf(PopupDialog):
         self.mainWidget = ToolshelfWidget(self, self.toolshelf_data)
         self.mainWidget.sizeChanged.connect(self.requestViewUpdate)
         self.grid.addWidget(self.mainWidget)
-        self.createActions()
 
-    def allowResizingChanged(self):
-        self.window_allow_resize = self.action_toggleResize.isChecked()
-        self.requestViewUpdate()
-
-    def createActions(self):
-        self.action_toggleResize = QAction(self)
-        self.action_toggleResize.setText("Allow resizing")
-        self.action_toggleResize.setCheckable(True)
-        self.action_toggleResize.setChecked(self.window_allow_resize)
-        self.action_toggleResize.setEnabled(self.windowMode == CfgTouchifyActionPopup.WindowType.Window)
-        self.action_toggleResize.changed.connect(self.allowResizingChanged)
+    def updateResizingState(self, value: bool):
+        if self.toolshelf_allow_resizing:
+            self.window_resizing_enabled = value
+            self.requestViewUpdate()
 
     def hasPanelStack(self):
         if hasattr(self, "panelStack"):

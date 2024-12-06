@@ -26,8 +26,7 @@ class ToolshelfDockWidget(QDockWidget):
         stylesheet = f"""QScrollArea {{ background: transparent; }}
         QScrollArea > QWidget > ToolshelfContainer {{ background: transparent; }}
         """
-        self._last_panel_id: str | None = None
-        self._last_pinned: bool = False
+        self.previous_state: ToolshelfWidget.PreviousState = ToolshelfWidget.PreviousState()
         self.scrollArea = QScrollArea(self)
         self.scrollArea.setContentsMargins(0,0,0,0)
         self.scrollArea.setViewportMargins(0,0,0,0)
@@ -55,10 +54,10 @@ class ToolshelfDockWidget(QDockWidget):
     def onLoaded(self):              
         self.mainWidget = ToolshelfWidget(self, TouchifyConfig.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
         self.scrollArea.setWidget(self.mainWidget)
-        self.mainWidget.restorePreviousState(self._last_pinned, self._last_panel_id)
+        self.mainWidget.restorePreviousState(self.previous_state)
 
     def onUnload(self):
-        self._last_pinned, self._last_panel_id = self.mainWidget.backupPreviousState()
+        self.previous_state = self.mainWidget.backupPreviousState()
         self.mainWidget.shutdownWidget()
         self.scrollArea.takeWidget()
         self.mainWidget.deleteLater()

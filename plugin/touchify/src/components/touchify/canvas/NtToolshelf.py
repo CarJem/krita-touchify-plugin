@@ -4,7 +4,6 @@ from touchify.src.docker_manager import DockerManager
 from touchify.src.action_manager import ActionManager
 
 
-from touchify.src.settings import TouchifyConfig
 from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from krita import *
 from touchify.src.variables import *
@@ -26,12 +25,6 @@ class NtToolshelf(NtWidgetPad):
 
         self.setObjectName("toolshelfPad")
         self.borrowDocker(self.toolshelf)
-
-        toolshelf_cfg = TouchifyConfig.instance().getActiveToolshelf(panel_index)
-        if toolshelf_cfg:
-            if toolshelf_cfg.header_options:
-                if toolshelf_cfg.header_options.default_to_pinned == True:
-                    self.toggle()
         
 
     def onUpdateViewRequested(self):

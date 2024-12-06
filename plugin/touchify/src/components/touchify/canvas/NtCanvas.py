@@ -179,6 +179,7 @@ class NtCanvas(QWidget):
         super().paintEvent(e)
 
     def onConfigUpdate(self):
+        self.reloadActivePreset()
         if self.toolbox: self.toolbox.updateStyle()
 
         if self.toolboxOptions: 

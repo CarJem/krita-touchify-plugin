@@ -92,15 +92,6 @@ class NtWidgetPad(QWidget):
         self.installEventFilter(self.adjustFilter)
 
         self.mdiArea.subWindowActivated.connect(self.onSubWindowActivated)        
-
-        self.createActions()
-    
-    def createActions(self):
-        self.action_toggleResize = QAction(self)
-        self.action_toggleResize.setText("Allow resizing")
-        self.action_toggleResize.setCheckable(True)
-        self.action_toggleResize.changed.connect(self.allowResizingChanged)
-        self.action_toggleResize.setEnabled(self.allowResizing)
         
     #region States
     def mouseInGrip(self, mousePos: QPoint):
@@ -307,10 +298,6 @@ class NtWidgetPad(QWidget):
 
     #region Functions
 
-    def toggleResizing(self):
-        if self.allowResizing:
-            self.action_toggleResize.trigger()
-
     def toggleWidgetVisible(self, value=None):
         if self.widget:
             if not value:
@@ -327,9 +314,9 @@ class NtWidgetPad(QWidget):
     
     #region Signals
     
-    def allowResizingChanged(self):
+    def updateResizingState(self, value: bool):
         if self.allowResizing:
-            self.resizingEnabled = self.action_toggleResize.isChecked()
+            self.resizingEnabled = value
         self.adjustToView()
         self.updateCursor(self.cursor().pos())
         

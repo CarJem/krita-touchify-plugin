@@ -170,7 +170,6 @@ class Panel(QWidget):
         self.page_stack: "PageStack" = toolshelf
         self.panel_config = data
 
-        self.edit_mode = False
         self.docker_manager = self.page_stack.rootWidget.parent_docker.docker_manager
         self.actions_manager = self.page_stack.rootWidget.parent_docker.actions_manager
         self.dockerWidgets: dict[any, DockerContainer] = {}
