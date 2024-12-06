@@ -28,6 +28,9 @@ class CfgToolshelfHeaderOptions:
     default_to_resize_mode: bool = False
     default_to_pinned: bool = False
 
+    show_pin_button: bool = True
+    show_menu_button: bool = True
+
 
     position: str = "top"
     stack_preview: str = "default"
@@ -48,6 +51,8 @@ class CfgToolshelfHeaderOptions:
         return [
             "default_to_resize_mode",
             "default_to_pinned",
+            "show_menu_button",
+            "show_pin_button",
             "button_size",
             "header_size",
             "position",
@@ -59,6 +64,7 @@ class CfgToolshelfHeaderOptions:
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
         row["default_options"] = {"items": ["default_to_resize_mode","default_to_pinned"], "use_labels": True}
+        row["visibility_options"] = {"items": ["show_menu_button","show_pin_button"], "use_labels": True}
         return row
 
     def propertygrid_labels(self):
@@ -66,6 +72,9 @@ class CfgToolshelfHeaderOptions:
         labels["default_options"] = "Defaults"
         labels["default_to_resize_mode"] = "Resizable"
         labels["default_to_pinned"] = "Pinned"
+        labels["visibility_options"] = "Show"
+        labels["show_menu_button"] = "Options Button"
+        labels["show_pin_button"] = "Pin Button"
         labels["button_size"] = "Button Size"
         labels["header_size"] = "Header Size"
         labels["position"] = "Header Position"

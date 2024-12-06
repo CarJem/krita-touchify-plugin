@@ -117,6 +117,21 @@ class Stylesheet:
         except AttributeError:
             Stylesheet.__instance = Stylesheet()
             return Stylesheet.__instance
+        
+    def touchify_edit_mode_selector(self):
+        base_color = qApp.palette().highlight().color()
+        base_factor = 25
+
+        normal_color = f"rgba({base_color.red()},{base_color.green()},{base_color.blue()},{0})"
+        hover_color = f"rgba({base_color.red() + base_factor},{base_color.green() + base_factor},{base_color.blue() + base_factor},{150})"
+        press_color = f"rgba({base_color.red() - base_factor},{base_color.green() - base_factor},{base_color.blue() - base_factor},{150})"
+
+        normal_style = f"QPushButton {{ background-color: {normal_color}; border: none; }}"
+        hover_style = f"QPushButton:hover {{ background-color: {hover_color}; border: none; }}"
+        pressed_style = f"QPushButton:pressed {{ background-color: {press_color}; border: none; }}"
+        
+        stylesheet = f"{normal_style} {hover_style} {pressed_style}"
+        return stylesheet
 
     def touchify_action_btn_popup(self, opacityLevel: float):
 

@@ -1,10 +1,11 @@
+from copy import deepcopy
 from PyQt5.QtWidgets import QSizePolicy, QStackedWidget
 from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
 from touchify.src.components.touchify.actions.TouchifyActionPanel import TouchifyActionPanel
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfPage import ToolshelfPage
+from touchify.src.components.touchify.dockers.toolshelf.Page import Page
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 
 from touchify.src.settings import *
@@ -12,20 +13,19 @@ from touchify.src.variables import *
 from touchify.src.docker_manager import *
 
 from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfHomepage import ToolshelfHomepage
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfPage import ToolshelfPage
+from touchify.src.components.touchify.dockers.toolshelf.Page import Page
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ToolshelfWidget import ToolshelfWidget
 
-class ToolshelfPageStack(QStackedWidget):
+class PageStack(QStackedWidget):
     def __init__(self, parent: "ToolshelfWidget", cfg: CfgToolshelf):
-        super(ToolshelfPageStack, self).__init__(parent)
+        super(PageStack, self).__init__(parent)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         
         self.rootWidget: "ToolshelfWidget"  = parent
-        self._panels = {}
+        self._panels: dict[str, Page] = {}
         self._current_panel_id = 'ROOT'
         self.cfg = cfg
 
@@ -40,6 +40,11 @@ class ToolshelfPageStack(QStackedWidget):
 
         self.changePanel('ROOT')
         self.evaluateSize()
+
+    def setEditMode(self, value: bool):
+        for panel_id in self._panels:
+            panel = self._panels[panel_id]
+            panel.setEditMode(value)
 
     def evaluateSize(self):
         for i in range(0, self.count()):
@@ -60,12 +65,15 @@ class ToolshelfPageStack(QStackedWidget):
 
 
     def addMainPanel(self):
-        self._mainWidget = ToolshelfHomepage(self, self.cfg)
+        data = deepcopy(self.cfg.homepage)
+        data.id = 'ROOT'
+        self._mainWidget = Page(self, data)
+        self._mainWidget.panel.sections_stack.setAutoFillBackground(False)
         self._panels['ROOT'] = self._mainWidget
         super().addWidget(self._mainWidget)
 
     def addPanel(self, data: CfgToolshelfPanel):
-        panel = ToolshelfPage(self, data)
+        panel = Page(self, data)
         self._panels[data.id] = panel
         super().addWidget(panel)
 
@@ -106,7 +114,7 @@ class ToolshelfPageStack(QStackedWidget):
 
         self.adjustSize()
 
-    def panel(self, name) -> ToolshelfPage:
+    def panel(self, name) -> Page:
         if name in self._panels:
             return self._panels[name]
         else:

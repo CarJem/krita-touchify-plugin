@@ -3,16 +3,15 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfEditMode import ToolshelfEditMode
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfHeader import ToolshelfHeader
+from touchify.src.components.touchify.dockers.toolshelf.Header import Header
 
+from touchify.src.components.touchify.dockers.toolshelf.TabList import TabList
 from touchify.src.settings import *
 from touchify.src.variables import *
 from touchify.src.docker_manager import *
 
 from touchify.src.cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfPageStack import ToolshelfPageStack
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfCanvasListener import ToolshelfCanvasListener
+from touchify.src.components.touchify.dockers.toolshelf.PageStack import PageStack
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -23,10 +22,23 @@ if TYPE_CHECKING:
 class ToolshelfWidget(QWidget):
     sizeChanged=pyqtSignal()
 
+    class CanvasListener(QObject):
+        mouseReleased = pyqtSignal()
+
+        def __init__(self):
+            super().__init__()
+
+        def eventFilter(self, obj, event):
+            if (event.type() == QEvent.MouseButtonRelease and event.button() == Qt.LeftButton) or \
+            (event.type() == QEvent.TabletRelease and event.button() == Qt.LeftButton):
+                self.mouseReleased.emit()
+            return super().eventFilter(obj, event)
+
+
     def __init__(self, parent: "ToolshelfDockWidget", cfg: CfgToolshelf, registry_index: int = -1):
         super(ToolshelfWidget, self).__init__(parent)
 
-        self.mouse_listener = ToolshelfCanvasListener()
+        self.mouse_listener = ToolshelfWidget.CanvasListener()
         self.pinned = False
         self.parent_docker: "ToolshelfDockWidget" | "ToolshelfDockWidgetKrita" | "PopupDialog_Toolshelf"  = parent
         self.registry_index = registry_index
@@ -36,8 +48,6 @@ class ToolshelfWidget(QWidget):
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.setContentsMargins(0,0,0,0)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-
-        self.edit_mode_connector = ToolshelfEditMode(self)
      
         headerOrientation = Qt.Orientation.Horizontal
         headerBeforePages = True
@@ -56,8 +66,9 @@ class ToolshelfWidget(QWidget):
                 headerOrientation = Qt.Orientation.Vertical
                 headerBeforePages = False
 
-        self.header = ToolshelfHeader(self, self.cfg, self.registry_index, headerOrientation)
-        self.pages = ToolshelfPageStack(self, self.cfg)
+        self.header = Header(self, self.cfg, self.registry_index, headerOrientation)
+        self.tabs = TabList(self.header, headerOrientation)
+        self.pages = PageStack(self, self.cfg)
 
         self.mainLayout = QVBoxLayout(self) if headerOrientation == Qt.Orientation.Horizontal else QHBoxLayout(self)
         self.mainLayout.setSpacing(0)
@@ -65,6 +76,7 @@ class ToolshelfWidget(QWidget):
         self.setLayout(self.mainLayout)
 
         self.mainLayout.addWidget(self.header)
+        self.mainLayout.addWidget(self.tabs)
         self.mainLayout.addWidget(self.pages)
 
         self.header.optionsMenu.editMode.changed.connect(self.editModeChanged)
@@ -151,13 +163,14 @@ class ToolshelfWidget(QWidget):
     #region Signals
 
     def editModeChanged(self):
-        self.edit_mode = self.header.optionsMenu.editMode.isChecked()
-        self.edit_mode_connector.setEnabled(self.edit_mode)
+        edit_mode = self.header.optionsMenu.editMode.isChecked()
+        self.pages.setEditMode(edit_mode)
     
     def onPageChanged(self, current_panel_id: str):
         self.requestViewUpdate()
         if hasattr(self, 'header'):
             self.header.onPageChanged(current_panel_id)
+            self.tabs.onPageChanged(current_panel_id)
 
     def requestViewUpdate(self):
         QTimer.singleShot(150, self.parent_docker.requestViewUpdate)

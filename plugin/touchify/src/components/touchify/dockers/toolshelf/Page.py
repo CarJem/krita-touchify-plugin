@@ -1,22 +1,20 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-
 from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfPanel import ToolshelfPanel
-
+from touchify.src.components.touchify.dockers.toolshelf.Panel import Panel
 
 from krita import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .ToolshelfPageStack import ToolshelfPageStack
+    from .PageStack import PageStack
 
 
-class ToolshelfPage(QWidget):
+class Page(QWidget):
     
-    def __init__(self, parent: "ToolshelfPageStack", data: CfgToolshelfPanel):
-        super(ToolshelfPage, self).__init__(parent)
+    def __init__(self, parent: "PageStack", data: CfgToolshelfPanel):
+        super(Page, self).__init__(parent)
         self.setAutoFillBackground(True)
         self.setLayout(QVBoxLayout(self))
         self.layout().setSpacing(0)
@@ -24,14 +22,17 @@ class ToolshelfPage(QWidget):
 
         self.ID = data.id
 
-        self.toolshelf: "ToolshelfPageStack" = parent
+        self.toolshelf: "PageStack" = parent
         self.docker_manager = self.toolshelf.rootWidget.parent_docker.docker_manager
         self.actions_manager = self.toolshelf.rootWidget.parent_docker.actions_manager
 
-        self.panel: ToolshelfPanel = ToolshelfPanel(self, parent, data)        
+        self.panel: Panel = Panel(self, parent, data)        
         self.layout().addWidget(self.panel)
 
         self.updateStyleSheet()
+
+    def setEditMode(self, value: bool):
+        self.panel.setEditMode(value)
     
     def activate(self):
         self.toolshelf.changePanel(self.ID)

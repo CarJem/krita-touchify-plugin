@@ -58,7 +58,10 @@
         "button_size": 32,
         "header_size": 16,
         "stack_alignment": "default",
-        "json_version": 1
+        "json_version": 1,
+        "show_menu_button": true,
+        "show_pin_button": true,
+        "default_to_pinned": false
     },
     "preset_name": "VaporJem",
     "json_version": 3,

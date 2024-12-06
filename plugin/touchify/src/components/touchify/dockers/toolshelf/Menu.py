@@ -11,12 +11,12 @@ from touchify.src.docker_manager import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .ToolshelfHeader import ToolshelfHeader
+    from .Header import Header
     from touchify.src.components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
-class ToolshelfMenu(QMenu):
+class Menu(QMenu):
     def __init__(self, parent: QWidget, cfg: CfgToolshelf, registry_index: int):
-        super(ToolshelfMenu, self).__init__(parent)
+        super(Menu, self).__init__(parent)
         self.cfg = cfg
         self.registry_index = registry_index
         self.parentNtWidget: NtWidgetPad = None
@@ -49,7 +49,7 @@ class ToolshelfMenu(QMenu):
                 self.addSeparator()
             self.setupPopup = False
         if self.setupGlobal:
-            #self.addAction(self.editMode)
+            self.addAction(self.editMode)
             self.setupGlobal = False
         
 
