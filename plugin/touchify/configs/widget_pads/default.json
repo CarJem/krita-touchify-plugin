@@ -30,5 +30,6 @@
         "stretch_y": 0,
         "span_x": -1,
         "span_y": -1
-    }
+    },
+    "json_version": 1
 }

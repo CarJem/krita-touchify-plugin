@@ -285,8 +285,8 @@ class CfgToolshelfSection:
         restrictions["action_section_display_mode"] = {"type": "values", "entries": self.ActionSectionDisplayMode.values()}
         restrictions["action_section_btn_width"] = {"type": "range", "min": 0}
         restrictions["action_section_btn_height"] = {"type": "range", "min": 0}
-        restrictions["action_alignment_x"] = {"type": "values", "entries": self.SectionAlignmentX.values()}
-        restrictions["action_alignment_y"] = {"type": "values", "entries": self.SectionAlignmentY.values()}
+        restrictions["action_section_alignment_x"] = {"type": "values", "entries": self.SectionAlignmentX.values()}
+        restrictions["action_section_alignment_y"] = {"type": "values", "entries": self.SectionAlignmentY.values()}
         restrictions["action_section_icon_size"] = {"type": "range", "min": 0}
 
         restrictions["special_item_type"] = {"type": "values", "entries": self.SpecialItemType.values()}

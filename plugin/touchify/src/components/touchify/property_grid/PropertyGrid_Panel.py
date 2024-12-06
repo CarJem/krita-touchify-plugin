@@ -26,7 +26,7 @@ class PropertyGrid_Panel(QScrollArea):
         super().__init__()
 
         self.fields: list[PropertyField] = []
-        self.labels: list[PropertyGrid_Panel.Label] = []
+        self.labels: list[PropertyLabel] = []
         
 
         self.stackHost = parentStack
@@ -93,13 +93,17 @@ class PropertyGrid_Panel(QScrollArea):
         use_labels: bool = False
         if "use_labels" in sister_data:
             use_labels = bool(sister_data["use_labels"])
+
+        flip_labels: bool = False
+        if "flip_labels" in sister_data:
+            flip_labels = bool(sister_data["flip_labels"])
         
 
         sister_field = QWidget(self)
         sister_field.setContentsMargins(0,0,0,0)
         
         if use_labels:
-            layout = QVBoxLayout(sister_field)
+            layout = QFormLayout(sister_field)
             layout.setContentsMargins(0,0,0,0)
             layout.setSpacing(0)
         else:
@@ -111,15 +115,16 @@ class PropertyGrid_Panel(QScrollArea):
             field = self.createField(source, variable_name)
 
             if use_labels:
-                sub_layout = QHBoxLayout()
-                sub_layout.setContentsMargins(0,0,0,0)
-                sub_layout.setSpacing(0)
-                
                 header = self.createLabel(variable_name, labelData, hintData, True)
-                field.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-                sub_layout.addWidget(field)
-                sub_layout.addWidget(header,1)
-                layout.addLayout(sub_layout)
+                if flip_labels:
+                    header.setMaximumWidth(250)
+                    layout.addRow(header, field)
+                else:
+                    field.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+                    layout.addRow(field, header)
+
+                header.setStyleSheet("font-style: italic;")
+                header.setContentsMargins(5,0,5,0)
             else:
                 layout.addWidget(field, 1)
 
@@ -154,13 +159,16 @@ class PropertyGrid_Panel(QScrollArea):
             if variable_id in known_sisters:
                 sister_info = sister_data[variable_id]
                 header = self.createLabel(variable_id, labelData, hintData)
-                header.setFixedWidth(200)
                 field = self.createSisterField(item, sister_info, labelData, hintData)
-                self.formLayout.addRow(header, field)
             else:
                 header = self.createLabel(variable_id, labelData, hintData)
-                header.setFixedWidth(200)
                 field = self.createField(item, variable_id)
-                self.formLayout.addRow(header, field)
+
+            header.setStyleSheet("font-weight: bold;")
+            header.setContentsMargins(5,0,5,0)
+            header.setMaximumWidth(250)
+            field.setContentsMargins(0,0,0,10)
+
+            self.formLayout.addRow(header, field)
 
         self.updateVisibility()

@@ -53,28 +53,40 @@ class TouchifyConfig:
 
         def propertygrid_labels(self):
             labels = {}
-            labels["resources"] = "Resources"
-            labels["toolshelfs"] = "Toolshelf Settings"
-            labels["actions_registry"] = "Registry"
-            labels["hotkeys"] = "Hotkeys"
-            labels["widget_pads"] = "Widget Pads"
+            labels["registries"] = "Registries"
+            labels["resources"] = "Resource Packs"
+            labels["actions_registry"] = "Legacy Registry"
+
+            labels["toolshelfs"] = "Toolshelf Presets"
+            labels["toolshelf_main"] = "Main Toolshelves"
+            labels["toolshelf_alt"] = "Preview Toolshelves "
+            labels["toolshelf_docker"] = "Docker Toolshelves"
+
+            labels["other_presets"] = "Touchify Presets"
             labels["toolbox_settings"] = "Touchify Toolbox"
+            labels["widget_pads"] = "Widget Pads"
+
+            labels["options"] = "Options"
+            labels["hotkeys"] = "Hotkeys"
             labels["preferences"] = "Preferences"
             return labels
         
         def propertygrid_sisters(self):
             row: dict[str, list[str]] = {}
-            row["toolshelfs"] = {"items": ["toolshelf_main", "toolshelf_alt", "toolshelf_docker"]}
+            row["toolshelfs"] = {"items": ["toolshelf_main", "toolshelf_alt", "toolshelf_docker"], "use_labels": True, "flip_labels": True}
+            row["registries"] = {"items": ["resources", "actions_registry"], "use_labels": True, "flip_labels": True}
+            row["options"] = {"items": ["hotkeys", "preferences"], "use_labels": True, "flip_labels": True}
+            row["other_presets"] = {"items": ["toolbox_settings", "widget_pads"], "use_labels": True, "flip_labels": True}
             return row
         
         def propertygrid_restrictions(self):
             restrictions = {}
             restrictions["resources"] = {"type": "expandable"}
-            restrictions["hotkeys"] = {"type": "expandable"}
-            restrictions["toolshelf_main"] = {"type": "expandable", "text": "Main"}
-            restrictions["toolshelf_alt"] = {"type": "expandable", "text": "Preview"}
-            restrictions["toolshelf_docker"] = {"type": "expandable", "text": "Docker"}
             restrictions["actions_registry"] = {"type": "expandable"}
+            restrictions["hotkeys"] = {"type": "expandable"}
+            restrictions["toolshelf_main"] = {"type": "expandable"}
+            restrictions["toolshelf_alt"] = {"type": "expandable"}
+            restrictions["toolshelf_docker"] = {"type": "expandable"}
             restrictions["toolbox_settings"] = {"type": "expandable"}
             restrictions["widget_pads"] = {"type": "expandable"}
             restrictions["preferences"] = {"type": "expandable"}

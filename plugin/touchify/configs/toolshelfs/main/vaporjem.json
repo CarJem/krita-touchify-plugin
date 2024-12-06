@@ -470,7 +470,12 @@
             "size_x": 0,
             "size_y": 0,
             "tab_type": "buttons",
-            "toolshelf_tab_row": 0
+            "toolshelf_tab_row": 0,
+            "display_name": "",
+            "min_size_x": 0,
+            "min_size_y": 0,
+            "max_size_x": 0,
+            "max_size_y": 0
         },
         {
             "sections": [
@@ -1353,6 +1358,71 @@
             },
             {
                 "subpanel_data": {
+                    "sections": [],
+                    "actions": []
+                },
+                "action_section_contents": [
+                    {
+                        "actions": [
+                            {
+                                "context_menu_actions": [],
+                                "display_custom_text_enabled": false,
+                                "json_version": 2,
+                                "registry_id": "",
+                                "display_custom_text": "",
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "variant": "action",
+                                "action_id": "Touchify_Res_VaporJemCore_BrushSmoothingMenu",
+                                "brush_name": "",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "docker_group_data": {
+                                    "docker_names": []
+                                },
+                                "popup_data": {
+                                    "toolshelf_data": {
+                                        "pages": []
+                                    },
+                                    "actions_items": []
+                                },
+                                "canvas_preset_data": {},
+                                "display_text_hide": false,
+                                "display_icon_hide": false
+                            }
+                        ],
+                        "row_name": "Single Button"
+                    }
+                ],
+                "action_section_id": "Button",
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none",
+                "json_version": 4,
+                "display_name": "",
+                "min_size_x": 35,
+                "min_size_y": 35,
+                "max_size_x": 35,
+                "max_size_y": 35,
+                "size_x": 0,
+                "size_y": 0,
+                "panel_x": 1,
+                "panel_y": 1,
+                "ignore_scaling": true,
+                "section_type": "actions",
+                "docker_id": "",
+                "docker_nesting_mode": "normal",
+                "docker_unloaded_visibility": "normal",
+                "docker_loading_priority": "normal",
+                "action_section_display_mode": "normal",
+                "action_section_btn_width": 35,
+                "action_section_btn_height": 35,
+                "action_section_icon_size": 0,
+                "special_item_type": "none"
+            },
+            {
+                "subpanel_data": {
                     "sections": [
                         {
                             "subpanel_data": {
@@ -1727,7 +1797,7 @@
                             {
                                 "context_menu_actions": [],
                                 "variant": "action",
-                                "action_id": "Touchify_Res_VaporJemPopups_QuickSettingsPopup",
+                                "action_id": "Touchify_Res_VaporJemCore_QuickSettingsPopup",
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
@@ -1781,7 +1851,7 @@
                             {
                                 "context_menu_actions": [],
                                 "variant": "action",
-                                "action_id": "Touchify_Res_VaporJemPopups_brushOptionsPopup",
+                                "action_id": "Touchify_Res_VaporJemCore_brushOptionsPopup",
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
