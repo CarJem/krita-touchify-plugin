@@ -95,29 +95,11 @@ class TouchifyWindow(QObject):
 
     #endregion
 
-    #region Event Handlers
-
-    def event_findContextMenus(self):
-        actions = self.windowSource.qwindow().findChildren(QAction)
-        for act in actions:
-            if act.text().find("Selection") != -1:
-                #print("Found IT!!!")
-                pass
-
-    def eventFilter(self, source: QObject, event: QEvent) -> bool:
-        if (event.type() == QEvent.Type.ContextMenu):
-            #print("Context Test")
-            QTimer.singleShot(1000, self.event_findContextMenus)
-
-        return super().eventFilter(source, event)
-
-    #endregion
 
     #region Setup Functions
 
     def setupWindow(self):
         window = self.windowSource.qwindow()
-        window.installEventFilter(self)
 
     def setupActions(self, window: Window):
         self.mainMenuBar = window.qwindow().menuBar().addMenu(TOUCHIFY_ID_MENU_ROOT)
