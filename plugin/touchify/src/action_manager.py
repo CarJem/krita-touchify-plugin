@@ -220,7 +220,10 @@ class ActionManager(QObject):
         if self.composer_action_down == True:
             QApplication.instance().sendEvent(Krita.instance().activeWindow().qwindow(), QKeyEvent(QEvent.Type.KeyRelease, Qt.Key.Key_Escape, Qt.KeyboardModifier.NoModifier))
             self.onComposerEnd.emit()
-            self.onComposerEnd.disconnect()
+            try:
+                self.onComposerEnd.disconnect()
+            except:
+                pass
             self.composer_action_down = False
 
     def onTimerTick(self):
