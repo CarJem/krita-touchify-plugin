@@ -52,7 +52,6 @@ class TouchifyExtension(Extension):
     def onTouchifyConfigUpdated(self):
         for id in self.instances:
             self.instances[id].onTouchifyConfigUpdated()
-
     
     def onWindowDestroyed(self, windowId: str):
         item: TouchifyWindow = self.instances[windowId]
