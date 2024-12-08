@@ -17,8 +17,8 @@ from touchify.src.window import TouchifyWindow
 class TouchifyExtension(Extension):
 
     instances: dict[str, TouchifyWindow] = {}
-    instance_generate: bool = False
-    instance_generated: TouchifyWindow = None
+    setup_instance: bool = False
+    new_instance: TouchifyWindow = None
 
     intervalTimerTicked = pyqtSignal()
 
@@ -53,11 +53,6 @@ class TouchifyExtension(Extension):
         for id in self.instances:
             self.instances[id].onTouchifyConfigUpdated()
 
-    def getNewWindow(self):
-        window = Krita.instance().activeWindow()
-        window_hash = str(window.qwindow().windowHandle().__hash__())
-        if window_hash not in self.instances:
-            return window
     
     def onWindowDestroyed(self, windowId: str):
         item: TouchifyWindow = self.instances[windowId]
@@ -66,18 +61,28 @@ class TouchifyExtension(Extension):
         del self.instances[windowId]
 
     def onWindowCreated(self):
-        if self.instance_generate:
-            new_window = self.getNewWindow()
-            new_window_id = str(new_window.qwindow().windowHandle().__hash__())
-            new_window.windowClosed.connect(lambda: self.onWindowDestroyed(new_window_id))
-            self.instances[new_window_id] = self.instance_generated
-            self.instances[new_window_id].onWindowCreated(new_window)
-            self.instance_generate = False
+        if not self.setup_instance: return
+
+        window: Window | None = None
+        window_id = self.new_instance.windowUUID
+
+        for __window in Krita.instance().windows():
+            if __window.qwindow().property("KRITA_TOUCHIFY_IS_LOADED") != True:
+                __window.qwindow().setProperty("KRITA_TOUCHIFY_IS_LOADED", True)
+                window = __window
+        
+        if window == None: return
+
+        window.windowClosed.connect(lambda: self.onWindowDestroyed(window_id))
+        self.instances[window_id] = self.new_instance
+        self.instances[window_id].onWindowCreated(window)
+
+        self.setup_instance = False
 
     def createActions(self, window: Window):
-        self.instance_generate = True
-        self.instance_generated = TouchifyWindow(self)
-        self.instance_generated.setupActions(window)
+        self.setup_instance = True
+        self.new_instance = TouchifyWindow(self)
+        self.new_instance.setupActions(window)
 
     def getSettingsClipboard(self, requested_type: type):
         if self.settings_clipboard_type == requested_type:
