@@ -1359,7 +1359,8 @@
             {
                 "subpanel_data": {
                     "sections": [],
-                    "actions": []
+                    "actions": [],
+                    "json_version": 2
                 },
                 "action_section_contents": [
                     {
@@ -1384,9 +1385,16 @@
                                 },
                                 "popup_data": {
                                     "toolshelf_data": {
-                                        "pages": []
+                                        "pages": [],
+                                        "json_version": 3,
+                                        "homepage": {
+                                            "sections": [],
+                                            "actions": [],
+                                            "json_version": 2
+                                        }
                                     },
-                                    "actions_items": []
+                                    "actions_items": [],
+                                    "json_version": 4
                                 },
                                 "canvas_preset_data": {},
                                 "display_text_hide": false,

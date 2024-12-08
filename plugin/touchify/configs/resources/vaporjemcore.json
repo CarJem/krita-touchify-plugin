@@ -243,7 +243,8 @@
                             {
                                 "subpanel_data": {
                                     "sections": [],
-                                    "actions": []
+                                    "actions": [],
+                                    "json_version": 2
                                 },
                                 "action_section_contents": [
                                     {
@@ -268,9 +269,16 @@
                                                 },
                                                 "popup_data": {
                                                     "toolshelf_data": {
-                                                        "pages": []
+                                                        "pages": [],
+                                                        "json_version": 3,
+                                                        "homepage": {
+                                                            "sections": [],
+                                                            "actions": [],
+                                                            "json_version": 2
+                                                        }
                                                     },
-                                                    "actions_items": []
+                                                    "actions_items": [],
+                                                    "json_version": 4
                                                 },
                                                 "canvas_preset_data": {},
                                                 "display_text_hide": false,
@@ -2098,6 +2106,34 @@
                                                 "display_custom_text": "",
                                                 "display_custom_icon": "",
                                                 "display_text_hide": true,
+                                                "display_icon_hide": false
+                                            },
+                                            {
+                                                "context_menu_actions": [],
+                                                "display_custom_text_enabled": true,
+                                                "json_version": 2,
+                                                "registry_id": "",
+                                                "display_custom_text": "",
+                                                "display_custom_icon_enabled": false,
+                                                "display_custom_icon": "",
+                                                "extra_closes_popup": false,
+                                                "extra_composer_mode": false,
+                                                "variant": "action",
+                                                "action_id": "paste_as_reference",
+                                                "brush_name": "",
+                                                "docker_id": "",
+                                                "workspace_id": "",
+                                                "docker_group_data": {
+                                                    "docker_names": []
+                                                },
+                                                "popup_data": {
+                                                    "toolshelf_data": {
+                                                        "pages": []
+                                                    },
+                                                    "actions_items": []
+                                                },
+                                                "canvas_preset_data": {},
+                                                "display_text_hide": false,
                                                 "display_icon_hide": false
                                             },
                                             {
