@@ -1,7 +1,11 @@
+import copy
 from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
 from touchify.src.cfg.resources.ResourcePack_Metadata import ResourcePack_Metadata
 import os
 
+from touchify.src.cfg.toolbox.CfgToolbox import CfgToolbox
+from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
+from touchify.src.cfg.widget_pad.CfgWidgetPadPreset import CfgWidgetPadPreset
 from touchify.src.ext.JsonExtensions import JsonExtensions
 from touchify.src.ext.types.TypedList import TypedList
 
@@ -10,6 +14,9 @@ HAS_ALREADY_LOADED: bool = False
 class ResourcePack:
     metadata: ResourcePack_Metadata | None = None
     components: TypedList[CfgTouchifyAction] = TypedList(None, CfgTouchifyAction)
+    toolshelves: TypedList[CfgToolshelf] = TypedList(None, CfgToolshelf)
+    toolboxes: TypedList[CfgToolbox] = TypedList(None, CfgToolbox)
+    widget_layouts: TypedList[CfgWidgetPadPreset] = TypedList(None, CfgWidgetPadPreset)
 
     def __init__(self, location: str) -> None:
         self.ROOT_DIRECTORY = location
@@ -30,7 +37,7 @@ class ResourcePack:
                 filePath = os.path.join(subpath, fileName)
                 if fileName.lower().endswith(".json"):
                     _item = JsonExtensions.loadClass(filePath, type)
-                    _item.INTERNAL_FILEPATH_ID = fileName
+                    _item.INTERNAL_FILEPATH_ID = filePath
                     result.append(_item)
                     
             return result
@@ -42,12 +49,19 @@ class ResourcePack:
             for contentName in contents:
                 contentPath = os.path.join(self.ROOT_DIRECTORY, contentName)
                 if os.path.isfile(contentPath) and contentName == "metadata.json":
-                    _metadata = JsonExtensions.loadClass(contentPath, ResourcePack_Metadata)
-                    self.metadata = _metadata
+                    self.metadata = JsonExtensions.loadClass(contentPath, ResourcePack_Metadata)
 
                 elif os.path.isdir(contentPath) and contentName == "components":
-                    _components = loadItems(contentPath, CfgTouchifyAction)
-                    self.components = _components
+                    self.components = loadItems(contentPath, CfgTouchifyAction)
+
+                elif os.path.isdir(contentPath) and contentName == "toolboxes":
+                    self.toolboxes = loadItems(contentPath, CfgToolbox)
+
+                elif os.path.isdir(contentPath) and contentName == "toolshelves":
+                    self.toolshelves = loadItems(contentPath, CfgToolshelf)
+
+                elif os.path.isdir(contentPath) and contentName == "widget_layouts":
+                    self.widget_layouts = loadItems(contentPath, CfgWidgetPadPreset)
 
             self.has_loaded = True
         except Exception as err:
@@ -59,10 +73,27 @@ class ResourcePack:
 
 
     def save(self):
+
+        def saveItem(subItem: any):
+            if hasattr(subItem, "INTERNAL_FILEPATH_ID"):
+                filePath: str = subItem.INTERNAL_FILEPATH_ID
+                outputData = copy.deepcopy(subItem)
+                del outputData.INTERNAL_FILEPATH_ID
+                JsonExtensions.saveClass(outputData, filePath)
+
         JsonExtensions.saveClass(self.metadata, os.path.join(self.ROOT_DIRECTORY, "metadata.json"))
+
         for component in self.components:
-            component: CfgTouchifyAction
-            component.save()
+            saveItem(component)
+            
+        for toolbox in self.toolboxes:
+            saveItem(toolbox)
+
+        for toolshelf in self.toolshelves:
+            saveItem(toolshelf)
+
+        for layout in self.widget_layouts:
+            saveItem(layout)
 
 
 

@@ -5,7 +5,7 @@ from touchify.paths import BASE_DIR
 
 HAS_ALREADY_LOADED: bool = False
 
-class CfgResourcesRegistry:
+class ResourcePackRegistry:
     presets: TypedList[ResourcePack] = TypedList(None, ResourcePack)
 
 

@@ -5,7 +5,7 @@ import os
 
 
 from touchify.src.cfg.CfgHotkeyRegistry import CfgHotkeyRegistry
-from touchify.src.cfg.CfgResourcesRegistry import CfgResourcesRegistry
+from touchify.src.cfg.ResourcePackRegistry import ResourcePackRegistry
 from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
 from touchify.src.cfg.CfgPreferences import CfgPreferences
 from touchify.src.variables import *
@@ -28,7 +28,7 @@ class TouchifyConfig:
         def __init__(self):
             self.__base_dir__ = BASE_DIR            
             self.actions_registry: CfgActionRegistry = CfgActionRegistry()
-            self.resources: CfgResourcesRegistry = CfgResourcesRegistry()
+            self.resources: ResourcePackRegistry = ResourcePackRegistry()
             self.hotkeys: CfgHotkeyRegistry = CfgHotkeyRegistry()
             self.toolshelf_main: CfgToolshelfRegistry = CfgToolshelfRegistry("main")
             self.toolshelf_alt: CfgToolshelfRegistry = CfgToolshelfRegistry("overview")
