@@ -1,4 +1,5 @@
 import copy
+import types
 from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
 from touchify.src.cfg.ResourcePackMetadata import ResourcePackMetadata
 import os
@@ -9,6 +10,7 @@ from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from touchify.src.cfg.toolbox.CfgToolbox import CfgToolbox
 from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
 from touchify.src.cfg.widget_pad.CfgWidgetPadPreset import CfgWidgetPadPreset
+from touchify.src.ext.Extensions import Extensions
 from touchify.src.ext.JsonExtensions import JsonExtensions
 from touchify.src.ext.types.TypedList import TypedList
 
@@ -26,9 +28,6 @@ class ResourcePack:
 
     def __init__(self, location: str, name: str) -> None:
         self.INTERNAL_ROOT_DIRECTORY = location
-        self.INTERNAL_FILEPATH_ID = location
-        self.INTERNAL_FILENAME_ID = name
-        self.INTERNAL_UUID_ID = name
 
         self.INTERNAL_has_loaded = False
         self.INTERNAL_active_files: list[str] = []
@@ -57,9 +56,10 @@ class ResourcePack:
                 if fileName.lower().endswith(".json"):
                     _item = JsonExtensions.loadClass(filePath, type)
                     self.INTERNAL_active_files.append(filePath)
+                    _item.propertygrid_on_duplicate = types.MethodType(ResourcePack.onDuplicateListItem, _item)
                     _item.INTERNAL_FILEPATH_ID = filePath
                     _item.INTERNAL_FILENAME_ID = fileName
-                    _item.INTERNAL_UUID_ID = fileName[:-4]
+                    _item.INTERNAL_UUID_ID = fileName[:-5]
                     _item.INTERNAL_FILESYSTEM_MANAGED = True
                     result.append(_item)
                     
@@ -108,38 +108,74 @@ class ResourcePack:
 
         found_files: list[str] = []
 
-        def saveItems(list: TypedList):
-            for item in list:
-                if hasattr(item, "INTERNAL_FILESYSTEM_MANAGED"):
-                    filePath: str = item.INTERNAL_FILEPATH_ID
-                    found_files.append(filePath)
+        def createFileDetails(item: any, folderPath: str):
+            if hasattr(item, "getFileName"):
+                result: str = item.getFileName()
+            else:
+                result: str = Extensions.fileStringify(str(item))
+            
+            name = Extensions.uniquify(f"{result}.json")
+            uuid = name[:-5]
+            path = os.path.join(folderPath, name)
 
-                    outputData = copy.deepcopy(item)
+            return uuid, name, path
+
+        def saveItems(list: TypedList, folderPath: str):
+            for item in list:
+                if not hasattr(item, "INTERNAL_FILESYSTEM_MANAGED"):
+
+                    uuid, name, path = createFileDetails(item, folderPath)
+
+                    item.INTERNAL_FILEPATH_ID = path
+                    item.INTERNAL_FILENAME_ID = name
+                    item.INTERNAL_UUID_ID = uuid
+                    item.INTERNAL_FILESYSTEM_MANAGED = True
+
+                filePath: str = item.INTERNAL_FILEPATH_ID
+                print(item.INTERNAL_FILEPATH_ID)
+                found_files.append(filePath)
+
+                outputData = copy.deepcopy(item)
+                
+                if hasattr(item, "INTERNAL_FILEPATH_ID"):
                     del outputData.INTERNAL_FILEPATH_ID
+                if hasattr(item, "INTERNAL_FILENAME_ID"):
                     del outputData.INTERNAL_FILENAME_ID
+                if hasattr(item, "INTERNAL_FILESYSTEM_MANAGED"):
                     del outputData.INTERNAL_FILESYSTEM_MANAGED
+                if hasattr(item, "INTERNAL_UUID_ID"):
                     del outputData.INTERNAL_UUID_ID
-                    JsonExtensions.saveClass(outputData, filePath)
+                if hasattr(item, "propertygrid_on_duplicate"):
+                    del outputData.propertygrid_on_duplicate
+
+                JsonExtensions.saveClass(outputData, filePath)
             
 
 
         JsonExtensions.saveClass(self.metadata, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "metadata.json"))
-        saveItems(self.components)
-        saveItems(self.toolboxes)
-        saveItems(self.toolshelves)
-        saveItems(self.widget_layouts)
-        saveItems(self.popups)
-        saveItems(self.docker_groups)
-        saveItems(self.canvas_presets)
+        saveItems(self.components, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "components"))
+        saveItems(self.toolboxes, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "toolboxes"))
+        saveItems(self.toolshelves, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "toolshelves"))
+        saveItems(self.widget_layouts, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "widget_layouts"))
+        saveItems(self.popups, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "popups"))
+        saveItems(self.docker_groups, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "docker_groups"))
+        saveItems(self.canvas_presets, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "canvas_presets"))
 
-        removed_files: list[str] = list(set(self.INTERNAL_active_files)(found_files))
+        removed_files: list[str] = list(set(self.INTERNAL_active_files).difference(found_files))
         for file in removed_files:
-            found_files
+            if os.path.exists(file):
+                os.remove(file)
+            self.INTERNAL_active_files.remove(file)
 
 
 
             
-
+    def onDuplicateListItem(self):
+        if hasattr(self, "INTERNAL_FILESYSTEM_MANAGED"):
+            del self.INTERNAL_FILEPATH_ID
+            del self.INTERNAL_FILENAME_ID
+            del self.INTERNAL_FILESYSTEM_MANAGED
+            del self.INTERNAL_UUID_ID
             
     def propertygrid_hidden(self):
         return [  ]

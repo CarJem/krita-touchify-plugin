@@ -1,6 +1,5 @@
+
 class Extensions:
-   
-   
     def tryPraseFloat(s: str, defaultValue: float):
         try:
             i = float(s)

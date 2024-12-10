@@ -1,3 +1,4 @@
+from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.cfg.docker_group.CfgTouchifyActionDockerGroupItem import CfgTouchifyActionDockerGroupItem
@@ -13,6 +14,9 @@ class CfgTouchifyActionDockerGroup:
         args = CfgBackwardsCompat.CfgTouchifyActionDockerGroup(args)
         Extensions.dictToObject(self, args)
         self.docker_names = Extensions.init_list(args, "docker_names", CfgTouchifyActionDockerGroupItem)
+
+    def getFileName(self):
+        return FileExtensions.fileStringify(self.id)
 
     def forceLoad(self):
         self.docker_names = TypedList(self.docker_names, CfgTouchifyActionDockerGroupItem)

@@ -1,11 +1,14 @@
-from PyQt5.QtWidgets import QWidget
 from krita import *
 from PyQt5.QtCore import *
+from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.KritaSettings import *
 from touchify.src.ext.KritaExtensions import *
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 class CfgTouchifyActionCanvasPreset:
+
+    preset_name: str = "New Preset"
+    
     checkers_main_color: KS_Color = KS_Color()
     checkers_alt_color: KS_Color = KS_Color()
     checkers_size: int = 32
@@ -25,6 +28,9 @@ class CfgTouchifyActionCanvasPreset:
 
     def __init__(self, **args) -> None:
         Extensions.dictToObject(self, args, [KS_Color])
+
+    def getFileName(self):
+        return FileExtensions.fileStringify(self.preset_name)
                                
     def activate(self): 
         if self.checkers_enabled:
@@ -66,6 +72,7 @@ class CfgTouchifyActionCanvasPreset:
        
     def propertygrid_sorted(self):
         return [
+            "preset_name",
             # Checkers Params
             "checkers_enabled",
             "checkers_main_color",

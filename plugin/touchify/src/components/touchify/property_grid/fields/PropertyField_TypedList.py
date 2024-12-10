@@ -290,6 +290,7 @@ class PropertyField_TypedList(PropertyField):
                 item_data = copy.deepcopy(variable[self.selectedIndex])
 
             if item_data != None and item_type != None:
+                self.prepareCopiedItem(item_data)
                 TouchifyHelpers.getExtension().setSettingsClipboard(item_type, item_data)
 
 
@@ -324,12 +325,14 @@ class PropertyField_TypedList(PropertyField):
                 list: TypedList = self.getNestedList(variable[self.selectedIndex])
                 item = list[self.selectedSubIndex]
                 newItem = copy.deepcopy(item)
+                self.prepareCopiedItem(newItem)
                 list.append(newItem)
                 self.updateList()
             else:
                 variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
                 item = variable[self.selectedIndex]
                 newItem = copy.deepcopy(item)
+                self.prepareCopiedItem(newItem)
                 variable.append(newItem)
                 self.updateList()
 
@@ -455,6 +458,10 @@ class PropertyField_TypedList(PropertyField):
                 return []
         except:
             return []
+        
+    def prepareCopiedItem(self, item):
+        if hasattr(item, "propertygrid_on_duplicate"):
+            item.propertygrid_on_duplicate()
 
     def getEditableValue(self, item):
         if hasattr(item, "forceLoad"):

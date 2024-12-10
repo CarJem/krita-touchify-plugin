@@ -1,8 +1,8 @@
-import string
 
 from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 from touchify.src.cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
 from touchify.src.cfg.toolshelf.CfgToolshelfPanel import CfgToolshelfPanel
+from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
@@ -23,10 +23,7 @@ class CfgToolshelf:
         self.pages = Extensions.init_list(args, "pages", CfgToolshelfPanel)
 
     def getFileName(self):
-        valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
-        filename = ''.join(c for c in self.preset_name if c in valid_chars)
-        filename = filename.replace(' ','_') # I don't like spaces in filenames.
-        return filename.lower()    
+        return FileExtensions.fileStringify(self.preset_name)
 
     def __str__(self):
         return self.preset_name.replace("\n", "\\n")

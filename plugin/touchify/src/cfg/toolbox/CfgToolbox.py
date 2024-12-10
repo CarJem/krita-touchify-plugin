@@ -1,6 +1,6 @@
-import string
 from touchify.src.cfg.toolbox.CfgToolboxItem import *
 from touchify.src.cfg.toolbox.CfgToolboxCategory import *
+from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
@@ -35,10 +35,7 @@ class CfgToolbox:
         return self.preset_name.replace("\n", "\\n")
 
     def getFileName(self):
-        valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
-        filename = ''.join(c for c in self.preset_name if c in valid_chars)
-        filename = filename.replace(' ','_') # I don't like spaces in filenames.
-        return filename.lower()
+        return FileExtensions.fileStringify(self.preset_name)
     
     def forceLoad(self):
         self.categories = TypedList(self.categories, CfgToolboxCategory)

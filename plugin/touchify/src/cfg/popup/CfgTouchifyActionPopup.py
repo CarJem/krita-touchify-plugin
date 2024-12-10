@@ -1,4 +1,5 @@
 from touchify.src.cfg.popup.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
+from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
@@ -66,7 +67,10 @@ class CfgTouchifyActionPopup:
         self.actions_items = Extensions.init_list(args, "actions_items", CfgTouchifyActionPopupItem)
 
     def __str__(self):
-        return self.id.replace("\n", "\\n")
+        return self.window_title.replace("\n", "\\n")
+    
+    def getFileName(self):
+        return FileExtensions.fileStringify(self.id)
 
     def forceLoad(self):
         self.actions_items = TypedList(self.actions_items, CfgTouchifyActionPopupItem)

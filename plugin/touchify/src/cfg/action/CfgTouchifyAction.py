@@ -1,6 +1,7 @@
 from touchify.src.cfg.docker_group.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
 from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from touchify.src.cfg.canvas_preset.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
+from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.types.StrEnum import StrEnum
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
@@ -64,41 +65,12 @@ class CfgTouchifyAction:
         args = CfgBackwardsCompat.CfgTouchifyAction(args)
         Extensions.dictToObject(self, args, [CfgTouchifyActionPopup, CfgTouchifyActionDockerGroup, CfgTouchifyActionCanvasPreset])
         self.context_menu_actions = Extensions.init_list(args, "context_menu_actions", CfgTouchifyAction)
+
+    def getFileName(self):
+        return FileExtensions.fileStringify(self.registry_id)
         
     def __str__(self):
-        match self.variant:
-            case CfgTouchifyAction.Variants.Action:
-                prefix = "[Action] "
-                suffix = self.action_id
-            case CfgTouchifyAction.Variants.Menu:
-                prefix = "[Menu] "
-                suffix = self.display_custom_text
-            case CfgTouchifyAction.Variants.Brush:
-                prefix = "[Brush] "
-                suffix = self.brush_name
-            case CfgTouchifyAction.Variants.Popup:
-                prefix = "[Popup] "
-                suffix = self.display_custom_text
-            case CfgTouchifyAction.Variants.Workspace:
-                prefix = "[Workspace] "
-                suffix = self.workspace_id
-            case CfgTouchifyAction.Variants.Docker:
-                prefix = "[Docker] "
-                suffix = self.docker_id
-            case CfgTouchifyAction.Variants.DockerGroup:
-                prefix = "[Docker Group] "
-                suffix = self.display_custom_text
-            case CfgTouchifyAction.Variants.CanvasPreset:
-                prefix = "[Canvas Preset] "
-                suffix = self.display_custom_text
-            case _:
-                prefix = f"[{self.variant}] "
-                suffix = self.display_custom_text
-                
-        if self.display_custom_text != "":
-            suffix = self.display_custom_text
-        
-        return prefix + suffix
+        return f"{self.display_custom_text} [{self.variant}]"
 
 
     def forceLoad(self):

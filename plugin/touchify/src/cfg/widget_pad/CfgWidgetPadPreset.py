@@ -1,7 +1,7 @@
-import string
-from .CfgWidgetPadOptions import CfgWidgetPadOptions
-from .CfgWidgetPadToolboxOptions import CfgWidgetPadToolboxOptions
-from ...ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.cfg.widget_pad.CfgWidgetPadOptions import CfgWidgetPadOptions
+from touchify.src.cfg.widget_pad.CfgWidgetPadToolboxOptions import CfgWidgetPadToolboxOptions
+from touchify.src.ext.FileExtensions import FileExtensions
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
    
 class CfgWidgetPadPreset:
     preset_name: str = "WidgetPad Preset"
@@ -16,10 +16,7 @@ class CfgWidgetPadPreset:
         Extensions.dictToObject(self, args, [CfgWidgetPadOptions, CfgWidgetPadToolboxOptions])
 
     def getFileName(self):
-        valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
-        filename = ''.join(c for c in self.preset_name if c in valid_chars)
-        filename = filename.replace(' ','_') # I don't like spaces in filenames.
-        return filename.lower()    
+        return FileExtensions.fileStringify(self.preset_name)
 
     def __str__(self):
         return self.preset_name.replace("\n", "\\n")
