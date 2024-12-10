@@ -3,43 +3,8 @@
     "action_id": "",
     "variant": "popup",
     "brush_name": "",
-    "docker_group_data": {
-        "docker_names": []
-    },
     "docker_id": "",
-    "popup_data": {
-        "toolshelf_data": {
-            "json_version": 3,
-            "pages": [],
-            "homepage": {
-                "sections": [],
-                "actions": [],
-                "json_version": 2
-            }
-        },
-        "id": "VaporJem_Popups_GridDocker",
-        "type": "docker",
-        "docker_id": "GridDocker",
-        "actions_grid_width": 3,
-        "actions_grid_padding": 2,
-        "actions_item_width": 300,
-        "actions_item_height": 400,
-        "actions_icon_width": 30,
-        "actions_icon_height": 30,
-        "window_title": "Grid and Guides Popup",
-        "actions_items": [],
-        "window_type": "popup",
-        "json_version": 4,
-        "docker_width": 300,
-        "docker_height": 400,
-        "actions_opacity": 0.5,
-        "closing_method": "default",
-        "popup_position_x": "default",
-        "popup_position_y": "default",
-        "actions_close_on_click": false
-    },
     "workspace_id": "",
-    "canvas_preset_data": {},
     "json_version": 2,
     "registry_id": "GridDockerPopup",
     "extra_composer_mode": false,
@@ -49,5 +14,8 @@
     "display_custom_text": "Grid and Guides Popup",
     "display_custom_icon": "gridbrush",
     "display_text_hide": true,
-    "display_icon_hide": false
+    "display_icon_hide": false,
+    "docker_group_data": "none",
+    "popup_data": "vaporjem/popup/GridDockerPopup.json",
+    "canvas_preset_data": "none"
 }

@@ -1,4 +1,4 @@
-from touchify.src.cfg.resources.ResourcePack import ResourcePack
+from touchify.src.cfg.ResourcePack import ResourcePack
 from touchify.src.ext.types.TypedList import TypedList
 import os
 from touchify.paths import BASE_DIR
@@ -10,16 +10,16 @@ class ResourcePackRegistry:
 
 
     def __init__(self) -> None:
-        self.ROOT_DIRECTORY = os.path.join(BASE_DIR, 'configs', 'resources')
+        self.INTERNAL_ROOT_DIRECTORY = os.path.join(BASE_DIR, 'configs', 'resources')
         self.load()
 
     def load(self):
         self.presets.clear()
 
-        directories = [f for f in os.listdir(self.ROOT_DIRECTORY) if os.path.isdir(os.path.join(self.ROOT_DIRECTORY, f))]
+        directories = [f for f in os.listdir(self.INTERNAL_ROOT_DIRECTORY) if os.path.isdir(os.path.join(self.INTERNAL_ROOT_DIRECTORY, f))]
         for folderName in directories:
-            fullFolderPath = os.path.join(self.ROOT_DIRECTORY, folderName)
-            item = ResourcePack(fullFolderPath)
+            fullFolderPath = os.path.join(self.INTERNAL_ROOT_DIRECTORY, folderName)
+            item = ResourcePack(fullFolderPath, folderName)
             self.presets.append(item)
 
 
@@ -30,7 +30,7 @@ class ResourcePackRegistry:
             preset.save()
             
     def propertygrid_hidden(self):
-        return [ "LAST_FILES", "ROOT_DIRECTORY" ]
+        return [ ]
 
     def propertygrid_labels(self):
         labels = {}

@@ -1,0 +1,35 @@
+{
+    "checkers_size": 32,
+    "pixgrid_threshold": 24,
+    "selection_outline_opacity": 1.0,
+    "selection_overlay_opacity": 0.5,
+    "checkers_enabled": true,
+    "pixgrid_enabled": false,
+    "selection_enabled": false,
+    "border_enabled": false,
+    "checkers_main_color": {
+        "r": 255,
+        "g": 255,
+        "b": 255
+    },
+    "checkers_alt_color": {
+        "r": 219,
+        "g": 219,
+        "b": 219
+    },
+    "pixgrid_color": {
+        "r": 255,
+        "g": 255,
+        "b": 255
+    },
+    "selection_overlay_color": {
+        "r": 255,
+        "g": 0,
+        "b": 0
+    },
+    "border_color": {
+        "r": 128,
+        "g": 128,
+        "b": 128
+    }
+}

@@ -2,7 +2,7 @@ from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 HAS_ALREADY_LOADED: bool = False
 
-class ResourcePack_Metadata:
+class ResourcePackMetadata:
     registry_id: str = "NewActRegistry"
     registry_name: str = "New Action Registry"
 

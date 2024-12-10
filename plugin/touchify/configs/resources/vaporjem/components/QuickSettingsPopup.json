@@ -3,43 +3,8 @@
     "action_id": "",
     "variant": "popup",
     "brush_name": "",
-    "docker_group_data": {
-        "docker_names": []
-    },
     "docker_id": "",
-    "popup_data": {
-        "toolshelf_data": {
-            "json_version": 3,
-            "pages": [],
-            "homepage": {
-                "sections": [],
-                "actions": [],
-                "json_version": 2
-            }
-        },
-        "id": "VaporJem_Popups_QuickSettings",
-        "type": "docker",
-        "docker_id": "quick_settings_docker",
-        "actions_grid_width": 3,
-        "actions_grid_padding": 2,
-        "actions_item_width": 310,
-        "actions_item_height": 400,
-        "actions_icon_width": 30,
-        "actions_icon_height": 30,
-        "actions_items": [],
-        "window_type": "popup",
-        "json_version": 4,
-        "docker_width": 310,
-        "docker_height": 400,
-        "actions_close_on_click": false,
-        "window_title": "",
-        "actions_opacity": 1.0,
-        "closing_method": "default",
-        "popup_position_x": "default",
-        "popup_position_y": "default"
-    },
     "workspace_id": "",
-    "canvas_preset_data": {},
     "json_version": 2,
     "registry_id": "QuickSettingsPopup",
     "extra_composer_mode": false,
@@ -49,5 +14,8 @@
     "display_custom_text": "Quick Settings Popup",
     "display_custom_icon": "material:palette-swatch-variant",
     "display_text_hide": true,
-    "display_icon_hide": false
+    "display_icon_hide": false,
+    "docker_group_data": "none",
+    "popup_data": "vaporjem/popup/QuickSettingsPopup.json",
+    "canvas_preset_data": "none"
 }

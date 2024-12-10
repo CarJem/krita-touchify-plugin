@@ -1,6 +1,6 @@
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.ext.types.TypedList import TypedList
-from touchify.src.cfg.action.CfgTouchifyActionDockerGroupItem import CfgTouchifyActionDockerGroupItem
+from touchify.src.cfg.docker_group.CfgTouchifyActionDockerGroupItem import CfgTouchifyActionDockerGroupItem
 from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 
 class CfgTouchifyActionDockerGroup:

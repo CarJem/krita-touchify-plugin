@@ -1,6 +1,6 @@
-from touchify.src.cfg.action.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
-from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from touchify.src.cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
+from touchify.src.cfg.docker_group.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
+from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.cfg.canvas_preset.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
 from touchify.src.ext.types.StrEnum import StrEnum
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
@@ -49,13 +49,13 @@ class CfgTouchifyAction:
     workspace_id: str = ""
     
     #Docker Group Params
-    docker_group_data: CfgTouchifyActionDockerGroup = CfgTouchifyActionDockerGroup()
+    docker_group_data: str = "none"
     
     #Popup Params
-    popup_data: CfgTouchifyActionPopup = CfgTouchifyActionPopup()
+    popup_data: str = "none"
 
     #Canvas Preset Params
-    canvas_preset_data: CfgTouchifyActionCanvasPreset = CfgTouchifyActionCanvasPreset()
+    canvas_preset_data: str = "none"
 
     json_version: int = 2
     
@@ -202,7 +202,7 @@ class CfgTouchifyAction:
         restrictions["action_id"] = {"type": "action_selection"}
         restrictions["workspace_id"] = {"type": "workspace_selection"}
         restrictions["docker_id"] = {"type": "docker_selection"}
-        restrictions["docker_group_data"] = {"type": "expandable"}
-        restrictions["popup_data"] = {"type": "expandable"}
-        restrictions["canvas_preset_data"] = {"type": "expandable"}
+        restrictions["docker_group_data"] = {"type": "registry_docker_group_selection"}
+        restrictions["popup_data"] = {"type": "registry_popup_selection"}
+        restrictions["canvas_preset_data"] = {"type": "registry_canvas_preset_selection"}
         return restrictions

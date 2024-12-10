@@ -1,7 +1,7 @@
-from ..ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 
-class CfgHotkeyRegistry:
+class HotkeyRegistry:
 
 
     def __init__(self, **args) -> None:

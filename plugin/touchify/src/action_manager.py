@@ -2,8 +2,10 @@ from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from touchify.src.cfg.resources.ResourcePack import ResourcePack
-from touchify.src.cfg.resources.ResourcePack_Metadata import ResourcePack_Metadata
+from touchify.src.cfg.ResourcePack import ResourcePack
+from touchify.src.cfg.ResourcePackMetadata import ResourcePackMetadata
+from touchify.src.cfg.canvas_preset.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
+from touchify.src.cfg.docker_group.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
 from touchify.src.components.pyqt.event_filters.MouseReleaseListener import MouseReleaseListener
 from touchify.src.components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
@@ -16,9 +18,7 @@ from touchify.src.variables import *
 from functools import partial
 
 from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
-from touchify.src.cfg.action.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
-from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from touchify.src.cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
+from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from touchify.src.ext.KritaExtensions import *
 
 from touchify.src.settings import TouchifyConfig
@@ -120,7 +120,12 @@ class ActionManager(QObject):
                 actual_action.triggered.connect(lambda: self.runAction(data, actual_action))
                 if actual_action: parent.addAction(actual_action)
 
-    def openPopup(self, data: CfgTouchifyActionPopup, _parent: QWidget = None):
+    def openPopup(self, id: str, _parent: QWidget = None):
+
+        data: CfgTouchifyActionPopup = TouchifyConfig.instance().getRegistryItem(id, CfgTouchifyActionPopup)
+        if not isinstance(data, CfgTouchifyActionPopup) or data == None: return
+
+
         is_dead = True
         popup_id = str(data.id)
         if popup_id in self.active_popups:
@@ -201,16 +206,10 @@ class ActionManager(QObject):
         
 
         cfg = TouchifyConfig.instance().getConfig()
-        for action in cfg.actions_registry.actions_registry:
-            action: CfgTouchifyAction
-            actionIdentifier ='TouchifyAction_{0}'.format(action.registry_id)
-
-            if actionIdentifier in self.registeredActions:
-                self.registeredActionsData[actionIdentifier] = action
 
         for pack in cfg.resources.presets:
             pack: ResourcePack
-            meta: ResourcePack_Metadata = pack.metadata
+            meta: ResourcePackMetadata = pack.metadata
             for data in pack.components:
                 data: CfgTouchifyAction
                 subActionIdentifier = 'Touchify_Res_{0}_{1}'.format(meta.registry_id, data.registry_id)
@@ -261,12 +260,6 @@ class ActionManager(QObject):
         root_menu = QtWidgets.QMenu("Registered Actions")
 
         core_menu = root_menu.addMenu("Core")
-
-        for data in cfg.actions_registry.actions_registry:
-            data: CfgTouchifyAction
-            id = 'TouchifyAction_{0}'.format(data.registry_id)
-            action = self.appEngine.action_management.createRegisteredAction(id, data, window, subItemPath)
-            core_menu.addAction(action)
 
         for pack in cfg.resources.presets:
             pack: ResourcePack
@@ -538,7 +531,11 @@ class ActionManager(QObject):
                                 workspace.trigger()
                                 break
                             
-    def action_dockergroup(self, data: CfgTouchifyActionDockerGroup):
+    def action_dockergroup(self, id: str):
+        data: CfgTouchifyActionDockerGroup = TouchifyConfig.instance().getRegistryItem(id, CfgTouchifyActionDockerGroup)
+        if not isinstance(data, CfgTouchifyActionDockerGroup) or data == None: return
+
+
         dockersList = self.appEngine.windowSource.dockers()
         
         if data.id not in self.custom_docker_states:
@@ -574,11 +571,14 @@ class ActionManager(QObject):
                 if (docker.objectName() == path):
                     docker.setVisible(isVisible)
                             
-    def action_popup(self, action: QAction, data: CfgTouchifyActionPopup):    
+    def action_popup(self, action: QAction, id: str):    
         _parent = self.__getActionSource(action)            
-        self.openPopup(data, _parent)
+        self.openPopup(id, _parent)
     
-    def action_canvas(self, data: CfgTouchifyActionCanvasPreset):
+    def action_canvas(self, id: str):
+        data: CfgTouchifyActionCanvasPreset = TouchifyConfig.instance().getRegistryItem(id, CfgTouchifyActionCanvasPreset)
+        if not isinstance(data, CfgTouchifyActionCanvasPreset) or data == None: return
+    
         def slotConfigChanged(obj: QObject):
             canvas_call = getattr(obj, "slotConfigChanged", None)
             if callable(canvas_call):

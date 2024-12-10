@@ -19,7 +19,6 @@ from touchify.src.ext.KritaSettings import KritaSettings
 from touchify.src.cfg.widget_pad.CfgWidgetPadPreset import CfgWidgetPadPreset
 from touchify.src.cfg.widget_pad.CfgWidgetPadOptions import CfgWidgetPadOptions
 from touchify.src.cfg.widget_pad.CfgWidgetPadToolboxOptions import CfgWidgetPadToolboxOptions
-from touchify.src.cfg.CfgWidgetPadRegistry import CfgWidgetPadRegistry
 from touchify.src.components.touchify.canvas.NtCanvasAction import NtCanvasAction
 
 
@@ -108,43 +107,33 @@ class NtCanvas(QWidget):
     def changePreset(self):
         ac: QAction = self.sender()
         if isinstance(ac, QAction):
-            index: int = ac.data()
-            if isinstance(index, int):
-                KritaSettings.writeSettingInt(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", index)
+            id: str = ac.data()
+            if isinstance(id, str):
+                TouchifyConfig.instance().setActiveWidgetLayout(id)
                 self.reloadActivePreset()
 
     def buildPresetMenu(self):
         self.presetsMenu.clear()
 
         index = 0
-        for preset in self.preset_registry.presets:
-            preset: CfgWidgetPadPreset
-            action = QAction(preset.preset_name, self.presetsMenu)
-            action.setCheckable(True)
-            if self.selectedPresetIndex == index:
-                action.setChecked(True)
-            action.setData(index)
-            action.triggered.connect(self.changePreset)
-            index += 1
-            self.presetsMenu.addAction(action)
+        registry = TouchifyConfig.instance().getRegistry(CfgWidgetPadPreset)
+        if registry != None:
+            for key, preset in registry.items():
+                preset: CfgWidgetPadPreset
+                action = QAction(preset.preset_name, self.presetsMenu)
+                action.setCheckable(True)
+                if self.selected_preset_id == key:
+                    action.setChecked(True)
+                action.setData(key)
+                action.triggered.connect(self.changePreset)
+                index += 1
+                self.presetsMenu.addAction(action)
 
     def reloadActivePreset(self):
-        self.preset_registry: CfgWidgetPadRegistry = TouchifyConfig.instance().getConfig().widget_pads
-        self.active_preset: CfgWidgetPadPreset = CfgWidgetPadPreset()
-
-        self.selectedPresetIndex = KritaSettings.readSettingInt(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", 0)
-
-        if 0 <= self.selectedPresetIndex < len(self.preset_registry.presets):
-            self.active_preset: CfgWidgetPadPreset = self.preset_registry.presets[self.selectedPresetIndex]
-        elif len(self.preset_registry.presets) >= 1:
-            self.selectedPresetIndex = 0
-            self.active_preset: CfgWidgetPadPreset = self.preset_registry.presets[self.selectedPresetIndex]
-        else:
-            self.selectedPresetIndex = 0
-            newItem = CfgWidgetPadPreset()
-            self.active_preset = newItem
+        self.active_preset: CfgWidgetPadPreset = TouchifyConfig.instance().getActiveWidgetLayout()
+        self.selected_preset_id = TouchifyConfig.instance().getActiveWidgetLayoutId()
         
-        KritaSettings.writeSettingInt(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", self.selectedPresetIndex)
+        KritaSettings.writeSettingInt(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", self.selected_preset_id)
         
         if self.toolbox:
             self.toolbox.toolbox.toolboxWidget.setHorizontalMode(self.active_preset.toolbox.horizontal_mode)

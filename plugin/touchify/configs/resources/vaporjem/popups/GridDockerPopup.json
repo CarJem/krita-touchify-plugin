@@ -1,0 +1,31 @@
+{
+    "toolshelf_data": {
+        "json_version": 3,
+        "pages": [],
+        "homepage": {
+            "sections": [],
+            "actions": [],
+            "json_version": 2
+        }
+    },
+    "id": "VaporJem_Popups_GridDocker",
+    "type": "docker",
+    "docker_id": "GridDocker",
+    "actions_grid_width": 3,
+    "actions_grid_padding": 2,
+    "actions_item_width": 300,
+    "actions_item_height": 400,
+    "actions_icon_width": 30,
+    "actions_icon_height": 30,
+    "window_title": "Grid and Guides Popup",
+    "actions_items": [],
+    "window_type": "popup",
+    "json_version": 4,
+    "docker_width": 300,
+    "docker_height": 400,
+    "actions_opacity": 0.5,
+    "closing_method": "default",
+    "popup_position_x": "default",
+    "popup_position_y": "default",
+    "actions_close_on_click": false
+}

@@ -10,33 +10,6 @@
                         "brush_name": "",
                         "docker_id": "RecorderDocker",
                         "workspace_id": "",
-                        "docker_group_data": {
-                            "docker_names": [
-                                {
-                                    "id": "TimelineDocker"
-                                },
-                                {
-                                    "id": "OnionSkinsDocker"
-                                }
-                            ],
-                            "id": "AnimationsDocker",
-                            "group_id": "",
-                            "tabs_mode": false
-                        },
-                        "popup_data": {
-                            "toolshelf_data": {
-                                "json_version": 3,
-                                "pages": [],
-                                "homepage": {
-                                    "sections": [],
-                                    "actions": [],
-                                    "json_version": 2
-                                }
-                            },
-                            "actions_items": [],
-                            "json_version": 4
-                        },
-                        "canvas_preset_data": {},
                         "json_version": 2,
                         "registry_id": "AnimationDockers",
                         "extra_composer_mode": false,
@@ -63,7 +36,7 @@
         "show_pin_button": true,
         "default_to_pinned": false
     },
-    "preset_name": "VaporJem",
+    "preset_name": "Main Toolshelf",
     "json_version": 3,
     "pages": [
         {
@@ -119,23 +92,6 @@
                                                 "brush_name": "",
                                                 "docker_id": "",
                                                 "workspace_id": "",
-                                                "docker_group_data": {
-                                                    "docker_names": []
-                                                },
-                                                "popup_data": {
-                                                    "toolshelf_data": {
-                                                        "pages": [],
-                                                        "json_version": 3,
-                                                        "homepage": {
-                                                            "sections": [],
-                                                            "actions": [],
-                                                            "json_version": 2
-                                                        }
-                                                    },
-                                                    "actions_items": [],
-                                                    "json_version": 4
-                                                },
-                                                "canvas_preset_data": {},
                                                 "json_version": 2,
                                                 "registry_id": "",
                                                 "extra_composer_mode": false,
@@ -224,23 +180,6 @@
                                                 "brush_name": "",
                                                 "docker_id": "",
                                                 "workspace_id": "",
-                                                "docker_group_data": {
-                                                    "docker_names": []
-                                                },
-                                                "popup_data": {
-                                                    "toolshelf_data": {
-                                                        "pages": [],
-                                                        "json_version": 3,
-                                                        "homepage": {
-                                                            "sections": [],
-                                                            "actions": [],
-                                                            "json_version": 2
-                                                        }
-                                                    },
-                                                    "actions_items": [],
-                                                    "json_version": 4
-                                                },
-                                                "canvas_preset_data": {},
                                                 "json_version": 2,
                                                 "registry_id": "",
                                                 "extra_composer_mode": false,
@@ -529,23 +468,6 @@
                                             "brush_name": "",
                                             "docker_id": "",
                                             "workspace_id": "",
-                                            "docker_group_data": {
-                                                "docker_names": []
-                                            },
-                                            "popup_data": {
-                                                "toolshelf_data": {
-                                                    "json_version": 3,
-                                                    "pages": [],
-                                                    "homepage": {
-                                                        "sections": [],
-                                                        "actions": [],
-                                                        "json_version": 2
-                                                    }
-                                                },
-                                                "actions_items": [],
-                                                "json_version": 4
-                                            },
-                                            "canvas_preset_data": {},
                                             "json_version": 2,
                                             "registry_id": "",
                                             "extra_composer_mode": false,
@@ -564,23 +486,6 @@
                                             "brush_name": "",
                                             "docker_id": "",
                                             "workspace_id": "",
-                                            "docker_group_data": {
-                                                "docker_names": []
-                                            },
-                                            "popup_data": {
-                                                "toolshelf_data": {
-                                                    "json_version": 3,
-                                                    "pages": [],
-                                                    "homepage": {
-                                                        "sections": [],
-                                                        "actions": [],
-                                                        "json_version": 2
-                                                    }
-                                                },
-                                                "actions_items": [],
-                                                "json_version": 4
-                                            },
-                                            "canvas_preset_data": {},
                                             "json_version": 2,
                                             "registry_id": "",
                                             "extra_composer_mode": false,
@@ -598,23 +503,6 @@
                                     "brush_name": "",
                                     "docker_id": "",
                                     "workspace_id": "",
-                                    "docker_group_data": {
-                                        "docker_names": []
-                                    },
-                                    "popup_data": {
-                                        "toolshelf_data": {
-                                            "json_version": 3,
-                                            "pages": [],
-                                            "homepage": {
-                                                "sections": [],
-                                                "actions": [],
-                                                "json_version": 2
-                                            }
-                                        },
-                                        "actions_items": [],
-                                        "json_version": 4
-                                    },
-                                    "canvas_preset_data": {},
                                     "json_version": 2,
                                     "registry_id": "CanvasBackground",
                                     "extra_composer_mode": false,
@@ -633,23 +521,6 @@
                                     "brush_name": "",
                                     "docker_id": "",
                                     "workspace_id": "",
-                                    "docker_group_data": {
-                                        "docker_names": []
-                                    },
-                                    "popup_data": {
-                                        "toolshelf_data": {
-                                            "pages": [],
-                                            "json_version": 3,
-                                            "homepage": {
-                                                "sections": [],
-                                                "actions": [],
-                                                "json_version": 2
-                                            }
-                                        },
-                                        "actions_items": [],
-                                        "json_version": 4
-                                    },
-                                    "canvas_preset_data": {},
                                     "json_version": 2,
                                     "registry_id": "",
                                     "extra_composer_mode": true,
@@ -738,37 +609,6 @@
                                     "brush_name": "",
                                     "docker_id": "",
                                     "workspace_id": "",
-                                    "docker_group_data": {
-                                        "docker_names": []
-                                    },
-                                    "popup_data": {
-                                        "toolshelf_data": {
-                                            "json_version": 3,
-                                            "pages": [],
-                                            "homepage": {
-                                                "sections": [],
-                                                "actions": [],
-                                                "json_version": 2
-                                            }
-                                        },
-                                        "actions_items": [],
-                                        "actions_grid_padding": 2,
-                                        "actions_grid_width": 3,
-                                        "actions_icon_width": 30,
-                                        "actions_icon_height": 30,
-                                        "actions_item_width": 300,
-                                        "actions_item_height": 300,
-                                        "actions_close_on_click": false,
-                                        "docker_id": "PatternDocker",
-                                        "id": "",
-                                        "type": "docker",
-                                        "window_type": "popup",
-                                        "json_version": 4,
-                                        "docker_width": 300,
-                                        "docker_height": 300,
-                                        "actions_opacity": 1.0
-                                    },
-                                    "canvas_preset_data": {},
                                     "json_version": 2,
                                     "registry_id": "",
                                     "display_custom_icon_enabled": false,
@@ -854,37 +694,6 @@
                                     "brush_name": "",
                                     "docker_id": "",
                                     "workspace_id": "",
-                                    "docker_group_data": {
-                                        "docker_names": []
-                                    },
-                                    "popup_data": {
-                                        "toolshelf_data": {
-                                            "json_version": 3,
-                                            "pages": [],
-                                            "homepage": {
-                                                "sections": [],
-                                                "actions": [],
-                                                "json_version": 2
-                                            }
-                                        },
-                                        "actions_items": [],
-                                        "actions_grid_padding": 2,
-                                        "actions_grid_width": 3,
-                                        "actions_icon_width": 30,
-                                        "actions_icon_height": 30,
-                                        "actions_item_width": 300,
-                                        "actions_item_height": 300,
-                                        "actions_close_on_click": false,
-                                        "docker_id": "PatternDocker",
-                                        "id": "",
-                                        "type": "docker",
-                                        "window_type": "popup",
-                                        "json_version": 4,
-                                        "docker_width": 300,
-                                        "docker_height": 300,
-                                        "actions_opacity": 1.0
-                                    },
-                                    "canvas_preset_data": {},
                                     "json_version": 2,
                                     "registry_id": "",
                                     "display_custom_icon_enabled": true,
@@ -957,37 +766,6 @@
                                     "brush_name": "",
                                     "docker_id": "",
                                     "workspace_id": "",
-                                    "docker_group_data": {
-                                        "docker_names": []
-                                    },
-                                    "popup_data": {
-                                        "toolshelf_data": {
-                                            "json_version": 3,
-                                            "pages": [],
-                                            "homepage": {
-                                                "sections": [],
-                                                "actions": [],
-                                                "json_version": 2
-                                            }
-                                        },
-                                        "actions_items": [],
-                                        "actions_grid_padding": 2,
-                                        "actions_grid_width": 3,
-                                        "actions_icon_width": 30,
-                                        "actions_icon_height": 30,
-                                        "actions_item_width": 300,
-                                        "actions_item_height": 300,
-                                        "actions_close_on_click": false,
-                                        "docker_id": "PatternDocker",
-                                        "id": "",
-                                        "type": "docker",
-                                        "window_type": "popup",
-                                        "json_version": 4,
-                                        "docker_width": 300,
-                                        "docker_height": 300,
-                                        "actions_opacity": 1.0
-                                    },
-                                    "canvas_preset_data": {},
                                     "json_version": 2,
                                     "registry_id": "",
                                     "display_custom_icon_enabled": true,
@@ -1091,37 +869,6 @@
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
-                                "docker_group_data": {
-                                    "docker_names": []
-                                },
-                                "popup_data": {
-                                    "toolshelf_data": {
-                                        "json_version": 3,
-                                        "pages": [],
-                                        "homepage": {
-                                            "sections": [],
-                                            "actions": [],
-                                            "json_version": 2
-                                        }
-                                    },
-                                    "actions_items": [],
-                                    "actions_grid_padding": 2,
-                                    "actions_grid_width": 3,
-                                    "actions_icon_width": 30,
-                                    "actions_icon_height": 30,
-                                    "actions_item_width": 300,
-                                    "actions_item_height": 300,
-                                    "actions_close_on_click": false,
-                                    "docker_id": "PatternDocker",
-                                    "id": "",
-                                    "type": "docker",
-                                    "window_type": "popup",
-                                    "json_version": 4,
-                                    "docker_width": 300,
-                                    "docker_height": 300,
-                                    "actions_opacity": 1.0
-                                },
-                                "canvas_preset_data": {},
                                 "json_version": 2,
                                 "registry_id": "",
                                 "display_custom_icon_enabled": false,
@@ -1138,37 +885,6 @@
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
-                                "docker_group_data": {
-                                    "docker_names": []
-                                },
-                                "popup_data": {
-                                    "toolshelf_data": {
-                                        "json_version": 3,
-                                        "pages": [],
-                                        "homepage": {
-                                            "sections": [],
-                                            "actions": [],
-                                            "json_version": 2
-                                        }
-                                    },
-                                    "actions_items": [],
-                                    "actions_grid_padding": 2,
-                                    "actions_grid_width": 3,
-                                    "actions_icon_width": 30,
-                                    "actions_icon_height": 30,
-                                    "actions_item_width": 300,
-                                    "actions_item_height": 300,
-                                    "actions_close_on_click": false,
-                                    "docker_id": "PatternDocker",
-                                    "id": "",
-                                    "type": "docker",
-                                    "window_type": "popup",
-                                    "json_version": 4,
-                                    "docker_width": 300,
-                                    "docker_height": 300,
-                                    "actions_opacity": 1.0
-                                },
-                                "canvas_preset_data": {},
                                 "json_version": 2,
                                 "registry_id": "",
                                 "display_custom_icon_enabled": false,
@@ -1185,37 +901,6 @@
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
-                                "docker_group_data": {
-                                    "docker_names": []
-                                },
-                                "popup_data": {
-                                    "toolshelf_data": {
-                                        "json_version": 3,
-                                        "pages": [],
-                                        "homepage": {
-                                            "sections": [],
-                                            "actions": [],
-                                            "json_version": 2
-                                        }
-                                    },
-                                    "actions_items": [],
-                                    "actions_grid_padding": 2,
-                                    "actions_grid_width": 3,
-                                    "actions_icon_width": 30,
-                                    "actions_icon_height": 30,
-                                    "actions_item_width": 300,
-                                    "actions_item_height": 300,
-                                    "actions_close_on_click": false,
-                                    "docker_id": "PatternDocker",
-                                    "id": "",
-                                    "type": "docker",
-                                    "window_type": "popup",
-                                    "json_version": 4,
-                                    "docker_width": 300,
-                                    "docker_height": 300,
-                                    "actions_opacity": 1.0
-                                },
-                                "canvas_preset_data": {},
                                 "json_version": 2,
                                 "registry_id": "",
                                 "display_custom_icon_enabled": false,
@@ -1232,23 +917,6 @@
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
-                                "docker_group_data": {
-                                    "docker_names": []
-                                },
-                                "popup_data": {
-                                    "toolshelf_data": {
-                                        "pages": [],
-                                        "json_version": 3,
-                                        "homepage": {
-                                            "sections": [],
-                                            "actions": [],
-                                            "json_version": 2
-                                        }
-                                    },
-                                    "actions_items": [],
-                                    "json_version": 4
-                                },
-                                "canvas_preset_data": {},
                                 "json_version": 2,
                                 "registry_id": "",
                                 "extra_composer_mode": false,
@@ -1267,23 +935,6 @@
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
-                                "docker_group_data": {
-                                    "docker_names": []
-                                },
-                                "popup_data": {
-                                    "toolshelf_data": {
-                                        "pages": [],
-                                        "json_version": 3,
-                                        "homepage": {
-                                            "sections": [],
-                                            "actions": [],
-                                            "json_version": 2
-                                        }
-                                    },
-                                    "actions_items": [],
-                                    "json_version": 4
-                                },
-                                "canvas_preset_data": {},
                                 "json_version": 2,
                                 "registry_id": "",
                                 "extra_composer_mode": true,
@@ -1380,23 +1031,6 @@
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
-                                "docker_group_data": {
-                                    "docker_names": []
-                                },
-                                "popup_data": {
-                                    "toolshelf_data": {
-                                        "pages": [],
-                                        "json_version": 3,
-                                        "homepage": {
-                                            "sections": [],
-                                            "actions": [],
-                                            "json_version": 2
-                                        }
-                                    },
-                                    "actions_items": [],
-                                    "json_version": 4
-                                },
-                                "canvas_preset_data": {},
                                 "display_text_hide": false,
                                 "display_icon_hide": false
                             }
@@ -1480,23 +1114,6 @@
                                             "brush_name": "",
                                             "docker_id": "",
                                             "workspace_id": "",
-                                            "docker_group_data": {
-                                                "docker_names": []
-                                            },
-                                            "popup_data": {
-                                                "toolshelf_data": {
-                                                    "pages": [],
-                                                    "json_version": 3,
-                                                    "homepage": {
-                                                        "sections": [],
-                                                        "actions": [],
-                                                        "json_version": 2
-                                                    }
-                                                },
-                                                "actions_items": [],
-                                                "json_version": 4
-                                            },
-                                            "canvas_preset_data": {},
                                             "json_version": 2,
                                             "registry_id": "",
                                             "extra_composer_mode": false,
@@ -1585,23 +1202,6 @@
                                             "brush_name": "",
                                             "docker_id": "",
                                             "workspace_id": "",
-                                            "docker_group_data": {
-                                                "docker_names": []
-                                            },
-                                            "popup_data": {
-                                                "toolshelf_data": {
-                                                    "pages": [],
-                                                    "json_version": 3,
-                                                    "homepage": {
-                                                        "sections": [],
-                                                        "actions": [],
-                                                        "json_version": 2
-                                                    }
-                                                },
-                                                "actions_items": [],
-                                                "json_version": 4
-                                            },
-                                            "canvas_preset_data": {},
                                             "json_version": 2,
                                             "registry_id": "",
                                             "extra_composer_mode": false,
@@ -1809,37 +1409,6 @@
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
-                                "docker_group_data": {
-                                    "docker_names": []
-                                },
-                                "popup_data": {
-                                    "toolshelf_data": {
-                                        "json_version": 3,
-                                        "pages": [],
-                                        "homepage": {
-                                            "sections": [],
-                                            "actions": [],
-                                            "json_version": 2
-                                        }
-                                    },
-                                    "actions_items": [],
-                                    "actions_grid_padding": 2,
-                                    "actions_grid_width": 3,
-                                    "actions_icon_width": 30,
-                                    "actions_icon_height": 30,
-                                    "actions_item_width": 300,
-                                    "actions_item_height": 300,
-                                    "actions_close_on_click": false,
-                                    "docker_id": "PatternDocker",
-                                    "id": "",
-                                    "type": "docker",
-                                    "window_type": "popup",
-                                    "json_version": 4,
-                                    "docker_width": 300,
-                                    "docker_height": 300,
-                                    "actions_opacity": 1.0
-                                },
-                                "canvas_preset_data": {},
                                 "json_version": 2,
                                 "registry_id": "",
                                 "extra_composer_mode": false,
@@ -1863,37 +1432,6 @@
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
-                                "docker_group_data": {
-                                    "docker_names": []
-                                },
-                                "popup_data": {
-                                    "toolshelf_data": {
-                                        "json_version": 3,
-                                        "pages": [],
-                                        "homepage": {
-                                            "sections": [],
-                                            "actions": [],
-                                            "json_version": 2
-                                        }
-                                    },
-                                    "actions_items": [],
-                                    "actions_grid_padding": 2,
-                                    "actions_grid_width": 3,
-                                    "actions_icon_width": 30,
-                                    "actions_icon_height": 30,
-                                    "actions_item_width": 300,
-                                    "actions_item_height": 300,
-                                    "actions_close_on_click": false,
-                                    "docker_id": "PatternDocker",
-                                    "id": "",
-                                    "type": "docker",
-                                    "window_type": "popup",
-                                    "json_version": 4,
-                                    "docker_width": 300,
-                                    "docker_height": 300,
-                                    "actions_opacity": 1.0
-                                },
-                                "canvas_preset_data": {},
                                 "json_version": 2,
                                 "registry_id": "",
                                 "extra_composer_mode": false,

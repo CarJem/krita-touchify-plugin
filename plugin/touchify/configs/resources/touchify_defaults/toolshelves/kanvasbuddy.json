@@ -300,22 +300,6 @@
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
-                                "docker_group_data": {
-                                    "docker_names": []
-                                },
-                                "popup_data": {
-                                    "toolshelf_data": {
-                                        "json_version": 3,
-                                        "pages": [],
-                                        "homepage": {
-                                            "sections": [],
-                                            "actions": [],
-                                            "json_version": 2
-                                        }
-                                    },
-                                    "actions_items": [],
-                                    "json_version": 4
-                                },
                                 "json_version": 2,
                                 "registry_id": "",
                                 "display_custom_icon_enabled": false,
@@ -332,22 +316,6 @@
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
-                                "docker_group_data": {
-                                    "docker_names": []
-                                },
-                                "popup_data": {
-                                    "toolshelf_data": {
-                                        "json_version": 3,
-                                        "pages": [],
-                                        "homepage": {
-                                            "sections": [],
-                                            "actions": [],
-                                            "json_version": 2
-                                        }
-                                    },
-                                    "actions_items": [],
-                                    "json_version": 4
-                                },
                                 "json_version": 2,
                                 "registry_id": "",
                                 "display_custom_icon_enabled": false,
@@ -364,22 +332,6 @@
                                 "brush_name": "",
                                 "docker_id": "",
                                 "workspace_id": "",
-                                "docker_group_data": {
-                                    "docker_names": []
-                                },
-                                "popup_data": {
-                                    "toolshelf_data": {
-                                        "json_version": 3,
-                                        "pages": [],
-                                        "homepage": {
-                                            "sections": [],
-                                            "actions": [],
-                                            "json_version": 2
-                                        }
-                                    },
-                                    "actions_items": [],
-                                    "json_version": 4
-                                },
                                 "json_version": 2,
                                 "registry_id": "",
                                 "display_custom_icon_enabled": false,

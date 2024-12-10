@@ -1,4 +1,4 @@
-from touchify.src.cfg.action.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
+from touchify.src.cfg.popup.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat

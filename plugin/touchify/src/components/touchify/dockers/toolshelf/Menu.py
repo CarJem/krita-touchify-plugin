@@ -36,7 +36,7 @@ class Menu(QMenu):
 
         
         if self.registry_index != -1:
-            self.current_preset_index = TouchifyConfig.instance().getActiveToolshelfIndex(self.registry_index)
+            self.current_preset_id = TouchifyConfig.instance().getActiveToolshelfId(self.registry_index)
             self.loadPresets()
 
     def setup(self):
@@ -98,18 +98,16 @@ class Menu(QMenu):
     def loadPresets(self):
         self.clear()
         
-        registry = TouchifyConfig.instance().getToolshelfRegistry(self.registry_index)
+        registry = TouchifyConfig.instance().getRegistry(CfgToolshelf)
         if registry != None:
-            index = 0
-            for preset in registry.presets:
+            for key, preset in registry.items():
                 preset: CfgToolshelf
                 action = QAction(preset.preset_name, self)
                 action.setCheckable(True)
-                if self.current_preset_index == index:
+                if self.current_preset_id == key:
                     action.setChecked(True)
-                action.setData(index)
+                action.setData(key)
                 action.triggered.connect(self.changePreset)
-                index += 1
                 self.addAction(action)
         
         self.addSeparator()
@@ -117,6 +115,6 @@ class Menu(QMenu):
     def changePreset(self):
         ac: QAction = self.sender()
         if isinstance(ac, QAction):
-            index: int = ac.data()
-            if isinstance(index, int):
-                TouchifyConfig.instance().setActiveToolshelf(self.registry_index, index)
+            id: str = ac.data()
+            if isinstance(id, str):
+                TouchifyConfig.instance().setActiveToolshelf(self.registry_index, id)

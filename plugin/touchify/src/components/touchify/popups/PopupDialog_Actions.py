@@ -2,9 +2,9 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.cfg.action.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
+from touchify.src.cfg.popup.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
 
-from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from touchify.src.settings import *
 from touchify.src.components.touchify.actions.TouchifyActionPanel import *
 from touchify.src.resources import *

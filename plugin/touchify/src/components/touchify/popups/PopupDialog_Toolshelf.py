@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import ToolshelfWidget
 
-from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from touchify.src.settings import *
 from touchify.src.resources import *
 from touchify.src.components.touchify.popups.PopupDialog import *

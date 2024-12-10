@@ -7,7 +7,7 @@ from touchify.src.stylesheet import Stylesheet
 
 from touchify.src.components.touchify.popups.PopupDialog_Titlebar import PopupDialog_Titlebar
 
-from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from touchify.src.settings import *
 from touchify.src.resources import *
 

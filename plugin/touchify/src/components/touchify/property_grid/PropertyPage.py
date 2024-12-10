@@ -67,14 +67,13 @@ class PropertyPage(QScrollArea):
         
         hiddenItems = PropertyUtils_Extensions.classHiddenVariables(self.currentData())
         hiddenItems.append("json_version")
-        hiddenItems.append("INTERNAL_FILEPATH_ID")
 
         for field in self.fields:     
-            if field.variable_name in hiddenItems: field.setHidden(True)
+            if field.variable_name in hiddenItems or field.variable_name.startswith("INTERNAL_"): field.setHidden(True)
             else: field.setHidden(False)
 
         for label in self.labels:     
-            if label.variable_name in hiddenItems: label.setHidden(True)
+            if label.variable_name in hiddenItems or label.variable_name.startswith("INTERNAL_"): label.setHidden(True)
             else: label.setHidden(False)
 
     def createLabel(self, varName: str, labelData: dict, hintData: dict, is_nested: bool = False):

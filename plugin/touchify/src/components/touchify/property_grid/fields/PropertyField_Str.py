@@ -26,6 +26,11 @@ class PropertyField_Str(PropertyField):
         self.is_action_selection = False
         self.is_hotkey_selector = False
         self.is_brush_selection = False
+
+        self.is_special_selector = False
+        self.special_selector_type = "none"
+
+
         self.is_combobox = False
         self.combobox_items: list[tuple[str, str]] = []
         
@@ -33,27 +38,24 @@ class PropertyField_Str(PropertyField):
 
         self.test_restrictions(variable_name)
 
-        if self.is_icon_viewer or self.is_docker_selector or self.is_action_selection or self.is_brush_selection:
+        if self.is_special_selector:
             self.editor = QLineEdit()
             self.editor.textChanged.connect(self.textChanged)
             self.editor.setText(self.variable_data.replace("\n", "\\n"))
 
             self.editorHelper = QPushButton()
-            if self.is_icon_viewer: 
+
+
+            if self.special_selector_type == "icons": 
                 self.editorHelper.setIcon(ResourceManager.iconLoader(self.variable_data.replace("\n", "\\n")))
-            elif self.is_brush_selection: 
-                self.editorHelper.setIcon(ResourceManager.brushIcon(self.variable_data.replace("\n", "\\n")))
-            else:
+            elif self.special_selector_type == "dockers": 
                 self.editorHelper.setIcon(ResourceManager.iconLoader("properties"))
+            elif self.special_selector_type == "actions":
+                self.editorHelper.setIcon(ResourceManager.iconLoader("properties"))
+            elif self.special_selector_type == "brushes":
+                self.editorHelper.setIcon(ResourceManager.brushIcon(self.variable_data.replace("\n", "\\n")))
 
-
-            editorHelperType = "none"
-            if self.is_icon_viewer: editorHelperType = "icons"
-            elif self.is_docker_selector: editorHelperType = "dockers"
-            elif self.is_action_selection: editorHelperType = "actions"
-            elif self.is_brush_selection: editorHelperType = "brushes"
-
-            self.editorHelper.clicked.connect(lambda: self.helperRequested(editorHelperType))
+            self.editorHelper.clicked.connect(lambda: self.helperRequested(self.special_selector_type))
 
             editorLayout = QHBoxLayout(self)
             editorLayout.setSpacing(0)
@@ -106,16 +108,32 @@ class PropertyField_Str(PropertyField):
                     self.is_combobox = True
                     list_setup = True
                 elif restriction["type"] == "action_selection":
-                    self.is_action_selection = True
+                    self.is_special_selector = True
+                    self.special_selector_type = "actions"
                     list_setup = True
                 elif restriction["type"] == "docker_selection":
-                    self.is_docker_selector = True
+                    self.is_special_selector = True
+                    self.special_selector_type = "dockers"
                     list_setup = True
                 elif restriction["type"] == "icon_selection":
-                    self.is_icon_viewer = True
+                    self.is_special_selector = True
+                    self.special_selector_type = "icons"
                     list_setup = True
                 elif restriction["type"] == "brush_selection":
-                    self.is_brush_selection = True
+                    self.is_special_selector = True
+                    self.special_selector_type = "brushes"
+                    list_setup = True
+                elif restriction["type"] == "registry_docker_group_selection":
+                    self.is_special_selector = True
+                    self.special_selector_type = "docker_groups"
+                    list_setup = True
+                elif restriction["type"] == "registry_popup_selection":
+                    self.is_special_selector = True
+                    self.special_selector_type = "popups"
+                    list_setup = True
+                elif restriction["type"] == "registry_canvas_preset_selection":
+                    self.is_special_selector = True
+                    self.special_selector_type = "canvas_presets"
                     list_setup = True
                 elif restriction["type"] == "hotkey_selection":
                     combobox_items = list[tuple[str, str]]()

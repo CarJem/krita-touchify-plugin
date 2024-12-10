@@ -2,6 +2,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from krita import *
+from touchify.src.cfg.canvas_preset.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
+from touchify.src.cfg.docker_group.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
+from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.settings import TouchifyConfig
 from touchify.src.stylesheet import Stylesheet
 from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 
@@ -107,6 +111,23 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem = QListWidgetItem()
                 listItem.setIcon(ResourceManager.iconLoader(customIconName))
                 listItem.setData(DATA_INDEX, customIconName)
+                self.list_view.addItem(listItem)
+        elif mode == "popups" or mode == "docker_groups" or mode == "canvas_presets":
+            self.list_view.setViewMode(QListView.ViewMode.ListMode)
+            self.list_view.setUniformItemSizes(True)
+
+            registry_type = None
+
+            if mode == "popups": registry_type = CfgTouchifyActionPopup
+            elif mode == "docker_groups": registry_type = CfgTouchifyActionDockerGroup
+            elif mode == "canvas_presets": registry_type = CfgTouchifyActionCanvasPreset
+            else: return
+
+            presets = TouchifyConfig.instance().getRegistry(registry_type)
+            for preset_key, value in presets.items():
+                listItem = QListWidgetItem()
+                listItem.setText(str(value))
+                listItem.setData(DATA_INDEX, preset_key)
                 self.list_view.addItem(listItem)
         elif mode == "brushes":
             self.list_view.setViewMode(QListView.ViewMode.ListMode)

@@ -16,7 +16,6 @@ from touchify.src.components.touchify.dockers.toolbox.ToolboxStyle import Toolbo
 from touchify.src.components.touchify.dockers.toolbox.ToolboxMenu import ToolboxMenu
 from touchify.src.components.touchify.dockers.toolbox.ToolboxButton import ToolboxButton
 from touchify.src.settings import TouchifyConfig
-from touchify.src.cfg.CfgToolboxRegistry import CfgToolboxRegistry
 from touchify.src.cfg.toolbox.CfgToolbox import CfgToolbox
 from touchify.src.cfg.toolbox.CfgToolboxItem import CfgToolboxItem
 from touchify.src.cfg.toolbox.CfgToolboxSubItem import CfgToolboxSubItem
@@ -141,8 +140,8 @@ class ToolboxWidget(QResizableWidget):
 
         
 
-        background_opacity = self.config.background_opacity
-        alternative_opacity = self.config.button_opacity
+        background_opacity = self.layout_config.background_opacity
+        alternative_opacity = self.layout_config.button_opacity
 
         if background_opacity > 255: background_opacity = 255
         if background_opacity < 0: background_opacity = 0
@@ -289,22 +288,8 @@ class ToolboxWidget(QResizableWidget):
         self.updateStyleSheet()
 
     def loadConfig(self):
-        self.settings: CfgToolboxRegistry = TouchifyConfig.instance().getConfig().toolbox_settings
-
-        self.config: CfgToolbox = CfgToolbox()
-        self.selectedPresetIndex = KritaSettings.readSettingInt(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", 0)
-
-        if 0 <= self.selectedPresetIndex < len(self.settings.presets):
-            self.config: CfgToolbox = self.settings.presets[self.selectedPresetIndex]
-        elif len(self.settings.presets) >= 1:
-            self.selectedPresetIndex = 0
-            self.config: CfgToolbox = self.settings.presets[self.selectedPresetIndex]
-        else:
-            self.selectedPresetIndex = 0
-            newItem = CfgToolbox()
-            self.config = newItem
-        
-        KritaSettings.writeSettingInt(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", self.selectedPresetIndex)
+        self.selected_preset_id = TouchifyConfig.instance().getActiveToolboxId()
+        self.layout_config = TouchifyConfig.instance().getActiveToolbox()
 
     def buildSettingsMenu(self):
         if self.horizontalModeAction != None:
@@ -313,19 +298,19 @@ class ToolboxWidget(QResizableWidget):
 
         self.settingsMenu.clear()
 
-        index = 0
-        for preset in self.settings.presets:
-            preset: CfgToolbox
-            action = QAction(preset.preset_name, self.settingsMenu)
-            action.setCheckable(True)
-            if self.selectedPresetIndex == index:
-                action.setChecked(True)
-            action.setData(index)
-            action.triggered.connect(self.changePreset)
-            index += 1
-            self.settingsMenu.addAction(action)
-        
-        self.settingsMenu.addSeparator()
+        registry = TouchifyConfig.instance().getRegistry(CfgToolbox)
+        if registry != None:
+            for key, preset in registry.items():
+                preset: CfgToolbox
+                action = QAction(preset.preset_name, self.settingsMenu)
+                action.setCheckable(True)
+                if self.selected_preset_id == key:
+                    action.setChecked(True)
+                action.setData(key)
+                action.triggered.connect(self.changePreset)
+                self.settingsMenu.addAction(action)
+            
+            self.settingsMenu.addSeparator()
 
 
 
@@ -342,8 +327,8 @@ class ToolboxWidget(QResizableWidget):
         x = 0
         y = 0
 
-        col_max = self.config.column_count
-        icon_size = int(self.config.icon_size * TouchifyConfig.instance().preferences().Interface_ToolboxIconScale)
+        col_max = self.layout_config.column_count
+        icon_size = int(self.layout_config.icon_size * TouchifyConfig.instance().preferences().Interface_ToolboxIconScale)
 
         toolbox_item_alignment = Qt.AlignmentFlag.AlignTop if self.horizontalMode else Qt.AlignmentFlag.AlignLeft
 
@@ -359,7 +344,7 @@ class ToolboxWidget(QResizableWidget):
             self.setOrientation(Qt.Orientation.Vertical)
 
 
-        for categoryData in self.config.categories: # Set up button logic
+        for categoryData in self.layout_config.categories: # Set up button logic
             categoryData: CfgToolboxCategory
             specific_col_max = col_max
             if categoryData.column_count >= 1:
@@ -396,7 +381,7 @@ class ToolboxWidget(QResizableWidget):
             btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             btn.setIconSize(QSize(icon_size, icon_size))
             btn.setToolTip(actionText)
-            btn.setStyle(ToolboxStyle("fusion", self.config.submenu_delay))
+            btn.setStyle(ToolboxStyle("fusion", self.layout_config.submenu_delay))
 
             if len(tool.items) >= 1:
                 btn.released.connect(self.activateTool) # Activate when released
@@ -495,9 +480,9 @@ class ToolboxWidget(QResizableWidget):
     def changePreset(self):
         ac: QAction = self.sender()
         if isinstance(ac, QAction):
-            index: int = ac.data()
-            if isinstance(index, int):
-                KritaSettings.writeSettingInt(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", index)
+            id: str = ac.data()
+            if isinstance(id, str):
+                TouchifyConfig.instance().setActiveToolbox(id)
                 self.reload()
     
     def setHorizontalMode(self, state: bool):
