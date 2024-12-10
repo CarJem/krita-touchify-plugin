@@ -13,8 +13,7 @@ from touchify.src.components.touchify.property_grid.fields.PropertyField import 
 
 class PropertyField_Bool(PropertyField):
     def __init__(self, variable_name=str, variable_data=bool, variable_source=any):
-        super(PropertyField, self).__init__()
-        self.setup(variable_name, variable_data, variable_source)
+        super().__init__(variable_name, variable_data, variable_source, True)
         self.setMaximumWidth(20)
         self.setMinimumWidth(20)
         

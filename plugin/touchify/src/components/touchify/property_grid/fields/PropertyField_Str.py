@@ -18,8 +18,7 @@ from touchify.src.components.touchify.property_grid.fields.PropertyField import 
 
 class PropertyField_Str(PropertyField):
     def __init__(self, variable_name=str, variable_data=str, variable_source=any):
-        super(PropertyField, self).__init__()
-        self.setup(variable_name, variable_data, variable_source)
+        super().__init__(variable_name, variable_data, variable_source, True)
 
 
         self.is_icon_viewer = False
@@ -32,34 +31,7 @@ class PropertyField_Str(PropertyField):
         
         self.editorHelper: QPushButton | None = None
 
-        restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source)
-        if variable_name in restrictions:
-            if restrictions[variable_name]["type"] == "values":
-                combobox_items =  list[tuple[str, str]]()
-                avaliableItems = list[str](restrictions[variable_name]["entries"])
-                for item in avaliableItems:
-                    input = (item, item)
-                    combobox_items.append(input)                         
-                self.combobox_items = combobox_items
-                self.is_combobox = True
-            elif restrictions[variable_name]["type"] == "action_selection":
-                self.is_action_selection = True
-            elif restrictions[variable_name]["type"] == "docker_selection":
-                self.is_docker_selector = True
-            elif restrictions[variable_name]["type"] == "icon_selection":
-                self.is_icon_viewer = True
-            elif restrictions[variable_name]["type"] == "brush_selection":
-                self.is_brush_selection = True
-            elif restrictions[variable_name]["type"] == "hotkey_selection":
-                combobox_items = list[tuple[str, str]]()
-                avaliableItems = TouchifyConfig.instance().hotkey_options_storage
-                combobox_items.append(("None", "none"))
-                for item in avaliableItems:
-                    input = (avaliableItems[item]["displayName"], item)
-                    combobox_items.append(input)
-                self.combobox_items = combobox_items
-                self.is_combobox = True
-                
+        self.test_restrictions(variable_name)
 
         if self.is_icon_viewer or self.is_docker_selector or self.is_action_selection or self.is_brush_selection:
             self.editor = QLineEdit()
@@ -117,6 +89,45 @@ class PropertyField_Str(PropertyField):
             editorLayout.setContentsMargins(0,0,0,0)
             editorLayout.addWidget(self.editor)
             self.setLayout(editorLayout)
+
+    def test_restrictions(self, variable_name: str):
+        restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source, variable_name)
+        list_setup = False
+
+        for restriction in restrictions:
+            if list_setup == False:
+                if restriction["type"] == "values":
+                    combobox_items =  list[tuple[str, str]]()
+                    avaliableItems = list[str](restriction["entries"])
+                    for item in avaliableItems:
+                        input = (item, item)
+                        combobox_items.append(input)                         
+                    self.combobox_items = combobox_items
+                    self.is_combobox = True
+                    list_setup = True
+                elif restriction["type"] == "action_selection":
+                    self.is_action_selection = True
+                    list_setup = True
+                elif restriction["type"] == "docker_selection":
+                    self.is_docker_selector = True
+                    list_setup = True
+                elif restriction["type"] == "icon_selection":
+                    self.is_icon_viewer = True
+                    list_setup = True
+                elif restriction["type"] == "brush_selection":
+                    self.is_brush_selection = True
+                    list_setup = True
+                elif restriction["type"] == "hotkey_selection":
+                    combobox_items = list[tuple[str, str]]()
+                    avaliableItems = TouchifyConfig.instance().hotkey_options_storage
+                    combobox_items.append(("None", "none"))
+                    for item in avaliableItems:
+                        input = (avaliableItems[item]["displayName"], item)
+                        combobox_items.append(input)
+                    self.combobox_items = combobox_items
+                    self.is_combobox = True
+                    list_setup = True
+                
 
 
     def dlg_accept(self):

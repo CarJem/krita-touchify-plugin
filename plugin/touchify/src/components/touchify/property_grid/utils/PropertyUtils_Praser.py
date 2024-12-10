@@ -10,6 +10,7 @@ from touchify.src.components.touchify.property_grid.fields.PropertyField_TypedLi
 # Special Field Imports
 from touchify.src.components.touchify.property_grid.special_fields.PropertyField_KsColor import PropertyField_KsColor
 from touchify.src.components.touchify.property_grid.special_fields.PropertyField_ActionCollection import PropertyField_ActionCollection
+from touchify.src.components.touchify.property_grid.special_fields.PropertyField_ActionList import PropertyField_ActionList
 
 #Type Imports
 from touchify.src.ext.types.TypedList import TypedList
@@ -28,11 +29,14 @@ class PropertyUtils_Praser:
 
     def isSpecialType(varName, variable, item):
         from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
+        from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
         from touchify.src.ext.KritaSettings import KS_Color
         varType = type(variable)
         listType = PropertyUtils_Praser.getListType(variable)
         
         if listType == CfgTouchifyActionCollection:
+            return True
+        if listType == CfgTouchifyAction:
             return True
         elif varType == KS_Color:
             return True
@@ -41,12 +45,15 @@ class PropertyUtils_Praser:
 
     def getSpecialType(varName, variable, item):
         from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
+        from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
         from touchify.src.ext.KritaSettings import KS_Color
         varType = type(variable)
         listType = PropertyUtils_Praser.getListType(variable)
         
         if listType == CfgTouchifyActionCollection:
             return PropertyField_ActionCollection(varName, variable, item)
+        if listType == CfgTouchifyAction:
+            return PropertyField_ActionList(varName, variable, item)
         elif varType == KS_Color:
             return PropertyField_KsColor(varName, variable, item)
         else:

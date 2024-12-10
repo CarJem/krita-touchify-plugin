@@ -15,27 +15,17 @@ from touchify.src.resources import *
 
 
 class PropertyField_TypedList(PropertyField):
-    def __init__(self, variable_name: str, variable_data: TypedList, variable_source: any, manual_restrictions: dict = {}):
-        super(PropertyField, self).__init__()
-        self.setup(variable_name, variable_data, variable_source)
+    def __init__(self, variable_name: str, variable_data: TypedList, variable_source: any, manual_restrictions: list[dict[str, any]] = []):
+        super().__init__(variable_name, variable_data, variable_source, True)
         self.variable_list_type = variable_data.allowedTypes()
         self.variable_data: TypedList
-        #print(self.variable_list_type)
-
-        if len(manual_restrictions) != 0: restrictions = manual_restrictions
-        else: restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source)
 
         self.nested_list_id = ""
         self.has_sub_array = False
-
-        if variable_name in restrictions:
-            if restrictions[variable_name]["type"] == "sub_array":
-                self.nested_list_id: str = restrictions[variable_name]["sub_id"]
-                self.nested_list_nested_type: type = restrictions[variable_name]["sub_type"]
-                self.has_sub_array = True
+        self.has_property_view = False
         
 
-
+        self.test_restrictions(manual_restrictions)
 
         self.selectedIndex = -1
         self.selectedSubIndex = -1
@@ -43,66 +33,80 @@ class PropertyField_TypedList(PropertyField):
         self.selectedItem = None
         self.selectedSubItem = None
         
-        field = QVBoxLayout(self)
-        field.setSpacing(0)
-        field.setContentsMargins(0,0,0,0)
+        self.field_layout = QHBoxLayout(self)
+        self.field_layout.setSpacing(0)
+        self.field_layout.setContentsMargins(0,0,0,0)
 
+        self.view_layout = QVBoxLayout()
+        self.view_layout.setSpacing(0)
+        self.view_layout.setContentsMargins(0,0,0,0)
+        self.field_layout.addLayout(self.view_layout)
+
+        self.view_editor = None
+
+        self.model = QtGui.QStandardItemModel()
         if self.has_sub_array:
             self.view = QTreeView()
             self.view.setHeaderHidden(True)
         else:
             self.view = QListView()
-
-
         self.view.doubleClicked.connect(self.list_edit)
         self.view.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.updateList()
+        self.view.setModel(self.model)
+        self.view_layout.addWidget(self.view)
+
+
+
+        if self.has_property_view:
+            from ..PropertyPage import PropertyPage
+            self.view_editor = PropertyPage(None)
+            self.view_editor.propertyChanged.connect(self.onPropertyViewUpdate)
+            self.field_layout.addWidget(self.view_editor)
+
+
+        self.selection_model = self.view.selectionModel()
+        self.selection_model.currentChanged.connect(self.updateSelected)
 
         btns = QHBoxLayout()
         btns.setAlignment(Qt.AlignmentFlag.AlignBottom)
-        btn_width = 24
+        self.view_layout.addLayout(btns)
 
-        self.model = QtGui.QStandardItemModel()
-        self.updateList()
-
-        self.view.setModel(self.model)
-        field.addWidget(self.view)
-        field.addLayout(btns)
 
         addButton = QPushButton()
         addButton.setIcon(ResourceManager.iconLoader("material:plus"))
-        addButton.setFixedHeight(btn_width)
+        addButton.setFixedHeight(24)
         addButton.clicked.connect(self.list_add)
         btns.addWidget(addButton)
 
         removeButton = QPushButton()
         removeButton.setIcon(ResourceManager.iconLoader("material:minus"))
-        removeButton.setFixedHeight(btn_width)
+        removeButton.setFixedHeight(24)
         removeButton.clicked.connect(self.list_remove)
         btns.addWidget(removeButton)
 
         moveUpButton = QPushButton()
         moveUpButton.setIcon(ResourceManager.iconLoader("material:arrow-up"))
-        moveUpButton.setFixedHeight(btn_width)
+        moveUpButton.setFixedHeight(24)
         moveUpButton.clicked.connect(self.list_moveUp)
         btns.addWidget(moveUpButton)
 
         moveDownButton = QPushButton()
         moveDownButton.setIcon(ResourceManager.iconLoader("material:arrow-down"))  
-        moveDownButton.setFixedHeight(btn_width)
+        moveDownButton.setFixedHeight(24)
         moveDownButton.clicked.connect(self.list_moveDown)
         btns.addWidget(moveDownButton)
 
         editButton = QPushButton()
         editButton.setIcon(ResourceManager.iconLoader("material:pencil"))                                                                                                                                                                                                                                                                                                                                 
-        editButton.setFixedHeight(btn_width)
+        editButton.setFixedHeight(24)
         editButton.clicked.connect(self.list_edit)
         btns.addWidget(editButton)
 
         moreButton = QPushButton()
         moreButton.setIcon(ResourceManager.iconLoader("material:menu"))                                                                                                                                                                                                                                                                                                              
-        moreButton.setFixedHeight(btn_width)
+        moreButton.setFixedHeight(24)
         btns.addWidget(moreButton)
-
 
         moreMenu = QMenu(moreButton)
         dupeAct = moreMenu.addAction("Duplicate")
@@ -113,11 +117,32 @@ class PropertyField_TypedList(PropertyField):
         pateAct.triggered.connect(self.list_paste)
         moreButton.setMenu(moreMenu)
 
-        self.selection_model = self.view.selectionModel()
-        self.selection_model.currentChanged.connect(self.updateSelected)
+        self.setLayout(self.field_layout)
 
-        self.setLayout(field)
+    def test_restrictions(self, manual_restrictions: list[dict[str, any]] = []):
+        restrictions: list[dict[str, any]] = []
+        if len(manual_restrictions) != 0: 
+            restrictions = manual_restrictions
+        else: 
+            restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source, self.variable_name)
 
+        sub_array_setup = False
+
+        for restriction in restrictions:
+            if restriction["type"] == "sub_array" and sub_array_setup == False:
+                self.nested_list_id: str = restriction["sub_id"]
+                self.nested_list_nested_type: type = restriction["sub_type"]
+                self.has_sub_array = True
+                sub_array_setup = True
+            if restriction["type"] == "property_view":
+                self.has_property_view = True
+                self.FULL_ROW_WIDGET = True
+
+
+    def setStackHost(self, host):
+        super().setStackHost(host)
+        if self.has_property_view:
+            self.view_editor.setStackHost(host)
     #region List Actions
 
     def list_moveUp(self):
@@ -170,8 +195,8 @@ class PropertyField_TypedList(PropertyField):
                     sub_variable.insert(newIndex, sub_variable.pop(oldIndex))
 
                 self.updateList()
-
                 self.selection_model.setCurrentIndex(self.model.index(parentIndex, 0).child(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
+                self.propertyChanged.emit(True)
 
             else:
                 variable = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
@@ -190,6 +215,7 @@ class PropertyField_TypedList(PropertyField):
                 variable.insert(newIndex, variable.pop(oldIndex))
                 self.updateList()
                 self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
+                self.propertyChanged.emit(True)
 
     def list_add(self):
         self.list_modify("add")
@@ -199,41 +225,53 @@ class PropertyField_TypedList(PropertyField):
     
     
     def list_modify(self, mode: Literal['edit', 'add'] = 'add'):
-        self.dlg = PropertyGrid_Dialog(self)
-        self.dlg.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
-        self.dlg.setWindowTitle(self.variable_name + ' - ' + str(self.selectedItem))
-        self.dlg.setWindowFlags(Qt.WindowType.Widget)
-        self.dlg.rejected.connect(self.updateList)
-        
-        self.container = QVBoxLayout(self)
-        self.container.setContentsMargins(0,0,0,0)
-        self.container.setSpacing(0)
 
-        from ..PropertyGrid_Panel import PropertyGrid_Panel
-        self.subwindowPropGrid = PropertyGrid_Panel(self.stackHost)
-        self.container.addWidget(self.subwindowPropGrid)
-        self.dlg.setLayout(self.container)
 
-        if mode == 'edit':
-            if self.selectedIndex != -1:
-                self.subwindowMode = "edit"
-                if self.selectedSubIndex != -1:
-                    self.subwindowItem = "subitem"
-                    self.subwindowPropGrid.updateDataObject(self.selectedSubItem)
-                else:
-                    self.subwindowItem = "normal"
-                    self.subwindowPropGrid.updateDataObject(self.selectedItem)
-                self.stackHost.goForward(self.dlg)
-                self.dlg.show()
-        elif mode == 'add':
+        def createPage():
+            dlg = PropertyGrid_Dialog(self)
+            dlg.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
+            dlg.setWindowTitle(self.variable_name + ' - ' + str(self.selectedItem))
+            dlg.setWindowFlags(Qt.WindowType.Widget)
+            dlg.rejected.connect(self.updateList)
+            
+            container = QVBoxLayout(self)
+            container.setContentsMargins(0,0,0,0)
+            container.setSpacing(0)
+
+            from ..PropertyPage import PropertyPage
+            container_props = PropertyPage(self.stackHost)
+            container.addWidget(container_props)
+            dlg.setLayout(container)
+
+            return (container_props, dlg)
+
+        if mode == 'add':
             if self.selectedSubIndex != -1:
                 editableValue = self.getEditableValue(type(self.selectedSubItem)())
                 self.getNestedList(self.selectedItem).append(editableValue)
-                self.updateList()
             else:
                 editableValue = self.getEditableValue(self.variable_list_type())
                 self.variable_data.append(editableValue)
-                self.updateList()
+            self.updateList()
+            self.propertyChanged.emit(True)
+        elif mode == 'edit':
+            prop_grid = None
+            page_dialog = None
+
+            if self.has_property_view: prop_grid = self.view_editor
+            else: prop_grid, page_dialog = createPage()
+
+
+            if self.selectedIndex != -1:
+                if self.selectedSubIndex != -1:
+                    prop_grid.updateDataObject(self.selectedSubItem)
+                else:
+                    prop_grid.updateDataObject(self.selectedItem)
+
+            if not self.has_property_view and page_dialog:
+                self.stackHost.goForward(page_dialog)
+                page_dialog.show()
+
 
 
 
@@ -318,18 +356,42 @@ class PropertyField_TypedList(PropertyField):
 
     def updateList(self):
         self.model.clear()
+        index = 0
+
+        indicies = []
+
         for varItem in self.variable_data:
             item = QtGui.QStandardItem(str(varItem))
+            index += 1
+
+            sub_index = 0
             columns = []
 
             for subAction in self.getNestedList(varItem):
                 subItem = QtGui.QStandardItem(str(subAction))
+                sub_index += 1
+
                 columns.append(subItem)
 
             item.appendColumn(columns)
             self.model.appendRow(item)
-        self.selectedIndex = -1
-        self.selectedItem = None
+            indicies.append(sub_index + 1)
+
+        if len(indicies) - 1 >= self.selectedIndex >= 0:
+            if indicies[self.selectedIndex] - 1 >= self.selectedSubIndex >= 0:
+                self.selection_model.setCurrentIndex(self.model.index(self.selectedIndex, 0).child(self.selectedSubIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
+            else:
+                self.selectedSubIndex = -1
+                self.selectedSubItem = None
+                self.selection_model.setCurrentIndex(self.model.index(self.selectedIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
+        else:
+            self.selectedIndex = -1
+            self.selectedItem = None
+            self.selectedSubIndex = -1
+            self.selectedSubItem = None
+
+        if self.has_property_view:
+            self.updatePropertyView()
 
         if self.has_sub_array:
             QTimer.singleShot(100, self.view.expandAll)
@@ -363,6 +425,26 @@ class PropertyField_TypedList(PropertyField):
 
         if self.has_sub_array:
             self.view.expandAll()
+
+        if self.has_property_view:
+            self.updatePropertyView()
+
+    def onPropertyViewUpdate(self, value: bool):
+        pass
+        #self.updateList()
+
+    def updatePropertyView(self):
+        if not self.has_property_view: return
+        if self.view_editor == None: return
+
+        if self.selectedIndex != -1:
+            if self.selectedSubIndex != -1:
+                self.view_editor.updateDataObject(self.selectedSubItem)
+            else:
+                self.view_editor.updateDataObject(self.selectedItem)
+        else:
+            self.view_editor.updateDataObject(None)
+
 
     def getNestedList(self, item: any):
         try:

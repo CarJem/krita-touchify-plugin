@@ -35,10 +35,19 @@ class PropertyUtils_Extensions:
                 sorted_results.append(item)
         return sorted_results
                 
-    def classRestrictions(obj):
+    def classRestrictions(obj: any, variable_name: str = "") -> list[dict[str, any]]:
         if hasattr(obj, "propertygrid_restrictions"):
-            return dict(obj.propertygrid_restrictions())
-        else: return {}            
+            cfg =  dict(obj.propertygrid_restrictions())
+            if variable_name in cfg:
+                result = cfg[variable_name]
+                returnable_result = []
+                if isinstance(result, dict):
+                    returnable_result.append(result)
+                elif isinstance(result, list):
+                    returnable_result = result
+                
+                return returnable_result
+        return []
 
     def classSisters(obj):
         if hasattr(obj, "propertygrid_sisters"):

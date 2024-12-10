@@ -14,8 +14,7 @@ from touchify.src.components.touchify.property_grid.fields.PropertyField import 
 
 class PropertyField_Int(PropertyField):
     def __init__(self, variable_name=str, variable_data=int, variable_source=any):
-        super(PropertyField, self).__init__()
-        self.setup(variable_name, variable_data, variable_source)
+        super().__init__(variable_name, variable_data, variable_source, True)
         
         self.editor = QSpinBox()
         self.editor.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
@@ -25,13 +24,13 @@ class PropertyField_Int(PropertyField):
         self.editor.valueChanged.connect(self.updateValue)
         self.editor.setValue(self.variable_data)
 
-        restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source)
-        if variable_name in restrictions:
-            if restrictions[variable_name]["type"] == "range":
-                if "min" in restrictions[variable_name]:
-                    self.editor.setMinimum(restrictions[variable_name]["min"])
-                if "max" in restrictions[variable_name]:
-                    self.editor.setMaximum(restrictions[variable_name]["max"])
+        restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source, variable_name)
+        for restriction in restrictions:
+            if restriction["type"] == "range":
+                if "min" in restriction:
+                    self.editor.setMinimum(restriction["min"])
+                if "max" in restriction:
+                    self.editor.setMaximum(restriction["max"])
         
         editorLayout = QHBoxLayout(self)
         editorLayout.setSpacing(0)

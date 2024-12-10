@@ -40,8 +40,8 @@ class PropertyGrid(QWidget):
 
         self.variable_path: list[str] = []
 
-        from .PropertyGrid_Panel import PropertyGrid_Panel
-        self.rootPropertyGrid = PropertyGrid_Panel(self)
+        from .PropertyPage import PropertyPage
+        self.rootPropertyGrid = PropertyPage(self)
         self.rootPropertyGrid.setWindowTitle("ROOT")
 
         self.stackWidget = QStackedWidget(self)

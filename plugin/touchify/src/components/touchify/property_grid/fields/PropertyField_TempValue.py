@@ -20,7 +20,7 @@ GROUP_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
 class PropertyField_TempValue(PropertyField):
     def __init__(self, variable_data, variable_source, variable_name, index):
-        super().__init__(variable_name, variable_data, variable_source)
+        super().__init__(variable_name, variable_data, variable_source, False)
         self.value: any = variable_data
         self.__index: any = index
 

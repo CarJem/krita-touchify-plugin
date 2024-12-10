@@ -19,8 +19,9 @@ ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
 ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
 
-class PropertyGrid_Panel(QScrollArea):
+class PropertyPage(QScrollArea):
 
+    propertyChanged = pyqtSignal(bool)
 
     def __init__(self, parentStack: PropertyGrid):
         super().__init__()
@@ -43,6 +44,11 @@ class PropertyGrid_Panel(QScrollArea):
         self.formWidget.setLayout(self.formLayout)
         self.setWidget(self.formWidget)
 
+    def setStackHost(self, host: PropertyGrid):
+        self.stackHost = host
+        for field in self.fields:
+            field.setStackHost(field)
+
     def currentData(self):
         field: PropertyField
         newItem = self.item
@@ -53,6 +59,7 @@ class PropertyGrid_Panel(QScrollArea):
     
     def onPropertyChanged(self, value: bool):
         self.updateVisibility()
+        self.propertyChanged.emit(True)
 
     def updateVisibility(self):
         if self.item == None:
@@ -136,6 +143,10 @@ class PropertyGrid_Panel(QScrollArea):
         self.labels.clear()
         
         PropertyUtils_Extensions.clearLayout(self.formLayout)
+
+        if self.item == None:
+            return
+
         labelData = PropertyUtils_Extensions.classVariableLabels(item)
         hintData = PropertyUtils_Extensions.classVariableHints(item)
 
@@ -161,14 +172,23 @@ class PropertyGrid_Panel(QScrollArea):
                 header = self.createLabel(variable_id, labelData, hintData)
                 field = self.createSisterField(item, sister_info, labelData, hintData)
             else:
-                header = self.createLabel(variable_id, labelData, hintData)
                 field = self.createField(item, variable_id)
+                header = self.createLabel(variable_id, labelData, hintData)
 
             header.setStyleSheet("font-weight: bold;")
-            header.setContentsMargins(5,0,5,0)
             header.setMaximumWidth(250)
+
             field.setContentsMargins(0,0,0,10)
 
-            self.formLayout.addRow(header, field)
+            if hasattr(field, "FULL_ROW_WIDGET") and field.FULL_ROW_WIDGET:
+                header.setContentsMargins(5,5,5,5)
+                self.formLayout.addRow(header)
+                self.formLayout.addRow(field)
+            else:
+                header.setContentsMargins(5,0,5,0)
+                self.formLayout.addRow(header, field)
+
+
+
 
         self.updateVisibility()

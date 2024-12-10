@@ -13,11 +13,11 @@ from touchify.src.resources import *
 
 class PropertyField_ActionCollection(PropertyField_TypedList):
     def __init__(self, variable_name=str, variable_data=TypedList[CfgTouchifyActionCollection], variable_source=any):
-        manual_restrictions = {
-            str(variable_name): {
+        manual_restrictions = [
+            {
                 "type": "sub_array",
                 "sub_id": "actions",
                 "sub_type": CfgTouchifyAction
             }
-        }
+        ]
         super(PropertyField_ActionCollection, self).__init__(variable_name, variable_data, variable_source, manual_restrictions)

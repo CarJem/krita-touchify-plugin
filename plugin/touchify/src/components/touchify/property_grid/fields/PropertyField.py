@@ -17,10 +17,14 @@ class PropertyField(QWidget):
 
     propertyChanged = pyqtSignal(bool)
 
-    def __init__(self, variable_name=str, variable_data=any, variable_source=any):
+    def __init__(self, variable_name=str, variable_data=any, variable_source=any, is_typed: bool = False):
         super().__init__()
+        self.is_typed = is_typed
+        self.FULL_ROW_WIDGET = False
         self.setup(variable_name, variable_data, variable_source)
-        self.testExpandability()
+        self.common_setup()
+        
+        if not self.is_typed: self.test_restrictions()
 
     def getFieldData(self):
          return [self.variable_name, self.variable_data, self.variable_source]
@@ -30,9 +34,6 @@ class PropertyField(QWidget):
         self.variable_data = variable_data
         self.variable_source = variable_source
 
-        self.setContentsMargins(0, 0, 0, 0)
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
     def setStackHost(self, host: PropertyGrid):
         self.stackHost = host
 
@@ -40,25 +41,31 @@ class PropertyField(QWidget):
         self.propertyChanged.emit(True)
         PropertyUtils_Extensions.setVariable(source, name, data)
 
-    #region Nestables
+    #region Commons / Nestables
 
-    def testExpandability(self):
-        restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source)
-        if self.variable_name in restrictions:
-            if restrictions[self.variable_name]["type"] == "expandable":
-                self.setupExpandable(restrictions[self.variable_name])
+    def common_setup(self):   
+        self.setContentsMargins(0, 0, 0, 0)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-    def setupExpandable(self, variableData: dict[str, any]):
-        self.editor = QPushButton()
-        self.editor.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+    def test_restrictions(self):
+        restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source, self.variable_name)
+        setup_expandable = False
+
+        for restriction in restrictions:
+            if restriction["type"] == "expandable" and setup_expandable == False:
+                self.nested_setup(restriction)
+                setup_expandable = True
+
+    def nested_setup(self, variableData: dict[str, any]):
         btnText = "Edit..."
 
         if "text" in variableData:
             btnText = variableData["text"]
 
+        self.editor = QPushButton()
+        self.editor.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         self.editor.clicked.connect(self.nested_edit)
         self.editor.setText(btnText)
-
 
         self.editor_button = QPushButton()
         self.editor_button.setMaximumWidth(16)
@@ -96,20 +103,20 @@ class PropertyField(QWidget):
             TouchifyHelpers.getExtension().setSettingsClipboard(item_type, item_data)
 
     def nested_edit(self):
-        self.nested_dlg = PropertyGrid_Dialog(self)
-        self.nested_dlg.setWindowTitle(str(self.variable_name))
-        self.nested_dlg.setWindowFlags(Qt.WindowType.Widget)
-        self.nested_container = QVBoxLayout(self)
-        self.nested_container.setContentsMargins(0,0,0,0)
-        self.nested_container.setSpacing(0)
+        self.nested_page_dialog = PropertyGrid_Dialog(self)
+        self.nested_page_dialog.setWindowTitle(str(self.variable_name))
+        self.nested_page_dialog.setWindowFlags(Qt.WindowType.Widget)
+        self.nested_page_layout = QVBoxLayout(self)
+        self.nested_page_layout.setContentsMargins(0,0,0,0)
+        self.nested_page_layout.setSpacing(0)
 
-        from ..PropertyGrid_Panel import PropertyGrid_Panel
-        self.nested_subwindowPropGrid = PropertyGrid_Panel(self.stackHost)
-        self.nested_container.addWidget(self.nested_subwindowPropGrid)
-        self.nested_dlg.setLayout(self.nested_container)
+        from ..PropertyPage import PropertyPage
+        self.nested_page_properties = PropertyPage(self.stackHost)
+        self.nested_page_layout.addWidget(self.nested_page_properties)
+        self.nested_page_dialog.setLayout(self.nested_page_layout)
 
-        self.nested_subwindowPropGrid.updateDataObject(self.variable_data)
-        self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.nested_dlg))
-        self.nested_dlg.show()
+        self.nested_page_properties.updateDataObject(self.variable_data)
+        self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.nested_page_dialog))
+        self.nested_page_dialog.show()
 
     #endregion
