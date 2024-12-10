@@ -1,4 +1,5 @@
 
+import json
 from touchify.src.ext.types.TypedList import TypedList
 from typing import *
 from PyQt5 import *
@@ -10,6 +11,17 @@ from krita import *
     
 
 class JsonExtensions:
+
+    def loadClass(filePath: str, type: type):
+        try:
+            with open(filePath) as f:
+                return type(**json.load(f))
+        except:
+            return type()
+            
+    def saveClass(data: any, filePath: str):
+        with open(filePath, "w") as f:
+            json.dump(data, f, default=lambda o: o.__dict__, indent=4)
 
     def tryCast(jsonData, type, defaultValue):
         if not jsonData:

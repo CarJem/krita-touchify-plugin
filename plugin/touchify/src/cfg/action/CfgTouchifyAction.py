@@ -1,3 +1,4 @@
+import copy
 from touchify.src.cfg.action.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
 from touchify.src.cfg.action.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from touchify.src.cfg.action.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
@@ -99,6 +100,14 @@ class CfgTouchifyAction:
             suffix = self.display_custom_text
         
         return prefix + suffix
+
+    def save(self):
+        if hasattr(self, "INTERNAL_FILEPATH_ID"):
+            filePath: str = self.INTERNAL_FILEPATH_ID
+            outputData = copy.deepcopy(self)
+            del outputData.INTERNAL_FILEPATH_ID
+            Extensions.saveClass(outputData, filePath)
+
 
     def forceLoad(self):
         self.context_menu_actions = TypedList(self.context_menu_actions, CfgTouchifyAction)

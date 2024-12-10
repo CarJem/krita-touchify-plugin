@@ -2,7 +2,8 @@ from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from touchify.src.cfg.CfgResourcesRegistry import CfgResourcePack
+from touchify.src.cfg.resources.ResourcePack import ResourcePack
+from touchify.src.cfg.resources.ResourcePack_Metadata import ResourcePack_Metadata
 from touchify.src.components.pyqt.event_filters.MouseReleaseListener import MouseReleaseListener
 from touchify.src.components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
@@ -208,10 +209,11 @@ class ActionManager(QObject):
                 self.registeredActionsData[actionIdentifier] = action
 
         for pack in cfg.resources.presets:
-            pack: CfgResourcePack
-            for data in pack.actions_registry:
+            pack: ResourcePack
+            meta: ResourcePack_Metadata = pack.metadata
+            for data in pack.components:
                 data: CfgTouchifyAction
-                subActionIdentifier = 'Touchify_Res_{0}_{1}'.format(pack.registry_id, data.registry_id)
+                subActionIdentifier = 'Touchify_Res_{0}_{1}'.format(meta.registry_id, data.registry_id)
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
         
@@ -267,11 +269,12 @@ class ActionManager(QObject):
             core_menu.addAction(action)
 
         for pack in cfg.resources.presets:
-            pack: CfgResourcePack
-            pack_menu = root_menu.addMenu(pack.registry_name)
-            for data in pack.actions_registry:
+            pack: ResourcePack
+            packMeta = pack.metadata
+            pack_menu = root_menu.addMenu(packMeta.registry_name)
+            for data in pack.components:
                 data: CfgTouchifyAction
-                id = 'Touchify_Res_{0}_{1}'.format(pack.registry_id, data.registry_id)
+                id = 'Touchify_Res_{0}_{1}'.format(packMeta.registry_id, data.registry_id)
                 action = self.appEngine.action_management.createRegisteredAction(id, data, window, subItemPath)
                 pack_menu.addAction(action)
 

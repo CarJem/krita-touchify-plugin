@@ -1,0 +1,737 @@
+{
+    "context_menu_actions": [
+        {
+            "context_menu_actions": [
+                {
+                    "context_menu_actions": [],
+                    "variant": "action",
+                    "action_id": "object_transform_rotate_90_cw",
+                    "brush_name": "",
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "toolshelf_data": {
+                            "pages": [],
+                            "json_version": 3,
+                            "homepage": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 2
+                            }
+                        },
+                        "actions_items": [],
+                        "json_version": 4
+                    },
+                    "canvas_preset_data": {},
+                    "json_version": 2,
+                    "registry_id": "",
+                    "extra_composer_mode": false,
+                    "extra_closes_popup": false,
+                    "display_custom_icon_enabled": true,
+                    "display_custom_text_enabled": false,
+                    "display_custom_text": "",
+                    "display_custom_icon": "",
+                    "display_text_hide": true,
+                    "display_icon_hide": false
+                },
+                {
+                    "context_menu_actions": [],
+                    "variant": "action",
+                    "action_id": "object_transform_rotate_90_ccw",
+                    "brush_name": "",
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "toolshelf_data": {
+                            "pages": [],
+                            "json_version": 3,
+                            "homepage": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 2
+                            }
+                        },
+                        "actions_items": [],
+                        "json_version": 4
+                    },
+                    "canvas_preset_data": {},
+                    "json_version": 2,
+                    "registry_id": "",
+                    "extra_composer_mode": false,
+                    "extra_closes_popup": false,
+                    "display_custom_icon_enabled": true,
+                    "display_custom_text_enabled": false,
+                    "display_custom_text": "",
+                    "display_custom_icon": "",
+                    "display_text_hide": true,
+                    "display_icon_hide": false
+                },
+                {
+                    "context_menu_actions": [],
+                    "variant": "action",
+                    "action_id": "object_transform_rotate_180",
+                    "brush_name": "",
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "toolshelf_data": {
+                            "pages": [],
+                            "json_version": 3,
+                            "homepage": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 2
+                            }
+                        },
+                        "actions_items": [],
+                        "json_version": 4
+                    },
+                    "canvas_preset_data": {},
+                    "json_version": 2,
+                    "registry_id": "",
+                    "extra_composer_mode": false,
+                    "extra_closes_popup": false,
+                    "display_custom_icon_enabled": true,
+                    "display_custom_text_enabled": false,
+                    "display_custom_text": "",
+                    "display_custom_icon": "",
+                    "display_text_hide": true,
+                    "display_icon_hide": false
+                },
+                {
+                    "context_menu_actions": [],
+                    "variant": "action",
+                    "action_id": "expanding_spacer_0",
+                    "brush_name": "",
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "toolshelf_data": {
+                            "pages": [],
+                            "json_version": 3,
+                            "homepage": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 2
+                            }
+                        },
+                        "actions_items": [],
+                        "json_version": 4
+                    },
+                    "canvas_preset_data": {},
+                    "json_version": 2,
+                    "registry_id": "",
+                    "extra_composer_mode": false,
+                    "extra_closes_popup": false,
+                    "display_custom_icon_enabled": true,
+                    "display_custom_text_enabled": false,
+                    "display_custom_text": "",
+                    "display_custom_icon": "",
+                    "display_text_hide": true,
+                    "display_icon_hide": false
+                },
+                {
+                    "context_menu_actions": [],
+                    "variant": "action",
+                    "action_id": "object_transform_mirror_horizontally",
+                    "brush_name": "",
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "toolshelf_data": {
+                            "pages": [],
+                            "json_version": 3,
+                            "homepage": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 2
+                            }
+                        },
+                        "actions_items": [],
+                        "json_version": 4
+                    },
+                    "canvas_preset_data": {},
+                    "json_version": 2,
+                    "registry_id": "",
+                    "extra_composer_mode": false,
+                    "extra_closes_popup": false,
+                    "display_custom_icon_enabled": true,
+                    "display_custom_text_enabled": false,
+                    "display_custom_text": "",
+                    "display_custom_icon": "",
+                    "display_text_hide": true,
+                    "display_icon_hide": false
+                },
+                {
+                    "context_menu_actions": [],
+                    "variant": "action",
+                    "action_id": "object_transform_mirror_vertically",
+                    "brush_name": "",
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "toolshelf_data": {
+                            "pages": [],
+                            "json_version": 3,
+                            "homepage": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 2
+                            }
+                        },
+                        "actions_items": [],
+                        "json_version": 4
+                    },
+                    "canvas_preset_data": {},
+                    "json_version": 2,
+                    "registry_id": "",
+                    "extra_composer_mode": false,
+                    "extra_closes_popup": false,
+                    "display_custom_icon_enabled": true,
+                    "display_custom_text_enabled": false,
+                    "display_custom_text": "",
+                    "display_custom_icon": "",
+                    "display_text_hide": true,
+                    "display_icon_hide": false
+                },
+                {
+                    "context_menu_actions": [],
+                    "variant": "action",
+                    "action_id": "expanding_spacer_0",
+                    "brush_name": "",
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "toolshelf_data": {
+                            "pages": [],
+                            "json_version": 3,
+                            "homepage": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 2
+                            }
+                        },
+                        "actions_items": [],
+                        "json_version": 4
+                    },
+                    "canvas_preset_data": {},
+                    "json_version": 2,
+                    "registry_id": "",
+                    "extra_composer_mode": false,
+                    "extra_closes_popup": false,
+                    "display_custom_icon_enabled": true,
+                    "display_custom_text_enabled": false,
+                    "display_custom_text": "",
+                    "display_custom_icon": "",
+                    "display_text_hide": true,
+                    "display_icon_hide": false
+                },
+                {
+                    "context_menu_actions": [],
+                    "variant": "action",
+                    "action_id": "object_transform_reset",
+                    "brush_name": "",
+                    "docker_id": "",
+                    "workspace_id": "",
+                    "docker_group_data": {
+                        "docker_names": []
+                    },
+                    "popup_data": {
+                        "toolshelf_data": {
+                            "pages": [],
+                            "json_version": 3,
+                            "homepage": {
+                                "sections": [],
+                                "actions": [],
+                                "json_version": 2
+                            }
+                        },
+                        "actions_items": [],
+                        "json_version": 4
+                    },
+                    "canvas_preset_data": {},
+                    "json_version": 2,
+                    "registry_id": "",
+                    "extra_composer_mode": false,
+                    "extra_closes_popup": false,
+                    "display_custom_icon_enabled": true,
+                    "display_custom_text_enabled": false,
+                    "display_custom_text": "",
+                    "display_custom_icon": "",
+                    "display_text_hide": true,
+                    "display_icon_hide": false
+                }
+            ],
+            "variant": "menu",
+            "action_id": "",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "TransformMenu",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": false,
+            "display_custom_text_enabled": true,
+            "display_custom_text": "Transform",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "edit_cut",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "edit_copy",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "edit_paste",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "paste_at",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "expanding_spacer_0",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "object_order_front",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "object_order_raise",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "object_order_lower",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "object_order_back",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "expanding_spacer_0",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "convert_shapes_to_vector_selection",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        }
+    ],
+    "variant": "menu",
+    "action_id": "",
+    "brush_name": "",
+    "docker_id": "",
+    "workspace_id": "",
+    "docker_group_data": {
+        "docker_names": []
+    },
+    "popup_data": {
+        "toolshelf_data": {
+            "pages": [],
+            "json_version": 3,
+            "homepage": {
+                "sections": [],
+                "actions": [],
+                "json_version": 2
+            }
+        },
+        "actions_items": [],
+        "json_version": 4
+    },
+    "canvas_preset_data": {},
+    "json_version": 2,
+    "registry_id": "Context_Objects",
+    "extra_composer_mode": false,
+    "extra_closes_popup": false,
+    "display_custom_icon_enabled": true,
+    "display_custom_text_enabled": true,
+    "display_custom_text": "Object Actions",
+    "display_custom_icon": "vectorLayer",
+    "display_text_hide": true,
+    "display_icon_hide": false
+}

@@ -1,0 +1,421 @@
+{
+    "context_menu_actions": [
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "Transform tool: free",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "Transform tool: perspective",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "Transform tool: warp",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "Transform tool: cage",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "Transform tool: liquify",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "Transform tool: mesh",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "expanding_spacer_0",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "mirrorNodeX",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": true,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "mirrorNodeY",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": true,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "rotateLayerCW90",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        },
+        {
+            "context_menu_actions": [],
+            "variant": "action",
+            "action_id": "rotateLayerCCW90",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": {
+                "docker_names": []
+            },
+            "popup_data": {
+                "toolshelf_data": {
+                    "pages": [],
+                    "json_version": 3,
+                    "homepage": {
+                        "sections": [],
+                        "actions": [],
+                        "json_version": 2
+                    }
+                },
+                "actions_items": [],
+                "json_version": 4
+            },
+            "canvas_preset_data": {},
+            "json_version": 2,
+            "registry_id": "",
+            "extra_composer_mode": false,
+            "extra_closes_popup": false,
+            "display_custom_icon_enabled": true,
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "display_custom_icon": "",
+            "display_text_hide": true,
+            "display_icon_hide": false
+        }
+    ],
+    "variant": "menu",
+    "action_id": "",
+    "brush_name": "",
+    "docker_id": "",
+    "workspace_id": "",
+    "docker_group_data": {
+        "docker_names": []
+    },
+    "popup_data": {
+        "toolshelf_data": {
+            "pages": [],
+            "json_version": 3,
+            "homepage": {
+                "sections": [],
+                "actions": [],
+                "json_version": 2
+            }
+        },
+        "actions_items": [],
+        "json_version": 4
+    },
+    "canvas_preset_data": {},
+    "json_version": 2,
+    "registry_id": "Context_Transform",
+    "extra_composer_mode": false,
+    "extra_closes_popup": false,
+    "display_custom_icon_enabled": true,
+    "display_custom_text_enabled": true,
+    "display_custom_text": "Transform Actions",
+    "display_custom_icon": "krita_tool_transform",
+    "display_text_hide": true,
+    "display_icon_hide": false
+}

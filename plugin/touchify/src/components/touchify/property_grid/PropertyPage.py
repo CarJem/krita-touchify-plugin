@@ -67,6 +67,7 @@ class PropertyPage(QScrollArea):
         
         hiddenItems = PropertyUtils_Extensions.classHiddenVariables(self.currentData())
         hiddenItems.append("json_version")
+        hiddenItems.append("INTERNAL_FILEPATH_ID")
 
         for field in self.fields:     
             if field.variable_name in hiddenItems: field.setHidden(True)
