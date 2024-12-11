@@ -25,6 +25,8 @@ class PropertyField_TypedList(PropertyField):
         self.has_property_view = False
         
 
+        self.add_remove_edit_only = False
+
         self.test_restrictions(manual_restrictions)
 
         self.selectedIndex = -1
@@ -85,17 +87,18 @@ class PropertyField_TypedList(PropertyField):
         removeButton.clicked.connect(self.list_remove)
         btns.addWidget(removeButton)
 
-        moveUpButton = QPushButton()
-        moveUpButton.setIcon(ResourceManager.iconLoader("material:arrow-up"))
-        moveUpButton.setFixedHeight(24)
-        moveUpButton.clicked.connect(self.list_moveUp)
-        btns.addWidget(moveUpButton)
+        if self.add_remove_edit_only == False:
+            moveUpButton = QPushButton()
+            moveUpButton.setIcon(ResourceManager.iconLoader("material:arrow-up"))
+            moveUpButton.setFixedHeight(24)
+            moveUpButton.clicked.connect(self.list_moveUp)
+            btns.addWidget(moveUpButton)
 
-        moveDownButton = QPushButton()
-        moveDownButton.setIcon(ResourceManager.iconLoader("material:arrow-down"))  
-        moveDownButton.setFixedHeight(24)
-        moveDownButton.clicked.connect(self.list_moveDown)
-        btns.addWidget(moveDownButton)
+            moveDownButton = QPushButton()
+            moveDownButton.setIcon(ResourceManager.iconLoader("material:arrow-down"))  
+            moveDownButton.setFixedHeight(24)
+            moveDownButton.clicked.connect(self.list_moveDown)
+            btns.addWidget(moveDownButton)
 
         editButton = QPushButton()
         editButton.setIcon(ResourceManager.iconLoader("material:pencil"))                                                                                                                                                                                                                                                                                                                                 
@@ -103,19 +106,20 @@ class PropertyField_TypedList(PropertyField):
         editButton.clicked.connect(self.list_edit)
         btns.addWidget(editButton)
 
-        moreButton = QPushButton()
-        moreButton.setIcon(ResourceManager.iconLoader("material:menu"))                                                                                                                                                                                                                                                                                                              
-        moreButton.setFixedHeight(24)
-        btns.addWidget(moreButton)
+        if self.add_remove_edit_only == False:
+            moreButton = QPushButton()
+            moreButton.setIcon(ResourceManager.iconLoader("material:menu"))                                                                                                                                                                                                                                                                                                              
+            moreButton.setFixedHeight(24)
+            btns.addWidget(moreButton)
 
-        moreMenu = QMenu(moreButton)
-        dupeAct = moreMenu.addAction("Duplicate")
-        dupeAct.triggered.connect(self.list_duplicate)
-        copyAct = moreMenu.addAction("Copy")
-        copyAct.triggered.connect(self.list_copy)
-        pateAct = moreMenu.addAction("Paste")
-        pateAct.triggered.connect(self.list_paste)
-        moreButton.setMenu(moreMenu)
+            moreMenu = QMenu(moreButton)
+            dupeAct = moreMenu.addAction("Duplicate")
+            dupeAct.triggered.connect(self.list_duplicate)
+            copyAct = moreMenu.addAction("Copy")
+            copyAct.triggered.connect(self.list_copy)
+            pateAct = moreMenu.addAction("Paste")
+            pateAct.triggered.connect(self.list_paste)
+            moreButton.setMenu(moreMenu)
 
         self.setLayout(self.field_layout)
 
@@ -137,6 +141,8 @@ class PropertyField_TypedList(PropertyField):
             if restriction["type"] == "property_view":
                 self.has_property_view = True
                 self.FULL_ROW_WIDGET = True
+            if restriction["type"] == "add_remove_edit_only":
+                self.add_remove_edit_only = True
 
 
     def setStackHost(self, host):
@@ -380,18 +386,11 @@ class PropertyField_TypedList(PropertyField):
             self.model.appendRow(item)
             indicies.append(sub_index + 1)
 
-        if len(indicies) - 1 >= self.selectedIndex >= 0:
-            if indicies[self.selectedIndex] - 1 >= self.selectedSubIndex >= 0:
-                self.selection_model.setCurrentIndex(self.model.index(self.selectedIndex, 0).child(self.selectedSubIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
-            else:
-                self.selectedSubIndex = -1
-                self.selectedSubItem = None
-                self.selection_model.setCurrentIndex(self.model.index(self.selectedIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
-        else:
-            self.selectedIndex = -1
-            self.selectedItem = None
-            self.selectedSubIndex = -1
-            self.selectedSubItem = None
+        self.selectedIndex = -1
+        self.selectedItem = None
+        self.selectedSubIndex = -1
+        self.selectedSubItem = None
+
 
         if self.has_property_view:
             self.updatePropertyView()

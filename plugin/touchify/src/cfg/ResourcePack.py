@@ -10,9 +10,11 @@ from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
 from touchify.src.cfg.toolbox.CfgToolbox import CfgToolbox
 from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
 from touchify.src.cfg.widget_pad.CfgWidgetPadPreset import CfgWidgetPadPreset
-from touchify.src.ext.Extensions import Extensions
+from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions
 from touchify.src.ext.types.TypedList import TypedList
+
+from touchify.paths import BASE_DIR
 
 HAS_ALREADY_LOADED: bool = False
 
@@ -26,14 +28,21 @@ class ResourcePack:
     canvas_presets: TypedList[CfgTouchifyActionCanvasPreset] = TypedList(None, CfgTouchifyActionCanvasPreset)
     docker_groups: TypedList[CfgTouchifyActionDockerGroup] = TypedList(None, CfgTouchifyActionDockerGroup)
 
-    def __init__(self, location: str, name: str) -> None:
-        self.INTERNAL_ROOT_DIRECTORY = location
+    def __init__(self, location: str = "") -> None:
 
-        self.INTERNAL_has_loaded = False
-        self.INTERNAL_active_files: list[str] = []
+        if location == "":
+            self.metadata = ResourcePackMetadata()
+            self.INTERNAL_ROOT_DIRECTORY = ""
+            self.INTERNAL_has_loaded = True
+            self.INTERNAL_active_files: list[str] = []
+        else:
+            self.INTERNAL_has_loaded = False
+            self.INTERNAL_ROOT_DIRECTORY = location
+            self.INTERNAL_active_files: list[str] = []
 
-        self.metadata = None
-        self.load()
+            self.metadata = None
+            self.load()
+
 
     def __str__(self):
         if self.INTERNAL_has_loaded:
@@ -43,7 +52,7 @@ class ResourcePack:
         return "Unknown Resource Pack"
 
     def isValid(self):
-        return self.INTERNAL_has_loaded
+        return self.INTERNAL_has_loaded and self.metadata != None
     
     def load(self):
 
@@ -59,7 +68,7 @@ class ResourcePack:
                     _item.propertygrid_on_duplicate = types.MethodType(ResourcePack.onDuplicateListItem, _item)
                     _item.INTERNAL_FILEPATH_ID = filePath
                     _item.INTERNAL_FILENAME_ID = fileName
-                    _item.INTERNAL_UUID_ID = fileName[:-5]
+                    _item.INTERNAL_UUID_ID = fileName[:-4]
                     _item.INTERNAL_FILESYSTEM_MANAGED = True
                     result.append(_item)
                     
@@ -99,12 +108,14 @@ class ResourcePack:
         except Exception as err:
             print(err)
             self.INTERNAL_has_loaded = False
-                
-
-                
 
 
     def save(self):
+
+        if self.INTERNAL_ROOT_DIRECTORY == "":
+            resource_pack_directory = os.path.join(BASE_DIR, 'configs', 'resources')
+            folder_name = FileExtensions.fileStringify(str(self.metadata.registry_id))
+            self.INTERNAL_ROOT_DIRECTORY = FileExtensions.uniquify(os.path.join(resource_pack_directory, folder_name))
 
         found_files: list[str] = []
 
@@ -112,15 +123,18 @@ class ResourcePack:
             if hasattr(item, "getFileName"):
                 result: str = item.getFileName()
             else:
-                result: str = Extensions.fileStringify(str(item))
-            
-            name = Extensions.uniquify(f"{result}.json")
-            uuid = name[:-5]
-            path = os.path.join(folderPath, name)
+                result: str = FileExtensions.fileStringify(str(item))
+
+            path = FileExtensions.uniquify(os.path.join(folderPath, f"{result}.json"))
+            name = os.path.basename(path)
+            uuid = name[:-4]
 
             return uuid, name, path
 
         def saveItems(list: TypedList, folderPath: str):
+            if not os.path.exists(folderPath):
+                os.mkdir(folderPath)
+                
             for item in list:
                 if not hasattr(item, "INTERNAL_FILESYSTEM_MANAGED"):
 

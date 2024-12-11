@@ -43,7 +43,6 @@ class SettingsDialog(QDialog):
     def _saveFile(self):
         self.editableConfig.save()
         TouchifyConfig.instance().notifyUpdate()
-        self.propertyGrid.updateDataObject(self.editableConfig)
 
     def onSave(self):
         self._saveFile()

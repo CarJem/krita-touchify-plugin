@@ -394,7 +394,7 @@
     "json_version": 4,
     "docker_width": 0,
     "docker_height": 0,
-    "window_title": "",
+    "window_title": "Layer Popup",
     "actions_opacity": 1.0,
     "closing_method": "default",
     "popup_position_x": "default",

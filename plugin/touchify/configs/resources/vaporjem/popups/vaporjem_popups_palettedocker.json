@@ -1,7 +1,7 @@
 {
     "toolshelf_data": {
-        "json_version": 3,
         "pages": [],
+        "json_version": 3,
         "homepage": {
             "sections": [],
             "actions": [],
@@ -9,23 +9,23 @@
         }
     },
     "actions_items": [],
-    "actions_item_width": 200,
-    "actions_item_height": 300,
+    "actions_opacity": 1.0,
     "actions_grid_width": 3,
     "actions_grid_padding": 2,
     "actions_icon_width": 30,
     "actions_icon_height": 30,
-    "type": "docker",
-    "docker_id": "Touchify/CompactBrushToggler",
-    "id": "VaporJem_Popups_CompactBrushToggler",
-    "window_type": "popup",
+    "actions_item_width": 100,
+    "actions_item_height": 100,
     "json_version": 4,
-    "docker_width": 200,
-    "docker_height": 300,
-    "actions_opacity": 1.0,
-    "window_title": "Compact Brush Toggler Popup",
+    "id": "VaporJem_Popups_PaletteDocker",
+    "window_title": "Palette Popup",
+    "window_type": "popup",
     "closing_method": "default",
     "popup_position_x": "default",
     "popup_position_y": "default",
-    "actions_close_on_click": false
+    "type": "docker",
+    "actions_close_on_click": false,
+    "docker_id": "PaletteDocker",
+    "docker_width": 300,
+    "docker_height": 300
 }

@@ -102,7 +102,7 @@
     "type": "toolshelf",
     "window_type": "popup",
     "json_version": 4,
-    "window_title": "",
+    "window_title": "Brushes Popup",
     "docker_width": 0,
     "docker_height": 0,
     "actions_opacity": 1.0,

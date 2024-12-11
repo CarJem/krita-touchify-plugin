@@ -8,9 +8,9 @@
             "json_version": 2
         }
     },
-    "id": "VaporJem_Popups_QuickSettings",
+    "id": "VaporJem_Popups_UndoHistory",
     "type": "docker",
-    "docker_id": "quick_settings_docker",
+    "docker_id": "History",
     "actions_grid_width": 3,
     "actions_grid_padding": 2,
     "actions_item_width": 310,
@@ -23,7 +23,7 @@
     "docker_width": 310,
     "docker_height": 400,
     "actions_close_on_click": false,
-    "window_title": "Quick Settings Popup",
+    "window_title": "History Popup",
     "actions_opacity": 1.0,
     "closing_method": "default",
     "popup_position_x": "default",

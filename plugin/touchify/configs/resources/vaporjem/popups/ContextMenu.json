@@ -799,7 +799,7 @@
                             "display_text_hide": true,
                             "display_icon_hide": false,
                             "docker_group_data": "none",
-                            "popup_data": "none",
+                            "popup_data": "vaporjem/popup/vaporjem_popups_palettedocker.json",
                             "canvas_preset_data": "none"
                         },
                         {
@@ -820,7 +820,7 @@
                             "display_text_hide": true,
                             "display_icon_hide": false,
                             "docker_group_data": "none",
-                            "popup_data": "none",
+                            "popup_data": "vaporjem/popup/vaporjem_popups_colordocker.json",
                             "canvas_preset_data": "none"
                         },
                         {
@@ -841,7 +841,7 @@
                             "display_text_hide": true,
                             "display_icon_hide": false,
                             "docker_group_data": "none",
-                            "popup_data": "none",
+                            "popup_data": "vaporjem/popup/vaporjem_popups_undohistory.json",
                             "canvas_preset_data": "none"
                         },
                         {
@@ -1935,7 +1935,7 @@
     "docker_height": 0,
     "id": "VaporJemContextMenu",
     "type": "toolshelf",
-    "window_title": "VaporJemContextMenu",
+    "window_title": "Context Menu",
     "window_type": "popup",
     "closing_method": "default",
     "actions_opacity": 1.0,

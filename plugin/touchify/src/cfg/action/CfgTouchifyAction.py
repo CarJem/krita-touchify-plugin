@@ -70,7 +70,39 @@ class CfgTouchifyAction:
         return FileExtensions.fileStringify(self.registry_id)
         
     def __str__(self):
-        return f"{self.display_custom_text} [{self.variant}]"
+        match self.variant:
+            case CfgTouchifyAction.Variants.Action:
+                prefix = "[Action]"
+                suffix = self.action_id
+            case CfgTouchifyAction.Variants.Menu:
+                prefix = "[Menu]"
+                suffix = self.display_custom_text
+            case CfgTouchifyAction.Variants.Brush:
+                prefix = "[Brush]"
+                suffix = self.brush_name
+            case CfgTouchifyAction.Variants.Popup:
+                prefix = "[Popup]"
+                suffix = self.display_custom_text
+            case CfgTouchifyAction.Variants.Workspace:
+                prefix = "[Workspace]"
+                suffix = self.workspace_id
+            case CfgTouchifyAction.Variants.Docker:
+                prefix = "[Docker]"
+                suffix = self.docker_id
+            case CfgTouchifyAction.Variants.DockerGroup:
+                prefix = "[Docker Group]"
+                suffix = self.display_custom_text
+            case CfgTouchifyAction.Variants.CanvasPreset:
+                prefix = "[Canvas Preset]"
+                suffix = self.display_custom_text
+            case _:
+                prefix = f"[{self.variant}]"
+                suffix = self.display_custom_text
+                
+        if self.display_custom_text != "":
+            suffix = self.display_custom_text
+        
+        return f"{suffix} {prefix}"
 
 
     def forceLoad(self):
