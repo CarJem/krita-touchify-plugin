@@ -18,15 +18,6 @@ typed list
 # @date 2012/07/19 08:21:22
 # @brief Definition of TypedList class.
 
-class Unsortable( list ):
-  """ 
-  .. class:: Unsortable
-  
-  list that cannot be sorted 
-  """
-  def sort( self, *args, **kwargs ):
-    return
-
 class TypedList(list):
   """
   .. class:: TypedList
@@ -68,6 +59,7 @@ class TypedList(list):
     if not isinstance( val, self._allowedTypes ):
       raise TypeError("Wrong type %s, this list can hold only instances of %s" % ( type(val),
                                                                                    str(self._allowedTypes) ) )
+  
   def __iadd__( self, other ):
     """ += operator
 
@@ -157,89 +149,3 @@ class TypedList(list):
     """
     self._typeCheck( val )
     list.insert( self, i, val )
-
-class BooleanList( TypedList ):
-  """
-  .. class:: BooleanList
-
-  A list holding only True or False items.
-  """
-  def __init__( self, iterable = None ):
-    """ c'tor
-
-    :param self: self reference
-    :param mixed iterable: initial values
-    """
-    TypedList.__init__( self, iterable, allowedTypes = bool )
-  
-class IntList( TypedList ):
-  """
-  .. class:: IntList
-
-  A list holding only int type items.
-  """
-  def __init__( self, iterable = None ):
-    """ c'tor
-
-    :param self: self reference
-    :param mixed iterable: initial values
-    """
-    TypedList.__init__( self, iterable, allowedTypes = int )
-
-class FloatList( TypedList ):
-  """
-  .. class:: FloatList
-
-  A list holding only float type items.
-  """
-  def __init__( self, iterable = None ):
-    """ c'tor
-
-    :param self: self reference
-    :param mixed iterable: initial values
-    """
-    TypedList.__init__( self, iterable, allowedTypes = float )
-
-class NumericList( TypedList ):
-  """
-   .. class:: NumericList
-
-   A list holding only int, long or float type items.
-  """
-  def __init__( self, iterable = None ):
-    """ c'tor
-
-    :param self: self reference
-    :param mixed iterable: initial values
-    """
-
-    TypedList.__init__( self, iterable, allowedTypes = ( int, float ) )
-
-class StrList( TypedList ):
-  """
-  .. class:: StrList
-
-  A list holding only str type items.
-  """
-  def __init__( self, iterable = None ):
-    """ c'tor
-
-    :param self: self reference
-    :param mixed iterable: initial values
-    """
-    TypedList.__init__( self, iterable, allowedTypes = str )
-
-class StringsList( TypedList ):
-  """
-  .. class:: StringsList
-
-  A list holding only str or unicode type items.
-  """
-  def __init__( self, iterable = None ):
-    """ c'tor
-
-    :param self: self reference
-    :param mixed iterable: initial values
-    """
-    TypedList.__init__( self, iterable, allowedTypes = ( str ) )
-    

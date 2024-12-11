@@ -8,10 +8,12 @@ import shutil
 HAS_ALREADY_LOADED: bool = False
 
 class ResourcePackRegistry:
-    presets: TypedList[ResourcePack] = []
 
+    def __defaults__(self):
+        self.presets: TypedList[ResourcePack] = []
 
     def __init__(self) -> None:
+        self.__defaults__()
         self.INTERNAL_ROOT_DIRECTORY = os.path.join(BASE_DIR, 'configs', 'resources')
         self.INTERNAL_active_files: list[str] = []
         self.load()

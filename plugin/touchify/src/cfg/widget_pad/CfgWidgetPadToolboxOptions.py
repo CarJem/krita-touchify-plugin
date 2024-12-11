@@ -1,25 +1,27 @@
-from ...ext.JsonExtensions import JsonExtensions as Extensions
-from .CfgWidgetPadOptions import CfgWidgetPadOptions
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.cfg.widget_pad.CfgWidgetPadOptions import CfgWidgetPadOptions
 
 class CfgWidgetPadToolboxOptions:
 
-    position_x: int = 0
-    position_y: int = 0
+    def __defaults__(self):
+        self.position_x: int = 0
+        self.position_y: int = 0
 
-    alignment_y: str = "top"
-    alignment_x: str = "left"
+        self.alignment_y: str = "top"
+        self.alignment_x: str = "left"
 
-    stretch_x: int = 0
-    stretch_y: int = 0
+        self.stretch_x: int = 0
+        self.stretch_y: int = 0
 
-    span_x: int = -1
-    span_y: int = -1
+        self.span_x: int = -1
+        self.span_y: int = -1
 
-    horizontal_mode: bool = False
+        self.horizontal_mode: bool = False
 
-    json_version: int = 1
+        self.json_version: int = 1
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         Extensions.dictToObject(self, args)
 
     def propertygrid_sorted(self):

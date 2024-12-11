@@ -30,36 +30,36 @@ class CfgTouchifyActionPopup:
         Center = "center"
         End = "end"
 
+    def __defaults__(self):
+        self.id: str = ""
+        self.window_type: str = "popup"
+        self.window_title: str = ""
+        self.type: str = "actions"
+        self.closing_method: str = "default"
+        self.popup_position_x: str = "default"
+        self.popup_position_y: str = "default"
+        
+        self.actions_grid_width: int = 3
+        self.actions_opacity: float = 1.0
+        self.actions_grid_padding: int = 2
+        self.actions_item_width: int = 100
+        self.actions_item_height: int = 100
+        self.actions_icon_width: int = 30
+        self.actions_icon_height: int = 30
+        self.actions_items: TypedList[CfgTouchifyActionPopupItem] = []
+        self.actions_close_on_click: bool = False
 
-    id: str = ""
-    window_type: str = "popup"
-    window_title: str = ""
-    type: str = "actions"
-    closing_method: str = "default"
-    popup_position_x: str = "default"
-    popup_position_y: str = "default"
-    
-    actions_grid_width: int = 3
-    actions_opacity: float = 1.0
-    actions_grid_padding: int = 2
-    actions_item_width: int = 100
-    actions_item_height: int = 100
-    actions_icon_width: int = 30
-    actions_icon_height: int = 30
-    actions_items: TypedList[CfgTouchifyActionPopupItem] = []
-    actions_close_on_click: bool = False
-    
-    docker_id: str = ""
-    docker_width: int = 0
-    docker_height: int = 0
+        self.docker_id: str = ""
+        self.docker_width: int = 0
+        self.docker_height: int = 0
 
+        self.json_version: int = 4
 
-
-    json_version: int = 4
 
 
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
         self.toolshelf_data: CfgToolshelf = CfgToolshelf()
         args = CfgBackwardsCompat.CfgTouchifyActionPopup(args)        

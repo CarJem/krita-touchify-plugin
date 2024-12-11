@@ -5,14 +5,16 @@ from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 
 class CfgToolboxItem:
 
-    name: str = ""
-    items: TypedList[CfgToolboxSubItem] = []
-    icon: str = ""
-    open_on_click: bool = False
+    def __defaults__(self):
+        self.name: str = ""
+        self.items: TypedList[CfgToolboxSubItem] = []
+        self.icon: str = ""
+        self.open_on_click: bool = False
 
-    json_version: int = 1
+        self.json_version: int = 1
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         args = CfgBackwardsCompat.CfgToolboxItem(args)
         Extensions.dictToObject(self, args)
         self.items = Extensions.init_list(args, "items", CfgToolboxSubItem)

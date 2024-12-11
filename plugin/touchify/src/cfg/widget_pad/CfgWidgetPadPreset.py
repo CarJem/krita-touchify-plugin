@@ -4,15 +4,18 @@ from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
    
 class CfgWidgetPadPreset:
-    preset_name: str = "WidgetPad Preset"
 
-    toolbox: CfgWidgetPadToolboxOptions = CfgWidgetPadToolboxOptions()
-    toolshelf_alt: CfgWidgetPadOptions = CfgWidgetPadOptions()
-    toolshelf: CfgWidgetPadOptions = CfgWidgetPadOptions()
+    def __defaults__(self):
+        self.preset_name: str = "WidgetPad Preset"
 
-    json_version: int = 1
+        self.toolbox: CfgWidgetPadToolboxOptions = CfgWidgetPadToolboxOptions()
+        self.toolshelf_alt: CfgWidgetPadOptions = CfgWidgetPadOptions()
+        self.toolshelf: CfgWidgetPadOptions = CfgWidgetPadOptions()
+
+        self.json_version: int = 1
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         Extensions.dictToObject(self, args, [CfgWidgetPadOptions, CfgWidgetPadToolboxOptions])
 
     def getFileName(self):

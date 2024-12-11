@@ -7,26 +7,28 @@ from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 class CfgTouchifyActionCanvasPreset:
 
-    preset_name: str = "New Preset"
-    
-    checkers_main_color: KS_Color = KS_Color()
-    checkers_alt_color: KS_Color = KS_Color()
-    checkers_size: int = 32
-    checkers_enabled: bool = False
+    def __defaults__(self):
+        self.preset_name: str = "New Preset"
+        
+        self.checkers_main_color: KS_Color = KS_Color()
+        self.checkers_alt_color: KS_Color = KS_Color()
+        self.checkers_size: int = 32
+        self.checkers_enabled: bool = False
 
-    pixgrid_color: KS_Color = KS_Color(255, 255, 255)
-    pixgrid_threshold: float = 24
-    pixgrid_enabled: bool = False
+        self.pixgrid_color: KS_Color = KS_Color(255, 255, 255)
+        self.pixgrid_threshold: float = 24
+        self.pixgrid_enabled: bool = False
 
-    selection_outline_opacity: float = 1.0
-    selection_overlay_color: KS_Color = KS_Color(255, 0, 0)
-    selection_overlay_opacity: float = 0.5
-    selection_enabled: bool = False
+        self.selection_outline_opacity: float = 1.0
+        self.selection_overlay_color: KS_Color = KS_Color(255, 0, 0)
+        self.selection_overlay_opacity: float = 0.5
+        self.selection_enabled: bool = False
 
-    border_color: KS_Color = KS_Color(128, 128, 128)
-    border_enabled: bool = False
+        self.border_color: KS_Color = KS_Color(128, 128, 128)
+        self.border_enabled: bool = False
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         Extensions.dictToObject(self, args, [KS_Color])
 
     def getFileName(self):

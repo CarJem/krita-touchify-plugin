@@ -19,16 +19,19 @@ from touchify.paths import BASE_DIR
 HAS_ALREADY_LOADED: bool = False
 
 class ResourcePack:
-    metadata: ResourcePackMetadata | None = None
-    components: TypedList[CfgTouchifyAction] = []
-    toolshelves: TypedList[CfgToolshelf] = []
-    toolboxes: TypedList[CfgToolbox] = []
-    widget_layouts: TypedList[CfgWidgetPadPreset] = []
-    popups: TypedList[CfgTouchifyActionPopup] = []
-    canvas_presets: TypedList[CfgTouchifyActionCanvasPreset] = []
-    docker_groups: TypedList[CfgTouchifyActionDockerGroup] = []
-    def __init__(self, location: str = "") -> None:
 
+    def __defaults__(self):
+        self.metadata: ResourcePackMetadata | None = None
+        self.components: TypedList[CfgTouchifyAction] = []
+        self.toolshelves: TypedList[CfgToolshelf] = []
+        self.toolboxes: TypedList[CfgToolbox] = []
+        self.widget_layouts: TypedList[CfgWidgetPadPreset] = []
+        self.popups: TypedList[CfgTouchifyActionPopup] = []
+        self.canvas_presets: TypedList[CfgTouchifyActionCanvasPreset] = []
+        self.docker_groups: TypedList[CfgTouchifyActionDockerGroup] = []
+
+    def __init__(self, location: str = "") -> None:
+        self.__defaults__()
         if location == "":
             self.metadata = ResourcePackMetadata()
             self.INTERNAL_ROOT_DIRECTORY = ""

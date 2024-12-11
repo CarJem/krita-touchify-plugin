@@ -3,14 +3,13 @@ from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 HAS_ALREADY_LOADED: bool = False
 
 class ResourcePackMetadata:
-
-
-    json_version: int = 1
-
-
-    def __init__(self, **args) -> None:
+    def __defaults__(self):
+        self.json_version: int = 1
         self.registry_id: str = "NewActRegistry"
         self.registry_name: str = "New Action Registry"
+
+    def __init__(self, **args) -> None:
+        self.__defaults__()
         Extensions.dictToObject(self, args)
 
     def forceLoad(self):

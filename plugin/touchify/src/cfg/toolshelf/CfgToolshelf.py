@@ -10,14 +10,16 @@ from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
    
 class CfgToolshelf:
-    pages: TypedList[CfgToolshelfPanel] = []
-    homepage: CfgToolshelfPanel = CfgToolshelfPanel() 
-    header_options: CfgToolshelfHeaderOptions = CfgToolshelfHeaderOptions()
-    preset_name: str = "New Toolshelf Preset"
+    def __defaults__(self):
+        self.pages: TypedList[CfgToolshelfPanel] = []
+        self.homepage: CfgToolshelfPanel = CfgToolshelfPanel() 
+        self.header_options: CfgToolshelfHeaderOptions = CfgToolshelfHeaderOptions()
+        self.preset_name: str = "New Toolshelf Preset"
 
-    json_version: int = 3
+        self.json_version: int = 3
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         args = CfgBackwardsCompat.CfgToolshelf(args)
         Extensions.dictToObject(self, args, [CfgToolshelfHeaderOptions, CfgToolshelfPanel])
         self.pages = Extensions.init_list(args, "pages", CfgToolshelfPanel)

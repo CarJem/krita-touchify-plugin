@@ -19,49 +19,51 @@ class CfgTouchifyAction:
         DockerGroup = "docker_group"
         CanvasPreset = "canvas_preset"
 
-    registry_id: str = ""      
-    variant: str = "action"
+    def __defaults__(self):
+        self.registry_id: str = ""      
+        self.variant: str = "action"
 
-    #Display Params
-    display_icon_hide: bool = False
-    display_text_hide: bool = False
-    display_custom_icon_enabled: bool = False
-    display_custom_icon: str = ""
-    display_custom_text_enabled: bool = True
-    display_custom_text: str = ""
+        #Display Params
+        self.display_icon_hide: bool = False
+        self.display_text_hide: bool = False
+        self.display_custom_icon_enabled: bool = False
+        self.display_custom_icon: str = ""
+        self.display_custom_text_enabled: bool = True
+        self.display_custom_text: str = ""
 
-    #Extras Params
-    extra_closes_popup: bool = False
-    extra_composer_mode: bool = False
+        #Extras Params
+        self.extra_closes_popup: bool = False
+        self.extra_composer_mode: bool = False
 
-    #Action Params
-    action_id: str = ""
+        #Action Params
+        self.action_id: str = ""
 
-    #Menu Params
-    context_menu_actions: TypedList["CfgTouchifyAction"] = []
+        #Menu Params
+        self.context_menu_actions: TypedList["CfgTouchifyAction"] = []
 
-    #Brush Params
-    brush_name: str = ""
-    
-    #Docker Params
-    docker_id: str = ""
-    
-    #Workspace Params
-    workspace_id: str = ""
-    
-    #Docker Group Params
-    docker_group_data: str = "none"
-    
-    #Popup Params
-    popup_data: str = "none"
+        #Brush Params
+        self.brush_name: str = ""
+        
+        #Docker Params
+        self.docker_id: str = ""
+        
+        #Workspace Params
+        self.workspace_id: str = ""
+        
+        #Docker Group Params
+        self.docker_group_data: str = "none"
+        
+        #Popup Params
+        self.popup_data: str = "none"
 
-    #Canvas Preset Params
-    canvas_preset_data: str = "none"
+        #Canvas Preset Params
+        self.canvas_preset_data: str = "none"
 
-    json_version: int = 2
+        self.json_version: int = 2
     
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         args = CfgBackwardsCompat.CfgTouchifyAction(args)
         Extensions.dictToObject(self, args, [CfgTouchifyActionPopup, CfgTouchifyActionDockerGroup, CfgTouchifyActionCanvasPreset])
         self.context_menu_actions = Extensions.init_list(args, "context_menu_actions", CfgTouchifyAction)

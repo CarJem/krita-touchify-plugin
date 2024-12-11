@@ -5,12 +5,15 @@ from touchify.src.cfg.docker_group.CfgTouchifyActionDockerGroupItem import CfgTo
 from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 
 class CfgTouchifyActionDockerGroup:
-    id: str = ""
-    tabs_mode: bool = True
-    group_id: str = ""
-    docker_names: TypedList[CfgTouchifyActionDockerGroupItem] = []
+
+    def __defaults__(self):
+        self.id: str = ""
+        self.tabs_mode: bool = True
+        self.group_id: str = ""
+        self.docker_names: TypedList[CfgTouchifyActionDockerGroupItem] = []
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         args = CfgBackwardsCompat.CfgTouchifyActionDockerGroup(args)
         Extensions.dictToObject(self, args)
         self.docker_names = Extensions.init_list(args, "docker_names", CfgTouchifyActionDockerGroupItem)

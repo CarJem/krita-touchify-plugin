@@ -56,43 +56,45 @@ class CfgToolshelfSection:
 
 
 
-    display_name: str = ""
+    def __defaults__(self):
+        self.display_name: str = ""
 
-    docker_id: str = ""
+        self.docker_id: str = ""
 
-    size_x: int = 0
-    size_y: int = 0
+        self.size_x: int = 0
+        self.size_y: int = 0
 
-    min_size_x: int = 0
-    min_size_y: int = 0
+        self.min_size_x: int = 0
+        self.min_size_y: int = 0
 
-    max_size_x: int = 0
-    max_size_y: int = 0
+        self.max_size_x: int = 0
+        self.max_size_y: int = 0
 
-    panel_y: int = 0
-    panel_x: int = 0
+        self.panel_y: int = 0
+        self.panel_x: int = 0
 
-    ignore_scaling: bool = False
-    section_type: str = "docker"
+        self.ignore_scaling: bool = False
+        self.section_type: str = "docker"
 
-    docker_nesting_mode: str = "normal"
-    docker_unloaded_visibility: str = "normal"
-    docker_loading_priority: str = "normal"
+        self.docker_nesting_mode: str = "normal"
+        self.docker_unloaded_visibility: str = "normal"
+        self.docker_loading_priority: str = "normal"
 
-    action_section_id: str = "Panel"
-    action_section_display_mode: str = "normal"
-    action_section_contents: TypedList[CfgTouchifyActionCollection] = []
-    action_section_alignment_x: str = "none"
-    action_section_alignment_y: str = "none"
-    action_section_btn_width: int = 0
-    action_section_btn_height: int = 0
-    action_section_icon_size: int = 0
+        self.action_section_id: str = "Panel"
+        self.action_section_display_mode: str = "normal"
+        self.action_section_contents: TypedList[CfgTouchifyActionCollection] = []
+        self.action_section_alignment_x: str = "none"
+        self.action_section_alignment_y: str = "none"
+        self.action_section_btn_width: int = 0
+        self.action_section_btn_height: int = 0
+        self.action_section_icon_size: int = 0
 
-    special_item_type: str = "none"
+        self.special_item_type: str = "none"
 
-    json_version: int = 4
+        self.json_version: int = 4
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         args = CfgBackwardsCompat.CfgToolshelfSection(args)
         from .CfgToolshelfPanel import CfgToolshelfPanel
         self.subpanel_data: CfgToolshelfPanel = CfgToolshelfPanel()

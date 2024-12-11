@@ -3,13 +3,15 @@ from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.cfg.toolbox.CfgToolboxItem import *
 
 class CfgToolboxCategory:
-    id: str=""
-    items: TypedList[CfgToolboxItem] = []
-    column_count: int = 0
+    def __defaults__(self):
+        self.id: str=""
+        self.items: TypedList[CfgToolboxItem] = []
+        self.column_count: int = 0
 
-    json_version: int = 1
+        self.json_version: int = 1
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         Extensions.dictToObject(self, args)
         self.items = Extensions.init_list(args, "items", CfgToolboxItem)
 

@@ -21,25 +21,26 @@ class CfgToolshelfHeaderOptions:
         Center = "center"
         Right = "right"
 
+    def __defaults__(self):
+        self.button_size: int = 32
+        self.header_size: int = 16
 
-    button_size: int = 32
-    header_size: int = 16
+        self.default_to_resize_mode: bool = False
+        self.default_to_pinned: bool = False
 
-    default_to_resize_mode: bool = False
-    default_to_pinned: bool = False
-
-    show_pin_button: bool = True
-    show_menu_button: bool = True
+        self.show_pin_button: bool = True
+        self.show_menu_button: bool = True
 
 
-    position: str = "top"
-    stack_preview: str = "default"
-    stack_alignment: str = "default"
-    stack_actions: TypedList[CfgTouchifyActionCollection] = []
+        self.position: str = "top"
+        self.stack_preview: str = "default"
+        self.stack_alignment: str = "default"
+        self.stack_actions: TypedList[CfgTouchifyActionCollection] = []
 
-    json_version: int = 1
+        self.json_version: int = 1
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         Extensions.dictToObject(self, args)
         
         self.stack_actions = Extensions.init_list(args, "stack_actions", CfgTouchifyActionCollection)

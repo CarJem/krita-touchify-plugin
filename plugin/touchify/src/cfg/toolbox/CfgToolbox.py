@@ -8,25 +8,26 @@ from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
 
    
 class CfgToolbox:
-    preset_name: str = "New Toolbox Preset"
+    def __defaults__(self):
+        self.preset_name: str = "New Toolbox Preset"
 
-    column_count: int = 2
-    icon_size: int = 16
+        self.column_count: int = 2
+        self.icon_size: int = 16
 
-    submenu_delay: int = 200
-    background_opacity: int = 255
-    button_opacity: int = 255
+        self.submenu_delay: int = 200
+        self.background_opacity: int = 255
+        self.button_opacity: int = 255
 
-    categories: TypedList[CfgToolboxCategory] = [] 
+        self.categories: TypedList[CfgToolboxCategory] = [] 
 
-
-    json_version: int = 1
+        self.json_version: int = 1
 
 
 
 
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         args = CfgBackwardsCompat.CfgToolbox(args)
         Extensions.dictToObject(self, args)
         self.categories = Extensions.init_list(args, "categories", CfgToolboxCategory)

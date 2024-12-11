@@ -1,11 +1,13 @@
-from ...ext.JsonExtensions import JsonExtensions as Extensions
-from ...ext.types.TypedList import TypedList
+from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 
 class CfgTouchifyActionDockerGroupItem:
-    id: str=""
+    
+    def __defaults__(self):
+        self.id: str = ""
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         Extensions.dictToObject(self, args)
 
     def __str__(self):

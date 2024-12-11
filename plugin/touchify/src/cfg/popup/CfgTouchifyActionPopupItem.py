@@ -2,9 +2,15 @@ from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 
 class CfgTouchifyActionPopupItem:
-    text: str = ""
-    action: str = ""
-    icon: str = ""
+
+    def __defaults__(self):
+        self.text: str = ""
+        self.action: str = ""
+        self.icon: str = ""
+
+    def __init__(self, **args) -> None:
+        self.__defaults__()
+        Extensions.dictToObject(self, args)
 
     def propertygrid_sorted(self):
         return [
@@ -19,9 +25,6 @@ class CfgTouchifyActionPopupItem:
         labels["icon"] = "Display Icon"
         labels["text"] = "Display Text"
         return labels
-
-    def __init__(self, **args) -> None:
-        Extensions.dictToObject(self, args)
 
     def __str__(self):
         return self.text.replace("\n", "\\n")

@@ -13,26 +13,28 @@ class CfgToolshelfPanel:
         Buttons = "buttons"
         Tabs = "tabs"
     
-    id: str = ""
-    display_name: str = ""
-    actions: TypedList[CfgTouchifyActionCollection] = []
-    sections: TypedList[CfgToolshelfSection] = []
-    tab_type: str = "buttons"
-    action_height: int = 10
+    def __defaults__(self):
+        self.id: str = ""
+        self.display_name: str = ""
+        self.actions: TypedList[CfgTouchifyActionCollection] = []
+        self.sections: TypedList[CfgToolshelfSection] = []
+        self.tab_type: str = "buttons"
+        self.action_height: int = 10
 
-    icon: str = ""
-    toolshelf_tab_row: int = 0
+        self.icon: str = ""
+        self.toolshelf_tab_row: int = 0
 
-    size_x: int = 0
-    size_y: int = 0
-    min_size_x: int = 0
-    min_size_y: int = 0
-    max_size_x: int = 0
-    max_size_y: int = 0
+        self.size_x: int = 0
+        self.size_y: int = 0
+        self.min_size_x: int = 0
+        self.min_size_y: int = 0
+        self.max_size_x: int = 0
+        self.max_size_y: int = 0
 
-    json_version: int = 2
+        self.json_version: int = 2
 
     def __init__(self, **args) -> None:
+        self.__defaults__()
         args = CfgBackwardsCompat.CfgToolshelfPanel(args)
         Extensions.dictToObject(self, args)
         self.sections = Extensions.init_list(args, "sections", CfgToolshelfSection)

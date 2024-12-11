@@ -7,11 +7,13 @@ if TYPE_CHECKING:
 
 class CfgTouchifyActionCollection:
     
-    row_name: str = "Actions Row"
-
-    def __init__(self, **args) -> None:
+    def __defaults__(self):
+        self.row_name: str = "Actions Row"
         from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
         self.actions: TypedList[CfgTouchifyAction] = []
+
+    def __init__(self, **args) -> None:
+        self.__defaults__()
         Extensions.dictToObject(self, args)
         self.actions = Extensions.init_list(args, "actions", CfgTouchifyAction)
 
