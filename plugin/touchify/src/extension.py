@@ -4,7 +4,7 @@ from krita import *
 
 from touchify.src.variables import *
 
-from touchify.src.settings import TouchifyConfig
+from touchify.src.settings import TouchifySettings
 
 
 from touchify.src.ext.KritaSettings import KritaSettings
@@ -32,7 +32,7 @@ class TouchifyExtension(Extension):
 
     def setup(self):
         Krita.instance().notifier().windowCreated.connect(self.onWindowCreated)
-        TouchifyConfig.instance().notifyConnect(self.onTouchifyConfigUpdated)
+        TouchifySettings.instance().notifyConnect(self.onTouchifyConfigUpdated)
         Krita.instance().notifier().configurationChanged.connect(self.onKritaConfigUpdated)
         KritaSettings.notifyConnect(self.onKritaConfigUpdated)
 

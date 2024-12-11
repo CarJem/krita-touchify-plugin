@@ -1,15 +1,15 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.cfg.ResourcePack import ResourcePack
+from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
 from touchify.src.cfg.TouchifyRegistry import TouchifyRegistry
-from touchify.src.cfg.canvas_preset.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
-from touchify.src.cfg.docker_group.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
-from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from touchify.src.cfg.toolbox.CfgToolbox import CfgToolbox
-from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
-from touchify.src.cfg.PreferencesRegistry import PreferencesRegistry
-from touchify.src.cfg.widget_pad.CfgWidgetPadPreset import CfgWidgetPadPreset
+from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
+from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
+from touchify.src.cfg.popup.PopupData import PopupData
+from touchify.src.cfg.toolbox.ToolboxData import ToolboxData
+from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
+from touchify.src.cfg.TouchifyRegistryPreferences import TouchifyRegistryPreferences
+from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.ext.KritaSettings import KritaSettings
 from touchify.src.variables import *
 
@@ -17,93 +17,111 @@ from touchify.src.ext.Extensions import *
 
 
 
-class TouchifyConfig:
+class TouchifySettings:
+
+    class RegistryKey:
+        def __init__(self, id: str, name: str, item_type: str, item_id: str):
+            self.id = id
+            self.name = name
+            self.item_type = item_type
+            self.item_id = item_id
+
+            self.actual_key = f"{self.id}/{self.item_type}/{self.item_id}"
+
+        def __eq__(self, another):
+            if isinstance(another, str):
+                return self.actual_key == another
+            else:
+                return hasattr(another, 'actual_key') and self.actual_key == another.actual_key
+        
+        def __hash__(self):
+            return hash(self.actual_key)
+
     def instance():
         try:
-            return TouchifyConfig.__instance
+            return TouchifySettings.__instance
         except AttributeError:
-            TouchifyConfig.__instance = TouchifyConfig()
-            return TouchifyConfig.__instance
+            TouchifySettings.__instance = TouchifySettings()
+            return TouchifySettings.__instance
 
     def __init__(self) -> None:
         self.notify_hooks = []
         self.hotkey_options_storage = {}
         self.cfg = TouchifyRegistry()
         
-    def preferences(self) -> PreferencesRegistry:
+    def preferences(self) -> TouchifyRegistryPreferences:
         return self.cfg.preferences
 
     def getConfig(self) -> TouchifyRegistry:
         return self.cfg
     
-
     def getRegistryItem(self, item_id: str, type: type) -> None |\
-                                                        CfgTouchifyActionPopup |\
-                                                        CfgTouchifyActionDockerGroup |\
-                                                        CfgTouchifyActionCanvasPreset:
+                                                        PopupData |\
+                                                        DockerGroup |\
+                                                        CanvasPreset:
         cfg = self.getConfig()
         for pack in cfg.resources.presets:
             pack: ResourcePack
 
-            if type == CfgTouchifyActionPopup:
+            if type == PopupData:
                 for item in pack.popups:
-                    item: CfgTouchifyActionPopup
+                    item: PopupData
                     id = f"{pack.INTERNAL_FILENAME_ID}/popup/{item.INTERNAL_FILENAME_ID}"
                     if item_id == id: return item
-            elif type == CfgTouchifyActionDockerGroup:
+            elif type == DockerGroup:
                 for item in pack.docker_groups:
-                    item: CfgTouchifyActionDockerGroup
+                    item: DockerGroup
                     id = f"{pack.INTERNAL_FILENAME_ID}/docker_group/{item.INTERNAL_FILENAME_ID}"
                     if item_id == id: return item
-            elif type == CfgTouchifyActionCanvasPreset:
+            elif type == CanvasPreset:
                 for item in pack.canvas_presets:
-                    item: CfgTouchifyActionCanvasPreset
+                    item: CanvasPreset
                     id = f"{pack.INTERNAL_FILENAME_ID}/canvas_preset/{item.INTERNAL_FILENAME_ID}"
                     if item_id == id: return item
 
         return None
     
-    def getRegistry(self, type: type) -> dict[str, any] |\
-                                        dict[str,CfgTouchifyActionPopup] |\
-                                        dict[str,CfgTouchifyActionDockerGroup] |\
-                                        dict[str,CfgTouchifyActionCanvasPreset] |\
-                                        dict[str,CfgToolshelf] |\
-                                        dict[str,CfgToolbox] |\
-                                        dict[str,CfgWidgetPadPreset]:
+    def getRegistry(self, type: type) -> dict[RegistryKey, any] |\
+                                        dict[RegistryKey,PopupData] |\
+                                        dict[RegistryKey,DockerGroup] |\
+                                        dict[RegistryKey,CanvasPreset] |\
+                                        dict[RegistryKey,ToolshelfData] |\
+                                        dict[RegistryKey,ToolboxData] |\
+                                        dict[RegistryKey,WidgetLayout]:
         cfg = self.getConfig()
         results: dict = {}
         for pack in cfg.resources.presets:
             pack: ResourcePack
 
-            if type == CfgTouchifyActionPopup:
+            if type == PopupData:
                 for item in pack.popups:
-                    item: CfgTouchifyActionPopup
-                    id = f"{pack.INTERNAL_FILENAME_ID}/popup/{item.INTERNAL_FILENAME_ID}"
+                    item: PopupData
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_FILENAME_ID, pack.metadata.registry_name, "popup", item.INTERNAL_FILENAME_ID)
                     results[id] = item
-            elif type == CfgTouchifyActionDockerGroup:
+            elif type == DockerGroup:
                 for item in pack.docker_groups:
-                    item: CfgTouchifyActionDockerGroup
-                    id = f"{pack.INTERNAL_FILENAME_ID}/docker_group/{item.INTERNAL_FILENAME_ID}"
+                    item: DockerGroup
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_FILENAME_ID, pack.metadata.registry_name, "docker_group", item.INTERNAL_FILENAME_ID)
                     results[id] = item
-            elif type == CfgTouchifyActionCanvasPreset:
+            elif type == CanvasPreset:
                 for item in pack.canvas_presets:
-                    item: CfgTouchifyActionCanvasPreset
-                    id = f"{pack.INTERNAL_FILENAME_ID}/canvas_preset/{item.INTERNAL_FILENAME_ID}"
+                    item: CanvasPreset
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_FILENAME_ID, pack.metadata.registry_name, "canvas_preset", item.INTERNAL_FILENAME_ID)
                     results[id] = item
-            elif type == CfgToolshelf:
+            elif type == ToolshelfData:
                 for item in pack.toolshelves:
-                    item: CfgToolshelf
-                    id = f"{pack.INTERNAL_FILENAME_ID}/toolshelves/{item.INTERNAL_FILENAME_ID}"
+                    item: ToolshelfData
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_FILENAME_ID, pack.metadata.registry_name, "toolshelves", item.INTERNAL_FILENAME_ID)
                     results[id] = item
-            elif type == CfgToolbox:
+            elif type == ToolboxData:
                 for item in pack.toolboxes:
-                    item: CfgToolbox
-                    id = f"{pack.INTERNAL_FILENAME_ID}/toolboxes/{item.INTERNAL_FILENAME_ID}"
+                    item: ToolboxData
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_FILENAME_ID, pack.metadata.registry_name, "toolboxes", item.INTERNAL_FILENAME_ID)
                     results[id] = item
-            elif type == CfgWidgetPadPreset:
+            elif type == WidgetLayout:
                 for item in pack.widget_layouts:
-                    item: CfgWidgetPadPreset
-                    id = f"{pack.INTERNAL_FILENAME_ID}/widget_layout/{item.INTERNAL_FILENAME_ID}"
+                    item: WidgetLayout
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_FILENAME_ID, pack.metadata.registry_name, "widget_layout", item.INTERNAL_FILENAME_ID)
                     results[id] = item
 
         return results
@@ -121,14 +139,14 @@ class TouchifyConfig:
         else:
             return fallback_val
 
-    def getActiveToolshelf(self, registry_index: int) -> CfgToolshelf:
-        registry = self.getRegistry(CfgToolshelf)
+    def getActiveToolshelf(self, registry_index: int) -> ToolshelfData:
+        registry = self.getRegistry(ToolshelfData)
         registry_selection = self.getActiveToolshelfId(registry_index)
 
         if registry_selection in registry:
             return registry[registry_selection]    
         else: 
-            return CfgToolshelf()
+            return ToolshelfData()
 
     def setActiveToolshelf(self, registry_index: int, id: str):
         if registry_index == 0:
@@ -148,14 +166,14 @@ class TouchifyConfig:
         fallback_val = "none"
         return KritaSettings.readSetting(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", fallback_val)
 
-    def getActiveToolbox(self) -> CfgToolbox:
-        registry = self.getRegistry(CfgToolbox)
+    def getActiveToolbox(self) -> ToolboxData:
+        registry = self.getRegistry(ToolboxData)
         registry_selection = self.getActiveToolboxId()
 
         if registry_selection in registry:
             return registry[registry_selection]    
         else: 
-            return CfgToolbox()
+            return ToolboxData()
 
     def setActiveToolbox(self, id: str):
         KritaSettings.writeSetting(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", id, False)
@@ -169,14 +187,14 @@ class TouchifyConfig:
         fallback_val = "none"
         return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", fallback_val)
 
-    def getActiveWidgetLayout(self) -> CfgWidgetPadPreset:
-        registry = self.getRegistry(CfgWidgetPadPreset)
+    def getActiveWidgetLayout(self) -> WidgetLayout:
+        registry = self.getRegistry(WidgetLayout)
         registry_selection = self.getActiveWidgetLayoutId()
 
         if registry_selection in registry:
             return registry[registry_selection]    
         else: 
-            return CfgWidgetPadPreset()
+            return WidgetLayout()
 
     def setActiveWidgetLayout(self, id: str):
         KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", id, False)
@@ -195,10 +213,10 @@ class TouchifyConfig:
         if actionName == "none":
             return
         
-        if actionName not in TouchifyConfig.instance().hotkey_options_storage:
+        if actionName not in TouchifySettings.instance().hotkey_options_storage:
             return
         
-        actionObj = TouchifyConfig.instance().hotkey_options_storage[actionName]
+        actionObj = TouchifySettings.instance().hotkey_options_storage[actionName]
         params = actionObj["params"]
         action = actionObj["action"]
         

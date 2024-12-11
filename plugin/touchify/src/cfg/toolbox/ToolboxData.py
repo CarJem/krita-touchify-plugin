@@ -1,13 +1,13 @@
-from touchify.src.cfg.toolbox.CfgToolboxItem import *
-from touchify.src.cfg.toolbox.CfgToolboxCategory import *
+from touchify.src.cfg.toolbox.ToolboxDataItem import *
+from touchify.src.cfg.toolbox.ToolboxDataCategory import *
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
-from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
+from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 
 
    
-class CfgToolbox:
+class ToolboxData:
     def __defaults__(self):
         self.preset_name: str = "New Toolbox Preset"
 
@@ -18,7 +18,7 @@ class CfgToolbox:
         self.background_opacity: int = 255
         self.button_opacity: int = 255
 
-        self.categories: TypedList[CfgToolboxCategory] = [] 
+        self.categories: TypedList[ToolboxDataCategory] = [] 
 
         self.json_version: int = 1
 
@@ -28,9 +28,9 @@ class CfgToolbox:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = CfgBackwardsCompat.CfgToolbox(args)
+        args = BackwardsCompatibility.ToolboxData(args)
         Extensions.dictToObject(self, args)
-        self.categories = Extensions.init_list(args, "categories", CfgToolboxCategory)
+        self.categories = Extensions.init_list(args, "categories", ToolboxDataCategory)
 
     def __str__(self):
         return self.preset_name.replace("\n", "\\n")
@@ -39,7 +39,7 @@ class CfgToolbox:
         return FileExtensions.fileStringify(self.preset_name)
     
     def forceLoad(self):
-        self.categories = TypedList(self.categories, CfgToolboxCategory)
+        self.categories = TypedList(self.categories, ToolboxDataCategory)
 
     def propertygrid_sorted(self):
         return [
@@ -74,9 +74,9 @@ class CfgToolbox:
         return restrictions
     
     def loadDefaults(self):
-        result = TypedList([], CfgToolboxCategory)
+        result = TypedList([], ToolboxDataCategory)
 
-        vectorSection = CfgToolboxCategory()
+        vectorSection = ToolboxDataCategory()
         vectorSection.id = "Vector"
 
         vectorSection.addAction("InteractionTool")
@@ -84,7 +84,7 @@ class CfgToolbox:
         vectorSection.addAction("PathTool")
         vectorSection.addAction("KarbonCalligraphyTool")
 
-        paintSection = CfgToolboxCategory()
+        paintSection = ToolboxDataCategory()
         paintSection.id = "Paint"
 
         paintSection.addAction("KisToolPencil")
@@ -98,7 +98,7 @@ class CfgToolbox:
         paintSection.addAction("KritaShape/KisToolDyna")
         paintSection.addAction("KritaShape/KisToolMultiBrush")
 
-        transformSection = CfgToolboxCategory()
+        transformSection = ToolboxDataCategory()
         transformSection.id = "Transform"
 
         transformSection.addAction("KisToolTransform")
@@ -106,7 +106,7 @@ class CfgToolbox:
         transformSection.addAction("KisToolCrop")
 
 
-        colorSection = CfgToolboxCategory()
+        colorSection = ToolboxDataCategory()
         colorSection.id = "Color"
 
         colorSection.addAction("KritaFill/KisToolGradient")
@@ -116,14 +116,14 @@ class CfgToolbox:
         colorSection.addAction("KritaFill/KisToolFill")
         colorSection.addAction("KisToolEncloseAndFill")
 
-        measureSection = CfgToolboxCategory()
+        measureSection = ToolboxDataCategory()
         measureSection.id = "Measure"
 
         measureSection.addAction("KisAssistantTool")
         measureSection.addAction("KritaShape/KisToolMeasure")
         measureSection.addAction("ToolReferenceImages")
 
-        selectSection = CfgToolboxCategory()
+        selectSection = ToolboxDataCategory()
         selectSection.id = "Select"
 
         selectSection.addAction("KisToolSelectRectangular")
@@ -135,7 +135,7 @@ class CfgToolbox:
         selectSection.addAction("KisToolSelectPath")   
         selectSection.addAction("KisToolSelectMagnetic")
 
-        navigationSection = CfgToolboxCategory()
+        navigationSection = ToolboxDataCategory()
         navigationSection.id = "Navigation"
 
         navigationSection.addAction("PanTool")

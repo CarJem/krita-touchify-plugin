@@ -1,7 +1,7 @@
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 
-class HotkeyRegistry:
+class TouchifyRegistryHotkeys:
 
 
     def __init__(self, **args) -> None:

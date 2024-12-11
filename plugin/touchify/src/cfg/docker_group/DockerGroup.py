@@ -1,28 +1,28 @@
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.ext.types.TypedList import TypedList
-from touchify.src.cfg.docker_group.CfgTouchifyActionDockerGroupItem import CfgTouchifyActionDockerGroupItem
-from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
+from touchify.src.cfg.docker_group.DockerGroupItem import DockerGroupItem
+from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 
-class CfgTouchifyActionDockerGroup:
+class DockerGroup:
 
     def __defaults__(self):
         self.id: str = ""
         self.tabs_mode: bool = True
         self.group_id: str = ""
-        self.docker_names: TypedList[CfgTouchifyActionDockerGroupItem] = []
+        self.docker_names: TypedList[DockerGroupItem] = []
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = CfgBackwardsCompat.CfgTouchifyActionDockerGroup(args)
+        args = BackwardsCompatibility.DockerGroup(args)
         Extensions.dictToObject(self, args)
-        self.docker_names = Extensions.init_list(args, "docker_names", CfgTouchifyActionDockerGroupItem)
+        self.docker_names = Extensions.init_list(args, "docker_names", DockerGroupItem)
 
     def getFileName(self):
         return FileExtensions.fileStringify(self.id)
 
     def forceLoad(self):
-        self.docker_names = TypedList(self.docker_names, CfgTouchifyActionDockerGroupItem)
+        self.docker_names = TypedList(self.docker_names, DockerGroupItem)
 
     def propertygrid_sorted(self):
         return [

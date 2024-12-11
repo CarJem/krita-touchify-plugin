@@ -1,7 +1,7 @@
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 
-class CfgTouchifyActionPopupItem:
+class PopupDataItem:
 
     def __defaults__(self):
         self.text: str = ""

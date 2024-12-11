@@ -3,12 +3,11 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from krita import *
-from .....cfg.toolbox.CfgToolboxSubItem import CfgToolboxSubItem
-from .....cfg.toolbox.CfgToolboxItem import CfgToolboxItem
+from touchify.src.cfg.toolbox.ToolboxDataItem import ToolboxDataItem
 
 class ToolboxMenu(QMenu): # this is the subtools menu
 
-    def __init__(self, parentBtn: QWidget, tool: CfgToolboxItem):
+    def __init__(self, parentBtn: QWidget, tool: ToolboxDataItem):
         super().__init__()
         self.parentBtn = parentBtn
         self.tool = tool

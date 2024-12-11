@@ -1,10 +1,10 @@
-from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
-from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
+from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
+from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.ext.types.StrEnum import StrEnum
 
-class CfgToolshelfSection:
+class ToolshelfDataSection:
 
     class SectionType(StrEnum):
         Actions = "actions"
@@ -82,7 +82,7 @@ class CfgToolshelfSection:
 
         self.action_section_id: str = "Panel"
         self.action_section_display_mode: str = "normal"
-        self.action_section_contents: TypedList[CfgTouchifyActionCollection] = []
+        self.action_section_contents: TypedList[TriggerGroup] = []
         self.action_section_alignment_x: str = "none"
         self.action_section_alignment_y: str = "none"
         self.action_section_btn_width: int = 0
@@ -95,29 +95,29 @@ class CfgToolshelfSection:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = CfgBackwardsCompat.CfgToolshelfSection(args)
-        from .CfgToolshelfPanel import CfgToolshelfPanel
-        self.subpanel_data: CfgToolshelfPanel = CfgToolshelfPanel()
-        Extensions.dictToObject(self, args, [CfgToolshelfPanel])
-        self.action_section_contents = Extensions.init_list(args, "action_section_contents", CfgTouchifyActionCollection)
+        args = BackwardsCompatibility.ToolshelfDataSection(args)
+        from .ToolshelfDataPage import ToolshelfDataPage
+        self.subpanel_data: ToolshelfDataPage = ToolshelfDataPage()
+        Extensions.dictToObject(self, args, [ToolshelfDataPage])
+        self.action_section_contents = Extensions.init_list(args, "action_section_contents", TriggerGroup)
 
     def forceLoad(self):
-        self.action_section_contents = TypedList(self.action_section_contents, CfgTouchifyActionCollection)
+        self.action_section_contents = TypedList(self.action_section_contents, TriggerGroup)
 
     def hasDisplayName(self):
         return self.display_name != None and self.display_name != "" and self.display_name.isspace() == False
 
     def __str__(self):
-        if self.section_type == CfgToolshelfSection.SectionType.Actions:
+        if self.section_type == ToolshelfDataSection.SectionType.Actions:
             name = self.action_section_id.replace("\n", "\\n")
             suffix = "(Actions)"
-        elif self.section_type == CfgToolshelfSection.SectionType.Subpanel:
+        elif self.section_type == ToolshelfDataSection.SectionType.Subpanel:
             name = self.subpanel_data.id.replace("\n", "\\n")
             suffix = "(Subpanel)"
-        elif self.section_type == CfgToolshelfSection.SectionType.Special:
+        elif self.section_type == ToolshelfDataSection.SectionType.Special:
             name = self.special_item_type.replace("\n", "\\n")
             suffix = "(Special)"
-        elif self.section_type == CfgToolshelfSection.SectionType.Docker:
+        elif self.section_type == ToolshelfDataSection.SectionType.Docker:
             name = self.docker_id.replace("\n", "\\n")
             suffix = "(Docker)"
         else:
@@ -213,16 +213,16 @@ class CfgToolshelfSection:
         ]
 
         result = []
-        if self.section_type != CfgToolshelfSection.SectionType.Docker:
+        if self.section_type != ToolshelfDataSection.SectionType.Docker:
             for item in docker_groups:
                 result.append(item)
-        if self.section_type != CfgToolshelfSection.SectionType.Actions:
+        if self.section_type != ToolshelfDataSection.SectionType.Actions:
             for item in action_groups:
                 result.append(item)
-        if self.section_type != CfgToolshelfSection.SectionType.Subpanel:
+        if self.section_type != ToolshelfDataSection.SectionType.Subpanel:
             for item in subgroup_groups:
                 result.append(item)
-        if self.section_type != CfgToolshelfSection.SectionType.Special:
+        if self.section_type != ToolshelfDataSection.SectionType.Special:
             for item in special_groups:
                 result.append(item)
 

@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 
-from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.cfg.popup.PopupData import PopupData
 from touchify.src.settings import *
 from touchify.src.resources import *
 from touchify.src.components.touchify.popups.PopupDialog import *
@@ -17,7 +17,7 @@ class PopupDialog_Docker(PopupDialog):
 
 
 
-    def __init__(self, parent: QWidget, args: CfgTouchifyActionPopup, docker_manager: DockerManager):     
+    def __init__(self, parent: QWidget, args: PopupData, docker_manager: DockerManager):     
         super().__init__(parent, args)
 
         self.dockerWidget: QDockWidget = None

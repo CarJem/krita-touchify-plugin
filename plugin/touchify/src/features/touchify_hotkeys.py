@@ -68,7 +68,7 @@ class TouchifyHotkeys(object):
     
     def triggerHotkey(self, index: int):
         actionRequest = "none"
-        cfg = TouchifyConfig.instance().getConfig().hotkeys
+        cfg = TouchifySettings.instance().getConfig().hotkeys
         match index:
             case  1: 
                 actionRequest = cfg.hotkey1
@@ -91,7 +91,7 @@ class TouchifyHotkeys(object):
             case 10: 
                 actionRequest = cfg.hotkey10
                 
-        TouchifyConfig.instance().runHotkeyOption(actionRequest)
+        TouchifySettings.instance().runHotkeyOption(actionRequest)
 
     def createActions(self, window: Window, subItemPath: str):
 

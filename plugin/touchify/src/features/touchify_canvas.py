@@ -36,7 +36,7 @@ class TouchifyCanvas(QObject):
 
     def createActions(self, window: Window, mainMenuBar: QMenuBar):
 
-        config = TouchifyConfig.instance().preferences()
+        config = TouchifySettings.instance().preferences()
 
         sublocation_name = "On-Canvas Widgets"
         sublocation_path = TOUCHIFY_ID_MENU_ROOT + "/" + sublocation_name
@@ -61,13 +61,13 @@ class TouchifyCanvas(QObject):
             self.ntCanvas.onConfigUpdate()
 
     def nuToolboxToggled(self, toggled):
-        TouchifyConfig.instance().preferences().CanvasWidgets_EnableToolbox = toggled
-        TouchifyConfig.instance().preferences().save()
+        TouchifySettings.instance().preferences().CanvasWidgets_EnableToolbox = toggled
+        TouchifySettings.instance().preferences().save()
 
     def nuToolOptionsToggled(self, toggled):
-        TouchifyConfig.instance().preferences().CanvasWidgets_EnableToolshelf = toggled
-        TouchifyConfig.instance().preferences().save()
+        TouchifySettings.instance().preferences().CanvasWidgets_EnableToolshelf = toggled
+        TouchifySettings.instance().preferences().save()
     
     def nuToolOptionsAltToggled(self, toggled):
-        TouchifyConfig.instance().preferences().CanvasWidgets_EnableAltToolshelf = toggled
-        TouchifyConfig.instance().preferences().save()
+        TouchifySettings.instance().preferences().CanvasWidgets_EnableAltToolshelf = toggled
+        TouchifySettings.instance().preferences().save()

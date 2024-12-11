@@ -1,7 +1,7 @@
 
-from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
-from touchify.src.cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
-from touchify.src.cfg.toolshelf.CfgToolshelfPanel import CfgToolshelfPanel
+from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
+from touchify.src.cfg.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
+from touchify.src.cfg.toolshelf.ToolshelfDataPage import ToolshelfDataPage
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
@@ -9,20 +9,20 @@ from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 
    
-class CfgToolshelf:
+class ToolshelfData:
     def __defaults__(self):
-        self.pages: TypedList[CfgToolshelfPanel] = []
-        self.homepage: CfgToolshelfPanel = CfgToolshelfPanel() 
-        self.header_options: CfgToolshelfHeaderOptions = CfgToolshelfHeaderOptions()
+        self.pages: TypedList[ToolshelfDataPage] = []
+        self.homepage: ToolshelfDataPage = ToolshelfDataPage() 
+        self.header_options: ToolshelfDataOptions = ToolshelfDataOptions()
         self.preset_name: str = "New Toolshelf Preset"
 
         self.json_version: int = 3
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = CfgBackwardsCompat.CfgToolshelf(args)
-        Extensions.dictToObject(self, args, [CfgToolshelfHeaderOptions, CfgToolshelfPanel])
-        self.pages = Extensions.init_list(args, "pages", CfgToolshelfPanel)
+        args = BackwardsCompatibility.ToolshelfData(args)
+        Extensions.dictToObject(self, args, [ToolshelfDataOptions, ToolshelfDataPage])
+        self.pages = Extensions.init_list(args, "pages", ToolshelfDataPage)
 
     def getFileName(self):
         return FileExtensions.fileStringify(self.preset_name)
@@ -31,7 +31,7 @@ class CfgToolshelf:
         return self.preset_name.replace("\n", "\\n")
 
     def forceLoad(self):
-        self.pages = TypedList(self.pages, CfgToolshelfPanel)
+        self.pages = TypedList(self.pages, ToolshelfDataPage)
 
     def propertygrid_sorted(self):
         return [

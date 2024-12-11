@@ -30,7 +30,7 @@ class TouchifyLooks(object):
         return result
 
     def createActions(self, window: Window, mainMenuBar: QMenuBar):
-        config = TouchifyConfig.instance().preferences()
+        config = TouchifySettings.instance().preferences()
         
         sublocation_name = "Styles and Tweaks"
         sublocation_path = TOUCHIFY_ID_MENU_ROOT + "/" + sublocation_name
@@ -43,26 +43,26 @@ class TouchifyLooks(object):
         nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_TABHEIGHT, "Thin Document Tabs", sublocation_path, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
 
     def toolbarBorderToggled(self, toggled):
-        TouchifyConfig.instance().preferences().Styles_BorderlessToolbar = toggled
-        TouchifyConfig.instance().preferences().save()
+        TouchifySettings.instance().preferences().Styles_BorderlessToolbar = toggled
+        TouchifySettings.instance().preferences().save()
         
         self.qWin.themeChanged.emit()
 
     def tabHeightToggled(self, toggled):
-        TouchifyConfig.instance().preferences().Styles_ThinDocumentTabs = toggled
-        TouchifyConfig.instance().preferences().save()
+        TouchifySettings.instance().preferences().Styles_ThinDocumentTabs = toggled
+        TouchifySettings.instance().preferences().save()
         self.qWin.themeChanged.emit()
         
     def privacyModeToggled(self, toggled):
-        TouchifyConfig.instance().preferences().Styles_PrivacyMode = toggled
-        TouchifyConfig.instance().preferences().save()
+        TouchifySettings.instance().preferences().Styles_PrivacyMode = toggled
+        TouchifySettings.instance().preferences().save()
         self.qWin.themeChanged.emit()
 
     def rebuildStyleSheet(self):
         if self.qWin == None:
             return
 
-        config = TouchifyConfig.instance().preferences()
+        config = TouchifySettings.instance().preferences()
 
         # region No Toolbar Borders
         full_style_sheet = ""

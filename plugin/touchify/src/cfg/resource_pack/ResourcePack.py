@@ -1,15 +1,15 @@
 import copy
 import types
-from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
-from touchify.src.cfg.ResourcePackMetadata import ResourcePackMetadata
+from touchify.src.cfg.triggers.Trigger import Trigger
+from touchify.src.cfg.resource_pack.ResourcePackMetadata import ResourcePackMetadata
 import os
 
-from touchify.src.cfg.canvas_preset.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
-from touchify.src.cfg.docker_group.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
-from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from touchify.src.cfg.toolbox.CfgToolbox import CfgToolbox
-from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
-from touchify.src.cfg.widget_pad.CfgWidgetPadPreset import CfgWidgetPadPreset
+from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
+from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
+from touchify.src.cfg.popup.PopupData import PopupData
+from touchify.src.cfg.toolbox.ToolboxData import ToolboxData
+from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
+from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions
 from touchify.src.ext.types.TypedList import TypedList
@@ -22,13 +22,13 @@ class ResourcePack:
 
     def __defaults__(self):
         self.metadata: ResourcePackMetadata | None = None
-        self.components: TypedList[CfgTouchifyAction] = []
-        self.toolshelves: TypedList[CfgToolshelf] = []
-        self.toolboxes: TypedList[CfgToolbox] = []
-        self.widget_layouts: TypedList[CfgWidgetPadPreset] = []
-        self.popups: TypedList[CfgTouchifyActionPopup] = []
-        self.canvas_presets: TypedList[CfgTouchifyActionCanvasPreset] = []
-        self.docker_groups: TypedList[CfgTouchifyActionDockerGroup] = []
+        self.triggers: TypedList[Trigger] = []
+        self.popups: TypedList[PopupData] = []
+        self.docker_groups: TypedList[DockerGroup] = []
+        self.canvas_presets: TypedList[CanvasPreset] = []
+        self.toolboxes: TypedList[ToolboxData] = []
+        self.toolshelves: TypedList[ToolshelfData] = []
+        self.widget_layouts: TypedList[WidgetLayout] = []
 
     def __init__(self, location: str = "") -> None:
         self.__defaults__()
@@ -89,25 +89,25 @@ class ResourcePack:
                     self.metadata = JsonExtensions.loadClass(contentPath, ResourcePackMetadata)
 
                 elif os.path.isdir(contentPath) and contentName == "components":
-                    self.components = loadItems(contentPath, CfgTouchifyAction)
+                    self.triggers = loadItems(contentPath, Trigger)
 
                 elif os.path.isdir(contentPath) and contentName == "toolboxes":
-                    self.toolboxes = loadItems(contentPath, CfgToolbox)
+                    self.toolboxes = loadItems(contentPath, ToolboxData)
 
                 elif os.path.isdir(contentPath) and contentName == "toolshelves":
-                    self.toolshelves = loadItems(contentPath, CfgToolshelf)
+                    self.toolshelves = loadItems(contentPath, ToolshelfData)
 
                 elif os.path.isdir(contentPath) and contentName == "widget_layouts":
-                    self.widget_layouts = loadItems(contentPath, CfgWidgetPadPreset)
+                    self.widget_layouts = loadItems(contentPath, WidgetLayout)
 
                 elif os.path.isdir(contentPath) and contentName == "docker_groups":
-                    self.docker_groups = loadItems(contentPath, CfgTouchifyActionDockerGroup)
+                    self.docker_groups = loadItems(contentPath, DockerGroup)
 
                 elif os.path.isdir(contentPath) and contentName == "popups":
-                    self.popups = loadItems(contentPath, CfgTouchifyActionPopup)
+                    self.popups = loadItems(contentPath, PopupData)
 
                 elif os.path.isdir(contentPath) and contentName == "canvas_presets":
-                    self.canvas_presets = loadItems(contentPath, CfgTouchifyActionCanvasPreset)
+                    self.canvas_presets = loadItems(contentPath, CanvasPreset)
 
             self.INTERNAL_has_loaded = True
         except Exception as err:
@@ -172,7 +172,7 @@ class ResourcePack:
 
 
         JsonExtensions.saveClass(self.metadata, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "metadata.json"))
-        saveItems(self.components, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "components"))
+        saveItems(self.triggers, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "triggers"))
         saveItems(self.toolboxes, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "toolboxes"))
         saveItems(self.toolshelves, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "toolshelves"))
         saveItems(self.widget_layouts, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "widget_layouts"))
@@ -201,7 +201,13 @@ class ResourcePack:
 
     def propertygrid_labels(self):
         labels = {}
-        labels["components"] = "Components"
+        labels["triggers"] = "Triggers"
+        labels["toolboxes"] = "Toolboxes"
+        labels["toolshelves"] = "Toolshelves"
+        labels["widget_layouts"] = "Widget Layouts"
+        labels["popups"] = "Popups"
+        labels["docker_groups"] = "Docker Groups"
+        labels["canvas_presets"] = "Canvas Presets"
         labels["metadata"] = "Metadata"
         return labels
 

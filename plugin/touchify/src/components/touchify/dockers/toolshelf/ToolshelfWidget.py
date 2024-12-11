@@ -10,7 +10,7 @@ from touchify.src.settings import *
 from touchify.src.variables import *
 from touchify.src.docker_manager import *
 
-from touchify.src.cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
+from touchify.src.cfg.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
 from touchify.src.components.touchify.dockers.toolshelf.PageStack import PageStack
 
 from typing import TYPE_CHECKING
@@ -41,7 +41,7 @@ class ToolshelfWidget(QWidget):
             self._last_resizable: bool = False
             self._last_panel_id: str | None = None
 
-    def __init__(self, parent: "ToolshelfDockWidget", cfg: CfgToolshelf, registry_index: int = -1):
+    def __init__(self, parent: "ToolshelfDockWidget", cfg: ToolshelfData, registry_index: int = -1):
         super(ToolshelfWidget, self).__init__(parent)
 
         self.mouse_listener = ToolshelfWidget.CanvasListener()
@@ -60,16 +60,16 @@ class ToolshelfWidget(QWidget):
         headerBeforePages = True
 
         match self.cfg.header_options.position:
-            case CfgToolshelfHeaderOptions.Position.Top:
+            case ToolshelfDataOptions.Position.Top:
                 headerOrientation = Qt.Orientation.Horizontal
                 headerBeforePages = True
-            case CfgToolshelfHeaderOptions.Position.Bottom:
+            case ToolshelfDataOptions.Position.Bottom:
                 headerOrientation = Qt.Orientation.Horizontal
                 headerBeforePages = False
-            case CfgToolshelfHeaderOptions.Position.Left:
+            case ToolshelfDataOptions.Position.Left:
                 headerOrientation = Qt.Orientation.Vertical
                 headerBeforePages = True
-            case CfgToolshelfHeaderOptions.Position.Right:
+            case ToolshelfDataOptions.Position.Right:
                 headerOrientation = Qt.Orientation.Vertical
                 headerBeforePages = False
 

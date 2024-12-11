@@ -1,4 +1,4 @@
-from touchify.src.cfg.ResourcePack import ResourcePack
+from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.types.TypedList import TypedList
 import os

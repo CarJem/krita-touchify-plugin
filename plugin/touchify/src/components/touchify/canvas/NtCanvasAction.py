@@ -4,7 +4,7 @@ from PyQt5.QtCore import QObject, QEvent
 from krita import *
 from PyQt5.QtWidgets import *
 
-from touchify.src.settings import TouchifyConfig
+from touchify.src.settings import TouchifySettings
 
 
 class NtCanvasAction(QObject):
@@ -33,9 +33,9 @@ class NtCanvasAction(QObject):
 
     def eventFilter(self, obj, event):
         if self.isCanvasEvent(event, Qt.MouseButton.LeftButton):
-            self.runAction(TouchifyConfig.instance().preferences().Canvas_LeftClickAction)
+            self.runAction(TouchifySettings.instance().preferences().Canvas_LeftClickAction)
         elif self.isCanvasEvent(event, Qt.MouseButton.RightButton):
-            self.runAction(TouchifyConfig.instance().preferences().Canvas_RightClickAction)
+            self.runAction(TouchifySettings.instance().preferences().Canvas_RightClickAction)
         elif self.isCanvasEvent(event, Qt.MouseButton.MiddleButton):
-            self.runAction(TouchifyConfig.instance().preferences().Canvas_MiddleClickAction)
+            self.runAction(TouchifySettings.instance().preferences().Canvas_MiddleClickAction)
         return super().eventFilter(obj, event)

@@ -2,8 +2,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.actions.TouchifyActionPanel import TouchifyActionPanel
-from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
-from touchify.src.cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
+from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfDataPage
+from touchify.src.cfg.toolshelf.ToolshelfDataSection import ToolshelfDataSection
 from touchify.src.components.touchify.special.BrushBlendingSelector import BrushBlendingSelector
 from touchify.src.components.touchify.special.BrushFlowSlider import BrushFlowSlider
 from touchify.src.components.touchify.special.BrushOpacitySlider import BrushOpacitySlider
@@ -14,7 +14,7 @@ from touchify.src.components.touchify.special.DockerContainer import DockerConta
 
 from touchify.src.components.touchify.special.LayerBlendingSelector import LayerBlendingSelector
 from touchify.src.components.touchify.special.LayerLabelBox import LayerLabelBox
-from touchify.src.settings import TouchifyConfig
+from touchify.src.settings import TouchifySettings
 from touchify.src.stylesheet import Stylesheet
 
 
@@ -91,7 +91,7 @@ class Panel(QWidget):
             
             self.mode = tab_type
 
-            if self.mode == CfgToolshelfPanel.TabType.Buttons:
+            if self.mode == ToolshelfDataPage.TabType.Buttons:
                 self.tabButton = QPushButton(self)
                 self.tabButtonMenu = QMenu(self)
                 self.tabButton.setMenu(self.tabButtonMenu)
@@ -149,7 +149,7 @@ class Panel(QWidget):
                     widget.updateGeometry()
                     widget.adjustSize()
 
-            if self.mode == CfgToolshelfPanel.TabType.Buttons:
+            if self.mode == ToolshelfDataPage.TabType.Buttons:
                 if index in self.tabTitles:
                     self.tabButton.setText(self.tabTitles[index])
             else:
@@ -165,7 +165,7 @@ class Panel(QWidget):
     pageLoadedSignal = pyqtSignal()
     pageUnloadSignal = pyqtSignal()
 
-    def __init__(self, parent: QWidget | None, toolshelf: "PageStack", data: CfgToolshelfPanel):
+    def __init__(self, parent: QWidget | None, toolshelf: "PageStack", data: ToolshelfDataPage):
         super(Panel, self).__init__(parent)
         self.page_stack: "PageStack" = toolshelf
         self.panel_config = data
@@ -189,8 +189,8 @@ class Panel(QWidget):
         self.root_layout.addWidget(self.actions_panel)
         
         for btnKey in self.actions_panel._buttons:
-            self.actions_panel._buttons[btnKey].setFixedHeight(int(self.panel_config.action_height * TouchifyConfig.instance().preferences().Interface_ToolshelfActionBarScale))
-            self.actions_panel._buttons[btnKey].setMinimumWidth(int(self.panel_config.action_height * TouchifyConfig.instance().preferences().Interface_ToolshelfActionBarScale))
+            self.actions_panel._buttons[btnKey].setFixedHeight(int(self.panel_config.action_height * TouchifySettings.instance().preferences().Interface_ToolshelfActionBarScale))
+            self.actions_panel._buttons[btnKey].setMinimumWidth(int(self.panel_config.action_height * TouchifySettings.instance().preferences().Interface_ToolshelfActionBarScale))
             self.actions_panel._buttons[btnKey].setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
 
         self.sections_container = QWidget(self)
@@ -228,16 +228,16 @@ class Panel(QWidget):
                 tabBar.setCurrentIndex(0)
                 splitter.addWidget(tabBar, x, y)
 
-        def Section_Actions(actionInfo: CfgToolshelfSection):
+        def Section_Actions(actionInfo: ToolshelfDataSection):
             
             display_type = TouchifyActionPanel.DisplayType.Toolbar
-            if actionInfo.action_section_display_mode == CfgToolshelfSection.ActionSectionDisplayMode.Flat:
+            if actionInfo.action_section_display_mode == ToolshelfDataSection.ActionSectionDisplayMode.Flat:
                 display_type = TouchifyActionPanel.DisplayType.ToolbarFlat
 
             if actionInfo.ignore_scaling:
                 scale = 1
             else:
-                scale = TouchifyConfig.instance().preferences().Interface_ToolshelfActionSectionScale
+                scale = TouchifySettings.instance().preferences().Interface_ToolshelfActionSectionScale
 
             
             icon_size = int(actionInfo.action_section_icon_size * scale)
@@ -260,7 +260,7 @@ class Panel(QWidget):
             if actionInfo.hasDisplayName(): actionWidget.setTitle(actionInfo.display_name)
             else: actionWidget.setTitle(actionInfo.action_section_id)
 
-            if actionInfo.action_section_alignment_x != CfgToolshelfSection.SectionAlignmentX.Nothing or actionInfo.action_section_alignment_y != CfgToolshelfSection.SectionAlignmentY.Nothing:
+            if actionInfo.action_section_alignment_x != ToolshelfDataSection.SectionAlignmentX.Nothing or actionInfo.action_section_alignment_y != ToolshelfDataSection.SectionAlignmentY.Nothing:
                 align_x = actionInfo.action_section_alignment_x
                 align_y = actionInfo.action_section_alignment_y
 
@@ -270,15 +270,15 @@ class Panel(QWidget):
                 expand_x = QSizePolicy.Policy.Preferred
                 expand_y = QSizePolicy.Policy.Preferred
 
-                if align_y == CfgToolshelfSection.SectionAlignmentY.Top: alignment_y = Qt.AlignmentFlag.AlignTop
-                elif align_y == CfgToolshelfSection.SectionAlignmentY.Center: alignment_y = Qt.AlignmentFlag.AlignVCenter
-                elif align_y == CfgToolshelfSection.SectionAlignmentY.Bottom: alignment_y = Qt.AlignmentFlag.AlignBottom
-                elif align_y == CfgToolshelfSection.SectionAlignmentY.Expanding: expand_y = QSizePolicy.Policy.Expanding
+                if align_y == ToolshelfDataSection.SectionAlignmentY.Top: alignment_y = Qt.AlignmentFlag.AlignTop
+                elif align_y == ToolshelfDataSection.SectionAlignmentY.Center: alignment_y = Qt.AlignmentFlag.AlignVCenter
+                elif align_y == ToolshelfDataSection.SectionAlignmentY.Bottom: alignment_y = Qt.AlignmentFlag.AlignBottom
+                elif align_y == ToolshelfDataSection.SectionAlignmentY.Expanding: expand_y = QSizePolicy.Policy.Expanding
 
-                if align_x == CfgToolshelfSection.SectionAlignmentX.Left: alignment_x = Qt.AlignmentFlag.AlignLeft
-                elif align_x == CfgToolshelfSection.SectionAlignmentX.Center: alignment_x = Qt.AlignmentFlag.AlignHCenter
-                elif align_x == CfgToolshelfSection.SectionAlignmentX.Right: alignment_x = Qt.AlignmentFlag.AlignRight
-                elif align_x == CfgToolshelfSection.SectionAlignmentX.Expanding: expand_x = QSizePolicy.Policy.Expanding
+                if align_x == ToolshelfDataSection.SectionAlignmentX.Left: alignment_x = Qt.AlignmentFlag.AlignLeft
+                elif align_x == ToolshelfDataSection.SectionAlignmentX.Center: alignment_x = Qt.AlignmentFlag.AlignHCenter
+                elif align_x == ToolshelfDataSection.SectionAlignmentX.Right: alignment_x = Qt.AlignmentFlag.AlignRight
+                elif align_x == ToolshelfDataSection.SectionAlignmentX.Expanding: expand_x = QSizePolicy.Policy.Expanding
 
                 actionWidget.layout().setAlignment(alignment_x | alignment_y)
                 if expand_x: actionWidget.setSizePolicy(expand_x, expand_y)
@@ -294,15 +294,15 @@ class Panel(QWidget):
 
             return actionWidget
         
-        def Section_Docker(actionInfo: CfgToolshelfSection):
+        def Section_Docker(actionInfo: ToolshelfDataSection):
             actionWidget = DockerContainer(self, actionInfo.docker_id, self.docker_manager)
-            if actionInfo.docker_nesting_mode == CfgToolshelfSection.DockerNestingMode.Docking:
+            if actionInfo.docker_nesting_mode == ToolshelfDataSection.DockerNestingMode.Docking:
                 actionWidget.setDockMode(True)
 
-            if actionInfo.docker_unloaded_visibility == CfgToolshelfSection.DockerUnloadedVisibility.Hidden:
+            if actionInfo.docker_unloaded_visibility == ToolshelfDataSection.DockerUnloadedVisibility.Hidden:
                 actionWidget.setHiddenMode(True)
             
-            if actionInfo.docker_loading_priority == CfgToolshelfSection.DockerLoadingPriority.Passive:
+            if actionInfo.docker_loading_priority == ToolshelfDataSection.DockerLoadingPriority.Passive:
                 actionWidget.setPassiveMode(True)
                 
             if actionInfo.size_x != 0 and actionInfo.size_y != 0:
@@ -320,29 +320,29 @@ class Panel(QWidget):
 
             return actionWidget
         
-        def Section_Special(actionInfo: CfgToolshelfSection):
-            if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushBlendingMode:
+        def Section_Special(actionInfo: ToolshelfDataSection):
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushBlendingMode:
                 actionWidget = BrushBlendingSelector(self)
-            if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.LayerBlendingMode:
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.LayerBlendingMode:
                 actionWidget = LayerBlendingSelector(self)
-            if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.LayerLabelBox:
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.LayerLabelBox:
                 actionWidget = LayerLabelBox(self)
-            if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushSizeSlider:
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushSizeSlider:
                 actionWidget = BrushSizeSlider(self)
                 actionWidget.setSourceWindow(self.actions_manager.appEngine.windowSource)
-            if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushOpacitySlider:
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushOpacitySlider:
                 actionWidget = BrushOpacitySlider(self)
                 actionWidget.setSourceWindow(self.actions_manager.appEngine.windowSource)
-            if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushFlowSlider:
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushFlowSlider:
                 actionWidget = BrushFlowSlider(self)
                 actionWidget.setSourceWindow(self.actions_manager.appEngine.windowSource)
-            if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BrushRotationSlider:
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushRotationSlider:
                 actionWidget = BrushRotationSlider(self)
                 actionWidget.setSourceWindow(self.actions_manager.appEngine.windowSource)
-            if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.BackgroundColorBox:
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BackgroundColorBox:
                 actionWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Background)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-            if actionInfo.special_item_type == CfgToolshelfSection.SpecialItemType.ForegroundColorBox:
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.ForegroundColorBox:
                 actionWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Foreground)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
@@ -352,7 +352,7 @@ class Panel(QWidget):
             if actionInfo.max_size_y != 0: actionWidget.setMaximumHeight(actionInfo.max_size_y)
             return actionWidget
 
-        def Section_Subpanel(actionInfo: CfgToolshelfSection):
+        def Section_Subpanel(actionInfo: ToolshelfDataSection):
             actionWidget = Panel(self, self.page_stack, actionInfo.subpanel_data)
 
             if actionInfo.size_x != 0 and actionInfo.size_y != 0: 
@@ -370,15 +370,15 @@ class Panel(QWidget):
         widget_groups: Mapping[int, Mapping[int, list[QWidget]]] = {}
 
         for sectionInfo in self.panel_config.sections:     
-            sectionInfo: CfgToolshelfSection
+            sectionInfo: ToolshelfDataSection
             match sectionInfo.section_type:
-                case CfgToolshelfSection.SectionType.Docker:
+                case ToolshelfDataSection.SectionType.Docker:
                     sectionWidget = Section_Docker(sectionInfo)
-                case CfgToolshelfSection.SectionType.Actions:
+                case ToolshelfDataSection.SectionType.Actions:
                     sectionWidget = Section_Actions(sectionInfo)
-                case CfgToolshelfSection.SectionType.Subpanel:
+                case ToolshelfDataSection.SectionType.Subpanel:
                     sectionWidget = Section_Subpanel(sectionInfo)
-                case CfgToolshelfSection.SectionType.Special:
+                case ToolshelfDataSection.SectionType.Special:
                     sectionWidget = Section_Special(sectionInfo)
                 case _:
                     sectionWidget = None

@@ -4,14 +4,14 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 
-from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
-from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
-from touchify.src.cfg.toolshelf.CfgToolshelfPanel import CfgToolshelfPanel
+from touchify.src.cfg.triggers.Trigger import Trigger
+from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
+from touchify.src.cfg.toolshelf.ToolshelfDataPage import ToolshelfDataPage
 from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
 
-from touchify.src.cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
+from touchify.src.cfg.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
 
-from touchify.src.settings import TouchifyConfig
+from touchify.src.settings import TouchifySettings
 from touchify.src.stylesheet import Stylesheet
 from touchify.src.variables import *
 from touchify.src.resources import ResourceManager
@@ -74,7 +74,7 @@ class TabList(QWidget):
         self.actions_manager = self.parent_header.parent_toolshelf.parent_docker.actions_manager
         
         self.orientation = orientation
-        self.tab_size = int(self.header_options.button_size * TouchifyConfig.instance().preferences().Interface_ToolshelfTabBarScale)
+        self.tab_size = int(self.header_options.button_size * TouchifySettings.instance().preferences().Interface_ToolshelfTabBarScale)
         
         self.ourLayout = QHBoxLayout(self) if self.orientation == Qt.Orientation.Vertical else QVBoxLayout(self)
         self.ourLayout.setSpacing(1)
@@ -88,19 +88,19 @@ class TabList(QWidget):
         self.button_size_policy = QSizePolicy()
         if self.orientation == Qt.Orientation.Vertical:
             self.button_size_policy.setHorizontalPolicy(QSizePolicy.Policy.Fixed)
-            if self.header_options.stack_alignment != CfgToolshelfHeaderOptions.StackAlignment.Default:
+            if self.header_options.stack_alignment != ToolshelfDataOptions.StackAlignment.Default:
                 self.button_size_policy.setVerticalPolicy(QSizePolicy.Policy.Minimum)
             else:
                 self.button_size_policy.setVerticalPolicy(QSizePolicy.Policy.MinimumExpanding)
         else:
-            if self.header_options.stack_alignment != CfgToolshelfHeaderOptions.StackAlignment.Default:
+            if self.header_options.stack_alignment != ToolshelfDataOptions.StackAlignment.Default:
                 self.button_size_policy.setHorizontalPolicy(QSizePolicy.Policy.Minimum)
             else:
                 self.button_size_policy.setHorizontalPolicy(QSizePolicy.Policy.MinimumExpanding)
             self.button_size_policy.setVerticalPolicy(QSizePolicy.Policy.Fixed)
 
 
-        homeProps = CfgToolshelfPanel()
+        homeProps = ToolshelfDataPage()
         homeProps.toolshelf_tab_row = 0
         homeProps.id = "ROOT"
         homeProps.icon = "material:home"
@@ -108,14 +108,14 @@ class TabList(QWidget):
 
         panels = self.cfg.pages
         for properties in panels:
-            properties: CfgToolshelfPanel
+            properties: ToolshelfDataPage
             self.createTab(properties, partial(self.parent_header.openPage, properties.id), properties.id)
 
         action_row = 0
         for action_list in self.header_options.stack_actions:
-            action_list: CfgTouchifyActionCollection
+            action_list: TriggerGroup
             for action in action_list.actions:
-                action: CfgTouchifyAction
+                action: Trigger
                 self.createAction(action, action_row)
             action_row += 1
 
@@ -137,20 +137,20 @@ class TabList(QWidget):
 
 
         match self.header_options.stack_alignment:
-            case CfgToolshelfHeaderOptions.StackAlignment.Left:
+            case ToolshelfDataOptions.StackAlignment.Left:
                 if isVertical: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
                 else: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignLeft)
-            case CfgToolshelfHeaderOptions.StackAlignment.Center:
+            case ToolshelfDataOptions.StackAlignment.Center:
                 if isVertical: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignVCenter)
                 else: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignHCenter)
-            case CfgToolshelfHeaderOptions.StackAlignment.Right:
+            case ToolshelfDataOptions.StackAlignment.Right:
                 if isVertical: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignBottom)
                 else: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignRight)
 
         self._rows[row] = rowWid
         self.ourLayout.addWidget(rowWid)
     
-    def createTab(self, properties: CfgToolshelfPanel, onClick: any, toolTip: str):
+    def createTab(self, properties: ToolshelfDataPage, onClick: any, toolTip: str):
         btn = TabList.TabItem()
         btn.setIcon(ResourceManager.iconLoader(properties.icon))
         if onClick: 
@@ -184,7 +184,7 @@ class TabList(QWidget):
             
         return btn
     
-    def createAction(self, properties: CfgTouchifyAction, action_row: int):
+    def createAction(self, properties: Trigger, action_row: int):
         btn = self.actions_manager.createButton(self, properties)
         if btn:
             btn.setContentsMargins(0,0,0,0)
@@ -212,15 +212,15 @@ class TabList(QWidget):
 
 
         match preview_type:
-            case CfgToolshelfHeaderOptions.StackPreview.Default:
+            case ToolshelfDataOptions.StackPreview.Default:
                 if btn_id == "ROOT": should_hide = True
                 else:
                     if page_id == "ROOT": should_hide = False
                     else: should_hide = True
-            case CfgToolshelfHeaderOptions.StackPreview.Tabbed:
+            case ToolshelfDataOptions.StackPreview.Tabbed:
                 if page_id == btn_id: should_check = True
                 else: should_check = False
-            case CfgToolshelfHeaderOptions.StackPreview.TabbedExclusive:
+            case ToolshelfDataOptions.StackPreview.TabbedExclusive:
                 if page_id == btn_id: should_hide = True
                 else: should_hide = False
 
@@ -240,12 +240,12 @@ class TabList(QWidget):
         should_hide = False
 
         match preview_type:
-            case CfgToolshelfHeaderOptions.StackPreview.Default:
+            case ToolshelfDataOptions.StackPreview.Default:
                 if page_id == "ROOT": should_hide = False
                 else: should_hide = True
-            case CfgToolshelfHeaderOptions.StackPreview.Tabbed:
+            case ToolshelfDataOptions.StackPreview.Tabbed:
                 pass
-            case CfgToolshelfHeaderOptions.StackPreview.TabbedExclusive:
+            case ToolshelfDataOptions.StackPreview.TabbedExclusive:
                 pass
 
         if should_hide: btn.hide()

@@ -10,15 +10,15 @@ from touchify.src.docker_manager import DockerManager
 from touchify.src.action_manager import ActionManager
 from touchify.src.components.touchify.canvas.NtToolbox import NtToolbox
 from touchify.src.components.touchify.canvas.NtToolshelf import NtToolshelf
-from touchify.src.settings import TouchifyConfig
+from touchify.src.settings import TouchifySettings
 from krita import *
 from PyQt5.QtCore import QObject
 from touchify.src.variables import *
 from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from touchify.src.ext.KritaSettings import KritaSettings
-from touchify.src.cfg.widget_pad.CfgWidgetPadPreset import CfgWidgetPadPreset
-from touchify.src.cfg.widget_pad.CfgWidgetPadOptions import CfgWidgetPadOptions
-from touchify.src.cfg.widget_pad.CfgWidgetPadToolboxOptions import CfgWidgetPadToolboxOptions
+from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
+from touchify.src.cfg.widget_layout.WidgetLayoutPadOptions import WidgetLayoutPadOptions
+from touchify.src.cfg.widget_layout.WidgetLayoutToolboxOptions import WidgetLayoutToolboxOptions
 from touchify.src.components.touchify.canvas.NtCanvasAction import NtCanvasAction
 
 
@@ -109,35 +109,38 @@ class NtCanvas(QWidget):
         if isinstance(ac, QAction):
             id: str = ac.data()
             if isinstance(id, str):
-                TouchifyConfig.instance().setActiveWidgetLayout(id)
+                TouchifySettings.instance().setActiveWidgetLayout(id)
                 self.reloadActivePreset()
 
     def buildPresetMenu(self):
         self.presetsMenu.clear()
-
+        menus: dict[str, QMenu] = {}
         index = 0
-        registry = TouchifyConfig.instance().getRegistry(CfgWidgetPadPreset)
+        registry = TouchifySettings.instance().getRegistry(WidgetLayout)
         if registry != None:
             for key, preset in registry.items():
-                preset: CfgWidgetPadPreset
+                if not key.id in menus:
+                    menus[key.id] = self.presetsMenu.addMenu(key.name)
+                preset: WidgetLayout
                 action = QAction(preset.preset_name, self.presetsMenu)
                 action.setCheckable(True)
-                if self.selected_preset_id == key:
+                if self.selected_preset_id == key.actual_key:
                     action.setChecked(True)
-                action.setData(key)
+                action.setData(key.actual_key)
                 action.triggered.connect(self.changePreset)
                 index += 1
-                self.presetsMenu.addAction(action)
+                
+                menus[key.id].addAction(action)
 
     def reloadActivePreset(self):
-        self.active_preset: CfgWidgetPadPreset = TouchifyConfig.instance().getActiveWidgetLayout()
-        self.selected_preset_id = TouchifyConfig.instance().getActiveWidgetLayoutId()
+        self.active_preset: WidgetLayout = TouchifySettings.instance().getActiveWidgetLayout()
+        self.selected_preset_id = TouchifySettings.instance().getActiveWidgetLayoutId()
         
         KritaSettings.writeSettingInt(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", self.selected_preset_id)
         
         if self.toolbox:
             self.toolbox.toolbox.toolboxWidget.setHorizontalMode(self.active_preset.toolbox.horizontal_mode)
-        elif TouchifyConfig.instance().preferences().CanvasWidgets_EnableToolbox:
+        elif TouchifySettings.instance().preferences().CanvasWidgets_EnableToolbox:
             KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_TOOLBOX, "IsHorizontal", self.active_preset.toolbox.horizontal_mode)
 
         self.updateElements()
@@ -198,9 +201,9 @@ class NtCanvas(QWidget):
         if self.windowLoaded == False:
             return
         
-        usesNuToolbox = TouchifyConfig.instance().preferences().CanvasWidgets_EnableToolbox
-        usesNuToolOptionsAlt = TouchifyConfig.instance().preferences().CanvasWidgets_EnableAltToolshelf
-        usesNuToolOptions = TouchifyConfig.instance().preferences().CanvasWidgets_EnableToolshelf
+        usesNuToolbox = TouchifySettings.instance().preferences().CanvasWidgets_EnableToolbox
+        usesNuToolOptionsAlt = TouchifySettings.instance().preferences().CanvasWidgets_EnableAltToolshelf
+        usesNuToolOptions = TouchifySettings.instance().preferences().CanvasWidgets_EnableToolshelf
 
         if self.toolbox == None and usesNuToolbox:
             self.toolbox = NtToolbox(self, self.krita_window)
@@ -242,9 +245,9 @@ class NtCanvas(QWidget):
             self.canvasLayout.setRowStretch(y, 0)
 
 
-        def insertWidgetPad(pad: NtWidgetPad, padOptions: CfgWidgetPadOptions | CfgWidgetPadToolboxOptions):
-            alignment_x = CfgWidgetPadOptions.HorizontalAlignment.toAlignmentFlag(padOptions.alignment_x)
-            alignment_y = CfgWidgetPadOptions.VerticalAlignment.toAlignmentFlag(padOptions.alignment_y)
+        def insertWidgetPad(pad: NtWidgetPad, padOptions: WidgetLayoutPadOptions | WidgetLayoutToolboxOptions):
+            alignment_x = WidgetLayoutPadOptions.HorizontalAlignment.toAlignmentFlag(padOptions.alignment_x)
+            alignment_y = WidgetLayoutPadOptions.VerticalAlignment.toAlignmentFlag(padOptions.alignment_y)
             pad.setLayoutAlignmentX(alignment_x)
             pad.setLayoutAlignmentY(alignment_y)
             if padOptions.span_x != -1 and padOptions.span_y != -1:

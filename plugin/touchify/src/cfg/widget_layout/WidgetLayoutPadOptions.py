@@ -1,14 +1,42 @@
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
-from touchify.src.cfg.widget_pad.CfgWidgetPadOptions import CfgWidgetPadOptions
+from touchify.src.ext.types.StrEnum import StrEnum
+from PyQt5.QtCore import Qt
 
-class CfgWidgetPadToolboxOptions:
+class WidgetLayoutPadOptions:
+
+    class VerticalAlignment(StrEnum):
+        Top = "top"
+        Center = "center"
+        Bottom = "bottom"
+
+        def toAlignmentFlag(en: str):
+            if en == WidgetLayoutPadOptions.VerticalAlignment.Top:
+                return Qt.AlignmentFlag.AlignTop
+            elif en == WidgetLayoutPadOptions.VerticalAlignment.Center:
+                return Qt.AlignmentFlag.AlignVCenter
+            elif en == WidgetLayoutPadOptions.VerticalAlignment.Bottom:
+                return Qt.AlignmentFlag.AlignBottom
+            else:
+                return Qt.AlignmentFlag.AlignTop
+    
+    class HorizontalAlignment(StrEnum):
+        Left = "left"
+        Center = "center"
+        Right = "right"
+
+        def toAlignmentFlag(en: str):
+            if en == WidgetLayoutPadOptions.HorizontalAlignment.Left:
+                return Qt.AlignmentFlag.AlignLeft
+            elif en == WidgetLayoutPadOptions.HorizontalAlignment.Center:
+                return Qt.AlignmentFlag.AlignHCenter
+            elif en == WidgetLayoutPadOptions.HorizontalAlignment.Right:
+                return Qt.AlignmentFlag.AlignRight
+            else:
+                return Qt.AlignmentFlag.AlignLeft
 
     def __defaults__(self):
         self.position_x: int = 0
         self.position_y: int = 0
-
-        self.alignment_y: str = "top"
-        self.alignment_x: str = "left"
 
         self.stretch_x: int = 0
         self.stretch_y: int = 0
@@ -16,7 +44,8 @@ class CfgWidgetPadToolboxOptions:
         self.span_x: int = -1
         self.span_y: int = -1
 
-        self.horizontal_mode: bool = False
+        self.alignment_y: str = "top"
+        self.alignment_x: str = "left"
 
         self.json_version: int = 1
 
@@ -29,12 +58,11 @@ class CfgWidgetPadToolboxOptions:
             "position_x",
             "position_y",
             "alignment_x",
-            "alignment_y",
+            "alignment_y"
             "stretch_x",
             "stretch_y",
             "span_x",
             "span_y"
-
         ]
 
     def propertygrid_labels(self):
@@ -47,7 +75,6 @@ class CfgWidgetPadToolboxOptions:
         labels["stretch_y"] = "Vertical Stretch"
         labels["span_x"] = "Horizontal Span"
         labels["span_y"] = "Vertical Span"
-        labels["horizontal_mode"] = "Horizontal Mode"
         return labels
 
     def propertygrid_restrictions(self):
@@ -58,6 +85,6 @@ class CfgWidgetPadToolboxOptions:
         restrictions["stretch_y"] = {"type": "range", "min": 0}
         restrictions["span_x"] = {"type": "range", "min": -1}
         restrictions["span_y"] = {"type": "range", "min": -1}
-        restrictions["alignment_x"] = {"type": "values", "entries": CfgWidgetPadOptions.HorizontalAlignment.values()}
-        restrictions["alignment_y"] = {"type": "values", "entries": CfgWidgetPadOptions.VerticalAlignment.values()}
+        restrictions["alignment_x"] = {"type": "values", "entries": self.HorizontalAlignment.values()}
+        restrictions["alignment_y"] = {"type": "values", "entries": self.VerticalAlignment.values()}
         return restrictions

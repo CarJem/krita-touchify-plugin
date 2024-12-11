@@ -8,8 +8,8 @@ from touchify.src.components.touchify.actions.TouchifyActionToolbar import Touch
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
-from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
+from touchify.src.cfg.triggers.Trigger import Trigger
+from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
 from touchify.src.stylesheet import Stylesheet
 from touchify.src.variables import *
 from touchify.src.settings import *
@@ -27,7 +27,7 @@ class TouchifyActionPanel(QWidget):
 
     action_triggered = pyqtSignal()
 
-    def __init__(self, cfg: List[CfgTouchifyActionCollection], parent: QWidget=None, actions_manager: "ActionManager" = None, type: str = "default", icon_width: int = -1, icon_height: int = -1, item_width: int = -1, item_height: int = -1, opacity: float = 1.0):
+    def __init__(self, cfg: List[TriggerGroup], parent: QWidget=None, actions_manager: "ActionManager" = None, type: str = "default", icon_width: int = -1, icon_height: int = -1, item_width: int = -1, item_height: int = -1, opacity: float = 1.0):
         super(TouchifyActionPanel, self).__init__(parent)
 
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
@@ -130,7 +130,7 @@ class TouchifyActionPanel(QWidget):
      
 
      
-    def appendButton(self, data: CfgTouchifyAction, btn: TouchifyActionButton, row: int):
+    def appendButton(self, data: Trigger, btn: TouchifyActionButton, row: int):
         def action_id():
             result = None
             while result in self._buttons or result == None:
@@ -140,7 +140,7 @@ class TouchifyActionPanel(QWidget):
         id = action_id()
         self._buttons[id] = btn
         
-        if data.variant == CfgTouchifyAction.Variants.Action:
+        if data.variant == Trigger.Variants.Action:
             action = Krita.instance().action(data.action_id)
             if action:
                 if action.isCheckable():
@@ -188,9 +188,9 @@ class TouchifyActionPanel(QWidget):
         
         
         for row in actions:
-            row: CfgTouchifyActionCollection
+            row: TriggerGroup
             for entry in row.actions:
-                act: CfgTouchifyAction = entry
+                act: Trigger = entry
                 btn = self.actions_manager.createButton(self, act)
                 if btn:
                     btn.clicked.connect(self.onButtonClicked)

@@ -1,7 +1,7 @@
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 
-class CfgTouchifyActionDockerGroupItem:
+class DockerGroupItem:
     
     def __defaults__(self):
         self.id: str = ""

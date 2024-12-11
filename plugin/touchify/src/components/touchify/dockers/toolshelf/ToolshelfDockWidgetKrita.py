@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 
 from typing import TYPE_CHECKING
 
-from touchify.src.settings import TouchifyConfig
+from touchify.src.settings import TouchifySettings
 
 from touchify.src.docker_manager import DockerManager
 from touchify.src.action_manager import ActionManager
@@ -36,7 +36,7 @@ class ToolshelfDockWidgetKrita(DockWidget):
         pass
     
     def onLoaded(self):              
-        self.mainWidget = ToolshelfWidget(self, TouchifyConfig.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
+        self.mainWidget = ToolshelfWidget(self, TouchifySettings.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
         self.setWidget(self.mainWidget)
         self.mainWidget.restorePreviousState(self.previous_state)
 

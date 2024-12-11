@@ -1,13 +1,13 @@
-from touchify.src.cfg.docker_group.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
-from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
-from touchify.src.cfg.canvas_preset.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
+from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
+from touchify.src.cfg.popup.PopupData import PopupData
+from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.types.StrEnum import StrEnum
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
-from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
+from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 
-class CfgTouchifyAction:
+class Trigger:
      
     class Variants(StrEnum):
         Action = "action"
@@ -39,7 +39,7 @@ class CfgTouchifyAction:
         self.action_id: str = ""
 
         #Menu Params
-        self.context_menu_actions: TypedList["CfgTouchifyAction"] = []
+        self.context_menu_actions: TypedList["Trigger"] = []
 
         #Brush Params
         self.brush_name: str = ""
@@ -64,37 +64,37 @@ class CfgTouchifyAction:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = CfgBackwardsCompat.CfgTouchifyAction(args)
-        Extensions.dictToObject(self, args, [CfgTouchifyActionPopup, CfgTouchifyActionDockerGroup, CfgTouchifyActionCanvasPreset])
-        self.context_menu_actions = Extensions.init_list(args, "context_menu_actions", CfgTouchifyAction)
+        args = BackwardsCompatibility.Trigger(args)
+        Extensions.dictToObject(self, args, [PopupData, DockerGroup, CanvasPreset])
+        self.context_menu_actions = Extensions.init_list(args, "context_menu_actions", Trigger)
 
     def getFileName(self):
         return FileExtensions.fileStringify(self.registry_id)
         
     def __str__(self):
         match self.variant:
-            case CfgTouchifyAction.Variants.Action:
+            case Trigger.Variants.Action:
                 prefix = "[Action]"
                 suffix = self.action_id
-            case CfgTouchifyAction.Variants.Menu:
+            case Trigger.Variants.Menu:
                 prefix = "[Menu]"
                 suffix = self.display_custom_text
-            case CfgTouchifyAction.Variants.Brush:
+            case Trigger.Variants.Brush:
                 prefix = "[Brush]"
                 suffix = self.brush_name
-            case CfgTouchifyAction.Variants.Popup:
+            case Trigger.Variants.Popup:
                 prefix = "[Popup]"
                 suffix = self.display_custom_text
-            case CfgTouchifyAction.Variants.Workspace:
+            case Trigger.Variants.Workspace:
                 prefix = "[Workspace]"
                 suffix = self.workspace_id
-            case CfgTouchifyAction.Variants.Docker:
+            case Trigger.Variants.Docker:
                 prefix = "[Docker]"
                 suffix = self.docker_id
-            case CfgTouchifyAction.Variants.DockerGroup:
+            case Trigger.Variants.DockerGroup:
                 prefix = "[Docker Group]"
                 suffix = self.display_custom_text
-            case CfgTouchifyAction.Variants.CanvasPreset:
+            case Trigger.Variants.CanvasPreset:
                 prefix = "[Canvas Preset]"
                 suffix = self.display_custom_text
             case _:
@@ -108,7 +108,7 @@ class CfgTouchifyAction:
 
 
     def forceLoad(self):
-        self.context_menu_actions = TypedList(self.context_menu_actions, CfgTouchifyAction)
+        self.context_menu_actions = TypedList(self.context_menu_actions, Trigger)
 
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
@@ -144,21 +144,21 @@ class CfgTouchifyAction:
 
     def propertygrid_hidden(self):
         result = []
-        if self.variant != CfgTouchifyAction.Variants.Action:
+        if self.variant != Trigger.Variants.Action:
             result.append("action_id")
-        if self.variant != CfgTouchifyAction.Variants.Menu:
+        if self.variant != Trigger.Variants.Menu:
             result.append("context_menu_actions")            
-        if self.variant != CfgTouchifyAction.Variants.Brush:
+        if self.variant != Trigger.Variants.Brush:
             result.append("brush_name")
-        if self.variant != CfgTouchifyAction.Variants.Workspace:
+        if self.variant != Trigger.Variants.Workspace:
             result.append("workspace_id")
-        if self.variant != CfgTouchifyAction.Variants.Docker:
+        if self.variant != Trigger.Variants.Docker:
             result.append("docker_id")
-        if self.variant != CfgTouchifyAction.Variants.Popup:
+        if self.variant != Trigger.Variants.Popup:
             result.append("popup_data")
-        if self.variant != CfgTouchifyAction.Variants.DockerGroup:
+        if self.variant != Trigger.Variants.DockerGroup:
             result.append("docker_group_data")
-        if self.variant != CfgTouchifyAction.Variants.CanvasPreset:
+        if self.variant != Trigger.Variants.CanvasPreset:
             result.append("canvas_preset_data")
 
         return result

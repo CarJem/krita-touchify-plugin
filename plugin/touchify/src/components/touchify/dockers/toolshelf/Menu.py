@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from touchify.src.components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
 class Menu(QMenu):
-    def __init__(self, parent: QWidget, cfg: CfgToolshelf, registry_index: int):
+    def __init__(self, parent: QWidget, cfg: ToolshelfData, registry_index: int):
         super(Menu, self).__init__(parent)
         self.cfg = cfg
         self.registry_index = registry_index
@@ -36,7 +36,7 @@ class Menu(QMenu):
 
         
         if self.registry_index != -1:
-            self.current_preset_id = TouchifyConfig.instance().getActiveToolshelfId(self.registry_index)
+            self.current_preset_id = TouchifySettings.instance().getActiveToolshelfId(self.registry_index)
             self.loadPresets()
 
     def setup(self):
@@ -97,18 +97,25 @@ class Menu(QMenu):
 
     def loadPresets(self):
         self.clear()
+
+        menus: dict[str, QMenu] = {}
         
-        registry = TouchifyConfig.instance().getRegistry(CfgToolshelf)
+        registry = TouchifySettings.instance().getRegistry(ToolshelfData)
         if registry != None:
             for key, preset in registry.items():
-                preset: CfgToolshelf
+                if not key.id in menus:
+                    menus[key.id] = self.addMenu(key.name)
+
+
+                
+                preset: ToolshelfData
                 action = QAction(preset.preset_name, self)
                 action.setCheckable(True)
-                if self.current_preset_id == key:
+                if self.current_preset_id == key.actual_key:
                     action.setChecked(True)
-                action.setData(key)
+                action.setData(key.actual_key)
                 action.triggered.connect(self.changePreset)
-                self.addAction(action)
+                menus[key.id].addAction(action)
         
         self.addSeparator()
 
@@ -117,4 +124,4 @@ class Menu(QMenu):
         if isinstance(ac, QAction):
             id: str = ac.data()
             if isinstance(id, str):
-                TouchifyConfig.instance().setActiveToolshelf(self.registry_index, id)
+                TouchifySettings.instance().setActiveToolshelf(self.registry_index, id)

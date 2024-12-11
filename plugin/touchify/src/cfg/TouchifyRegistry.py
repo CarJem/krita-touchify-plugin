@@ -3,9 +3,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from touchify.paths import BASE_DIR
-from touchify.src.cfg.HotkeyRegistry import HotkeyRegistry
-from touchify.src.cfg.ResourcePackRegistry import ResourcePackRegistry
-from touchify.src.cfg.PreferencesRegistry import PreferencesRegistry
+from touchify.src.cfg.TouchifyRegistryHotkeys import TouchifyRegistryHotkeys
+from touchify.src.cfg.resource_pack.ResourcePackRegistry import ResourcePackRegistry
+from touchify.src.cfg.TouchifyRegistryPreferences import TouchifyRegistryPreferences
 from touchify.src.variables import *
 
 from touchify.src.ext.Extensions import *
@@ -18,8 +18,8 @@ class TouchifyRegistry:
     def __init__(self):
         self.__base_dir__ = BASE_DIR            
         self.resources: ResourcePackRegistry = ResourcePackRegistry()
-        self.hotkeys: HotkeyRegistry = HotkeyRegistry()
-        self.preferences: PreferencesRegistry = PreferencesRegistry()
+        self.hotkeys: TouchifyRegistryHotkeys = TouchifyRegistryHotkeys()
+        self.preferences: TouchifyRegistryPreferences = TouchifyRegistryPreferences()
         self.load()
 
     def loadClass(self, configName, type):
@@ -61,7 +61,7 @@ class TouchifyRegistry:
         self.preferences.save()
 
     def load(self):
-        self.hotkeys = self.loadClass("hotkeys", HotkeyRegistry)
+        self.hotkeys = self.loadClass("hotkeys", TouchifyRegistryHotkeys)
         self.resources.load()
         self.preferences.load()
         

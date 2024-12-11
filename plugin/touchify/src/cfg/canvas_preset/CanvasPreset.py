@@ -5,7 +5,7 @@ from touchify.src.ext.KritaSettings import *
 from touchify.src.ext.KritaExtensions import *
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
-class CfgTouchifyActionCanvasPreset:
+class CanvasPreset:
 
     def __defaults__(self):
         self.preset_name: str = "New Preset"
@@ -31,6 +31,9 @@ class CfgTouchifyActionCanvasPreset:
         self.__defaults__()
         Extensions.dictToObject(self, args, [KS_Color])
 
+    def __str__(self):
+        return self.preset_name.replace("\n", "\\n")
+
     def getFileName(self):
         return FileExtensions.fileStringify(self.preset_name)
                                
@@ -52,7 +55,7 @@ class CfgTouchifyActionCanvasPreset:
             KritaSettings.writeSettingColor("", "canvasBorderColor", self.border_color)
         
     def current():
-        result = CfgTouchifyActionCanvasPreset()
+        result = CanvasPreset()
         
         result.checkers_main_color = KritaSettings.readSettingColor("", "checkerscolor", KS_Color())
         result.checkers_alt_color = KritaSettings.readSettingColor("", "checkerscolor2", KS_Color())
@@ -114,6 +117,8 @@ class CfgTouchifyActionCanvasPreset:
 
     def propertygrid_labels(self):
         labels = {}
+        labels["preset_name"] = "Preset Name"
+
         labels["checkers_enabled"] = "Checkers"
         labels["checkers_main_color"] = "Main Color"
         labels["checkers_alt_color"] = "Alt Color"

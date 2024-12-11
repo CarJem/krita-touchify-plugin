@@ -1,9 +1,9 @@
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.ext.types.StrEnum import StrEnum
-from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
+from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
 
-class CfgToolshelfHeaderOptions:
+class ToolshelfDataOptions:
     class StackPreview(StrEnum):
         Default = "default"
         Tabbed = "tabbed"
@@ -35,7 +35,7 @@ class CfgToolshelfHeaderOptions:
         self.position: str = "top"
         self.stack_preview: str = "default"
         self.stack_alignment: str = "default"
-        self.stack_actions: TypedList[CfgTouchifyActionCollection] = []
+        self.stack_actions: TypedList[TriggerGroup] = []
 
         self.json_version: int = 1
 
@@ -43,10 +43,10 @@ class CfgToolshelfHeaderOptions:
         self.__defaults__()
         Extensions.dictToObject(self, args)
         
-        self.stack_actions = Extensions.init_list(args, "stack_actions", CfgTouchifyActionCollection)
+        self.stack_actions = Extensions.init_list(args, "stack_actions", TriggerGroup)
     
     def forceLoad(self):
-        self.stack_actions = TypedList(self.stack_actions, CfgTouchifyActionCollection)
+        self.stack_actions = TypedList(self.stack_actions, TriggerGroup)
 
     def propertygrid_sorted(self):
         return [

@@ -9,8 +9,8 @@ from touchify.src.components.touchify.property_grid.fields.PropertyField_TypedLi
 
 # Special Field Imports
 from touchify.src.components.touchify.property_grid.special_fields.PropertyField_KsColor import PropertyField_KsColor
-from touchify.src.components.touchify.property_grid.special_fields.PropertyField_ActionCollection import PropertyField_ActionCollection
-from touchify.src.components.touchify.property_grid.special_fields.PropertyField_ActionList import PropertyField_ActionList
+from touchify.src.components.touchify.property_grid.special_fields.PropertyField_TriggerGroups import PropertyField_TriggerGroups
+from touchify.src.components.touchify.property_grid.special_fields.PropertyField_TriggerList import PropertyField_TriggerList
 
 #Type Imports
 from touchify.src.ext.types.TypedList import TypedList
@@ -28,15 +28,15 @@ class PropertyUtils_Praser:
         return None
 
     def isSpecialType(varName, variable, item):
-        from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
-        from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
+        from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
+        from touchify.src.cfg.triggers.Trigger import Trigger
         from touchify.src.ext.KritaSettings import KS_Color
         varType = type(variable)
         listType = PropertyUtils_Praser.getListType(variable)
         
-        if listType == CfgTouchifyActionCollection:
+        if listType == TriggerGroup:
             return True
-        if listType == CfgTouchifyAction:
+        if listType == Trigger:
             return True
         elif varType == KS_Color:
             return True
@@ -44,16 +44,16 @@ class PropertyUtils_Praser:
             return False
 
     def getSpecialType(varName, variable, item):
-        from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
-        from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
+        from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
+        from touchify.src.cfg.triggers.Trigger import Trigger
         from touchify.src.ext.KritaSettings import KS_Color
         varType = type(variable)
         listType = PropertyUtils_Praser.getListType(variable)
         
-        if listType == CfgTouchifyActionCollection:
-            return PropertyField_ActionCollection(varName, variable, item)
-        if listType == CfgTouchifyAction:
-            return PropertyField_ActionList(varName, variable, item)
+        if listType == TriggerGroup:
+            return PropertyField_TriggerGroups(varName, variable, item)
+        if listType == Trigger:
+            return PropertyField_TriggerList(varName, variable, item)
         elif varType == KS_Color:
             return PropertyField_KsColor(varName, variable, item)
         else:

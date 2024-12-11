@@ -2,7 +2,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
-from touchify.src.settings import TouchifyConfig
+from touchify.src.settings import TouchifySettings
 import copy
 
 from krita import *
@@ -21,7 +21,7 @@ class SettingsDialog(QDialog):
 
         
 
-        self.editableConfig = copy.deepcopy(TouchifyConfig.instance().getConfig())
+        self.editableConfig = copy.deepcopy(TouchifySettings.instance().getConfig())
         self.propertyGrid = PropertyGrid()
         self.propertyGrid.updateDataObject(self.editableConfig)
 
@@ -42,7 +42,7 @@ class SettingsDialog(QDialog):
     
     def _saveFile(self):
         self.editableConfig.save()
-        TouchifyConfig.instance().notifyUpdate()
+        TouchifySettings.instance().notifyUpdate()
 
     def onSave(self):
         self._saveFile()

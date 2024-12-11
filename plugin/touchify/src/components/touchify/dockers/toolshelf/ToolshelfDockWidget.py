@@ -52,7 +52,7 @@ class ToolshelfDockWidget(QDockWidget):
         self.updateViewRequested.emit()
     
     def onLoaded(self):              
-        self.mainWidget = ToolshelfWidget(self, TouchifyConfig.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
+        self.mainWidget = ToolshelfWidget(self, TouchifySettings.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
         self.scrollArea.setWidget(self.mainWidget)
         self.mainWidget.restorePreviousState(self.previous_state)
 

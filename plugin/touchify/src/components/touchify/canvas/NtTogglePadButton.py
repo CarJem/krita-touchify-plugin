@@ -18,7 +18,7 @@ class NtTogglePadButton(QToolButton):
         self.updateStyleSheet()
 
     def updateStyleSheet(self):
-        iconSize: int = int(11 * TouchifyConfig.instance().preferences().Interface_CanvasToggleScale)
+        iconSize: int = int(11 * TouchifySettings.instance().preferences().Interface_CanvasToggleScale)
         self.setIconSize(QSize(iconSize, iconSize))
         self.setStyleSheet(Stylesheet.instance().touchify_toggle_button)
 

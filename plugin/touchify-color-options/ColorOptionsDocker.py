@@ -3,7 +3,7 @@ from krita import *
 from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.special.CanvasColorPicker import CanvasColorPicker
-from touchify.src.settings import TouchifyConfig
+from touchify.src.settings import TouchifySettings
 from touchify.src.variables import *
 
 from touchify.src.resources import ResourceManager
@@ -58,7 +58,7 @@ class ColorSourceToggle(QWidget):
         self.updateStyle()
 
     def updateStyle(self):
-        cubeSize = int(self.cubeSize * TouchifyConfig.instance().preferences().Interface_ColorOptionsDockerScale)
+        cubeSize = int(self.cubeSize * TouchifySettings.instance().preferences().Interface_ColorOptionsDockerScale)
         iconSize = int(cubeSize - 8)
 
         self.toggleBtn.setFixedSize(cubeSize, cubeSize)
@@ -114,7 +114,7 @@ class ColorOptionsDocker(DockWidget):
         instance.connectNotify
 
     def addonUpdateStyle(self):
-        widgetHeight = int(50 * TouchifyConfig.instance().preferences().Interface_ColorOptionsDockerScale)
+        widgetHeight = int(50 * TouchifySettings.instance().preferences().Interface_ColorOptionsDockerScale)
         self.setFixedHeight(widgetHeight)
         self.colorToggle.updateStyle()
 

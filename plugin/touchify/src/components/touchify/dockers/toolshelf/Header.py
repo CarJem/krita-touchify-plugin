@@ -6,10 +6,10 @@ from PyQt5.QtWidgets import *
 
 from touchify.src.components.touchify.dockers.toolshelf.Menu import Menu
 
-from touchify.src.cfg.toolshelf.CfgToolshelfHeaderOptions import CfgToolshelfHeaderOptions
-from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
+from touchify.src.cfg.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
+from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 
-from touchify.src.settings import TouchifyConfig
+from touchify.src.settings import TouchifySettings
 from touchify.src.variables import *
 from touchify.src.stylesheet import Stylesheet
 from touchify.src.resources import ResourceManager
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 class Header(QWidget):
 
-    def __init__(self, parent_toolshelf: "ToolshelfWidget", cfg: CfgToolshelf, registry_index: int, orientation: Qt.Orientation):
+    def __init__(self, parent_toolshelf: "ToolshelfWidget", cfg: ToolshelfData, registry_index: int, orientation: Qt.Orientation):
         super(Header, self).__init__(parent_toolshelf)
 
         self.parent_toolshelf: ToolshelfWidget = parent_toolshelf
@@ -30,7 +30,7 @@ class Header(QWidget):
         self.orientation = orientation
         self.cfg = cfg
 
-        self.button_size = int(self.cfg.header_options.header_size * TouchifyConfig.instance().preferences().Interface_ToolshelfHeaderScale)
+        self.button_size = int(self.cfg.header_options.header_size * TouchifySettings.instance().preferences().Interface_ToolshelfHeaderScale)
         self.icon_size = self.button_size - 4
 
         self.setObjectName("toolshelf-header")
@@ -139,7 +139,7 @@ class Header(QWidget):
     #region Signal Recievers
 
     def onPageChanged(self, current_panel_id: str):
-        if self.cfg.header_options.stack_preview == CfgToolshelfHeaderOptions.StackPreview.Default:
+        if self.cfg.header_options.stack_preview == ToolshelfDataOptions.StackPreview.Default:
             if current_panel_id != "ROOT":
                 self.backButton.show()
                 self.fillerWidget.hide()

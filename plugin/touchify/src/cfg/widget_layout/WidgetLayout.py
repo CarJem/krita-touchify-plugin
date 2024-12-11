@@ -1,22 +1,22 @@
-from touchify.src.cfg.widget_pad.CfgWidgetPadOptions import CfgWidgetPadOptions
-from touchify.src.cfg.widget_pad.CfgWidgetPadToolboxOptions import CfgWidgetPadToolboxOptions
+from touchify.src.cfg.widget_layout.WidgetLayoutPadOptions import WidgetLayoutPadOptions
+from touchify.src.cfg.widget_layout.WidgetLayoutToolboxOptions import WidgetLayoutToolboxOptions
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
    
-class CfgWidgetPadPreset:
+class WidgetLayout:
 
     def __defaults__(self):
         self.preset_name: str = "WidgetPad Preset"
 
-        self.toolbox: CfgWidgetPadToolboxOptions = CfgWidgetPadToolboxOptions()
-        self.toolshelf_alt: CfgWidgetPadOptions = CfgWidgetPadOptions()
-        self.toolshelf: CfgWidgetPadOptions = CfgWidgetPadOptions()
+        self.toolbox: WidgetLayoutToolboxOptions = WidgetLayoutToolboxOptions()
+        self.toolshelf_alt: WidgetLayoutPadOptions = WidgetLayoutPadOptions()
+        self.toolshelf: WidgetLayoutPadOptions = WidgetLayoutPadOptions()
 
         self.json_version: int = 1
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        Extensions.dictToObject(self, args, [CfgWidgetPadOptions, CfgWidgetPadToolboxOptions])
+        Extensions.dictToObject(self, args, [WidgetLayoutPadOptions, WidgetLayoutToolboxOptions])
 
     def getFileName(self):
         return FileExtensions.fileStringify(self.preset_name)

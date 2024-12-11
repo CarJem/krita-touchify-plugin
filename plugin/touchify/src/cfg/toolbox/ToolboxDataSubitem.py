@@ -1,12 +1,12 @@
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
-class CfgToolboxSubItem:
+class ToolboxDataSubitem:
 
     def __defaults__(self):
-        name: str = ""
-        icon: str = ""
+        self.name: str = ""
+        self.icon: str = ""
 
-        json_version: int = 1
+        self.json_version: int = 1
 
     def __init__(self, **args) -> None:
         self.__defaults__()

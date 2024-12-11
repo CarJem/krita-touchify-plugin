@@ -1,13 +1,13 @@
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
-from touchify.src.cfg.toolbox.CfgToolboxSubItem import CfgToolboxSubItem
-from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
+from touchify.src.cfg.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
+from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 
-class CfgToolboxItem:
+class ToolboxDataItem:
 
     def __defaults__(self):
         self.name: str = ""
-        self.items: TypedList[CfgToolboxSubItem] = []
+        self.items: TypedList[ToolboxDataSubitem] = []
         self.icon: str = ""
         self.open_on_click: bool = False
 
@@ -15,15 +15,15 @@ class CfgToolboxItem:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = CfgBackwardsCompat.CfgToolboxItem(args)
+        args = BackwardsCompatibility.ToolboxDataItem(args)
         Extensions.dictToObject(self, args)
-        self.items = Extensions.init_list(args, "items", CfgToolboxSubItem)
+        self.items = Extensions.init_list(args, "items", ToolboxDataSubitem)
 
     def __str__(self):
         return self.name.replace("\n", "\\n")
     
     def toSubItem(self):
-        result = CfgToolboxSubItem()
+        result = ToolboxDataSubitem()
         result.name = self.name
         return result
     

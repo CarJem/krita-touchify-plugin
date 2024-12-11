@@ -2,9 +2,9 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.cfg.popup.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
+from touchify.src.cfg.popup.PopupDataItem import PopupDataItem
 
-from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.cfg.popup.PopupData import PopupData
 from touchify.src.settings import *
 from touchify.src.components.touchify.actions.TouchifyActionPanel import *
 from touchify.src.resources import *
@@ -19,7 +19,7 @@ from krita import *
 
 class PopupDialog_Actions(PopupDialog):
 
-    def __init__(self, parent: QWidget, args: CfgTouchifyActionPopup, actions_manager: "ActionManager"):     
+    def __init__(self, parent: QWidget, args: PopupData, actions_manager: "ActionManager"):     
         super().__init__(parent, args)
         self.actions_manager = actions_manager
         self.grid = self.generateActionsLayout()
@@ -55,7 +55,7 @@ class PopupDialog_Actions(PopupDialog):
     def generateActionsLayout(self):   
         layout = QVBoxLayout(self)
         
-        converted_groups: dict[int, CfgTouchifyActionCollection] = {}
+        converted_groups: dict[int, TriggerGroup] = {}
             
         current_x = 0
         current_y = 0
@@ -65,17 +65,17 @@ class PopupDialog_Actions(PopupDialog):
         maximum_x = self.metadata.actions_grid_width
         
         
-        actionItem: CfgTouchifyActionPopupItem
+        actionItem: PopupDataItem
         for actionItem in self.metadata.actions_items:
             if not current_x < maximum_x:
                 current_y += 1
                 current_x = 0
                 
             if current_y not in converted_groups:
-                converted_groups[current_y] = CfgTouchifyActionCollection()
+                converted_groups[current_y] = TriggerGroup()
             
             
-            newAction = CfgTouchifyAction()
+            newAction = Trigger()
             newAction.action_id = actionItem.action
             newAction.display_custom_text = actionItem.text
             newAction.display_custom_icon = actionItem.icon

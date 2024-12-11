@@ -12,8 +12,16 @@
                 {
                     "name": "KisToolTransform",
                     "items": [
-                        {},
-                        {}
+                        {
+                            "name": "KritaTransform/KisToolMove",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KisToolCrop",
+                            "icon": "",
+                            "json_version": 1
+                        }
                     ],
                     "icon": "",
                     "open_on_click": false,
@@ -29,9 +37,21 @@
                 {
                     "name": "InteractionTool",
                     "items": [
-                        {},
-                        {},
-                        {}
+                        {
+                            "name": "SvgTextTool",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "PathTool",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KarbonCalligraphyTool",
+                            "icon": "",
+                            "json_version": 1
+                        }
                     ],
                     "icon": "",
                     "open_on_click": false,
@@ -47,10 +67,26 @@
                 {
                     "name": "KritaShape/KisToolBrush",
                     "items": [
-                        {},
-                        {},
-                        {},
-                        {}
+                        {
+                            "name": "KisToolPencil",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KritaShape/KisToolDyna",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KritaShape/KisToolMultiBrush",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KritaShape/KisToolSmartPatch",
+                            "icon": "",
+                            "json_version": 1
+                        }
                     ],
                     "icon": "",
                     "open_on_click": false,
@@ -66,10 +102,26 @@
                 {
                     "name": "KritaFill/KisToolFill",
                     "items": [
-                        {},
-                        {},
-                        {},
-                        {}
+                        {
+                            "name": "KritaFill/KisToolGradient",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KritaSelected/KisToolColorSampler",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KritaShape/KisToolLazyBrush",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KisToolEncloseAndFill",
+                            "icon": "",
+                            "json_version": 1
+                        }
                     ],
                     "icon": "",
                     "open_on_click": false,
@@ -85,11 +137,31 @@
                 {
                     "name": "KritaShape/KisToolRectangle",
                     "items": [
-                        {},
-                        {},
-                        {},
-                        {},
-                        {}
+                        {
+                            "name": "KritaShape/KisToolLine",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KritaShape/KisToolEllipse",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KisToolPolygon",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KisToolPolyline",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KisToolPath",
+                            "icon": "",
+                            "json_version": 1
+                        }
                     ],
                     "icon": "",
                     "open_on_click": false,
@@ -105,9 +177,21 @@
                 {
                     "name": "KisToolSelectRectangular",
                     "items": [
-                        {},
-                        {},
-                        {}
+                        {
+                            "name": "KisToolSelectPath",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KisToolSelectElliptical",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KisToolSelectPolygonal",
+                            "icon": "",
+                            "json_version": 1
+                        }
                     ],
                     "icon": "",
                     "open_on_click": false,
@@ -123,9 +207,21 @@
                 {
                     "name": "KisToolSelectOutline",
                     "items": [
-                        {},
-                        {},
-                        {}
+                        {
+                            "name": "KisToolSelectContiguous",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KisToolSelectSimilar",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KisToolSelectMagnetic",
+                            "icon": "",
+                            "json_version": 1
+                        }
                     ],
                     "icon": "",
                     "open_on_click": false,
@@ -141,8 +237,16 @@
                 {
                     "name": "ToolReferenceImages",
                     "items": [
-                        {},
-                        {}
+                        {
+                            "name": "KritaShape/KisToolMeasure",
+                            "icon": "",
+                            "json_version": 1
+                        },
+                        {
+                            "name": "KisAssistantTool",
+                            "icon": "",
+                            "json_version": 1
+                        }
                     ],
                     "icon": "",
                     "open_on_click": false,
@@ -158,7 +262,11 @@
                 {
                     "name": "PanTool",
                     "items": [
-                        {}
+                        {
+                            "name": "ZoomTool",
+                            "icon": "",
+                            "json_version": 1
+                        }
                     ],
                     "icon": "",
                     "open_on_click": false,

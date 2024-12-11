@@ -7,7 +7,7 @@ from touchify.src.stylesheet import Stylesheet
 
 from touchify.src.components.touchify.popups.PopupDialog_Titlebar import PopupDialog_Titlebar
 
-from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.cfg.popup.PopupData import PopupData
 from touchify.src.settings import *
 from touchify.src.resources import *
 
@@ -21,7 +21,7 @@ class PopupDialog(QDockWidget):
 
 
     
-    def __init__(self, parent: QWidget, args: CfgTouchifyActionPopup):     
+    def __init__(self, parent: QWidget, args: PopupData):     
         super().__init__(parent)  
         self.grid: QLayout = None
         self.parent: QWidget = parent
@@ -72,21 +72,21 @@ class PopupDialog(QDockWidget):
 
 
         match self.metadata.popup_position_x:
-            case CfgTouchifyActionPopup.PopupPosition.Start:
+            case PopupData.PopupPosition.Start:
                 offset_x -= 0 
-            case CfgTouchifyActionPopup.PopupPosition.Center:
+            case PopupData.PopupPosition.Center:
                 offset_x -= (dialog_width // 2) 
-            case CfgTouchifyActionPopup.PopupPosition.End:
+            case PopupData.PopupPosition.End:
                 offset_x -= dialog_width
             case _:
                 offset_x -= 0 
 
         match self.metadata.popup_position_y:
-            case CfgTouchifyActionPopup.PopupPosition.Start:
+            case PopupData.PopupPosition.Start:
                 offset_y -= 0 
-            case CfgTouchifyActionPopup.PopupPosition.Center:
+            case PopupData.PopupPosition.Center:
                 offset_y -= (dialog_height // 2) 
-            case CfgTouchifyActionPopup.PopupPosition.End:
+            case PopupData.PopupPosition.End:
                 offset_y -= dialog_height
             case _:
                 offset_y -= 0 
@@ -126,10 +126,10 @@ class PopupDialog(QDockWidget):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
 
-        if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
+        if self.windowMode == PopupData.WindowType.Popup:
             self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
             self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, True)
-        elif self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
+        elif self.windowMode == PopupData.WindowType.Window:
             self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
             self.setMouseTracking(True)
 
@@ -137,7 +137,7 @@ class PopupDialog(QDockWidget):
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
             self.setWindowOpacity(self.metadata.actions_opacity)
 
-        if self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
+        if self.windowMode == PopupData.WindowType.Window:
             self.titlebarEnabled = True
             self._toolbar = PopupDialog_Titlebar(self)
             self.setTitleBarWidget(self._toolbar)
@@ -172,9 +172,9 @@ class PopupDialog(QDockWidget):
         return [0, 0]
     
     def updateSize(self, dialog_width: int, dialog_height: int):
-        if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
+        if self.windowMode == PopupData.WindowType.Popup:
             self.setFixedSize(dialog_width, dialog_height)
-        elif self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
+        elif self.windowMode == PopupData.WindowType.Window:
             if self.isCollapsed == False:
                 self.setMinimumSize(dialog_width, dialog_height)
                 if self.window_resizing_enabled == False:
@@ -206,7 +206,7 @@ class PopupDialog(QDockWidget):
     def triggerPopup(self, parent: QWidget = None):
         if self.isVisible():
             self.closePopup()
-            if not self.windowMode == CfgTouchifyActionPopup.WindowType.Popup: 
+            if not self.windowMode == PopupData.WindowType.Popup: 
                 return
         
         actual_x = 0
@@ -229,10 +229,10 @@ class PopupDialog(QDockWidget):
         self.show()
         self.time_since_opening = QTime.currentTime()
 
-        if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
+        if self.windowMode == PopupData.WindowType.Popup:
             self.updateSize(dialog_width, dialog_height)
             self.activateWindow()
-        elif self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
+        elif self.windowMode == PopupData.WindowType.Window:
             self.updateSize(dialog_width, dialog_height)
 
     def shutdownWidget(self):
@@ -244,7 +244,7 @@ class PopupDialog(QDockWidget):
     #region Window Methods
 
     def toggleMinimized(self):
-        if self.windowMode == CfgTouchifyActionPopup.WindowType.Window:
+        if self.windowMode == PopupData.WindowType.Window:
             if self._toolbar:
                 if self.isCollapsed:
                     self.setMinimumSize(self.oldMinSize)
@@ -274,10 +274,10 @@ class PopupDialog(QDockWidget):
         if not is_deactivation_event: return super().event(event)
         if self.composer_work_around: return super().event(event)
         
-        if self.closing_method == CfgTouchifyActionPopup.ClosingMethod.Deactivation:
+        if self.closing_method == PopupData.ClosingMethod.Deactivation:
             self.closePopup()
         else:
-            if self.windowMode == CfgTouchifyActionPopup.WindowType.Popup:
+            if self.windowMode == PopupData.WindowType.Popup:
                 self.closePopup()
 
         return super().event(event)

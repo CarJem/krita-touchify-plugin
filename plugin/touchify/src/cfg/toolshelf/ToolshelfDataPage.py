@@ -1,12 +1,12 @@
-from touchify.src.cfg.toolshelf.CfgToolshelfSection import CfgToolshelfSection
+from touchify.src.cfg.toolshelf.ToolshelfDataSection import ToolshelfDataSection
 from touchify.src.ext.types.StrEnum import StrEnum
 from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
-from touchify.src.cfg.action.CfgTouchifyActionCollection import CfgTouchifyActionCollection
-from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
+from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
+from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 
 
-class CfgToolshelfPanel:
+class ToolshelfDataPage:
 
 
     class TabType(StrEnum):
@@ -16,8 +16,8 @@ class CfgToolshelfPanel:
     def __defaults__(self):
         self.id: str = ""
         self.display_name: str = ""
-        self.actions: TypedList[CfgTouchifyActionCollection] = []
-        self.sections: TypedList[CfgToolshelfSection] = []
+        self.actions: TypedList[TriggerGroup] = []
+        self.sections: TypedList[ToolshelfDataSection] = []
         self.tab_type: str = "buttons"
         self.action_height: int = 10
 
@@ -35,17 +35,17 @@ class CfgToolshelfPanel:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = CfgBackwardsCompat.CfgToolshelfPanel(args)
+        args = BackwardsCompatibility.ToolshelfDataPage(args)
         Extensions.dictToObject(self, args)
-        self.sections = Extensions.init_list(args, "sections", CfgToolshelfSection)
-        self.actions = Extensions.init_list(args, "actions", CfgTouchifyActionCollection)
+        self.sections = Extensions.init_list(args, "sections", ToolshelfDataSection)
+        self.actions = Extensions.init_list(args, "actions", TriggerGroup)
 
     def hasDisplayName(self):
         return self.display_name != None and self.display_name != "" and self.display_name.isspace() == False
 
     def forceLoad(self):
-        self.sections = TypedList(self.sections, CfgToolshelfSection)
-        self.actions = TypedList(self.actions, CfgTouchifyActionCollection)
+        self.sections = TypedList(self.sections, ToolshelfDataSection)
+        self.actions = TypedList(self.actions, TriggerGroup)
 
     def __str__(self):
         name = self.id.replace("\n", "\\n")

@@ -1,15 +1,15 @@
-from touchify.src.cfg.popup.CfgTouchifyActionPopupItem import CfgTouchifyActionPopupItem
+from touchify.src.cfg.popup.PopupDataItem import PopupDataItem
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.ext.types.TypedList import TypedList
-from touchify.src.cfg.CfgBackwardsCompat import CfgBackwardsCompat
+from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 from touchify.src.ext.types.StrEnum import StrEnum
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
+    from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 
-class CfgTouchifyActionPopup:
+class PopupData:
 
     class Variants(StrEnum):
         Actions = "actions"
@@ -46,7 +46,7 @@ class CfgTouchifyActionPopup:
         self.actions_item_height: int = 100
         self.actions_icon_width: int = 30
         self.actions_icon_height: int = 30
-        self.actions_items: TypedList[CfgTouchifyActionPopupItem] = []
+        self.actions_items: TypedList[PopupDataItem] = []
         self.actions_close_on_click: bool = False
 
         self.docker_id: str = ""
@@ -60,11 +60,11 @@ class CfgTouchifyActionPopup:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelf
-        self.toolshelf_data: CfgToolshelf = CfgToolshelf()
-        args = CfgBackwardsCompat.CfgTouchifyActionPopup(args)        
-        Extensions.dictToObject(self, args, [CfgToolshelf])
-        self.actions_items = Extensions.init_list(args, "actions_items", CfgTouchifyActionPopupItem)
+        from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
+        self.toolshelf_data: ToolshelfData = ToolshelfData()
+        args = BackwardsCompatibility.PopupData(args)        
+        Extensions.dictToObject(self, args, [ToolshelfData])
+        self.actions_items = Extensions.init_list(args, "actions_items", PopupDataItem)
 
     def __str__(self):
         return self.window_title.replace("\n", "\\n")
@@ -73,7 +73,7 @@ class CfgTouchifyActionPopup:
         return FileExtensions.fileStringify(self.id)
 
     def forceLoad(self):
-        self.actions_items = TypedList(self.actions_items, CfgTouchifyActionPopupItem)
+        self.actions_items = TypedList(self.actions_items, PopupDataItem)
         pass
 
     def propertygrid_sisters(self):
@@ -160,13 +160,13 @@ class CfgTouchifyActionPopup:
             "toolshelf_data"
         ]
 
-        if self.type != CfgTouchifyActionPopup.Variants.Docker:
+        if self.type != PopupData.Variants.Docker:
             for item in docker_mode_settings:
                 result.append(item)
-        if self.type != CfgTouchifyActionPopup.Variants.Actions:
+        if self.type != PopupData.Variants.Actions:
             for item in action_mode_settings:
                 result.append(item)
-        if self.type != CfgTouchifyActionPopup.Variants.Toolshelf:
+        if self.type != PopupData.Variants.Toolshelf:
             for item in toolshelf_mode_settings:
                 result.append(item)
 

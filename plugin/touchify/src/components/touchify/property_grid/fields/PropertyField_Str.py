@@ -137,7 +137,7 @@ class PropertyField_Str(PropertyField):
                     list_setup = True
                 elif restriction["type"] == "hotkey_selection":
                     combobox_items = list[tuple[str, str]]()
-                    avaliableItems = TouchifyConfig.instance().hotkey_options_storage
+                    avaliableItems = TouchifySettings.instance().hotkey_options_storage
                     combobox_items.append(("None", "none"))
                     for item in avaliableItems:
                         input = (avaliableItems[item]["displayName"], item)

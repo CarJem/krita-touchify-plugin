@@ -21,18 +21,9 @@ class Helpers:
     def isLegacyConfig(args: dict[str, any]):
         return Helpers.getVersion(args) == -1
 
-class CfgBackwardsCompat:
-    def CfgToolboxItem(args: dict[str, any]):
+class BackwardsCompatibility:
 
-        if not args: return args
-        if Helpers.isLegacyConfig(args):
-            Helpers.setVersion(args, 1)
-
-        #print(args)
-
-        return args
-
-    def CfgTouchifyAction(args: dict[str, any]):
+    def Trigger(args: dict[str, any]):
         if not args: return args
         if Helpers.isLegacyConfig(args):
             Helpers.changeVarName(args, "showText", "show_text")
@@ -77,7 +68,7 @@ class CfgBackwardsCompat:
             Helpers.setVersion(args, 2)
         return args
 
-    def CfgTouchifyActionDockerGroup(args: dict[str, any]):
+    def DockerGroup(args: dict[str, any]):
         if not args: return args
         if Helpers.isLegacyConfig(args):
             Helpers.changeVarName(args, "groupId", "group_id")
@@ -85,17 +76,7 @@ class CfgBackwardsCompat:
             Helpers.setVersion(args, 1)
         return args
 
-    def CfgToolshelfPanel(args: dict[str, any]):
-        if not args: return args
-        if Helpers.isLegacyConfig(args):
-            Helpers.changeVarName(args, "actionHeight", "action_height")
-            Helpers.setVersion(args, 1)
-        if Helpers.getVersion(args) == 1:
-            Helpers.changeVarName(args, "row", "toolshelf_tab_row")
-            Helpers.setVersion(args, 2)
-        return args
-
-    def CfgToolshelf(args: dict[str, any]):
+    def ToolshelfData(args: dict[str, any]):
         if not args: return args
         if Helpers.isLegacyConfig(args):
             Helpers.changeVarName(args, "actionHeight", "action_height")
@@ -113,7 +94,17 @@ class CfgBackwardsCompat:
             Helpers.setVersion(args, 3)
         return args
     
-    def CfgToolshelfSection(args: dict[str, any]):
+    def ToolshelfDataPage(args: dict[str, any]):
+        if not args: return args
+        if Helpers.isLegacyConfig(args):
+            Helpers.changeVarName(args, "actionHeight", "action_height")
+            Helpers.setVersion(args, 1)
+        if Helpers.getVersion(args) == 1:
+            Helpers.changeVarName(args, "row", "toolshelf_tab_row")
+            Helpers.setVersion(args, 2)
+        return args
+
+    def ToolshelfDataSection(args: dict[str, any]):
         if not args: return args
         if Helpers.isLegacyConfig(args) or Helpers.getVersion(args) == 1:
             Helpers.changeVarName(args, "id", "docker_id")
@@ -128,9 +119,8 @@ class CfgBackwardsCompat:
             Helpers.changeVarName(args, "section_alignment_y", "action_section_alignment_y")
             Helpers.setVersion(args, 4)
         return args
-
-    
-    def CfgTouchifyActionPopup(args: dict[str, any]):
+  
+    def PopupData(args: dict[str, any]):
         if not args: return args
         if Helpers.isLegacyConfig(args):
             Helpers.changeVarName(args, "btnName", "display_name")
@@ -151,9 +141,18 @@ class CfgBackwardsCompat:
             Helpers.setVersion(args, 4)
         return args
 
-    def CfgToolbox(args: dict[str, any]):
+    def ToolboxData(args: dict[str, any]):
         if not args: return args
         if Helpers.isLegacyConfig(args):
             Helpers.changeVarName(args, "presetName", "preset_name")
             Helpers.setVersion(args, 1)
+        return args
+    
+    def ToolboxDataItem(args: dict[str, any]):
+        if not args: return args
+        if Helpers.isLegacyConfig(args):
+            Helpers.setVersion(args, 1)
+
+        #print(args)
+
         return args

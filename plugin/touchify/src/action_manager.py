@@ -2,10 +2,10 @@ from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from touchify.src.cfg.ResourcePack import ResourcePack
-from touchify.src.cfg.ResourcePackMetadata import ResourcePackMetadata
-from touchify.src.cfg.canvas_preset.CfgTouchifyActionCanvasPreset import CfgTouchifyActionCanvasPreset
-from touchify.src.cfg.docker_group.CfgTouchifyActionDockerGroup import CfgTouchifyActionDockerGroup
+from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
+from touchify.src.cfg.resource_pack.ResourcePackMetadata import ResourcePackMetadata
+from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
+from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
 from touchify.src.components.pyqt.event_filters.MouseReleaseListener import MouseReleaseListener
 from touchify.src.components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
@@ -17,11 +17,11 @@ from touchify.src.variables import *
 
 from functools import partial
 
-from touchify.src.cfg.action.CfgTouchifyAction import CfgTouchifyAction
-from touchify.src.cfg.popup.CfgTouchifyActionPopup import CfgTouchifyActionPopup
+from touchify.src.cfg.triggers.Trigger import Trigger
+from touchify.src.cfg.popup.PopupData import PopupData
 from touchify.src.ext.KritaExtensions import *
 
-from touchify.src.settings import TouchifyConfig
+from touchify.src.settings import TouchifySettings
 from touchify.src.resources import ResourceManager
 
 from touchify.src.components.touchify.popups.PopupDialog import PopupDialog
@@ -54,38 +54,38 @@ class ActionManager(QObject):
         self.__lastToolboxTool: str = ""
         self.__lastBrushPreset: Resource = None
 
-    def runAction(self, data: CfgTouchifyAction, action: QAction):
+    def runAction(self, data: Trigger, action: QAction):
         match data.variant:
-            case CfgTouchifyAction.Variants.CanvasPreset:
+            case Trigger.Variants.CanvasPreset:
                 self.action_canvas(data.canvas_preset_data)
-            case CfgTouchifyAction.Variants.Docker:
+            case Trigger.Variants.Docker:
                 self.action_docker(data.docker_id)
-            case CfgTouchifyAction.Variants.Workspace:
+            case Trigger.Variants.Workspace:
                 self.action_workspace(data.workspace_id)
-            case CfgTouchifyAction.Variants.Popup:
+            case Trigger.Variants.Popup:
                 self.action_popup(action, data.popup_data)
-            case CfgTouchifyAction.Variants.Brush:
+            case Trigger.Variants.Brush:
                 self.action_brush(data.brush_name)
-            case CfgTouchifyAction.Variants.DockerGroup:
+            case Trigger.Variants.DockerGroup:
                 self.action_dockergroup(data.docker_group_data)
-            case CfgTouchifyAction.Variants.Menu:
+            case Trigger.Variants.Menu:
                 self.action_menu(action, data)
-            case CfgTouchifyAction.Variants.Action:
+            case Trigger.Variants.Action:
                 self.action_trigger(data)
             
-    def createButton(self, parent: QWidget, data: CfgTouchifyAction):
-        if data.variant == CfgTouchifyAction.Variants.Action:
+    def createButton(self, parent: QWidget, data: Trigger):
+        if data.variant == Trigger.Variants.Action:
             if data.action_id and data.action_id in self.registeredActions:
                 data = self.registeredActionsData[data.action_id]
 
         match data.variant:
-            case CfgTouchifyAction.Variants.Brush:
+            case Trigger.Variants.Brush:
                 result = self.button_brush(data)
-            case CfgTouchifyAction.Variants.Menu:
+            case Trigger.Variants.Menu:
                 result = self.button_menu(data)
-            case CfgTouchifyAction.Variants.Popup:
+            case Trigger.Variants.Popup:
                 result = self.button_popup(data)
-            case CfgTouchifyAction.Variants.Action:
+            case Trigger.Variants.Action:
                 result = self.button_trigger(data)
             case _:
                 result = self.button_generic(data)
@@ -97,17 +97,17 @@ class ActionManager(QObject):
 
         return result
     
-    def createMenuItem(self, parent: TouchifyActionMenu, data: CfgTouchifyAction):
-        if data.variant == CfgTouchifyAction.Variants.Action:
+    def createMenuItem(self, parent: TouchifyActionMenu, data: Trigger):
+        if data.variant == Trigger.Variants.Action:
             if data.action_id and data.action_id in self.registeredActions:
                 data = self.registeredActionsData[data.action_id]
 
         match data.variant:
-            case CfgTouchifyAction.Variants.Menu:
+            case Trigger.Variants.Menu:
                 actual_menu = TouchifyActionMenu(data, parent, self)
                 actual_menu.setTitle(data.display_custom_text)
                 parent.addMenu(actual_menu)
-            case CfgTouchifyAction.Variants.Action:
+            case Trigger.Variants.Action:
                 if data.action_id in CommonActions.EXPANDING_SPACERS:
                     actual_action = QAction(parent)
                     actual_action.setSeparator(True)
@@ -122,8 +122,8 @@ class ActionManager(QObject):
 
     def openPopup(self, id: str, _parent: QWidget = None):
 
-        data: CfgTouchifyActionPopup = TouchifyConfig.instance().getRegistryItem(id, CfgTouchifyActionPopup)
-        if not isinstance(data, CfgTouchifyActionPopup) or data == None: return
+        data: PopupData = TouchifySettings.instance().getRegistryItem(id, PopupData)
+        if not isinstance(data, PopupData) or data == None: return
 
 
         is_dead = True
@@ -140,11 +140,11 @@ class ActionManager(QObject):
             if popup_id in self.active_popups: 
                 del self.active_popups[popup_id]
 
-            if data.type == CfgTouchifyActionPopup.Variants.Actions:
+            if data.type == PopupData.Variants.Actions:
                 popup = PopupDialog_Actions(self.appEngine.windowSource.qwindow().window(), data, self)
-            elif data.type == CfgTouchifyActionPopup.Variants.Docker:
+            elif data.type == PopupData.Variants.Docker:
                 popup = PopupDialog_Docker(self.appEngine.windowSource.qwindow().window(), data, self.appEngine.docker_management)
-            elif data.type == CfgTouchifyActionPopup.Variants.Toolshelf:
+            elif data.type == PopupData.Variants.Toolshelf:
                 popup = PopupDialog_Toolshelf(self.appEngine.windowSource.qwindow().window(), data, self, self.appEngine.docker_management)
             else:
                 popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
@@ -205,13 +205,13 @@ class ActionManager(QObject):
         self.active_popups.clear()
         
 
-        cfg = TouchifyConfig.instance().getConfig()
+        cfg = TouchifySettings.instance().getConfig()
 
         for pack in cfg.resources.presets:
             pack: ResourcePack
             meta: ResourcePackMetadata = pack.metadata
-            for data in pack.components:
-                data: CfgTouchifyAction
+            for data in pack.triggers:
+                data: Trigger
                 subActionIdentifier = 'Touchify_Res_{0}_{1}'.format(meta.registry_id, data.registry_id)
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
@@ -236,18 +236,18 @@ class ActionManager(QObject):
 
     def runRegisteredAction(self, identifier: str, action: QAction):
         if identifier in self.registeredActions:
-            data: CfgTouchifyAction = self.registeredActionsData[identifier]
-            if isinstance(data, CfgTouchifyAction):
+            data: Trigger = self.registeredActionsData[identifier]
+            if isinstance(data, Trigger):
                 self.runAction(data, action)
 
-    def createRegisteredAction(self, actionIdentifier: str, data: CfgTouchifyAction, window: Window, actionPath: str):
+    def createRegisteredAction(self, actionIdentifier: str, data: Trigger, window: Window, actionPath: str):
         displayName = data.display_custom_text
         action = window.createAction(actionIdentifier, displayName, actionPath)
 
         self.registeredActions[actionIdentifier] = action
         self.registeredActionsData[actionIdentifier] = data
            
-        TouchifyConfig.instance().addHotkeyOption(actionIdentifier, displayName, self.runRegisteredAction, {'identifier': actionIdentifier, 'action': action})      
+        TouchifySettings.instance().addHotkeyOption(actionIdentifier, displayName, self.runRegisteredAction, {'identifier': actionIdentifier, 'action': action})      
         action.triggered.connect(partial(self.runRegisteredAction, actionIdentifier, action))
              
         (has_text, text, has_icon, icon, using_action_icon) = self.__getTouchifyActionDisplay(data)
@@ -256,17 +256,15 @@ class ActionManager(QObject):
 
     def createRegisteredActions(self, window: Window, actionPath: str):
         subItemPath = actionPath + "/" + "registered"
-        cfg = TouchifyConfig.instance().getConfig()
+        cfg = TouchifySettings.instance().getConfig()
         root_menu = QtWidgets.QMenu("Registered Actions")
-
-        core_menu = root_menu.addMenu("Core")
 
         for pack in cfg.resources.presets:
             pack: ResourcePack
             packMeta = pack.metadata
             pack_menu = root_menu.addMenu(packMeta.registry_name)
-            for data in pack.components:
-                data: CfgTouchifyAction
+            for data in pack.triggers:
+                data: Trigger
                 id = 'Touchify_Res_{0}_{1}'.format(packMeta.registry_id, data.registry_id)
                 action = self.appEngine.action_management.createRegisteredAction(id, data, window, subItemPath)
                 pack_menu.addAction(action)
@@ -293,11 +291,11 @@ class ActionManager(QObject):
         else:
             return _sender
     
-    def __getTouchifyActionDisplay(self, data: CfgTouchifyAction):
+    def __getTouchifyActionDisplay(self, data: Trigger):
         use_custom_icon: bool = data.display_custom_icon_enabled
         use_custom_text: bool = data.display_custom_text_enabled
-        is_brush: bool = data.variant == CfgTouchifyAction.Variants.Brush
-        is_action: bool = data.variant == CfgTouchifyAction.Variants.Action
+        is_brush: bool = data.variant == Trigger.Variants.Brush
+        is_action: bool = data.variant == Trigger.Variants.Action
         using_action_icon: bool = False
 
         if use_custom_icon:
@@ -325,7 +323,7 @@ class ActionManager(QObject):
         return (has_text, text, has_icon, icon, using_action_icon)
 
 
-    def __setButtonDisplay(self, act: CfgTouchifyAction, btn: TouchifyActionButton):
+    def __setButtonDisplay(self, act: Trigger, btn: TouchifyActionButton):
         (has_text, text, has_icon, icon, using_action_icon) = self.__getTouchifyActionDisplay(act)  
         if has_text: btn.setText(text)      
         if has_icon: btn.setIcon(icon) 
@@ -415,7 +413,7 @@ class ActionManager(QObject):
         btn.setCheckable(checkable)
         return btn
    
-    def button_brush(self, act: CfgTouchifyAction):
+    def button_brush(self, act: Trigger):
         btn: TouchifyActionButton | None = None
         id = act.brush_name
         brush_presets = ResourceManager.getBrushPresets()
@@ -427,7 +425,7 @@ class ActionManager(QObject):
             self.__setButtonDisplay(act, btn)
         return btn
                    
-    def button_menu(self, act: CfgTouchifyAction):
+    def button_menu(self, act: Trigger):
         btn: TouchifyActionButton = self.button_main(None, act.display_custom_text, False)   
         self.__setButtonDisplay(act, btn)
         
@@ -436,33 +434,33 @@ class ActionManager(QObject):
         btn.clicked.connect(btn.showMenu)
         return btn
     
-    def button_popup(self, data: CfgTouchifyAction):
+    def button_popup(self, data: Trigger):
         btn: TouchifyActionButton | None = None
         btn = self.button_main(None, data.display_custom_text, False)
         btn.clicked.connect((lambda: self.openPopup(data.popup_data, btn)))
         self.__setButtonDisplay(data, btn)
         return btn
 
-    def button_generic(self, data: CfgTouchifyAction):
+    def button_generic(self, data: Trigger):
         btn: TouchifyActionButton | None = None
         
         onClick = None
         
         match data.variant:
-            case CfgTouchifyAction.Variants.Docker:
+            case Trigger.Variants.Docker:
                 onClick = (lambda: self.action_docker(data.docker_id))
-            case CfgTouchifyAction.Variants.Workspace:
+            case Trigger.Variants.Workspace:
                 onClick = (lambda: self.action_workspace(data.workspace_id))
-            case CfgTouchifyAction.Variants.DockerGroup:
+            case Trigger.Variants.DockerGroup:
                 onClick = (lambda: self.action_dockergroup(data.docker_group_data))
-            case CfgTouchifyAction.Variants.CanvasPreset:
+            case Trigger.Variants.CanvasPreset:
                 onClick = (lambda: self.action_canvas(data.canvas_preset_data))
 
         btn = self.button_main(onClick, data.display_custom_text, False)
         self.__setButtonDisplay(data, btn)
         return btn
         
-    def button_trigger(self, act: CfgTouchifyAction):
+    def button_trigger(self, act: Trigger):
         action = Krita.instance().action(act.action_id)
         btn: TouchifyActionButton | None = None
         if action:
@@ -494,7 +492,7 @@ class ActionManager(QObject):
     #endregion
 
     #region Action Functions    
-    def action_trigger(self, data: CfgTouchifyAction):
+    def action_trigger(self, data: Trigger):
         if data.action_id in self.registeredActions:
             act: QAction = self.registeredActions[data.action_id]
             act.trigger()
@@ -503,7 +501,7 @@ class ActionManager(QObject):
             if action:
                 action.trigger()
     
-    def action_menu(self, action: QAction, data: CfgTouchifyAction):
+    def action_menu(self, action: QAction, data: Trigger):
         _parent = self.__getActionSource(action)
         contextMenu = TouchifyActionMenu(data, _parent, self)
         contextMenu.show()
@@ -532,8 +530,8 @@ class ActionManager(QObject):
                                 break
                             
     def action_dockergroup(self, id: str):
-        data: CfgTouchifyActionDockerGroup = TouchifyConfig.instance().getRegistryItem(id, CfgTouchifyActionDockerGroup)
-        if not isinstance(data, CfgTouchifyActionDockerGroup) or data == None: return
+        data: DockerGroup = TouchifySettings.instance().getRegistryItem(id, DockerGroup)
+        if not isinstance(data, DockerGroup) or data == None: return
 
 
         dockersList = self.appEngine.windowSource.dockers()
@@ -576,8 +574,8 @@ class ActionManager(QObject):
         self.openPopup(id, _parent)
     
     def action_canvas(self, id: str):
-        data: CfgTouchifyActionCanvasPreset = TouchifyConfig.instance().getRegistryItem(id, CfgTouchifyActionCanvasPreset)
-        if not isinstance(data, CfgTouchifyActionCanvasPreset) or data == None: return
+        data: CanvasPreset = TouchifySettings.instance().getRegistryItem(id, CanvasPreset)
+        if not isinstance(data, CanvasPreset) or data == None: return
     
         def slotConfigChanged(obj: QObject):
             canvas_call = getattr(obj, "slotConfigChanged", None)

@@ -12,7 +12,7 @@ from touchify.src.settings import *
 from touchify.src.variables import *
 from touchify.src.docker_manager import *
 
-from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
+from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfDataPage
 from touchify.src.components.touchify.dockers.toolshelf.Page import Page
 
 from typing import TYPE_CHECKING
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from .ToolshelfWidget import ToolshelfWidget
 
 class PageStack(QStackedWidget):
-    def __init__(self, parent: "ToolshelfWidget", cfg: CfgToolshelf):
+    def __init__(self, parent: "ToolshelfWidget", cfg: ToolshelfData):
         super(PageStack, self).__init__(parent)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         
@@ -35,7 +35,7 @@ class PageStack(QStackedWidget):
         self.addMainPanel()
         panels = self.cfg.pages
         for entry in panels:
-            properties: CfgToolshelfPanel = entry
+            properties: ToolshelfDataPage = entry
             self.addPanel(properties)
 
         self.changePanel('ROOT')
@@ -72,7 +72,7 @@ class PageStack(QStackedWidget):
         self._panels['ROOT'] = self._mainWidget
         super().addWidget(self._mainWidget)
 
-    def addPanel(self, data: CfgToolshelfPanel):
+    def addPanel(self, data: ToolshelfDataPage):
         panel = Page(self, data)
         self._panels[data.id] = panel
         super().addWidget(panel)

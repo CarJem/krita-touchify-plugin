@@ -1,11 +1,11 @@
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.ext.types.TypedList import TypedList
-from touchify.src.cfg.toolbox.CfgToolboxItem import *
+from touchify.src.cfg.toolbox.ToolboxDataItem import *
 
-class CfgToolboxCategory:
+class ToolboxDataCategory:
     def __defaults__(self):
         self.id: str=""
-        self.items: TypedList[CfgToolboxItem] = []
+        self.items: TypedList[ToolboxDataItem] = []
         self.column_count: int = 0
 
         self.json_version: int = 1
@@ -13,10 +13,10 @@ class CfgToolboxCategory:
     def __init__(self, **args) -> None:
         self.__defaults__()
         Extensions.dictToObject(self, args)
-        self.items = Extensions.init_list(args, "items", CfgToolboxItem)
+        self.items = Extensions.init_list(args, "items", ToolboxDataItem)
 
     def addAction(self, action_id: str):
-        newItem = CfgToolboxItem()
+        newItem = ToolboxDataItem()
         newItem.name = action_id
         self.items.append(newItem)
 
@@ -24,7 +24,7 @@ class CfgToolboxCategory:
         return self.id.replace("\n", "\\n")
 
     def forceLoad(self):
-        self.items = TypedList(self.items, CfgToolboxItem)
+        self.items = TypedList(self.items, ToolboxDataItem)
 
 
     def propertygrid_ismodel(self):

@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.cfg.toolshelf.CfgToolshelf import CfgToolshelfPanel
+from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfDataPage
 from touchify.src.components.touchify.dockers.toolshelf.Panel import Panel
 
 from krita import *
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class Page(QWidget):
     
-    def __init__(self, parent: "PageStack", data: CfgToolshelfPanel):
+    def __init__(self, parent: "PageStack", data: ToolshelfDataPage):
         super(Page, self).__init__(parent)
         self.setAutoFillBackground(True)
         self.setLayout(QVBoxLayout(self))
