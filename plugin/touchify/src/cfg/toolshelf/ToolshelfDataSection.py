@@ -136,52 +136,15 @@ class ToolshelfDataSection:
         hints["max_size"] = "the maximum size of this section; leave set to 0 for automatic sizing"
         return hints
     
+    def propertygrid_view_type(self):
+        return "tabs_vertical"
+    
     def propertygrid_sorted(self):
-        global_groups = [
-            "display_name",
-            "min_size",
-            "min_size_x",
-            "min_size_y",
-            "max_size",
-            "max_size_x",
-            "max_size_y",
-            "size",
-            "size_x",
-            "size_y",
-            "panel_location",
-            "panel_x",
-            "panel_y",
-            "ignore_scaling",
-            "section_type"
+        return [
+            "general_groups",
+            "variant_data_group",
+            "subpanel_data"
         ]
-
-        docker_groups = [
-            "docker_id", 
-            "docker_nesting_mode", 
-            "docker_unloaded_visibility", 
-            "docker_loading_priority"
-        ]
-
-        action_groups = [
-            "action_section_id", 
-            "action_section_display_mode",
-            "action_section_btn_width", 
-            "action_section_btn_height",
-            "action_section_alignment_x", 
-            "action_section_alignment_y", 
-            "action_section_icon_size",
-            "action_section_contents", 
-        ]
-
-        special_groups = [
-            "special_item_type"
-        ]
-
-        subgroup_groups = [
-            "subpanel_data",
-        ]
-
-        return global_groups + docker_groups + action_groups + special_groups + subgroup_groups
     
     def propertygrid_hidden(self):
         docker_groups = [
@@ -231,6 +194,9 @@ class ToolshelfDataSection:
     def propertygrid_labels(self):
         labels = {}
 
+        labels["general_group"] = "General"
+        labels["variant_group"] = "Variant Options"
+
         labels["display_name"] = "Display Name"
 
         labels["size"] = "Base Width / Height"
@@ -254,11 +220,39 @@ class ToolshelfDataSection:
 
         labels["special_item_type"] = "Component Type"
 
-        labels["subpanel_data"] = "Panel Data"
+        labels["subpanel_data"] = "Subpanel Options"
         return labels
     
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
+
+        global_groups = [
+            "display_name",
+            "min_size",
+            "max_size",
+            "size",
+            "panel_location",
+            "ignore_scaling"
+        ]
+
+        variant_group = [
+            "section_type",
+            "docker_id", 
+            "docker_nesting_mode", 
+            "docker_unloaded_visibility", 
+            "docker_loading_priority",
+            "action_section_id", 
+            "action_section_display_mode",
+            "action_section_btn_size",
+            "action_section_alignment", 
+            "action_section_icon_size",
+            "action_section_contents",
+            "special_item_type"
+        ]
+
+        row["general_group"] = {"items": global_groups, "is_group": True}
+        row["variant_group"] = {"items": variant_group, "is_group": True}
+
         row["action_section_btn_size"] = {"items": ["action_section_btn_width", "action_section_btn_height"]}
         row["action_section_alignment"] = {"items": ["action_section_alignment_x","action_section_alignment_y"]}
         row["size"] = {"items": ["size_x","size_y"]}

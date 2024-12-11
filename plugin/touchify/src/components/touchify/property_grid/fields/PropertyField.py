@@ -18,9 +18,8 @@ class PropertyField(QWidget):
     propertyChanged = pyqtSignal(bool)
 
     def __init__(self, variable_name=str, variable_data=any, variable_source=any, is_typed: bool = False):
-        super().__init__()
+        super().__init__(parent=None)
         self.is_typed = is_typed
-        self.FULL_ROW_WIDGET = False
         self.setup(variable_name, variable_data, variable_source)
         self.common_setup()
         
@@ -35,11 +34,11 @@ class PropertyField(QWidget):
         self.variable_source = variable_source
 
     def setStackHost(self, host: PropertyGrid):
-        self.stackHost = host
+        self.stack_host = host
 
     def setVariable(self, source, name, data):
-        self.propertyChanged.emit(True)
         PropertyUtils_Extensions.setVariable(source, name, data)
+        self.propertyChanged.emit(True)
 
     #region Commons / Nestables
 
@@ -62,15 +61,17 @@ class PropertyField(QWidget):
         if "text" in variableData:
             btnText = variableData["text"]
 
-        self.editor = QPushButton()
+        self.editor = QPushButton(self)
         self.editor.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         self.editor.clicked.connect(self.nested_edit)
         self.editor.setText(btnText)
+        print(self.editor)
 
-        self.editor_button = QPushButton()
+        self.editor_button = QPushButton(self)
         self.editor_button.setMaximumWidth(16)
         self.editor_button.setContentsMargins(0,0,0,0)
         self.editor_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        print(self.editor_button)
 
         moreMenu = QMenu(self.editor_button)
         copyAct = moreMenu.addAction("Copy")
@@ -79,12 +80,12 @@ class PropertyField(QWidget):
         pateAct.triggered.connect(self.nested_paste)
         self.editor_button.setMenu(moreMenu)
         
-        editorLayout = QHBoxLayout(self)
-        editorLayout.setSpacing(0)
-        editorLayout.setContentsMargins(0,0,0,0)
-        editorLayout.addWidget(self.editor, 1)
-        editorLayout.addWidget(self.editor_button)
-        self.setLayout(editorLayout)
+        self.editorLayout = QHBoxLayout(self)
+        self.editorLayout.setSpacing(0)
+        self.editorLayout.setContentsMargins(0,0,0,0)
+        self.editorLayout.addWidget(self.editor, 1)
+        self.editorLayout.addWidget(self.editor_button)
+        self.setLayout(self.editorLayout)
 
     def nested_paste(self):
         item_type: type | None = type(self.variable_data)
@@ -111,12 +112,12 @@ class PropertyField(QWidget):
         self.nested_page_layout.setSpacing(0)
 
         from ..PropertyPage import PropertyPage
-        self.nested_page_properties = PropertyPage(self.stackHost)
+        self.nested_page_properties = PropertyPage(self.stack_host)
         self.nested_page_layout.addWidget(self.nested_page_properties)
         self.nested_page_dialog.setLayout(self.nested_page_layout)
 
         self.nested_page_properties.updateDataObject(self.variable_data)
-        self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.nested_page_dialog))
+        self.stack_host.setCurrentIndex(self.stack_host.addWidget(self.nested_page_dialog))
         self.nested_page_dialog.show()
 
     #endregion

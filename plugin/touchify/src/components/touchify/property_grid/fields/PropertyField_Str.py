@@ -149,21 +149,21 @@ class PropertyField_Str(PropertyField):
 
 
     def dlg_accept(self):
-        self.stackHost.goBack()
+        self.stack_host.goBack()
         self.dlg.accept()
     
     def dlg_reject(self):
-        self.stackHost.goBack()
+        self.stack_host.goBack()
         self.dlg.reject()
 
     def helperRequested(self, mode):
-        self.dlg = PropertyGrid_SelectorDialog(self.stackHost)
+        self.dlg = PropertyGrid_SelectorDialog(self.stack_host)
         self.dlg.setWindowFlags(Qt.WindowType.Widget)
         self.dlg.header_buttons.accepted.connect(lambda: self.dlg_accept())
         self.dlg.header_buttons.rejected.connect(lambda: self.dlg_reject())
 
         self.dlg.load_list(mode)
-        self.stackHost.setCurrentIndex(self.stackHost.addWidget(self.dlg))
+        self.stack_host.setCurrentIndex(self.stack_host.addWidget(self.dlg))
         if self.dlg.exec_():
             result = self.dlg.selectedResult()
             if self.is_icon_viewer: 

@@ -198,6 +198,9 @@ class ResourcePack:
             
     def propertygrid_hidden(self):
         return [  ]
+    
+    def propertygrid_view_type(self):
+        return "tabs_vertical"
 
     def propertygrid_labels(self):
         labels = {}

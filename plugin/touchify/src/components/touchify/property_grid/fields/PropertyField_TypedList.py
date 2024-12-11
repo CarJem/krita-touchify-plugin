@@ -140,7 +140,6 @@ class PropertyField_TypedList(PropertyField):
                 sub_array_setup = True
             if restriction["type"] == "property_view":
                 self.has_property_view = True
-                self.FULL_ROW_WIDGET = True
             if restriction["type"] == "add_remove_edit_only":
                 self.add_remove_edit_only = True
 
@@ -245,7 +244,7 @@ class PropertyField_TypedList(PropertyField):
             container.setSpacing(0)
 
             from ..PropertyPage import PropertyPage
-            container_props = PropertyPage(self.stackHost)
+            container_props = PropertyPage(self.stack_host)
             container.addWidget(container_props)
             dlg.setLayout(container)
 
@@ -275,7 +274,7 @@ class PropertyField_TypedList(PropertyField):
                     prop_grid.updateDataObject(self.selectedItem)
 
             if not self.has_property_view and page_dialog:
-                self.stackHost.goForward(page_dialog)
+                self.stack_host.goForward(page_dialog)
                 page_dialog.show()
 
 

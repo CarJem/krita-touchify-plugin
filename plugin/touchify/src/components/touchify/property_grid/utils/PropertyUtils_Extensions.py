@@ -4,37 +4,52 @@ from PyQt5.QtWidgets import QMessageBox
 
 class PropertyUtils_Extensions:
 
-    def tryGetVariable(obj, varName):
+    def tryGetVariable(obj: any, varName: str):
         if hasattr(obj, varName):
             return getattr(obj, varName)
         else: return None
 
-    def getVariable(obj, varName):
+    def getVariable(obj: any, varName: str):
         return getattr(obj, varName)
 
-    def setVariable(obj, varName, data):
+    def setVariable(obj: any, varName: str, data: any):
         return setattr(obj, varName, data)
 
-    def getClassVariables(obj):
+    def getClassVariables(obj: any):
         sorted_results = []
+        sister_items = []
+
         if hasattr(obj, "propertygrid_sorted"):
             sorted_results = list[str](obj.propertygrid_sorted())
         else:
             sorted_results = []
+
+        if hasattr(obj, "propertygrid_sisters"):
+            sister_items = list[str](dict(obj.propertygrid_sisters()).keys())
             
         found_results = [attr for attr in dir(obj) if not callable(getattr(obj, attr)) and
                 not attr.startswith("__") and
                 not attr.startswith("_"  + type(obj).__name__ + "__")]
         
-        for item in sorted_results:
-            if item not in found_results:
+        for item in sorted_results[:]:
+            if item not in found_results and item not in sister_items:
                 sorted_results.remove(item)
         
         for item in found_results:
             if item not in sorted_results:
                 sorted_results.append(item)
-        return sorted_results
+
+        for item in sister_items:
+            if item not in sorted_results:
+                sorted_results.append(item)
                 
+        return sorted_results
+
+    def classViewType(obj: any):
+        if hasattr(obj, "propertygrid_view_type"):
+            return str(obj.propertygrid_view_type())
+        return "default"
+
     def classRestrictions(obj: any, variable_name: str = "") -> list[dict[str, any]]:
         if hasattr(obj, "propertygrid_restrictions"):
             cfg =  dict(obj.propertygrid_restrictions())

@@ -35,23 +35,34 @@ class ToolshelfData:
 
     def propertygrid_sorted(self):
         return [
-            "preset_name",
+            "metadata",
             "header_options",
-            "homepage",
-            "pages"
+            "pages_group",
         ]
+    
+    def propertygrid_sisters(self):
+        row: dict[str, list[str]] = {}
+        row["metadata"] = {"items": ["preset_name"], "is_group": True}
+        row["pages_group"] = {"items": ["homepage", "pages"], "is_group": True}
+        return row
+    
+    def propertygrid_view_type(self):
+        return "tabs_vertical"
 
     def propertygrid_labels(self):
         labels = {}
+        labels["metadata"] = "Metadata"
         labels["preset_name"] = "Preset Name"
+
+        labels["header_options"] = "Options"
+        
+        labels["pages_group"] = "Pages"
         labels["homepage"] = "Home Page"
-        labels["pages"] = "Pages"
-        labels["header_options"] = "Header Options"
+        labels["pages"] = "Other Pages"
         return labels
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["tab_type"] = {"type": "values", "entries": ["buttons", "tabs"]}
         restrictions["homepage"] = {"type": "expandable"}
         restrictions["header_options"] = {"type": "expandable"}
         return restrictions

@@ -24,10 +24,10 @@ class PropertyLabel(QWidget):
         titleSection.setContentsMargins(0,0,0,0)
 
         self.varLabel = QLabel(self)
-        self.varLabel.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        self.varLabel.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         self.varLabel.setMargin(0)
         self.varLabel.setWordWrap(True)
-        self.varLabel.setContentsMargins(2,0,2,0)
+        self.varLabel.setContentsMargins(0,0,0,0)
         self.varLabel.setText(self.label_text)
 
         if self.hint_text != "":

@@ -37,15 +37,16 @@ class TouchifyRegistry:
 
     def propertygrid_labels(self):
         labels = {}
-        labels["registries"] = "Registries"
         labels["resources"] = "Resource Packs"
         labels["hotkeys"] = "Hotkeys"
         labels["preferences"] = "Preferences"
         return labels
     
+    def propertygrid_view_type(self):
+        return "tabs"
+    
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
-        row["registries"] = {"items": ["resources", "hotkeys", "preferences"], "use_labels": True, "flip_labels": True}
         return row
     
     def propertygrid_restrictions(self):

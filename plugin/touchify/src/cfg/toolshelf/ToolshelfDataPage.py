@@ -61,8 +61,14 @@ class ToolshelfDataPage:
         hints["min_size"] = "the minimum size of this panel; leave set to 0 for automatic sizing"
         return hints
     
+    def propertygrid_view_type(self):
+        return "tabs_vertical"
+    
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
+        row["page_options"] = {"items": [ "toolshelf_tab_row", "tab_type", "action_height", "size", "max_size", "min_size"], "is_group": True}
+        row["metadata"] = {"items": [ "id", "display_name", "icon"], "is_group": True}
+
         row["size"] = {"items": ["size_x","size_y"]}
         row["max_size"] = {"items": ["max_size_x","max_size_y"]}
         row["min_size"] = {"items": ["min_size_x","min_size_y"]}
@@ -70,35 +76,30 @@ class ToolshelfDataPage:
     
     def propertygrid_sorted(self):
         return [
-            "id",
-            "display_name",
-            "icon",
-            "row",
-            "action_height",
-            "size_x",
-            "size_y",
-            "min_size_x",
-            "min_size_y",
-            "max_size_x",
-            "max_size_y",
-            "tab_type",
+            "metadata",
+            "page_options",
             "sections",
             "actions"
         ]
 
     def propertygrid_labels(self):
         labels = {}
+        labels["metadata"] = "Metadata"
         labels["id"] = "Panel ID"
         labels["display_name"] = "Display Name"
         labels["icon"] = "Display Icon"
+
+
+        labels["page_options"] = "Settings"
+        labels["action_height"] = "Action Button Height"
+        labels["tab_type"] = "Tab Type"
+        labels["toolshelf_tab_row"] = "Toolshelf Tab Row"
         labels["size"] = "Panel Width / Height"
         labels["max_size"] = "Panel Max Width / Height"
         labels["min_size"] = "Panel Min Width / Height"
-        labels["toolshelf_tab_row"] = "Toolshelf Tab Row"
-        labels["tab_type"] = "Tab Type"
+        
         labels["sections"] = "Sections"
         labels["actions"] = "Actions"
-        labels["action_height"] = "Action Button Height"
         return labels
 
     def propertygrid_restrictions(self):
