@@ -3,28 +3,36 @@
     "toolbox": {
         "position_x": 0,
         "position_y": 1,
-        "alignment_x": "center",
         "alignment_y": "bottom",
-        "horizontal_mode": true,
+        "alignment_x": "center",
+        "stretch_x": 0,
+        "stretch_y": 0,
         "span_x": 3,
         "span_y": 1,
-        "stretch_x": 0,
-        "stretch_y": 0
-    },
-    "toolshelf": {
-        "position_x": 2,
-        "position_y": 0,
-        "alignment_x": "right",
-        "alignment_y": "top"
+        "horizontal_mode": true,
+        "json_version": 1
     },
     "toolshelf_alt": {
         "position_x": 0,
         "position_y": 0,
-        "alignment_x": "left",
-        "alignment_y": "top",
+        "stretch_x": 0,
+        "stretch_y": 0,
         "span_x": -1,
         "span_y": -1,
+        "alignment_y": "top",
+        "alignment_x": "left",
+        "json_version": 1
+    },
+    "toolshelf": {
+        "position_x": 2,
+        "position_y": 0,
+        "stretch_x": 0,
         "stretch_y": 0,
-        "stretch_x": 0
-    }
+        "span_x": -1,
+        "span_y": -1,
+        "alignment_y": "top",
+        "alignment_x": "right",
+        "json_version": 1
+    },
+    "json_version": 1
 }
