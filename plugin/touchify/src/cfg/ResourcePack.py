@@ -20,14 +20,13 @@ HAS_ALREADY_LOADED: bool = False
 
 class ResourcePack:
     metadata: ResourcePackMetadata | None = None
-    components: TypedList[CfgTouchifyAction] = TypedList(None, CfgTouchifyAction)
-    toolshelves: TypedList[CfgToolshelf] = TypedList(None, CfgToolshelf)
-    toolboxes: TypedList[CfgToolbox] = TypedList(None, CfgToolbox)
-    widget_layouts: TypedList[CfgWidgetPadPreset] = TypedList(None, CfgWidgetPadPreset)
-    popups: TypedList[CfgTouchifyActionPopup] = TypedList(None, CfgTouchifyActionPopup)
-    canvas_presets: TypedList[CfgTouchifyActionCanvasPreset] = TypedList(None, CfgTouchifyActionCanvasPreset)
-    docker_groups: TypedList[CfgTouchifyActionDockerGroup] = TypedList(None, CfgTouchifyActionDockerGroup)
-
+    components: TypedList[CfgTouchifyAction] = []
+    toolshelves: TypedList[CfgToolshelf] = []
+    toolboxes: TypedList[CfgToolbox] = []
+    widget_layouts: TypedList[CfgWidgetPadPreset] = []
+    popups: TypedList[CfgTouchifyActionPopup] = []
+    canvas_presets: TypedList[CfgTouchifyActionCanvasPreset] = []
+    docker_groups: TypedList[CfgTouchifyActionDockerGroup] = []
     def __init__(self, location: str = "") -> None:
 
         if location == "":
@@ -43,6 +42,9 @@ class ResourcePack:
             self.metadata = None
             self.load()
 
+    def forceLoad(self):
+        pass
+
 
     def __str__(self):
         if self.INTERNAL_has_loaded:
@@ -57,7 +59,7 @@ class ResourcePack:
     def load(self):
 
         def loadItems(subpath: str, type: type):
-            result = TypedList(None, type)
+            result = []
             files = [f for f in os.listdir(subpath) if os.path.isfile(os.path.join(subpath, f))]
 
             for fileName in files:
@@ -72,7 +74,7 @@ class ResourcePack:
                     _item.INTERNAL_FILESYSTEM_MANAGED = True
                     result.append(_item)
                     
-            return result
+            return TypedList(result, type)
 
 
         self.INTERNAL_has_loaded = False
@@ -134,7 +136,7 @@ class ResourcePack:
         def saveItems(list: TypedList, folderPath: str):
             if not os.path.exists(folderPath):
                 os.mkdir(folderPath)
-                
+
             for item in list:
                 if not hasattr(item, "INTERNAL_FILESYSTEM_MANAGED"):
 

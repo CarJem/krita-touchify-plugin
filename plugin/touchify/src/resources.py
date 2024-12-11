@@ -3,6 +3,7 @@ from PyQt5 import QtGui
 import os
 
 
+from touchify.paths import BASE_DIR
 from touchify.src.components.pyqt.icon_engines.QSvgIconEngine import QSvgIconEngine
 
 

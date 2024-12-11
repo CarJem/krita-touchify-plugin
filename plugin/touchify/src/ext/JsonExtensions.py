@@ -1,5 +1,4 @@
 
-import copy
 import json
 from touchify.src.ext.types.TypedList import TypedList
 from typing import *
@@ -18,7 +17,7 @@ class JsonExtensions:
             with open(filePath) as f:
                 return type(**json.load(f))
         except:
-            return copy.deepcopy(type())
+            return type()
             
     def saveClass(data: any, filePath: str):
         with open(filePath, "w") as f:

@@ -8,7 +8,7 @@ import shutil
 HAS_ALREADY_LOADED: bool = False
 
 class ResourcePackRegistry:
-    presets: TypedList[ResourcePack] = TypedList(None, ResourcePack)
+    presets: TypedList[ResourcePack] = []
 
 
     def __init__(self) -> None:
@@ -20,6 +20,8 @@ class ResourcePackRegistry:
         self.presets.clear()
         self.INTERNAL_active_files.clear()
 
+        results = []
+
         directories = [f for f in os.listdir(self.INTERNAL_ROOT_DIRECTORY) if os.path.isdir(os.path.join(self.INTERNAL_ROOT_DIRECTORY, f))]
         for folderName in directories:
             fullFolderPath = os.path.join(self.INTERNAL_ROOT_DIRECTORY, folderName)
@@ -30,7 +32,9 @@ class ResourcePackRegistry:
                 item.INTERNAL_FILENAME_ID = folderName
                 item.INTERNAL_UUID_ID = folderName
                 item.INTERNAL_FILESYSTEM_MANAGED = True
-                self.presets.append(item)
+                results.append(item)
+        
+        self.presets = TypedList(results, ResourcePack)
 
 
     
