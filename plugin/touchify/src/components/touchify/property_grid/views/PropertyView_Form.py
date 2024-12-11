@@ -17,7 +17,7 @@ from touchify.src.ext.types.TypedList import *
 from touchify.src.resources import *
 
 
-ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
+ROW_SIZE_POLICY_X = QSizePolicy.Policy.Expanding
 ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -39,7 +39,7 @@ class PropertyView_Form(QWidget, PropertyView):
         self.setContentsMargins(0,0,0,0)
         
 
-        self.formLayout = QFormLayout()
+        self.formLayout = QFormLayout(self)
         self.formLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.formLayout.setSpacing(0)
         self.formLayout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
@@ -71,7 +71,7 @@ class PropertyView_Form(QWidget, PropertyView):
     def createLabel(self, varName: str, labelData: dict, hintData: dict, is_nested: bool = False):
         labelText = PropertyUtils_Extensions.getVariableLabel(labelData, varName)
         hintText = PropertyUtils_Extensions.getVariableHint(hintData, varName)
-        header = PropertyLabel(varName, labelText, hintText, is_nested)
+        header = PropertyLabel(self, varName, labelText, hintText, is_nested)
         self.labels.append(header)
         return header
     
@@ -79,6 +79,7 @@ class PropertyView_Form(QWidget, PropertyView):
         variable = PropertyUtils_Extensions.getVariable(source, _varName)
         field = PropertyUtils_Praser.getPropertyType(_varName, variable, source)
         if field:
+            field.setParent(self)
             field.propertyChanged.connect(self.parent_page.onPropertyChanged)
             field.setStackHost(self.parent_page.stackHost)
             field.setSizePolicy(ROW_SIZE_POLICY_X, ROW_SIZE_POLICY_Y)

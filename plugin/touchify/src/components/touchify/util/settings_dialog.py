@@ -22,7 +22,7 @@ class SettingsDialog(QDialog):
         
 
         self.editableConfig = copy.deepcopy(TouchifySettings.instance().getConfig())
-        self.propertyGrid = PropertyGrid()
+        self.propertyGrid = PropertyGrid(self)
         self.propertyGrid.updateDataObject(self.editableConfig)
 
         self.container = QVBoxLayout(self)

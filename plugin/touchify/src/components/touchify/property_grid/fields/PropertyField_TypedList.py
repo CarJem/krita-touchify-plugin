@@ -39,19 +39,20 @@ class PropertyField_TypedList(PropertyField):
         self.field_layout.setSpacing(0)
         self.field_layout.setContentsMargins(0,0,0,0)
 
-        self.view_layout = QVBoxLayout()
+        self.view_layout = QVBoxLayout(self)
         self.view_layout.setSpacing(0)
         self.view_layout.setContentsMargins(0,0,0,0)
         self.field_layout.addLayout(self.view_layout)
 
         self.view_editor = None
 
-        self.model = QtGui.QStandardItemModel()
+        self.model = QtGui.QStandardItemModel(self)
         if self.has_sub_array:
-            self.view = QTreeView()
+            self.view = QTreeView(self)
             self.view.setHeaderHidden(True)
         else:
-            self.view = QListView()
+            self.view = QListView(self)
+            self.view.setSelectionBehavior(QListView.SelectionBehavior.SelectItems)
         self.view.doubleClicked.connect(self.list_edit)
         self.view.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.updateList()
@@ -62,7 +63,7 @@ class PropertyField_TypedList(PropertyField):
 
         if self.has_property_view:
             from ..PropertyPage import PropertyPage
-            self.view_editor = PropertyPage(None)
+            self.view_editor = PropertyPage(self)
             self.view_editor.propertyChanged.connect(self.onPropertyViewUpdate)
             self.field_layout.addWidget(self.view_editor)
 
@@ -70,44 +71,44 @@ class PropertyField_TypedList(PropertyField):
         self.selection_model = self.view.selectionModel()
         self.selection_model.currentChanged.connect(self.updateSelected)
 
-        btns = QHBoxLayout()
+        btns = QHBoxLayout(self)
         btns.setAlignment(Qt.AlignmentFlag.AlignBottom)
         self.view_layout.addLayout(btns)
 
 
-        addButton = QPushButton()
+        addButton = QPushButton(self)
         addButton.setIcon(ResourceManager.iconLoader("material:plus"))
         addButton.setFixedHeight(24)
         addButton.clicked.connect(self.list_add)
         btns.addWidget(addButton)
 
-        removeButton = QPushButton()
+        removeButton = QPushButton(self)
         removeButton.setIcon(ResourceManager.iconLoader("material:minus"))
         removeButton.setFixedHeight(24)
         removeButton.clicked.connect(self.list_remove)
         btns.addWidget(removeButton)
 
         if self.add_remove_edit_only == False:
-            moveUpButton = QPushButton()
+            moveUpButton = QPushButton(self)
             moveUpButton.setIcon(ResourceManager.iconLoader("material:arrow-up"))
             moveUpButton.setFixedHeight(24)
             moveUpButton.clicked.connect(self.list_moveUp)
             btns.addWidget(moveUpButton)
 
-            moveDownButton = QPushButton()
+            moveDownButton = QPushButton(self)
             moveDownButton.setIcon(ResourceManager.iconLoader("material:arrow-down"))  
             moveDownButton.setFixedHeight(24)
             moveDownButton.clicked.connect(self.list_moveDown)
             btns.addWidget(moveDownButton)
 
-        editButton = QPushButton()
+        editButton = QPushButton(self)
         editButton.setIcon(ResourceManager.iconLoader("material:pencil"))                                                                                                                                                                                                                                                                                                                                 
         editButton.setFixedHeight(24)
         editButton.clicked.connect(self.list_edit)
         btns.addWidget(editButton)
 
         if self.add_remove_edit_only == False:
-            moreButton = QPushButton()
+            moreButton = QPushButton(self)
             moreButton.setIcon(ResourceManager.iconLoader("material:menu"))                                                                                                                                                                                                                                                                                                              
             moreButton.setFixedHeight(24)
             btns.addWidget(moreButton)
@@ -239,12 +240,13 @@ class PropertyField_TypedList(PropertyField):
             dlg.setWindowFlags(Qt.WindowType.Widget)
             dlg.rejected.connect(self.updateList)
             
-            container = QVBoxLayout(self)
+            container = QVBoxLayout(dlg)
             container.setContentsMargins(0,0,0,0)
             container.setSpacing(0)
 
             from ..PropertyPage import PropertyPage
             container_props = PropertyPage(self.stack_host)
+            container_props.setParent(dlg)
             container.addWidget(container_props)
             dlg.setLayout(container)
 

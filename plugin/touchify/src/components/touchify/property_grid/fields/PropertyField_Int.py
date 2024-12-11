@@ -16,7 +16,7 @@ class PropertyField_Int(PropertyField):
     def __init__(self, variable_name=str, variable_data=int, variable_source=any):
         super().__init__(variable_name, variable_data, variable_source, True)
         
-        self.editor = QSpinBox()
+        self.editor = QSpinBox(self)
         self.editor.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.editor.installEventFilter(MouseWheelWidgetAdjustmentGuard(self))
         self.editor.setMaximum(2147483647)

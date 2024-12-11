@@ -9,8 +9,8 @@ class PropertyLabel(QWidget):
 
 
 
-    def __init__(self, variable_name: str, label_text: str, hint_text: str, is_nested: bool = False) -> None:
-        super().__init__()
+    def __init__(self, parent: QWidget, variable_name: str, label_text: str, hint_text: str, is_nested: bool = False) -> None:
+        super().__init__(parent)
 
         self.variable_name = variable_name
         self.label_text = label_text

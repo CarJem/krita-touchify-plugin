@@ -24,7 +24,7 @@ class PropertyPage(QScrollArea):
     propertyChanged = pyqtSignal(bool)
 
     def __init__(self, parentStack: PropertyGrid):
-        super().__init__()
+        super().__init__(parentStack)
         self.stackHost = parentStack
         self.current_view_type = "unloaded"
 
@@ -36,7 +36,7 @@ class PropertyPage(QScrollArea):
         self.limiters: list[str]  = []
 
         self.formWidget: PropertyView = None
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn) 
         self.setWidgetResizable(True)
         self.setContentsMargins(0,0,0,0)
 
@@ -49,11 +49,15 @@ class PropertyPage(QScrollArea):
             case "tabs":
                 result = PropertyView_Tabs(self)
                 self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
             case "tabs_vertical":
                 result = PropertyView_Tabs(self, True)
                 self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
             case _:
                 result = PropertyView_Form(self)
+                self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+                self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         
         self.formWidget = result
         self.setWidget(self.formWidget)

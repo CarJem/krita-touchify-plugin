@@ -65,7 +65,7 @@ class PropertyField_Str(PropertyField):
             self.setLayout(editorLayout)
             self.setLayout(editorLayout)
         elif self.is_combobox:
-            self.editor = QComboBox()
+            self.editor = QComboBox(self)
             self.editor.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
             self.editor.installEventFilter(MouseWheelWidgetAdjustmentGuard(self))
             for item in self.combobox_items:

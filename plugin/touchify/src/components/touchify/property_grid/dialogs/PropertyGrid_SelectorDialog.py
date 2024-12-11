@@ -49,12 +49,12 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         self.header_icon.setFlat(True)
 
         self.header_layout = QHBoxLayout(self.header)
+        self.header.setLayout(self.header_layout)
         self.header_layout.setSpacing(0)
         self.header_layout.setContentsMargins(0,6,0,6)
         self.header_layout.addWidget(self.header_icon)
         self.header_layout.addWidget(self.header_text, 1)
         self.header_layout.addWidget(self.header_buttons)
-        self.header.setLayout(self.header_layout)
 
         self.dlg_layout = QVBoxLayout(self)
         self.dlg_layout.setContentsMargins(0,0,0,0)

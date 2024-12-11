@@ -1,20 +1,5 @@
-from PyQt5.QtWidgets import QApplication, QTabWidget, QTabBar, QStylePainter, QStyleOptionTabWidgetFrame, QStyleOptionTab, QStyle
+from PyQt5.QtWidgets import QApplication, QTabBar, QStylePainter, QStyleOptionTab, QStyle
 from PyQt5 import QtCore
-
-class VerticalQTabWidget(QTabWidget):
-    def __init__(self):
-        super(VerticalQTabWidget, self).__init__()
-        self.setTabBar(VerticalQTabBar())
-        self.setTabPosition(QTabWidget.TabPosition.West)
-
-    def paintEvent(self, event):
-        painter = QStylePainter(self)
-        option = QStyleOptionTabWidgetFrame()
-        self.initStyleOption(option)
-        option.rect = QtCore.QRect(QtCore.QPoint(self.tabBar().geometry().width(), 0),
-                                   QtCore.QSize(option.rect.width(), option.rect.height()))
-        painter.drawPrimitive(QStyle.PrimitiveElement.PE_FrameTabWidget, option)
-
 
 class VerticalQTabBar(QTabBar):
     def __init__(self, *args, **kwargs):

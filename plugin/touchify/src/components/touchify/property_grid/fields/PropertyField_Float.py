@@ -18,7 +18,7 @@ class PropertyField_Float(PropertyField):
     def __init__(self, variable_name=str, variable_data=float, variable_source=any):
         super().__init__(variable_name, variable_data, variable_source, True)
         
-        self.editor = QDoubleSpinBox()
+        self.editor = QDoubleSpinBox(self)
         self.editor.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.editor.installEventFilter(MouseWheelWidgetAdjustmentGuard(self))
         self.editor.setMaximum(sys.float_info.max)
