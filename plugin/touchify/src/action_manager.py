@@ -347,7 +347,7 @@ class ActionManager(QObject):
                 
     def __btn_brushButtonUpdate(self, __btn: TouchifyActionButton, id: str):
 
-        __brush_presets = ResourceManager.getBrushPresets()
+        __brush_presets = ResourceManager.brushPresets()
         if id not in __brush_presets: return
         btn_preset = __brush_presets[id]
         
@@ -416,7 +416,7 @@ class ActionManager(QObject):
     def button_brush(self, act: Trigger):
         btn: TouchifyActionButton | None = None
         id = act.brush_name
-        brush_presets = ResourceManager.getBrushPresets()
+        brush_presets = ResourceManager.brushPresets()
         
         if id in brush_presets:
             preset = brush_presets[id]
@@ -507,7 +507,7 @@ class ActionManager(QObject):
         contextMenu.show()
             
     def action_brush(self, id):
-        brush_presets = ResourceManager.getBrushPresets()
+        brush_presets = ResourceManager.brushPresets()
         if id in brush_presets:
             preset = brush_presets[id]
             self.appEngine.windowSource.activeView().setCurrentBrushPreset(preset)

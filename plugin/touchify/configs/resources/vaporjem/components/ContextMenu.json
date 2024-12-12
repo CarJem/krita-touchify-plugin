@@ -15,7 +15,7 @@
     "docker_id": "",
     "workspace_id": "",
     "docker_group_data": "none",
-    "popup_data": "vaporjem/popup/ContextMenu.json",
+    "popup_data": "vaporjem/popup/ContextMenu",
     "canvas_preset_data": "none",
     "json_version": 2
 }

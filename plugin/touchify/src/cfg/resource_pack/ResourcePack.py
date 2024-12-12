@@ -73,7 +73,7 @@ class ResourcePack:
                     _item.propertygrid_on_duplicate = types.MethodType(ResourcePack.onDuplicateListItem, _item)
                     _item.INTERNAL_FILEPATH_ID = filePath
                     _item.INTERNAL_FILENAME_ID = fileName
-                    _item.INTERNAL_UUID_ID = fileName[:-4]
+                    _item.INTERNAL_UUID_ID = fileName[:-5]
                     _item.INTERNAL_FILESYSTEM_MANAGED = True
                     result.append(_item)
                     
@@ -121,6 +121,7 @@ class ResourcePack:
             resource_pack_directory = os.path.join(BASE_DIR, 'configs', 'resources')
             folder_name = FileExtensions.fileStringify(str(self.metadata.registry_id))
             self.INTERNAL_ROOT_DIRECTORY = FileExtensions.uniquify(os.path.join(resource_pack_directory, folder_name))
+            self.metadata.registry_id = os.path.dirname(self.INTERNAL_ROOT_DIRECTORY)
 
         found_files: list[str] = []
 
@@ -132,7 +133,7 @@ class ResourcePack:
 
             path = FileExtensions.uniquify(os.path.join(folderPath, f"{result}.json"))
             name = os.path.basename(path)
-            uuid = name[:-4]
+            uuid = name[:-5]
 
             return uuid, name, path
 

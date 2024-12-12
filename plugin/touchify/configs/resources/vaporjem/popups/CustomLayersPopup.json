@@ -98,7 +98,7 @@
                                     "display_icon_hide": false,
                                     "display_text_hide": true,
                                     "display_custom_icon_enabled": true,
-                                    "display_custom_icon": "custom:clear_layer",
+                                    "display_custom_icon": "resource_pack:vaporjem:clear_layer",
                                     "display_custom_text_enabled": true,
                                     "display_custom_text": "Canvas Background",
                                     "extra_closes_popup": false,
@@ -123,7 +123,7 @@
                                             "workspace_id": "",
                                             "docker_group_data": "none",
                                             "popup_data": "none",
-                                            "canvas_preset_data": "touchify_defaults/canvas_preset/dark_canvas.json",
+                                            "canvas_preset_data": "touchify_defaults/canvas_preset/dark_canvas",
                                             "json_version": 2
                                         },
                                         {
@@ -144,7 +144,7 @@
                                             "workspace_id": "",
                                             "docker_group_data": "none",
                                             "popup_data": "none",
-                                            "canvas_preset_data": "touchify_defaults/canvas_preset/light_canvas.json",
+                                            "canvas_preset_data": "touchify_defaults/canvas_preset/light_canvas",
                                             "json_version": 2
                                         }
                                     ],

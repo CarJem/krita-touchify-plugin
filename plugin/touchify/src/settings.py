@@ -66,17 +66,17 @@ class TouchifySettings:
             if type == PopupData:
                 for item in pack.popups:
                     item: PopupData
-                    id = f"{pack.INTERNAL_FILENAME_ID}/popup/{item.INTERNAL_FILENAME_ID}"
+                    id = f"{pack.INTERNAL_UUID_ID}/popup/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
             elif type == DockerGroup:
                 for item in pack.docker_groups:
                     item: DockerGroup
-                    id = f"{pack.INTERNAL_FILENAME_ID}/docker_group/{item.INTERNAL_FILENAME_ID}"
+                    id = f"{pack.INTERNAL_UUID_ID}/docker_group/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
             elif type == CanvasPreset:
                 for item in pack.canvas_presets:
                     item: CanvasPreset
-                    id = f"{pack.INTERNAL_FILENAME_ID}/canvas_preset/{item.INTERNAL_FILENAME_ID}"
+                    id = f"{pack.INTERNAL_UUID_ID}/canvas_preset/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
 
         return None
@@ -96,32 +96,32 @@ class TouchifySettings:
             if type == PopupData:
                 for item in pack.popups:
                     item: PopupData
-                    id = TouchifySettings.RegistryKey(pack.INTERNAL_FILENAME_ID, pack.metadata.registry_name, "popup", item.INTERNAL_FILENAME_ID)
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "popup", item.INTERNAL_UUID_ID)
                     results[id] = item
             elif type == DockerGroup:
                 for item in pack.docker_groups:
                     item: DockerGroup
-                    id = TouchifySettings.RegistryKey(pack.INTERNAL_FILENAME_ID, pack.metadata.registry_name, "docker_group", item.INTERNAL_FILENAME_ID)
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "docker_group", item.INTERNAL_UUID_ID)
                     results[id] = item
             elif type == CanvasPreset:
                 for item in pack.canvas_presets:
                     item: CanvasPreset
-                    id = TouchifySettings.RegistryKey(pack.INTERNAL_FILENAME_ID, pack.metadata.registry_name, "canvas_preset", item.INTERNAL_FILENAME_ID)
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "canvas_preset", item.INTERNAL_UUID_ID)
                     results[id] = item
             elif type == ToolshelfData:
                 for item in pack.toolshelves:
                     item: ToolshelfData
-                    id = TouchifySettings.RegistryKey(pack.INTERNAL_FILENAME_ID, pack.metadata.registry_name, "toolshelves", item.INTERNAL_FILENAME_ID)
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "toolshelves", item.INTERNAL_UUID_ID)
                     results[id] = item
             elif type == ToolboxData:
                 for item in pack.toolboxes:
                     item: ToolboxData
-                    id = TouchifySettings.RegistryKey(pack.INTERNAL_FILENAME_ID, pack.metadata.registry_name, "toolboxes", item.INTERNAL_FILENAME_ID)
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "toolboxes", item.INTERNAL_UUID_ID)
                     results[id] = item
             elif type == WidgetLayout:
                 for item in pack.widget_layouts:
                     item: WidgetLayout
-                    id = TouchifySettings.RegistryKey(pack.INTERNAL_FILENAME_ID, pack.metadata.registry_name, "widget_layout", item.INTERNAL_FILENAME_ID)
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "widget_layout", item.INTERNAL_UUID_ID)
                     results[id] = item
 
         return results

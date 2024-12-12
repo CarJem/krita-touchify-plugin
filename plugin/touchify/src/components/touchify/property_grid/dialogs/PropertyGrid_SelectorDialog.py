@@ -99,14 +99,14 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         if mode == "icons":
             self.list_view.setViewMode(QListView.ViewMode.IconMode)
             self.list_view.setUniformItemSizes(True)
-            presets = ResourceManager.getIconList()
+            presets = ResourceManager.iconList("krita")
             for preset_key in presets:
                 listItem = QListWidgetItem()
                 listItem.setIcon(ResourceManager.iconLoader(preset_key))
                 listItem.setData(DATA_INDEX, preset_key)
                 self.list_view.addItem(listItem)
 
-            custom_icons = ResourceManager.getCustomIconList()
+            custom_icons = ResourceManager.iconList("custom")
             for customIconName in custom_icons:
                 listItem = QListWidgetItem()
                 listItem.setIcon(ResourceManager.iconLoader(customIconName))
@@ -132,7 +132,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         elif mode == "brushes":
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
-            presets = ResourceManager.getBrushPresets()
+            presets = ResourceManager.brushPresets()
             for preset_key in presets:
                 preset = presets[preset_key]
                 listItem = QListWidgetItem()

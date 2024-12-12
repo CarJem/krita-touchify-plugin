@@ -564,7 +564,7 @@
                                     "display_icon_hide": false,
                                     "display_text_hide": true,
                                     "display_custom_icon_enabled": true,
-                                    "display_custom_icon": "custom:clear_layer",
+                                    "display_custom_icon": "resource_pack:vaporjem:clear_layer",
                                     "display_custom_text_enabled": true,
                                     "display_custom_text": "Canvas Background",
                                     "extra_closes_popup": false,
@@ -589,7 +589,7 @@
                                             "workspace_id": "",
                                             "docker_group_data": "none",
                                             "popup_data": "none",
-                                            "canvas_preset_data": "touchify_defaults/canvas_preset/light_canvas.json",
+                                            "canvas_preset_data": "touchify_defaults/canvas_preset/light_canvas",
                                             "json_version": 2
                                         },
                                         {
@@ -610,7 +610,7 @@
                                             "workspace_id": "",
                                             "docker_group_data": "none",
                                             "popup_data": "none",
-                                            "canvas_preset_data": "touchify_defaults/canvas_preset/dark_canvas.json",
+                                            "canvas_preset_data": "touchify_defaults/canvas_preset/dark_canvas",
                                             "json_version": 2
                                         }
                                     ],
@@ -1319,7 +1319,7 @@
                                 "display_custom_text": "",
                                 "extra_closes_popup": false,
                                 "extra_composer_mode": false,
-                                "action_id": "Touchify_Res_VaporJemCore_BrushSmoothingMenu",
+                                "action_id": "Touchify_Res_VaporJem_BrushSmoothingMenu",
                                 "context_menu_actions": [],
                                 "brush_name": "",
                                 "docker_id": "",
@@ -1798,7 +1798,7 @@
                                 "display_custom_text": "",
                                 "extra_closes_popup": false,
                                 "extra_composer_mode": false,
-                                "action_id": "Touchify_Res_VaporJemCore_QuickSettingsPopup",
+                                "action_id": "Touchify_Res_VaporJem_QuickSettingsPopup",
                                 "context_menu_actions": [],
                                 "brush_name": "",
                                 "docker_id": "",
@@ -1824,7 +1824,7 @@
                                 "display_custom_text": "",
                                 "extra_closes_popup": false,
                                 "extra_composer_mode": false,
-                                "action_id": "Touchify_Res_VaporJemCore_brushOptionsPopup",
+                                "action_id": "Touchify_Res_VaporJem_brushOptionsPopup",
                                 "context_menu_actions": [],
                                 "brush_name": "",
                                 "docker_id": "",
