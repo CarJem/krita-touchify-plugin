@@ -9,25 +9,27 @@ class PropertyGrid(QWidget):
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        self.setLayout(QVBoxLayout(self))
-        self.layout().setSpacing(0)
-        self.layout().setContentsMargins(0,0,0,0)
+        self.our_layout = QVBoxLayout(self)
+        self.our_layout.setSpacing(0)
+        self.our_layout.setContentsMargins(0,0,0,0)
+        self.setLayout(self.our_layout)
 
         self.navi_connection = None
 
         self.naviBarRow = QWidget(self)
         self.naviBarRow.setContentsMargins(0,0,0,0)
-        self.naviBarRow.setLayout(QHBoxLayout(self))
-        self.naviBarRow.layout().setSpacing(0)
-        self.naviBarRow.layout().setContentsMargins(0,0,0,0)
-        self.layout().addWidget(self.naviBarRow)
+        self.naviBarLayout = QHBoxLayout(self)
+        self.naviBarLayout.setSpacing(0)
+        self.naviBarLayout.setContentsMargins(0,0,0,0)
+        self.naviBarRow.setLayout(self.naviBarLayout)
+        self.our_layout.addWidget(self.naviBarRow)
 
         self.naviBarBackBtn = QPushButton(self.naviBarRow)
         self.naviBarBackBtn.setContentsMargins(0,0,0,0)
         self.naviBarBackBtn.setFlat(True)
         self.naviBarBackBtn.setIcon(ResourceManager.materialIcon("arrow-left"))
         self.naviBarBackBtn.clicked.connect(self.goBack)
-        self.naviBarRow.layout().addWidget(self.naviBarBackBtn)
+        self.naviBarLayout.addWidget(self.naviBarBackBtn)
 
         self.naviTabBar = QTabBar(self.naviBarRow)
         self.naviTabBar.setExpanding(False)
@@ -36,7 +38,7 @@ class PropertyGrid(QWidget):
         self.naviTabBar.setUsesScrollButtons(True)
         self.naviTabBar.installEventFilter(self)
         self.naviTabBar.setTabsClosable(False)
-        self.naviBarRow.layout().addWidget(self.naviTabBar, 1)
+        self.naviBarLayout.addWidget(self.naviTabBar, 1)
 
         self.variable_path: list[str] = []
 
@@ -46,7 +48,7 @@ class PropertyGrid(QWidget):
 
         self.stackWidget = QStackedWidget(self)
         self.stackWidget.insertWidget(0, self.rootPropertyGrid)
-        self.layout().addWidget(self.stackWidget)
+        self.our_layout.addWidget(self.stackWidget)
 
         self.updateNavigationTabs()
 

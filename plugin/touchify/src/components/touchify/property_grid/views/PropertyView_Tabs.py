@@ -36,22 +36,13 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
             self.setTabPosition(QTabWidget.TabPosition.West)
             self.setStyleSheet("QTabWidget::tab-bar {left : 0;}")
 
+        self.setElideMode(Qt.TextElideMode.ElideNone)
+        self.tabBar().adjustSize()
+
         self.pages: list["PropertyPage"] = []
         self.tabs: list[str] = []
 
         self.setContentsMargins(0,0,0,0)
-
-
-    def paintEvent(self, event):
-        if self.is_vertical:
-            painter = QStylePainter(self)
-            option = QStyleOptionTabWidgetFrame()
-            self.initStyleOption(option)
-            option.rect = QtCore.QRect(QtCore.QPoint(self.tabBar().geometry().width(), 0),
-                                   QtCore.QSize(option.rect.width(), option.rect.height()))
-            painter.drawPrimitive(QStyle.PrimitiveElement.PE_FrameTabWidget, option)
-        else:
-            QTabWidget.paintEvent(self, event)
 
 
     def setStackHost(self, host: PropertyGrid):
