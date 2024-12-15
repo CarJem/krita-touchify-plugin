@@ -130,8 +130,9 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
         for variable_id in variable_data:    
             variable_id: str     
             page = None
-
-            if variable_id in known_sisters:
+            if variable_id.startswith("#"):
+                pass
+            elif variable_id in known_sisters:
                 sister_info = sister_data[variable_id]
                 if "is_group" in sister_info:
                     if bool(sister_info["is_group"]):

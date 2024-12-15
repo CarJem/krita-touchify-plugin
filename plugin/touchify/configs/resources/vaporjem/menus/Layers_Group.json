@@ -1,0 +1,50 @@
+{
+    "registry_id": "Layers_Group",
+    "registry_name": "[Layers] Group Layers Menu",
+    "json_version": 1,
+    "context_menu_actions": [
+        {
+            "registry_id": "",
+            "variant": "action",
+            "display_icon_hide": false,
+            "display_text_hide": false,
+            "display_custom_icon_enabled": false,
+            "display_custom_icon": "",
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "extra_closes_popup": false,
+            "extra_composer_mode": false,
+            "action_id": "create_quick_group",
+            "context_menu_actions": [],
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": "none",
+            "popup_data": "none",
+            "canvas_preset_data": "none",
+            "json_version": 2
+        },
+        {
+            "registry_id": "",
+            "variant": "action",
+            "display_icon_hide": false,
+            "display_text_hide": false,
+            "display_custom_icon_enabled": false,
+            "display_custom_icon": "",
+            "display_custom_text_enabled": false,
+            "display_custom_text": "",
+            "extra_closes_popup": false,
+            "extra_composer_mode": false,
+            "action_id": "quick_ungroup",
+            "context_menu_actions": [],
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": "none",
+            "popup_data": "none",
+            "canvas_preset_data": "none",
+            "json_version": 2
+        }
+    ]
+
+}

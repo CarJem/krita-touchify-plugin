@@ -39,12 +39,11 @@ class PropertyView_Form(QWidget, PropertyView):
         self.setContentsMargins(0,0,0,0)
         
 
-        self.formLayout = QFormLayout(self)
-        self.formLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.formLayout.setSpacing(0)
-        self.formLayout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
-        self.formLayout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(self.formLayout)
+        self.gridLayout = QVBoxLayout(self)
+        self.gridLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.gridLayout.setSpacing(0)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(self.gridLayout)
 
 
     def setStackHost(self, host: PropertyGrid):
@@ -134,9 +133,29 @@ class PropertyView_Form(QWidget, PropertyView):
         self.fields.clear()
         self.labels.clear()
         
-        PropertyUtils_Extensions.clearLayout(self.formLayout)
+        PropertyUtils_Extensions.clearLayout(self.gridLayout)
 
     def updateDataObject(self, item):
+
+        def createColumn(sectionLayout: QBoxLayout):
+            formLayout = QFormLayout()
+            formLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+            formLayout.setSpacing(0)
+            formLayout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
+            formLayout.setContentsMargins(2, 2, 2, 2)
+            sectionLayout.addLayout(formLayout)
+            return formLayout
+
+        def createSection():
+            sectionLayout = QHBoxLayout()
+            sectionLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+            sectionLayout.setSpacing(0)
+            sectionLayout.setContentsMargins(0,0,0,0)
+            self.gridLayout.addLayout(sectionLayout)
+            return sectionLayout
+            
+
+
         PropertyView.updateDataObject(self, item)
         self.unloadPropertyView()
 
@@ -148,11 +167,20 @@ class PropertyView_Form(QWidget, PropertyView):
         variable_data, known_sisters, sister_data = PropertyView.getClassVariablesWithSisters(self, item)
 
         no_labels = "no_labels" in self.parent_page.modifiers
+        
+        sectionLayout = createSection()
+        formLayout = createColumn(sectionLayout)
 
         for variable_id in variable_data:    
             variable_id: str     
             field = None
-            if variable_id in known_sisters:
+            if variable_id.startswith("#"):
+                if variable_id == "#NEW_SECTION":
+                    sectionLayout = createSection()
+                    formLayout = createColumn(sectionLayout)
+                elif variable_id == "#NEW_COLUMN":
+                    formLayout = createColumn(sectionLayout)
+            elif variable_id in known_sisters:
                 sister_info = sister_data[variable_id]
 
                 is_group = False
@@ -169,14 +197,14 @@ class PropertyView_Form(QWidget, PropertyView):
             field.setContentsMargins(0,0,0,0)
 
             if no_labels:
-                self.formLayout.addRow(field)
+                formLayout.addRow(field)
             else:
                 label = self.createLabel(variable_id, labelData, hintData)
                 label.setStyleSheet("font-weight: bold;")
                 #label.setMaximumWidth(250)
                 label.setContentsMargins(5,0,5,0)
-                self.formLayout.addRow(label)
-                self.formLayout.addRow(field)
+                formLayout.addRow(label)
+                formLayout.addRow(field)
 
 
 

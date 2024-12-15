@@ -9,6 +9,7 @@ from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
 from touchify.src.cfg.popup.PopupData import PopupData
 from touchify.src.cfg.toolbox.ToolboxData import ToolboxData
 from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
+from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
 from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions
@@ -23,6 +24,7 @@ class ResourcePack:
     def __defaults__(self):
         self.metadata: ResourcePackMetadata | None = None
         self.triggers: TypedList[Trigger] = []
+        self.menus: TypedList[TriggerMenu] = []
         self.popups: TypedList[PopupData] = []
         self.docker_groups: TypedList[DockerGroup] = []
         self.canvas_presets: TypedList[CanvasPreset] = []
@@ -47,6 +49,7 @@ class ResourcePack:
 
     def forceLoad(self):
         self.triggers = TypedList(self.triggers, Trigger)
+        self.menus = TypedList(self.menus, TriggerMenu)
         self.popups = TypedList(self.popups, PopupData)
         self.docker_groups = TypedList(self.docker_groups, DockerGroup)
         self.canvas_presets = TypedList(self.canvas_presets, CanvasPreset)
@@ -96,6 +99,9 @@ class ResourcePack:
 
                 elif os.path.isdir(contentPath) and contentName == "triggers":
                     self.triggers = loadItems(contentPath, Trigger)
+
+                elif os.path.isdir(contentPath) and contentName == "menus":
+                    self.menus = loadItems(contentPath, TriggerMenu)
 
                 elif os.path.isdir(contentPath) and contentName == "toolboxes":
                     self.toolboxes = loadItems(contentPath, ToolboxData)
@@ -180,6 +186,7 @@ class ResourcePack:
 
         JsonExtensions.saveClass(self.metadata, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "metadata.json"))
         saveItems(self.triggers, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "triggers"))
+        saveItems(self.menus, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "menus"))
         saveItems(self.toolboxes, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "toolboxes"))
         saveItems(self.toolshelves, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "toolshelves"))
         saveItems(self.widget_layouts, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "widget_layouts"))
@@ -212,6 +219,7 @@ class ResourcePack:
     def propertygrid_labels(self):
         labels = {}
         labels["triggers"] = "Triggers"
+        labels["menus"] = "Menus"
         labels["toolboxes"] = "Toolboxes"
         labels["toolshelves"] = "Toolshelves"
         labels["widget_layouts"] = "Widget Layouts"

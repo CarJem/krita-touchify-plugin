@@ -53,6 +53,9 @@ class PopupData:
         self.docker_width: int = 0
         self.docker_height: int = 0
 
+
+        self.toolshelf_id: str = ""
+
         self.json_version: int = 4
 
 
@@ -60,10 +63,8 @@ class PopupData:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
-        self.toolshelf_data: ToolshelfData = ToolshelfData()
         args = BackwardsCompatibility.PopupData(args)        
-        Extensions.dictToObject(self, args, [ToolshelfData])
+        Extensions.dictToObject(self, args, [])
         self.actions_items = Extensions.init_list(args, "actions_items", PopupDataItem)
 
     def __str__(self):
@@ -117,7 +118,7 @@ class PopupData:
         ]
 
         toolshelf_mode_settings = [
-            "toolshelf_data"
+            "toolshelf_id"
         ]
 
 
@@ -157,7 +158,7 @@ class PopupData:
         ]
 
         toolshelf_mode_settings = [
-            "toolshelf_data"
+            "toolshelf_id"
         ]
 
         if self.type != PopupData.Variants.Docker:
@@ -186,7 +187,7 @@ class PopupData:
         labels["actions_items"] = "Actions"
         labels["actions_close_on_click"] = "Close on Click"
         labels["actions_opacity"] = "Actions Opacity"
-        labels["toolshelf_data"] = "Toolshelf Data"
+        labels["toolshelf_id"] = "Toolshelf ID"
         labels["window_title"] = "Window Title"
         labels["closing_method"] = "Closing Method"
         labels["popup_position"] = "Popup Position"
@@ -201,5 +202,5 @@ class PopupData:
         restrictions["popup_position_y"] = {"type": "values", "entries": self.PopupPosition.values()}
         restrictions["closing_method"] = {"type": "values", "entries": self.ClosingMethod.values()}
         restrictions["actions_opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
-        restrictions["toolshelf_data"] = {"type": "expandable"}
+        restrictions["toolshelf_id"] = {"type": "registry_toolshelf_selection"}
         return restrictions

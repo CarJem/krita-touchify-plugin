@@ -9,6 +9,7 @@ from touchify.src.cfg.popup.PopupData import PopupData
 from touchify.src.cfg.toolbox.ToolboxData import ToolboxData
 from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 from touchify.src.cfg.TouchifyRegistryPreferences import TouchifyRegistryPreferences
+from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
 from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.ext.KritaSettings import KritaSettings
 from touchify.src.variables import *
@@ -56,9 +57,13 @@ class TouchifySettings:
         return self.cfg
     
     def getRegistryItem(self, item_id: str, type: type) -> None |\
+                                                        TriggerMenu |\
                                                         PopupData |\
                                                         DockerGroup |\
-                                                        CanvasPreset:
+                                                        CanvasPreset |\
+                                                        ToolshelfData |\
+                                                        ToolboxData |\
+                                                        WidgetLayout:
         cfg = self.getConfig()
         for pack in cfg.resources.presets:
             pack: ResourcePack
@@ -68,6 +73,26 @@ class TouchifySettings:
                     item: PopupData
                     id = f"{pack.INTERNAL_UUID_ID}/popup/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
+            elif type == TriggerMenu:
+                for item in pack.menus:
+                    item: TriggerMenu
+                    id = f"{pack.INTERNAL_UUID_ID}/menu/{item.INTERNAL_UUID_ID}"
+                    if item_id == id: return item
+            elif type == ToolshelfData:
+                for item in pack.toolshelves:
+                    item: ToolshelfData
+                    id = f"{pack.INTERNAL_UUID_ID}/toolshelves/{item.INTERNAL_UUID_ID}"
+                    if item_id == id: return item
+            elif type == ToolboxData:
+                for item in pack.toolboxes:
+                    item: ToolboxData
+                    id = f"{pack.INTERNAL_UUID_ID}/toolboxes/{item.INTERNAL_UUID_ID}"
+                    if item_id == id: return item
+            elif type == WidgetLayout:
+                for item in pack.widget_layouts:
+                    item: WidgetLayout
+                    id = f"{pack.INTERNAL_UUID_ID}/widget_layout/{item.INTERNAL_UUID_ID}"
+                    if item_id == id: return item                
             elif type == DockerGroup:
                 for item in pack.docker_groups:
                     item: DockerGroup
@@ -82,6 +107,7 @@ class TouchifySettings:
         return None
     
     def getRegistry(self, type: type) -> dict[RegistryKey, any] |\
+                                        dict[RegistryKey, TriggerMenu] |\
                                         dict[RegistryKey,PopupData] |\
                                         dict[RegistryKey,DockerGroup] |\
                                         dict[RegistryKey,CanvasPreset] |\
@@ -97,6 +123,11 @@ class TouchifySettings:
                 for item in pack.popups:
                     item: PopupData
                     id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "popup", item.INTERNAL_UUID_ID)
+                    results[id] = item
+            elif type == TriggerMenu:
+                for item in pack.menus:
+                    item: TriggerMenu
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "menus", item.INTERNAL_UUID_ID)
                     results[id] = item
             elif type == DockerGroup:
                 for item in pack.docker_groups:

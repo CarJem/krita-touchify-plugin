@@ -2,10 +2,13 @@ from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from touchify.src.cfg.menu.TriggerMenuItem import TriggerMenuItem
 from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
 from touchify.src.cfg.resource_pack.ResourcePackMetadata import ResourcePackMetadata
 from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
+from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
+from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 from touchify.src.components.pyqt.event_filters.MouseReleaseListener import MouseReleaseListener
 from touchify.src.components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
@@ -69,7 +72,7 @@ class ActionManager(QObject):
             case Trigger.Variants.DockerGroup:
                 self.action_dockergroup(data.docker_group_data)
             case Trigger.Variants.Menu:
-                self.action_menu(action, data)
+                self.action_menu(action, data.context_menu_id)
             case Trigger.Variants.Action:
                 self.action_trigger(data)
             
@@ -97,17 +100,17 @@ class ActionManager(QObject):
 
         return result
     
-    def createMenuItem(self, parent: TouchifyActionMenu, data: Trigger):
-        if data.variant == Trigger.Variants.Action:
+    def createMenuItem(self, parent: TouchifyActionMenu, data: TriggerMenuItem):
+        if data.variant == TriggerMenuItem.Variants.Action:
             if data.action_id and data.action_id in self.registeredActions:
                 data = self.registeredActionsData[data.action_id]
 
         match data.variant:
-            case Trigger.Variants.Menu:
+            case TriggerMenuItem.Variants.Menu:
                 actual_menu = TouchifyActionMenu(data, parent, self)
                 actual_menu.setTitle(data.display_custom_text)
                 parent.addMenu(actual_menu)
-            case Trigger.Variants.Action:
+            case TriggerMenuItem.Variants.Action:
                 if data.action_id in CommonActions.EXPANDING_SPACERS:
                     actual_action = QAction(parent)
                     actual_action.setSeparator(True)
@@ -145,7 +148,10 @@ class ActionManager(QObject):
             elif data.type == PopupData.Variants.Docker:
                 popup = PopupDialog_Docker(self.appEngine.windowSource.qwindow().window(), data, self.appEngine.docker_management)
             elif data.type == PopupData.Variants.Toolshelf:
-                popup = PopupDialog_Toolshelf(self.appEngine.windowSource.qwindow().window(), data, self, self.appEngine.docker_management)
+                toolshelf_data: ToolshelfData = TouchifySettings.instance().getRegistryItem(data.toolshelf_id, ToolshelfData)
+                if not isinstance(toolshelf_data, ToolshelfData) or toolshelf_data == None: return
+
+                popup = PopupDialog_Toolshelf(self.appEngine.windowSource.qwindow().window(), data, toolshelf_data, self, self.appEngine.docker_management)
             else:
                 popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
             self.active_popups[popup_id] = popup
@@ -426,10 +432,13 @@ class ActionManager(QObject):
         return btn
                    
     def button_menu(self, act: Trigger):
+        data: TriggerMenu = TouchifySettings.instance().getRegistryItem(act.context_menu_id, TriggerMenu)
+        if not isinstance(data, TriggerMenu) or data == None: return None
+        
         btn: TouchifyActionButton = self.button_main(None, act.display_custom_text, False)   
         self.__setButtonDisplay(act, btn)
         
-        contextMenu = TouchifyActionMenu(act, btn, self)
+        contextMenu = TouchifyActionMenu(data, btn, self)
         btn.setMenu(contextMenu)
         btn.clicked.connect(btn.showMenu)
         return btn
@@ -501,7 +510,10 @@ class ActionManager(QObject):
             if action:
                 action.trigger()
     
-    def action_menu(self, action: QAction, data: Trigger):
+    def action_menu(self, action: QAction, id: str):
+        data: TriggerMenu = TouchifySettings.instance().getRegistryItem(id, TriggerMenu)
+        if not isinstance(data, TriggerMenu) or data == None: return
+
         _parent = self.__getActionSource(action)
         contextMenu = TouchifyActionMenu(data, _parent, self)
         contextMenu.show()

@@ -32,7 +32,7 @@ class PropertyUtils_Extensions:
                 not attr.startswith("_"  + type(obj).__name__ + "__")]
         
         for item in sorted_results[:]:
-            if item not in found_results and item not in sister_items:
+            if item not in found_results and item not in sister_items and item.startswith("#") == False:
                 sorted_results.remove(item)
         
         for item in found_results:

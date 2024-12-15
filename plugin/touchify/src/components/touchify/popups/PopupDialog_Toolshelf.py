@@ -21,12 +21,12 @@ class PopupDialog_Toolshelf(PopupDialog):
 
 
 
-    def __init__(self, parent: QWidget, args: PopupData, action_manager: "ActionManager", docker_manager: "DockerManager"):     
+    def __init__(self, parent: QWidget, args: PopupData, toolshelf_data: ToolshelfData, action_manager: "ActionManager", docker_manager: "DockerManager"):     
         super().__init__(parent, args)
 
         self.docker_manager: "DockerManager" = docker_manager
         self.actions_manager: "ActionManager" = action_manager
-        self.toolshelf_data = args.toolshelf_data
+        self.toolshelf_data = toolshelf_data
 
         self.toolshelf_allow_resizing = self.windowMode == PopupData.WindowType.Window
         if self.toolshelf_allow_resizing:

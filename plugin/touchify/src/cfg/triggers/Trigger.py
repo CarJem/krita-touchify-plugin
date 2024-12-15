@@ -1,9 +1,5 @@
-from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
-from touchify.src.cfg.popup.PopupData import PopupData
-from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.types.StrEnum import StrEnum
-from touchify.src.ext.types.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 
@@ -39,7 +35,7 @@ class Trigger:
         self.action_id: str = ""
 
         #Menu Params
-        self.context_menu_actions: TypedList["Trigger"] = []
+        self.context_menu_id: str = ""
 
         #Brush Params
         self.brush_name: str = ""
@@ -65,8 +61,7 @@ class Trigger:
     def __init__(self, **args) -> None:
         self.__defaults__()
         args = BackwardsCompatibility.Trigger(args)
-        Extensions.dictToObject(self, args, [PopupData, DockerGroup, CanvasPreset])
-        self.context_menu_actions = Extensions.init_list(args, "context_menu_actions", Trigger)
+        Extensions.dictToObject(self, args, [])
 
     def getFileName(self):
         return FileExtensions.fileStringify(self.registry_id)
@@ -108,7 +103,8 @@ class Trigger:
 
 
     def forceLoad(self):
-        self.context_menu_actions = TypedList(self.context_menu_actions, Trigger)
+        pass
+    
 
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
@@ -121,25 +117,25 @@ class Trigger:
     def propertygrid_sorted(self):
         return [
             "registry_id",
-            #Display Params
-            "display_custom_text_enabled",
-            "display_custom_icon_enabled",
-            #Special Options
-            "extra_closes_popup",
-            #Common Params
+
+            "#NEW_SECTION",
+            
+            "display_custom_text_opt",
+            "display_custom_icon_opt",
+            "display_opt",
+
+            "#NEW_COLUMN",
+
             "variant",
-            #Action Params
             "action_id",
-            #Menu Params
-            "context_menu_actions",
-            #Brush Params
+            "context_menu_id",
             "brush_name",
-            #Others
             "docker_id",
             "workspace_id",
             "docker_group_data",
             "popup_data",
             "canvas_preset_data"
+            "extra_opt",
         ]
 
     def propertygrid_hidden(self):
@@ -147,7 +143,7 @@ class Trigger:
         if self.variant != Trigger.Variants.Action:
             result.append("action_id")
         if self.variant != Trigger.Variants.Menu:
-            result.append("context_menu_actions")            
+            result.append("context_menu_id")            
         if self.variant != Trigger.Variants.Brush:
             result.append("brush_name")
         if self.variant != Trigger.Variants.Workspace:
@@ -186,7 +182,7 @@ class Trigger:
 
         labels["action_id"] = "Action ID"
 
-        labels["context_menu_actions"] = "Menu Actions"
+        labels["context_menu_id"] = "Menu ID"
 
         labels["brush_name"] = "Brush"
         
@@ -211,4 +207,5 @@ class Trigger:
         restrictions["docker_group_data"] = {"type": "registry_docker_group_selection"}
         restrictions["popup_data"] = {"type": "registry_popup_selection"}
         restrictions["canvas_preset_data"] = {"type": "registry_canvas_preset_selection"}
+        restrictions["context_menu_id"] = {"type": "registry_menu_selection"}
         return restrictions

@@ -5,6 +5,8 @@ from krita import *
 from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
 from touchify.src.cfg.popup.PopupData import PopupData
+from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
+from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 from touchify.src.settings import TouchifySettings
 from touchify.src.stylesheet import Stylesheet
 from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
@@ -121,6 +123,8 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             if mode == "popups": registry_type = PopupData
             elif mode == "docker_groups": registry_type = DockerGroup
             elif mode == "canvas_presets": registry_type = CanvasPreset
+            elif mode == "menus": registry_type = TriggerMenu
+            elif mode == "toolshelves": registry_type = ToolshelfData
             else: return
 
             presets = TouchifySettings.instance().getRegistry(registry_type)

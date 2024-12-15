@@ -48,12 +48,10 @@ class PropertyField_Str(PropertyField):
 
             if self.special_selector_type == "icons": 
                 self.editorHelper.setIcon(ResourceManager.iconLoader(self.variable_data.replace("\n", "\\n")))
-            elif self.special_selector_type == "dockers": 
-                self.editorHelper.setIcon(ResourceManager.iconLoader("properties"))
-            elif self.special_selector_type == "actions":
-                self.editorHelper.setIcon(ResourceManager.iconLoader("properties"))
             elif self.special_selector_type == "brushes":
                 self.editorHelper.setIcon(ResourceManager.brushIcon(self.variable_data.replace("\n", "\\n")))
+            else:
+                self.editorHelper.setIcon(ResourceManager.iconLoader("properties"))
 
             self.editorHelper.clicked.connect(lambda: self.helperRequested(self.special_selector_type))
 
@@ -134,6 +132,14 @@ class PropertyField_Str(PropertyField):
                 elif restriction["type"] == "registry_canvas_preset_selection":
                     self.is_special_selector = True
                     self.special_selector_type = "canvas_presets"
+                    list_setup = True
+                elif restriction["type"] == "registry_menu_selection":
+                    self.is_special_selector = True
+                    self.special_selector_type = "menus"
+                    list_setup = True
+                elif restriction["type"] == "registry_toolshelf_selection":
+                    self.is_special_selector = True
+                    self.special_selector_type = "toolshelves"
                     list_setup = True
                 elif restriction["type"] == "hotkey_selection":
                     combobox_items = list[tuple[str, str]]()
