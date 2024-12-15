@@ -6,7 +6,7 @@ from touchify.src.cfg.menu.TriggerMenuItem import TriggerMenuItem
 class TriggerMenu:
 
     def __defaults__(self):
-        self.registry_id: str = ""    
+        self.registry_id: str = "NewTriggerMenu"    
         self.registry_name: str = "New Trigger Menu"  
 
         #Menu Params

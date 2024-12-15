@@ -31,7 +31,7 @@ class PopupData:
         End = "end"
 
     def __defaults__(self):
-        self.id: str = ""
+        self.id: str = "NewPopup"
         self.window_type: str = "popup"
         self.window_title: str = ""
         self.type: str = "actions"

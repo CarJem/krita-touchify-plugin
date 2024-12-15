@@ -25,7 +25,8 @@ class PropertyField_TypedList(PropertyField):
         self.has_property_view = False
         
 
-        self.add_remove_edit_only = False
+        self.allow_move = True
+        self.allow_clipboard = True
 
         self.test_restrictions(manual_restrictions)
 
@@ -88,7 +89,7 @@ class PropertyField_TypedList(PropertyField):
         removeButton.clicked.connect(self.list_remove)
         btns.addWidget(removeButton)
 
-        if self.add_remove_edit_only == False:
+        if self.allow_move == True:
             moveUpButton = QPushButton(self)
             moveUpButton.setIcon(ResourceManager.iconLoader("material:arrow-up"))
             moveUpButton.setFixedHeight(24)
@@ -107,7 +108,7 @@ class PropertyField_TypedList(PropertyField):
         editButton.clicked.connect(self.list_edit)
         btns.addWidget(editButton)
 
-        if self.add_remove_edit_only == False:
+        if self.allow_clipboard == True:
             moreButton = QPushButton(self)
             moreButton.setIcon(ResourceManager.iconLoader("material:menu"))                                                                                                                                                                                                                                                                                                              
             moreButton.setFixedHeight(24)
@@ -142,7 +143,11 @@ class PropertyField_TypedList(PropertyField):
             if restriction["type"] == "property_view":
                 self.has_property_view = True
             if restriction["type"] == "add_remove_edit_only":
-                self.add_remove_edit_only = True
+                self.allow_move = False
+                self.allow_clipboard = False
+            if restriction["type"] == "inmovable_list":
+                self.allow_move = False
+
 
 
     def setStackHost(self, host):

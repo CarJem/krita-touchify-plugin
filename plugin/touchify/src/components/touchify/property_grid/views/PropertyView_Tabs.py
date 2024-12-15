@@ -20,6 +20,7 @@ ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from touchify.src.components.touchify.property_grid.PropertyPage import PropertyPage
+    from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
 
 
 class PropertyView_Tabs(QTabWidget, PropertyView):
@@ -39,7 +40,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
         self.setElideMode(Qt.TextElideMode.ElideNone)
         self.tabBar().adjustSize()
 
-        self.pages: list["PropertyPage"] = []
+        self.pages: list["PropertyPage" | "PropertyGrid"] = []
         self.tabs: list[str] = []
 
         self.setContentsMargins(0,0,0,0)
@@ -71,11 +72,14 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
         restictions = PropertyUtils_Extensions.classRestrictions(source, _varName)
 
         is_expandable_area = False
+        has_nested_tabs = False
 
         for entry in restictions:
             for key, value in entry.items():
                 if key == "type" and value == "expandable":
                     is_expandable_area = True
+                elif key == "type" and value == "nested_tabs":
+                    has_nested_tabs = True
 
         if is_expandable_area:
             from touchify.src.components.touchify.property_grid.PropertyPage import PropertyPage
@@ -86,16 +90,27 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
             self.pages.append(page)
             return page
         else:
-            from touchify.src.components.touchify.property_grid.PropertyPage import PropertyPage
-            page = PropertyPage(self.parent_page.stackHost)
-            page.propertyChanged.connect(self.onPropertyChanged)
-            page.setParent(self)
-            page.setLimiters([_varName])
-            page.setModifiers({"no_labels": ""})
-            page.setViewOverride("default")
-            page.updateDataObject(source)
-            self.pages.append(page)
-            return page
+            if has_nested_tabs:
+                from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
+                page = PropertyGrid(self)
+                page.rootPropertyGrid.propertyChanged.connect(self.onPropertyChanged)
+                page.rootPropertyGrid.setLimiters([_varName])
+                page.rootPropertyGrid.setModifiers({"no_labels": ""})
+                page.rootPropertyGrid.setViewOverride("default")
+                page.rootPropertyGrid.updateDataObject(source)
+                self.pages.append(page)
+                return page
+            else:
+                from touchify.src.components.touchify.property_grid.PropertyPage import PropertyPage
+                page = PropertyPage(self.parent_page.stackHost)
+                page.propertyChanged.connect(self.onPropertyChanged)
+                page.setParent(self)
+                page.setLimiters([_varName])
+                page.setModifiers({"no_labels": ""})
+                page.setViewOverride("default")
+                page.updateDataObject(source)
+                self.pages.append(page)
+                return page
         
     def updateVisibility(self):
         if self.item == None:

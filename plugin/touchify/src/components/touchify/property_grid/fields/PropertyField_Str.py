@@ -61,7 +61,6 @@ class PropertyField_Str(PropertyField):
             editorLayout.addWidget(self.editor)
             editorLayout.addWidget(self.editorHelper)
             self.setLayout(editorLayout)
-            self.setLayout(editorLayout)
         elif self.is_combobox:
             self.editor = QComboBox(self)
             self.editor.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
@@ -139,7 +138,7 @@ class PropertyField_Str(PropertyField):
                     list_setup = True
                 elif restriction["type"] == "registry_toolshelf_selection":
                     self.is_special_selector = True
-                    self.special_selector_type = "toolshelves"
+                    self.special_selector_type = "toolshelf"
                     list_setup = True
                 elif restriction["type"] == "hotkey_selection":
                     combobox_items = list[tuple[str, str]]()

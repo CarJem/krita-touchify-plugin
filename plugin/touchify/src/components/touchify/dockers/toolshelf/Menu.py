@@ -98,7 +98,7 @@ class Menu(QMenu):
     def loadPresets(self):
         self.clear()
 
-        menus: dict[str, QMenu] = {}
+        menus: dict[str, dict[str, QMenu]] = {}
         
         registry = TouchifySettings.instance().getRegistry(ToolshelfData)
         if registry != None:
@@ -106,8 +106,6 @@ class Menu(QMenu):
                 if not key.id in menus:
                     menus[key.id] = self.addMenu(key.name)
 
-
-                
                 preset: ToolshelfData
                 action = QAction(preset.preset_name, self)
                 action.setCheckable(True)

@@ -1,6 +1,6 @@
 {
     "registry_id": "BrushSmoothingMenu",
-    "registry_name": "Brush Smoothing",
+    "registry_name": "[Common] Brush Smoothing",
     "context_menu_actions": [
         {
             "registry_id": "",

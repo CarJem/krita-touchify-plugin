@@ -15,6 +15,7 @@ class ToolshelfData:
         self.homepage: ToolshelfDataPage = ToolshelfDataPage() 
         self.header_options: ToolshelfDataOptions = ToolshelfDataOptions()
         self.preset_name: str = "New Toolshelf Preset"
+        self.preset_group: str = ""
 
         self.json_version: int = 3
 
@@ -42,7 +43,7 @@ class ToolshelfData:
     
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
-        row["metadata"] = {"items": ["preset_name"], "is_group": True}
+        row["metadata"] = {"items": ["preset_name", "preset_group"], "is_group": True}
         row["pages_group"] = {"items": ["homepage", "pages"], "is_group": True}
         return row
     
@@ -53,6 +54,7 @@ class ToolshelfData:
         labels = {}
         labels["metadata"] = "Metadata"
         labels["preset_name"] = "Preset Name"
+        labels["preset_group"] = "Preset Group"
 
         labels["header_options"] = "Options"
         

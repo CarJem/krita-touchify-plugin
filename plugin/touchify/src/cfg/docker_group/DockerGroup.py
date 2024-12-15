@@ -7,7 +7,7 @@ from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 class DockerGroup:
 
     def __defaults__(self):
-        self.id: str = ""
+        self.id: str = "NewDockerGroup"
         self.tabs_mode: bool = True
         self.group_id: str = ""
         self.docker_names: TypedList[DockerGroupItem] = []

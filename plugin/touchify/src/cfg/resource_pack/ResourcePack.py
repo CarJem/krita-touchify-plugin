@@ -215,6 +215,19 @@ class ResourcePack:
     
     def propertygrid_view_type(self):
         return "tabs_vertical"
+    
+    def propertygrid_sorted(self):
+        return [
+            "metadata",
+            "triggers",
+            "menus",
+            "toolboxes",
+            "toolshelves",
+            "widget_layouts",
+            "popups",
+            "docker_groups",
+            "canvas_presets"
+        ]
 
     def propertygrid_labels(self):
         labels = {}
@@ -232,4 +245,12 @@ class ResourcePack:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["metadata"] = {"type": "expandable"}
+        restrictions["triggers"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
+        restrictions["menus"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
+        restrictions["toolboxes"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
+        restrictions["toolshelves"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
+        restrictions["widget_layouts"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
+        restrictions["popups"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
+        restrictions["docker_groups"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
+        restrictions["canvas_presets"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
         return restrictions

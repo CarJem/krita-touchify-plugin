@@ -35,9 +35,8 @@ class TriggerMenuItem(Trigger):
 
     def propertygrid_sorted(self):
         result = super().propertygrid_sorted()
-        for key, value in result.items():
-            if "context_menu_id" in value:
-                value.insert(value.index("context_menu_id"), "context_menu_actions")
+        if "context_menu_id" in result:
+            result.insert(result.index("context_menu_id"), "context_menu_actions")
         return result
 
     def propertygrid_hidden(self):

@@ -16,7 +16,7 @@ class Trigger:
         CanvasPreset = "canvas_preset"
 
     def __defaults__(self):
-        self.registry_id: str = ""      
+        self.registry_id: str = "NewTrigger"      
         self.variant: str = "action"
 
         #Display Params
@@ -119,7 +119,7 @@ class Trigger:
             "registry_id",
 
             "#NEW_SECTION",
-            
+
             "display_custom_text_opt",
             "display_custom_icon_opt",
             "display_opt",

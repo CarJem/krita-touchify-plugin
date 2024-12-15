@@ -24,6 +24,8 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
     def __init__(self, parent: QStackedWidget):
         super().__init__(parent)
 
+        self.selector_registry_type = None
+
         self.list_view = QListWidget()
         self.list_view.setResizeMode(QListView.ResizeMode.Adjust)
         self.list_view.setMovement(QListView.Movement.Static)
@@ -32,6 +34,8 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         self.list_view.itemClicked.connect(self.updateSelected)
 
         self.selected_item = "null"
+
+        self.show_status_bar = False
 
         self.filter_bar = QLineEdit()
         self.filter_bar.setPlaceholderText("Filter...")
@@ -82,14 +86,20 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
 
     def updateSelected(self):
         currentItem = self.list_view.currentItem()
-        if currentItem:
-            self.selected_item = str(currentItem.data(DATA_INDEX))
-            self.header_icon.setIcon(currentItem.icon())
-            self.header_text.setText(self.selected_item)
-        else: 
-            self.selected_item = "null"
-            self.header_icon.setIcon(QIcon())
-            self.header_text.setText("")
+        if self.show_status_bar:
+            self.header_icon.setVisible(True)
+            self.header_text.setVisible(True)
+            if currentItem:
+                self.selected_item = str(currentItem.data(DATA_INDEX))
+                self.header_icon.setIcon(currentItem.icon())
+                self.header_text.setText(self.selected_item)
+            else: 
+                self.selected_item = "null"
+                self.header_icon.setIcon(QIcon())
+                self.header_text.setText("")
+        else:
+            self.header_icon.setVisible(False)
+            self.header_text.setVisible(False)
 
 
     def selectedResult(self):
@@ -99,6 +109,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         self.list_view.setSelectionRectVisible(True)
         self.list_view.setStyleSheet(Stylesheet.instance().propertygrid_selectordialog_listview)
         if mode == "icons":
+            self.show_status_bar = True
             self.list_view.setViewMode(QListView.ViewMode.IconMode)
             self.list_view.setUniformItemSizes(True)
             presets = ResourceManager.iconList("krita")
@@ -114,23 +125,26 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem.setIcon(ResourceManager.iconLoader(customIconName))
                 listItem.setData(DATA_INDEX, customIconName)
                 self.list_view.addItem(listItem)
-        elif mode == "popups" or mode == "docker_groups" or mode == "canvas_presets":
+        elif mode == "popups" or \
+            mode == "docker_groups" or \
+            mode == "canvas_presets" or \
+            mode == "menus" or \
+            mode == "toolshelf":
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
 
-            registry_type = None
-
-            if mode == "popups": registry_type = PopupData
-            elif mode == "docker_groups": registry_type = DockerGroup
-            elif mode == "canvas_presets": registry_type = CanvasPreset
-            elif mode == "menus": registry_type = TriggerMenu
-            elif mode == "toolshelves": registry_type = ToolshelfData
+            if mode == "popups": self.selector_registry_type = PopupData
+            elif mode == "docker_groups": self.selector_registry_type = DockerGroup
+            elif mode == "canvas_presets": self.selector_registry_type = CanvasPreset
+            elif mode == "menus": self.selector_registry_type = TriggerMenu
+            elif mode == "toolshelf": self.selector_registry_type = ToolshelfData
             else: return
 
-            presets = TouchifySettings.instance().getRegistry(registry_type)
+            presets = TouchifySettings.instance().getRegistry(self.selector_registry_type)
             for preset_key, value in presets.items():
+                displayName = f"{str(value)}\n{preset_key.actual_key}"
                 listItem = QListWidgetItem()
-                listItem.setText(str(value))
+                listItem.setText(displayName)
                 listItem.setData(DATA_INDEX, preset_key.actual_key)
                 self.list_view.addItem(listItem)
         elif mode == "brushes":
