@@ -86,20 +86,23 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
 
     def updateSelected(self):
         currentItem = self.list_view.currentItem()
+
         if self.show_status_bar:
             self.header_icon.setVisible(True)
             self.header_text.setVisible(True)
-            if currentItem:
-                self.selected_item = str(currentItem.data(DATA_INDEX))
-                self.header_icon.setIcon(currentItem.icon())
-                self.header_text.setText(self.selected_item)
-            else: 
-                self.selected_item = "null"
-                self.header_icon.setIcon(QIcon())
-                self.header_text.setText("")
         else:
             self.header_icon.setVisible(False)
             self.header_text.setVisible(False)
+
+        if currentItem:
+            self.selected_item = str(currentItem.data(DATA_INDEX))
+            self.header_icon.setIcon(currentItem.icon())
+            self.header_text.setText(self.selected_item)
+        else: 
+            self.selected_item = "null"
+            self.header_icon.setIcon(QIcon())
+            self.header_text.setText("")
+
 
 
     def selectedResult(self):

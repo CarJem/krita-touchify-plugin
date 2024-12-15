@@ -45,6 +45,13 @@ class TouchifyRegistry:
     def propertygrid_view_type(self):
         return "tabs"
     
+    def propertygrid_sorted(self):
+        return [
+            "resources",
+            "hotkeys",
+            "preferences"
+        ]
+    
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
         return row

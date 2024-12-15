@@ -17,6 +17,7 @@ class TriggerMenuItem(Trigger):
         super().__defaults__()
         self.__defaults__()
         Extensions.dictToObject(self, args, [])
+        self.registry_id = ""
         self.context_menu_actions = Extensions.init_list(args, "context_menu_actions", TriggerMenuItem)
 
     def getFileName(self):
@@ -42,6 +43,7 @@ class TriggerMenuItem(Trigger):
     def propertygrid_hidden(self):
         result = super().propertygrid_hidden()
         result.append("context_menu_id")   
+        result.append("registry_id")
         if self.variant != Trigger.Variants.Menu:
             result.append("context_menu_actions")
             

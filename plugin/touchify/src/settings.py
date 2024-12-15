@@ -127,7 +127,7 @@ class TouchifySettings:
             elif type == TriggerMenu:
                 for item in pack.menus:
                     item: TriggerMenu
-                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "menus", item.INTERNAL_UUID_ID)
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "menu", item.INTERNAL_UUID_ID)
                     results[id] = item
             elif type == DockerGroup:
                 for item in pack.docker_groups:

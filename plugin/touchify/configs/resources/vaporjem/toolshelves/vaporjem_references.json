@@ -119,6 +119,7 @@
         "stack_actions": [],
         "json_version": 1
     },
-    "preset_name": "[Window] References",
+    "preset_name": "References",
+    "preset_group": "Windows...",
     "json_version": 3
 }

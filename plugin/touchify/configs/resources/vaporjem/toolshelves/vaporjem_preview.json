@@ -294,12 +294,33 @@
                         "row_name": "Actions Row",
                         "actions": [
                             {
+                                "registry_id": "NewTrigger",
+                                "variant": "menu",
+                                "display_icon_hide": false,
+                                "display_text_hide": true,
+                                "display_custom_icon_enabled": true,
+                                "display_custom_icon": "krita_tool_color_sampler",
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "Sample",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "context_menu_id": "vaporjem/menu/common_colorpicker_menu",
+                                "brush_name": "",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "docker_group_data": "none",
+                                "popup_data": "none",
+                                "canvas_preset_data": "none",
+                                "json_version": 2
+                            },
+                            {
                                 "registry_id": "",
                                 "variant": "popup",
                                 "display_icon_hide": false,
                                 "display_text_hide": true,
                                 "display_custom_icon_enabled": true,
-                                "display_custom_icon": "gridbrush",
+                                "display_custom_icon": "krita_tool_grid",
                                 "display_custom_text_enabled": true,
                                 "display_custom_text": "Grids & Guides",
                                 "extra_closes_popup": false,
@@ -455,5 +476,6 @@
         "json_version": 1
     },
     "preset_name": "Preview Toolshelf",
+    "preset_group": "",
     "json_version": 3
 }

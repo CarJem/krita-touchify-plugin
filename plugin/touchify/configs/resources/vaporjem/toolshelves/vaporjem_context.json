@@ -1230,5 +1230,6 @@
         "json_version": 1
     },
     "preset_name": "Context Menu",
+    "preset_group": "Context...",
     "json_version": 3
 }

@@ -3,7 +3,7 @@
     "registry_name": "Object Actions",
     "context_menu_actions": [
         {
-            "registry_id": "TransformMenu",
+            "registry_id": "",
             "variant": "menu",
             "display_icon_hide": false,
             "display_text_hide": true,

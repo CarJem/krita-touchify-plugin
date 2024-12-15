@@ -119,6 +119,7 @@
         "stack_actions": [],
         "json_version": 1
     },
-    "preset_name": "[Popup] Brushes",
+    "preset_name": "Brushes",
+    "preset_group": "Popups...",
     "json_version": 3
 }

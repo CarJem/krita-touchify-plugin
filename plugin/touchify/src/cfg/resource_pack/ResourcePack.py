@@ -164,7 +164,7 @@ class ResourcePack:
                     item.INTERNAL_FILESYSTEM_MANAGED = True
 
                 filePath: str = item.INTERNAL_FILEPATH_ID
-                print(item.INTERNAL_FILEPATH_ID)
+                #print(item.INTERNAL_FILEPATH_ID)
                 found_files.append(filePath)
 
                 outputData = copy.deepcopy(item)

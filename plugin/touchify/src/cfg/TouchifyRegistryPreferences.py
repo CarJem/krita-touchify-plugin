@@ -85,7 +85,22 @@ class TouchifyRegistryPreferences:
             "Canvas_LeftClickAction": "Canvas Left Click Action",
             "Canvas_MiddleClickAction": "Canvas Middle Click Action"
         }
-        
+
+
+    def propertygrid_sorted(self):
+        return [
+            "Canvas_LeftClickAction",
+            "Canvas_RightClickAction",
+            "Canvas_MiddleClickAction",
+            "#NEW_COLUMN",
+            "Interface_CanvasToggleScale",
+            "Interface_ToolboxIconScale",
+            "Interface_ToolshelfActionBarScale",
+            "Interface_ToolshelfTabBarScale",
+            "Interface_ToolshelfHeaderScale",
+            "Interface_ToolshelfActionSectionScale",
+            "Interface_ColorOptionsDockerScale"
+        ]
 
     def propertygrid_restrictions(self):
         restrictions = {}

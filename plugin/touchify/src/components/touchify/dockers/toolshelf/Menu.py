@@ -98,13 +98,15 @@ class Menu(QMenu):
     def loadPresets(self):
         self.clear()
 
-        menus: dict[str, dict[str, QMenu]] = {}
+        menus: dict[str, QMenu] = {}
+        sub_menus: dict[str, dict[str, QMenu]] = {}
         
         registry = TouchifySettings.instance().getRegistry(ToolshelfData)
         if registry != None:
             for key, preset in registry.items():
                 if not key.id in menus:
                     menus[key.id] = self.addMenu(key.name)
+                    sub_menus[key.id] = {}
 
                 preset: ToolshelfData
                 action = QAction(preset.preset_name, self)
@@ -113,7 +115,13 @@ class Menu(QMenu):
                     action.setChecked(True)
                 action.setData(key.actual_key)
                 action.triggered.connect(self.changePreset)
-                menus[key.id].addAction(action)
+
+                if preset.preset_group == "":
+                    menus[key.id].addAction(action)
+                else:
+                    if not preset.preset_group in sub_menus[key.id]:
+                        sub_menus[key.id][preset.preset_group] = menus[key.id].addMenu(preset.preset_group)
+                    sub_menus[key.id][preset.preset_group].addAction(action)
         
         self.addSeparator()
 

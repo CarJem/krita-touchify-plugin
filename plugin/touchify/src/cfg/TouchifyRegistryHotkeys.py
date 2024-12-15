@@ -27,6 +27,7 @@ class TouchifyRegistryHotkeys:
             "hotkey3",
             "hotkey4",
             "hotkey5",
+            "#NEW_COLUMN",
             "hotkey6",
             "hotkey7",
             "hotkey8",

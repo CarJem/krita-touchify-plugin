@@ -408,6 +408,7 @@
         "stack_actions": [],
         "json_version": 1
     },
-    "preset_name": "[Popup] Layers",
+    "preset_name": "Layers",
+    "preset_group": "Popups...",
     "json_version": 3
 }

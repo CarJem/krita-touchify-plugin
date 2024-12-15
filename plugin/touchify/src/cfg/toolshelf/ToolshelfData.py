@@ -29,7 +29,11 @@ class ToolshelfData:
         return FileExtensions.fileStringify(self.preset_name)
 
     def __str__(self):
-        return self.preset_name.replace("\n", "\\n")
+        actual_name = self.preset_name.replace("\n", "\\n")
+        if self.preset_group != "":
+            return f"[{self.preset_group}] {actual_name}"
+        else:
+            return actual_name
 
     def forceLoad(self):
         self.pages = TypedList(self.pages, ToolshelfDataPage)
