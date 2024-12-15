@@ -18,40 +18,6 @@
     "docker_id": "History",
     "docker_width": 310,
     "docker_height": 400,
-    "json_version": 4,
-    "toolshelf_data": {
-        "pages": [],
-        "homepage": {
-            "id": "",
-            "display_name": "",
-            "actions": [],
-            "sections": [],
-            "tab_type": "buttons",
-            "action_height": 10,
-            "icon": "",
-            "toolshelf_tab_row": 0,
-            "size_x": 0,
-            "size_y": 0,
-            "min_size_x": 0,
-            "min_size_y": 0,
-            "max_size_x": 0,
-            "max_size_y": 0,
-            "json_version": 2
-        },
-        "header_options": {
-            "button_size": 32,
-            "header_size": 16,
-            "default_to_resize_mode": false,
-            "default_to_pinned": false,
-            "show_pin_button": true,
-            "show_menu_button": true,
-            "position": "top",
-            "stack_preview": "default",
-            "stack_alignment": "default",
-            "stack_actions": [],
-            "json_version": 1
-        },
-        "preset_name": "New Toolshelf Preset",
-        "json_version": 3
-    }
+    "toolshelf_id": "",
+    "json_version": 4
 }

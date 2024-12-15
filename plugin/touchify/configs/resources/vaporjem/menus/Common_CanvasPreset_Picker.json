@@ -1,7 +1,6 @@
 {
     "registry_id": "Common_CanvasPreset_Picker",
     "registry_name": "[Common] Canvas Presets Menu",
-    "json_version": 1,
     "context_menu_actions": [
         {
             "registry_id": "",
@@ -15,14 +14,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "TouchifyAction_DarkCanvas",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "touchify_defaults/canvas_preset/dark_canvas",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         },
         {
             "registry_id": "",
@@ -36,15 +36,16 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "TouchifyAction_LightCanvas",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "touchify_defaults/canvas_preset/light_canvas",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         }
-    ]
-
+    ],
+    "json_version": 1
 }

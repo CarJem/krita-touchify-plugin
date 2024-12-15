@@ -1,7 +1,6 @@
 {
     "registry_id": "Context_Misc",
     "registry_name": "[Context] Misc Menu",
-    "json_version": 1,
     "context_menu_actions": [
         {
             "registry_id": "",
@@ -15,14 +14,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "hmirror_action",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         },
         {
             "registry_id": "",
@@ -36,14 +36,16 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "vmirror_action",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         }
-    ]
+    ],
+    "json_version": 1
 }

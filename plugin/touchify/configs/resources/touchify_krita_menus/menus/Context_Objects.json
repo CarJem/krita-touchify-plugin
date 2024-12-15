@@ -14,6 +14,14 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "",
+            "context_menu_id": "",
+            "brush_name": "",
+            "docker_id": "",
+            "workspace_id": "",
+            "docker_group_data": "none",
+            "popup_data": "none",
+            "canvas_preset_data": "none",
+            "json_version": 2,
             "context_menu_actions": [
                 {
                     "registry_id": "",
@@ -27,14 +35,15 @@
                     "extra_closes_popup": false,
                     "extra_composer_mode": false,
                     "action_id": "object_transform_rotate_90_cw",
-                    "context_menu_actions": [],
+                    "context_menu_id": "",
                     "brush_name": "",
                     "docker_id": "",
                     "workspace_id": "",
                     "docker_group_data": "none",
                     "popup_data": "none",
                     "canvas_preset_data": "none",
-                    "json_version": 2
+                    "json_version": 2,
+                    "context_menu_actions": []
                 },
                 {
                     "registry_id": "",
@@ -48,14 +57,15 @@
                     "extra_closes_popup": false,
                     "extra_composer_mode": false,
                     "action_id": "object_transform_rotate_90_ccw",
-                    "context_menu_actions": [],
+                    "context_menu_id": "",
                     "brush_name": "",
                     "docker_id": "",
                     "workspace_id": "",
                     "docker_group_data": "none",
                     "popup_data": "none",
                     "canvas_preset_data": "none",
-                    "json_version": 2
+                    "json_version": 2,
+                    "context_menu_actions": []
                 },
                 {
                     "registry_id": "",
@@ -69,14 +79,15 @@
                     "extra_closes_popup": false,
                     "extra_composer_mode": false,
                     "action_id": "object_transform_rotate_180",
-                    "context_menu_actions": [],
+                    "context_menu_id": "",
                     "brush_name": "",
                     "docker_id": "",
                     "workspace_id": "",
                     "docker_group_data": "none",
                     "popup_data": "none",
                     "canvas_preset_data": "none",
-                    "json_version": 2
+                    "json_version": 2,
+                    "context_menu_actions": []
                 },
                 {
                     "registry_id": "",
@@ -90,14 +101,15 @@
                     "extra_closes_popup": false,
                     "extra_composer_mode": false,
                     "action_id": "expanding_spacer_0",
-                    "context_menu_actions": [],
+                    "context_menu_id": "",
                     "brush_name": "",
                     "docker_id": "",
                     "workspace_id": "",
                     "docker_group_data": "none",
                     "popup_data": "none",
                     "canvas_preset_data": "none",
-                    "json_version": 2
+                    "json_version": 2,
+                    "context_menu_actions": []
                 },
                 {
                     "registry_id": "",
@@ -111,14 +123,15 @@
                     "extra_closes_popup": false,
                     "extra_composer_mode": false,
                     "action_id": "object_transform_mirror_horizontally",
-                    "context_menu_actions": [],
+                    "context_menu_id": "",
                     "brush_name": "",
                     "docker_id": "",
                     "workspace_id": "",
                     "docker_group_data": "none",
                     "popup_data": "none",
                     "canvas_preset_data": "none",
-                    "json_version": 2
+                    "json_version": 2,
+                    "context_menu_actions": []
                 },
                 {
                     "registry_id": "",
@@ -132,14 +145,15 @@
                     "extra_closes_popup": false,
                     "extra_composer_mode": false,
                     "action_id": "object_transform_mirror_vertically",
-                    "context_menu_actions": [],
+                    "context_menu_id": "",
                     "brush_name": "",
                     "docker_id": "",
                     "workspace_id": "",
                     "docker_group_data": "none",
                     "popup_data": "none",
                     "canvas_preset_data": "none",
-                    "json_version": 2
+                    "json_version": 2,
+                    "context_menu_actions": []
                 },
                 {
                     "registry_id": "",
@@ -153,14 +167,15 @@
                     "extra_closes_popup": false,
                     "extra_composer_mode": false,
                     "action_id": "expanding_spacer_0",
-                    "context_menu_actions": [],
+                    "context_menu_id": "",
                     "brush_name": "",
                     "docker_id": "",
                     "workspace_id": "",
                     "docker_group_data": "none",
                     "popup_data": "none",
                     "canvas_preset_data": "none",
-                    "json_version": 2
+                    "json_version": 2,
+                    "context_menu_actions": []
                 },
                 {
                     "registry_id": "",
@@ -174,23 +189,17 @@
                     "extra_closes_popup": false,
                     "extra_composer_mode": false,
                     "action_id": "object_transform_reset",
-                    "context_menu_actions": [],
+                    "context_menu_id": "",
                     "brush_name": "",
                     "docker_id": "",
                     "workspace_id": "",
                     "docker_group_data": "none",
                     "popup_data": "none",
                     "canvas_preset_data": "none",
-                    "json_version": 2
+                    "json_version": 2,
+                    "context_menu_actions": []
                 }
-            ],
-            "brush_name": "",
-            "docker_id": "",
-            "workspace_id": "",
-            "docker_group_data": "none",
-            "popup_data": "none",
-            "canvas_preset_data": "none",
-            "json_version": 2
+            ]
         },
         {
             "registry_id": "",
@@ -204,14 +213,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "edit_cut",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         },
         {
             "registry_id": "",
@@ -225,14 +235,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "edit_copy",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         },
         {
             "registry_id": "",
@@ -246,14 +257,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "edit_paste",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         },
         {
             "registry_id": "",
@@ -267,14 +279,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "paste_at",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         },
         {
             "registry_id": "",
@@ -288,14 +301,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "expanding_spacer_0",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         },
         {
             "registry_id": "",
@@ -309,14 +323,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "object_order_front",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         },
         {
             "registry_id": "",
@@ -330,14 +345,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "object_order_raise",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         },
         {
             "registry_id": "",
@@ -351,14 +367,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "object_order_lower",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         },
         {
             "registry_id": "",
@@ -372,14 +389,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "object_order_back",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         },
         {
             "registry_id": "",
@@ -393,14 +411,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "expanding_spacer_0",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         },
         {
             "registry_id": "",
@@ -414,14 +433,15 @@
             "extra_closes_popup": false,
             "extra_composer_mode": false,
             "action_id": "convert_shapes_to_vector_selection",
-            "context_menu_actions": [],
+            "context_menu_id": "",
             "brush_name": "",
             "docker_id": "",
             "workspace_id": "",
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "none",
-            "json_version": 2
+            "json_version": 2,
+            "context_menu_actions": []
         }
     ],
     "json_version": 1

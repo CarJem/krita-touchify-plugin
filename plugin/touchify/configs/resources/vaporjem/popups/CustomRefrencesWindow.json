@@ -18,6 +18,6 @@
     "docker_id": "",
     "docker_width": 0,
     "docker_height": 0,
-    "json_version": 4,
-    "toolshelf_id": "vaporjem/toolshelves/vaporjem_references"
+    "toolshelf_id": "vaporjem/toolshelves/vaporjem_references",
+    "json_version": 4
 }
