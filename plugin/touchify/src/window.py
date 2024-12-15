@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.src.features.touchify_dev import TouchifyDev
+from touchify.src.features.touchify_shortcut_composer import TouchifyShortcutComposer
 from touchify.src.variables import *
 from touchify.src.docker_manager import DockerManager
 from touchify.src.action_manager import ActionManager
@@ -38,6 +39,7 @@ class TouchifyWindow(QObject):
         self.touchify_canvas = TouchifyCanvas(self)
         self.touchify_hotkeys = TouchifyHotkeys(self)
         self.touchify_dev = TouchifyDev(self)
+        self.touchify_shortcut_composer = TouchifyShortcutComposer(self)
         
         self.action_management = ActionManager(self)
         
@@ -119,6 +121,7 @@ class TouchifyWindow(QObject):
         
         self.touchify_looks.createActions(window, self.mainMenuBar)
         self.touchify_canvas.createActions(window, self.mainMenuBar)
+        self.touchify_shortcut_composer.createActions(window, self.mainMenuBar)
 
     def setupSoftActions(self):
         seperator = QAction("", self.mainMenuBar)
@@ -136,6 +139,7 @@ class TouchifyWindow(QObject):
 
         self.touchify_hotkeys.buildMenu(self.mainMenuBar)
         self.touchify_actions.buildMenu(self.mainMenuBar)
+        self.touchify_shortcut_composer.buildMenu(self.mainMenuBar)
         self.touchify_dev.buildMenu(self.mainMenuBar)
             
     def setupAddons(self, window: Window):   

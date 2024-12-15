@@ -9,11 +9,14 @@ from krita import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from touchify.src.window import TouchifyWindow
+
+
     
 class TouchifyDev(object):
     
     def __init__(self, instance: "TouchifyWindow"):
         self.appEngine = instance  
+
 
     def buildMenu(self, menu: QMenu):
         menu.addMenu(self.root_menu)
@@ -21,10 +24,10 @@ class TouchifyDev(object):
     def createActions(self, window: Window, actionPath: str):
         subItemPath = actionPath + "/" + "developer"
         self.root_menu = QtWidgets.QMenu("Developer...")
-
-
-        testUIAction = self.root_menu.addAction("No Actions")
-        testUIAction.setEnabled(False)
+    
+        if len(self.root_menu.actions()) == 0:
+            testUIAction = self.root_menu.addAction("No Actions")
+            testUIAction.setEnabled(False)
 
 
 

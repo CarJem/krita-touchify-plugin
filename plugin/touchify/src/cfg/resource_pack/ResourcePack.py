@@ -46,7 +46,13 @@ class ResourcePack:
             self.load()
 
     def forceLoad(self):
-        pass
+        self.triggers = TypedList(self.triggers, Trigger)
+        self.popups = TypedList(self.popups, PopupData)
+        self.docker_groups = TypedList(self.docker_groups, DockerGroup)
+        self.canvas_presets = TypedList(self.canvas_presets, CanvasPreset)
+        self.toolboxes = TypedList(self.toolboxes, ToolboxData)
+        self.toolshelves = TypedList(self.toolshelves, ToolshelfData)
+        self.widget_layouts = TypedList(self.widget_layouts, WidgetLayout)
 
 
     def __str__(self):
@@ -88,7 +94,7 @@ class ResourcePack:
                 if os.path.isfile(contentPath) and contentName == "metadata.json":
                     self.metadata = JsonExtensions.loadClass(contentPath, ResourcePackMetadata)
 
-                elif os.path.isdir(contentPath) and contentName == "components":
+                elif os.path.isdir(contentPath) and contentName == "triggers":
                     self.triggers = loadItems(contentPath, Trigger)
 
                 elif os.path.isdir(contentPath) and contentName == "toolboxes":
