@@ -40,12 +40,6 @@
                         "action_height": 10,
                         "icon": "",
                         "toolshelf_tab_row": 0,
-                        "size_x": 0,
-                        "size_y": 0,
-                        "min_size_x": 0,
-                        "min_size_y": 0,
-                        "max_size_x": 0,
-                        "max_size_y": 0,
                         "json_version": 2
                     }
                 }
@@ -54,12 +48,6 @@
             "action_height": 10,
             "icon": "paintop_settings_01",
             "toolshelf_tab_row": 0,
-            "size_x": 0,
-            "size_y": 0,
-            "min_size_x": 0,
-            "min_size_y": 0,
-            "max_size_x": 0,
-            "max_size_y": 0,
             "json_version": 2
         },
         {
@@ -102,12 +90,6 @@
                         "action_height": 10,
                         "icon": "",
                         "toolshelf_tab_row": 0,
-                        "size_x": 0,
-                        "size_y": 0,
-                        "min_size_x": 0,
-                        "min_size_y": 0,
-                        "max_size_x": 0,
-                        "max_size_y": 0,
                         "json_version": 2
                     }
                 }
@@ -116,12 +98,6 @@
             "action_height": 10,
             "icon": "palette-library",
             "toolshelf_tab_row": 0,
-            "size_x": 0,
-            "size_y": 0,
-            "min_size_x": 0,
-            "min_size_y": 0,
-            "max_size_x": 0,
-            "max_size_y": 0,
             "json_version": 2
         },
         {
@@ -164,12 +140,6 @@
                         "action_height": 10,
                         "icon": "",
                         "toolshelf_tab_row": 0,
-                        "size_x": 0,
-                        "size_y": 0,
-                        "min_size_x": 0,
-                        "min_size_y": 0,
-                        "max_size_x": 0,
-                        "max_size_y": 0,
                         "json_version": 2
                     }
                 }
@@ -178,12 +148,6 @@
             "action_height": 10,
             "icon": "all-layers",
             "toolshelf_tab_row": 0,
-            "size_x": 0,
-            "size_y": 0,
-            "min_size_x": 0,
-            "min_size_y": 0,
-            "max_size_x": 0,
-            "max_size_y": 0,
             "json_version": 2
         },
         {
@@ -226,12 +190,6 @@
                         "action_height": 10,
                         "icon": "",
                         "toolshelf_tab_row": 0,
-                        "size_x": 0,
-                        "size_y": 0,
-                        "min_size_x": 0,
-                        "min_size_y": 0,
-                        "max_size_x": 0,
-                        "max_size_y": 0,
                         "json_version": 2
                     }
                 }
@@ -240,12 +198,6 @@
             "action_height": 10,
             "icon": "krita_tool_color_sampler",
             "toolshelf_tab_row": 0,
-            "size_x": 0,
-            "size_y": 0,
-            "min_size_x": 0,
-            "min_size_y": 0,
-            "max_size_x": 0,
-            "max_size_y": 0,
             "json_version": 2
         },
         {
@@ -288,12 +240,6 @@
                         "action_height": 10,
                         "icon": "",
                         "toolshelf_tab_row": 0,
-                        "size_x": 0,
-                        "size_y": 0,
-                        "min_size_x": 0,
-                        "min_size_y": 0,
-                        "max_size_x": 0,
-                        "max_size_y": 0,
                         "json_version": 2
                     }
                 }
@@ -302,12 +248,6 @@
             "action_height": 10,
             "icon": "duplicatelayer",
             "toolshelf_tab_row": 0,
-            "size_x": 0,
-            "size_y": 0,
-            "min_size_x": 0,
-            "min_size_y": 0,
-            "max_size_x": 0,
-            "max_size_y": 0,
             "json_version": 2
         }
     ],
@@ -351,12 +291,6 @@
                     "action_height": 10,
                     "icon": "",
                     "toolshelf_tab_row": 0,
-                    "size_x": 0,
-                    "size_y": 0,
-                    "min_size_x": 0,
-                    "min_size_y": 0,
-                    "max_size_x": 0,
-                    "max_size_y": 0,
                     "json_version": 2
                 }
             },
@@ -395,12 +329,6 @@
                     "action_height": 10,
                     "icon": "",
                     "toolshelf_tab_row": 0,
-                    "size_x": 0,
-                    "size_y": 0,
-                    "min_size_x": 0,
-                    "min_size_y": 0,
-                    "max_size_x": 0,
-                    "max_size_y": 0,
                     "json_version": 2
                 }
             },
@@ -508,12 +436,6 @@
                     "action_height": 10,
                     "icon": "",
                     "toolshelf_tab_row": 0,
-                    "size_x": 0,
-                    "size_y": 0,
-                    "min_size_x": 0,
-                    "min_size_y": 0,
-                    "max_size_x": 0,
-                    "max_size_y": 0,
                     "json_version": 2
                 }
             }
@@ -522,12 +444,6 @@
         "action_height": 16,
         "icon": "",
         "toolshelf_tab_row": 0,
-        "size_x": 0,
-        "size_y": 0,
-        "min_size_x": 0,
-        "min_size_y": 0,
-        "max_size_x": 0,
-        "max_size_y": 0,
         "json_version": 2
     },
     "header_options": {

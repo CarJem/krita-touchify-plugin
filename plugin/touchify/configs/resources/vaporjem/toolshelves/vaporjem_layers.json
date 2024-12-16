@@ -40,12 +40,6 @@
                     "action_height": 10,
                     "icon": "",
                     "toolshelf_tab_row": 0,
-                    "size_x": 0,
-                    "size_y": 0,
-                    "min_size_x": 0,
-                    "min_size_y": 0,
-                    "max_size_x": 0,
-                    "max_size_y": 0,
                     "json_version": 2
                 }
             },
@@ -195,12 +189,6 @@
                     "action_height": 10,
                     "icon": "",
                     "toolshelf_tab_row": 0,
-                    "size_x": 0,
-                    "size_y": 0,
-                    "min_size_x": 0,
-                    "min_size_y": 0,
-                    "max_size_x": 0,
-                    "max_size_y": 0,
                     "json_version": 2
                 }
             },
@@ -239,12 +227,6 @@
                     "action_height": 10,
                     "icon": "",
                     "toolshelf_tab_row": 0,
-                    "size_x": 0,
-                    "size_y": 0,
-                    "min_size_x": 0,
-                    "min_size_y": 0,
-                    "max_size_x": 0,
-                    "max_size_y": 0,
                     "json_version": 2
                 }
             },
@@ -373,12 +355,6 @@
                     "action_height": 10,
                     "icon": "",
                     "toolshelf_tab_row": 0,
-                    "size_x": 0,
-                    "size_y": 0,
-                    "min_size_x": 0,
-                    "min_size_y": 0,
-                    "max_size_x": 0,
-                    "max_size_y": 0,
                     "json_version": 2
                 }
             }
@@ -387,12 +363,6 @@
         "action_height": 10,
         "icon": "all-layers",
         "toolshelf_tab_row": 0,
-        "size_x": 0,
-        "size_y": 0,
-        "min_size_x": 0,
-        "min_size_y": 0,
-        "max_size_x": 0,
-        "max_size_y": 0,
         "json_version": 2
     },
     "header_options": {

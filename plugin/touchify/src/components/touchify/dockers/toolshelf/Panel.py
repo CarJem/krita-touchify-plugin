@@ -199,15 +199,6 @@ class Panel(QWidget):
         self.sections_container.layout().setContentsMargins(0,0,0,0)
         self.sections_container.setAutoFillBackground(True)
         self.root_layout.addWidget(self.sections_container)
-        
-        if self.panel_config.size_x != 0 and self.panel_config.size_y != 0:
-            size = [self.panel_config.size_x, self.panel_config.size_y]
-            self.setSizeHint(size)
-
-        if self.panel_config.min_size_x != 0: self.setMinimumWidth(self.panel_config.min_size_x)
-        if self.panel_config.min_size_y != 0: self.setMinimumHeight(self.panel_config.min_size_y)
-        if self.panel_config.max_size_x != 0: self.setMaximumWidth(self.panel_config.max_size_x)
-        if self.panel_config.max_size_y != 0: self.setMaximumHeight(self.panel_config.max_size_y)
 
         self.__initSections__()
 

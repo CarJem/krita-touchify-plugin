@@ -52,7 +52,35 @@ class ToolshelfDockWidgetKrita(DockWidget):
         self.onLoaded()
 
     def requestViewUpdate(self):
-        pass
+        if self.isFloating():
+            self.adjustSize()
+
+    def sizeHint(self):
+        if hasattr(self, "mainWidget"):
+            if self.mainWidget:
+                return self.mainWidget.sizeHint()
+        
+        return super().sizeHint()
+
+    def minimumSizeHint(self):
+        if hasattr(self, "mainWidget"):
+            if self.mainWidget:
+                return self.mainWidget.minimumSizeHint()
+
+        return super().minimumSizeHint()
+
+    def minimumSize(self):
+        if hasattr(self, "mainWidget"):
+            if self.mainWidget:
+                return self.mainWidget.minimumSize()
+
+        return super().minimumSize()
+        
+    def maximumSize(self):
+        if hasattr(self, "mainWidget"):
+            if self.mainWidget:
+                return self.mainWidget.maximumSize()
+        return super().maximumSize()
         
     def showEvent(self, event):
         super().showEvent(event)
