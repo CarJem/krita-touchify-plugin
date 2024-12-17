@@ -133,7 +133,7 @@ class Stylesheet:
         stylesheet = f"{normal_style} {hover_style} {pressed_style}"
         return stylesheet
 
-    def touchify_action_btn_popup(self, opacityLevel: float):
+    def touchify_action_btn_popup(self):
 
         return f"""
             QToolButton, QPushButton {{
@@ -142,31 +142,14 @@ class Stylesheet:
                 padding: 5px 5px;
                 border: 0px solid transparent; 
                 font-size: 12px;
-                opacity: {opacityLevel};
             }}
             
             QToolButton:hover, QPushButton:hover {{
                 background-color: palette(highlight);
-                opacity: {opacityLevel};
             }}
                             
             QToolButton:pressed, QToolButton:pressed {{
                 background-color: palette(alternate-base);
-                opacity: {opacityLevel};
             }}
         """
-
-    def touchify_popup_frame(self, opacityAllowed: bool, opacityValue: float) -> str:
-        if opacityAllowed:
-            styleData = f"""opacity: {opacityValue};"""
-        else:
-            styleData = "opacity: 1;"
-        return f"""QFrame#popupFrame {styleData}"""
-
-    def touchify_popup_titlebar(self, opacityAllowed: bool, opacityValue: float) -> str:
-        if opacityAllowed:
-            styleData = f"""opacity: {opacityValue};"""
-        else:
-            styleData = "opacity: 1;"
-        return f"""QWidget#popupFrameTitlebar {styleData}"""
     

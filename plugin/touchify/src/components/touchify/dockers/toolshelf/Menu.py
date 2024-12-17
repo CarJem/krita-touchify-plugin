@@ -12,7 +12,7 @@ from touchify.src.docker_manager import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .Header import Header
-    from touchify.src.components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
+    from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
 
 class Menu(QMenu):
     def __init__(self, parent: QWidget, cfg: ToolshelfData, registry_index: int):
@@ -20,7 +20,7 @@ class Menu(QMenu):
         self.cfg = cfg
         self.registry_index = registry_index
         self.parentNtWidget: NtWidgetPad = None
-        self.parentPopup: "PopupDialog_Toolshelf" = None
+        self.parentPopup: "TouchifyPopup" = None
         self.setupWidgetPad = True
         self.setupPopup = True
         self.setupGlobal = True
@@ -51,7 +51,7 @@ class Menu(QMenu):
         if self.setupPopup:
             self.parentPopup = self.findPopup()
             if self.parentPopup != None:
-                if self.parentPopup.toolshelf_allow_resizing:
+                if self.parentPopup.resizing_allowed:
                     self.parentPopup.updateResizingState(self.toggleResizeAct.isChecked())
                     self.addActions([self.toggleResizeAct])
                     self.addSeparator()
@@ -63,12 +63,12 @@ class Menu(QMenu):
 
 
     def findPopup(self):
-        from touchify.src.components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
+        from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
         try:
             widget = self.parent()
             while (widget):
                 foo = widget
-                if isinstance(foo, PopupDialog_Toolshelf):
+                if isinstance(foo, TouchifyPopup):
                     return foo
                 widget = widget.parent()
             return None

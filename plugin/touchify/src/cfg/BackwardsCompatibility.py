@@ -3,6 +3,8 @@
 
 
 
+
+
 class Helpers:
     def setVersion(args: dict[str, any], ver: int):
         args["json_version"] = ver
@@ -139,6 +141,10 @@ class BackwardsCompatibility:
             Helpers.changeVarName(args, "popup_position", "popup_position_x")
             if "popup_position_x" in args: args["popup_position_y"] = args["popup_position_x"]
             Helpers.setVersion(args, 4)
+        if Helpers.getVersion(args) == 4:
+            Helpers.changeVarName(args, "docker_width", "popup_width")
+            Helpers.changeVarName(args, "docker_height", "popup_height")            
+            Helpers.setVersion(args, 5)
         return args
 
     def ToolboxData(args: dict[str, any]):

@@ -3,11 +3,8 @@ from PyQt5.QtWidgets import QMdiArea
 
 
 
-from touchify.src.components.touchify.canvas import NtCanvasAction
 from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
 
-from touchify.src.docker_manager import DockerManager
-from touchify.src.action_manager import ActionManager
 from touchify.src.components.touchify.canvas.NtToolbox import NtToolbox
 from touchify.src.components.touchify.canvas.NtToolshelf import NtToolshelf
 from touchify.src.settings import TouchifySettings
@@ -19,7 +16,9 @@ from touchify.src.ext.KritaSettings import KritaSettings
 from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.cfg.widget_layout.WidgetLayoutPadOptions import WidgetLayoutPadOptions
 from touchify.src.cfg.widget_layout.WidgetLayoutToolboxOptions import WidgetLayoutToolboxOptions
-from touchify.src.components.touchify.canvas.NtCanvasAction import NtCanvasAction
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from touchify.src.window import TouchifyWindow
 
 
 class NtCanvas(QWidget):
@@ -33,7 +32,7 @@ class NtCanvas(QWidget):
         self.adjustFilter = None
         
         self.windowLoaded = False
-        self.dockerManager = None
+        self.app_engine = None
 
         self.toolbox = None
         self.toolboxOptions = None
@@ -51,19 +50,15 @@ class NtCanvas(QWidget):
 
 
     #region Setup Stuff
-    def setManagers(self, manager: DockerManager, actionsManager: ActionManager):
-        self.dockerManager = manager
-        self.actions_manager = actionsManager
+    def windowCreated(self, app_engine: "TouchifyWindow"):
+        self.app_engine = app_engine
 
         Krita.instance().action("view_ruler").triggered.connect(self.onKritaConfigUpdate)
 
-    def windowCreated(self, window: Window):
-        self.krita_window = window
+
+        self.krita_window = self.app_engine.windowSource
         self.qWin = self.krita_window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
-
-        self.action_handler = NtCanvasAction(self.qWin)
-        self.qWin.installEventFilter(self.action_handler)
 
         self.adjustFilter = NtSubWinFilter(self.mdiArea)
         self.adjustFilter.setTargetWidget(self)
@@ -217,7 +212,7 @@ class NtCanvas(QWidget):
             self.toolbox = None
 
         if self.toolboxOptions == None and usesNuToolOptionsAlt:
-            self.toolboxOptions = NtToolshelf(self, self.krita_window, False, self.dockerManager, self.actions_manager)
+            self.toolboxOptions = NtToolshelf(self, self.krita_window, False, self.app_engine)
             self.installEventFilters(self.toolboxOptions)
             self.canvasLayout.addWidget(self.toolboxOptions)
             self.toolboxOptions.show()
@@ -228,7 +223,7 @@ class NtCanvas(QWidget):
             self.toolboxOptions = None
 
         if self.toolOptions == None and usesNuToolOptions:
-            self.toolOptions = NtToolshelf(self, self.krita_window, True, self.dockerManager, self.actions_manager)
+            self.toolOptions = NtToolshelf(self, self.krita_window, True, self.app_engine)
             self.installEventFilters(self.toolOptions)
             self.canvasLayout.addWidget(self.toolOptions)
             self.toolOptions.show()

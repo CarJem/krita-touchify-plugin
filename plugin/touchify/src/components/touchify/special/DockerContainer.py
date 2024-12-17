@@ -128,11 +128,22 @@ class DockerContainer(QWidget):
     #endregion
 
     #region Overrides
+
+    def minimumSizeHint(self):
+        baseSize: QSize = QSize()
+        if self.borrowedDocker:
+            baseSize = self.borrowedDocker.minimumSizeHint()
+        else:
+            baseSize = super().minimumSizeHint()
+            
+        return baseSize
     
     def sizeHint(self):
         baseSize: QSize = QSize()
-        if self.size:
+        if self.size != None:
             baseSize = self.size
+        elif self.borrowedDocker:
+            baseSize = self.borrowedDocker.sizeHint()
         else:
             baseSize = super().sizeHint()
             

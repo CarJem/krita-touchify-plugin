@@ -159,7 +159,7 @@ class TouchifyActionPanel(QWidget):
             btn.setFixedHeight(self.item_height)
             
         if self.type == "popup":
-            btn.setStyleSheet(Stylesheet.instance().touchify_action_btn_popup(self.opacity))
+            btn.setStyleSheet(Stylesheet.instance().touchify_action_btn_popup())
             btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
             btn.setText(btn.meta_text)
         elif self.type == "toolbar":

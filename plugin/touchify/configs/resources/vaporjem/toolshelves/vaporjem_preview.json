@@ -445,6 +445,8 @@
         "default_to_pinned": false,
         "show_pin_button": true,
         "show_menu_button": true,
+        "show_tabs": true,
+        "show_titlebar": true,
         "position": "top",
         "stack_preview": "default",
         "stack_alignment": "default",

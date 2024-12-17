@@ -41,6 +41,7 @@ class ToolshelfDataSection:
     class ActionSectionDisplayMode(StrEnum):
         Normal = "normal"
         Flat = "flat"
+        Detailed = "detailed"
 
     class DockerNestingMode(StrEnum):
         Normal = "normal"

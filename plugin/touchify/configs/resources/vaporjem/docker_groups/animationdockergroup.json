@@ -1,0 +1,13 @@
+{
+    "id": "AnimationDockerGroup",
+    "tabs_mode": false,
+    "group_id": "",
+    "docker_names": [
+        {
+            "id": "TimelineDocker"
+        },
+        {
+            "id": "OnionSkinsDocker"
+        }
+    ]
+}

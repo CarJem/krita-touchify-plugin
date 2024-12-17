@@ -31,6 +31,9 @@ class ToolshelfDataOptions:
         self.show_pin_button: bool = True
         self.show_menu_button: bool = True
 
+        self.show_tabs: bool = True
+        self.show_titlebar: bool = True
+
 
         self.position: str = "top"
         self.stack_preview: str = "default"
@@ -65,7 +68,7 @@ class ToolshelfDataOptions:
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
         row["default_options"] = {"items": ["default_to_resize_mode","default_to_pinned"], "use_labels": True}
-        row["visibility_options"] = {"items": ["show_menu_button","show_pin_button"], "use_labels": True}
+        row["visibility_options"] = {"items": ["show_tabs","show_titlebar","show_menu_button","show_pin_button"], "use_labels": True}
         return row
 
     def propertygrid_labels(self):
@@ -74,6 +77,8 @@ class ToolshelfDataOptions:
         labels["default_to_resize_mode"] = "Resizable"
         labels["default_to_pinned"] = "Pinned"
         labels["visibility_options"] = "Show"
+        labels["show_tabs"] = "Tabs"
+        labels["show_titlebar"] = "Titlebar"
         labels["show_menu_button"] = "Options Button"
         labels["show_pin_button"] = "Pin Button"
         labels["button_size"] = "Button Size"

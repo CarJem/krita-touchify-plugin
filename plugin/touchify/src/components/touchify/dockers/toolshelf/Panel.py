@@ -134,20 +134,20 @@ class Panel(QWidget):
                         if widget.isEnabled() == False: widget.loadWidget()
 
 
-                    policy = QSizePolicy.Policy.Preferred
-                    widget.setSizePolicy(policy, policy)
+                    #policy = QSizePolicy.Policy.Preferred
+                    #widget.setSizePolicy(policy, policy)
                     widget.setEnabled(True)
-                    widget.updateGeometry()
-                    widget.adjustSize()
+                    #widget.updateGeometry()
+                    #widget.adjustSize()
                 else:
                     if isinstance(widget, DockerContainer): 
                         if widget.isEnabled(): widget.unloadWidget()
 
-                    policy = QSizePolicy.Policy.Ignored
-                    widget.setSizePolicy(policy, policy)
+                    #policy = QSizePolicy.Policy.Ignored
+                    #widget.setSizePolicy(policy, policy)
                     widget.setDisabled(True)
-                    widget.updateGeometry()
-                    widget.adjustSize()
+                    #widget.updateGeometry()
+                    #widget.adjustSize()
 
             if self.mode == ToolshelfDataPage.TabType.Buttons:
                 if index in self.tabTitles:
@@ -155,9 +155,9 @@ class Panel(QWidget):
             else:
                 pass
 
-            self.adjustSize()
-            self.stackPanel.adjustSize()
-            self.panel.adjustSize()
+            #self.adjustSize()
+            #self.stackPanel.adjustSize()
+            #self.panel.adjustSize()
             self.panel.page_stack.rootWidget.requestViewUpdate()
         
     dockerWidgets: dict = {}
@@ -224,6 +224,8 @@ class Panel(QWidget):
             display_type = TouchifyActionPanel.DisplayType.Toolbar
             if actionInfo.action_section_display_mode == ToolshelfDataSection.ActionSectionDisplayMode.Flat:
                 display_type = TouchifyActionPanel.DisplayType.ToolbarFlat
+            elif actionInfo.action_section_display_mode == ToolshelfDataSection.ActionSectionDisplayMode.Detailed:
+                display_type = TouchifyActionPanel.DisplayType.Popup
 
             if actionInfo.ignore_scaling:
                 scale = 1

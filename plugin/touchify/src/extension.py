@@ -9,7 +9,7 @@ from touchify.src.settings import TouchifySettings
 
 from touchify.src.ext.KritaSettings import KritaSettings
 
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDockWidgetKrita import ToolshelfDockWidgetKrita
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget
 from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
 
 from touchify.src.window import TouchifyWindow
@@ -94,5 +94,5 @@ class TouchifyExtension(Extension):
 
 
 Krita.instance().addExtension(TouchifyExtension(Krita.instance()))
-Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ToolshelfDockWidgetKrita))
+Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ToolshelfDockWidget))
 Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_TOOLBOX, DockWidgetFactoryBase.DockPosition.DockRight, ToolboxDocker))

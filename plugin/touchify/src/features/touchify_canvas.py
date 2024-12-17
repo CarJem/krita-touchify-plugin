@@ -21,8 +21,7 @@ class TouchifyCanvas(QObject):
 
     def windowCreated(self):
         self.qWin = self.appEngine.windowSource.qwindow()
-        self.ntCanvas.setManagers(self.appEngine.docker_management, self.appEngine.action_management)
-        self.ntCanvas.windowCreated(self.appEngine.windowSource)
+        self.ntCanvas.windowCreated(self.appEngine)
 
     def createAction(self, window: Window, id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
         result = window.createAction(id, text, menuLocation)

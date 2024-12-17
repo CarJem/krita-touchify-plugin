@@ -8,9 +8,7 @@ from touchify.src.cfg.resource_pack.ResourcePackMetadata import ResourcePackMeta
 from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
 from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
-from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 from touchify.src.components.pyqt.event_filters.MouseReleaseListener import MouseReleaseListener
-from touchify.src.components.touchify.popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
 
 from touchify.src.components.touchify.actions.TouchifyActionMenu import TouchifyActionMenu
 
@@ -27,9 +25,7 @@ from touchify.src.ext.KritaExtensions import *
 from touchify.src.settings import TouchifySettings
 from touchify.src.resources import ResourceManager
 
-from touchify.src.components.touchify.popups.PopupDialog import PopupDialog
-from touchify.src.components.touchify.popups.PopupDialog_Actions import PopupDialog_Actions
-from touchify.src.components.touchify.popups.PopupDialog_Docker import PopupDialog_Docker
+from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
 
 from touchify.src.enums.common_actions import CommonActions
 
@@ -46,7 +42,7 @@ class ActionManager(QObject):
         self.custom_docker_states = {}
         self.registeredActions = {}
         self.registeredActionsData = {}
-        self.active_popups: dict[str, PopupDialog] = {}
+        self.active_popups: dict[str, TouchifyPopup] = {}
 
         self.composer_action_down: bool = False
         self.composer_listener = MouseReleaseListener()
@@ -143,17 +139,9 @@ class ActionManager(QObject):
             if popup_id in self.active_popups: 
                 del self.active_popups[popup_id]
 
-            if data.type == PopupData.Variants.Actions:
-                popup = PopupDialog_Actions(self.appEngine.windowSource.qwindow().window(), data, self)
-            elif data.type == PopupData.Variants.Docker:
-                popup = PopupDialog_Docker(self.appEngine.windowSource.qwindow().window(), data, self.appEngine.docker_management)
-            elif data.type == PopupData.Variants.Toolshelf:
-                toolshelf_data: ToolshelfData = TouchifySettings.instance().getRegistryItem(data.toolshelf_id, ToolshelfData)
-                if not isinstance(toolshelf_data, ToolshelfData) or toolshelf_data == None: return
-
-                popup = PopupDialog_Toolshelf(self.appEngine.windowSource.qwindow().window(), data, toolshelf_data, self, self.appEngine.docker_management)
-            else:
-                popup = PopupDialog(self.appEngine.windowSource.qwindow().window(), data)  
+            popup = TouchifyPopup.construct(self.appEngine.windowSource.qwindow().window(), data, self.appEngine)
+            if popup == None: return
+            
             self.active_popups[popup_id] = popup
 
         popup.triggerPopup(_parent)
@@ -177,12 +165,12 @@ class ActionManager(QObject):
 
     def onComposerBtnPressed(self, btn: TouchifyActionButton, onClick: any):
         def tryFindParentPopup(source: QWidget):
-            from touchify.src.components.touchify.popups.PopupDialog import PopupDialog
+            from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
             try:
                 widget = source.parent()
                 while (widget):
                     foo = widget
-                    if isinstance(foo, PopupDialog):
+                    if isinstance(foo, TouchifyPopup):
                         return foo
                     widget = widget.parent()
                 return None
@@ -344,7 +332,7 @@ class ActionManager(QObject):
         if btn:
             parent: QWidget | None = btn.parentWidget()
             while parent:
-                if isinstance(parent, PopupDialog):
+                if isinstance(parent, TouchifyPopup):
                     parent.closePopup()
                     return
                 else:

@@ -1791,6 +1791,8 @@
         "default_to_pinned": false,
         "show_pin_button": true,
         "show_menu_button": true,
+        "show_tabs": true,
+        "show_titlebar": true,
         "position": "top",
         "stack_preview": "tabbed",
         "stack_alignment": "default",
@@ -1814,7 +1816,7 @@
                         "brush_name": "",
                         "docker_id": "RecorderDocker",
                         "workspace_id": "",
-                        "docker_group_data": "none",
+                        "docker_group_data": "vaporjem/docker_group/animationdockergroup",
                         "popup_data": "none",
                         "canvas_preset_data": "none",
                         "json_version": 2

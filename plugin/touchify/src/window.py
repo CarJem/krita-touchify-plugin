@@ -3,6 +3,7 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
 
+from touchify.src.canvas_manager import CanvasManager
 from touchify.src.features.touchify_dev import TouchifyDev
 from touchify.src.features.touchify_shortcut_composer import TouchifyShortcutComposer
 from touchify.src.variables import *
@@ -18,7 +19,7 @@ from touchify.src.features.touchify_actions import TouchifyActions
 
 from touchify.src.ext.PyQtExtensions import PyQtExtensions
 
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDockWidgetKrita import ToolshelfDockWidgetKrita
+from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget
 from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
 
 WINDOW_ID: int = 0
@@ -43,6 +44,7 @@ class TouchifyWindow(QObject):
         
         self.action_management = ActionManager(self)
         
+        
         self.settings_dlg: SettingsDialog | None = None
 
     def openSettings(self):
@@ -62,8 +64,8 @@ class TouchifyWindow(QObject):
         self.setParent(window.qwindow())
         self.windowSource = window
         self.docker_management = DockerManager(self)
+        self.canvas_management = CanvasManager(self)
         self.setupAddons(window)
-        self.setupWindow()
         self.setupSoftActions()
         
     def onKritaConfigUpdated(self):
@@ -100,9 +102,6 @@ class TouchifyWindow(QObject):
 
     #region Setup Functions
 
-    def setupWindow(self):
-        window = self.windowSource.qwindow()
-
     def setupActions(self, window: Window):
         self.mainMenuBar = window.qwindow().menuBar().addMenu(TOUCHIFY_ID_MENU_ROOT)
 
@@ -130,7 +129,6 @@ class TouchifyWindow(QObject):
         seperator.setSeparator(True)
         self.mainMenuBar.addAction(seperator)
 
-
         self.action_management.onWindowCreated()
         
         self.touchify_hotkeys.windowCreated()
@@ -147,7 +145,7 @@ class TouchifyWindow(QObject):
         def setupDockers():
             for docker in self.windowSource.dockers():
                 if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER:
-                    toolshelfDocker: ToolshelfDockWidgetKrita = docker
+                    toolshelfDocker: ToolshelfDockWidget = docker
                     toolshelfDocker.setup(self)
                 elif docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLBOX:
                     toolboxDocker: ToolboxDocker = docker
@@ -207,7 +205,7 @@ class TouchifyWindow(QObject):
     def getToolshelfDocker(self):
         for docker in self.windowSource.dockers():
             if docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER:
-                toolshelfDocker: ToolshelfDockWidgetKrita = docker
+                toolshelfDocker: ToolshelfDockWidget = docker
                 return toolshelfDocker
         return None
     

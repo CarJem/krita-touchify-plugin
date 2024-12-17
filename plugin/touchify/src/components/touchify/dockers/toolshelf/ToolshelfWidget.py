@@ -15,24 +15,12 @@ from touchify.src.components.touchify.dockers.toolshelf.PageStack import PageSta
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
+    from .ToolshelfCanvasWidget import ToolshelfCanvasWidget
     from .ToolshelfDockWidget import ToolshelfDockWidget
-    from .ToolshelfDockWidgetKrita import ToolshelfDockWidgetKrita
-    from ...popups.PopupDialog_Toolshelf import PopupDialog_Toolshelf
+    from ...special.TouchifyPopup import TouchifyPopup
 
 class ToolshelfWidget(QWidget):
     sizeChanged=pyqtSignal()
-
-    class CanvasListener(QObject):
-        mouseReleased = pyqtSignal()
-
-        def __init__(self):
-            super().__init__()
-
-        def eventFilter(self, obj, event):
-            if (event.type() == QEvent.MouseButtonRelease and event.button() == Qt.LeftButton) or \
-            (event.type() == QEvent.TabletRelease and event.button() == Qt.LeftButton):
-                self.mouseReleased.emit()
-            return super().eventFilter(obj, event)
 
     class PreviousState:
         def __init__(self):
@@ -41,12 +29,11 @@ class ToolshelfWidget(QWidget):
             self._last_resizable: bool = False
             self._last_panel_id: str | None = None
 
-    def __init__(self, parent: "ToolshelfDockWidget", cfg: ToolshelfData, registry_index: int = -1):
+    def __init__(self, parent: "ToolshelfCanvasWidget", cfg: ToolshelfData, registry_index: int = -1):
         super(ToolshelfWidget, self).__init__(parent)
 
-        self.mouse_listener = ToolshelfWidget.CanvasListener()
         self.pinned = False
-        self.parent_docker: "ToolshelfDockWidget" | "ToolshelfDockWidgetKrita" | "PopupDialog_Toolshelf"  = parent
+        self.parent_docker: "ToolshelfCanvasWidget" | "ToolshelfDockWidget" | "TouchifyPopup"  = parent
         self.registry_index = registry_index
         self.cfg = cfg
         self.toolshelf_id = cfg.preset_name
@@ -77,6 +64,8 @@ class ToolshelfWidget(QWidget):
         self.tabs = TabList(self.header, headerOrientation)
         self.pages = PageStack(self, self.cfg)
 
+
+
         self.mainLayout = QVBoxLayout(self) if headerOrientation == Qt.Orientation.Horizontal else QHBoxLayout(self)
         self.mainLayout.setSpacing(0)
         self.mainLayout.setContentsMargins(0,0,0,0)
@@ -93,6 +82,12 @@ class ToolshelfWidget(QWidget):
             self.mainLayout.setDirection(QVBoxLayout.Direction.TopToBottom if headerBeforePages else QBoxLayout.Direction.BottomToTop)
         else:
             self.mainLayout.setDirection(QHBoxLayout.Direction.LeftToRight if headerBeforePages else QHBoxLayout.Direction.RightToLeft)
+
+        if not self.cfg.header_options.show_titlebar:
+            self.header.setVisible(False)
+
+        if not self.cfg.header_options.show_tabs:
+            self.tabs.setVisible(False)
 
         if self.cfg.header_options.default_to_pinned:
             self.setPinned(True)
@@ -156,20 +151,17 @@ class ToolshelfWidget(QWidget):
     
     def deactivateWidget(self):
         if self.is_active == True:
-            QApplication.instance().removeEventFilter(self.mouse_listener)
-            self.mouse_listener.mouseReleased.disconnect(self.onMouseRelease)
+            self.parent_docker.canvas_manager.delayedFocus.disconnect(self.onCanvasFocused)
             self.pages.deactivateWidget()
             self.is_active = False
 
     def activateWidget(self):
         if not hasattr(self, "is_active"):
-            self.mouse_listener.mouseReleased.connect(self.onMouseRelease)
-            QApplication.instance().installEventFilter(self.mouse_listener)
+            self.parent_docker.canvas_manager.delayedFocus.connect(self.onCanvasFocused)
             self.is_active = True
         else:
             if self.is_active == False:
-                QApplication.instance().installEventFilter(self.mouse_listener)
-                self.mouse_listener.mouseReleased.connect(self.onMouseRelease)
+                self.parent_docker.canvas_manager.delayedFocus.connect(self.onCanvasFocused)
                 self.pages.activateWidget()
                 self.is_active = True
     
@@ -195,13 +187,7 @@ class ToolshelfWidget(QWidget):
     def requestViewUpdate(self):
         QTimer.singleShot(150, self.parent_docker.requestViewUpdate)
 
-    def onMouseRelease(self):
-        cursor_pos = QCursor.pos()
-        widget_under_cursor = QApplication.widgetAt(cursor_pos)
-        
-        if not isinstance(widget_under_cursor, QOpenGLWidget): return
-        if not widget_under_cursor.metaObject().className() == "KisOpenGLCanvas2": return
-        
+    def onCanvasFocused(self):
         if self.pinned == False:
             self.goHome()
 
