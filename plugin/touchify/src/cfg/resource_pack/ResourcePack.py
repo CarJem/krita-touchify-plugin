@@ -86,7 +86,7 @@ class ResourcePack:
                     _item.INTERNAL_FILESYSTEM_MANAGED = True
                     result.append(_item)
                     
-            return TypedList(result, type)
+            return TypedList(sorted(result, key=lambda x: x.__str__()), type)
 
 
         self.INTERNAL_has_loaded = False

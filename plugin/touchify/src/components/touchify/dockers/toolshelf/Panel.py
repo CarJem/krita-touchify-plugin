@@ -1,8 +1,9 @@
+from copy import deepcopy
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.actions.TouchifyActionPanel import TouchifyActionPanel
-from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfDataPage
+from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData, ToolshelfDataPage
 from touchify.src.cfg.toolshelf.ToolshelfDataSection import ToolshelfDataSection
 from touchify.src.components.touchify.special.BrushBlendingSelector import BrushBlendingSelector
 from touchify.src.components.touchify.special.BrushFlowSlider import BrushFlowSlider
@@ -346,7 +347,17 @@ class Panel(QWidget):
             return actionWidget
 
         def Section_Subpanel(actionInfo: ToolshelfDataSection):
-            actionWidget = Panel(self, self.page_stack, actionInfo.subpanel_data)
+            if actionInfo.subpanel_mode == ToolshelfDataSection.SubpanelMode.Data:
+                actionWidget = Panel(self, self.page_stack, actionInfo.subpanel_data)
+            elif actionInfo.subpanel_mode == ToolshelfDataSection.SubpanelMode.Reference:
+                toolshelf_data: ToolshelfData = TouchifySettings.instance().getRegistryItem(actionInfo.subpanel_id, ToolshelfData)
+                if not toolshelf_data: return None
+                toolshelf_page = deepcopy(toolshelf_data.homepage)
+                toolshelf_page.display_name = actionInfo.display_name
+                actionWidget = Panel(self, self.page_stack, toolshelf_page)
+            else:
+                return None
+
 
             if actionInfo.size_x != 0 and actionInfo.size_y != 0: 
                 actionWidget.setSizeHint([actionInfo.size_x, actionInfo.size_y])

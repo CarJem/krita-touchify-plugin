@@ -22,6 +22,48 @@ if TYPE_CHECKING:
 
 class TouchifyPopup(QDockWidget):
 
+    class LayoutState:
+        def __init__(self, x: int, y: int, width: int, height: int):
+            self.__x = x
+            self.__y = y
+            self.__width = width
+            self.__height = height
+
+        def prase(state_str: str):
+            try:
+                results = list(map(int, state_str.split(",")))
+                if len(results) == 4:
+                    return TouchifyPopup.LayoutState(results[0], results[1], results[2], results[3])
+                else:
+                    return None
+            except:
+                return None
+            
+        def position(self, main_window: QMainWindow):
+            widget_position = QPoint(self.__x, self.__y)
+            window_position = main_window.pos()
+            actual_x = window_position.x() + widget_position.x()
+            actual_y = window_position.y() + widget_position.y()
+            return QPoint(actual_x, actual_y)
+
+        def positionRelative(main_window: QMainWindow, widget: QDockWidget):
+            window_position = main_window.pos()
+            widget_position = widget.pos()
+            relative_x = widget_position.x() - window_position.x()
+            relative_y = widget_position.y() - window_position.y()
+            relative_position = QPoint(relative_x, relative_y)
+            return relative_position
+
+            
+        def value(self):
+            return f"{self.__x},{self.__y},{self.__width},{self.__height}"
+        
+        def width(self):
+            return self.__width
+        
+        def height(self):
+            return self.__height
+
     class Titlebar(QWidget):
         def __init__(self, parent_popup: "TouchifyPopup"):
             super().__init__(parent_popup)
@@ -42,8 +84,25 @@ class TouchifyPopup(QDockWidget):
             self.titlebarText.setText(self.parent_popup.config.window_title)
             self.ourLayout.addWidget(self.titlebarText)
 
+            if self.parent_popup.window_fixed_layout_mode == PopupData.WindowFixedLayoutMode.On or \
+                  self.parent_popup.window_fixed_layout_mode == PopupData.WindowFixedLayoutMode.OnRequest:
+                restoreMenu = QMenu(self)
+                storeFixedLocationAct = restoreMenu.addAction("Store Fixed Layout...")
+                storeFixedLocationAct.triggered.connect(self.parent_popup.storeFixedLayoutState)
+                restoreFixedLocationAct = restoreMenu.addAction("Restore Fixed Layout...")
+                restoreFixedLocationAct.triggered.connect(self.parent_popup.restoreFixedLayoutState)
+
+                self.restoreLocation = QPushButton(self)
+                self.restoreLocation.setIcon(Krita.instance().icon('settings-button'))
+                self.restoreLocation.setFixedSize(18,18)
+                self.restoreLocation.setMenu(restoreMenu)
+                self.restoreLocation.setFlat(True)
+                self.ourLayout.addWidget(self.restoreLocation)
+            else:
+                self.restoreLocation = None
+
             self.minimizeBtn = QPushButton(self)
-            self.minimizeBtn.setIcon(Krita.instance().icon('arrow-down'))
+            self.minimizeBtn.setIcon(Krita.instance().icon('docker_collapse_a'))
             self.minimizeBtn.setFixedSize(18,18)
             self.minimizeBtn.clicked.connect(self.parent_popup.toggleShade)
             self.minimizeBtn.setFlat(True)
@@ -55,32 +114,38 @@ class TouchifyPopup(QDockWidget):
             self.closeButton.setFlat(True)
             self.closeButton.clicked.connect(self.parent_popup.closePopup)
             self.ourLayout.addWidget(self.closeButton)
+
+        def updateCollapseState(self, is_collapsed: bool):
+            if is_collapsed:
+                self.minimizeBtn.setIcon(Krita.instance().icon('docker_collapse_a'))
+                if self.restoreLocation: self.restoreLocation.setEnabled(True)
+            else:
+                self.minimizeBtn.setIcon(Krita.instance().icon('docker_collapse_b'))
+                if self.restoreLocation: self.restoreLocation.setEnabled(False)
+                
+
+        def setFloatingVisibility(self, value: bool):
+            self.minimizeBtn.setVisible(value)
+            if self.restoreLocation: self.restoreLocation.setVisible(value)
     
-    def __init__(self, parent: QWidget, args: PopupData, toolshelf_data: ToolshelfData, app_engine: "TouchifyWindow"):     
+    def __init__(self, parent: QWidget, id: str, args: PopupData, toolshelf_data: ToolshelfData, app_engine: "TouchifyWindow"):     
         super().__init__(parent)  
 
         self.isVisibleAction = self.toggleViewAction()
         self.dockLocationChanged.connect(self.onDockLocationChanged)
+        self.current_dock_location = Qt.DockWidgetArea.NoDockWidgetArea
 
         self.config = args
-
+        self.registry_id = id
         self.time_since_opening = QTime()
-
         self.is_collapsed = False
         self.collapsed_old_size = None
         self.collapsed_old_min_size = None
-
         self.composer_work_around = False
-
         self.parent_popup: TouchifyPopup | None = None
         self.child_popup_focused: bool = False
+        self.has_previously_opened = False
 
-        self.closing_method = args.closing_method
-        self.display_type = args.window_type
-        self.last_location_saved = False
-        self.draw_frame = False
-        self.docking_allowed = False
-        self.remember_location = False
 
         self.app_engine: "TouchifyWindow" = app_engine
         self.docker_manager: "DockerManager" = app_engine.docker_management
@@ -88,7 +153,12 @@ class TouchifyPopup(QDockWidget):
         self.canvas_manager: "CanvasManager" = app_engine.canvas_management
         self.toolshelf_data = toolshelf_data
 
-        self.resizing_allowed = self.display_type == PopupData.WindowType.Window
+        self.main_window = self.app_engine.windowSource.qwindow()
+        self.closing_method = args.closing_method
+        self.clamp_to_main_window = args.clamp_to_main_window
+        self.dock_widget_type = args.window_type
+
+        self.resizing_allowed = self.dock_widget_type == PopupData.WindowType.Window
         self.resizing_enabled = self.toolshelf_data.header_options.default_to_resize_mode if self.resizing_allowed else False
 
         self.setAutoFillBackground(True)
@@ -102,6 +172,8 @@ class TouchifyPopup(QDockWidget):
         self.container_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setWidget(self.container_widget)
 
+        self.setFixedWidth()
+
         self.container_grid = QVBoxLayout(self)
         self.container_grid.setContentsMargins(0,0,0,0)
         self.container_grid.setSpacing(0)
@@ -111,25 +183,28 @@ class TouchifyPopup(QDockWidget):
         self.toolshelf_widget.sizeChanged.connect(self.requestViewUpdate)
         self.container_grid.addWidget(self.toolshelf_widget)
 
-        if self.display_type == PopupData.WindowType.Popup:
+        if self.dock_widget_type == PopupData.WindowType.Popup:
             self.draw_frame = True
-            self.docking_allowed = False
-            self.remember_location = False
+            self.window_docking_allowed = False
+            self.window_remember_layout = False
+            self.window_fixed_layout_mode = PopupData.WindowFixedLayoutMode.Off
             self.setTitleBarWidget(QWidget(self))
             
-        elif self.display_type == PopupData.WindowType.Window:
+        elif self.dock_widget_type == PopupData.WindowType.Window:
+            self.draw_frame = False
+            self.window_docking_allowed = args.window_docking_allowed
+            self.window_remember_layout = args.window_remember_layout
+            self.window_fixed_layout_mode = args.window_fixed_layout
             self._toolbar = TouchifyPopup.Titlebar(self)
-            self.docking_allowed = args.window_docking_allowed
-            self.remember_location = args.window_remember_location
             self.setTitleBarWidget(self._toolbar)
 
-        if self.docking_allowed: self.setAllowedAreas(Qt.DockWidgetArea.AllDockWidgetAreas)
+        if self.window_docking_allowed: self.setAllowedAreas(Qt.DockWidgetArea.AllDockWidgetAreas)
         else: self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
 
 
 
 
-    def construct(parent: QWidget, data: PopupData, app_engine: "TouchifyWindow"):      
+    def construct(id: str, parent: QWidget, data: PopupData, app_engine: "TouchifyWindow"):      
         from touchify.src.cfg.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
         from touchify.src.cfg.toolshelf.ToolshelfDataPage import ToolshelfDataPage
         from touchify.src.cfg.toolshelf.ToolshelfDataSection import ToolshelfDataSection
@@ -148,9 +223,9 @@ class TouchifyPopup(QDockWidget):
             dockers = [ ]
 
             if metadata.type == PopupData.Variants.MultipleDockers:
-                from touchify.src.cfg.docker_group.DockerGroupItem import DockerGroupItem
+                from touchify.src.cfg.docker_group.DockerItem import DockerItem
                 for item in metadata.dockers_list:
-                    item: DockerGroupItem
+                    item: DockerItem
                     dockers.append(item.id)
             else:
                 dockers.append(metadata.docker_id)
@@ -207,70 +282,10 @@ class TouchifyPopup(QDockWidget):
                 toolshelf_data = None
         
         if not isinstance(toolshelf_data, ToolshelfData) or toolshelf_data == None: return None                
-        return TouchifyPopup(parent, data, toolshelf_data, app_engine)
+        return TouchifyPopup(parent, id, data, toolshelf_data, app_engine)
                 
 
     #region Helper Methods
-
-    def getGeometry(self, position, width, height, isMouse = False):
-        dialog_width, dialog_height = self.generateSize()
-
-        screen = QGuiApplication.screenAt(position)
-        screen_geometry = screen.geometry()
-        screenSize = screen.size()
-
-        screen_x = screen_geometry.x()
-        screen_y = screen_geometry.y()
-        screen_height = screenSize.height()
-        screen_width = screenSize.width()
-
-        
-        offset_x = position.x() 
-        offset_y = position.y()
-        
-        if not isMouse:
-            offset_x += (width // 2) - (dialog_width // 2)
-            offset_y += (height)
-
-
-        match self.config.popup_position_x:
-            case PopupData.PopupPosition.Start:
-                offset_x -= 0 
-            case PopupData.PopupPosition.Center:
-                offset_x -= (dialog_width // 2) 
-            case PopupData.PopupPosition.End:
-                offset_x -= dialog_width
-            case _:
-                offset_x -= 0 
-
-        match self.config.popup_position_y:
-            case PopupData.PopupPosition.Start:
-                offset_y -= 0 
-            case PopupData.PopupPosition.Center:
-                offset_y -= (dialog_height // 2) 
-            case PopupData.PopupPosition.End:
-                offset_y -= dialog_height
-            case _:
-                offset_y -= 0 
-
-        actual_x = offset_x
-        actual_y = offset_y
-
-        if actual_x + dialog_width > screen_x + screen_width:
-            actual_x = screen_x + screen_width - dialog_width
-        elif actual_x < screen_x:
-            actual_x = screen_x
-
-        if actual_y + dialog_height > screen_y + screen_height:
-            actual_y = screen_y + screen_height - dialog_height
-
-        return [actual_x, actual_y, dialog_width, dialog_height]
-
-    def getActionSource(self, parent: QWidget | None):
-        if parent != None:
-            return self.getGeometry(parent.mapToGlobal(QPoint(0,0)), parent.width(), parent.height())
-        else:
-            return 0, 0, 0, 0
 
     def getParentPopup(self, source: QWidget):
         from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
@@ -285,12 +300,91 @@ class TouchifyPopup(QDockWidget):
         except:
             return None
 
+
     #endregion
 
     #region Size Methods
 
+    def prepareSize(self,  parent: QWidget = None):
+        def OffsetPosition(__hint_width: int, __hint_height: int):
+            if parent == None:
+                parent_pos = QCursor.pos()
+                parent_width = 0
+                parent_height = 0
+
+                offset_x = parent_pos.x()
+                offset_y = parent_pos.y()
+            else:
+                parent_pos = parent.mapToGlobal(QPoint(0,0))
+                parent_width = parent.width()
+                parent_height = parent.height()
+
+                offset_x = parent_pos.x() + (parent_width // 2) - (__hint_width // 2)
+                offset_y = parent_pos.y() + (parent_height)
+
+            match self.config.popup_position_x:
+                case PopupData.PopupPosition.Start:
+                    offset_x -= 0 
+                case PopupData.PopupPosition.Center:
+                    offset_x -= (__hint_width // 2) 
+                case PopupData.PopupPosition.End:
+                    offset_x -= __hint_width
+                case _:
+                    offset_x -= 0 
+
+            match self.config.popup_position_y:
+                case PopupData.PopupPosition.Start:
+                    offset_y -= 0 
+                case PopupData.PopupPosition.Center:
+                    offset_y -= (__hint_height // 2) 
+                case PopupData.PopupPosition.End:
+                    offset_y -= __hint_height
+                case _:
+                    offset_y -= 0 
+        
+            return [offset_x, offset_y]
+
+        def ClampPosition(__x: int, __y: int, __hint_width: int, __hint_height: int):
+            screen_x = self.main_window.geometry().x()
+            screen_y = self.main_window.geometry().y()
+            screen_height = self.main_window.size().height()
+            screen_width = self.main_window.size().width()
+
+            if __x + __hint_width > screen_x + screen_width:
+                __x = screen_x + screen_width - __hint_width
+            elif __x < screen_x:
+                __x = screen_x
+
+            if __y + __hint_height > screen_y + screen_height:
+                __y = screen_y + screen_height - __hint_height
+
+            return [__x, __y]
+
+        last_state = self.getLastLayoutState()
+        fixed_state = self.getFixedLayoutState()
+
+        hint_width, hint_height = self.generateSize()
+        hint_x, hint_y = OffsetPosition(hint_width, hint_height)
+
+        if self.window_fixed_layout_mode == PopupData.WindowFixedLayoutMode.On and fixed_state != None:
+            fixed_pos = fixed_state.position(self.main_window)
+            hint_x, hint_y = fixed_pos.x(), fixed_pos.y()
+            hint_width, hint_height = fixed_state.width(), fixed_state.height()
+
+        elif self.window_remember_layout and last_state != None:
+            last_pos = last_state.position(self.main_window)
+            hint_x, hint_y = last_pos.x(), last_pos.y()
+            hint_width, hint_height = last_state.width(), last_state.height()
+
+
+        if self.clamp_to_main_window:
+            hint_x, hint_y = ClampPosition(hint_x, hint_y, hint_width, hint_height)
+
+        self.setGeometry(hint_x, hint_y, hint_width, hint_height)
+        self.updateSize(hint_width, hint_height)
+
     def generateSize(self):
-        if self.display_type == PopupData.WindowType.Popup and self.toolshelf_widget:
+        if self.dock_widget_type == PopupData.WindowType.Popup and self.toolshelf_widget:
             dialog_width = self.sizeHint().width()
             dialog_height = self.sizeHint().height()
         else:
@@ -300,9 +394,9 @@ class TouchifyPopup(QDockWidget):
         return [int(dialog_width), int(dialog_height)]
     
     def updateSize(self, dialog_width: int, dialog_height: int):
-        if self.display_type == PopupData.WindowType.Popup:
+        if self.dock_widget_type == PopupData.WindowType.Popup:
             self.setFixedSize(dialog_width, dialog_height)
-        elif self.display_type == PopupData.WindowType.Window:
+        elif self.dock_widget_type == PopupData.WindowType.Window:
             if self.is_collapsed == False:
                 self.setMinimumSize(dialog_width, dialog_height)
                 if self.resizing_enabled == False:
@@ -328,10 +422,14 @@ class TouchifyPopup(QDockWidget):
         if self.child_popup_focused: return
 
         if self.isVisibleAction.isChecked():
+            if self.is_collapsed: self.toggleShade()
             self.isVisibleAction.trigger()
 
-            if self.remember_location:
-                self.last_location_saved = True
+            self.has_previously_opened = True
+
+
+            if self.window_remember_layout:    
+                self.storeLastLayoutState()
 
             if self.parent_popup:
                 self.parent_popup.child_popup_focused = False
@@ -340,7 +438,7 @@ class TouchifyPopup(QDockWidget):
     def triggerPopup(self, parent: QWidget = None):
         if self.isVisible():
             self.closePopup()
-            if not self.display_type == PopupData.WindowType.Popup: 
+            if not self.dock_widget_type == PopupData.WindowType.Popup: 
                 return
         
         if parent != None:
@@ -349,52 +447,73 @@ class TouchifyPopup(QDockWidget):
                 self.parent_popup = result
                 self.parent_popup.child_popup_focused = True
         
-        if self.last_location_saved == False:
-            actual_x = 0
-            actual_y = 0
-            dialog_width = 0
-            dialog_height = 0
-
-            if not self.isFloating():
-                self.setFloating(True)
-
-            if parent == None:
-                actual_x, actual_y, dialog_width, dialog_height = self.getGeometry(QCursor.pos(), 0, 0, True)
-            else:
-                actual_x, actual_y, dialog_width, dialog_height = self.getActionSource(parent)
-            
-            self.setGeometry(actual_x, actual_y, dialog_width, dialog_height)
-            self.updateSize(dialog_width, dialog_height)
-            self.show()
-        else:
-            self.show()
-
-        if self.display_type == PopupData.WindowType.Popup:
+        self.prepareSize(parent)
+        self.show()
+        
+        if self.dock_widget_type == PopupData.WindowType.Popup:
             self.activateWindow()
             
         self.time_since_opening = QTime.currentTime()
 
 
+    def getLastLayoutState(self) -> LayoutState | None:
+        if self.isFloating() and self.is_collapsed == False:
+            state_str: str = KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_POPUPS_LAST_LOCATIONS, self.registry_id, "")
+            return TouchifyPopup.LayoutState.prase(state_str)
+        else:
+            return None
+
+    def getFixedLayoutState(self) -> LayoutState | None:
+        if self.isFloating() and self.is_collapsed == False:
+            state_str: str = KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_POPUPS_FIXED_LOCATIONS, self.registry_id, "")
+            return TouchifyPopup.LayoutState.prase(state_str)
+        else:
+            return None
+    
+    def getCurrentLayoutState(self):
+        current_location = TouchifyPopup.LayoutState.positionRelative(self.main_window, self)
+        current_size = self.size()
+        return TouchifyPopup.LayoutState(current_location.x(), current_location.y(), current_size.width(), current_size.height())
+
+    def storeLastLayoutState(self):
+        if self.isFloating() and self.is_collapsed == False:
+            current_state = self.getCurrentLayoutState()
+            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_POPUPS_LAST_LOCATIONS, self.registry_id, current_state.value(), False)
+
+    def storeFixedLayoutState(self):
+        if self.isFloating() and self.is_collapsed == False:
+            current_state = self.getCurrentLayoutState()
+            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_POPUPS_FIXED_LOCATIONS, self.registry_id, current_state.value(), False)
+
+    def restoreFixedLayoutState(self):
+        state = self.getFixedLayoutState()
+        if state and self.is_collapsed == False:
+            self.setFloating(True)
+            self.move(state.position(self.main_window))
+            self.resize(state.width(), state.height())
+
 
     def toggleShade(self):
-        if self.display_type == PopupData.WindowType.Window:
+        if self.dock_widget_type == PopupData.WindowType.Window:
             if self._toolbar:
                 if self.is_collapsed:
                     self.setMinimumSize(self.collapsed_old_min_size)
                     self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
                     self.resize(self.collapsed_old_size)
+                    self._toolbar.updateCollapseState(True)
                     self.container_widget.setVisible(True)
                     self.collapsed_old_size = None
                     self.collapsed_old_min_size = None
                     self.is_collapsed = False
-                    if self.docking_allowed: self.setAllowedAreas(Qt.DockWidgetArea.AllDockWidgetAreas)
+                    if self.window_docking_allowed: self.setAllowedAreas(Qt.DockWidgetArea.AllDockWidgetAreas)
                 else:
                     self.collapsed_old_size = self.size()
                     self.collapsed_old_min_size = self.minimumSize()
-                    self.setFixedSize(self._toolbar.width(), self._toolbar.height() + 1)
+                    self._toolbar.updateCollapseState(False)
+                    self.setFixedSize(self.size().width(), self._toolbar.height() + 5)
                     self.container_widget.setVisible(False)
                     self.is_collapsed = True
-                    if self.docking_allowed: self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
+                    if self.window_docking_allowed: self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
     
     def shutdownWidget(self):
         if self.toolshelf_widget:
@@ -410,12 +529,11 @@ class TouchifyPopup(QDockWidget):
     #region Events 
 
     def onDockLocationChanged(self):
-        if self.display_type != PopupData.WindowType.Window: return
+        self.current_dock_location = self.main_window.dockWidgetArea(self)
+        if self.dock_widget_type != PopupData.WindowType.Window: return
         if not self._toolbar: return
-        if self.isFloating():
-            self._toolbar.minimizeBtn.setVisible(True)
-        else:
-            self._toolbar.minimizeBtn.setVisible(False)
+        if self.isFloating(): self._toolbar.setFloatingVisibility(True)
+        else: self._toolbar.setFloatingVisibility(False)
 
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)
@@ -435,8 +553,8 @@ class TouchifyPopup(QDockWidget):
             if self.closing_method == PopupData.ClosingMethod.Deactivation: self.closePopup()
             elif self.closing_method == PopupData.ClosingMethod.MouseLeave: pass
     
-            elif self.display_type == PopupData.WindowType.Popup: self.closePopup()
-            elif self.display_type == PopupData.WindowType.Window: pass
+            elif self.dock_widget_type == PopupData.WindowType.Popup: self.closePopup()
+            elif self.dock_widget_type == PopupData.WindowType.Window: pass
 
         return super().event(event)
 

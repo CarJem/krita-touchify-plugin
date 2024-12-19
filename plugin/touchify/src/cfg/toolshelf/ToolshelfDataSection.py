@@ -6,6 +6,10 @@ from touchify.src.ext.types.StrEnum import StrEnum
 
 class ToolshelfDataSection:
 
+    class SubpanelMode(StrEnum):
+        Data = "data"
+        Reference = "reference"
+
     class SectionType(StrEnum):
         Actions = "actions"
         Docker = "docker"
@@ -92,6 +96,9 @@ class ToolshelfDataSection:
 
         self.special_item_type: str = "none"
 
+        self.subpanel_id: str = ""
+        self.subpanel_mode: str = "data"
+
         self.json_version: int = 4
 
     def __init__(self, **args) -> None:
@@ -173,7 +180,15 @@ class ToolshelfDataSection:
         ]
 
         subgroup_groups = [
-            "subpanel_data",
+            "subpanel_mode"
+        ]
+
+        subgroup_data_groups = [
+            "subpanel_data"
+        ]
+
+        subgroup_refrence_groups = [
+            "subpanel_id"
         ]
 
         result = []
@@ -183,9 +198,17 @@ class ToolshelfDataSection:
         if self.section_type != ToolshelfDataSection.SectionType.Actions:
             for item in action_groups:
                 result.append(item)
+
         if self.section_type != ToolshelfDataSection.SectionType.Subpanel:
-            for item in subgroup_groups:
-                result.append(item)
+            all_groups = subgroup_groups + subgroup_data_groups + subgroup_refrence_groups
+            for item in all_groups: result.append(item)
+        else:
+            if self.subpanel_mode != self.SubpanelMode.Data:
+                for item in subgroup_data_groups:
+                    result.append(item)
+            if self.subpanel_mode != self.SubpanelMode.Reference:
+                for item in subgroup_refrence_groups:
+                    result.append(item)
         if self.section_type != ToolshelfDataSection.SectionType.Special:
             for item in special_groups:
                 result.append(item)
@@ -221,7 +244,9 @@ class ToolshelfDataSection:
 
         labels["special_item_type"] = "Component Type"
 
+        labels["subpanel_mode"] = "Subpanel Mode"
         labels["subpanel_data"] = "Subpanel Options"
+        labels["subpanel_id"] = "Subshelf ID"
         return labels
     
     def propertygrid_sisters(self):
@@ -248,7 +273,9 @@ class ToolshelfDataSection:
             "action_section_alignment", 
             "action_section_icon_size",
             "action_section_contents",
-            "special_item_type"
+            "special_item_type",
+            "subpanel_mode",
+            "subpanel_id"
         ]
 
         row["general_group"] = {"items": global_groups, "is_group": True}
@@ -289,4 +316,6 @@ class ToolshelfDataSection:
         restrictions["special_item_type"] = {"type": "values", "entries": self.SpecialItemType.values()}
 
         restrictions["subpanel_data"] = {"type": "expandable"}
+        restrictions["subpanel_mode"] = {"type": "values", "entries": self.SubpanelMode.values()}
+        restrictions["subpanel_id"] = {"type": "registry_toolshelf_selection"}
         return restrictions

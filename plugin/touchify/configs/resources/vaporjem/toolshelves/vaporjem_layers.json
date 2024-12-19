@@ -30,6 +30,8 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "layer_label_box",
+                "subpanel_id": "",
+                "subpanel_mode": "data",
                 "json_version": 4,
                 "subpanel_data": {
                     "id": "",
@@ -179,6 +181,8 @@
                 "action_section_btn_height": 35,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "subpanel_id": "",
+                "subpanel_mode": "data",
                 "json_version": 4,
                 "subpanel_data": {
                     "id": "",
@@ -217,6 +221,8 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "subpanel_id": "",
+                "subpanel_mode": "data",
                 "json_version": 4,
                 "subpanel_data": {
                     "id": "",
@@ -345,6 +351,8 @@
                 "action_section_btn_height": 32,
                 "action_section_icon_size": 24,
                 "special_item_type": "none",
+                "subpanel_id": "",
+                "subpanel_mode": "data",
                 "json_version": 4,
                 "subpanel_data": {
                     "id": "",
@@ -381,6 +389,6 @@
         "json_version": 1
     },
     "preset_name": "Layers",
-    "preset_group": "Popups...",
+    "preset_group": "Internal...",
     "json_version": 3
 }

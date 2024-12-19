@@ -144,7 +144,7 @@ class ActionManager(QObject):
             if popup_id in self.active_popups: 
                 del self.active_popups[popup_id]
 
-            popup = TouchifyPopup.construct(self.appEngine.windowSource.qwindow().window(), data, self.appEngine)
+            popup = TouchifyPopup.construct(id, self.appEngine.windowSource.qwindow().window(), data, self.appEngine)
             if popup == None: return
             
             self.active_popups[popup_id] = popup
@@ -197,8 +197,8 @@ class ActionManager(QObject):
 
         for popup_id in self.active_popups:
             try:
-                self.active_popups[popup_id].deletePopup()
-                del self.active_popups[popup_id]
+                popup: TouchifyPopup = self.active_popups[popup_id]
+                popup.shutdownWidget()
             except:
                 pass
         self.active_popups.clear()

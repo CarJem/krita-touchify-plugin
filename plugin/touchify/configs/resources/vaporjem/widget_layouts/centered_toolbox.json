@@ -1,21 +1,21 @@
 {
-    "preset_name": "Default Layout",
+    "preset_name": "Centered Toolbox",
     "toolbox": {
-        "position_x": 3,
+        "position_x": 0,
         "position_y": 0,
         "alignment_y": "top",
         "alignment_x": "center",
         "stretch_x": 0,
         "stretch_y": 0,
-        "span_x": -1,
-        "span_y": -1,
-        "horizontal_mode": false,
+        "span_x": 3,
+        "span_y": 0,
+        "horizontal_mode": true,
         "json_version": 1
     },
     "toolshelf_alt": {
-        "position_x": 1,
+        "position_x": 0,
         "position_y": 0,
-        "stretch_x": 1,
+        "stretch_x": 0,
         "stretch_y": 0,
         "span_x": -1,
         "span_y": -1,

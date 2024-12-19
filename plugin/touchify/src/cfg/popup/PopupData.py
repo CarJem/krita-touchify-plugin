@@ -1,4 +1,4 @@
-from touchify.src.cfg.docker_group.DockerGroupItem import DockerGroupItem
+from touchify.src.cfg.docker_group.DockerItem import DockerItem
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.ext.types.TypedList import TypedList
@@ -10,6 +10,11 @@ if TYPE_CHECKING:
     from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
 
 class PopupData:
+
+    class WindowFixedLayoutMode(StrEnum):
+        Off = "off"
+        OnRequest = "on_request"
+        On = "on"
 
     class DockersTabType(StrEnum):
         Buttons = "buttons"
@@ -37,15 +42,19 @@ class PopupData:
         End = "end"
 
     def __defaults__(self):
+        self.registry_name: str = "New Popup"
+
         self.id: str = "NewPopup"
         self.window_type: str = "popup"
         self.window_title: str = ""
 
         self.window_docking_allowed: bool = False
-        self.window_remember_location: bool = False
+        self.window_remember_layout: bool = False
+        self.window_fixed_layout: str = "off"
         
         self.type: str = "actions"
         self.closing_method: str = "default"
+        self.clamp_to_main_window: bool = True
 
         self.popup_position_x: str = "default"
         self.popup_position_y: str = "default"
@@ -65,7 +74,7 @@ class PopupData:
 
         self.docker_id: str = ""
 
-        self.dockers_list: TypedList[DockerGroupItem] = []
+        self.dockers_list: TypedList[DockerItem] = []
         self.dockers_tab_type: str = "tabs"
         
         
@@ -85,10 +94,10 @@ class PopupData:
         from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
         self.actions_items = Extensions.init_list(args, "actions_items", TriggerGroup)
 
-        self.dockers_list = Extensions.init_list(args, "dockers_list", DockerGroupItem)
+        self.dockers_list = Extensions.init_list(args, "dockers_list", DockerItem)
 
     def __str__(self):
-        return self.window_title.replace("\n", "\\n")
+        return self.registry_name
     
     def getFileName(self):
         return FileExtensions.fileStringify(self.id)
@@ -96,7 +105,7 @@ class PopupData:
     def forceLoad(self):
         from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
         self.actions_items = TypedList(self.actions_items, TriggerGroup)
-        self.dockers_list = TypedList(self.dockers_list, DockerGroupItem)
+        self.dockers_list = TypedList(self.dockers_list, DockerItem)
 
 
 
@@ -110,18 +119,21 @@ class PopupData:
      
     def propertygrid_sorted(self):
         common_settings = [
+            "registry_name",
             "id",
             "window_title",
             "closing_method",
             "popup_position",
             "popup_size",
             "popup_min_size",
+            "clamp_to_main_window",
             "window_type"   
         ]
 
         window_type_settings = [
             "window_docking_allowed",
-            "window_remember_location"
+            "window_remember_layout",
+            "window_fixed_layout"
         ]
 
         popup_type_settings = [
@@ -176,12 +188,14 @@ class PopupData:
             "popup_position",
             "popup_size",
             "popup_min_size",
+            "clamp_to_main_window",
             "window_type"   
         ]
 
         window_type_settings = [
             "window_docking_allowed",
-            "window_remember_location"
+            "window_remember_layout",
+            "window_fixed_layout"
         ]
 
         popup_type_settings = [
@@ -245,10 +259,12 @@ class PopupData:
 
     def propertygrid_labels(self):
         labels = {}
+        labels["registry_name"] = "Registry display name"
         labels["id"] = "Popup ID"
         labels["window_type"] = "Window Type"
         labels["window_docking_allowed"] = "Allow window docking"
-        labels["window_remember_location"] = "Remember window location"
+        labels["window_remember_layout"] = "Remember layout"
+        labels["window_fixed_layout"] = "Fixed layout"
         labels["type"] = "Popup Type"
         labels["docker_id"] = "Docker ID"
         labels["dockers_list"] = "Dockers"
@@ -261,6 +277,7 @@ class PopupData:
         labels["window_title"] = "Window Title"
         labels["closing_method"] = "Closing Method"
         labels["popup_position"] = "Popup Position"
+        labels["clamp_to_main_window"] = "Clamp to main window"
         return labels
 
     def propertygrid_restrictions(self):
@@ -272,6 +289,7 @@ class PopupData:
         restrictions["popup_position_y"] = {"type": "values", "entries": self.PopupPosition.values()}
         restrictions["closing_method"] = {"type": "values", "entries": self.ClosingMethod.values()}
         restrictions["dockers_tab_type"] = {"type": "values", "entries": self.DockersTabType.values()}
+        restrictions["window_fixed_layout"] = {"type": "values", "entries": self.WindowFixedLayoutMode.values()}
         restrictions["toolshelf_id"] = {"type": "registry_toolshelf_selection"}
 
         restrictions["actions_item_height"] = {"type": "range", "min": 0}

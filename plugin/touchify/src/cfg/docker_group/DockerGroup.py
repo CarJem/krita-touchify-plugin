@@ -1,7 +1,7 @@
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.ext.types.TypedList import TypedList
-from touchify.src.cfg.docker_group.DockerGroupItem import DockerGroupItem
+from touchify.src.cfg.docker_group.DockerItem import DockerItem
 from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 
 class DockerGroup:
@@ -11,13 +11,13 @@ class DockerGroup:
         self.id: str = "NewDockerGroup"
         self.tabs_mode: bool = True
         self.group_id: str = ""
-        self.docker_names: TypedList[DockerGroupItem] = []
+        self.docker_names: TypedList[DockerItem] = []
 
     def __init__(self, **args) -> None:
         self.__defaults__()
         args = BackwardsCompatibility.DockerGroup(args)
         Extensions.dictToObject(self, args)
-        self.docker_names = Extensions.init_list(args, "docker_names", DockerGroupItem)
+        self.docker_names = Extensions.init_list(args, "docker_names", DockerItem)
 
     def __str__(self):
         return self.registry_name
@@ -26,7 +26,7 @@ class DockerGroup:
         return FileExtensions.fileStringify(self.id)
 
     def forceLoad(self):
-        self.docker_names = TypedList(self.docker_names, DockerGroupItem)
+        self.docker_names = TypedList(self.docker_names, DockerItem)
 
     def propertygrid_sorted(self):
         return [
