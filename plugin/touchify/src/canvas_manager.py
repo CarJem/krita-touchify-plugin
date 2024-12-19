@@ -58,7 +58,7 @@ class CanvasManager(QObject):
         if not self.__IsCanvasWidget__(obj): 
             return super().eventFilter(obj, event)
         
-        if event.type() == QEvent.Type.MouseButtonPress:
+        if event.type() == QEvent.Type.MouseButtonPress or event.type() == QEvent.Type.TabletPress:
                 match event.button():
                     case Qt.MouseButton.LeftButton:
                         self.__runCanvasAction__(TouchifySettings.instance().preferences().Canvas_LeftClickAction)
@@ -69,18 +69,18 @@ class CanvasManager(QObject):
                     case Qt.MouseButton.MiddleButton:
                         self.__runCanvasAction__(TouchifySettings.instance().preferences().Canvas_MiddleClickAction)
                         self.mouseMiddlePress.emit()
-        elif event.type() == QEvent.Type.MouseButtonRelease:
+        elif event.type() == QEvent.Type.MouseButtonRelease or event.type() == QEvent.Type.TabletRelease:
                 if self.lastCanvasFocus:
                     self.delayedFocus.emit()
                     self.lastCanvasFocus = None
-                else:
-                    match event.button():
-                        case Qt.MouseButton.LeftButton:
-                            self.mouseLeftRelease.emit()
-                        case Qt.MouseButton.RightButton:
-                            self.mouseRightRelease.emit()
-                        case Qt.MouseButton.MiddleButton:
-                            self.mouseMiddleRelease.emit()
+
+                match event.button():
+                    case Qt.MouseButton.LeftButton:
+                        self.mouseLeftRelease.emit()
+                    case Qt.MouseButton.RightButton:
+                        self.mouseRightRelease.emit()
+                    case Qt.MouseButton.MiddleButton:
+                        self.mouseMiddleRelease.emit()
         elif event.type() == QEvent.Type.FocusIn:
             if obj.hasFocus(): 
                 self.lastCanvasFocus = obj

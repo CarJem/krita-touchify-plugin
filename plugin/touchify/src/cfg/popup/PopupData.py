@@ -28,6 +28,7 @@ class PopupData:
     class ClosingMethod(StrEnum):
         Default = "default"
         Deactivation = "deactivation"
+        MouseLeave = "mouse_leave"
 
     class PopupPosition(StrEnum):
         Default = "default"
@@ -134,7 +135,7 @@ class PopupData:
         action_mode_settings = [
             "actions_items",
             "actions_item_size",
-            "actions_icon_size",
+            "actions_icon_size"
         ]
 
         docker_mode_single_settings = [
@@ -194,7 +195,7 @@ class PopupData:
         action_mode_settings = [
             "actions_items",
             "actions_item_size",
-            "actions_icon_size",
+            "actions_icon_size"
         ]
 
         docker_mode_single_settings = [

@@ -7,6 +7,7 @@ from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 class DockerGroup:
 
     def __defaults__(self):
+        self.registry_name: str = "New Docker Group"
         self.id: str = "NewDockerGroup"
         self.tabs_mode: bool = True
         self.group_id: str = ""
@@ -18,6 +19,9 @@ class DockerGroup:
         Extensions.dictToObject(self, args)
         self.docker_names = Extensions.init_list(args, "docker_names", DockerGroupItem)
 
+    def __str__(self):
+        return self.registry_name
+
     def getFileName(self):
         return FileExtensions.fileStringify(self.id)
 
@@ -26,6 +30,7 @@ class DockerGroup:
 
     def propertygrid_sorted(self):
         return [
+            "registry_name",
             "id",
             "group_id",
             "tabs_mode",
@@ -34,6 +39,7 @@ class DockerGroup:
     
     def propertygrid_labels(self):
         labels = {}
+        labels["registry_name"] = "Registry Name"
         labels["id"] = "Group ID"
         labels["tabs_mode"] = "Tab Mode"
         labels["group_id"] = "Tab Mode Group ID"

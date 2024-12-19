@@ -60,7 +60,8 @@ class PropertyView_Form(QWidget, PropertyView):
         hiddenItems = PropertyView.getHiddenVariableNames(self)
 
         for field in self.fields:     
-            if field.variable_name in hiddenItems: field.setHidden(True)
+            
+            if field.variable_name in hiddenItems or (field.sister_id != None and field.sister_id in hiddenItems): field.setHidden(True)
             else: field.setHidden(False)
 
         for label in self.labels:     
@@ -86,7 +87,7 @@ class PropertyView_Form(QWidget, PropertyView):
             return field
         return None
 
-    def createSisterField(self, source: any, sister_data: dict[str, any], labelData: dict, hintData: dict):
+    def createSisterField(self, source: any, sister_id: str, sister_data: dict[str, any], labelData: dict, hintData: dict):
         sister_items = list[str](sister_data["items"])
 
         use_labels: bool = False
@@ -112,6 +113,7 @@ class PropertyView_Form(QWidget, PropertyView):
 
         for index, variable_name in enumerate(sister_items):
             field = self.createField(source, variable_name)
+            field.sister_id = sister_id
 
             if use_labels:
                 header = self.createLabel(variable_name, labelData, hintData, True)
@@ -188,7 +190,7 @@ class PropertyView_Form(QWidget, PropertyView):
                     is_group = bool(sister_info["is_group"])
                     
                 if is_group == False:
-                    field = self.createSisterField(item, sister_info, labelData, hintData)
+                    field = self.createSisterField(item, variable_id, sister_info, labelData, hintData)
             else:
                 field = self.createField(item, variable_id)
 

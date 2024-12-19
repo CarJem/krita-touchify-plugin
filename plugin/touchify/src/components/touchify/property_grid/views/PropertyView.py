@@ -27,7 +27,7 @@ class PropertyView(QObject):
         
         hidden_variables = []
         variables_requested_to_hide = PropertyUtils_Extensions.classHiddenVariables(self.item)
-        variable_names, b, c = self.getClassVariablesWithSisters(self.item)
+        variable_names, known_sisters, sister_data = self.getClassVariablesWithSisters(self.item)
 
         hidden_variables.append("json_version")
 
@@ -36,7 +36,7 @@ class PropertyView(QObject):
                 hidden_variables.append(varName)
 
         for varName in variables_requested_to_hide:
-            if varName in variables_requested_to_hide:
+            if varName in variable_names:
                 hidden_variables.append(varName)
         
         return hidden_variables

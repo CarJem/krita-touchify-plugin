@@ -24,14 +24,12 @@ class PropertyField(QWidget):
         self.common_setup()
         
         if not self.is_typed: self.test_restrictions()
-
-    def getFieldData(self):
-         return [self.variable_name, self.variable_data, self.variable_source]
          
     def setup(self, variable_name=str, variable_data=any, variable_source=any):
         self.variable_name = variable_name
         self.variable_data = variable_data
         self.variable_source = variable_source
+        self.sister_id = None
 
     def setStackHost(self, host: PropertyGrid):
         self.stack_host = host

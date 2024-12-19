@@ -5,7 +5,7 @@
     "window_docking_allowed": false,
     "window_remember_location": false,
     "type": "docker",
-    "closing_method": "default",
+    "closing_method": "mouse_leave",
     "popup_position_x": "default",
     "popup_position_y": "default",
     "popup_width": 200,

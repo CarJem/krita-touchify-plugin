@@ -95,6 +95,7 @@ class TouchifyPopup(QDockWidget):
         self.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
+        self.setMouseTracking(True)
         
         self.container_widget = QWidget(self)
         self.container_widget.setContentsMargins(1,1,1,1) # essential to draw the frame properly
@@ -121,7 +122,6 @@ class TouchifyPopup(QDockWidget):
             self.docking_allowed = args.window_docking_allowed
             self.remember_location = args.window_remember_location
             self.setTitleBarWidget(self._toolbar)
-            self.setMouseTracking(True)
 
         if self.docking_allowed: self.setAllowedAreas(Qt.DockWidgetArea.AllDockWidgetAreas)
         else: self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
@@ -428,17 +428,24 @@ class TouchifyPopup(QDockWidget):
         self.composer_work_around = False
 
     def event(self, event: QEvent):
-        is_deactivation_event = event.type() == QEvent.Type.WindowDeactivate and not self.isActiveWindow()
-        if not is_deactivation_event: return super().event(event)
-        if self.composer_work_around: return super().event(event)
-        
-        if self.closing_method == PopupData.ClosingMethod.Deactivation:
-            self.closePopup()
-        else:
-            if self.display_type == PopupData.WindowType.Popup:
-                self.closePopup()
+        if event.type() == QEvent.Type.WindowDeactivate:
+            if self.isActiveWindow(): return super().event(event)
+            if self.composer_work_around: return super().event(event)
+            
+            if self.closing_method == PopupData.ClosingMethod.Deactivation: self.closePopup()
+            elif self.closing_method == PopupData.ClosingMethod.MouseLeave: pass
+    
+            elif self.display_type == PopupData.WindowType.Popup: self.closePopup()
+            elif self.display_type == PopupData.WindowType.Window: pass
 
         return super().event(event)
+
+    def leaveEvent(self, event: QEvent):
+        if event.type() == QEvent.Type.Leave:
+            if self.closing_method == PopupData.ClosingMethod.MouseLeave:
+                self.closePopup()
+
+        return super().leaveEvent(event)
 
     def closeEvent(self, event):
         super().closeEvent(event)
