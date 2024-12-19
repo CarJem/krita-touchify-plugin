@@ -8,9 +8,11 @@ class TriggerMenuItem(Trigger):
     class Variants(StrEnum):
         Action = "action"
         Menu = "menu"
+        Seperator = "seperator"
 
     def __defaults__(self):
         self.context_menu_actions: TypedList["TriggerMenuItem"] = []
+        self.variant: str = "action"
     
 
     def __init__(self, **args) -> None:

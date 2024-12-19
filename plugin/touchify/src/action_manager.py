@@ -113,6 +113,11 @@ class ActionManager(QObject):
                 else:
                     actual_action = parent.krita_instance.action(data.action_id)
                 if actual_action: parent.addAction(actual_action)
+            case TriggerMenuItem.Variants.Seperator:
+                actual_action = QAction(parent)
+                actual_action.setText(data.display_custom_text)
+                actual_action.setSeparator(True)
+                if actual_action: parent.addAction(actual_action)                
             case _:
                 actual_action = QAction(parent)
                 actual_action.setText(data.display_custom_text)
