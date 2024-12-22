@@ -433,7 +433,7 @@ class TouchifyPopup(QDockWidget):
 
             if self.parent_popup:
                 self.parent_popup.child_popup_focused = False
-                self.parent_popup.activateWindow()
+                QTimer.singleShot(150, self.parent_popup.activateWindow)
 
     def triggerPopup(self, parent: QWidget = None):
         if self.isVisible():
