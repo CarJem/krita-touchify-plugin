@@ -172,8 +172,6 @@ class TouchifyPopup(QDockWidget):
         self.container_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setWidget(self.container_widget)
 
-        self.setFixedWidth()
-
         self.container_grid = QVBoxLayout(self)
         self.container_grid.setContentsMargins(0,0,0,0)
         self.container_grid.setSpacing(0)
@@ -201,6 +199,7 @@ class TouchifyPopup(QDockWidget):
         if self.window_docking_allowed: self.setAllowedAreas(Qt.DockWidgetArea.AllDockWidgetAreas)
         else: self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
 
+        self.app_engine.canvas_management.normalFocus.connect(self.canvasFocusEvent)
 
 
 
@@ -290,12 +289,12 @@ class TouchifyPopup(QDockWidget):
     def getParentPopup(self, source: QWidget):
         from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
         try:
-            widget = source.parent()
+            widget = source.parentWidget()
             while (widget):
                 foo = widget
                 if isinstance(foo, TouchifyPopup):
                     return foo
-                widget = widget.parent()
+                widget = widget.parentWidget()
             return None
         except:
             return None
@@ -552,11 +551,25 @@ class TouchifyPopup(QDockWidget):
             
             if self.closing_method == PopupData.ClosingMethod.Deactivation: self.closePopup()
             elif self.closing_method == PopupData.ClosingMethod.MouseLeave: pass
-    
+
             elif self.dock_widget_type == PopupData.WindowType.Popup: self.closePopup()
             elif self.dock_widget_type == PopupData.WindowType.Window: pass
 
         return super().event(event)
+    
+
+    def canvasFocusEvent(self):
+        pass
+        #if self.child_popup_focused: return
+        #if self.isActiveWindow(): return 
+        #if self.composer_work_around: return
+
+        #if self.closing_method == PopupData.ClosingMethod.Deactivation: self.closePopup()
+        #elif self.closing_method == PopupData.ClosingMethod.MouseLeave: pass
+
+        #elif self.dock_widget_type == PopupData.WindowType.Popup: self.closePopup()
+        #elif self.dock_widget_type == PopupData.WindowType.Window: pass
+
 
     def leaveEvent(self, event: QEvent):
         if event.type() == QEvent.Type.Leave:
