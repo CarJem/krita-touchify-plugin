@@ -75,7 +75,8 @@ class TouchifyActionPanel(QWidget):
         if action in self.registered_actions:
             btn = self.registered_actions[action]
             btn.setChecked(action.isChecked())
-            btn.updateIcon(action)
+            if btn.use_action_icon: 
+                btn.setIcon(action.icon())
     
     def registerAction(self, btn: TouchifyActionButton, action: QAction):
         action.changed.connect(self.updateButtonV2)
@@ -193,7 +194,7 @@ class TouchifyActionPanel(QWidget):
                 act: Trigger = entry
                 btn = self.actions_manager.createButton(self, act)
                 if btn:
-                    btn.clicked.connect(self.onButtonClicked)
+                    btn.triggerActivated.connect(self.onButtonClicked)
                     self.stylizeButton(btn)
                     self.appendButton(act, btn, row_index)
 

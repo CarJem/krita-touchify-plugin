@@ -91,7 +91,7 @@ class ActionManager(QObject):
 
         if result and result != None:
             if data.extra_closes_popup == True:
-                result.clicked.connect(lambda: self.__btn_closePopup(result))
+                result.triggerActivated.connect(lambda: self.__btn_closePopup(result))
             result.setParent(parent)
 
         return result
@@ -403,10 +403,9 @@ class ActionManager(QObject):
         btn = TouchifyActionButton()
         
         if onClick:
-            if composerMode:
-                btn.pressed.connect(lambda: self.onComposerBtnPressed(btn, onClick))
-            else:
-                btn.clicked.connect(onClick) # collect and disconnect all when closing
+            if composerMode: btn.setTrigger(lambda: self.onComposerBtnPressed(btn, onClick), True)
+            else: btn.setTrigger(onClick) # collect and disconnect all when closing
+                
         btn.setToolTip(toolTip)
         btn.setContentsMargins(0,0,0,0)
         btn.setCheckable(checkable)
@@ -433,13 +432,13 @@ class ActionManager(QObject):
         
         contextMenu = TouchifyActionMenu(data, btn, self)
         btn.setMenu(contextMenu)
-        btn.clicked.connect(btn.showMenu)
+        btn.triggerActivated.connect(btn.showMenu)
         return btn
     
     def button_popup(self, data: Trigger):
         btn: TouchifyActionButton | None = None
         btn = self.button_main(None, data.display_custom_text, False)
-        btn.clicked.connect((lambda: self.openPopup(data.popup_data, btn)))
+        btn.triggerActivated.connect((lambda: self.openPopup(data.popup_data, btn)))
         self.__setButtonDisplay(data, btn)
         return btn
 

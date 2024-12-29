@@ -5,6 +5,9 @@ from PyQt5.QtCore import *
 from krita import *
 
 
+from touchify.src.action_manager import ActionManager
+from touchify.src.cfg.triggers.Trigger import Trigger
+from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
 from touchify.src.variables import *
 
 from touchify.src.ext.KritaSettings import KritaSettings
@@ -14,7 +17,6 @@ from touchify.src.components.touchify.dockers.toolbox.ToolboxCategory import Too
 from touchify.src.components.touchify.dockers.toolbox.ToolboxScrollArea import ToolboxScrollArea
 from touchify.src.components.touchify.dockers.toolbox.ToolboxStyle import ToolboxStyle
 from touchify.src.components.touchify.dockers.toolbox.ToolboxMenu import ToolboxMenu
-from touchify.src.components.touchify.dockers.toolbox.ToolboxButton import ToolboxButton
 from touchify.src.settings import TouchifySettings
 from touchify.src.cfg.toolbox.ToolboxData import ToolboxData
 from touchify.src.cfg.toolbox.ToolboxDataItem import ToolboxDataItem
@@ -72,6 +74,7 @@ class ToolboxWidget(QResizableWidget):
         super().__init__(parent)
 
         self.sourceWindow: Window = None
+        self.actionEngine: ActionManager = None
 
         self.OPACITY_LEVEL = 0.65
 
@@ -83,7 +86,7 @@ class ToolboxWidget(QResizableWidget):
         self.horizontalMode: bool = KritaSettings.readSettingBool(TOUCHIFY_ID_DOCKER_TOOLBOX, "IsHorizontal", False)
         self.categories: list[ToolboxCategory] = []
         self.lastActiveTool = ""
-        self.registeredToolBtns: list[ToolboxButton] = []
+        self.registeredToolBtns: list[TouchifyActionButton] = []
         self.horizontalModeAction: QAction = None
 
 
@@ -122,6 +125,7 @@ class ToolboxWidget(QResizableWidget):
 
     def setup(self, instance: "TouchifyWindow"):
         self.sourceWindow = instance.windowSource
+        self.actionEngine = instance.action_management
         self.reload()
     
 
@@ -214,19 +218,7 @@ class ToolboxWidget(QResizableWidget):
         return ""
 
     def updateCheckedStates(self):
-        activeTool = self.getActiveToolButton()
-
-        if activeTool != "":
-            for btn in self.registeredToolBtns:
-                actualName = btn.actionName
-                if btn.actionName in TOOLBOX_ITEMS:
-                    actualName = TOOLBOX_ITEMS[actualName]
-  
-                if btn.actionName == activeTool:
-                    btn.setChecked(True)
-                else:
-                    btn.setChecked(False)
-            self.lastActiveTool = activeTool
+        pass
 
     #region Setters
 
@@ -268,11 +260,9 @@ class ToolboxWidget(QResizableWidget):
 
     def unload(self):
         for cat in self.categories:
-            btnList: list[ToolboxButton] = cat.buttons
+            btnList: list[TouchifyActionButton] = cat.buttons
             for btn in btnList:
                 cat.removeTool(btn)
-                if btn.actionName in TOOLBOX_ITEMS:
-                    self.buttonGroup.removeButton(btn)
                 btn.hide()
                 btn.close()
             self.viewportLayout.removeWidget(cat)
@@ -372,23 +362,25 @@ class ToolboxWidget(QResizableWidget):
         self.updateCheckedStates()
 
     def buildCategoryAction(self, tool: ToolboxDataItem, icon_size: int):
-        ac = Krita.instance().action(tool.name)
-        if ac:
-            actionText = ac.toolTip()
-            btn: ToolboxButton = ToolboxButton(tool.name)
+        trigger = Trigger()
+        trigger.variant = Trigger.Variants.Action
+        trigger.action_id = tool.name
+
+        is_toolbox_menu = len(tool.items) >= 1
+
+        btn: TouchifyActionButton = self.actionEngine.createButton(self, trigger)
+        if btn:
+            btn.useToolboxButton(is_toolbox_menu)
             btn.setWindowOpacity(self.OPACITY_LEVEL)
             btn.setObjectName(tool.name)
-            btn.setText(actionText)
-            btn.setIcon(self.buildActionIcon(tool.name, tool.icon))
+            
+            if tool.icon != "": 
+                btn.setIcon(ResourceManager.iconLoader(tool.icon))
+                btn.use_action_icon = False
+
             btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             btn.setIconSize(QSize(icon_size, icon_size))
-            btn.setToolTip(actionText)
             btn.setStyle(ToolboxStyle("fusion", self.layout_config.submenu_delay))
-
-            if len(tool.items) >= 1:
-                btn.released.connect(self.activateTool) # Activate when released
-            else:
-                btn.pressed.connect(self.activateTool) # Activate when pressed
 
             if tool.name in TOOLBOX_ITEMS:
                 self.buttonGroup.addButton(btn)
@@ -396,7 +388,7 @@ class ToolboxWidget(QResizableWidget):
                 btn.setAutoRaise(True)
                 self.registeredToolBtns.append(btn)
 
-            if len(tool.items) >= 1:
+            if is_toolbox_menu:
                 subMenu = ToolboxMenu(btn, tool)
                 btn.setMenu(subMenu) # this will be the submenu for each main tool
 
@@ -437,7 +429,7 @@ class ToolboxWidget(QResizableWidget):
             toolAction.setObjectName(toolName)
             toolAction.setParent(subMenu.parentBtn) # set toolbutton as parent
             toolAction.triggered.connect(self.swapToolButton) # activate menu tool on click
-            toolAction.triggered.connect(self.activateTool) # activate menu tool on click
+            toolAction.triggered.connect(act.trigger) # activate menu tool on click
             subMenu.addAction(toolAction) # add the button for this tool in the menu
 
     def buildActionIcon(self, actionName: str, iconName: str):
@@ -461,23 +453,12 @@ class ToolboxWidget(QResizableWidget):
 
     def swapToolButton(self):
         ac: QAction = self.sender()
-        btn: ToolboxButton = ac.parent()
+        btn: TouchifyActionButton = ac.parent()
 
-        btn.actionName = ac.objectName()
-        btn.setObjectName(ac.objectName())
+        btn.setTrigger(ac.trigger, False)
+
         btn.setText(ac.text())
         btn.setIcon(ac.icon())
-
-    def activateTool(self):
-        actionName = self.sender().objectName() # get ToolButton name
-        ac = Krita.instance().action(actionName) # Search this name in Krita's action list
-
-        #print(actionName, ac)
-        if ac:
-            ac.trigger() # trigger the action in Krita
-
-        else:
-            pass
     
     def changePreset(self):
         ac: QAction = self.sender()
