@@ -29,46 +29,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .....window import TouchifyWindow
 
-
-TOOLBOX_ITEMS: dict[str, str] = {
-        "KisToolTransform": "KisToolTransform",
-        "KritaTransform/KisToolMove": "KritaTransform/KisToolMove",
-        "KisToolCrop": "KisToolCrop",
-        "InteractionTool": "InteractionTool",
-        "SvgTextTool": "SvgTextTool",
-        "PathTool": "PathTool",
-        "KarbonCalligraphyTool": "KarbonCalligraphyTool",
-        "KritaShape/KisToolBrush": "KritaShape/KisToolBrush",
-        "KritaShape/KisToolDyna": "KritaShape/KisToolDyna",
-        "KritaShape/KisToolMultiBrush": "KritaShape/KisToolMultiBrush",
-        "KritaShape/KisToolSmartPatch": "KritaShape/KisToolSmartPatch",
-        "KisToolPencil": "KisToolPencil",
-        "KritaFill/KisToolFill": "KritaFill/KisToolFill",
-        "KritaSelected/KisToolColorSampler": "KritaSelected/KisToolColorPicker",
-        "KritaShape/KisToolLazyBrush": "KritaShape/KisToolLazyBrush",
-        "KritaFill/KisToolGradient": "KritaFill/KisToolGradient",
-        "KritaShape/KisToolRectangle": "KritaShape/KisToolRectangle",
-        "KritaShape/KisToolLine": "KritaShape/KisToolLine",
-        "KritaShape/KisToolEllipse": "KritaShape/KisToolEllipse",
-        "KisToolPolygon": "KisToolPolygon",
-        "KisToolPolyline": "KisToolPolyline",
-        "KisToolPath": "KisToolPath",
-        "KisToolEncloseAndFill": "KisToolEncloseAndFill",
-        "KisToolSelectRectangular": "KisToolSelectRectangular",
-        "KisToolSelectElliptical": "KisToolSelectElliptical",
-        "KisToolSelectPolygonal": "KisToolSelectPolygonal",
-        "KisToolSelectPath": "KisToolSelectPath",
-        "KisToolSelectOutline": "KisToolSelectOutline",
-        "KisToolSelectContiguous": "KisToolSelectContiguous",
-        "KisToolSelectSimilar": "KisToolSelectSimilar",
-        "KisToolSelectMagnetic": "KisToolSelectMagnetic",
-        "ToolReferenceImages": "ToolReferenceImages",
-        "KisAssistantTool": "KisAssistantTool",
-        "KritaShape/KisToolMeasure": "KritaShape/KisToolMeasure",
-        "PanTool": "PanTool",
-        "ZoomTool": "ZoomTool"
-}
-
 class ToolboxWidget(QResizableWidget):
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
@@ -79,7 +39,6 @@ class ToolboxWidget(QResizableWidget):
         self.OPACITY_LEVEL = 0.65
 
         self.__preload__themeChanged = False
-        self.__preload__checkChanged = False
 
         self.loadConfig()
         
@@ -202,21 +161,6 @@ class ToolboxWidget(QResizableWidget):
             actualSizeMod.setHeight(actualSizeMod.height() + padding)
         return actualSizeMod
 
-    def getActiveToolButton(self):
-        try:
-            active_window = self.sourceWindow         
-            if active_window != None:   
-                mobj = next((w for w in active_window.qwindow().findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
-                for q_obj in mobj.findChildren(QToolButton):
-                    if q_obj.metaObject().className() == "KoToolBoxButton":
-                        if q_obj.isChecked():
-                            name = q_obj.objectName()
-                            name = name.replace("\n", "")
-                            return name
-        except:
-            pass
-        return ""
-
     def updateCheckedStates(self):
         pass
 
@@ -233,7 +177,7 @@ class ToolboxWidget(QResizableWidget):
     #region Layouts
 
     def preload(self):
-        isPreloaded = self.__preload__themeChanged and self.__preload__checkChanged
+        isPreloaded = self.__preload__themeChanged
         if isPreloaded:
             return
 
@@ -243,12 +187,6 @@ class ToolboxWidget(QResizableWidget):
                 if self.__preload__themeChanged == False:
                     active_window.qwindow().themeChanged.connect(self.updatePalette)
                     self.__preload__themeChanged = True
-
-                if self.__preload__checkChanged == False:
-                    mobj = next((w for w in active_window.qwindow().findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
-                    wobj = mobj.findChild(QButtonGroup)
-                    wobj.idToggled.connect(self.updateCheckedStates)
-                    self.__preload__checkChanged = True  
         except:
             pass
         
@@ -372,8 +310,9 @@ class ToolboxWidget(QResizableWidget):
         if btn:
             btn.useToolboxButton(is_toolbox_menu)
             btn.setWindowOpacity(self.OPACITY_LEVEL)
-            btn.setObjectName(tool.name)
-            
+
+            btn.toolbox_action_id = tool.name
+
             if tool.icon != "": 
                 btn.setIcon(ResourceManager.iconLoader(tool.icon))
                 btn.use_action_icon = False
@@ -381,12 +320,6 @@ class ToolboxWidget(QResizableWidget):
             btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             btn.setIconSize(QSize(icon_size, icon_size))
             btn.setStyle(ToolboxStyle("fusion", self.layout_config.submenu_delay))
-
-            if tool.name in TOOLBOX_ITEMS:
-                self.buttonGroup.addButton(btn)
-                btn.setCheckable(True)
-                btn.setAutoRaise(True)
-                self.registeredToolBtns.append(btn)
 
             if is_toolbox_menu:
                 subMenu = ToolboxMenu(btn, tool)
@@ -454,6 +387,8 @@ class ToolboxWidget(QResizableWidget):
     def swapToolButton(self):
         ac: QAction = self.sender()
         btn: TouchifyActionButton = ac.parent()
+
+        btn.toolbox_action_id = ac.objectName()
 
         btn.setTrigger(ac.trigger, False)
 

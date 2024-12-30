@@ -354,8 +354,17 @@ class ActionManager(QObject):
         else: __btn.setBrushSelected(True)
 
     def __btn_toolboxToolUpdate(self, __btn: TouchifyActionButton, id: str):
-        if self.__lastToolboxTool != id: __btn.setChecked(False)
-        else: __btn.setChecked(True)
+        toolbox_item = __btn.getToolboxItem()
+        if toolbox_item != "" and self.__lastToolboxTool == toolbox_item:
+            __btn.setChecked(True)
+        else:
+            __btn.setChecked(False)
+
+        
+
+    def __btn_checkableActionUpdate(self, __btn: TouchifyActionButton, id: str):
+        action = Krita.instance().action(id)
+        if action: __btn.setChecked(action.isChecked())
 
     #endregion
 
@@ -387,14 +396,19 @@ class ActionManager(QObject):
             self.__updateActionToggleStates()
 
     def __updateActionToggleStates(self):
-        src = self.appEngine.windowSource
-        if not src: return
+        def checkWithin(wid: QWidget):
+            btns = wid.findChildren(TouchifyActionButton, None, Qt.FindChildOption.FindChildrenRecursively)
+            for btn in btns: btn.update_requested.emit()
 
-        win = src.qwindow()
-        if not win: return
-    
-        btns = win.findChildren(TouchifyActionButton)
-        for btn in btns: btn.timer_interval_triggered.emit()
+        src = self.appEngine.windowSource
+        if src:
+            win = src.qwindow()
+            if win: checkWithin(win)
+
+        toolbox = self.appEngine.toolboxDocker
+        if toolbox: checkWithin(toolbox.toolboxWidget)
+
+            
 
     #endregion
 
@@ -419,7 +433,7 @@ class ActionManager(QObject):
         if id in brush_presets:
             preset = brush_presets[id]
             btn = self.button_main(lambda: self.action_brush(id), preset.name(), False)
-            btn.timer_interval_triggered.connect(lambda: self.__btn_brushButtonUpdate(btn, id))
+            btn.update_requested.connect(lambda: self.__btn_brushButtonUpdate(btn, id))
             self.__setButtonDisplay(act, btn)
         return btn
                    
@@ -478,17 +492,20 @@ class ActionManager(QObject):
             btn = self.button_main(action.trigger, action.toolTip(), checkable, act.extra_composer_mode)
 
             if act.action_id in CommonActions.TOOLBOX_ITEMS:
-                btn.timer_interval_triggered.connect(lambda: self.__btn_toolboxToolUpdate(btn, act.action_id))
+                btn.update_requested.connect(lambda: self.__btn_toolboxToolUpdate(btn, act.action_id))
+            elif checkable:
+                btn.update_requested.connect(lambda: self.__btn_checkableActionUpdate(btn, act.action_id))
 
             self.__setButtonDisplay(act, btn)
 
             if checkable:
                 btn.setCheckable(True)
                 if toolbox_item:
-                    if self.__lastToolboxTool == act.action_id:
-                        btn.setChecked(True)
+                    if self.__lastToolboxTool == act.action_id: btn.setChecked(True)
+                    btn.toggled.connect(lambda: self.__btn_toolboxToolUpdate(btn, act.action_id))
                 else:
                     btn.setChecked(action.isChecked())
+                    btn.toggled.connect(lambda: self.__btn_checkableActionUpdate(btn, act.action_id))
         return btn
     #endregion
 

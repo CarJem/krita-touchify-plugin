@@ -8,7 +8,7 @@ from PyQt5.QtGui import *
 
 class TouchifyActionButton(QToolButton):
 
-    timer_interval_triggered = pyqtSignal()
+    update_requested = pyqtSignal()
 
     triggerActivated = pyqtSignal()
 
@@ -32,7 +32,8 @@ class TouchifyActionButton(QToolButton):
         self.use_action_icon = False
 
         self.is_toolbox_button = False
-        self.has_toolbox_menu = False
+        self.is_toolbox_menu = False
+        self.toolbox_action_id = ""
         self.is_composer_active = False
 
         self.brushSelected = False
@@ -44,9 +45,14 @@ class TouchifyActionButton(QToolButton):
         self.pressed.connect(self.onPressed)
         self.clicked.connect(self.onClicked)
 
+    def getToolboxItem(self):
+        if self.is_toolbox_button:
+            return self.toolbox_action_id
+        return ""
+
     def onReleased(self):
         if self.is_toolbox_button:
-            if self.has_toolbox_menu:
+            if self.is_toolbox_menu:
                 self.trigger()
 
         elif self.is_composer_active:
@@ -54,18 +60,14 @@ class TouchifyActionButton(QToolButton):
 
     def onPressed(self):
         if self.is_toolbox_button:
-            if not self.has_toolbox_menu:
+            if not self.is_toolbox_menu:
                 self.trigger()
 
         elif self.is_composer_active:
             self.trigger()
 
     def onClicked(self):
-        if self.is_toolbox_button == True:
-            if self.has_toolbox_menu == False:
-                self.trigger()
-
-        elif self.is_composer_active == False:
+        if self.is_toolbox_button == False and self.is_composer_active == False:
             self.trigger()
 
 
@@ -100,7 +102,7 @@ class TouchifyActionButton(QToolButton):
     
     def useToolboxButton(self, is_toolbox_menu: bool):
         self.is_toolbox_button = True
-        self.has_toolbox_menu = is_toolbox_menu
+        self.is_toolbox_menu = is_toolbox_menu
         self.updatePalette()
 
     def setTrigger(self, onClick, is_composer: bool = False):
@@ -127,9 +129,9 @@ class TouchifyActionButton(QToolButton):
 
     def setMenu(self, menu: QMenu):
         if self.is_toolbox_button:
-            self.has_toolbox_menu = True if menu else False
+            self.is_toolbox_menu = True if menu else False
         else:
-            self.has_toolbox_menu = False
+            self.is_toolbox_menu = False
 
         super().setMenu(menu)
 
@@ -168,7 +170,7 @@ class TouchifyActionButton(QToolButton):
 
 
     def paintToolboxMenu(self, e: QPaintEvent):
-        if self.has_toolbox_menu:
+        if self.is_toolbox_menu:
             rect = e.rect()
 
             triangleScale = 4

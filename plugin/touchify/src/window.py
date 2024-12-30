@@ -35,6 +35,8 @@ class TouchifyWindow(QObject):
 
         self.update_style_calls: list[Callable] = []
 
+        self.toolboxDocker: ToolboxDocker = None
+
         self.touchify_actions = TouchifyActions(self)
         self.touchify_looks = TouchifyLooks(self)
         self.touchify_canvas = TouchifyCanvas(self)
@@ -148,8 +150,8 @@ class TouchifyWindow(QObject):
                     toolshelfDocker: ToolshelfDockWidget = docker
                     toolshelfDocker.setup(self)
                 elif docker.objectName() == TOUCHIFY_ID_DOCKER_TOOLBOX:
-                    toolboxDocker: ToolboxDocker = docker
-                    toolboxDocker.setup(self)
+                    self.toolboxDocker: ToolboxDocker = docker # type: ignore
+                    self.toolboxDocker.setup(self)
                 elif docker.objectName().startswith("Touchify/"):
                     addonSetupFn = getattr(docker, "addonSetup", None)
                     addonUpdateStyleFn = getattr(docker, "addonUpdateStyle", None)
