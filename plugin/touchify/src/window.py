@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, TYPE_CHECKING
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
@@ -23,6 +23,8 @@ from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDockWidget impo
 from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
 
 WINDOW_ID: int = 0
+if TYPE_CHECKING:
+    from .extension import TouchifyExtension
 
 class TouchifyWindow(QObject):
     
@@ -62,42 +64,34 @@ class TouchifyWindow(QObject):
 
     #region Signal Callbacks
 
-    def onWindowCreated(self, window: Window):
+    def onWindowCreated(self, extension: "TouchifyExtension", window: Window):
         self.setParent(window.qwindow())
+        extension.timerTicked.connect(self.onTimerTick)
+        extension.kritaConfigUpdated.connect(self.onKritaConfigUpdated)
+        extension.touchifyConfigUpdated.connect(self.onTouchifyConfigUpdated)
         self.windowSource = window
         self.docker_management = DockerManager(self)
         self.canvas_management = CanvasManager(self)
         self.setupAddons(window)
         self.setupSoftActions()
-        
-    def onKritaConfigUpdated(self):
-        toolshelf_docker = self.getToolshelfDocker()
-        if toolshelf_docker: toolshelf_docker.onKritaConfigUpdate()
-        
-        self.touchify_canvas.onKritaConfigUpdated()
-
-        self.action_management.onConfigUpdated()
-
-        for call in self.update_style_calls:
-            call()
 
     def onTimerTick(self):
-        self.action_management.onTimerTick()
-        self.docker_management.onTimerTick()
+        self.action_management.onTimerTick()    
+
+    def onKritaConfigUpdated(self):
+        toolshelf_docker = self.getToolshelfDocker()
+        if toolshelf_docker: toolshelf_docker.onKritaConfigUpdate()    
+        self.touchify_canvas.onKritaConfigUpdated()
+        for call in self.update_style_calls: call()
 
     def onTouchifyConfigUpdated(self):
         toolshelf_docker = self.getToolshelfDocker()
         if toolshelf_docker: toolshelf_docker.onConfigUpdated()
-        
         toolbox_docker = self.getToolboxDocker()
         if toolbox_docker: toolbox_docker.onConfigUpdated()
-        
         self.touchify_canvas.onConfigUpdated()    
-
         self.action_management.onConfigUpdated()
-
-        for call in self.update_style_calls:
-            call()
+        for call in self.update_style_calls: call()
 
     #endregion
 

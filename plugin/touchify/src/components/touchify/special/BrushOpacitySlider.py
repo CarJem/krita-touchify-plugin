@@ -22,7 +22,7 @@ class BrushOpacitySlider(KisSliderSpinBox):
         self.appEngine = window
         self.appEngine.action_management.viewChanged.connect(self.onViewChanged)
         self.appEngine.action_management.brushOpacityChanged.connect(self.onOpacityChanged)
-        self.onOpacityChanged(window.action_management.getBrushProperty("opacity"))
+        self.onOpacityChanged(window.action_management.getBrushOpacity())
 
     def onViewChanged(self, view: View):
         self.view = view

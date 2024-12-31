@@ -29,7 +29,7 @@ class BrushRotationSlider(KisAngleSelector):
         self.appEngine = window
         self.appEngine.action_management.viewChanged.connect(self.onViewChanged)
         self.appEngine.action_management.brushRotationChanged.connect(self.onRotationChanged)
-        self.onRotationChanged(window.action_management.getBrushProperty("rotation"))
+        self.onRotationChanged(window.action_management.getBrushRotation())
 
     def onViewChanged(self, view: View):
         self.view = view

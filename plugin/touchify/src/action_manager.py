@@ -196,17 +196,24 @@ class ActionManager(QObject):
 
     def getBrushBlendingMode(self):
         return self.__lastBrushBlendingMode
+    
+    def getLayerBlendingMode(self):
+        return self.__lastLayerBlendingMode
 
     def getCurrentCanvas(self):
         return self.__lastCanvas
-
-    def getBrushProperty(self, input: str):
-        match input:
-            case "size": return self.__lastBrushSize
-            case "opacity": return self.__lastBrushOpacity
-            case "flow": return self.__lastBrushFlow
-            case "rotation": return self.__lastBrushRotation
-            case _: return 0
+    
+    def getBrushSize(self):
+        return self.__lastBrushSize
+    
+    def getBrushOpacity(self):
+        return self.__lastBrushOpacity
+    
+    def getBrushFlow(self):
+        return self.__lastBrushFlow
+    
+    def getBrushRotation(self):
+        return self.__lastBrushRotation
 
     def getCanvasColor(self, is_background: bool = False):
         if is_background: return self.__lastBackgroundColor

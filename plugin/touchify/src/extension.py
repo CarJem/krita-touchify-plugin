@@ -20,6 +20,10 @@ class TouchifyExtension(Extension):
     setup_instance: bool = False
     new_instance: TouchifyWindow = None
 
+    timerTicked=pyqtSignal()
+    touchifyConfigUpdated=pyqtSignal()
+    kritaConfigUpdated=pyqtSignal()
+
     def __init__(self, parent):
         super().__init__(parent)
         self.DEV_HOOK_FIND_PLUGIN = "TOUCHIFY"
@@ -39,16 +43,13 @@ class TouchifyExtension(Extension):
         self.intervalTimer.start(TOUCHIFY_TIMER_MAIN_INTERVAL)
 
     def onTimerTick(self):
-        for id in self.instances:    
-            self.instances[id].onTimerTick()
+        self.timerTicked.emit()
 
     def onKritaConfigUpdated(self):
-        for id in self.instances:
-            self.instances[id].onKritaConfigUpdated()
+        self.kritaConfigUpdated.emit()
 
     def onTouchifyConfigUpdated(self):
-        for id in self.instances:
-            self.instances[id].onTouchifyConfigUpdated()
+        self.touchifyConfigUpdated.emit()
     
     def onWindowDestroyed(self, windowId: str):
         item: TouchifyWindow = self.instances[windowId]
@@ -71,7 +72,7 @@ class TouchifyExtension(Extension):
 
         window.windowClosed.connect(lambda: self.onWindowDestroyed(window_id))
         self.instances[window_id] = self.new_instance
-        self.instances[window_id].onWindowCreated(window)
+        self.instances[window_id].onWindowCreated(self, window)
 
         self.setup_instance = False
 

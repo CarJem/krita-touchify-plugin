@@ -23,7 +23,7 @@ class BrushFlowSlider(KisSliderSpinBox):
         self.appEngine = window
         self.appEngine.action_management.viewChanged.connect(self.onViewChanged)
         self.appEngine.action_management.brushFlowChanged.connect(self.onFlowChanged)
-        self.onFlowChanged(window.action_management.getBrushProperty("flow"))
+        self.onFlowChanged(window.action_management.getBrushFlow())
 
     def onViewChanged(self, view: View):
         self.view = view

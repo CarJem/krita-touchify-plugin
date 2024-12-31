@@ -24,7 +24,7 @@ class BrushSizeSlider(KisSliderSpinBox):
         self.appEngine = window
         self.appEngine.action_management.viewChanged.connect(self.onViewChanged)
         self.appEngine.action_management.brushSizeChanged.connect(self.onSizeChanged)
-        self.onSizeChanged(self.appEngine.action_management.getBrushProperty("size"))
+        self.onSizeChanged(self.appEngine.action_management.getBrushSize())
 
     def onViewChanged(self, view: View):
         self.view = view
