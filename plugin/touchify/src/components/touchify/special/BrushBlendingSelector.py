@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import *
 from touchify.src.variables import *
 from touchify.src.docker_manager import *
 from krita import *
-from touchify.src.helpers import TouchifyHelpers
 
 try:
     from api_krita.enums.blending_mode import BlendingMode, PRETTY_NAMES
@@ -70,8 +69,6 @@ class BrushBlendingSelector(QPushButton):
     def __init__(self, parent: QWidget=None):
         super().__init__(parent)
 
-        self.timerActive = False
-
         if SHORTCUT_COMPOSER_LOADED:
             self.HAS_LOADED = True
             self.constructLayout()
@@ -82,7 +79,6 @@ class BrushBlendingSelector(QPushButton):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.modeActions: list[BrushBlendingOption] = []
-        self.setupTimer()
         self.setMinimumHeight(30)
 
         self.clicked.connect(self.showMenu)  
@@ -105,43 +101,27 @@ class BrushBlendingSelector(QPushButton):
                 self.modeActions.append(action)
                 subMenu.addAction(action)
         self.updateFavs()
-                
         self.setMenu(self.menu)
-        self.timerActive = True
 
-
-    def setupTimer(self):
-        parentExtension = TouchifyHelpers.getExtension()
-        if parentExtension:
-            parentExtension.intervalTimerTicked.connect(self.onTimerTick)
-
-    def onTimerTick(self):
-        if self.timerActive:
-            self.updateInterface()
+    def setInstance(self, window: "TouchifyWindow"):
+        self.appEngine = window
+        self.appEngine.action_management.brushBlendingModeChanged.connect(self.onBlendingModeChanged)
+        self.onBlendingModeChanged(self.appEngine.action_management.getBrushBlendingMode())
 
     def showEvent(self, event):
-        if self.HAS_LOADED: self.timerActive = True
         super().showEvent(event)
 
     def hideEvent(self, event):
-        if self.HAS_LOADED: self.timerActive = False
         super().hideEvent(event)
         
     def closeEvent(self, event):
-        if self.HAS_LOADED: self.timerActive = False
         super().closeEvent(event)
 
     def beforeShow(self):
         self.updateFavs()
 
-    def updateInterface(self):
-        activeWindow = Krita.instance().activeWindow()
-        if not activeWindow: return
-
-        activeView = activeWindow.activeView()
-        if not activeView: return
-
-        text = self.getFancyName(activeView.currentBlendingMode())
+    def onBlendingModeChanged(self, blending_mode: str):
+        text = self.getFancyName(blending_mode)
         self.setText(text)
 
     def updateFavs(self):

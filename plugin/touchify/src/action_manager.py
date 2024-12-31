@@ -34,7 +34,26 @@ if TYPE_CHECKING:
 
 class ActionManager(QObject):
 
-    onComposerEnd=pyqtSignal()
+    composerTriggerEnded=pyqtSignal()
+
+    brushChanged=pyqtSignal(Resource)
+    toolChanged=pyqtSignal(str)
+    viewChanged=pyqtSignal(View)
+    canvasChanged=pyqtSignal(Canvas)
+    
+    selectedNodesChanged=pyqtSignal()
+    selectedNodeColorsChanged=pyqtSignal()
+    
+    brushSizeChanged=pyqtSignal(float)
+    brushOpacityChanged=pyqtSignal(float)
+    brushRotationChanged=pyqtSignal(float)
+    brushFlowChanged=pyqtSignal(float)
+
+    brushBlendingModeChanged=pyqtSignal(str)
+    layerBlendingModeChanged=pyqtSignal(str)
+
+    backgroundColorChanged=pyqtSignal(ManagedColor)
+    foregroundColorChanged=pyqtSignal(ManagedColor)
     
     def __init__(self, instance: "TouchifyWindow"):
         super().__init__()
@@ -44,14 +63,36 @@ class ActionManager(QObject):
         self.registeredActionsData = {}
         self.active_popups: dict[str, TouchifyPopup] = {}
 
+
+        self.queue_update_running = False
+
         self.composer_action_down: bool = False
         self.composer_listener = MouseReleaseListener()
         self.composer_listener.mouseReleased.connect(self.onMouseRelease)
         qApp.installEventFilter(self.composer_listener)
 
 
-        self.__lastToolboxTool: str = ""
+        self.__lastView: View = None
         self.__lastBrushPreset: Resource = None
+        self.__lastCanvas: Canvas = None
+
+        self.__lastToolboxTool: str = ""
+
+        self.__lastBrushSize: float = 0
+        self.__lastBrushOpacity: float = 0
+        self.__lastBrushFlow: float = 0
+        self.__lastBrushRotation: float = 0
+
+        self.__lastBrushBlendingMode: str = ""
+        self.__lastLayerBlendingMode: str = ""
+
+        self.__lastForegroundColor: ManagedColor = None
+        self.__lastBackgroundColor: ManagedColor = None
+
+        self.__lastSelectedNodes: list[Node] = []
+        self.__lastNodeColors: list[int] = []
+
+
 
     def runAction(self, data: Trigger, action: QAction):
         match data.variant:
@@ -151,22 +192,34 @@ class ActionManager(QObject):
 
         popup.triggerPopup(_parent)
 
+    #region Getters
+
+    def getBrushBlendingMode(self):
+        return self.__lastBrushBlendingMode
+
+    def getCurrentCanvas(self):
+        return self.__lastCanvas
+
+    def getBrushProperty(self, input: str):
+        match input:
+            case "size": return self.__lastBrushSize
+            case "opacity": return self.__lastBrushOpacity
+            case "flow": return self.__lastBrushFlow
+            case "rotation": return self.__lastBrushRotation
+            case _: return 0
+
+    def getCanvasColor(self, is_background: bool = False):
+        if is_background: return self.__lastBackgroundColor
+        else: return self.__lastForegroundColor
+
+    #endregion
+
     #region Event Functions
     def onWindowCreated(self):
-        def initToolboxHook():
-            def onButtonToggled(obj: QAbstractButton):
-                if obj:
-                    toolboxTool = obj.objectName()
-                    if toolboxTool != self.__lastToolboxTool:
-                        self.__lastToolboxTool = toolboxTool
-                        self.__updateActionToggleStates()
-                        
-            qwin = Krita.instance().activeWindow().qwindow()
-            mobj = next((w for w in qwin.findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
-            wobj = mobj.findChild(QButtonGroup)
-            wobj.buttonToggled.connect(onButtonToggled)
-        
-        initToolboxHook()
+        qwin = Krita.instance().activeWindow().qwindow()
+        mobj = next((w for w in qwin.findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
+        wobj = mobj.findChild(QButtonGroup)
+        wobj.buttonToggled.connect(self.onToolChanged)
 
     def onComposerBtnPressed(self, btn: TouchifyActionButton, onClick: any):
         def tryFindParentPopup(source: QWidget):
@@ -185,7 +238,7 @@ class ActionManager(QObject):
         parentPopup = tryFindParentPopup(btn)
         if parentPopup: 
             parentPopup.composer_work_around = True
-            self.onComposerEnd.connect(parentPopup.composerEndEvent)
+            self.composerTriggerEnded.connect(parentPopup.composerEndEvent)
 
         onClick()
         self.composer_action_down = True
@@ -215,19 +268,126 @@ class ActionManager(QObject):
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
         
+    def onToolChanged(self, obj: QAbstractButton):
+        if obj:
+            toolboxTool = obj.objectName()
+            if toolboxTool != self.__lastToolboxTool:
+                self.__lastToolboxTool = toolboxTool
+                self.toolChanged.emit(toolboxTool)
 
     def onMouseRelease(self):
         if self.composer_action_down == True:
             QApplication.instance().sendEvent(Krita.instance().activeWindow().qwindow(), QKeyEvent(QEvent.Type.KeyRelease, Qt.Key.Key_Escape, Qt.KeyboardModifier.NoModifier))
-            self.onComposerEnd.emit()
+            self.composerTriggerEnded.emit()
             try:
-                self.onComposerEnd.disconnect()
+                self.composerTriggerEnded.disconnect()
             except:
                 pass
             self.composer_action_down = False
 
     def onTimerTick(self):
-        self.__updateActionButtons()
+        currentBrush: Resource = None
+        currentView: View = None
+        currentCanvas: Canvas = None
+
+        currentBrushBlendingMode: str = ""
+        currentLayerBlendingMode: str = ""
+
+        currentSize: float = 0
+        currentOpacity: float = 0
+        currentFlow: float = 0
+        currentRotation: float = 0
+
+        currentForegroundColor: ManagedColor = None
+        currentBackgroundColor: ManagedColor = None
+
+        selectedNodes: list[Node] = []
+        selectedNodeColors: list[int] = []
+
+        try:
+            win = self.appEngine.windowSource
+            if win: 
+                currentView = win.activeView()
+                if currentView: 
+                    currentDocument = currentView.document()
+                    if currentDocument:
+                        currentNode = currentDocument.activeNode()
+                        if currentNode:
+                            currentLayerBlendingMode = currentNode.blendingMode()
+
+                    selectedNodes = currentView.selectedNodes()
+                    selectedNodeColors = [node.colorLabel() for node in currentView.selectedNodes() ]
+
+                    
+                    currentBrush = currentView.currentBrushPreset()
+                    currentSize = currentView.brushSize()
+                    currentOpacity = currentView.paintingOpacity()
+                    currentFlow = currentView.paintingFlow()
+                    currentRotation = currentView.brushRotation()
+                    currentBrushBlendingMode = currentView.currentBlendingMode()
+                    
+                    currentCanvas = currentView.canvas()
+
+                    currentForegroundColor = currentView.foregroundColor()
+                    currentBackgroundColor = currentView.backgroundColor()
+
+
+        except:
+            pass
+        if currentCanvas != self.__lastCanvas:
+            self.canvasChanged.emit(currentCanvas)
+            self.__lastCanvas = currentCanvas
+
+        if currentView != self.__lastView:
+            self.viewChanged.emit(currentView)
+            self.__lastView = currentView
+
+        if selectedNodes != self.__lastSelectedNodes:
+            self.selectedNodesChanged.emit()
+            self.__lastSelectedNodes = selectedNodes
+
+        if selectedNodeColors != self.__lastNodeColors:
+            self.selectedNodeColorsChanged.emit()
+            self.__lastNodeColors = selectedNodeColors
+
+        if currentLayerBlendingMode != self.__lastLayerBlendingMode:
+            self.layerBlendingModeChanged.emit(currentLayerBlendingMode)
+            self.__lastLayerBlendingMode = currentLayerBlendingMode
+
+        if currentBrushBlendingMode != self.__lastBrushBlendingMode:
+            self.brushBlendingModeChanged.emit(currentBrushBlendingMode)
+            self.__lastBrushBlendingMode = currentBrushBlendingMode
+
+        if currentForegroundColor != self.__lastForegroundColor:
+            print("foreground changed")
+            self.foregroundColorChanged.emit(currentForegroundColor)
+            self.__lastForegroundColor = currentForegroundColor
+
+        if currentBackgroundColor != self.__lastBackgroundColor:
+            print("foreground changed")
+            self.backgroundColorChanged.emit(currentBackgroundColor)
+            self.__lastBackgroundColor = currentBackgroundColor
+
+        
+        if currentSize != self.__lastBrushSize:
+            self.brushSizeChanged.emit(currentSize)
+            self.__lastBrushSize = currentSize
+
+        if currentFlow != self.__lastBrushFlow:
+            self.brushFlowChanged.emit(currentFlow)
+            self.__lastBrushFlow = currentFlow
+
+        if currentOpacity != self.__lastBrushOpacity:
+            self.brushOpacityChanged.emit(currentOpacity)
+            self.__lastBrushOpacity = currentOpacity
+
+        if currentRotation != self.__lastBrushRotation:
+            self.brushRotationChanged.emit(currentRotation)
+            self.__lastBrushRotation = currentRotation
+
+        if currentBrush != self.__lastBrushPreset:
+            self.brushChanged.emit(currentBrush)
+            self.__lastBrushPreset = currentBrush
 
     #endregion
         
@@ -321,7 +481,6 @@ class ActionManager(QObject):
 
         return (has_text, text, has_icon, icon, using_action_icon)
 
-
     def __setButtonDisplay(self, act: Trigger, btn: TouchifyActionButton):
         (has_text, text, has_icon, icon, using_action_icon) = self.__getTouchifyActionDisplay(act)  
         if has_text: btn.setText(text)      
@@ -344,72 +503,6 @@ class ActionManager(QObject):
                     parent = parent.parentWidget()
             return
                 
-    def __btn_brushButtonUpdate(self, __btn: TouchifyActionButton, id: str):
-
-        __brush_presets = ResourceManager.brushPresets()
-        if id not in __brush_presets: return
-        btn_preset = __brush_presets[id]
-        
-        if self.__lastBrushPreset != btn_preset: __btn.setBrushSelected(False)
-        else: __btn.setBrushSelected(True)
-
-    def __btn_toolboxToolUpdate(self, __btn: TouchifyActionButton, id: str):
-        toolbox_item = __btn.getToolboxItem()
-        if toolbox_item != "" and self.__lastToolboxTool == toolbox_item:
-            __btn.setChecked(True)
-        else:
-            __btn.setChecked(False)
-
-        
-
-    def __btn_checkableActionUpdate(self, __btn: TouchifyActionButton, id: str):
-        action = Krita.instance().action(id)
-        if action: __btn.setChecked(action.isChecked())
-
-    #endregion
-
-    #region Button Update Functions
-
-    def __updateActionButtons(self):
-        def getCurrentBrush():
-            try:
-                win = self.appEngine.windowSource
-                if not win: return None
-                view = win.activeView()
-                if not view: return None
-                currentPreset: Resource = view.currentBrushPreset()
-                if not currentPreset: return None
-
-                return currentPreset
-            except:
-                pass
-            return None
-    
-        queue_update = False
-        currentPreset: Resource = getCurrentBrush()
-
-        if currentPreset != self.__lastBrushPreset:
-            queue_update = True
-            self.__lastBrushPreset = currentPreset
-
-        if queue_update:
-            self.__updateActionToggleStates()
-
-    def __updateActionToggleStates(self):
-        def checkWithin(wid: QWidget):
-            btns = wid.findChildren(TouchifyActionButton, None, Qt.FindChildOption.FindChildrenRecursively)
-            for btn in btns: btn.update_requested.emit()
-
-        src = self.appEngine.windowSource
-        if src:
-            win = src.qwindow()
-            if win: checkWithin(win)
-
-        toolbox = self.appEngine.toolboxDocker
-        if toolbox: checkWithin(toolbox.toolboxWidget)
-
-            
-
     #endregion
 
     #region Button Constructors
@@ -433,7 +526,7 @@ class ActionManager(QObject):
         if id in brush_presets:
             preset = brush_presets[id]
             btn = self.button_main(lambda: self.action_brush(id), preset.name(), False)
-            btn.update_requested.connect(lambda: self.__btn_brushButtonUpdate(btn, id))
+            btn.setupBrushChange(self, id, preset == self.__lastBrushPreset)
             self.__setButtonDisplay(act, btn)
         return btn
                    
@@ -481,31 +574,22 @@ class ActionManager(QObject):
         if action:
             checkable = action.isCheckable()
             toolbox_item = False
+            is_current_tool = False
+            
             if act.action_id in CommonActions.KNOWN_UNCHECKABLES:
                 checkable = False
             
             if act.action_id in CommonActions.TOOLBOX_ITEMS:
-                checkable = True
                 toolbox_item = True
+                is_current_tool = self.__lastToolboxTool == act.action_id
 
             
             btn = self.button_main(action.trigger, action.toolTip(), checkable, act.extra_composer_mode)
 
-            if act.action_id in CommonActions.TOOLBOX_ITEMS:
-                btn.update_requested.connect(lambda: self.__btn_toolboxToolUpdate(btn, act.action_id))
-            elif checkable:
-                btn.update_requested.connect(lambda: self.__btn_checkableActionUpdate(btn, act.action_id))
+            if toolbox_item: btn.setupToolChange(self, is_current_tool)
+            elif checkable: btn.setupActionChange(action, action.isChecked())
 
             self.__setButtonDisplay(act, btn)
-
-            if checkable:
-                btn.setCheckable(True)
-                if toolbox_item:
-                    if self.__lastToolboxTool == act.action_id: btn.setChecked(True)
-                    btn.toggled.connect(lambda: self.__btn_toolboxToolUpdate(btn, act.action_id))
-                else:
-                    btn.setChecked(action.isChecked())
-                    btn.toggled.connect(lambda: self.__btn_checkableActionUpdate(btn, act.action_id))
         return btn
     #endregion
 

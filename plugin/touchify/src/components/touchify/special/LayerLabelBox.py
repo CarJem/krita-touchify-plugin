@@ -2,8 +2,11 @@ from krita import *
 from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtGui import QIcon,QPixmap
 from touchify.src.variables import *
-from touchify.src.helpers import TouchifyHelpers
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from touchify.src.window import TouchifyWindow
+    
 def getCurrentLayer():
     app = Krita.instance()
     doc = app.activeDocument()
@@ -43,10 +46,8 @@ greyColor = QColor(118,119,114) #8
 class LayerLabelBox(QComboBox):
     def __init__(self, parent: QWidget = None):
         super().__init__(parent)
-        self.timerActive = False
         self.setAccessibleName('colorLabelBox')
         self.setObjectName('colorLabelBox')
-        self.setupTimer()
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         #self.setMinimumHeight(35)
 
@@ -76,25 +77,18 @@ class LayerLabelBox(QComboBox):
             
         self.activated.connect(lambda index: self.updateLayerColorLabel(index))
 
-    def setupTimer(self):
-        parentExtension = TouchifyHelpers.getExtension()
-        if parentExtension:
-            parentExtension.intervalTimerTicked.connect(self.onTimerTick)
-
-    def onTimerTick(self):
-        if self.timerActive:
-            self.updateInterface()
+    def setInstance(self, window: "TouchifyWindow"):
+        self.appEngine = window
+        self.appEngine.action_management.selectedNodeColorsChanged.connect(self.updateInterface)
+        self.updateInterface()
         
     def showEvent(self, event):
-        self.timerActive = True
         super().showEvent(event)
 
     def hideEvent(self, event):
-        self.timerActive = False
         super().hideEvent(event)
         
     def closeEvent(self, event):
-        self.timerActive = False
         super().closeEvent(event)
 
     def updateInterface(self):

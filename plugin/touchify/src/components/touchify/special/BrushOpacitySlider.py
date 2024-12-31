@@ -1,66 +1,36 @@
 from krita import *
 from PyQt5.QtCore import *
-from ....variables import *
+from touchify.src.variables import *
 
-from ....ext.KritaSettings import *
-from ...krita.KisSliderSpinBox import KisSliderSpinBox
-from ....helpers import TouchifyHelpers
+from touchify.src.ext.KritaSettings import *
+from touchify.src.components.krita.KisSliderSpinBox import KisSliderSpinBox
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from touchify.src.window import TouchifyWindow
 
 class BrushOpacitySlider(KisSliderSpinBox):
 
-    def __init__(self, parent=None, window: Window = None):
+    def __init__(self, parent=None):
         super(BrushOpacitySlider, self).__init__(parent=parent, isInt=True)
         self.view: View = None
-        self.sourceWindow: Window = window
+        self.appEngine: "TouchifyWindow" = None
         self.setAffixes('Opacity: ', '%')
-        self.connectValueChanged(self.valueChanged)
-        self.timerActive = False
-        self.setupTimer()
-
-    def setupTimer(self):
-        parentExtension = TouchifyHelpers.getExtension()
-        if parentExtension:
-            parentExtension.intervalTimerTicked.connect(self.onTimerTick)
-            self.timerActive = True
-
-    def onTimerTick(self):
-        if self.timerActive:
-            self.synchronizeView()
-
-    def showEvent(self, event):
-        self.timerActive = True
-        super().showEvent(event)
-
-    def hideEvent(self, event):
-        self.timerActive = False
-        super().hideEvent(event)
-
-    def closeEvent(self, event):
-        self.timerActive = False
-        super().closeEvent(event)
+        self.connectValueChanged(self.onValueChanged)
     
-    def setSourceWindow(self, window: Window):
-        self.sourceWindow = window
-        self.synchronizeView()
+    def setInstance(self, window: "TouchifyWindow"):
+        self.appEngine = window
+        self.appEngine.action_management.viewChanged.connect(self.onViewChanged)
+        self.appEngine.action_management.brushOpacityChanged.connect(self.onOpacityChanged)
+        self.onOpacityChanged(window.action_management.getBrushProperty("opacity"))
 
-    def valueChanged(self, value):
+    def onViewChanged(self, view: View):
+        self.view = view
+
+    def onOpacityChanged(self, value: float):
+        self.setValue(value*100)
+
+    def onValueChanged(self, value):
         if self.view == None: return
         self.view.setPaintingOpacity(self.value()/100)
 
-    def synchronizeView(self):
-        if self.isVisible() == False:
-            return
-        
-        active_window = self.sourceWindow
-        if active_window == None: return
-
-        active_view = active_window.activeView()
-        if active_view == None: return
-
-        self.view = active_view
-        self.synchronize()
-
-    def synchronize(self):
-        if self.view == None: return
-        self.setValue(self.view.paintingOpacity()*100)

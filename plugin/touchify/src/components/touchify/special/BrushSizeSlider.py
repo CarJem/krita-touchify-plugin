@@ -5,63 +5,33 @@ from PyQt5.QtCore import *
 from touchify.src.ext.KritaSettings import *
 from touchify.src.components.krita.KisSliderSpinBox import KisSliderSpinBox
 from touchify.src.variables import *
-from touchify.src.helpers import TouchifyHelpers
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from touchify.src.window import TouchifyWindow
 
 class BrushSizeSlider(KisSliderSpinBox):
 
-    def __init__(self, parent=None, window: Window = None):
+    def __init__(self, parent=None):
         super(BrushSizeSlider, self).__init__(0.01, 1000, False, parent)
         self.view: View = None
-        self.sourceWindow: Window = window
+        self.appEngine: "TouchifyWindow" = None
         self.setScaling(3)
         self.setAffixes('Size: ', ' px')
-        self.connectValueChanged(self.valueChanged)
-        self.timerActive = False
-        self.setupTimer()
+        self.connectValueChanged(self.onValueChanged)
 
-    def setupTimer(self):
-        parentExtension = TouchifyHelpers.getExtension()
-        if parentExtension:
-            parentExtension.intervalTimerTicked.connect(self.onTimerTick)
-            self.timerActive = True
+    def setInstance(self, window: "TouchifyWindow"):
+        self.appEngine = window
+        self.appEngine.action_management.viewChanged.connect(self.onViewChanged)
+        self.appEngine.action_management.brushSizeChanged.connect(self.onSizeChanged)
+        self.onSizeChanged(self.appEngine.action_management.getBrushProperty("size"))
 
-    def onTimerTick(self):
-        if self.timerActive:
-            self.synchronizeView()
+    def onViewChanged(self, view: View):
+        self.view = view
 
-    def showEvent(self, event):
-        self.timerActive = True
-        super().showEvent(event)
+    def onSizeChanged(self, value: float):
+        self.setValue(value)
 
-    def hideEvent(self, event):
-        self.timerActive = False
-        super().hideEvent(event)
-
-    def closeEvent(self, event):
-        self.timerActive = False
-        super().closeEvent(event)
-
-    def setSourceWindow(self, window: Window):
-        self.sourceWindow = window
-        self.synchronizeView()
-
-    def valueChanged(self, value):
+    def onValueChanged(self, value):
         if self.view == None: return
         self.view.setBrushSize(value)
-
-    def synchronizeView(self):
-        if self.isVisible() == False:
-            return
-        
-        active_window = self.sourceWindow
-        if active_window == None: return
-
-        active_view = active_window.activeView()
-        if active_view == None: return
-
-        self.view = active_view
-        self.synchronize()
-
-    def synchronize(self):
-        if self.view == None: return
-        self.setValue(self.view.brushSize())

@@ -1,4 +1,5 @@
 import typing
+from touchify.src.resources import ResourceManager
 from touchify.src.variables import *
 from touchify.src.ext.KritaExtensions import *
 from krita import *
@@ -6,10 +7,13 @@ from touchify.src.settings import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from action_manager import ActionManager
+
+
 class TouchifyActionButton(QToolButton):
-
-    update_requested = pyqtSignal()
-
     triggerActivated = pyqtSignal()
 
     toggled: typing.ClassVar[QtCore.pyqtSignal]
@@ -34,6 +38,7 @@ class TouchifyActionButton(QToolButton):
         self.is_toolbox_button = False
         self.is_toolbox_menu = False
         self.toolbox_action_id = ""
+        self.brush_id = ""
         self.is_composer_active = False
 
         self.brushSelected = False
@@ -45,10 +50,46 @@ class TouchifyActionButton(QToolButton):
         self.pressed.connect(self.onPressed)
         self.clicked.connect(self.onClicked)
 
-    def getToolboxItem(self):
-        if self.is_toolbox_button:
-            return self.toolbox_action_id
-        return ""
+
+    def setupBrushChange(self, manager: "ActionManager", brush_id: str, is_active: bool):
+        self.brush_id = brush_id
+        manager.brushChanged.connect(self.onBrushChanged)
+        if is_active: 
+            self.brushSelected = True
+            self.repaint()
+
+    def setupToolChange(self, manager: "ActionManager", is_active: bool):
+        manager.toolChanged.connect(self.onToolChanged)
+
+        self.setCheckable(True)
+        if is_active: self.setChecked(True)
+
+    def setupActionChange(self, action: QAction, is_active: bool):
+        action.toggled.connect(self.onActionToggled)
+
+        self.setCheckable(True)
+        if is_active: self.setChecked(True)
+
+    def onActionToggled(self, checked: bool):
+        self.setChecked(checked)
+
+    def onBrushChanged(self, current_brush: Resource):
+        __brush_presets = ResourceManager.brushPresets()
+        if id not in __brush_presets: return
+        btn_preset = __brush_presets[id]
+        
+        if current_brush != btn_preset: 
+            self.brushSelected = False
+            self.repaint()
+        else: 
+            self.brushSelected = True
+            self.repaint()
+        
+    def onToolChanged(self, current_tool: str):
+        if not self.is_toolbox_button: return
+        
+        if self.toolbox_action_id != "" and current_tool == self.toolbox_action_id: self.setChecked(True)
+        else: self.setChecked(False)
 
     def onReleased(self):
         if self.is_toolbox_button:
@@ -112,10 +153,6 @@ class TouchifyActionButton(QToolButton):
     def setMetadata(self, text, icon):
         self.meta_text = text
         self.meta_icon = icon
-
-    def setBrushSelected(self, state: bool):
-        self.brushSelected = state
-        self.repaint()
 
     def setIcon(self, icon):
         if isinstance(icon, QIcon):

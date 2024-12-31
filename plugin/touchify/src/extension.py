@@ -20,8 +20,6 @@ class TouchifyExtension(Extension):
     setup_instance: bool = False
     new_instance: TouchifyWindow = None
 
-    intervalTimerTicked = pyqtSignal()
-
     def __init__(self, parent):
         super().__init__(parent)
         self.DEV_HOOK_FIND_PLUGIN = "TOUCHIFY"
@@ -41,7 +39,6 @@ class TouchifyExtension(Extension):
         self.intervalTimer.start(TOUCHIFY_TIMER_MAIN_INTERVAL)
 
     def onTimerTick(self):
-        self.intervalTimerTicked.emit()
         for id in self.instances:    
             self.instances[id].onTimerTick()
 

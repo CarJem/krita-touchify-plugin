@@ -7,7 +7,6 @@ from touchify.src.settings import TouchifySettings
 from touchify.src.variables import *
 
 from touchify.src.resources import ResourceManager
-from touchify.src.helpers import TouchifyHelpers
 
 DOCKER_TITLE = 'Touchify Addon: Color Options'
 DOCKER_ID="Touchify/ColorOptionsDocker"
@@ -23,7 +22,7 @@ class ColorSourceToggle(QWidget):
         self.setContentsMargins(0,0,0,0)
 
         self.instance: TouchifyWindow = None
-        self.sourceWindow: Window = None
+        self.appEngine: Window = None
 
         self.cubeSize = cubeSize
 
@@ -71,20 +70,15 @@ class ColorSourceToggle(QWidget):
         self.setBgBtn.setFixedHeight(cubeSize)
 
     def setup(self, instance: "TouchifyWindow"):
-        self.sourceWindow: Window = instance.windowSource
-        parentExtension = TouchifyHelpers.getExtension()
-        if parentExtension:
-            parentExtension.intervalTimerTicked.connect(self.intervalTimerTicked)
+        self.appEngine: TouchifyWindow = instance
+        self.setFgBtn.setInstance(self.appEngine)
+        self.setBgBtn.setInstance(self.appEngine)
 
     def toggleColors(self):
         Krita.instance().action("toggle_fg_bg").trigger()
-        self.setFgBtn.updateColors()
-        self.setBgBtn.updateColors()
 
     def resetColors(self):
         Krita.instance().action("reset_fg_bg").trigger()
-        self.setFgBtn.updateColors()
-        self.setBgBtn.updateColors()
 
     def showEvent(self, event):
         super().showEvent(event)
@@ -92,12 +86,8 @@ class ColorSourceToggle(QWidget):
     def closeEvent(self, event):
         super().closeEvent(event)
 
-    def intervalTimerTicked(self):
-        pass
-
     def onCanvasChanged(self, canvas: Canvas):
-        self.setFgBtn.updateColors()
-        self.setBgBtn.updateColors()
+        pass
 
 class ColorOptionsDocker(DockWidget):
 
@@ -111,7 +101,6 @@ class ColorOptionsDocker(DockWidget):
 
     def addonSetup(self, instance: "TouchifyWindow"):
         self.colorToggle.setup(instance)
-        instance.connectNotify
 
     def addonUpdateStyle(self):
         widgetHeight = int(50 * TouchifySettings.instance().preferences().Interface_ColorOptionsDockerScale)

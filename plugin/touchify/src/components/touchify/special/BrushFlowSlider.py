@@ -5,59 +5,32 @@ from touchify.src.variables import *
 
 from touchify.src.ext.KritaSettings import *
 from touchify.src.components.krita.KisSliderSpinBox import KisSliderSpinBox
-from touchify.src.helpers import TouchifyHelpers
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from touchify.src.window import TouchifyWindow
 
 
 class BrushFlowSlider(KisSliderSpinBox):
-    def __init__(self, parent=None, window: Window = None):
+    def __init__(self, parent=None):
         super(BrushFlowSlider, self).__init__(parent=parent, isInt=True)
-        self.view: View = None
-        self.sourceWindow: Window = window
+        self.appEngine: "TouchifyWindow" = None
         self.setAffixes('Flow: ', '%')
-        self.connectValueChanged(self.valueChanged)
-        self.timerActive = False
-        self.setupTimer()
+        self.connectValueChanged(self.onValueChanged)
+        self.view: View = None
 
-    def setupTimer(self):
-        parentExtension = TouchifyHelpers.getExtension()
-        if parentExtension:
-            parentExtension.intervalTimerTicked.connect(self.onTimerTick)
-            self.timerActive = True
+    def setInstance(self, window: "TouchifyWindow"):
+        self.appEngine = window
+        self.appEngine.action_management.viewChanged.connect(self.onViewChanged)
+        self.appEngine.action_management.brushFlowChanged.connect(self.onFlowChanged)
+        self.onFlowChanged(window.action_management.getBrushProperty("flow"))
 
-    def onTimerTick(self):
-        if self.timerActive:
-            self.synchronizeView()
+    def onViewChanged(self, view: View):
+        self.view = view
 
-    def showEvent(self, event):
-        self.timerActive = True
-        super().showEvent(event)
+    def onFlowChanged(self, value: float):
+        self.setValue(value*100)
 
-    def hideEvent(self, event):
-        self.timerActive = False
-        super().hideEvent(event)
-
-    def closeEvent(self, event):
-        self.timerActive = False
-        super().closeEvent(event)
-
-    def setSourceWindow(self, window: Window):
-        self.sourceWindow = window
-        self.synchronizeView()
-
-    def valueChanged(self, value):
+    def onValueChanged(self, value):
         if self.view == None: return
         self.view.setPaintingFlow(self.value()/100)
-
-    def synchronizeView(self):
-        active_window = self.sourceWindow
-        if active_window == None: return
-
-        active_view = active_window.activeView()
-        if active_view == None: return
-
-        self.view = active_view
-        self.synchronize()
-
-    def synchronize(self):
-        if self.view == None: return
-        self.setValue(self.view.paintingFlow()*100)

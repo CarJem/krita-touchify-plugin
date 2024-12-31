@@ -1,18 +1,21 @@
 from PyQt5.QtWidgets import QWidget
 from krita import *
 from PyQt5.QtCore import *
-from ....variables import *
+from touchify.src.variables import *
 
-from ....ext.KritaSettings import *
-from ...krita.KisAngleSelector import KisAngleSelector
-from ....helpers import TouchifyHelpers
+from touchify.src.ext.KritaSettings import *
+from touchify.src.components.krita.KisAngleSelector import KisAngleSelector
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from touchify.src.window import TouchifyWindow
 
 
 class BrushRotationSlider(KisAngleSelector):
-    def __init__(self, parent: QWidget | None = None, window: Window = None) -> None:
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.view: View = None
-        self.sourceWindow: Window = window
+        self.appEngine: "TouchifyWindow" = None
         self.setContentsMargins(0,0,0,0)
         self.setMinimumWidth(100)
         self.setFixedHeight(30)
@@ -20,53 +23,20 @@ class BrushRotationSlider(KisAngleSelector):
 
         self.setFlipOptionsMode(KisAngleSelector.FlipOptionsMode.MenuButton)
         self.spinBox.setPrefix('Rotation: ')
-        self.spinBox.valueChanged.connect(self.valueChanged)
-        self.timerActive = False
-        self.setupTimer()
+        self.spinBox.valueChanged.connect(self.onValueChanged)
 
-    def setupTimer(self):
-        parentExtension = TouchifyHelpers.getExtension()
-        if parentExtension:
-            parentExtension.intervalTimerTicked.connect(self.onTimerTick)
-            self.timerActive = True
+    def setInstance(self, window: "TouchifyWindow"):
+        self.appEngine = window
+        self.appEngine.action_management.viewChanged.connect(self.onViewChanged)
+        self.appEngine.action_management.brushRotationChanged.connect(self.onRotationChanged)
+        self.onRotationChanged(window.action_management.getBrushProperty("rotation"))
 
-    def onTimerTick(self):
-        if self.timerActive:
-            self.synchronizeView()
+    def onViewChanged(self, view: View):
+        self.view = view
 
-    def showEvent(self, event):
-        self.timerActive = True
-        super().showEvent(event)
+    def onRotationChanged(self, value: float):
+        self.spinBox.setValue(value)
 
-    def hideEvent(self, event):
-        self.timerActive = False
-        super().hideEvent(event)
-
-    def closeEvent(self, event):
-        self.timerActive = False
-        super().closeEvent(event)
-
-    def setSourceWindow(self, window: Window):
-        self.sourceWindow = window
-        self.synchronizeView()
-
-    def valueChanged(self, value):
+    def onValueChanged(self, value):
         if self.view == None: return
         self.view.setBrushRotation(self.spinBox.value())
-
-    def synchronizeView(self):
-        if self.isVisible() == False:
-            return
-        
-        active_window = self.sourceWindow
-        if active_window == None: return
-
-        active_view = active_window.activeView()
-        if active_view == None: return
-
-        self.view = active_view
-        self.synchronize()
-
-    def synchronize(self):
-        if self.view == None: return
-        self.setAngle(self.view.brushRotation())
