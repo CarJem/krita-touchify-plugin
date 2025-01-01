@@ -53,7 +53,7 @@ class WidgetLayout:
             "#NEW_SECTION",
 
             "preset_name",
-            "toolbox_enabled"
+            "toolbox_enabled",
             "toolshelf_count",
 
             "#NEW_COLUMN",
