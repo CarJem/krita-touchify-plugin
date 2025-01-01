@@ -31,6 +31,7 @@ class TouchifyActionButton(QToolButton):
         self.trigger_source = None
 
         self._toggled = False
+        self._menu_toggled = False
         
         self.meta_icon: QIcon = None
         self.meta_text: str = ""
@@ -45,6 +46,7 @@ class TouchifyActionButton(QToolButton):
 
         self.is_toolbox_child = False
         self.is_toolbox_menu = False
+        self.toolbox_item_list = []
 
         self.is_tool_action = False
         self.tool_action_id = ""
@@ -60,6 +62,15 @@ class TouchifyActionButton(QToolButton):
         self.released.connect(self.onReleased)
         self.pressed.connect(self.onPressed)
         self.clicked.connect(self.onClicked)
+
+    @pyqtProperty(bool)
+    def menu_toggled(self):
+        return self._menu_toggled
+    
+    @menu_toggled.setter
+    def menu_toggled(self, state):
+        self._menu_toggled = state
+        self.style().polish(self)
 
     @pyqtProperty(bool)
     def toggled(self):
@@ -92,9 +103,10 @@ class TouchifyActionButton(QToolButton):
 
         if is_active: self.toggled = (True)
 
-    def setupToolboxButton(self, is_toolbox_menu: bool):
+    def setupToolboxButton(self, is_toolbox_menu: bool, item_list: list[str]):
         self.is_toolbox_child = True
         self.is_toolbox_menu = is_toolbox_menu
+        self.toolbox_item_list = item_list
         self.onPaletteChanged()
 
     def setupAction(self, action: QAction, action_id: str):
@@ -109,7 +121,7 @@ class TouchifyActionButton(QToolButton):
         self.is_action_checkable = True
         self.action_id = action_id
         self.action_source = action
-        
+
         action.changed.connect(self.onActionChanged)
         action.toggled.connect(self.onActionToggled)
 
@@ -130,6 +142,10 @@ class TouchifyActionButton(QToolButton):
 
         if self.tool_action_id == self.tool_last_action_id: self.toggled = True
         else: self.toggled = False
+
+
+        if self.tool_action_id in self.toolbox_item_list: self.menu_toggled = (True)
+        else: self.menu_toggled = (False)
 
     def onActionChanged(self):
         if self.action_use_icon: 
@@ -175,6 +191,9 @@ class TouchifyActionButton(QToolButton):
         self.tool_last_action_id = current_tool
         if self.tool_action_id != "" and current_tool == self.tool_action_id: self.toggled = (True)
         else: self.toggled = (False)
+
+        if self.is_toolbox_menu and current_tool in self.toolbox_item_list: self.menu_toggled = (True)
+        else: self.menu_toggled = (False)
         
 
     def onReleased(self):
@@ -208,6 +227,9 @@ class TouchifyActionButton(QToolButton):
             self.toggled = (self.action_source.isChecked())
         elif self.is_tool_action:
             self.toggled = (self.tool_action_id == self.tool_last_action_id)
+
+        if self.is_toolbox_menu:
+            self.menu_toggled = (self.tool_last_action_id in self.toolbox_item_list)
 
     #endregion
 

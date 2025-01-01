@@ -130,12 +130,16 @@ class ToolboxWidget(QResizableWidget):
             
             TouchifyActionButton {{
                 background-color: #{alt_opacity_hex}{background_hex};
-                border: none;
+                border: 1px soild transparent;
                 border-radius: 4px;
             }}
             
             TouchifyActionButton[toggled="true"] {{
                 background-color: #{alt_opacity_hex}{highlight_hex};
+            }}
+
+            TouchifyActionButton[menu_toggled="true"] {{
+                border: 1px solid #{alt_opacity_hex}{highlight_hex};
             }}
             
             TouchifyActionButton:hover {{
@@ -308,7 +312,9 @@ class ToolboxWidget(QResizableWidget):
 
         btn: TouchifyActionButton = self.actionEngine.createButton(self, trigger)
         if btn:
-            btn.setupToolboxButton(is_toolbox_menu)
+            tool_names: list[str] = [item.name for item in tool.items]
+            tool_names.append(tool.name)
+            btn.setupToolboxButton(is_toolbox_menu, tool_names)
             btn.setWindowOpacity(self.OPACITY_LEVEL)
 
             if tool.icon != "": 
