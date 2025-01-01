@@ -178,7 +178,7 @@ class TouchifyPopup(QDockWidget):
         self.container_widget.setLayout(self.container_grid)
 
         self.toolshelf_widget = ToolshelfWidget(self, self.toolshelf_data)
-        self.toolshelf_widget.sizeChanged.connect(self.requestViewUpdate)
+        self.toolshelf_widget.toolshelfPageChanged.connect(self.onToolshelfPageChanged)
         self.container_grid.addWidget(self.toolshelf_widget)
 
         if self.dock_widget_type == PopupData.WindowType.Popup:
@@ -405,14 +405,17 @@ class TouchifyPopup(QDockWidget):
 
     #region Interface Methods
 
-    def requestViewUpdate(self):
+    def onSizeChanged(self):
+        pass
+
+    def onToolshelfPageChanged(self):
         size = self.generateSize()
         self.updateSize(size[0], size[1])
 
     def updateResizingState(self, value: bool):
         if self.resizing_allowed:
             self.resizing_enabled = value
-            self.requestViewUpdate()
+            self.onToolshelfPageChanged()
     #endregion
 
     #region Window Methods

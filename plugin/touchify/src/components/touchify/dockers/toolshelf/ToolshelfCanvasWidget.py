@@ -15,9 +15,6 @@ if TYPE_CHECKING:
 
  
 class ToolshelfCanvasWidget(QDockWidget):
-
-    updateViewRequested = pyqtSignal()
-
     def __init__(self, panel_index: int, app_engine: "TouchifyWindow"):
         super().__init__()
         self.setWindowTitle("Touchify Toolshelf")
@@ -31,6 +28,7 @@ class ToolshelfCanvasWidget(QDockWidget):
         """
         self.previous_state: ToolshelfWidget.PreviousState = ToolshelfWidget.PreviousState()
         self.scrollArea = QScrollArea(self)
+        self.scrollArea.setMouseTracking(True)
         self.scrollArea.setContentsMargins(0,0,0,0)
         self.scrollArea.setViewportMargins(0,0,0,0)
         self.scrollArea.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
@@ -41,16 +39,28 @@ class ToolshelfCanvasWidget(QDockWidget):
         self.setWidget(self.scrollArea)
         self.onLoaded()
 
-    def requestViewUpdate(self):
-        self.updateViewRequested.emit()
+    def onToolshelfPageChanged(self):
+        pass
+
+    def onToolshelfResize(self):
+        pass
+
+    def onToolshelfChanged(self):
+        pass
     
     def onLoaded(self):              
         self.mainWidget = ToolshelfWidget(self, TouchifySettings.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
+        self.mainWidget.toolshelfPageChanged.connect(self.onToolshelfPageChanged)
+        self.mainWidget.toolshelfResized.connect(self.onToolshelfResize)
+        self.mainWidget.toolshelfChanged.connect(self.onToolshelfChanged)
         self.scrollArea.setWidget(self.mainWidget)
         self.mainWidget.restorePreviousState(self.previous_state)
 
     def onUnload(self):
         self.previous_state = self.mainWidget.backupPreviousState()
+        self.mainWidget.toolshelfPageChanged.disconnect(self.onToolshelfPageChanged)
+        self.mainWidget.toolshelfResized.disconnect(self.onToolshelfResize)
+        self.mainWidget.toolshelfChanged.disconnect(self.onToolshelfChanged)
         self.mainWidget.shutdownWidget()
         self.scrollArea.takeWidget()
         self.mainWidget.deleteLater()

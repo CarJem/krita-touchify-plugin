@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QObject, QEvent, QPoint
+from PyQt5.QtCore import QObject, QEvent
 
 
 

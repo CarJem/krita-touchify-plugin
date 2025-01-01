@@ -19,18 +19,12 @@ class NtToolshelf(NtWidgetPad):
         super().__init__(window, canvas, True)   
 
         self.toolshelf = ToolshelfCanvasWidget(panel_index, app_engine)
-        self.toolshelf.updateViewRequested.connect(self.onUpdateViewRequested)
         self.toolshelf.installEventFilter(self.adjustFilter)
 
         self.setObjectName("toolshelfPad")
         self.borrowDocker(self.toolshelf)
-        
-
-    def onUpdateViewRequested(self):
-        self.canvas.updateView()
     
     def close(self):
-        self.toolshelf.updateViewRequested.disconnect(self.onUpdateViewRequested)
         self.toolshelf.removeEventFilter(self.adjustFilter)
         self.toolshelf.onUnload()
         result = super().close()

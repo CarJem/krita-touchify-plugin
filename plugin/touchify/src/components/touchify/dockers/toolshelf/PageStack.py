@@ -19,6 +19,10 @@ if TYPE_CHECKING:
     from .ToolshelfWidget import ToolshelfWidget
 
 class PageStack(QStackedWidget):
+
+    contentsChanged = pyqtSignal()
+    contentsResized = pyqtSignal()
+
     def __init__(self, parent: "ToolshelfWidget", cfg: ToolshelfData):
         super(PageStack, self).__init__(parent)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
@@ -52,27 +56,31 @@ class PageStack(QStackedWidget):
             widget.setSizePolicy(policy, policy)
             widget.setDisabled(False)
             widget.updateGeometry()
-            widget.adjustSize()
-        self.adjustSize()
+            #widget.adjustSize()
+        #self.adjustSize()
 
         currentPage = self.currentWidget()
         currentPage.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         currentPage.setEnabled(True)
         currentPage.updateGeometry()
-        currentPage.adjustSize()
-        self.adjustSize()
+        #currentPage.adjustSize()
+        #self.adjustSize()
 
 
     def addMainPanel(self):
         data = deepcopy(self.cfg.homepage)
         data.id = 'ROOT'
         self._mainWidget = Page(self, data)
+        self._mainWidget.panelItemUpdated.connect(self.onPanelItemUpdated)
+        self._mainWidget.panelItemResized.connect(self.onPanelItemResized)
         self._mainWidget.panel.sections_stack.setAutoFillBackground(False)
         self._panels['ROOT'] = self._mainWidget
         super().addWidget(self._mainWidget)
 
     def addPanel(self, data: ToolshelfDataPage):
         panel = Page(self, data)
+        panel.panelItemUpdated.connect(self.onPanelItemUpdated)
+        panel.panelItemResized.connect(self.onPanelItemResized)
         self._panels[data.id] = panel
         super().addWidget(panel)
 
@@ -80,8 +88,11 @@ class PageStack(QStackedWidget):
         if self.currentWidget() != self._mainWidget:
             self.changePanel('ROOT')
     
-    def onDockerUpdate(self):
-        self.adjustSize()
+    def onPanelItemUpdated(self):
+        self.contentsChanged.emit()
+
+    def onPanelItemResized(self):
+        self.contentsResized.emit()
 
     def changePanel(self, panel_id: str):
         new_panel = self.panel(panel_id)
@@ -103,15 +114,15 @@ class PageStack(QStackedWidget):
                 widget.setSizePolicy(policy, policy)
                 widget.setEnabled(True)
                 widget.updateGeometry()
-                widget.adjustSize()
+                #widget.adjustSize()
             else:
                 policy = QSizePolicy.Policy.Ignored
                 widget.setSizePolicy(policy, policy)
                 widget.setDisabled(False)
                 widget.updateGeometry()
-                widget.adjustSize()
+                #widget.adjustSize()
 
-        self.adjustSize()
+        #self.adjustSize()
 
     def panel(self, name) -> Page:
         if name in self._panels:
@@ -120,14 +131,10 @@ class PageStack(QStackedWidget):
             return None
         
     def deactivateWidget(self):
-        children = self.findChildren(DockerContainer)
-        #for child in children:
-            #child.unloadWidget()
+        pass
 
     def activateWidget(self):
-        children = self.findChildren(DockerContainer)
-        #for child in children:
-            #child.loadWidget()
+        pass
     
     def shutdownWidget(self):
         super().currentChanged.disconnect(self.onCurrentChanged)

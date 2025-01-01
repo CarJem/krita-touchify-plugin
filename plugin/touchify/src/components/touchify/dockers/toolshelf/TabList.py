@@ -252,8 +252,6 @@ class TabList(QWidget):
         else: btn.show()
             
     def onPageChanged(self, page_id: str):
-
-
         for btn_id in self._buttons:
             btn = self._buttons[btn_id]
             self.applyButtonRules(btn, btn_id, page_id)

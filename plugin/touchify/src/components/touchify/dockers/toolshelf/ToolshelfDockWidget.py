@@ -37,12 +37,18 @@ class ToolshelfDockWidget(DockWidget):
     
     def onLoaded(self):              
         self.mainWidget = ToolshelfWidget(self, TouchifySettings.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
+        self.mainWidget.toolshelfPageChanged.connect(self.onToolshelfPageChanged)
+        self.mainWidget.toolshelfResized.connect(self.onToolshelfResize)
+        self.mainWidget.toolshelfChanged.connect(self.onToolshelfChanged)
         self.setWidget(self.mainWidget)
         self.mainWidget.restorePreviousState(self.previous_state)
 
     def onUnload(self):
         if hasattr(self, 'mainWidget'):
             self.previous_state = self.mainWidget.backupPreviousState()
+            self.mainWidget.toolshelfPageChanged.disconnect(self.onToolshelfPageChanged)
+            self.mainWidget.toolshelfResized.disconnect(self.onToolshelfResize)
+            self.mainWidget.toolshelfChanged.disconnect(self.onToolshelfChanged)
             self.mainWidget.shutdownWidget()
             self.mainWidget.deleteLater()
             self.mainWidget = None
@@ -51,9 +57,14 @@ class ToolshelfDockWidget(DockWidget):
         self.onUnload()
         self.onLoaded()
 
-    def requestViewUpdate(self):
-        if self.isFloating():
-            self.adjustSize()
+    def onToolshelfResize(self):
+        pass
+
+    def onToolshelfChanged(self):
+        pass
+
+    def onToolshelfPageChanged(self):
+        if self.isFloating(): self.adjustSize()
 
     def sizeHint(self):
         if hasattr(self, "mainWidget"):

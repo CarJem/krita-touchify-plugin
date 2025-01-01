@@ -77,6 +77,8 @@ class Panel(QWidget):
             self.ourLayout.addWidget(widget, y, x)
             
     class SectionGroup(QWidget):
+        groupItemChanged = pyqtSignal()
+
         def __init__(self, parent: "Panel", tab_type: str) -> None:
             super().__init__(parent)
             
@@ -130,25 +132,8 @@ class Panel(QWidget):
             for i in range(0, self.stackPanel.count()):
 
                 widget = self.stackPanel.widget(i)
-                if i == index:
-                    #if isinstance(widget, DockerContainer):  
-                        #if widget.isEnabled() == False: widget.loadWidget()
-
-
-                    #policy = QSizePolicy.Policy.Preferred
-                    #widget.setSizePolicy(policy, policy)
-                    widget.setEnabled(True)
-                    #widget.updateGeometry()
-                    #widget.adjustSize()
-                else:
-                    #if isinstance(widget, DockerContainer): 
-                        #if widget.isEnabled(): widget.unloadWidget()
-
-                    #policy = QSizePolicy.Policy.Ignored
-                    #widget.setSizePolicy(policy, policy)
-                    widget.setDisabled(True)
-                    #widget.updateGeometry()
-                    #widget.adjustSize()
+                if i == index: widget.setEnabled(True)
+                else: widget.setDisabled(True)
 
             if self.mode == ToolshelfDataPage.TabType.Buttons:
                 if index in self.tabTitles:
@@ -156,15 +141,15 @@ class Panel(QWidget):
             else:
                 pass
 
-            #self.adjustSize()
-            #self.stackPanel.adjustSize()
-            #self.panel.adjustSize()
-            self.panel.page_stack.rootWidget.requestViewUpdate()
+            self.groupItemChanged.emit()
         
     dockerWidgets: dict = {}
     
     pageLoadedSignal = pyqtSignal()
     pageUnloadSignal = pyqtSignal()
+
+    panelItemUpdated = pyqtSignal()
+    panelItemResized = pyqtSignal()
 
     def __init__(self, parent: QWidget | None, toolshelf: "PageStack", data: ToolshelfDataPage):
         super(Panel, self).__init__(parent)
@@ -212,6 +197,7 @@ class Panel(QWidget):
                 splitter.addWidget(widgets[0], x, y)
             else:
                 tabBar = Panel.SectionGroup(self, self.panel_config.tab_type)
+                tabBar.groupItemChanged.connect(self.onGroupItemChanged)
                 for item in widgets:
                     if isinstance(item, DockerContainer): tabBar.addTab(item, self.docker_manager.dockerWindowTitle(item.docker_id))
                     elif isinstance(item, TouchifyActionPanel): tabBar.addTab(item, item.title)
@@ -309,6 +295,7 @@ class Panel(QWidget):
 
             self.dockerWidgets[actionInfo.docker_id] = actionWidget
             actionWidget.dockerChanged.connect(self.onDockerUpdate)
+            actionWidget.dockerSizeChanged.connect(self.onDockerSizeChanged)
             #self.pageLoadedSignal.connect(actionWidget.loadWidget)
             #self.pageUnloadSignal.connect(actionWidget.unloadWidget)
 
@@ -371,9 +358,12 @@ class Panel(QWidget):
             if actionInfo.min_size_y != 0: actionWidget.setMinimumHeight(actionInfo.min_size_y)
             if actionInfo.max_size_x != 0: actionWidget.setMaximumWidth(actionInfo.max_size_x)
             if actionInfo.max_size_y != 0: actionWidget.setMaximumHeight(actionInfo.max_size_y)
+
+            actionWidget.panelItemResized.connect(self.onSubpanelItemResized)
+            actionWidget.panelItemUpdated.connect(self.onSubpanelItemUpdated)
             
-            self.pageLoadedSignal.connect(actionWidget.loadPage)
-            self.pageUnloadSignal.connect(actionWidget.unloadPage)
+            self.pageLoadedSignal.connect(actionWidget.onLoadPage)
+            self.pageUnloadSignal.connect(actionWidget.onUnloadPage)
             return actionWidget
         
         widget_groups: Mapping[int, Mapping[int, list[QWidget]]] = {}
@@ -423,7 +413,19 @@ class Panel(QWidget):
         self.sections_stack.setEditMode(value)
 
     def onDockerUpdate(self):
-        self.page_stack.onDockerUpdate()
+        self.panelItemUpdated.emit()
+
+    def onDockerSizeChanged(self):
+        self.panelItemResized.emit()
+
+    def onGroupItemChanged(self):
+        self.panelItemUpdated.emit()
+
+    def onSubpanelItemResized(self):
+        self.panelItemResized.emit()
+
+    def onSubpanelItemUpdated(self):
+        self.panelItemUpdated.emit()
 
     def title(self):
         if self.panel_config:
@@ -434,10 +436,10 @@ class Panel(QWidget):
         else:
             return "Unknown Panel"
 
-    def unloadPage(self):
+    def onUnloadPage(self):
         self.pageUnloadSignal.emit()
 
-    def loadPage(self):
+    def onLoadPage(self):
         self.pageLoadedSignal.emit()
 
     def setSizeHint(self, size):

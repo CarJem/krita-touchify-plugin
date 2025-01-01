@@ -20,7 +20,10 @@ if TYPE_CHECKING:
     from ...special.TouchifyPopup import TouchifyPopup
 
 class ToolshelfWidget(QWidget):
-    sizeChanged=pyqtSignal()
+    toolshelfResized=pyqtSignal()
+    toolshelfChanged=pyqtSignal()
+
+    toolshelfPageChanged=pyqtSignal()
 
     class PreviousState:
         def __init__(self):
@@ -64,7 +67,8 @@ class ToolshelfWidget(QWidget):
         self.tabs = TabList(self.header, headerOrientation)
         self.pages = PageStack(self, self.cfg)
 
-
+        self.pages.contentsChanged.connect(self.onContentsChanged)
+        self.pages.contentsResized.connect(self.onContentsResized)
 
         self.mainLayout = QVBoxLayout(self) if headerOrientation == Qt.Orientation.Horizontal else QHBoxLayout(self)
         self.mainLayout.setSpacing(0)
@@ -75,7 +79,7 @@ class ToolshelfWidget(QWidget):
         self.mainLayout.addWidget(self.tabs)
         self.mainLayout.addWidget(self.pages)
 
-        self.header.optionsMenu.editMode.changed.connect(self.editModeChanged)
+        self.header.optionsMenu.editMode.changed.connect(self.onEditModeChanged)
 
 
         if headerOrientation == Qt.Orientation.Horizontal:
@@ -92,9 +96,10 @@ class ToolshelfWidget(QWidget):
         if self.cfg.header_options.default_to_pinned:
             self.setPinned(True)
 
+    #region Events
 
     def resizeEvent(self, event: QResizeEvent):
-        self.sizeChanged.emit()
+        self.toolshelfResized.emit()
         super().resizeEvent(event)
 
     def showEvent(self, event: QShowEvent):
@@ -104,6 +109,8 @@ class ToolshelfWidget(QWidget):
     def hideEvent(self, event: QHideEvent):
         self.deactivateWidget()
         super().hideEvent(event)
+
+    #endregion
     
     #region Getters / Setters
 
@@ -174,22 +181,24 @@ class ToolshelfWidget(QWidget):
 
     #region Signals
 
-    def editModeChanged(self):
+    def onEditModeChanged(self):
         edit_mode = self.header.optionsMenu.editMode.isChecked()
         self.pages.setEditMode(edit_mode)
     
     def onPageChanged(self, current_panel_id: str):
-        self.requestViewUpdate()
         if hasattr(self, 'header'):
             self.header.onPageChanged(current_panel_id)
             self.tabs.onPageChanged(current_panel_id)
+        self.toolshelfPageChanged.emit()
 
-    def requestViewUpdate(self):
-        QTimer.singleShot(150, self.parent_docker.requestViewUpdate)
+    def onContentsChanged(self):
+        self.toolshelfChanged.emit()
+
+    def onContentsResized(self):
+        self.toolshelfResized.emit()
 
     def onCanvasFocused(self):
-        if self.pinned == False:
-            self.goHome()
+        if self.pinned == False: self.goHome()
 
     #endregion
 

@@ -9,6 +9,7 @@ from krita import *
 class DockerContainer(QWidget):
   
     dockerChanged=pyqtSignal()
+    dockerSizeChanged=pyqtSignal()
 
     def __init__(self, parent: QWidget | None, docker_id: str, docker_manager: DockerManager):
         super(DockerContainer, self).__init__(parent)
@@ -63,6 +64,12 @@ class DockerContainer(QWidget):
         super().hideEvent(event)
         self.unloadWidget()
 
+    def eventFilter(self, a0: QObject, a1: QEvent):
+        if a0 == self.borrowedDocker:
+            if a1.type() == QEvent.Type.Resize:
+                self.dockerSizeChanged.emit()
+        return super().eventFilter(a0, a1)
+
     def unloadWidget(self):
         self.dockerShouldBeActive = False
         self._unloadDocker()
@@ -98,12 +105,14 @@ class DockerContainer(QWidget):
         dockerLoaded: QWidget | None = self.docker_manager.loadDocker(self.docker_id, shareArgs)
         if not dockerLoaded: return
         self.borrowedDocker = dockerLoaded
+        self.borrowedDocker.installEventFilter(self)
         self.dockerChanged.emit()
         self.container_layout.addWidget(self.borrowedDocker, 1)
         if self.dockMode: self.borrowedDocker.show()
         self.updateVisibility()
 
     def _unloadDocker(self):
+        self.borrowedDocker.removeEventFilter(self)
         self.docker_manager.unloadDocker(self.docker_id)
         self.dockerChanged.emit()
         self.updateVisibility()

@@ -359,6 +359,13 @@ class NtCanvas(QWidget):
             if self.toolshelf_gamma: self.toolshelf_gamma.adjustToView()
             if self.toolshelf_delta: self.toolshelf_delta.adjustToView()
 
+    def mouseMoveEvent(self, a0):
+        if self.toolbox: self.toolbox.updateCursor()
+        if self.toolshelf_alpha: self.toolshelf_alpha.updateCursor()
+        if self.toolshelf_beta: self.toolshelf_beta.updateCursor()
+        if self.toolshelf_gamma: self.toolshelf_gamma.updateCursor()
+        if self.toolshelf_delta: self.toolshelf_delta.updateCursor()
+
     def updatePalette(self):
         if self.windowLoaded == False:
             return

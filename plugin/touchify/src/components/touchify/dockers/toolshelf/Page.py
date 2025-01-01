@@ -12,6 +12,9 @@ if TYPE_CHECKING:
 
 
 class Page(QWidget):
+
+    panelItemUpdated=pyqtSignal()
+    panelItemResized=pyqtSignal()
     
     def __init__(self, parent: "PageStack", data: ToolshelfDataPage):
         super(Page, self).__init__(parent)
@@ -26,10 +29,18 @@ class Page(QWidget):
         self.docker_manager = self.toolshelf.rootWidget.parent_docker.docker_manager
         self.actions_manager = self.toolshelf.rootWidget.parent_docker.actions_manager
 
-        self.panel: Panel = Panel(self, parent, data)        
+        self.panel: Panel = Panel(self, parent, data)     
+        self.panel.panelItemUpdated.connect(self.onPanelItemUpdated) 
+        self.panel.panelItemResized.connect(self.onPanelItemResized)
         self.layout().addWidget(self.panel)
 
         self.updateStyleSheet()
+
+    def onPanelItemUpdated(self):
+        self.panelItemUpdated.emit()
+
+    def onPanelItemResized(self):
+        self.panelItemResized.emit()
 
     def setEditMode(self, value: bool):
         self.panel.setEditMode(value)
