@@ -24,7 +24,6 @@ class PropertyField_Str(PropertyField):
         self.is_icon_viewer = False
         self.is_docker_selector = False
         self.is_action_selection = False
-        self.is_hotkey_selector = False
         self.is_brush_selection = False
 
         self.is_special_selector = False
@@ -139,16 +138,6 @@ class PropertyField_Str(PropertyField):
                 elif restriction["type"] == "registry_toolshelf_selection":
                     self.is_special_selector = True
                     self.special_selector_type = "toolshelf"
-                    list_setup = True
-                elif restriction["type"] == "hotkey_selection":
-                    combobox_items = list[tuple[str, str]]()
-                    avaliableItems = TouchifySettings.instance().hotkey_options_storage
-                    combobox_items.append(("None", "none"))
-                    for item in avaliableItems:
-                        input = (avaliableItems[item]["displayName"], item)
-                        combobox_items.append(input)
-                    self.combobox_items = combobox_items
-                    self.is_combobox = True
                     list_setup = True
                 
 

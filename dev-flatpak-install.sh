@@ -5,7 +5,9 @@ KRITA_PATH="$HOME/.var/app/org.kde.krita/data/krita/pykrita"
 
 install_plugin() {
     PLUGIN_NAME=$1
-    rm -r "${KRITA_PATH:?}"/"${PLUGIN_NAME:?}"/*
+    PLUGIN_PATH="${KRITA_PATH:?}"/"${PLUGIN_NAME:?}"
+    find "$PLUGIN_PATH" ! -path "$PLUGIN_PATH" ! -name "registered_actions.action" -exec rm -r {} \;
+    #rm -r "${KRITA_PATH:?}"/"${PLUGIN_NAME:?}"/*
     cp "$SCRIPT_DIR/plugin/$PLUGIN_NAME.desktop" "${KRITA_PATH:?}/"
     cp "$SCRIPT_DIR/plugin/$PLUGIN_NAME.action" "${KRITA_PATH:?}/"
     cp -r "$SCRIPT_DIR/plugin/$PLUGIN_NAME" "${KRITA_PATH:?}/"

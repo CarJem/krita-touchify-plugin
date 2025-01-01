@@ -128,21 +128,21 @@ class ToolboxWidget(QResizableWidget):
             QScrollArea > QWidget > QWidget {{ background: transparent; }}
             QScrollArea > QWidget > QScrollBar {{ background: palette(base); }}
             
-            QAbstractButton {{
+            TouchifyActionButton {{
                 background-color: #{alt_opacity_hex}{background_hex};
                 border: none;
                 border-radius: 4px;
             }}
             
-            QAbstractButton:checked {{
+            TouchifyActionButton[toggled="true"] {{
                 background-color: #{alt_opacity_hex}{highlight_hex};
             }}
             
-            QAbstractButton:hover {{
+            TouchifyActionButton:hover {{
                 background-color: #{alt_opacity_hex}{highlight_hex};
             }}
             
-            QAbstractButton:pressed {{
+            TouchifyActionButton:pressed {{
                 background-color: #{alt_opacity_hex}{alternate_hex};
             }}
         """)
@@ -308,14 +308,12 @@ class ToolboxWidget(QResizableWidget):
 
         btn: TouchifyActionButton = self.actionEngine.createButton(self, trigger)
         if btn:
-            btn.useToolboxButton(is_toolbox_menu)
+            btn.setupToolboxButton(is_toolbox_menu)
             btn.setWindowOpacity(self.OPACITY_LEVEL)
-
-            btn.toolbox_action_id = tool.name
 
             if tool.icon != "": 
                 btn.setIcon(ResourceManager.iconLoader(tool.icon))
-                btn.use_action_icon = False
+                btn.action_use_icon = False
 
             btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             btn.setIconSize(QSize(icon_size, icon_size))
@@ -387,13 +385,7 @@ class ToolboxWidget(QResizableWidget):
     def swapToolButton(self):
         ac: QAction = self.sender()
         btn: TouchifyActionButton = ac.parent()
-
-        btn.toolbox_action_id = ac.objectName()
-
-        btn.setTrigger(ac.trigger, False)
-
-        btn.setText(ac.text())
-        btn.setIcon(ac.icon())
+        btn.onToolboxButtonSwap(ac)
     
     def changePreset(self):
         ac: QAction = self.sender()

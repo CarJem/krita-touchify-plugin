@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class BrushRotationSlider(KisAngleSelector):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        self.view: View = None
+
         self.appEngine: "TouchifyWindow" = None
         self.setContentsMargins(0,0,0,0)
         self.setMinimumWidth(100)
@@ -28,6 +28,7 @@ class BrushRotationSlider(KisAngleSelector):
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
         self.appEngine.action_management.viewChanged.connect(self.onViewChanged)
+        self.onViewChanged(self.appEngine.action_management.getCurrentView())
         self.appEngine.action_management.brushRotationChanged.connect(self.onRotationChanged)
         self.onRotationChanged(window.action_management.getBrushRotation())
 

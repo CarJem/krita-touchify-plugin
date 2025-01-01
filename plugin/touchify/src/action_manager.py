@@ -2,6 +2,7 @@ from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from touchify.paths import REGISTERED_ACTIONS_FILE
 from touchify.src.cfg.menu.TriggerMenuItem import TriggerMenuItem
 from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
 from touchify.src.cfg.resource_pack.ResourcePackMetadata import ResourcePackMetadata
@@ -29,10 +30,15 @@ from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
 
 from touchify.src.enums.common_actions import CommonActions
 
+import xml.etree.ElementTree as ET
+from xml.dom import minidom as MiniDOM
+
 if TYPE_CHECKING:
     from .window import TouchifyWindow
 
 class ActionManager(QObject):
+
+    
 
     composerTriggerEnded=pyqtSignal()
 
@@ -194,6 +200,12 @@ class ActionManager(QObject):
 
     #region Getters
 
+    def getCurrentView(self):
+        return self.__lastView
+
+    def getCurrentTool(self):
+        return self.__lastToolboxTool
+
     def getBrushBlendingMode(self):
         return self.__lastBrushBlendingMode
     
@@ -271,7 +283,7 @@ class ActionManager(QObject):
             meta: ResourcePackMetadata = pack.metadata
             for data in pack.triggers:
                 data: Trigger
-                subActionIdentifier = 'Touchify_Res_{0}_{1}'.format(meta.registry_id, data.registry_id)
+                subActionIdentifier = '{0}{1}_{2}'.format(TOUCHIFY_ID_ACTION_REGISTERED, meta.registry_id, data.registry_id)
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
         
@@ -400,40 +412,70 @@ class ActionManager(QObject):
         
     #region Registered Actions
 
+    def createRegisteredElement(self, actionname):
+        element = ET.Element("Action",{"name":"{0}".format(actionname)})
+        ET.SubElement(element,"text").text = actionname
+        ET.SubElement(element,"shortcut").text = "none"
+        return element
+    
     def runRegisteredAction(self, identifier: str, action: QAction):
         if identifier in self.registeredActions:
             data: Trigger = self.registeredActionsData[identifier]
             if isinstance(data, Trigger):
                 self.runAction(data, action)
 
-    def createRegisteredAction(self, actionIdentifier: str, data: Trigger, window: Window, actionPath: str):
+    def installRegisteredAction(self, actionIdentifier: str, data: Trigger, window: Window, actionPath: str):
         displayName = data.display_custom_text
         action = window.createAction(actionIdentifier, displayName, actionPath)
 
         self.registeredActions[actionIdentifier] = action
-        self.registeredActionsData[actionIdentifier] = data
-           
-        TouchifySettings.instance().addHotkeyOption(actionIdentifier, displayName, self.runRegisteredAction, {'identifier': actionIdentifier, 'action': action})      
+        self.registeredActionsData[actionIdentifier] = data  
         action.triggered.connect(partial(self.runRegisteredAction, actionIdentifier, action))
              
         (has_text, text, has_icon, icon, using_action_icon) = self.__getTouchifyActionDisplay(data)
         if has_icon: action.setIcon(icon)
         return action
+    
+    def writeRegisteredActions(self, registry: dict[str, tuple[ResourcePackMetadata, list[ET.Element]]]):
+        tree = ET.ElementTree(ET.Element("ActionCollection",{"version":"2","name":"Touchify"}))
+        action_collection = tree.getroot()
+
+
+        for registry_name, registry_data in registry.items():
+            registry_meta = registry_data[0]
+            registry_actions = registry_data[1]
+
+            pack_collection = ET.SubElement(action_collection, "Actions", {"category":"Touchify"})
+            ET.SubElement(pack_collection, "text").text = "{0}".format(registry_meta.registry_name)
+
+            for action in registry_actions:
+                pack_collection.append(action)
+
+        xmlstr = MiniDOM.parseString(ET.tostring(action_collection, encoding='UTF-8', xml_declaration=True, short_empty_elements=False)).toprettyxml(indent="   ")
+        with open(REGISTERED_ACTIONS_FILE, "w") as f:
+            f.write(xmlstr)
 
     def createRegisteredActions(self, window: Window, actionPath: str):
         subItemPath = actionPath + "/" + "registered"
         cfg = TouchifySettings.instance().getConfig()
         root_menu = QtWidgets.QMenu("Registered Actions")
 
+        registered_elements: dict[str, tuple[ResourcePackMetadata, list[ET.Element]]] = {}
+
         for pack in cfg.resources.presets:
             pack: ResourcePack
             packMeta = pack.metadata
             pack_menu = root_menu.addMenu(packMeta.registry_name)
+            registered_elements[packMeta.registry_id] = packMeta, []
             for data in pack.triggers:
                 data: Trigger
-                id = 'Touchify_Res_{0}_{1}'.format(packMeta.registry_id, data.registry_id)
-                action = self.appEngine.action_management.createRegisteredAction(id, data, window, subItemPath)
+                id = '{0}{1}_{2}'.format(TOUCHIFY_ID_ACTION_REGISTERED, packMeta.registry_id, data.registry_id)
+                
+                action = self.appEngine.action_management.installRegisteredAction(id, data, window, subItemPath)
+                registered_elements[packMeta.registry_id][1].append(self.createRegisteredElement(id))
                 pack_menu.addAction(action)
+            
+        self.writeRegisteredActions(registered_elements)
 
         return root_menu
 
@@ -492,7 +534,7 @@ class ActionManager(QObject):
         (has_text, text, has_icon, icon, using_action_icon) = self.__getTouchifyActionDisplay(act)  
         if has_text: btn.setText(text)      
         if has_icon: btn.setIcon(icon) 
-        if using_action_icon: btn.useActionIcon()        
+        if using_action_icon: btn.setupActionIcon()        
         btn.setMetadata(text, icon)
 
     #endregion    
@@ -513,7 +555,7 @@ class ActionManager(QObject):
     #endregion
 
     #region Button Constructors
-    def button_main(self, onClick: any, toolTip: str, checkable: bool, composerMode: bool = False):
+    def button_main(self, onClick: any, toolTip: str, composerMode: bool = False):
         btn = TouchifyActionButton()
         
         if onClick:
@@ -522,7 +564,6 @@ class ActionManager(QObject):
                 
         btn.setToolTip(toolTip)
         btn.setContentsMargins(0,0,0,0)
-        btn.setCheckable(checkable)
         return btn
    
     def button_brush(self, act: Trigger):
@@ -532,7 +573,7 @@ class ActionManager(QObject):
         
         if id in brush_presets:
             preset = brush_presets[id]
-            btn = self.button_main(lambda: self.action_brush(id), preset.name(), False)
+            btn = self.button_main(lambda: self.action_brush(id), preset.name())
             btn.setupBrushChange(self, id, preset == self.__lastBrushPreset)
             self.__setButtonDisplay(act, btn)
         return btn
@@ -541,7 +582,7 @@ class ActionManager(QObject):
         data: TriggerMenu = TouchifySettings.instance().getRegistryItem(act.context_menu_id, TriggerMenu)
         if not isinstance(data, TriggerMenu) or data == None: return None
         
-        btn: TouchifyActionButton = self.button_main(None, act.display_custom_text, False)   
+        btn: TouchifyActionButton = self.button_main(None, act.display_custom_text)   
         self.__setButtonDisplay(act, btn)
         
         contextMenu = TouchifyActionMenu(data, btn, self)
@@ -551,7 +592,7 @@ class ActionManager(QObject):
     
     def button_popup(self, data: Trigger):
         btn: TouchifyActionButton | None = None
-        btn = self.button_main(None, data.display_custom_text, False)
+        btn = self.button_main(None, data.display_custom_text)
         btn.triggerActivated.connect((lambda: self.openPopup(data.popup_data, btn)))
         self.__setButtonDisplay(data, btn)
         return btn
@@ -571,7 +612,7 @@ class ActionManager(QObject):
             case Trigger.Variants.CanvasPreset:
                 onClick = (lambda: self.action_canvas(data.canvas_preset_data))
 
-        btn = self.button_main(onClick, data.display_custom_text, False)
+        btn = self.button_main(onClick, data.display_custom_text)
         self.__setButtonDisplay(data, btn)
         return btn
         
@@ -581,20 +622,19 @@ class ActionManager(QObject):
         if action:
             checkable = action.isCheckable()
             toolbox_item = False
-            is_current_tool = False
             
             if act.action_id in CommonActions.KNOWN_UNCHECKABLES:
                 checkable = False
             
             if act.action_id in CommonActions.TOOLBOX_ITEMS:
                 toolbox_item = True
-                is_current_tool = self.__lastToolboxTool == act.action_id
 
             
-            btn = self.button_main(action.trigger, action.toolTip(), checkable, act.extra_composer_mode)
+            btn = self.button_main(action.trigger, action.toolTip(), act.extra_composer_mode)
 
-            if toolbox_item: btn.setupToolChange(self, is_current_tool)
-            elif checkable: btn.setupActionChange(action, action.isChecked())
+            if toolbox_item: btn.setupToolChange(self, act.action_id, self.__lastToolboxTool == act.action_id)
+            elif checkable: btn.setupActionCheckChange(action, act.action_id, action.isChecked())
+            else: btn.setupAction(action, act.action_id)
 
             self.__setButtonDisplay(act, btn)
         return btn

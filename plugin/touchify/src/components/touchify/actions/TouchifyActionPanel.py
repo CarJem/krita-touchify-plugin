@@ -50,7 +50,6 @@ class TouchifyActionPanel(QWidget):
         self._buttons: dict[any, TouchifyActionButton] = {}
         
         self.hinted_size: QSize | None = None
-        self.registered_actions: dict[QAction, TouchifyActionButton] = {}
         
         self.createPanel()
 
@@ -70,28 +69,8 @@ class TouchifyActionPanel(QWidget):
         hint = super().minimumSizeHint()
         return hint
     
-    def updateButtonV2(self):
-        action: QAction = self.sender()
-        if action in self.registered_actions:
-            btn = self.registered_actions[action]
-            btn.setChecked(action.isChecked())
-            if btn.use_action_icon: 
-                btn.setIcon(action.icon())
-    
-    def registerAction(self, btn: TouchifyActionButton, action: QAction):
-        action.changed.connect(self.updateButtonV2)
-        self.registered_actions[action] = (btn)
-    
     def close(self):
-        self.unregisterActions()
         super().close()
-
-    def unregisterActions(self):
-        for action in self.registered_actions:
-            try:
-                action.changed.disconnect(self.updateButtonV2)
-            except TypeError:
-                pass
      
      
     def appendRow(self, row: int):
@@ -128,7 +107,6 @@ class TouchifyActionPanel(QWidget):
             tlb: QWidget = rowItem
             tlb.layout().addWidget(btn)
 
-     
 
      
     def appendButton(self, data: Trigger, btn: TouchifyActionButton, row: int):
@@ -140,12 +118,6 @@ class TouchifyActionPanel(QWidget):
         
         id = action_id()
         self._buttons[id] = btn
-        
-        if data.variant == Trigger.Variants.Action:
-            action = Krita.instance().action(data.action_id)
-            if action:
-                if action.isCheckable():
-                    self.registerAction(btn, action)
                     
         self.addWidgetToRow(row, btn)
         

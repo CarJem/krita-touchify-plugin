@@ -1,11 +1,11 @@
 from PyQt5.QtWidgets import QDockWidget
 
-from ..dockers.toolbox.ToolboxDocker import ToolboxDocker
+from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
 
-from .NtWidgetPad import NtWidgetPad
+from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from krita import *
 from PyQt5.QtWidgets import QDockWidget
-from ....variables import *
+from touchify.src.variables import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -15,7 +15,7 @@ class NtToolbox(NtWidgetPad):
 
     def __init__(self, canvas: "NtCanvas", window: Window):
         super().__init__(window, canvas)
-
+        self.reopenDockerOnReturn = False
         self.toolbox: ToolboxDocker = self.qWin.findChild(ToolboxDocker, TOUCHIFY_ID_DOCKER_TOOLBOX)
         self.toolbox.installEventFilter(self.adjustFilter)
         

@@ -35,7 +35,7 @@ class Menu(QMenu):
         self.toggleResizeAct.setChecked(cfg.header_options.default_to_resize_mode)
 
         
-        if self.registry_index != -1:
+        if self.registry_index != -2:
             self.current_preset_id = TouchifySettings.instance().getActiveToolshelfId(self.registry_index)
             self.loadPresets()
 

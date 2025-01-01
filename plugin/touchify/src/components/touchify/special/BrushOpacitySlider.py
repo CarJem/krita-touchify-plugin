@@ -21,6 +21,7 @@ class BrushOpacitySlider(KisSliderSpinBox):
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
         self.appEngine.action_management.viewChanged.connect(self.onViewChanged)
+        self.onViewChanged(self.appEngine.action_management.getCurrentView())
         self.appEngine.action_management.brushOpacityChanged.connect(self.onOpacityChanged)
         self.onOpacityChanged(window.action_management.getBrushOpacity())
 

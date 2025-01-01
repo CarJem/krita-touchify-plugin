@@ -57,7 +57,10 @@ class NtWidgetPad(QWidget):
 
         self.alignment_x = Qt.AlignmentFlag.AlignLeft
         self.alignment_y = Qt.AlignmentFlag.AlignTop
-        self.widgetEnabled = True
+        self.collapsed = True
+
+
+        self.reopenDockerOnReturn = True
 
         
         self.setMouseTracking(True)
@@ -70,7 +73,7 @@ class NtWidgetPad(QWidget):
 
          # Visibility toggle
         self.btnHide = NtTogglePadButton()
-        self.btnHide.clicked.connect(self.toggleWidgetVisible)
+        self.btnHide.clicked.connect(self.setCollapsed)
         self.layout().addWidget(self.btnHide)
         self.updateArrow()
         
@@ -196,6 +199,8 @@ class NtWidgetPad(QWidget):
             self.adjustToView()        
             self.widgetDocker.hide()
 
+            if self.collapsed: self.widget.setVisible(False)
+
             return True
             
         return False
@@ -210,7 +215,8 @@ class NtWidgetPad(QWidget):
             else:
                 self.widgetDocker.setWidget(self.widget)
 
-            self.widgetDocker.show()
+            if self.reopenDockerOnReturn:
+                self.widgetDocker.show()
             self.widget = None
             self.widgetDocker = None
     #endregion
@@ -290,7 +296,7 @@ class NtWidgetPad(QWidget):
             self.setCursor(Qt.CursorShape.ArrowCursor)
 
     def updateArrow(self):
-        self.btnHide.setArrow(self.alignment_x, self.alignment_y, self.widgetEnabled)
+        self.btnHide.setArrow(self.alignment_x, self.alignment_y, self.collapsed)
 
 
            
@@ -298,12 +304,9 @@ class NtWidgetPad(QWidget):
 
     #region Functions
 
-    def toggleWidgetVisible(self, value=None):
-        if self.widget:
-            if not value:
-                value = not self.widget.isVisible()   
-            self.widget.setVisible(value)
-            self.widgetEnabled = value
+    def setCollapsed(self, value: bool):
+        if self.widget: self.widget.setVisible(value)
+        self.collapsed = value
 
         self.updateArrow()
         self.adjustToView()  

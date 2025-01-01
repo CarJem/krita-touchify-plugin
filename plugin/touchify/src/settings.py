@@ -47,7 +47,6 @@ class TouchifySettings:
 
     def __init__(self) -> None:
         self.notify_hooks = []
-        self.hotkey_options_storage = {}
         self.cfg = TouchifyRegistry()
         
     def preferences(self) -> TouchifyRegistryPreferences:
@@ -161,12 +160,17 @@ class TouchifySettings:
 
     def getActiveToolshelfId(self, registry_index: int) -> str:
         fallback_val = "none"
-        if registry_index == 0:
+
+        if registry_index == -1:
+            return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Docker", fallback_val)
+        elif registry_index == 0:
             return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Main", fallback_val)
         elif registry_index == 1:
             return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Alt", fallback_val)
         elif registry_index == 2:
-            return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Docker", fallback_val)
+            return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Gamma", fallback_val)
+        elif registry_index == 3:
+            return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Delta", fallback_val)
         else:
             return fallback_val
 
@@ -180,12 +184,16 @@ class TouchifySettings:
             return ToolshelfData()
 
     def setActiveToolshelf(self, registry_index: int, id: str):
-        if registry_index == 0:
+        if registry_index == -1:
+            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Docker", id, False)
+        elif registry_index == 0:
             KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Main", id, False)
         elif registry_index == 1:
             KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Alt", id, False)
         elif registry_index == 2:
-            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Docker", id, False)
+            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Gamma", id, False)
+        elif registry_index == 3:
+            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Delta", id, False)
 
         self.notifyUpdate()
     
@@ -232,26 +240,6 @@ class TouchifySettings:
         self.notifyUpdate()
     
     #endregion
-
-    def addHotkeyOption(self, actionName, displayName, action, parameters):
-        self.hotkey_options_storage[actionName] = {
-            "displayName": displayName,
-            "action": action,
-            "params": parameters
-        }
-    
-    def runHotkeyOption(self, actionName: str):
-        if actionName == "none":
-            return
-        
-        if actionName not in TouchifySettings.instance().hotkey_options_storage:
-            return
-        
-        actionObj = TouchifySettings.instance().hotkey_options_storage[actionName]
-        params = actionObj["params"]
-        action = actionObj["action"]
-        
-        action(**params)
 
     def notifyConnect(self, event):
         self.notify_hooks.append(event)

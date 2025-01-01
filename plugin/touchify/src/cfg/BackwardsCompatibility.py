@@ -154,6 +154,14 @@ class BackwardsCompatibility:
             Helpers.setVersion(args, 1)
         return args
     
+    def WidgetLayout(args: dict[str, any]):
+        if not args: return args
+        if Helpers.getVersion(args) == 1:
+            Helpers.changeVarName(args, "toolshelf", "toolshelf_alpha")
+            Helpers.changeVarName(args, "toolshelf_alt", "toolshelf_beta")
+            Helpers.setVersion(args, 2)
+        return args
+    
     def ToolboxDataItem(args: dict[str, any]):
         if not args: return args
         if Helpers.isLegacyConfig(args):

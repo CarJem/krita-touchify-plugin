@@ -25,7 +25,7 @@ class ToolshelfDockWidget(DockWidget):
         self.docker_manager: DockerManager = None
         self.actions_manager: ActionManager = None
         self.canvas_manager: CanvasManager = None
-        self.PanelIndex = 2
+        self.PanelIndex = -1
         self.previous_state: ToolshelfWidget.PreviousState = ToolshelfWidget.PreviousState()
         self.setWindowTitle(DOCKER_TITLE)
       
@@ -34,9 +34,6 @@ class ToolshelfDockWidget(DockWidget):
         self.actions_manager = instance.action_management
         self.canvas_manager = instance.canvas_management
         self.onLoaded()
-        
-    def onKritaConfigUpdate(self):
-        pass
     
     def onLoaded(self):              
         self.mainWidget = ToolshelfWidget(self, TouchifySettings.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)

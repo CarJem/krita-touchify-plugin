@@ -131,8 +131,8 @@ class Panel(QWidget):
 
                 widget = self.stackPanel.widget(i)
                 if i == index:
-                    if isinstance(widget, DockerContainer):  
-                        if widget.isEnabled() == False: widget.loadWidget()
+                    #if isinstance(widget, DockerContainer):  
+                        #if widget.isEnabled() == False: widget.loadWidget()
 
 
                     #policy = QSizePolicy.Policy.Preferred
@@ -141,8 +141,8 @@ class Panel(QWidget):
                     #widget.updateGeometry()
                     #widget.adjustSize()
                 else:
-                    if isinstance(widget, DockerContainer): 
-                        if widget.isEnabled(): widget.unloadWidget()
+                    #if isinstance(widget, DockerContainer): 
+                        #if widget.isEnabled(): widget.unloadWidget()
 
                     #policy = QSizePolicy.Policy.Ignored
                     #widget.setSizePolicy(policy, policy)
@@ -309,8 +309,8 @@ class Panel(QWidget):
 
             self.dockerWidgets[actionInfo.docker_id] = actionWidget
             actionWidget.dockerChanged.connect(self.onDockerUpdate)
-            self.pageLoadedSignal.connect(actionWidget.loadWidget)
-            self.pageUnloadSignal.connect(actionWidget.unloadWidget)
+            #self.pageLoadedSignal.connect(actionWidget.loadWidget)
+            #self.pageUnloadSignal.connect(actionWidget.unloadWidget)
 
             return actionWidget
         

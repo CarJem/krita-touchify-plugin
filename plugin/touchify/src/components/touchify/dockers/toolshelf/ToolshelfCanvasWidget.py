@@ -41,9 +41,6 @@ class ToolshelfCanvasWidget(QDockWidget):
         self.setWidget(self.scrollArea)
         self.onLoaded()
 
-    def onKritaConfigUpdate(self):
-        pass
-
     def requestViewUpdate(self):
         self.updateViewRequested.emit()
     

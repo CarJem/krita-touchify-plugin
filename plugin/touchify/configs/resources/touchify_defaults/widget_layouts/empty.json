@@ -1,7 +1,7 @@
 {
-    "preset_name": "Sidepads",
-    "toolbox_enabled": true,
-    "toolshelf_count": 2,
+    "preset_name": "Empty",
+    "toolbox_enabled": false,
+    "toolshelf_count": 0,
     "toolbox": {
         "position_x": 0,
         "position_y": 0,
@@ -9,31 +9,31 @@
         "alignment_x": "left",
         "stretch_x": 0,
         "stretch_y": 0,
-        "span_x": 1,
-        "span_y": 1,
+        "span_x": -1,
+        "span_y": -1,
         "horizontal_mode": false,
         "json_version": 1
     },
     "toolshelf_alpha": {
-        "position_x": 1,
+        "position_x": 0,
         "position_y": 0,
         "stretch_x": 0,
         "stretch_y": 0,
         "span_x": -1,
         "span_y": -1,
         "alignment_y": "top",
-        "alignment_x": "right",
+        "alignment_x": "left",
         "json_version": 1
     },
     "toolshelf_beta": {
-        "position_x": 1,
-        "position_y": 1,
+        "position_x": 0,
+        "position_y": 0,
         "stretch_x": 0,
         "stretch_y": 0,
         "span_x": -1,
         "span_y": -1,
-        "alignment_y": "bottom",
-        "alignment_x": "right",
+        "alignment_y": "top",
+        "alignment_x": "left",
         "json_version": 1
     },
     "toolshelf_gamma": {

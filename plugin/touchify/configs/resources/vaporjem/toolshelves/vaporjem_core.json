@@ -726,7 +726,7 @@
                         "display_custom_text": "Undo History",
                         "extra_closes_popup": false,
                         "extra_composer_mode": false,
-                        "action_id": "Touchify_Res_VaporJemPopups_CustomBrushesPopup",
+                        "action_id": "touchify_registry_VaporJemPopups_CustomBrushesPopup",
                         "context_menu_id": "",
                         "brush_name": "",
                         "docker_id": "",

@@ -4,7 +4,6 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from touchify.src.components.touchify.actions.TouchifyActionPanel import TouchifyActionPanel
 from touchify.src.components.touchify.dockers.toolshelf.Page import Page
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 
@@ -122,13 +121,13 @@ class PageStack(QStackedWidget):
         
     def deactivateWidget(self):
         children = self.findChildren(DockerContainer)
-        for child in children:
-            child.unloadWidget()
+        #for child in children:
+            #child.unloadWidget()
 
     def activateWidget(self):
         children = self.findChildren(DockerContainer)
-        for child in children:
-            child.loadWidget()
+        #for child in children:
+            #child.loadWidget()
     
     def shutdownWidget(self):
         super().currentChanged.disconnect(self.onCurrentChanged)
@@ -137,12 +136,5 @@ class PageStack(QStackedWidget):
         for child in children:
             child.shutdownWidget()
 
-        children = self.findChildren(TouchifyActionPanel)
-        for child in children:
-            child.unregisterActions()
-
         for panel_id in self._panels:
             self._panels[panel_id].close()
-    
-    def onKritaConfigUpdate(self):
-        pass

@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from touchify.src.window import TouchifyWindow
     
-class TouchifyActions(object):
+class TouchifyRegisteredActions(object):
     
     def __init__(self, instance: "TouchifyWindow"):
         self.appEngine = instance  

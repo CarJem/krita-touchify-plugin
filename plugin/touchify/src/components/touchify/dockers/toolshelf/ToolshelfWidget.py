@@ -29,7 +29,7 @@ class ToolshelfWidget(QWidget):
             self._last_resizable: bool = False
             self._last_panel_id: str | None = None
 
-    def __init__(self, parent: "ToolshelfCanvasWidget", cfg: ToolshelfData, registry_index: int = -1):
+    def __init__(self, parent: "ToolshelfCanvasWidget", cfg: ToolshelfData, registry_index: int = -2):
         super(ToolshelfWidget, self).__init__(parent)
 
         self.pinned = False

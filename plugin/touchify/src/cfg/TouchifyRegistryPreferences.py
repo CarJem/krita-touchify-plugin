@@ -29,12 +29,6 @@ class TouchifyRegistryPreferences:
         self.Styles_ThinDocumentTabs = False
         self.Styles_PrivacyMode = False
 
-        self.CanvasWidgets_EnableToolbox = False
-        self.CanvasWidgets_EnableToolshelf = False
-        self.CanvasWidgets_EnableAltToolshelf = False
-        self.CanvasWidgets_ToolboxOnRight = False
-        self.CanvasWidgets_AlternativeToolboxPosition = False
-
         self.DockerUtils_HiddenDockersLeft: str = ""
         self.DockerUtils_HiddenDockersRight: str = ""
         self.DockerUtils_HiddenDockersUp: str = ""
@@ -59,12 +53,6 @@ class TouchifyRegistryPreferences:
             "Styles_BorderlessToolbar",
             "Styles_ThinDocumentTabs",
             "Styles_PrivacyMode",
-
-            "CanvasWidgets_EnableToolbox",
-            "CanvasWidgets_EnableToolshelf",
-            "CanvasWidgets_EnableAltToolshelf",
-            "CanvasWidgets_ToolboxOnRight",
-            "CanvasWidgets_AlternativeToolboxPosition",
 
             "DockerUtils_HiddenDockersLeft",
             "DockerUtils_HiddenDockersRight",
@@ -120,13 +108,6 @@ class TouchifyRegistryPreferences:
         self.Styles_BorderlessToolbar = TouchifyRegistryPreferences.IO.readBool("usesBorderlessToolbar", False)
         self.Styles_ThinDocumentTabs = TouchifyRegistryPreferences.IO.readBool("usesThinDocumentTabs", False)
         self.Styles_PrivacyMode = TouchifyRegistryPreferences.IO.readBool("Styles_PrivacyMode", False)
-        
-        self.CanvasWidgets_EnableToolbox = TouchifyRegistryPreferences.IO.readBool("usesNuToolbox", False)
-        self.CanvasWidgets_EnableToolshelf = TouchifyRegistryPreferences.IO.readBool("usesNuToolOptions", False)
-        self.CanvasWidgets_EnableAltToolshelf = TouchifyRegistryPreferences.IO.readBool("usesNuToolOptionsAlt", False)
-
-        self.CanvasWidgets_ToolboxOnRight = TouchifyRegistryPreferences.IO.readBool("nuOptions_ToolboxOnRight", False)
-        self.CanvasWidgets_AlternativeToolboxPosition = TouchifyRegistryPreferences.IO.readBool("nuOptions_alternativeToolboxPosition", False)
 
         self.DockerUtils_HiddenDockersLeft = TouchifyRegistryPreferences.IO.readStr("DockerUtils_HiddenLeft", "")
         self.DockerUtils_HiddenDockersRight = TouchifyRegistryPreferences.IO.readStr("DockerUtils_HiddenRight", "")
@@ -149,13 +130,6 @@ class TouchifyRegistryPreferences:
         TouchifyRegistryPreferences.IO.writeBool("usesBorderlessToolbar", self.Styles_BorderlessToolbar, False)
         TouchifyRegistryPreferences.IO.writeBool("usesThinDocumentTabs", self.Styles_ThinDocumentTabs, False)
         TouchifyRegistryPreferences.IO.writeBool("Styles_PrivacyMode", self.Styles_PrivacyMode, False)
-        
-        TouchifyRegistryPreferences.IO.writeBool("usesNuToolbox", self.CanvasWidgets_EnableToolbox, False)
-        TouchifyRegistryPreferences.IO.writeBool("usesNuToolOptions", self.CanvasWidgets_EnableToolshelf, False)
-        TouchifyRegistryPreferences.IO.writeBool("usesNuToolOptionsAlt", self.CanvasWidgets_EnableAltToolshelf, False)
-
-        TouchifyRegistryPreferences.IO.writeBool("nuOptions_ToolboxOnRight", self.CanvasWidgets_ToolboxOnRight, False)
-        TouchifyRegistryPreferences.IO.writeBool("nuOptions_alternativeToolboxPosition", self.CanvasWidgets_AlternativeToolboxPosition, False)
 
         TouchifyRegistryPreferences.IO.writeStr("DockerUtils_HiddenLeft", self.DockerUtils_HiddenDockersLeft, "")
         TouchifyRegistryPreferences.IO.writeStr("DockerUtils_HiddenRight", self.DockerUtils_HiddenDockersRight, "")

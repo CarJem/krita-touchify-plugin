@@ -13,9 +13,9 @@ from touchify.src.action_manager import ActionManager
 from touchify.src.components.touchify.util.settings_dialog import SettingsDialog
 
 from touchify.src.features.touchify_canvas import TouchifyCanvas
-from touchify.src.features.touchify_hotkeys import TouchifyHotkeys
+from touchify.src.features.touchify_shortcuts import TouchifyShortcuts
 from touchify.src.features.touchify_looks import TouchifyLooks
-from touchify.src.features.touchify_actions import TouchifyActions
+from touchify.src.features.touchify_registered_actions import TouchifyRegisteredActions
 
 from touchify.src.ext.PyQtExtensions import PyQtExtensions
 
@@ -39,10 +39,10 @@ class TouchifyWindow(QObject):
 
         self.toolboxDocker: ToolboxDocker = None
 
-        self.touchify_actions = TouchifyActions(self)
+        self.touchify_actions = TouchifyRegisteredActions(self)
         self.touchify_looks = TouchifyLooks(self)
         self.touchify_canvas = TouchifyCanvas(self)
-        self.touchify_hotkeys = TouchifyHotkeys(self)
+        self.touchify_shortcuts = TouchifyShortcuts(self)
         self.touchify_dev = TouchifyDev(self)
         self.touchify_shortcut_composer = TouchifyShortcutComposer(self)
         
@@ -79,8 +79,6 @@ class TouchifyWindow(QObject):
         self.action_management.onTimerTick()    
 
     def onKritaConfigUpdated(self):
-        toolshelf_docker = self.getToolshelfDocker()
-        if toolshelf_docker: toolshelf_docker.onKritaConfigUpdate()    
         self.touchify_canvas.onKritaConfigUpdated()
         for call in self.update_style_calls: call()
 
@@ -99,11 +97,15 @@ class TouchifyWindow(QObject):
     #region Setup Functions
 
     def setupActions(self, window: Window):
-        self.mainMenuBar = window.qwindow().menuBar().addMenu(TOUCHIFY_ID_MENU_ROOT)
+
+        self.mainMenuBar = QMenu(TOUCHIFY_ID_MENU_ROOT, window.qwindow())
+        
+        action = window.createAction("touchify", TOUCHIFY_ID_MENU_ROOT, "tools")
+        action.setMenu(self.mainMenuBar)
 
         subItemPath = TOUCHIFY_ID_MENU_ROOT
 
-        self.touchify_hotkeys.createActions(window, subItemPath)
+        self.touchify_shortcuts.createActions(window, subItemPath)
         self.touchify_actions.createActions(window, subItemPath)  
         self.touchify_dev.createActions(window, subItemPath)
 
@@ -127,11 +129,11 @@ class TouchifyWindow(QObject):
 
         self.action_management.onWindowCreated()
         
-        self.touchify_hotkeys.windowCreated()
+        self.touchify_shortcuts.windowCreated()
         self.touchify_looks.windowCreated()
         self.touchify_canvas.windowCreated()
 
-        self.touchify_hotkeys.buildMenu(self.mainMenuBar)
+        self.touchify_shortcuts.buildMenu(self.mainMenuBar)
         self.touchify_actions.buildMenu(self.mainMenuBar)
         self.touchify_shortcut_composer.buildMenu(self.mainMenuBar)
         self.touchify_dev.buildMenu(self.mainMenuBar)

@@ -134,7 +134,7 @@
                     "json_version": 1
                 },
                 {
-                    "name": "Touchify_Res_VaporJem_Common_MiscTools",
+                    "name": "touchify_registry_VaporJem_Common_MiscTools",
                     "items": [],
                     "icon": "material:dots-horizontal",
                     "open_on_click": false,
@@ -148,7 +148,7 @@
             "id": "Options",
             "items": [
                 {
-                    "name": "Touchify_Res_VaporJem_Common_SelectionMenu",
+                    "name": "touchify_registry_VaporJem_Common_SelectionMenu",
                     "items": [],
                     "icon": "material:select",
                     "open_on_click": false,
@@ -162,14 +162,14 @@
                     "json_version": 1
                 },
                 {
-                    "name": "Touchify_Res_VaporJem_GridDockerPopup",
+                    "name": "touchify_registry_VaporJem_GridDockerPopup",
                     "items": [],
                     "icon": "material:grid",
                     "open_on_click": false,
                     "json_version": 1
                 },
                 {
-                    "name": "Touchify_Res_VaporJem_Common_ObjectMenu",
+                    "name": "touchify_registry_VaporJem_Common_ObjectMenu",
                     "items": [],
                     "icon": "vectorLayer",
                     "open_on_click": false,

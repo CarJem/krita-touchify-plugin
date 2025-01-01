@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from touchify.paths import BASE_DIR
-from touchify.src.cfg.TouchifyRegistryHotkeys import TouchifyRegistryHotkeys
 from touchify.src.cfg.resource_pack.ResourcePackRegistry import ResourcePackRegistry
 from touchify.src.cfg.TouchifyRegistryPreferences import TouchifyRegistryPreferences
 from touchify.src.variables import *
@@ -18,7 +17,6 @@ class TouchifyRegistry:
     def __init__(self):
         self.__base_dir__ = BASE_DIR            
         self.resources: ResourcePackRegistry = ResourcePackRegistry()
-        self.hotkeys: TouchifyRegistryHotkeys = TouchifyRegistryHotkeys()
         self.preferences: TouchifyRegistryPreferences = TouchifyRegistryPreferences()
         self.load()
 
@@ -38,7 +36,6 @@ class TouchifyRegistry:
     def propertygrid_labels(self):
         labels = {}
         labels["resources"] = "Resource Packs"
-        labels["hotkeys"] = "Hotkeys"
         labels["preferences"] = "Preferences"
         return labels
     
@@ -48,7 +45,6 @@ class TouchifyRegistry:
     def propertygrid_sorted(self):
         return [
             "resources",
-            "hotkeys",
             "preferences"
         ]
     
@@ -59,17 +55,14 @@ class TouchifyRegistry:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["resources"] = {"type": "expandable"}
-        restrictions["hotkeys"] = {"type": "expandable"}
         restrictions["preferences"] = {"type": "expandable"}
         return restrictions
     
     def save(self):
-        self.saveClass(self.hotkeys, "hotkeys")
         self.resources.save()
         self.preferences.save()
 
     def load(self):
-        self.hotkeys = self.loadClass("hotkeys", TouchifyRegistryHotkeys)
         self.resources.load()
         self.preferences.load()
         

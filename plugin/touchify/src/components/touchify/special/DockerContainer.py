@@ -55,6 +55,14 @@ class DockerContainer(QWidget):
         self.dockerShouldBeActive = False
         self.isLoaded = True
 
+    def showEvent(self, event: QShowEvent):
+        super().showEvent(event)
+        self.loadWidget()
+
+    def hideEvent(self, event: QHideEvent):
+        super().hideEvent(event)
+        self.unloadWidget()
+
     def unloadWidget(self):
         self.dockerShouldBeActive = False
         self._unloadDocker()

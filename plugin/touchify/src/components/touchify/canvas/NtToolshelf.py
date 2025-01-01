@@ -15,9 +15,8 @@ if TYPE_CHECKING:
 
 class NtToolshelf(NtWidgetPad):
 
-    def __init__(self, canvas: "NtCanvas", window: Window, isPrimaryPanel: bool, app_engine: "TouchifyWindow"):
+    def __init__(self, canvas: "NtCanvas", window: Window, panel_index: int, app_engine: "TouchifyWindow"):
         super().__init__(window, canvas, True)   
-        panel_index = 0 if isPrimaryPanel else 1
 
         self.toolshelf = ToolshelfCanvasWidget(panel_index, app_engine)
         self.toolshelf.updateViewRequested.connect(self.onUpdateViewRequested)

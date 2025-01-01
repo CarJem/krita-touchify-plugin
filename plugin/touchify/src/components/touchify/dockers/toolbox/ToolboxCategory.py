@@ -19,7 +19,7 @@ class ToolboxCategory(QFrame):
 
     def updatePalette(self):
         for btn in self.buttons:
-            btn.updatePalette()
+            btn.onPaletteChanged()
 
     def addTool(self, btn: TouchifyActionButton, x: int, y: int, alignment: Qt.Alignment | Qt.AlignmentFlag):
         self.buttons.append(btn)

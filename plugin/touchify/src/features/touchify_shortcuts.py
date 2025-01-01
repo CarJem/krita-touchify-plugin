@@ -10,13 +10,11 @@ if TYPE_CHECKING:
 
 from krita import *
     
-class TouchifyHotkeys(object):
+class TouchifyShortcuts(object):
 
 
     def __init__(self, instance: "TouchifyWindow"):
         self.appEngine = instance
-        self.hotkeys_storage = {}
-        self.hotkey_options_storage = {}
 
     def onAppEngineStart(self, instance: "TouchifyWindow"):
         self.appEngine = instance
@@ -61,50 +59,10 @@ class TouchifyHotkeys(object):
         self.appEngine.docker_management.toggleDockersPerArea(area)
 
     def buildMenu(self, menu: QMenu):
-        menu.addMenu(self.hotkey_menu)
         menu.addMenu(self.other_menu)
         menu.addMenu(self.docker_utils_menu)
-        
-    
-    def triggerHotkey(self, index: int):
-        actionRequest = "none"
-        cfg = TouchifySettings.instance().getConfig().hotkeys
-        match index:
-            case  1: 
-                actionRequest = cfg.hotkey1
-            case  2: 
-                actionRequest = cfg.hotkey2
-            case  3: 
-                actionRequest = cfg.hotkey3
-            case  4: 
-                actionRequest = cfg.hotkey4
-            case  5: 
-                actionRequest = cfg.hotkey5
-            case  6: 
-                actionRequest = cfg.hotkey6
-            case  7: 
-                actionRequest = cfg.hotkey7
-            case  8: 
-                actionRequest = cfg.hotkey8
-            case  9: 
-                actionRequest = cfg.hotkey9
-            case 10: 
-                actionRequest = cfg.hotkey10
-                
-        TouchifySettings.instance().runHotkeyOption(actionRequest)
 
     def createActions(self, window: Window, subItemPath: str):
-
-        self.hotkey_menu = QtWidgets.QMenu("Hotkey Actions")
-        hotkey_subpath = "actions"
-
-        # Global Hotkey Assignments
-        for i in range(1, 11):
-            hotkeyName = '{0}_{1}'.format(TOUCHIFY_ID_ACTION_PREFIX_HOTKEY, str(i))
-            hotkeyAction = window.createAction(hotkeyName, "Touchify - Action " + str(i), subItemPath + "/" + hotkey_subpath)
-            hotkeyAction.triggered.connect(lambda z, x=i: self.triggerHotkey(x))
-            self.hotkeys_storage[i] = hotkeyAction
-            self.hotkey_menu.addAction(hotkeyAction)
 
         self.other_menu = QtWidgets.QMenu("Other Actions")
         other_subpath = "other"
