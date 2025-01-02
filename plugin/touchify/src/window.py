@@ -112,9 +112,8 @@ class TouchifyWindow(QObject):
 
         self.mainMenuBar.addSection("Touchify")
         
-        openSettingsAction = window.createAction(TOUCHIFY_ID_ACTION_CONFIGURE, "Configure Touchify...", TOUCHIFY_ID_MENU_ROOT)
+        openSettingsAction = window.createAction(TOUCHIFY_ID_ACTION_CONFIGURE, "Configure Touchify...", "settings")
         openSettingsAction.triggered.connect(self.openSettings)
-        self.mainMenuBar.addAction(openSettingsAction)
         
         self.touchify_looks.createActions(window, self.mainMenuBar)
         self.touchify_canvas.createActions(window, self.mainMenuBar)
@@ -128,12 +127,10 @@ class TouchifyWindow(QObject):
         self.mainMenuBar.addAction(seperator)
 
         self.action_management.onWindowCreated()
-        
         self.touchify_shortcuts.windowCreated()
         self.touchify_looks.windowCreated()
         self.touchify_canvas.windowCreated()
 
-        self.touchify_shortcuts.buildMenu(self.mainMenuBar)
         self.touchify_actions.buildMenu(self.mainMenuBar)
         self.touchify_shortcut_composer.buildMenu(self.mainMenuBar)
         self.touchify_dev.buildMenu(self.mainMenuBar)

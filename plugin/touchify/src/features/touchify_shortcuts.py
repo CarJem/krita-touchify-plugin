@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 
+from touchify.src.helpers import TouchifyHelpers
 from touchify.src.variables import *
 from touchify.src.settings import *
 
@@ -21,6 +22,17 @@ class TouchifyShortcuts(object):
 
     def windowCreated(self):
         self.qWin = self.appEngine.windowSource.qwindow()
+
+        settings_menu = self.qWin.findChild(QMenu, 'settings')
+
+        configureAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_CONFIGURE, settings_menu, settings_menu, 'options_configure')
+        configureAction.setIcon(Krita.instance().icon("configure"))
+
+        popupPaletteAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_OTHER_SHOWPOPUPPALETTE, settings_menu, settings_menu, 'toolbars_submenu_action')
+        popupMenuAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_OTHER_SHOWMENUBARPOPUP, settings_menu, settings_menu, 'toolbars_submenu_action')
+        settings_menu.insertSeparator(popupMenuAction)
+
+        TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_DOCKERUTILS_MENU, settings_menu, settings_menu, 'view_toggledockers')
 
     def showPopupPalette(self):
         activeWindow = self.appEngine.windowSource
@@ -58,44 +70,39 @@ class TouchifyShortcuts(object):
     def toggleDirectionalDockers(self, area: int):
         self.appEngine.docker_management.toggleDockersPerArea(area)
 
-    def buildMenu(self, menu: QMenu):
-        menu.addMenu(self.other_menu)
-        menu.addMenu(self.docker_utils_menu)
 
     def createActions(self, window: Window, subItemPath: str):
 
-        self.other_menu = QtWidgets.QMenu("Other Actions")
-        other_subpath = "other"
+        docker_utils_path = "{0}/{1}".format(TOUCHIFY_ID_MENU_ROOT, "Toggle Dockers...")
 
         # Show Popup Palette
-        popupPaletteToggle = window.createAction(TOUCHIFY_ID_ACTION_OTHER_SHOWPOPUPPALETTE, "Show Popup Palette", subItemPath + "/" + other_subpath)
+        popupPaletteToggle = window.createAction(TOUCHIFY_ID_ACTION_OTHER_SHOWPOPUPPALETTE, "Show Popup Palette", "settings")
         popupPaletteToggle.setCheckable(False)
         popupPaletteToggle.triggered.connect(self.showPopupPalette)
-        self.other_menu.addAction(popupPaletteToggle)
 
         # Show Popup Menu
-        popupMenuToggle = window.createAction(TOUCHIFY_ID_ACTION_OTHER_SHOWMENUBARPOPUP, "Show Popup Menu", subItemPath + "/" + other_subpath)
+        popupMenuToggle = window.createAction(TOUCHIFY_ID_ACTION_OTHER_SHOWMENUBARPOPUP, "Show Popup Menu", "settings")
         popupMenuToggle.setCheckable(False)
         popupMenuToggle.triggered.connect(self.showMenubarPopup)
-        self.other_menu.addAction(popupMenuToggle)
 
-        self.docker_utils_menu = QtWidgets.QMenu("Docker Utils")
-        docker_utils_subpath = "docker_utils"
+        self.docker_utils_menu = QtWidgets.QMenu("Docker Utils", window.qwindow())
+        self.docker_utils_action = window.createAction(TOUCHIFY_ID_ACTION_DOCKERUTILS_MENU, "Toggle Dockers...", "settings")
+        self.docker_utils_action.setMenu(self.docker_utils_menu)
 
         # Toggle Dockers
-        toggleDockersLeft = window.createAction(TOUCHIFY_ID_ACTION_DOCKERUTILS_TOGGLELEFT, "Toggle Left Dockers", subItemPath + "/" + docker_utils_subpath)
+        toggleDockersLeft = window.createAction(TOUCHIFY_ID_ACTION_DOCKERUTILS_TOGGLELEFT, "Toggle Left Dockers", docker_utils_path)
         toggleDockersLeft.triggered.connect(lambda: self.toggleDirectionalDockers(1))
         self.docker_utils_menu.addAction(toggleDockersLeft)
 
-        toggleDockersRight = window.createAction(TOUCHIFY_ID_ACTION_DOCKERUTILS_TOGGLERIGHT, "Toggle Right Dockers", subItemPath + "/" + docker_utils_subpath)
+        toggleDockersRight = window.createAction(TOUCHIFY_ID_ACTION_DOCKERUTILS_TOGGLERIGHT, "Toggle Right Dockers", docker_utils_path)
         toggleDockersRight.triggered.connect(lambda: self.toggleDirectionalDockers(2))
         self.docker_utils_menu.addAction(toggleDockersRight)
 
-        toggleDockersTop = window.createAction(TOUCHIFY_ID_ACTION_DOCKERUTILS_TOGGLEUP, "Toggle Top Dockers", subItemPath + "/" + docker_utils_subpath)
+        toggleDockersTop = window.createAction(TOUCHIFY_ID_ACTION_DOCKERUTILS_TOGGLEUP, "Toggle Top Dockers", docker_utils_path)
         toggleDockersTop.triggered.connect(lambda: self.toggleDirectionalDockers(4))
         self.docker_utils_menu.addAction(toggleDockersTop)
 
-        toggleDockersBottom = window.createAction(TOUCHIFY_ID_ACTION_DOCKERUTILS_TOGGLEDOWN, "Toggle Bottom Dockers", subItemPath + "/" + docker_utils_subpath)
+        toggleDockersBottom = window.createAction(TOUCHIFY_ID_ACTION_DOCKERUTILS_TOGGLEDOWN, "Toggle Bottom Dockers", docker_utils_path)
         toggleDockersBottom.triggered.connect(lambda: self.toggleDirectionalDockers(8))
         self.docker_utils_menu.addAction(toggleDockersBottom)
 

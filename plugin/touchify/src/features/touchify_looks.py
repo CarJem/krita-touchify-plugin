@@ -1,5 +1,5 @@
-from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
+from touchify.src.helpers import TouchifyHelpers
 from touchify.src.variables import *
 from touchify.src.settings import *
 from touchify.src.stylesheet import Stylesheet
@@ -20,6 +20,7 @@ class TouchifyLooks(object):
     def windowCreated(self):
         self.qWin = self.appEngine.windowSource.qwindow()
         self.qWin.themeChanged.connect(self.rebuildStyleSheet)
+        self.finishActions()
         self.rebuildStyleSheet()
 
     def createAction(self, window: Window, id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
@@ -28,15 +29,21 @@ class TouchifyLooks(object):
         result.setChecked(setChecked)
         result.toggled.connect(onToggled)
         return result
+    
+    def finishActions(self):
+        settings_menu = self.qWin.findChild(QMenu, 'settings')
+        TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_STYLES_MENU, settings_menu, settings_menu, 'style_menu')
 
     def createActions(self, window: Window, mainMenuBar: QMenuBar):
         config = TouchifySettings.instance().preferences()
         
-        sublocation_name = "Styles and Tweaks"
+        sublocation_name = "Tweaks"
         sublocation_path = TOUCHIFY_ID_MENU_ROOT + "/" + sublocation_name
 
-        nu_options_menu = QtWidgets.QMenu(sublocation_name, mainMenuBar)
-        mainMenuBar.addMenu(nu_options_menu)
+
+        nu_options_menu = QMenu(sublocation_name, window.qwindow())
+        options_action = window.createAction(TOUCHIFY_ID_ACTION_STYLES_MENU, sublocation_name, "settings")
+        options_action.setMenu(nu_options_menu)
 
         nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_PRIVACYMODE, "Privacy Mode", sublocation_path, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
         nu_options_menu.addAction(self.createAction(window, TOUCHIFY_ID_ACTION_STYLES_BORDERLESSTOOLBARS, "Borderless Toolbars", sublocation_path, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))

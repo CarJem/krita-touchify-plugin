@@ -24,7 +24,7 @@ class TouchifyCanvas(QObject):
 
     def createActions(self, window: Window, mainMenuBar: QMenuBar):
         self.ntCanvas = NtCanvas(window.qwindow().window(), window)
-        self.ntCanvas.createActions(window, mainMenuBar)
+        self.ntCanvas.createMenuActions(window, mainMenuBar)
 
     def onKritaConfigUpdated(self):
         pass

@@ -456,7 +456,7 @@ class ActionManager(QObject):
             f.write(xmlstr)
 
     def createRegisteredActions(self, window: Window, actionPath: str):
-        subItemPath = actionPath + "/" + "registered"
+        subItemPath = actionPath
         cfg = TouchifySettings.instance().getConfig()
         root_menu = QtWidgets.QMenu("Registered Actions")
 
