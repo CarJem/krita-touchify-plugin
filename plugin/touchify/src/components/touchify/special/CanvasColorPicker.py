@@ -7,9 +7,6 @@ from touchify.src.variables import *
 
 from touchify.src.components.pyqt.widgets.ColorFramedButton import ColorFramedButton
 
-DOCKER_TITLE = 'Touchify Addon: Color Options'
-DOCKER_ID="Touchify/ColorOptionsDocker"
-
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from touchify.src.window import TouchifyWindow

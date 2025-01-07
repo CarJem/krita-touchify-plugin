@@ -1,12 +1,24 @@
 from PyQt5.QtCore import *
 from PyQt5.QtGui  import *
 from PyQt5.QtWidgets  import *
+from PyQt5.QtCore import pyqtProperty
 
 class ColorFramedButton(QPushButton):
     
     def __init__(self, _parent: QWidget = None, color: QColor | None = None):
         super(ColorFramedButton, self).__init__(_parent)
         self.__color = color
+        self.__padding = 6
+
+
+    @pyqtProperty(int)
+    def padding(self):
+        return self.__padding
+    
+    @padding.setter
+    def padding(self, val: int):
+        self.__padding = val
+        self.repaint()
         
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)
@@ -14,13 +26,12 @@ class ColorFramedButton(QPushButton):
         r = event.rect()
         p = QPainter(self)
         
-        padding = 6
         frame_size = 1
         
-        x = padding
-        y = padding
-        width = (r.width()) - (padding * 2)
-        height = (r.height()) - (padding * 2)
+        x = self.__padding
+        y = self.__padding
+        width = (r.width()) - (self.__padding * 2)
+        height = (r.height()) - (self.__padding * 2)
         
         if self.__color:
             frame_color = self.palette().color(QPalette.ColorRole.AlternateBase)

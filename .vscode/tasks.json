@@ -45,6 +45,24 @@
             }
         },
         {
+            "label": "Close Krita.COM",
+            "hide": true,
+            "type": "shell",
+            "windows": {
+                "command": "cmd.exe /D /C 'taskkill /IM krita.com /F'",
+            },
+            "linux": {
+                "command": "/usr/bin/flatpak kill org.kde.krita || echo 'Krita was not running'"
+            }
+        },
+        {
+            "label": "Plugin Prelaunch",
+            "dependsOn": [
+                "Close Krita.COM",
+                "Install Plugin"
+            ]
+        },
+        {
             "label": "……………………………………………",
             "type": "shell",
             "command": "",

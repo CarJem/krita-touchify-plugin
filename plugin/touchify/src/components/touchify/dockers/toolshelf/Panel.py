@@ -10,7 +10,9 @@ from touchify.src.components.touchify.special.BrushFlowSlider import BrushFlowSl
 from touchify.src.components.touchify.special.BrushOpacitySlider import BrushOpacitySlider
 from touchify.src.components.touchify.special.BrushRotationSlider import BrushRotationSlider
 from touchify.src.components.touchify.special.BrushSizeSlider import BrushSizeSlider
+from touchify.src.components.touchify.special.CanvasBrushPicker import CanvasBrushPicker
 from touchify.src.components.touchify.special.CanvasColorPicker import CanvasColorPicker
+from touchify.src.components.touchify.special.CanvasDualColorPicker import CanvasDualColorPicker
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 
 from touchify.src.components.touchify.special.LayerBlendingSelector import LayerBlendingSelector
@@ -329,6 +331,14 @@ class Panel(QWidget):
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.ForegroundColorBox:
                 actionWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Foreground)
+                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.ForegroundBackgroundColorPicker:
+                actionWidget = CanvasDualColorPicker(self)
+                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushPicker:
+                actionWidget = CanvasBrushPicker(self)
                 actionWidget.setInstance(self.actions_manager.appEngine)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 

@@ -173,8 +173,16 @@ class ActionManager(QObject):
 
     def openPopup(self, id: str, _parent: QWidget = None):
 
-        data: PopupData = TouchifySettings.instance().getRegistryItem(id, PopupData)
-        if not isinstance(data, PopupData) or data == None: return
+        if id == "touchify_internal_brush_picker":
+            data: PopupData = PopupData()
+            data.type = "docker"
+            data.window_type = "popup"
+            data.docker_id = "PresetDocker"
+            data.popup_width = 300
+            data.popup_height = 500
+        else:
+            data: PopupData = TouchifySettings.instance().getRegistryItem(id, PopupData)
+            if not isinstance(data, PopupData) or data == None: return
 
 
         is_dead = True
@@ -214,6 +222,9 @@ class ActionManager(QObject):
 
     def getCurrentCanvas(self):
         return self.__lastCanvas
+    
+    def getCurrentBrush(self):
+        return self.__lastBrushPreset
     
     def getBrushSize(self):
         return self.__lastBrushSize

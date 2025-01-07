@@ -28,6 +28,8 @@ class TouchifyRegistryPreferences:
         self.Styles_BorderlessToolbar = False
         self.Styles_ThinDocumentTabs = False
         self.Styles_PrivacyMode = False
+        self.Styles_DockedBrushEditor = False
+        self.Styles_BrushEditorZoomFix = False
 
         self.DockerUtils_HiddenDockersLeft: str = ""
         self.DockerUtils_HiddenDockersRight: str = ""
@@ -53,6 +55,8 @@ class TouchifyRegistryPreferences:
             "Styles_BorderlessToolbar",
             "Styles_ThinDocumentTabs",
             "Styles_PrivacyMode",
+            "Styles_DockedBrushEditor",
+            "Styles_BrushEditorZoomFix",
 
             "DockerUtils_HiddenDockersLeft",
             "DockerUtils_HiddenDockersRight",
@@ -108,6 +112,8 @@ class TouchifyRegistryPreferences:
         self.Styles_BorderlessToolbar = TouchifyRegistryPreferences.IO.readBool("usesBorderlessToolbar", False)
         self.Styles_ThinDocumentTabs = TouchifyRegistryPreferences.IO.readBool("usesThinDocumentTabs", False)
         self.Styles_PrivacyMode = TouchifyRegistryPreferences.IO.readBool("Styles_PrivacyMode", False)
+        self.Styles_DockedBrushEditor = TouchifyRegistryPreferences.IO.readBool("Styles_DockedBrushEditor", False)
+        self.Styles_BrushEditorZoomFix = TouchifyRegistryPreferences.IO.readBool("Styles_BrushEditorZoomFix", False)
 
         self.DockerUtils_HiddenDockersLeft = TouchifyRegistryPreferences.IO.readStr("DockerUtils_HiddenLeft", "")
         self.DockerUtils_HiddenDockersRight = TouchifyRegistryPreferences.IO.readStr("DockerUtils_HiddenRight", "")
@@ -130,6 +136,9 @@ class TouchifyRegistryPreferences:
         TouchifyRegistryPreferences.IO.writeBool("usesBorderlessToolbar", self.Styles_BorderlessToolbar, False)
         TouchifyRegistryPreferences.IO.writeBool("usesThinDocumentTabs", self.Styles_ThinDocumentTabs, False)
         TouchifyRegistryPreferences.IO.writeBool("Styles_PrivacyMode", self.Styles_PrivacyMode, False)
+        TouchifyRegistryPreferences.IO.writeBool("Styles_DockedBrushEditor", self.Styles_DockedBrushEditor, False)
+        TouchifyRegistryPreferences.IO.writeBool("Styles_BrushEditorZoomFix", self.Styles_BrushEditorZoomFix, False)
+        
 
         TouchifyRegistryPreferences.IO.writeStr("DockerUtils_HiddenLeft", self.DockerUtils_HiddenDockersLeft, "")
         TouchifyRegistryPreferences.IO.writeStr("DockerUtils_HiddenRight", self.DockerUtils_HiddenDockersRight, "")

@@ -27,6 +27,8 @@ class ToolshelfDataSection:
         BrushRotationSlider = "brush_rotation_slider"
         ForegroundColorBox = "foreground_color_box"
         BackgroundColorBox = "background_color_box"
+        ForegroundBackgroundColorPicker = "foreground_background_color_picker"
+        BrushPicker = "brush_preset_picker"
 
     class SectionAlignmentX(StrEnum):
         Nothing = "none"

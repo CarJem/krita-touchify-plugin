@@ -14,7 +14,7 @@ from touchify.src.components.touchify.util.settings_dialog import SettingsDialog
 
 from touchify.src.features.touchify_canvas import TouchifyCanvas
 from touchify.src.features.touchify_shortcuts import TouchifyShortcuts
-from touchify.src.features.touchify_looks import TouchifyLooks
+from touchify.src.features.touchify_tweaks import TouchifyTweaks
 from touchify.src.features.touchify_registered_actions import TouchifyRegisteredActions
 
 from touchify.src.ext.PyQtExtensions import PyQtExtensions
@@ -40,7 +40,7 @@ class TouchifyWindow(QObject):
         self.toolboxDocker: ToolboxDocker = None
 
         self.touchify_actions = TouchifyRegisteredActions(self)
-        self.touchify_looks = TouchifyLooks(self)
+        self.touchify_tweaks = TouchifyTweaks(self)
         self.touchify_canvas = TouchifyCanvas(self)
         self.touchify_shortcuts = TouchifyShortcuts(self)
         self.touchify_dev = TouchifyDev(self)
@@ -115,7 +115,7 @@ class TouchifyWindow(QObject):
         openSettingsAction = window.createAction(TOUCHIFY_ID_ACTION_CONFIGURE, "Configure Touchify...", "settings")
         openSettingsAction.triggered.connect(self.openSettings)
         
-        self.touchify_looks.createActions(window, self.mainMenuBar)
+        self.touchify_tweaks.createActions(window, self.mainMenuBar)
         self.touchify_canvas.createActions(window, self.mainMenuBar)
         self.touchify_shortcut_composer.createActions(window, self.mainMenuBar)
 
@@ -128,7 +128,7 @@ class TouchifyWindow(QObject):
 
         self.action_management.onWindowCreated()
         self.touchify_shortcuts.windowCreated()
-        self.touchify_looks.windowCreated()
+        self.touchify_tweaks.onWindowCreated()
         self.touchify_canvas.windowCreated()
 
         self.touchify_actions.buildMenu(self.mainMenuBar)
