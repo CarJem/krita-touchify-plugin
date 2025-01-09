@@ -7,7 +7,7 @@
         "sections": [
             {
                 "display_name": "",
-                "docker_id": "pykrita_imagine_board_docker",
+                "docker_id": "Touchify/ReferenceTabsDocker",
                 "size_x": 0,
                 "size_y": 0,
                 "min_size_x": 400,
@@ -47,7 +47,7 @@
             },
             {
                 "display_name": "",
-                "docker_id": "Touchify/ReferenceTabsDocker",
+                "docker_id": "pykrita_imagine_board_docker",
                 "size_x": 0,
                 "size_y": 0,
                 "min_size_x": 400,
@@ -107,7 +107,7 @@
         "stack_actions": [],
         "json_version": 1
     },
-    "preset_name": "References",
+    "preset_name": "VaporJem References",
     "preset_group": "Windows...",
     "json_version": 3
 }

@@ -13,6 +13,8 @@ from touchify.src.components.touchify.special.BrushSizeSlider import BrushSizeSl
 from touchify.src.components.touchify.special.CanvasBrushPicker import CanvasBrushPicker
 from touchify.src.components.touchify.special.CanvasColorPicker import CanvasColorPicker
 from touchify.src.components.touchify.special.CanvasDualColorPicker import CanvasDualColorPicker
+from touchify.src.components.touchify.special.CanvasGradientPicker import CanvasGradientPicker
+from touchify.src.components.touchify.special.CanvasPatternPicker import CanvasPatternPicker
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 
 from touchify.src.components.touchify.special.LayerBlendingSelector import LayerBlendingSelector
@@ -339,6 +341,14 @@ class Panel(QWidget):
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushPicker:
                 actionWidget = CanvasBrushPicker(self)
+                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.PatternPicker:
+                actionWidget = CanvasPatternPicker(self)
+                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+            if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.GradientPicker:
+                actionWidget = CanvasGradientPicker(self)
                 actionWidget.setInstance(self.actions_manager.appEngine)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 

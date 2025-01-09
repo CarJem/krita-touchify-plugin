@@ -8,7 +8,6 @@
             "name": "Launch Plugin",
             "type": "f5anything",
             "request": "launch",
-            "internalConsoleOptions": "neverOpen", 
             "showTerminal": true,
             "terminalIndex": 0,
             "preLaunchTask": "Plugin Prelaunch",

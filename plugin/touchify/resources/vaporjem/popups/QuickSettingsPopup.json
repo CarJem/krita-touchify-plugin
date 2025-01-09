@@ -1,5 +1,5 @@
 {
-    "registry_name": "[Popups...] Quick Settings",
+    "registry_name": "[Popups...] Quick Settings Docker",
     "id": "VaporJem_Popups_QuickSettings",
     "window_type": "popup",
     "window_title": "Quick Settings Popup",

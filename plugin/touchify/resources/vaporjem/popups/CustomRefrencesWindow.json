@@ -1,12 +1,12 @@
 {
-    "registry_name": "[Windows...] References",
+    "registry_name": "[Windows...] VaporJem References",
     "id": "VaporJemReferencesPopup",
     "window_type": "window",
     "window_title": "Reference Window",
     "window_docking_allowed": true,
     "window_remember_layout": true,
     "window_fixed_layout": "on",
-    "type": "multiple_dockers",
+    "type": "toolshelf",
     "closing_method": "default",
     "clamp_to_main_window": true,
     "popup_position_x": "default",
@@ -22,13 +22,10 @@
     "docker_id": "",
     "dockers_list": [
         {
-            "id": "Touchify/ReferenceTabsDocker"
-        },
-        {
             "id": "pykrita_imagine_board_docker"
         },
         {
-            "id": "PhotobashDocker"
+            "id": "Touchify/ReferenceTabsDocker"
         }
     ],
     "dockers_tab_type": "buttons",

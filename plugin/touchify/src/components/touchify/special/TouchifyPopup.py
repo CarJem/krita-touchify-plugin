@@ -4,6 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from touchify.src.cfg.popup.PopupData import PopupData
+from touchify.src.components.pyqt.extensions import PyQtExtensions
 from touchify.src.components.pyqt.widgets.ElidedLabel import ElidedLabel
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import ToolshelfWidget
 from touchify.src.settings import *
@@ -343,21 +344,7 @@ class TouchifyPopup(QDockWidget):
         
             return [offset_x, offset_y]
 
-        def ClampPosition(__x: int, __y: int, __hint_width: int, __hint_height: int):
-            screen_x = self.main_window.geometry().x()
-            screen_y = self.main_window.geometry().y()
-            screen_height = self.main_window.size().height()
-            screen_width = self.main_window.size().width()
 
-            if __x + __hint_width > screen_x + screen_width:
-                __x = screen_x + screen_width - __hint_width
-            elif __x < screen_x:
-                __x = screen_x
-
-            if __y + __hint_height > screen_y + screen_height:
-                __y = screen_y + screen_height - __hint_height
-
-            return [__x, __y]
 
         last_state = self.getLastLayoutState()
         fixed_state = self.getFixedLayoutState()
@@ -377,7 +364,9 @@ class TouchifyPopup(QDockWidget):
 
 
         if self.clamp_to_main_window:
-            hint_x, hint_y = ClampPosition(hint_x, hint_y, hint_width, hint_height)
+            adjusted_point = PyQtExtensions.Geometry.clampToTarget(QPoint(hint_x, hint_y), QSize(hint_width, hint_height), self.main_window)
+            hint_x = adjusted_point.x()
+            hint_y = adjusted_point.y()
 
         self.setGeometry(hint_x, hint_y, hint_width, hint_height)
         self.updateSize(hint_width, hint_height)

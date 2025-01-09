@@ -424,14 +424,14 @@
                                 "json_version": 2
                             },
                             {
-                                "registry_id": "krita_tool_assistant",
+                                "registry_id": "",
                                 "variant": "menu",
                                 "display_icon_hide": false,
                                 "display_text_hide": true,
                                 "display_custom_icon_enabled": true,
-                                "display_custom_icon": "krita_tool_assistant",
+                                "display_custom_icon": "visible",
                                 "display_custom_text_enabled": true,
-                                "display_custom_text": "Assistants",
+                                "display_custom_text": "Show",
                                 "extra_closes_popup": false,
                                 "extra_composer_mode": false,
                                 "action_id": "deselect",

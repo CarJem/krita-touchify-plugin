@@ -30,6 +30,8 @@ class ToolshelfDataSection:
         BackgroundColorBox = "background_color_box"
         ForegroundBackgroundColorPicker = "foreground_background_color_picker"
         BrushPicker = "brush_preset_picker"
+        GradientPicker = "pattern_chooser_popup"
+        PatternPicker = "gradient_chooser_popup"
 
     class SectionAlignmentX(StrEnum):
         Nothing = "none"

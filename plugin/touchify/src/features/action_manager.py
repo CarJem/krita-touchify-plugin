@@ -12,6 +12,7 @@ from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
 from touchify.src.cfg.script.CustomScript import CustomScript
 from touchify.src.components.pyqt.event_filters.MouseReleaseListener import MouseReleaseListener
 
+from touchify.src.components.pyqt.extensions import PyQtExtensions as QtExt
 from touchify.src.components.touchify.actions.TouchifyActionMenu import TouchifyActionMenu
 
 from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
@@ -44,6 +45,8 @@ class ActionManager(QObject):
     composerTriggerEnded=pyqtSignal()
 
     brushChanged=pyqtSignal(Resource)
+    gradientChanged=pyqtSignal(Resource)
+    patternChanged=pyqtSignal(Resource)
     toolChanged=pyqtSignal(str)
     viewChanged=pyqtSignal(View)
     canvasChanged=pyqtSignal(Canvas)
@@ -55,6 +58,7 @@ class ActionManager(QObject):
     brushOpacityChanged=pyqtSignal(float)
     brushRotationChanged=pyqtSignal(float)
     brushFlowChanged=pyqtSignal(float)
+
 
     brushBlendingModeChanged=pyqtSignal(str)
     layerBlendingModeChanged=pyqtSignal(str)
@@ -82,6 +86,8 @@ class ActionManager(QObject):
         self.__lastView: View = None
         self.__lastBrushPreset: Resource = None
         self.__lastCanvas: Canvas = None
+        self.__lastGradient: Resource = None
+        self.__lastPattern: Resource = None
 
         self.__lastToolboxTool: str = ""
 
@@ -183,6 +189,19 @@ class ActionManager(QObject):
             data.docker_id = "PresetDocker"
             data.popup_width = 300
             data.popup_height = 500
+        elif id == "gradient_chooser_popup" or id == "pattern_chooser_popup":    
+            main_window = self.appEngine.windowSource.qwindow()
+            frames = main_window.findChildren(QFrame,'KisPopupButtonFrame')
+            for frame in frames:
+                result = frame.findChild(QWidget, id)
+                if result: 
+                    frame.show()
+                    if _parent: position = QtExt.Geometry.clampToTarget(
+                        _parent.mapToGlobal(QPoint(0,0)), frame.size(), main_window, QPoint(0, _parent.height()))
+                    else: position = QCursor.pos()
+                    frame.move(position.x(), position.y())
+                    break
+            return
         else:
             data: PopupData = TouchifySettings.instance().getRegistryItem(id, PopupData)
             if not isinstance(data, PopupData) or data == None: return
@@ -210,6 +229,12 @@ class ActionManager(QObject):
         popup.triggerPopup(_parent)
 
     #region Getters
+
+    def getCurrentGradient(self):
+        return self.__lastGradient
+    
+    def getCurrentPattern(self):
+        return self.__lastPattern
 
     def getCurrentView(self):
         return self.__lastView
@@ -320,6 +345,8 @@ class ActionManager(QObject):
 
     def onTimerTick(self):
         currentBrush: Resource = None
+        currentGradient: Resource = None
+        currentPattern: Resource = None
         currentView: View = None
         currentCanvas: Canvas = None
 
@@ -351,7 +378,8 @@ class ActionManager(QObject):
                     selectedNodes = currentView.selectedNodes()
                     selectedNodeColors = [node.colorLabel() for node in currentView.selectedNodes() ]
 
-                    
+                    currentGradient = currentView.currentGradient()
+                    currentPattern = currentView.currentPattern()
                     currentBrush = currentView.currentBrushPreset()
                     currentSize = currentView.brushSize()
                     currentOpacity = currentView.paintingOpacity()
@@ -367,6 +395,15 @@ class ActionManager(QObject):
 
         except:
             pass
+
+        if currentGradient != self.__lastGradient:
+            self.gradientChanged.emit(currentGradient)
+            self.__lastGradient = currentGradient
+
+        if currentPattern != self.__lastPattern:
+            self.patternChanged.emit(currentPattern)
+            self.__lastPattern = currentPattern
+
         if currentCanvas != self.__lastCanvas:
             self.canvasChanged.emit(currentCanvas)
             self.__lastCanvas = currentCanvas

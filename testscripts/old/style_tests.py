@@ -8,7 +8,7 @@ sys.path.append('C:/Users/demo/Documents/Apps/Scripts/KritaDev/modules')
 highlight = qApp.palette().color(QPalette.Highlight).name().split("#")[1]
 
 
-from touchify.src.components.krita.KisSliderSpinBox import KisSliderSpinBox
+from touchify.src.components.krita.ui.KisSliderSpinBox import KisSliderSpinBox
 from krita import *
 qwin = Krita.instance().activeWindow().qwindow()
 wobj = qwin.findChild(QMdiArea)

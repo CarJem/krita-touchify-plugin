@@ -262,12 +262,12 @@ class NtWidgetPad(QWidget):
             if self.resizingEnabled == False:
                 widgetNewSize = QSize(widgetSizeHint)
                                            
-            widgetNewSize = fitToView(self.canvas, Ext.QSize.fitToSource(widgetSizeHint, widgetNewSize))                   
+            widgetNewSize = fitToView(self.canvas, Ext.Geometry.fitToSource(widgetSizeHint, widgetNewSize))                   
             if widgetSize != widgetNewSize:
                 self.widget.setFixedSize(widgetNewSize)
                 
             padSizeHint = self.sizeHint()
-            padSizeHint = Ext.QSize.fitToTarget(padSizeHint, self.canvas.size())
+            padSizeHint = Ext.Geometry.fitToTarget(padSizeHint, self.canvas.size())
 
             if self.size() != padSizeHint:
                 self.resize(padSizeHint)
