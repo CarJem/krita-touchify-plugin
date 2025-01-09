@@ -1,4 +1,5 @@
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 
 class DockerItem:
@@ -26,5 +27,5 @@ class DockerItem:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["id"] = {"type": "docker_selection"}
+        restrictions["id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Docker)
         return restrictions

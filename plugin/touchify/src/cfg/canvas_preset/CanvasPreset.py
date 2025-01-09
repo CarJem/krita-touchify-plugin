@@ -1,9 +1,10 @@
 from krita import *
 from PyQt5.QtCore import *
-from touchify.src.ext.FileExtensions import FileExtensions
+from touchify.src.components.python.file_extensions import FileExtensions
 from touchify.src.components.krita.settings import *
 from touchify.src.components.krita.extensions import *
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class CanvasPreset:
 
@@ -139,8 +140,8 @@ class CanvasPreset:
 
     def propertygrid_restrictions(self):   
         restrictions = {}
-        restrictions["checkers_size"]  = {"type": "range", "min": 0}
-        restrictions["pixgrid_threshold"] = {"type": "range", "min": 0}
-        restrictions["selection_outline_opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
-        restrictions["selection_overlay_opacity"] = {"type": "range", "min": 0.0, "max": 1.0}
+        restrictions["checkers_size"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["pixgrid_threshold"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["selection_outline_opacity"] = PropertyGrid_Restrictions.range(min=0.0,max=1.0)
+        restrictions["selection_overlay_opacity"] = PropertyGrid_Restrictions.range(min=0.0,max=1.0)
         return restrictions

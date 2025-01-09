@@ -1,8 +1,9 @@
 from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
 from touchify.src.components.python.datatypes.TypedList import TypedList
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
 from touchify.src.components.python.datatypes.StrEnum import StrEnum
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class ToolshelfDataSection:
 
@@ -293,31 +294,31 @@ class ToolshelfDataSection:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["panel_x"] = {"type": "range", "min": 0}
-        restrictions["panel_y"] = {"type": "range", "min": 0}
-        restrictions["size_x"] = {"type": "range", "min": 0}
-        restrictions["size_y"] = {"type": "range", "min": 0}
-        restrictions["min_size_x"] = {"type": "range", "min": 0}
-        restrictions["min_size_y"] = {"type": "range", "min": 0}
-        restrictions["max_size_x"] = {"type": "range", "min": 0}
-        restrictions["max_size_y"] = {"type": "range", "min": 0}
-        restrictions["section_type"] = {"type": "values", "entries": self.SectionType.values()}
+        restrictions["panel_x"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["panel_y"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["size_x"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["size_y"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["min_size_x"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["min_size_y"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["max_size_x"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["max_size_y"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["section_type"] = PropertyGrid_Restrictions.values(self.SectionType.values())
 
-        restrictions["docker_id"] = {"type": "docker_selection"}
-        restrictions["docker_nesting_mode"] = {"type": "values", "entries": self.DockerNestingMode.values()}
-        restrictions["docker_unloaded_visibility"] = {"type": "values", "entries": self.DockerUnloadedVisibility.values()}
-        restrictions["docker_loading_priority"] = {"type": "values", "entries": self.DockerLoadingPriority.values()}
+        restrictions["docker_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Docker)
+        restrictions["docker_nesting_mode"] = PropertyGrid_Restrictions.values(self.DockerNestingMode.values())
+        restrictions["docker_unloaded_visibility"] = PropertyGrid_Restrictions.values(self.DockerUnloadedVisibility.values())
+        restrictions["docker_loading_priority"] = PropertyGrid_Restrictions.values(self.DockerLoadingPriority.values())
 
-        restrictions["action_section_display_mode"] = {"type": "values", "entries": self.ActionSectionDisplayMode.values()}
-        restrictions["action_section_btn_width"] = {"type": "range", "min": 0}
-        restrictions["action_section_btn_height"] = {"type": "range", "min": 0}
-        restrictions["action_section_alignment_x"] = {"type": "values", "entries": self.SectionAlignmentX.values()}
-        restrictions["action_section_alignment_y"] = {"type": "values", "entries": self.SectionAlignmentY.values()}
-        restrictions["action_section_icon_size"] = {"type": "range", "min": 0}
+        restrictions["action_section_display_mode"] = PropertyGrid_Restrictions.values(self.ActionSectionDisplayMode.values())
+        restrictions["action_section_btn_width"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["action_section_btn_height"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["action_section_alignment_x"] = PropertyGrid_Restrictions.values(self.SectionAlignmentX.values())
+        restrictions["action_section_alignment_y"] = PropertyGrid_Restrictions.values(self.SectionAlignmentY.values())
+        restrictions["action_section_icon_size"] = PropertyGrid_Restrictions.range(min=0)
 
-        restrictions["special_item_type"] = {"type": "values", "entries": self.SpecialItemType.values()}
+        restrictions["special_item_type"] = PropertyGrid_Restrictions.values(self.SpecialItemType.values())
 
-        restrictions["subpanel_data"] = {"type": "expandable"}
-        restrictions["subpanel_mode"] = {"type": "values", "entries": self.SubpanelMode.values()}
-        restrictions["subpanel_id"] = {"type": "registry_toolshelf_selection"}
+        restrictions["subpanel_data"] = PropertyGrid_Restrictions.expandable()
+        restrictions["subpanel_mode"] = PropertyGrid_Restrictions.values(self.SubpanelMode.values())
+        restrictions["subpanel_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Toolshelf)
         return restrictions

@@ -1,6 +1,7 @@
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
 from touchify.src.cfg.toolbox.ToolboxDataItem import *
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class ToolboxDataCategory:
     def __defaults__(self):
@@ -46,5 +47,5 @@ class ToolboxDataCategory:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["column_count"] = {"type": "range", "min": 0}
+        restrictions["column_count"] = PropertyGrid_Restrictions.range(min=0)
         return restrictions

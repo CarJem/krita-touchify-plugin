@@ -1,7 +1,8 @@
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.components.python.datatypes.StrEnum import StrEnum
 from touchify.src.components.python.datatypes.TypedList import TypedList
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class TriggerMenuItem(Trigger):
 
@@ -62,5 +63,5 @@ class TriggerMenuItem(Trigger):
 
     def propertygrid_restrictions(self):
         restrictions = super().propertygrid_restrictions()
-        restrictions["variant"] = {"type": "values", "entries": self.Variants.values()}
+        restrictions["variant"] = PropertyGrid_Restrictions.values(self.Variants.values())
         return restrictions

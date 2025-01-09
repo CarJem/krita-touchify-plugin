@@ -1,9 +1,11 @@
 from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
-from touchify.src.ext.FileExtensions import FileExtensions
+from touchify.src.components.python.file_extensions import FileExtensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
 import os
 from touchify.paths import BASE_DIR
 import shutil
+
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 HAS_ALREADY_LOADED: bool = False
 
@@ -85,5 +87,5 @@ class ResourcePackRegistry:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["presets"] = {"type": "add_remove_edit_only"}
+        restrictions["presets"] = PropertyGrid_Restrictions.listMod(PropertyGrid_Restrictions.ListMod.AddRemoveEditOnly)
         return restrictions

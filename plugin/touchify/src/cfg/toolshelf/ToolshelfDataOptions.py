@@ -1,7 +1,8 @@
 from touchify.src.components.python.datatypes.TypedList import TypedList
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
 from touchify.src.components.python.datatypes.StrEnum import StrEnum
 from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class ToolshelfDataOptions:
     class StackPreview(StrEnum):
@@ -91,7 +92,7 @@ class ToolshelfDataOptions:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["stack_preview"] = {"type": "values", "entries": self.StackPreview.values()}
-        restrictions["stack_alignment"] = {"type": "values", "entries": self.StackAlignment.values()}
-        restrictions["position"] = {"type": "values", "entries": self.Position.values()}
+        restrictions["stack_preview"] = PropertyGrid_Restrictions.values(self.StackPreview.values())
+        restrictions["stack_alignment"] = PropertyGrid_Restrictions.values(self.StackAlignment.values())
+        restrictions["position"] = PropertyGrid_Restrictions.values(self.Position.values())
         return restrictions

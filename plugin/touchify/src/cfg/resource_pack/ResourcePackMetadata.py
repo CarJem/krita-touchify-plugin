@@ -1,5 +1,5 @@
 import textwrap
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
 
 HAS_ALREADY_LOADED: bool = False
 

@@ -15,7 +15,7 @@ from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.components.krita.settings import KritaSettings
 from touchify.src.variables import *
 
-from touchify.src.ext.Extensions import *
+from touchify.src.components.python.extensions import *
 
 
 

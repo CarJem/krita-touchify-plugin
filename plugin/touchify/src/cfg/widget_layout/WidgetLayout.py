@@ -1,8 +1,9 @@
 from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 from touchify.src.cfg.widget_layout.WidgetLayoutPadOptions import WidgetLayoutPadOptions
 from touchify.src.cfg.widget_layout.WidgetLayoutToolboxOptions import WidgetLayoutToolboxOptions
-from touchify.src.ext.FileExtensions import FileExtensions
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.file_extensions import FileExtensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
    
 class WidgetLayout:
 
@@ -79,12 +80,12 @@ class WidgetLayout:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["toolbox"] = {"type": "expandable"}
-        restrictions["toolshelf_count"] = {"type": "range", "min": 0, "max": 4}
-        restrictions["toolshelf_alpha"] = {"type": "expandable"}
-        restrictions["toolshelf_beta"]  = {"type": "expandable"}
-        restrictions["toolshelf_gamma"] = {"type": "expandable"}
-        restrictions["toolshelf_delta"] = {"type": "expandable"}
+        restrictions["toolbox"] = PropertyGrid_Restrictions.expandable()
+        restrictions["toolshelf_count"] = PropertyGrid_Restrictions.range(min=0,max=4)
+        restrictions["toolshelf_alpha"] = PropertyGrid_Restrictions.expandable()
+        restrictions["toolshelf_beta"]  = PropertyGrid_Restrictions.expandable()
+        restrictions["toolshelf_gamma"] = PropertyGrid_Restrictions.expandable()
+        restrictions["toolshelf_delta"] = PropertyGrid_Restrictions.expandable()
         return restrictions
 
 

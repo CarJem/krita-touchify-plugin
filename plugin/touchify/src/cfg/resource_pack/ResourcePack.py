@@ -12,11 +12,12 @@ from touchify.src.cfg.toolbox.ToolboxData import ToolboxData
 from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
 from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
-from touchify.src.ext.FileExtensions import FileExtensions
-from touchify.src.ext.JsonExtensions import JsonExtensions
+from touchify.src.components.python.file_extensions import FileExtensions
+from touchify.src.components.python.json_extensions import JsonExtensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
 
 from touchify.paths import BASE_DIR
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions as RS
 
 HAS_ALREADY_LOADED: bool = False
 
@@ -253,14 +254,14 @@ class ResourcePack:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["metadata"] = {"type": "expandable"}
-        restrictions["triggers"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
-        restrictions["menus"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
-        restrictions["toolboxes"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
-        restrictions["toolshelves"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
-        restrictions["widget_layouts"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
-        restrictions["popups"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
-        restrictions["docker_groups"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
-        restrictions["canvas_presets"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
-        restrictions["scripts"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
+        restrictions["metadata"] = RS.expandable()
+        restrictions["triggers"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
+        restrictions["menus"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
+        restrictions["toolboxes"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
+        restrictions["toolshelves"] =[RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
+        restrictions["widget_layouts"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
+        restrictions["popups"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
+        restrictions["docker_groups"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
+        restrictions["canvas_presets"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
+        restrictions["scripts"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         return restrictions

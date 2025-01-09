@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 
 
 
-from touchify.src.ext.Extensions import *
+from touchify.src.components.python.extensions import *
 from touchify.src.settings import *
 
 from typing import TYPE_CHECKING, Callable

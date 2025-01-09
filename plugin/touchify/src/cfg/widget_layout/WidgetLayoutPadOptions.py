@@ -1,6 +1,8 @@
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
 from touchify.src.components.python.datatypes.StrEnum import StrEnum
 from PyQt5.QtCore import Qt
+
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class WidgetLayoutPadOptions:
 
@@ -79,12 +81,12 @@ class WidgetLayoutPadOptions:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["position_x"] = {"type": "range", "min": 0}
-        restrictions["position_y"] = {"type": "range", "min": 0}
-        restrictions["stretch_x"] = {"type": "range", "min": 0}
-        restrictions["stretch_y"] = {"type": "range", "min": 0}
-        restrictions["span_x"] = {"type": "range", "min": -1}
-        restrictions["span_y"] = {"type": "range", "min": -1}
-        restrictions["alignment_x"] = {"type": "values", "entries": self.HorizontalAlignment.values()}
-        restrictions["alignment_y"] = {"type": "values", "entries": self.VerticalAlignment.values()}
+        restrictions["position_x"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["position_y"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["stretch_x"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["stretch_y"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["span_x"] = PropertyGrid_Restrictions.range(min=-1)
+        restrictions["span_y"] = PropertyGrid_Restrictions.range(min=-1)
+        restrictions["alignment_x"] = PropertyGrid_Restrictions.values(self.HorizontalAlignment.values())
+        restrictions["alignment_y"] = PropertyGrid_Restrictions.values(self.VerticalAlignment.values())
         return restrictions

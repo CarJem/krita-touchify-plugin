@@ -1,4 +1,5 @@
 from touchify.src.components.krita.settings import KritaSettings
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class TouchifyRegistryPreferences:
 
@@ -96,16 +97,16 @@ class TouchifyRegistryPreferences:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["Interface_CanvasToggleScale"] = {"type": "range", "min": 1}
-        restrictions["Interface_ToolboxIconScale"] = {"type": "range", "min": 1}
-        restrictions["Interface_ToolshelfActionBarScale"] = {"type": "range", "min": 1}
-        restrictions["Interface_ToolshelfTabBarScale"] = {"type": "range", "min": 1}
-        restrictions["Interface_ToolshelfHeaderScale"] = {"type": "range", "min": 1}
-        restrictions["Interface_ToolshelfActionSectionScale"] = {"type": "range", "min": 1}
-        restrictions["Interface_ColorOptionsDockerScale"] = {"type": "range", "min": 1}
-        restrictions["Canvas_RightClickAction"] = {"type": "action_selection"}
-        restrictions["Canvas_LeftClickAction"] = {"type": "action_selection"}
-        restrictions["Canvas_MiddleClickAction"] = {"type": "action_selection"}
+        restrictions["Interface_CanvasToggleScale"] = PropertyGrid_Restrictions.range(min=1)
+        restrictions["Interface_ToolboxIconScale"] = PropertyGrid_Restrictions.range(min=1)
+        restrictions["Interface_ToolshelfActionBarScale"] = PropertyGrid_Restrictions.range(min=1)
+        restrictions["Interface_ToolshelfTabBarScale"] = PropertyGrid_Restrictions.range(min=1)
+        restrictions["Interface_ToolshelfHeaderScale"] = PropertyGrid_Restrictions.range(min=1)
+        restrictions["Interface_ToolshelfActionSectionScale"] = PropertyGrid_Restrictions.range(min=1)
+        restrictions["Interface_ColorOptionsDockerScale"] = PropertyGrid_Restrictions.range(min=1)
+        restrictions["Canvas_RightClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Actions)
+        restrictions["Canvas_LeftClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Actions)
+        restrictions["Canvas_MiddleClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Actions)
         return restrictions
 
     def load(self):

@@ -1,6 +1,6 @@
 from krita import *
 from PyQt5.QtGui import QColor
-from touchify.src.ext.Extensions import Extensions
+from touchify.src.components.python.extensions import Extensions
 
 
 

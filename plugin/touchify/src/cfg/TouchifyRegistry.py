@@ -5,9 +5,10 @@ from PyQt5.QtCore import *
 from touchify.paths import BASE_DIR
 from touchify.src.cfg.resource_pack.ResourcePackRegistry import ResourcePackRegistry
 from touchify.src.cfg.TouchifyRegistryPreferences import TouchifyRegistryPreferences
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.variables import *
 
-from touchify.src.ext.Extensions import *
+from touchify.src.components.python.extensions import *
 
 import json
 
@@ -54,8 +55,8 @@ class TouchifyRegistry:
     
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["resources"] = {"type": "expandable"}
-        restrictions["preferences"] = {"type": "expandable"}
+        restrictions["resources"] = PropertyGrid_Restrictions.expandable()
+        restrictions["preferences"] = PropertyGrid_Restrictions.expandable()
         return restrictions
     
     def save(self):

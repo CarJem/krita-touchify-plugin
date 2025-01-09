@@ -1,4 +1,5 @@
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class ToolboxDataSubitem:
 
@@ -33,6 +34,6 @@ class ToolboxDataSubitem:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["name"] = {"type": "action_selection"}
-        restrictions["icon"] = {"type": "icon_selection"}
+        restrictions["name"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Actions)
+        restrictions["icon"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Icon)
         return restrictions

@@ -1,9 +1,10 @@
 from touchify.src.cfg.toolshelf.ToolshelfDataSection import ToolshelfDataSection
 from touchify.src.components.python.datatypes.StrEnum import StrEnum
 from touchify.src.components.python.datatypes.TypedList import TypedList
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
 from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
 from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 
 class ToolshelfDataPage:
@@ -87,7 +88,7 @@ class ToolshelfDataPage:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["toolshelf_tab_row"] = {"type": "range", "min": 0}
-        restrictions["icon"] = {"type": "icon_selection"}
-        restrictions["tab_type"] = {"type": "values", "entries": self.TabType.values()}
+        restrictions["toolshelf_tab_row"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["icon"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Icon)
+        restrictions["tab_type"] = PropertyGrid_Restrictions.values(self.TabType.values())
         return restrictions

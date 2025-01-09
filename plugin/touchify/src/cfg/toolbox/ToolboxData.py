@@ -1,9 +1,10 @@
 from touchify.src.cfg.toolbox.ToolboxDataItem import *
 from touchify.src.cfg.toolbox.ToolboxDataCategory import *
-from touchify.src.ext.FileExtensions import FileExtensions
+from touchify.src.components.python.file_extensions import FileExtensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
 from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 
    
@@ -68,9 +69,9 @@ class ToolboxData:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["column_count"] = {"type": "range", "min": 1}
-        restrictions["background_opacity"] = {"type": "range", "min": 0, "max": 255}
-        restrictions["button_opacity"] = {"type": "range", "min": 0, "max": 255}
+        restrictions["column_count"] = PropertyGrid_Restrictions.range(min=1)
+        restrictions["background_opacity"] = PropertyGrid_Restrictions.range(min=0, max=255)
+        restrictions["button_opacity"] = PropertyGrid_Restrictions.range(min=0, max=255)
         return restrictions
     
     def loadDefaults(self):

@@ -1,11 +1,13 @@
 from touchify.src.cfg.docker_group.DockerItem import DockerItem
-from touchify.src.ext.FileExtensions import FileExtensions
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.file_extensions import FileExtensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
 from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 from touchify.src.components.python.datatypes.StrEnum import StrEnum
 
 from typing import TYPE_CHECKING
+
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 if TYPE_CHECKING:
     from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
 
@@ -282,19 +284,19 @@ class PopupData:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["docker_id"] = {"type": "docker_selection"}
-        restrictions["type"] = {"type": "values", "entries": self.Variants.values()}
-        restrictions["window_type"] = {"type": "values", "entries": self.WindowType.values()}
-        restrictions["popup_position_x"] = {"type": "values", "entries": self.PopupPosition.values()}
-        restrictions["popup_position_y"] = {"type": "values", "entries": self.PopupPosition.values()}
-        restrictions["closing_method"] = {"type": "values", "entries": self.ClosingMethod.values()}
-        restrictions["dockers_tab_type"] = {"type": "values", "entries": self.DockersTabType.values()}
-        restrictions["window_fixed_layout"] = {"type": "values", "entries": self.WindowFixedLayoutMode.values()}
-        restrictions["toolshelf_id"] = {"type": "registry_toolshelf_selection"}
+        restrictions["docker_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Docker)
+        restrictions["type"] = PropertyGrid_Restrictions.values(self.Variants.values())
+        restrictions["window_type"] = PropertyGrid_Restrictions.values(self.WindowType.values())
+        restrictions["popup_position_x"] = PropertyGrid_Restrictions.values(self.PopupPosition.values())
+        restrictions["popup_position_y"] = PropertyGrid_Restrictions.values(self.PopupPosition.values())
+        restrictions["closing_method"] = PropertyGrid_Restrictions.values(self.ClosingMethod.values())
+        restrictions["dockers_tab_type"] = PropertyGrid_Restrictions.values(self.DockersTabType.values())
+        restrictions["window_fixed_layout"] = PropertyGrid_Restrictions.values(self.WindowFixedLayoutMode.values())
+        restrictions["toolshelf_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Toolshelf)
 
-        restrictions["actions_item_height"] = {"type": "range", "min": 0}
-        restrictions["actions_item_width"] = {"type": "range", "min": 0}
-        restrictions["popup_width"] = {"type": "range", "min": 0}
-        restrictions["popup_height"] = {"type": "range", "min": 0}
+        restrictions["actions_item_height"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["actions_item_width"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["popup_width"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["popup_height"] = PropertyGrid_Restrictions.range(min=0)
 
         return restrictions

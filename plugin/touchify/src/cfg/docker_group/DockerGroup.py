@@ -1,5 +1,5 @@
-from touchify.src.ext.FileExtensions import FileExtensions
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.file_extensions import FileExtensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
 from touchify.src.cfg.docker_group.DockerItem import DockerItem
 from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility

@@ -2,9 +2,10 @@
 from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 from touchify.src.cfg.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
 from touchify.src.cfg.toolshelf.ToolshelfDataPage import ToolshelfDataPage
-from touchify.src.ext.FileExtensions import FileExtensions
+from touchify.src.components.python.file_extensions import FileExtensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
-from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
+from touchify.src.components.python.json_extensions import JsonExtensions as Extensions
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 
 
@@ -69,8 +70,8 @@ class ToolshelfData:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["homepage"] = {"type": "expandable"}
-        restrictions["header_options"] = {"type": "expandable"}
+        restrictions["homepage"] = PropertyGrid_Restrictions.expandable()
+        restrictions["header_options"] = PropertyGrid_Restrictions.expandable()
         return restrictions
 
 
