@@ -26,6 +26,7 @@
                         "docker_group_data": "none",
                         "popup_data": "none",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -47,6 +48,7 @@
                         "docker_group_data": "none",
                         "popup_data": "vaporjem/popup/CustomBrushesPopup",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -68,6 +70,7 @@
                         "docker_group_data": "none",
                         "popup_data": "vaporjem/popup/CustomLayersPopup",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -89,6 +92,7 @@
                         "docker_group_data": "none",
                         "popup_data": "vaporjem/popup/vaporjem_popups_palettedocker",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -110,6 +114,7 @@
                         "docker_group_data": "none",
                         "popup_data": "vaporjem/popup/vaporjem_popups_colordocker",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -131,6 +136,7 @@
                         "docker_group_data": "none",
                         "popup_data": "vaporjem/popup/vaporjem_popups_undohistory",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -152,6 +158,7 @@
                         "docker_group_data": "none",
                         "popup_data": "none",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     }
                 ]
@@ -178,6 +185,7 @@
                         "docker_group_data": "none",
                         "popup_data": "none",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -199,6 +207,7 @@
                         "docker_group_data": "none",
                         "popup_data": "none",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -220,6 +229,7 @@
                         "docker_group_data": "none",
                         "popup_data": "none",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -241,6 +251,7 @@
                         "docker_group_data": "none",
                         "popup_data": "none",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -262,6 +273,7 @@
                         "docker_group_data": "none",
                         "popup_data": "none",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -283,6 +295,7 @@
                         "docker_group_data": "none",
                         "popup_data": "none",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     }
                 ]
@@ -309,6 +322,7 @@
                         "docker_group_data": "none",
                         "popup_data": "none",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -330,6 +344,7 @@
                         "docker_group_data": "none",
                         "popup_data": "none",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     }
                 ]
@@ -417,6 +432,7 @@
                                 "docker_group_data": "none",
                                 "popup_data": "none",
                                 "canvas_preset_data": "none",
+                                "script_id": "",
                                 "json_version": 2
                             },
                             {
@@ -438,6 +454,7 @@
                                 "docker_group_data": "none",
                                 "popup_data": "none",
                                 "canvas_preset_data": "none",
+                                "script_id": "",
                                 "json_version": 2
                             },
                             {
@@ -459,6 +476,29 @@
                                 "docker_group_data": "none",
                                 "popup_data": "none",
                                 "canvas_preset_data": "none",
+                                "script_id": "",
+                                "json_version": 2
+                            },
+                            {
+                                "registry_id": "",
+                                "variant": "action",
+                                "display_icon_hide": false,
+                                "display_text_hide": true,
+                                "display_custom_icon_enabled": true,
+                                "display_custom_icon": "material:microsoft-xbox-controller-menu",
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "touchify_registry_VaporJem_OpenPopupPaletteScripted",
+                                "context_menu_id": "",
+                                "brush_name": "",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "docker_group_data": "none",
+                                "popup_data": "none",
+                                "canvas_preset_data": "none",
+                                "script_id": "",
                                 "json_version": 2
                             }
                         ]

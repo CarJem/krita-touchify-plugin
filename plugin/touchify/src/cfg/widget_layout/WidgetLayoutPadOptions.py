@@ -1,5 +1,5 @@
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
-from touchify.src.ext.types.StrEnum import StrEnum
+from touchify.src.components.python.datatypes.StrEnum import StrEnum
 from PyQt5.QtCore import Qt
 
 class WidgetLayoutPadOptions:

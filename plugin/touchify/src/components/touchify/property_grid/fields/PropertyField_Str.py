@@ -4,7 +4,8 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.pyqt.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from touchify.src.ext.types.TypedList import *
+from touchify.src.components.touchify.property_grid.enums.PropertyGrid_SelectorDialogModes import PropertyGrid_SelectorDialogModes
+from touchify.src.components.python.datatypes.TypedList import *
 from touchify.src.resources import *
 
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
@@ -29,6 +30,7 @@ class PropertyField_Str(PropertyField):
         self.is_special_selector = False
         self.special_selector_type = "none"
 
+        self.is_multiline_string = False
 
         self.is_combobox = False
         self.combobox_items: list[tuple[str, str]] = []
@@ -78,9 +80,17 @@ class PropertyField_Str(PropertyField):
             editorLayout.addWidget(self.editor)
             self.setLayout(editorLayout)
         else:
-            self.editor = QLineEdit()
-            self.editor.textChanged.connect(self.textChanged)
-            self.editor.setText(self.variable_data.replace("\n", "\\n"))
+
+
+            if self.is_multiline_string:
+                self.editor = QPlainTextEdit()
+                self.editor.setMinimumHeight(300)
+                self.editor.textChanged.connect(self.multilineTextChanged)
+                self.editor.setPlainText(self.variable_data)
+            else:
+                self.editor = QLineEdit()
+                self.editor.textChanged.connect(self.textChanged)
+                self.editor.setText(self.variable_data.replace("\n", "\\n"))
 
             editorLayout = QHBoxLayout(self)
             editorLayout.setSpacing(0)
@@ -94,7 +104,9 @@ class PropertyField_Str(PropertyField):
 
         for restriction in restrictions:
             if list_setup == False:
-                if restriction["type"] == "values":
+                if restriction["type"] == "multiline_string":
+                    self.is_multiline_string = True
+                elif restriction["type"] == "values":
                     combobox_items =  list[tuple[str, str]]()
                     avaliableItems = list[str](restriction["entries"])
                     for item in avaliableItems:
@@ -103,41 +115,9 @@ class PropertyField_Str(PropertyField):
                     self.combobox_items = combobox_items
                     self.is_combobox = True
                     list_setup = True
-                elif restriction["type"] == "action_selection":
+                elif restriction["type"] in PropertyGrid_SelectorDialogModes:
                     self.is_special_selector = True
-                    self.special_selector_type = "actions"
-                    list_setup = True
-                elif restriction["type"] == "docker_selection":
-                    self.is_special_selector = True
-                    self.special_selector_type = "dockers"
-                    list_setup = True
-                elif restriction["type"] == "icon_selection":
-                    self.is_special_selector = True
-                    self.special_selector_type = "icons"
-                    list_setup = True
-                elif restriction["type"] == "brush_selection":
-                    self.is_special_selector = True
-                    self.special_selector_type = "brushes"
-                    list_setup = True
-                elif restriction["type"] == "registry_docker_group_selection":
-                    self.is_special_selector = True
-                    self.special_selector_type = "docker_groups"
-                    list_setup = True
-                elif restriction["type"] == "registry_popup_selection":
-                    self.is_special_selector = True
-                    self.special_selector_type = "popups"
-                    list_setup = True
-                elif restriction["type"] == "registry_canvas_preset_selection":
-                    self.is_special_selector = True
-                    self.special_selector_type = "canvas_presets"
-                    list_setup = True
-                elif restriction["type"] == "registry_menu_selection":
-                    self.is_special_selector = True
-                    self.special_selector_type = "menus"
-                    list_setup = True
-                elif restriction["type"] == "registry_toolshelf_selection":
-                    self.is_special_selector = True
-                    self.special_selector_type = "toolshelf"
+                    self.special_selector_type = restriction["type"]
                     list_setup = True
                 
 
@@ -170,6 +150,12 @@ class PropertyField_Str(PropertyField):
     def currentIndexChanged(self):
         self.variable_data = str(self.editor.currentData(1)).replace("\\n", "\n")
         super().setVariable(self.variable_source, self.variable_name, self.variable_data)
+
+    def multilineTextChanged(self):
+        plain_text_editor: QPlainTextEdit = self.editor
+        if isinstance(plain_text_editor, QPlainTextEdit):
+            self.variable_data = plain_text_editor.toPlainText()
+            super().setVariable(self.variable_source, self.variable_name, self.variable_data)
 
     def textChanged(self):
         self.variable_data = self.editor.text().replace("\\n", "\n")

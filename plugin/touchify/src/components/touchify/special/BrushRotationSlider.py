@@ -3,8 +3,8 @@ from krita import *
 from PyQt5.QtCore import *
 from touchify.src.variables import *
 
-from touchify.src.ext.KritaSettings import *
-from touchify.src.components.krita.KisAngleSelector import KisAngleSelector
+from touchify.src.components.krita.settings import *
+from touchify.src.components.krita.ui.KisAngleSelector import KisAngleSelector
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

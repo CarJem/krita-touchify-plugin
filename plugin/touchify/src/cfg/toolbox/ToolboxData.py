@@ -1,7 +1,7 @@
 from touchify.src.cfg.toolbox.ToolboxDataItem import *
 from touchify.src.cfg.toolbox.ToolboxDataCategory import *
 from touchify.src.ext.FileExtensions import FileExtensions
-from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.components.python.datatypes.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 

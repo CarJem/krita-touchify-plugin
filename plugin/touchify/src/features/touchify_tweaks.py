@@ -46,7 +46,6 @@ class TouchifyTweaks(object):
         self.qWin.installEventFilter(self.window_event_filter)
         self.qWin.themeChanged.connect(self.rebuildStyleSheet)
         qApp.focusWindowChanged.connect(self.onFocusWindowChanged)
-        self.finishActions()
         self.rebuildStyleSheet()
 
     def onBrushEditorTrigged(self):
@@ -59,7 +58,7 @@ class TouchifyTweaks(object):
 
     #region Actions
 
-    def createActions(self, window: Window, mainMenuBar: QMenuBar):
+    def createActions(self, window: Window, subPathName: str):
 
         def createAction(id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
             result = window.createAction(id, text, menuLocation)
@@ -71,7 +70,7 @@ class TouchifyTweaks(object):
         config = TouchifySettings.instance().preferences()
         
         sublocation_name = "Tweaks"
-        sublocation_path = TOUCHIFY_ID_MENU_ROOT + "/" + sublocation_name
+        sublocation_path = subPathName + "/" + sublocation_name
 
 
         nu_options_menu = QMenu(sublocation_name, window.qwindow())
@@ -84,7 +83,7 @@ class TouchifyTweaks(object):
         nu_options_menu.addAction(createAction(TOUCHIFY_ID_ACTION_STYLES_DOCKEDBRUSHEDITOR, "Docked Brush Editor", sublocation_path, True, config.Styles_DockedBrushEditor, self.dockedBrushEditorToggled))
         nu_options_menu.addAction(createAction(TOUCHIFY_ID_ACTION_STYLES_DOCKEDBRUSHEDITORZOOMFIX, "Brush Editor Zoom Fix", sublocation_path, True, config.Styles_BrushEditorZoomFix, self.brushEditorZoomFixToggled))
 
-    def finishActions(self):
+    def finalizeActions(self):
         settings_menu = self.qWin.findChild(QMenu, 'settings')
         TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_STYLES_MENU, settings_menu, settings_menu, 'style_menu')
 

@@ -8,7 +8,7 @@ from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog 
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
 from touchify.src.components.touchify.property_grid.PropertyGrid import *
 
-from touchify.src.ext.types.TypedList import *
+from touchify.src.components.python.datatypes.TypedList import *
 from touchify.src.helpers import TouchifyHelpers
 from touchify.src.resources import *
 

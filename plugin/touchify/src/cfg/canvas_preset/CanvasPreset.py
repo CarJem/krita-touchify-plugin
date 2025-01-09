@@ -1,8 +1,8 @@
 from krita import *
 from PyQt5.QtCore import *
 from touchify.src.ext.FileExtensions import FileExtensions
-from touchify.src.ext.KritaSettings import *
-from touchify.src.ext.KritaExtensions import *
+from touchify.src.components.krita.settings import *
+from touchify.src.components.krita.extensions import *
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 class CanvasPreset:

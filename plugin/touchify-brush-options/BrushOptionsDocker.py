@@ -10,8 +10,8 @@ from touchify.src.components.touchify.special.BrushSizeSlider import BrushSizeSl
 from touchify.src.variables import *
 
 from touchify.src.stylesheet import Stylesheet
-from touchify.src.ext.KritaSettings import *
-from touchify.src.components.krita.KisSliderSpinBox import KisSliderSpinBox
+from touchify.src.components.krita.settings import *
+from touchify.src.components.krita.ui.KisSliderSpinBox import KisSliderSpinBox
 
 DOCKER_TITLE = 'Touchify Addon: Brush Options'
 DOCKER_ID = "Touchify/BrushOptionsDocker"

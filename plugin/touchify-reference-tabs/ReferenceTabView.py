@@ -28,7 +28,7 @@ ZOOM_STEP = 10
 
 useAngleSelector = True
 
-from touchify.src.components.krita.KisAngleSelector import KisAngleSelector as AngleSelector
+from touchify.src.components.krita.ui.KisAngleSelector import KisAngleSelector as AngleSelector
 from .ReferenceView import ReferenceView
 
 

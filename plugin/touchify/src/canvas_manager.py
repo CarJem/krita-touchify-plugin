@@ -6,7 +6,7 @@ from touchify.src.settings import TouchifySettings
 from touchify.src.variables import *
 
 
-from touchify.src.ext.KritaExtensions import *
+from touchify.src.components.krita.extensions import *
 
 if TYPE_CHECKING:
     from .window import TouchifyWindow

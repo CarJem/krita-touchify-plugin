@@ -26,7 +26,7 @@ from touchify.src.components.touchify.canvas.NtTogglePadButton import NtTogglePa
 from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
 
 from touchify.src.settings import *
-from touchify.src.ext.PyQtExtensions import PyQtExtensions as Ext
+from touchify.src.components.pyqt.extensions import PyQtExtensions as Ext
 
 from krita import *
 

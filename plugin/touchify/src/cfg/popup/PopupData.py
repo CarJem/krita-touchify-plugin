@@ -1,9 +1,9 @@
 from touchify.src.cfg.docker_group.DockerItem import DockerItem
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
-from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.components.python.datatypes.TypedList import TypedList
 from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
-from touchify.src.ext.types.StrEnum import StrEnum
+from touchify.src.components.python.datatypes.StrEnum import StrEnum
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

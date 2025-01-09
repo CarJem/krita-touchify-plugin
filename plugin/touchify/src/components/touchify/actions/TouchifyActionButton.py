@@ -1,7 +1,7 @@
 import typing
 from touchify.src.resources import ResourceManager
 from touchify.src.variables import *
-from touchify.src.ext.KritaExtensions import *
+from touchify.src.components.krita.extensions import *
 from krita import *
 from touchify.src.settings import *
 from PyQt5.QtWidgets import *

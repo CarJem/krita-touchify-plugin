@@ -1,5 +1,6 @@
 import copy
 import types
+from touchify.src.cfg.scripts.CustomScript import CustomScript
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.cfg.resource_pack.ResourcePackMetadata import ResourcePackMetadata
 import os
@@ -13,7 +14,7 @@ from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
 from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.ext.FileExtensions import FileExtensions
 from touchify.src.ext.JsonExtensions import JsonExtensions
-from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.components.python.datatypes.TypedList import TypedList
 
 from touchify.paths import BASE_DIR
 
@@ -31,6 +32,7 @@ class ResourcePack:
         self.toolboxes: TypedList[ToolboxData] = []
         self.toolshelves: TypedList[ToolshelfData] = []
         self.widget_layouts: TypedList[WidgetLayout] = []
+        self.scripts: TypedList[CustomScript] = []
 
     def __init__(self, location: str = "") -> None:
         self.__defaults__()
@@ -56,6 +58,7 @@ class ResourcePack:
         self.toolboxes = TypedList(self.toolboxes, ToolboxData)
         self.toolshelves = TypedList(self.toolshelves, ToolshelfData)
         self.widget_layouts = TypedList(self.widget_layouts, WidgetLayout)
+        self.scripts = TypedList(self.scripts, CustomScript)
 
 
     def __str__(self):
@@ -120,6 +123,9 @@ class ResourcePack:
 
                 elif os.path.isdir(contentPath) and contentName == "canvas_presets":
                     self.canvas_presets = loadItems(contentPath, CanvasPreset)
+
+                elif os.path.isdir(contentPath) and contentName == "scripts":
+                    self.scripts = loadItems(contentPath, CustomScript)
 
             self.INTERNAL_has_loaded = True
         except Exception as err:
@@ -193,6 +199,7 @@ class ResourcePack:
         saveItems(self.popups, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "popups"))
         saveItems(self.docker_groups, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "docker_groups"))
         saveItems(self.canvas_presets, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "canvas_presets"))
+        saveItems(self.scripts, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "scripts"))
 
         removed_files: list[str] = list(set(self.INTERNAL_active_files).difference(found_files))
         for file in removed_files:
@@ -226,7 +233,8 @@ class ResourcePack:
             "widget_layouts",
             "popups",
             "docker_groups",
-            "canvas_presets"
+            "canvas_presets",
+            "scripts"
         ]
 
     def propertygrid_labels(self):
@@ -240,6 +248,7 @@ class ResourcePack:
         labels["docker_groups"] = "Docker Groups"
         labels["canvas_presets"] = "Canvas Presets"
         labels["metadata"] = "Metadata"
+        labels["scripts"] = "Scripts"
         return labels
 
     def propertygrid_restrictions(self):
@@ -253,4 +262,5 @@ class ResourcePack:
         restrictions["popups"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
         restrictions["docker_groups"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
         restrictions["canvas_presets"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
+        restrictions["scripts"] = [{"type": "inmovable_list"}, {"type": "nested_tabs"}]
         return restrictions

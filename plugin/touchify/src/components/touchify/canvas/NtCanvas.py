@@ -13,7 +13,7 @@ from krita import *
 from PyQt5.QtCore import QObject
 from touchify.src.variables import *
 from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
-from touchify.src.ext.KritaSettings import KritaSettings
+from touchify.src.components.krita.settings import KritaSettings
 from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.cfg.widget_layout.WidgetLayoutPadOptions import WidgetLayoutPadOptions
 from touchify.src.cfg.widget_layout.WidgetLayoutToolboxOptions import WidgetLayoutToolboxOptions
@@ -86,28 +86,26 @@ class NtCanvas(QWidget):
 
         
         self.krita_window.qwindow().themeChanged.connect(self.updatePalette)
-
-        self.finishMenuActions()
         self.updateElements()
         self.updateActions()
 
     def finishMenuActions(self):
         settings_menu = self.qWin.findChild(QMenu, 'settings')
 
-        layoutsMenuAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_SETTINGS_WIDGETPAD_LAYOUTS_MENU, settings_menu, settings_menu, 'toolbars_submenu_action')
-        optionsMenuAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_SETTINGS_WIDGETPAD_OPTIONS_MENU, settings_menu, settings_menu, 'toolbars_submenu_action')
+        layoutsMenuAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_WIDGETPAD_MENU, settings_menu, settings_menu, 'toolbars_submenu_action')
+        optionsMenuAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_WIDGETPAD_PRESETS_MENU, settings_menu, settings_menu, 'toolbars_submenu_action')
         seperator = settings_menu.insertSeparator(optionsMenuAction)
 
     def createMenuActions(self, window: Window, menu: QMenuBar): 
 
 
 
-        layouts_action = window.createAction(TOUCHIFY_ID_SETTINGS_WIDGETPAD_OPTIONS_MENU, "Configure Layout...", "settings")
+        layouts_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_PRESETS_MENU, "Configure Layout...", "settings")
         layouts_action.setIcon(Krita.instance().icon("configure"))
         layouts_action.setMenu(self.presetsMenu)
 
         optionsMenu = QMenu("Widgets Shown", window.qwindow())
-        options_action = window.createAction(TOUCHIFY_ID_SETTINGS_WIDGETPAD_LAYOUTS_MENU, "Widgets Shown", "settings")
+        options_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_MENU, "Widgets Shown", "settings")
         options_action.setMenu(optionsMenu)
 
 
@@ -119,31 +117,31 @@ class NtCanvas(QWidget):
         show_toolshelf_delta = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_delta"), True)
 
 
-        self.tlb_action = window.createAction(TOUCHIFY_ID_ACTION_CANVAS_SHOWTOOLBOX, "Toolbox", "")
+        self.tlb_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLBOX, "Toolbox", "")
         self.tlb_action.triggered.connect(lambda a: self.updateActions("toolbox", a))
         self.tlb_action.setCheckable(True)
         self.tlb_action.setChecked(show_toolbox)
         optionsMenu.addAction(self.tlb_action)
 
-        self.tlshlf_alpha_action = window.createAction(TOUCHIFY_ID_ACTION_CANVAS_SHOWTOOLSHELF_ALPHA, "Toolshelf (Alpha)", "")
+        self.tlshlf_alpha_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_ALPHA, "Toolshelf (Alpha)", "")
         self.tlshlf_alpha_action.triggered.connect(lambda a: self.updateActions("toolshelf_alpha", a))
         self.tlshlf_alpha_action.setCheckable(True)
         self.tlshlf_alpha_action.setChecked(show_toolshelf_alpha)
         optionsMenu.addAction(self.tlshlf_alpha_action)
 
-        self.tlshlf_beta_action = window.createAction(TOUCHIFY_ID_ACTION_CANVAS_SHOWTOOLSHELF_BETA, "Toolshelf (Beta)", "")
+        self.tlshlf_beta_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_BETA, "Toolshelf (Beta)", "")
         self.tlshlf_beta_action.triggered.connect(lambda a: self.updateActions("toolshelf_beta", a))
         self.tlshlf_beta_action.setCheckable(True)
         self.tlshlf_beta_action.setChecked(show_toolshelf_beta)
         optionsMenu.addAction(self.tlshlf_beta_action)
 
-        self.tlshlf_gamma_action = window.createAction(TOUCHIFY_ID_ACTION_CANVAS_SHOWTOOLSHELF_GAMMA, "Toolshelf (Gamma)", "")
+        self.tlshlf_gamma_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_GAMMA, "Toolshelf (Gamma)", "")
         self.tlshlf_gamma_action.triggered.connect(lambda a: self.updateActions("toolshelf_gamma", a))
         self.tlshlf_gamma_action.setCheckable(True)
         self.tlshlf_gamma_action.setChecked(show_toolshelf_gamma)
         optionsMenu.addAction(self.tlshlf_gamma_action)
 
-        self.tlshlf_delta_action = window.createAction(TOUCHIFY_ID_ACTION_CANVAS_SHOWTOOLSHELF_DELTA, "Toolshelf (Delta)", "")
+        self.tlshlf_delta_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_DELTA, "Toolshelf (Delta)", "")
         self.tlshlf_delta_action.triggered.connect(lambda a: self.updateActions("toolshelf_delta", a))
         self.tlshlf_delta_action.setCheckable(True)
         self.tlshlf_delta_action.setChecked(show_toolshelf_delta)

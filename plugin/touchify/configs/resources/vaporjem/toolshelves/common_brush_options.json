@@ -126,6 +126,7 @@
                                 "docker_group_data": "none",
                                 "popup_data": "none",
                                 "canvas_preset_data": "none",
+                                "script_id": "",
                                 "json_version": 2
                             },
                             {
@@ -147,6 +148,7 @@
                                 "docker_group_data": "none",
                                 "popup_data": "none",
                                 "canvas_preset_data": "none",
+                                "script_id": "",
                                 "json_version": 2
                             },
                             {
@@ -168,6 +170,7 @@
                                 "docker_group_data": "none",
                                 "popup_data": "none",
                                 "canvas_preset_data": "none",
+                                "script_id": "",
                                 "json_version": 2
                             },
                             {
@@ -189,6 +192,7 @@
                                 "docker_group_data": "none",
                                 "popup_data": "none",
                                 "canvas_preset_data": "none",
+                                "script_id": "",
                                 "json_version": 2
                             }
                         ]
@@ -457,6 +461,7 @@
                                 "docker_group_data": "none",
                                 "popup_data": "none",
                                 "canvas_preset_data": "none",
+                                "script_id": "",
                                 "json_version": 2
                             }
                         ]
@@ -483,6 +488,7 @@
                                 "docker_group_data": "none",
                                 "popup_data": "none",
                                 "canvas_preset_data": "none",
+                                "script_id": "",
                                 "json_version": 2
                             }
                         ]
@@ -509,6 +515,7 @@
                                 "docker_group_data": "none",
                                 "popup_data": "none",
                                 "canvas_preset_data": "none",
+                                "script_id": "",
                                 "json_version": 2
                             }
                         ]

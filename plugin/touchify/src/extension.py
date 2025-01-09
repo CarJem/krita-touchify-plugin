@@ -7,7 +7,7 @@ from touchify.src.variables import *
 from touchify.src.settings import TouchifySettings
 
 
-from touchify.src.ext.KritaSettings import KritaSettings
+from touchify.src.components.krita.settings import KritaSettings
 
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget
 from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker

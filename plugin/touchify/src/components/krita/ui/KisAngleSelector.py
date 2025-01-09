@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from .KisAngleGauge import *
+from touchify.src.components.krita.ui.KisAngleGauge import *
 
 class KisAngleSelectorSpinBox(QDoubleSpinBox):
 

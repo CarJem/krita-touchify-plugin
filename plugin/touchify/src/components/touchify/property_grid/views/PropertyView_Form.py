@@ -13,7 +13,7 @@ from touchify.src.components.touchify.property_grid.PropertyGrid import Property
 
 
 from touchify.src.components.touchify.property_grid.views.PropertyView import PropertyView
-from touchify.src.ext.types.TypedList import *
+from touchify.src.components.python.datatypes.TypedList import *
 from touchify.src.resources import *
 
 

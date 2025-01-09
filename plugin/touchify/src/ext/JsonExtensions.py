@@ -1,6 +1,6 @@
 
 import json
-from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.components.python.datatypes.TypedList import TypedList
 from typing import *
 from PyQt5 import *
 from PyQt5.QtWidgets import *

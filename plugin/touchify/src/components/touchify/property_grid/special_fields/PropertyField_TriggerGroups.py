@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
 from touchify.src.components.touchify.property_grid.fields.PropertyField_TypedList import PropertyField_TypedList
-from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.components.python.datatypes.TypedList import TypedList
 from touchify.src.resources import *
 
 

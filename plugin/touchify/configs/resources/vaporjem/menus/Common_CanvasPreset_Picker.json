@@ -21,6 +21,7 @@
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "touchify_defaults/canvas_preset/dark_canvas",
+            "script_id": "",
             "json_version": 2,
             "context_menu_actions": []
         },
@@ -43,6 +44,7 @@
             "docker_group_data": "none",
             "popup_data": "none",
             "canvas_preset_data": "touchify_defaults/canvas_preset/light_canvas",
+            "script_id": "",
             "json_version": 2,
             "context_menu_actions": []
         }

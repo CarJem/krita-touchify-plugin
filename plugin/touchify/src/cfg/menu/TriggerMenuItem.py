@@ -1,6 +1,6 @@
 from touchify.src.cfg.triggers.Trigger import Trigger
-from touchify.src.ext.types.StrEnum import StrEnum
-from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.components.python.datatypes.StrEnum import StrEnum
+from touchify.src.components.python.datatypes.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 class TriggerMenuItem(Trigger):

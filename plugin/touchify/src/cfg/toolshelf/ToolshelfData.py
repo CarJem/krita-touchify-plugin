@@ -3,7 +3,7 @@ from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 from touchify.src.cfg.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
 from touchify.src.cfg.toolshelf.ToolshelfDataPage import ToolshelfDataPage
 from touchify.src.ext.FileExtensions import FileExtensions
-from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.components.python.datatypes.TypedList import TypedList
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 
 

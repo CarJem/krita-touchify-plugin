@@ -1,7 +1,7 @@
 
 from touchify.src.components.touchify.shortcut_composer.PieActionController import PieActionController
 from touchify.src.components.touchify.shortcut_composer.PieMenu import PieMenu
-from touchify.src.ext.KritaExtensions import *
+from touchify.src.components.krita.extensions import *
 
 from touchify.src.variables import *
 

@@ -6,12 +6,13 @@ from touchify.src.cfg.TouchifyRegistry import TouchifyRegistry
 from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
 from touchify.src.cfg.popup.PopupData import PopupData
+from touchify.src.cfg.scripts.CustomScript import CustomScript
 from touchify.src.cfg.toolbox.ToolboxData import ToolboxData
 from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 from touchify.src.cfg.TouchifyRegistryPreferences import TouchifyRegistryPreferences
 from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
 from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
-from touchify.src.ext.KritaSettings import KritaSettings
+from touchify.src.components.krita.settings import KritaSettings
 from touchify.src.variables import *
 
 from touchify.src.ext.Extensions import *
@@ -62,6 +63,7 @@ class TouchifySettings:
                                                         CanvasPreset |\
                                                         ToolshelfData |\
                                                         ToolboxData |\
+                                                        CustomScript |\
                                                         WidgetLayout:
         cfg = self.getConfig()
         for pack in cfg.resources.presets:
@@ -102,6 +104,11 @@ class TouchifySettings:
                     item: CanvasPreset
                     id = f"{pack.INTERNAL_UUID_ID}/canvas_preset/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
+            elif type == CustomScript:
+                for item in pack.scripts:
+                    item: CustomScript
+                    id = f"{pack.INTERNAL_UUID_ID}/scripts/{item.INTERNAL_UUID_ID}"
+                    if item_id == id: return item
 
         return None
     
@@ -112,6 +119,7 @@ class TouchifySettings:
                                         dict[RegistryKey,CanvasPreset] |\
                                         dict[RegistryKey,ToolshelfData] |\
                                         dict[RegistryKey,ToolboxData] |\
+                                        dict[RegistryKey,CustomScript] |\
                                         dict[RegistryKey,WidgetLayout]:
         cfg = self.getConfig()
         results: dict = {}
@@ -152,6 +160,11 @@ class TouchifySettings:
                 for item in pack.widget_layouts:
                     item: WidgetLayout
                     id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "widget_layout", item.INTERNAL_UUID_ID)
+                    results[id] = item
+            elif type == CustomScript:
+                for item in pack.scripts:
+                    item: CustomScript
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "scripts", item.INTERNAL_UUID_ID)
                     results[id] = item
 
         return results

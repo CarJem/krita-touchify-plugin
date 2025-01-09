@@ -21,14 +21,14 @@ from functools import partial
 
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.cfg.popup.PopupData import PopupData
-from touchify.src.ext.KritaExtensions import *
+from touchify.src.components.krita.extensions import *
 
 from touchify.src.settings import TouchifySettings
 from touchify.src.resources import ResourceManager
 
 from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
 
-from touchify.src.enums.common_actions import CommonActions
+from touchify.src.components.touchify.enums.common_actions import CommonActions
 
 import xml.etree.ElementTree as ET
 from xml.dom import minidom as MiniDOM
@@ -118,6 +118,8 @@ class ActionManager(QObject):
                 self.action_menu(action, data.context_menu_id)
             case Trigger.Variants.Action:
                 self.action_trigger(data)
+            case Trigger.Variants.Script:
+                self.action_script(data.script_code)
             
     def createButton(self, parent: QWidget, data: Trigger):
         if data.variant == Trigger.Variants.Action:
@@ -294,7 +296,7 @@ class ActionManager(QObject):
             meta: ResourcePackMetadata = pack.metadata
             for data in pack.triggers:
                 data: Trigger
-                subActionIdentifier = '{0}{1}_{2}'.format(TOUCHIFY_ID_ACTION_REGISTERED, meta.registry_id, data.registry_id)
+                subActionIdentifier = '{0}{1}_{2}'.format(TOUCHIFY_REGISTRY_PREFIX, meta.registry_id, data.registry_id)
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
         
@@ -480,7 +482,7 @@ class ActionManager(QObject):
             registered_elements[packMeta.registry_id] = packMeta, []
             for data in pack.triggers:
                 data: Trigger
-                id = '{0}{1}_{2}'.format(TOUCHIFY_ID_ACTION_REGISTERED, packMeta.registry_id, data.registry_id)
+                id = '{0}{1}_{2}'.format(TOUCHIFY_REGISTRY_PREFIX, packMeta.registry_id, data.registry_id)
                 
                 action = self.appEngine.action_management.installRegisteredAction(id, data, window, subItemPath)
                 registered_elements[packMeta.registry_id][1].append(self.createRegisteredElement(id))
@@ -622,6 +624,8 @@ class ActionManager(QObject):
                 onClick = (lambda: self.action_dockergroup(data.docker_group_data))
             case Trigger.Variants.CanvasPreset:
                 onClick = (lambda: self.action_canvas(data.canvas_preset_data))
+            case Trigger.Variants.Script:
+                onClick = (lambda: self.action_script(data.script_code))
 
         btn = self.button_main(onClick, data.display_custom_text)
         self.__setButtonDisplay(data, btn)
@@ -759,4 +763,11 @@ class ActionManager(QObject):
         for docker in self.appEngine.windowSource.dockers():
             if (docker.objectName() == "KisLayerBox"):
                 slotConfigChanged(docker)
+    
+    def action_script(self, script_code: str):
+        try:
+            code = compile(script_code, '<string>', 'exec')
+            exec(code, {'__name__': '__main__'})
+        except Exception as ex:
+            pass
     #endregion

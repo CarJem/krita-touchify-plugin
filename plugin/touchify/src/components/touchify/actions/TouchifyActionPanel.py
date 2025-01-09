@@ -1,6 +1,6 @@
 import uuid
 from krita import *
-from touchify.src.ext.types.StrEnum import StrEnum
+from touchify.src.components.python.datatypes.StrEnum import StrEnum
 
 from touchify.src.components.touchify.actions.TouchifyActionButton import *
 from touchify.src.components.touchify.actions.TouchifyActionToolbar import TouchifyActionToolbar

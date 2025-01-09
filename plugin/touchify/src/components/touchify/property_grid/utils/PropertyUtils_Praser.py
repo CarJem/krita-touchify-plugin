@@ -13,7 +13,7 @@ from touchify.src.components.touchify.property_grid.special_fields.PropertyField
 from touchify.src.components.touchify.property_grid.special_fields.PropertyField_TriggerList import PropertyField_TriggerList
 
 #Type Imports
-from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.components.python.datatypes.TypedList import TypedList
 
 class PropertyUtils_Praser:
 
@@ -30,7 +30,7 @@ class PropertyUtils_Praser:
     def isSpecialType(varName, variable, item):
         from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
         from touchify.src.cfg.triggers.Trigger import Trigger
-        from touchify.src.ext.KritaSettings import KS_Color
+        from touchify.src.components.krita.settings import KS_Color
         varType = type(variable)
         listType = PropertyUtils_Praser.getListType(variable)
         
@@ -46,7 +46,7 @@ class PropertyUtils_Praser:
     def getSpecialType(varName, variable, item):
         from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
         from touchify.src.cfg.triggers.Trigger import Trigger
-        from touchify.src.ext.KritaSettings import KS_Color
+        from touchify.src.components.krita.settings import KS_Color
         varType = type(variable)
         listType = PropertyUtils_Praser.getListType(variable)
         

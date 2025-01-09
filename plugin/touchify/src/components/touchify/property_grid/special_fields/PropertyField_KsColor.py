@@ -2,13 +2,13 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.ext.types.TypedList import *
+from touchify.src.components.python.datatypes.TypedList import *
 from touchify.src.resources import *
 
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
 from touchify.src.components.touchify.property_grid.PropertyGrid import *
 from touchify.src.components.touchify.property_grid.fields.PropertyField import *
-from touchify.src.ext.KritaSettings import KS_Color
+from touchify.src.components.krita.settings import KS_Color
 from touchify.src.components.pyqt.widgets.ColorButton import ColorButton
 
 

@@ -19,7 +19,7 @@ from PyQt5.QtGui import QImage, QPainter, QWheelEvent, QTouchEvent
 from PyQt5.QtWidgets import QSizePolicy, \
                             QGraphicsView
                             
-from touchify.src.ext.KritaExtensions import *
+from touchify.src.components.krita.extensions import *
 from krita import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

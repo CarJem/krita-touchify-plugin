@@ -53,10 +53,14 @@
             },
             "linux": {
                 "command": "/usr/bin/flatpak kill org.kde.krita || echo 'Krita was not running'"
+            },
+            "presentation": {
+                "close": true
             }
         },
         {
             "label": "Plugin Prelaunch",
+            "hide": true,
             "dependsOn": [
                 "Close Krita.COM",
                 "Install Plugin"

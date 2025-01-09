@@ -6,7 +6,9 @@ from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
 from touchify.src.cfg.popup.PopupData import PopupData
 from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
+from touchify.src.cfg.scripts.CustomScript import CustomScript
 from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
+from touchify.src.components.touchify.property_grid.enums.PropertyGrid_SelectorDialogModes import PropertyGrid_SelectorDialogModes
 from touchify.src.settings import TouchifySettings
 from touchify.src.stylesheet import Stylesheet
 from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
@@ -111,7 +113,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
     def load_list(self, mode):
         self.list_view.setSelectionRectVisible(True)
         self.list_view.setStyleSheet(Stylesheet.instance().propertygrid_selectordialog_listview)
-        if mode == "icons":
+        if mode == PropertyGrid_SelectorDialogModes.Icon:
             self.show_status_bar = True
             self.list_view.setViewMode(QListView.ViewMode.IconMode)
             self.list_view.setUniformItemSizes(True)
@@ -128,19 +130,21 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem.setIcon(ResourceManager.iconLoader(customIconName))
                 listItem.setData(DATA_INDEX, customIconName)
                 self.list_view.addItem(listItem)
-        elif mode == "popups" or \
-            mode == "docker_groups" or \
-            mode == "canvas_presets" or \
-            mode == "menus" or \
-            mode == "toolshelf":
+        elif mode == PropertyGrid_SelectorDialogModes.Popup or \
+            mode == PropertyGrid_SelectorDialogModes.DockerGroup or \
+            mode == PropertyGrid_SelectorDialogModes.CanvasPreset or \
+            mode == PropertyGrid_SelectorDialogModes.Menu or \
+            mode == PropertyGrid_SelectorDialogModes.Script or \
+            mode == PropertyGrid_SelectorDialogModes.Toolshelf:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
 
-            if mode == "popups": self.selector_registry_type = PopupData
-            elif mode == "docker_groups": self.selector_registry_type = DockerGroup
-            elif mode == "canvas_presets": self.selector_registry_type = CanvasPreset
-            elif mode == "menus": self.selector_registry_type = TriggerMenu
-            elif mode == "toolshelf": self.selector_registry_type = ToolshelfData
+            if mode == PropertyGrid_SelectorDialogModes.Popup: self.selector_registry_type = PopupData
+            elif mode == PropertyGrid_SelectorDialogModes.DockerGroup: self.selector_registry_type = DockerGroup
+            elif mode == PropertyGrid_SelectorDialogModes.CanvasPreset: self.selector_registry_type = CanvasPreset
+            elif mode == PropertyGrid_SelectorDialogModes.Menu: self.selector_registry_type = TriggerMenu
+            elif mode == PropertyGrid_SelectorDialogModes.Toolshelf: self.selector_registry_type = ToolshelfData
+            elif mode == PropertyGrid_SelectorDialogModes.Script: self.selector_registry_type = CustomScript
             else: return
 
             presets = TouchifySettings.instance().getRegistry(self.selector_registry_type)
@@ -150,7 +154,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem.setText(displayName)
                 listItem.setData(DATA_INDEX, preset_key.actual_key)
                 self.list_view.addItem(listItem)
-        elif mode == "brushes":
+        elif mode == PropertyGrid_SelectorDialogModes.Brush:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
             presets = ResourceManager.brushPresets()
@@ -161,7 +165,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem.setText(preset.name())
                 listItem.setData(DATA_INDEX, preset_key)
                 self.list_view.addItem(listItem)
-        elif mode == "dockers":
+        elif mode == PropertyGrid_SelectorDialogModes.Docker:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
             dockers = Krita.instance().dockers()
@@ -171,7 +175,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem.setText(displayName)
                 listItem.setData(DATA_INDEX, dockerData.objectName())
                 self.list_view.addItem(listItem)
-        elif mode == "actions":
+        elif mode == PropertyGrid_SelectorDialogModes.Actions:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
             actions = Krita.instance().actions()

@@ -2,7 +2,7 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.ext.types.TypedList import *
+from touchify.src.components.python.datatypes.TypedList import *
 from touchify.src.resources import *
 
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *

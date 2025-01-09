@@ -8,7 +8,7 @@ from PyQt5.QtCore import *
 from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 from touchify.src.components.touchify.property_grid.fields.PropertyField import PropertyField
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import PropertyUtils_Extensions
-from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.components.python.datatypes.TypedList import TypedList
 from touchify.src.helpers import TouchifyHelpers
 from touchify.src.resources import *
 

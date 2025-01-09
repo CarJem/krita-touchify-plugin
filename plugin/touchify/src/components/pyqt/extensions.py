@@ -1,5 +1,5 @@
 
-from touchify.src.ext.types.TypedList import *
+from touchify.src.components.python.datatypes.TypedList import *
 from typing import *
 from PyQt5 import *
 from PyQt5.QtWidgets import *

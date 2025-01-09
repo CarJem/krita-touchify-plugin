@@ -1,4 +1,4 @@
-from touchify.src.ext.KritaSettings import KritaSettings
+from touchify.src.components.krita.settings import KritaSettings
 
 class TouchifyRegistryPreferences:
 

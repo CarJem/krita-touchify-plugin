@@ -17,7 +17,7 @@ from touchify.src.features.touchify_shortcuts import TouchifyShortcuts
 from touchify.src.features.touchify_tweaks import TouchifyTweaks
 from touchify.src.features.touchify_registered_actions import TouchifyRegisteredActions
 
-from touchify.src.ext.PyQtExtensions import PyQtExtensions
+from touchify.src.components.pyqt.extensions import PyQtExtensions
 
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget
 from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
@@ -97,39 +97,38 @@ class TouchifyWindow(QObject):
     #region Setup Functions
 
     def setupActions(self, window: Window):
+        subItemPath = TOUCHIFY_ID_ACTION_ROOT
 
-        self.mainMenuBar = QMenu(TOUCHIFY_ID_MENU_ROOT, window.qwindow())
-        
-        action = window.createAction("touchify", TOUCHIFY_ID_MENU_ROOT, "tools")
-        action.setMenu(self.mainMenuBar)
+        openSettingsAction = window.createAction(TOUCHIFY_ID_ACTION_CONFIGURE, "Configure Touchify...", "settings")
+        openSettingsAction.triggered.connect(self.openSettings)
 
-        subItemPath = TOUCHIFY_ID_MENU_ROOT
+        self.mainMenuBar = QMenu(subItemPath, window.qwindow())
+        menuAction = window.createAction("touchify", subItemPath, "tools")
+        menuAction.setMenu(self.mainMenuBar)
 
         self.touchify_shortcuts.createActions(window, subItemPath)
         self.touchify_actions.createActions(window, subItemPath)  
         self.touchify_dev.createActions(window, subItemPath)
-
-
-        self.mainMenuBar.addSection("Touchify")
-        
-        openSettingsAction = window.createAction(TOUCHIFY_ID_ACTION_CONFIGURE, "Configure Touchify...", "settings")
-        openSettingsAction.triggered.connect(self.openSettings)
-        
-        self.touchify_tweaks.createActions(window, self.mainMenuBar)
+        self.touchify_tweaks.createActions(window, subItemPath)
         self.touchify_canvas.createActions(window, self.mainMenuBar)
         self.touchify_shortcut_composer.createActions(window, self.mainMenuBar)
 
     def setupSoftActions(self):
-        seperator = QAction("", self.mainMenuBar)
-        seperator.setText(f"Instance: #{self.windowUUID}")
-        seperator.setEnabled(False)
-        seperator.setSeparator(True)
-        self.mainMenuBar.addAction(seperator)
+        instance_seperator = QAction("", self.mainMenuBar)
+        instance_seperator.setText(f"Instance: #{self.windowUUID}")
+        instance_seperator.setEnabled(False)
+        instance_seperator.setSeparator(True)
+        self.mainMenuBar.addAction(instance_seperator)
+
 
         self.action_management.onWindowCreated()
-        self.touchify_shortcuts.windowCreated()
+        self.touchify_shortcuts.onWindowCreated()
         self.touchify_tweaks.onWindowCreated()
-        self.touchify_canvas.windowCreated()
+        self.touchify_canvas.onWindowCreated()
+
+        self.touchify_shortcuts.finalizeActions()
+        self.touchify_tweaks.finalizeActions()
+        self.touchify_canvas.finalizeActions()
 
         self.touchify_actions.buildMenu(self.mainMenuBar)
         self.touchify_shortcut_composer.buildMenu(self.mainMenuBar)

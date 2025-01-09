@@ -18,9 +18,12 @@ class TouchifyCanvas(QObject):
         self.appEngine = instance
         self.ntCanvas: NtCanvas | None = None
 
-    def windowCreated(self):
+    def onWindowCreated(self):
         self.qWin = self.appEngine.windowSource.qwindow()
         self.ntCanvas.windowCreated(self.appEngine)
+
+    def finalizeActions(self):
+        self.ntCanvas.finishMenuActions()
 
     def createActions(self, window: Window, mainMenuBar: QMenuBar):
         self.ntCanvas = NtCanvas(window.qwindow().window(), window)

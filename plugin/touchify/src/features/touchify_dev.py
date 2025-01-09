@@ -1,4 +1,4 @@
-from touchify.src.ext.KritaExtensions import *
+from touchify.src.components.krita.extensions import *
 
 from touchify.src.variables import *
 

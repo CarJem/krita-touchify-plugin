@@ -1,5 +1,5 @@
 from touchify.src.ext.FileExtensions import FileExtensions
-from touchify.src.ext.types.StrEnum import StrEnum
+from touchify.src.components.python.datatypes.StrEnum import StrEnum
 from touchify.src.ext.JsonExtensions import JsonExtensions as Extensions
 from touchify.src.cfg.BackwardsCompatibility import BackwardsCompatibility
 
@@ -14,6 +14,7 @@ class Trigger:
         Workspace = "workspace"
         DockerGroup = "docker_group"
         CanvasPreset = "canvas_preset"
+        Script = "script"
 
     def __defaults__(self):
         self.registry_id: str = "NewTrigger"      
@@ -55,6 +56,9 @@ class Trigger:
         #Canvas Preset Params
         self.canvas_preset_data: str = "none"
 
+        #Script Params
+        self.script_id: str = ""
+
         self.json_version: int = 2
     
 
@@ -91,6 +95,9 @@ class Trigger:
                 suffix = self.display_custom_text
             case Trigger.Variants.CanvasPreset:
                 prefix = "[Canvas Preset]"
+                suffix = self.display_custom_text
+            case Trigger.Variants.Script:
+                prefix = "[Script]"
                 suffix = self.display_custom_text
             case _:
                 prefix = f"[{self.variant}]"
@@ -134,8 +141,9 @@ class Trigger:
             "workspace_id",
             "docker_group_data",
             "popup_data",
-            "canvas_preset_data"
-            "extra_opt",
+            "canvas_preset_data",
+            "script_id",
+            "extra_opt"
         ]
 
     def propertygrid_hidden(self):
@@ -156,6 +164,8 @@ class Trigger:
             result.append("docker_group_data")
         if self.variant != Trigger.Variants.CanvasPreset:
             result.append("canvas_preset_data")
+        if self.variant != Trigger.Variants.Script:
+            result.append("script_id")
 
         return result
     
@@ -188,9 +198,11 @@ class Trigger:
         
         labels["workspace_id"] = "Workspace ID"
         labels["docker_id"] = "Docker ID"
+        labels["script_id"] = "Script ID"
         
         labels["docker_group_data"] = "Group Settings"
         labels["popup_data"] = "Popup Settings"
+
 
         labels["canvas_preset_data"] = "Canvas Settings"
 
@@ -208,4 +220,5 @@ class Trigger:
         restrictions["popup_data"] = {"type": "registry_popup_selection"}
         restrictions["canvas_preset_data"] = {"type": "registry_canvas_preset_selection"}
         restrictions["context_menu_id"] = {"type": "registry_menu_selection"}
+        restrictions["script_id"] = {"type": "registry_script_selection"}
         return restrictions

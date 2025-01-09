@@ -10,7 +10,7 @@ from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
 from touchify.src.variables import *
 
-from touchify.src.ext.KritaSettings import KritaSettings
+from touchify.src.components.krita.settings import KritaSettings
 
 
 from touchify.src.components.touchify.dockers.toolbox.ToolboxCategory import ToolboxCategory

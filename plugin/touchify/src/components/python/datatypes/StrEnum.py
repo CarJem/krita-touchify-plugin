@@ -1,6 +1,13 @@
-from enum import Enum
+from enum import EnumMeta
+from enum import StrEnum as StrEnumPy
 
-class StrEnum(str, Enum):
+
+class __StrEnumMeta(EnumMeta):
+    def __contains__(cls, item):
+        return item in [str(member) for member in cls]
+
+class StrEnum(StrEnumPy, metaclass=__StrEnumMeta):
+
     """
     StrEnum where enum.auto() returns the field name.
     See https://docs.python.org/3.9/library/enum.html#using-automatic-values

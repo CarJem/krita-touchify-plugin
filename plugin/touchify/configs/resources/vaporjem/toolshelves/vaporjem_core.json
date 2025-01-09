@@ -178,6 +178,7 @@
                                     "docker_group_data": "none",
                                     "popup_data": "none",
                                     "canvas_preset_data": "none",
+                                    "script_id": "",
                                     "json_version": 2
                                 },
                                 {
@@ -199,6 +200,7 @@
                                     "docker_group_data": "none",
                                     "popup_data": "none",
                                     "canvas_preset_data": "none",
+                                    "script_id": "",
                                     "json_version": 2
                                 }
                             ]
@@ -734,6 +736,7 @@
                         "docker_group_data": "none",
                         "popup_data": "vaporjem/popup/vaporjem_popups_undohistory",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     },
                     {
@@ -755,6 +758,7 @@
                         "docker_group_data": "vaporjem/docker_group/animationdockergroup",
                         "popup_data": "none",
                         "canvas_preset_data": "none",
+                        "script_id": "",
                         "json_version": 2
                     }
                 ]

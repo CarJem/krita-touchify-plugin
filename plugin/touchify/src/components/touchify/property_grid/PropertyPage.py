@@ -11,7 +11,7 @@ from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Selecto
 from touchify.src.components.touchify.property_grid.views.PropertyView import PropertyView
 from touchify.src.components.touchify.property_grid.views.PropertyView_Form import PropertyView_Form
 from touchify.src.components.touchify.property_grid.views.PropertyView_Tabs import PropertyView_Tabs
-from touchify.src.ext.types.TypedList import *
+from touchify.src.components.python.datatypes.TypedList import *
 from touchify.src.resources import *
 
 

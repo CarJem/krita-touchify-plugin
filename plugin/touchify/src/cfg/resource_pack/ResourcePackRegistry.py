@@ -1,6 +1,6 @@
 from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
 from touchify.src.ext.FileExtensions import FileExtensions
-from touchify.src.ext.types.TypedList import TypedList
+from touchify.src.components.python.datatypes.TypedList import TypedList
 import os
 from touchify.paths import BASE_DIR
 import shutil
