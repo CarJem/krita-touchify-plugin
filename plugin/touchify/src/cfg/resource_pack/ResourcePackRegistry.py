@@ -2,7 +2,7 @@ from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
 from touchify.src.components.python.file_extensions import FileExtensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
 import os
-from touchify.paths import BASE_DIR
+from touchify.paths import RESOURCE_PACKS_DIRECTORY
 import shutil
 
 from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
@@ -16,7 +16,7 @@ class ResourcePackRegistry:
 
     def __init__(self) -> None:
         self.__defaults__()
-        self.INTERNAL_ROOT_DIRECTORY = os.path.join(BASE_DIR, 'configs', 'resources')
+        self.INTERNAL_ROOT_DIRECTORY = RESOURCE_PACKS_DIRECTORY
         self.INTERNAL_active_files: list[str] = []
         self.load()
 
@@ -50,7 +50,7 @@ class ResourcePackRegistry:
             item: ResourcePack
     
             if not hasattr(item, "INTERNAL_FILESYSTEM_MANAGED"):
-                folderPath = os.path.join(BASE_DIR, 'configs', 'resources')
+                folderPath = RESOURCE_PACKS_DIRECTORY
                 registryName = FileExtensions.fileStringify(item.metadata.registry_id)
 
                 path = FileExtensions.uniquify(os.path.join(folderPath, registryName))

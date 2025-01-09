@@ -3,7 +3,7 @@ from PyQt5 import QtGui
 import os
 
 
-from touchify.paths import BASE_DIR
+from touchify.paths import ASSETS_DIRECTORY, RESOURCE_PACKS_DIRECTORY
 from touchify.src.components.pyqt.icon_engines.QSvgIconEngine import QSvgIconEngine
 
 
@@ -31,10 +31,10 @@ class ResourceManager:
         return fileName
 
     def __resourcesDir__():
-        return os.path.join(BASE_DIR, "resources")
+        return ASSETS_DIRECTORY
     
     def __resourcePacksDir__():
-        return os.path.join(BASE_DIR, "configs", "resources")
+        return RESOURCE_PACKS_DIRECTORY
 
     def loadResourcePackIcons(isStartup: bool = False):
         global RESOURCE_PACK_ICONS_INIT
@@ -73,7 +73,7 @@ class ResourceManager:
         if ICON_PACKS_LOADED:
             return
         
-        material_icon_zip = os.path.join(ResourceManager.__resourcesDir__(), "builtin", 'material-icons.zip')
+        material_icon_zip = os.path.join(ResourceManager.__resourcesDir__(), 'material-icons.zip')
         with ZipFile(material_icon_zip, 'r') as zip:
             for item in zip.filelist:
                 if item.filename.startswith('MaterialDesign-master/svg/') and item.filename.endswith('.svg'):
@@ -122,7 +122,7 @@ class ResourceManager:
         return Krita.instance().icon(iconName)
     
     def fallbackIcon():
-        return QtGui.QIcon(os.path.join(ResourceManager.__resourcesDir__(), 'builtin', 'default.svg'))
+        return QtGui.QIcon(os.path.join(ResourceManager.__resourcesDir__(), 'default.svg'))
 
     #endregion
 

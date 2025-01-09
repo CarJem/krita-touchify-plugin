@@ -16,7 +16,7 @@ from touchify.src.components.python.file_extensions import FileExtensions
 from touchify.src.components.python.json_extensions import JsonExtensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
 
-from touchify.paths import BASE_DIR
+from touchify.paths import RESOURCE_PACKS_DIRECTORY
 from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions as RS
 
 HAS_ALREADY_LOADED: bool = False
@@ -137,7 +137,7 @@ class ResourcePack:
     def save(self):
 
         if self.INTERNAL_ROOT_DIRECTORY == "":
-            resource_pack_directory = os.path.join(BASE_DIR, 'configs', 'resources')
+            resource_pack_directory = RESOURCE_PACKS_DIRECTORY
             folder_name = FileExtensions.fileStringify(str(self.metadata.registry_id))
             self.INTERNAL_ROOT_DIRECTORY = FileExtensions.uniquify(os.path.join(resource_pack_directory, folder_name))
             self.metadata.registry_id = os.path.dirname(self.INTERNAL_ROOT_DIRECTORY)
