@@ -15,7 +15,7 @@ from touchify.src.variables import *
 from touchify.src.settings import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ....action_manager import ActionManager
+    from ....features.action_manager import ActionManager
 
 class TouchifyActionPanel(QWidget):
 

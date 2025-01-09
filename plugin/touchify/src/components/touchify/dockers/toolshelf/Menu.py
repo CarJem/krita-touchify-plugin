@@ -7,7 +7,7 @@ from krita import *
 
 from touchify.src.settings import *
 from touchify.src.variables import *
-from touchify.src.docker_manager import *
+from touchify.src.features.docker_manager import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

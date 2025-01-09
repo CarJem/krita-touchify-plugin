@@ -10,7 +10,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import pyqtProperty
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from action_manager import ActionManager
+    from touchify.src.features.action_manager import ActionManager
 
 
 class TouchifyActionButton(QToolButton):

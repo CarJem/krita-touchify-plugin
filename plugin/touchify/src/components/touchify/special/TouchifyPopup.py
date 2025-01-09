@@ -15,9 +15,9 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from touchify.src.window import TouchifyWindow
-    from touchify.src.action_manager import ActionManager
-    from touchify.src.docker_manager import DockerManager
-    from touchify.src.canvas_manager import CanvasManager
+    from touchify.src.features.action_manager import ActionManager
+    from touchify.src.features.docker_manager import DockerManager
+    from touchify.src.features.canvas_manager import CanvasManager
 
 
 class TouchifyPopup(QDockWidget):

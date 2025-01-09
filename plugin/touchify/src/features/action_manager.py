@@ -35,7 +35,7 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom as MiniDOM
 
 if TYPE_CHECKING:
-    from .window import TouchifyWindow
+    from ..window import TouchifyWindow
 
 class ActionManager(QObject):
 

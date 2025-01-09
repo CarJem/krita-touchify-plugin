@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import *
-from touchify.src.docker_manager import *
+from touchify.src.features.docker_manager import *
 from krita import *
 from touchify.src.variables import *
 

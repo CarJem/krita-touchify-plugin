@@ -9,7 +9,7 @@ from touchify.src.variables import *
 from touchify.src.components.krita.extensions import *
 
 if TYPE_CHECKING:
-    from .window import TouchifyWindow
+    from ..window import TouchifyWindow
 
 class CanvasManager(QObject):
 

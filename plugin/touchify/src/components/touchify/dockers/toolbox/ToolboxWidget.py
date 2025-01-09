@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 from krita import *
 
 
-from touchify.src.action_manager import ActionManager
+from touchify.src.features.action_manager import ActionManager
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
 from touchify.src.variables import *

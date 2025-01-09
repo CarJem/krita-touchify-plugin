@@ -8,7 +8,7 @@ from touchify.src.components.touchify.dockers.toolshelf.Header import Header
 from touchify.src.components.touchify.dockers.toolshelf.TabList import TabList
 from touchify.src.settings import *
 from touchify.src.variables import *
-from touchify.src.docker_manager import *
+from touchify.src.features.docker_manager import *
 
 from touchify.src.cfg.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
 from touchify.src.components.touchify.dockers.toolshelf.PageStack import PageStack

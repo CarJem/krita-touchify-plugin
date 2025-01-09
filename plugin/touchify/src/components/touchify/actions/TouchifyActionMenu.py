@@ -8,7 +8,7 @@ from touchify.src.cfg.triggers.Trigger import *
 from krita import *
 
 if TYPE_CHECKING:
-    from touchify.src.action_manager import ActionManager
+    from touchify.src.features.action_manager import ActionManager
 
 class TouchifyActionMenu(QMenu):
     

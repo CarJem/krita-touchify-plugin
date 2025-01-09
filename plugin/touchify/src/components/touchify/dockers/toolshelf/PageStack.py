@@ -9,7 +9,7 @@ from touchify.src.components.touchify.special.DockerContainer import DockerConta
 
 from touchify.src.settings import *
 from touchify.src.variables import *
-from touchify.src.docker_manager import *
+from touchify.src.features.docker_manager import *
 
 from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfDataPage
 from touchify.src.components.touchify.dockers.toolshelf.Page import Page

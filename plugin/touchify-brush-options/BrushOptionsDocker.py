@@ -124,12 +124,12 @@ class BrushOptionsWidget(QWidget):
     def updateSliders(self):
 
         def updateSliderVisibility(option: bool, slider: KisSliderSpinBox):
-            if option and slider.isHidden():
+            if option:
                 slider.show()
                 slider.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
                 slider.updateGeometry()
                 slider.adjustSize()
-            elif option == False and slider.isVisible():
+            else:
                 slider.hide()
                 slider.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
                 slider.updateGeometry()

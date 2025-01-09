@@ -3,12 +3,12 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
 
-from touchify.src.canvas_manager import CanvasManager
+from touchify.src.features.canvas_manager import CanvasManager
 from touchify.src.features.touchify_dev import TouchifyDev
 from touchify.src.features.touchify_shortcut_composer import TouchifyShortcutComposer
 from touchify.src.variables import *
-from touchify.src.docker_manager import DockerManager
-from touchify.src.action_manager import ActionManager
+from touchify.src.features.docker_manager import DockerManager
+from touchify.src.features.action_manager import ActionManager
 
 from touchify.src.components.touchify.util.settings_dialog import SettingsDialog
 
