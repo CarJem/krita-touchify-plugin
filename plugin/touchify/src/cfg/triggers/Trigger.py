@@ -211,15 +211,15 @@ class Trigger:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["display_custom_icon"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Icon)
-        restrictions["variant"] = PropertyGrid_Restrictions.values(self.Variants.values())
-        restrictions["brush_name"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Brush)
-        restrictions["action_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Actions)
-        restrictions["workspace_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Workspace)
-        restrictions["docker_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Docker)
-        restrictions["docker_group_data"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.DockerGroup)
-        restrictions["popup_data"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Popup)
-        restrictions["canvas_preset_data"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.CanvasPreset)
-        restrictions["context_menu_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Menu)
-        restrictions["script_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Script)
+        restrictions["display_custom_icon"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.IconSelection)
+        restrictions["variant"] = PropertyGrid_Restrictions.strValues(self.Variants.values())
+        restrictions["brush_name"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.BrushSelection)
+        restrictions["action_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ActionSelection)
+        restrictions["workspace_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.WorkspaceSelection)
+        restrictions["docker_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.DockerSelection)
+        restrictions["docker_group_data"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.DockerGroupRegistry)
+        restrictions["popup_data"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.PopupRegistry)
+        restrictions["canvas_preset_data"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.CanvasPresetRegistry)
+        restrictions["context_menu_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.MenuRegistry)
+        restrictions["script_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ScriptRegistry)
         return restrictions

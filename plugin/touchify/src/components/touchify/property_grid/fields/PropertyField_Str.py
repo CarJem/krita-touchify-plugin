@@ -4,8 +4,9 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.pyqt.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from touchify.src.components.touchify.property_grid.enums.PropertyGrid_SelectorDialogModes import PropertyGrid_SelectorDialogModes
+from touchify.src.components.pyqt.widgets.PythonEditor import PythonEditor
 from touchify.src.components.python.datatypes.TypedList import *
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.resources import *
 
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
@@ -23,15 +24,11 @@ class PropertyField_Str(PropertyField):
 
 
         self.is_icon_viewer = False
-        self.is_docker_selector = False
-        self.is_action_selection = False
         self.is_brush_selection = False
-
         self.is_special_selector = False
         self.special_selector_type = "none"
-
         self.is_multiline_string = False
-
+        self.is_python_editor = False
         self.is_combobox = False
         self.combobox_items: list[tuple[str, str]] = []
         
@@ -80,15 +77,18 @@ class PropertyField_Str(PropertyField):
             editorLayout.addWidget(self.editor)
             self.setLayout(editorLayout)
         else:
-
-
-            if self.is_multiline_string:
-                self.editor = QPlainTextEdit()
+            if self.is_python_editor:
+                self.editor = PythonEditor(self)
+                self.editor.setMinimumHeight(300)
+                self.editor.textChanged.connect(self.multilineTextChanged)
+                self.editor.setPlainText(self.variable_data)                
+            elif self.is_multiline_string:
+                self.editor = QPlainTextEdit(self)
                 self.editor.setMinimumHeight(300)
                 self.editor.textChanged.connect(self.multilineTextChanged)
                 self.editor.setPlainText(self.variable_data)
             else:
-                self.editor = QLineEdit()
+                self.editor = QLineEdit(self)
                 self.editor.textChanged.connect(self.textChanged)
                 self.editor.setText(self.variable_data.replace("\n", "\\n"))
 
@@ -104,9 +104,11 @@ class PropertyField_Str(PropertyField):
 
         for restriction in restrictions:
             if list_setup == False:
-                if restriction["type"] == "multiline_string":
+                if restriction["type"] == PropertyGrid_Restrictions.StrMod.Multiline:
                     self.is_multiline_string = True
-                elif restriction["type"] == "values":
+                elif restriction["type"] == PropertyGrid_Restrictions.StrMod.PythonEdtior:
+                    self.is_python_editor = True
+                elif restriction["type"] == PropertyGrid_Restrictions.StrMod.Values:
                     combobox_items =  list[tuple[str, str]]()
                     avaliableItems = list[str](restriction["entries"])
                     for item in avaliableItems:
@@ -115,7 +117,7 @@ class PropertyField_Str(PropertyField):
                     self.combobox_items = combobox_items
                     self.is_combobox = True
                     list_setup = True
-                elif restriction["type"] in PropertyGrid_SelectorDialogModes:
+                elif restriction["type"] in PropertyGrid_Restrictions.strSelectors():
                     self.is_special_selector = True
                     self.special_selector_type = restriction["type"]
                     list_setup = True

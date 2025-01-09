@@ -6,7 +6,7 @@ from touchify.src.cfg.TouchifyRegistry import TouchifyRegistry
 from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
 from touchify.src.cfg.popup.PopupData import PopupData
-from touchify.src.cfg.scripts.CustomScript import CustomScript
+from touchify.src.cfg.script.CustomScript import CustomScript
 from touchify.src.cfg.toolbox.ToolboxData import ToolboxData
 from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 from touchify.src.cfg.TouchifyRegistryPreferences import TouchifyRegistryPreferences

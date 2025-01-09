@@ -2,38 +2,69 @@ from touchify.src.components.python.datatypes.StrEnum import StrEnum
 
 class PropertyGrid_Restrictions:
 
+    class OtherMod(StrEnum):
+        Expandable="expandable"
+
     class StrMod(StrEnum):
-        Actions="action_selection"
-        Docker="docker_selection"
-        Icon="icon_selection"
-        Brush="brush_selection"
-        DockerGroup="registry_docker_group_selection"
-        Popup="registry_popup_selection"
-        CanvasPreset="registry_canvas_preset_selection"
-        Menu="registry_menu_selection"
-        Script="registry_script_selection"
-        Toolshelf="registry_toolshelf_selection"
-        Workspace="workspace"
+        Values="values"
+        Multiline="multiline_string"
+        PythonEdtior="python_editor"
+        
+        ActionSelection="action_selection"
+        DockerSelection="docker_selection"
+        WorkspaceSelection="workspace"
+        IconSelection="icon_selection"
+        BrushSelection="brush_selection"
+
+        DockerGroupRegistry="registry_docker_group_selection"
+        PopupRegistry="registry_popup_selection"
+        CanvasPresetRegistry="registry_canvas_preset_selection"
+        MenuRegistry="registry_menu_selection"
+        ScriptRegistry="registry_script_selection"
+        ToolshelfRegistry="registry_toolshelf_selection"
+
+    class NumberMod(StrEnum):
+        Range="range"
 
     class ListMod(StrEnum):
         Inmovable="inmovable"
         NestedTabs="nested_tabs"
         AddRemoveEditOnly="add_remove_edit_only"
+        PropertyView="property_view"
+        Subarray="sub_array"
+
+    def listSubArray(sub_id: str, sub_type: type):
+        return { "type": PropertyGrid_Restrictions.ListMod.Subarray, "sub_id": sub_id, "sub_type": sub_type }
 
     def listMod(type: ListMod):
         return {"type": type}
 
     def expandable():
-         return {"type": "expandable"}
+         return {"type": PropertyGrid_Restrictions.OtherMod.Expandable}
 
     def strMod(type: StrMod):
         return {"type": type}
 
-    def values(items: list):
-        return {"type": "values", "entries": items}
+    def strValues(items: list):
+        return {"type": PropertyGrid_Restrictions.StrMod.Values, "entries": items}
+    
+    def strSelectors():
+        return [
+            PropertyGrid_Restrictions.StrMod.ActionSelection,
+            PropertyGrid_Restrictions.StrMod.DockerSelection,
+            PropertyGrid_Restrictions.StrMod.WorkspaceSelection,
+            PropertyGrid_Restrictions.StrMod.IconSelection,
+            PropertyGrid_Restrictions.StrMod.BrushSelection,
+            PropertyGrid_Restrictions.StrMod.DockerGroupRegistry,
+            PropertyGrid_Restrictions.StrMod.PopupRegistry,
+            PropertyGrid_Restrictions.StrMod.CanvasPresetRegistry,
+            PropertyGrid_Restrictions.StrMod.MenuRegistry,
+            PropertyGrid_Restrictions.StrMod.ScriptRegistry,
+            PropertyGrid_Restrictions.StrMod.ToolshelfRegistry
+        ]
 
     def range(min: any = None, max: any = None):
-        result = {"type": "range"}
+        result = {"type": PropertyGrid_Restrictions.NumberMod.Range}
         
         if min != None: result["min"] = min
         if max != None: result["max"] = max

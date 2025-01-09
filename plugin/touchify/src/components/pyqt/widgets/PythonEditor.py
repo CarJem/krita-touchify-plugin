@@ -50,7 +50,7 @@ class PythonEditor(QPlainTextEdit):
         self.setLineWrapMode(self.NoWrap)
 
         self.scripter = scripter
-        self.lineNumberArea = PythonEditor.LineNumberArea.LineNumberArea(self)
+        self.lineNumberArea = PythonEditor.LineNumberArea(self)
 
         self.blockCountChanged.connect(self.updateMarginsWidth)
         self.updateRequest.connect(self.updateLineNumberArea)

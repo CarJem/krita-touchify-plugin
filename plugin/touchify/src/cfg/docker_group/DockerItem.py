@@ -27,5 +27,5 @@ class DockerItem:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Docker)
+        restrictions["id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.DockerSelection)
         return restrictions

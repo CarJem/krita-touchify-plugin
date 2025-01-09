@@ -92,7 +92,7 @@ class ToolshelfDataOptions:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["stack_preview"] = PropertyGrid_Restrictions.values(self.StackPreview.values())
-        restrictions["stack_alignment"] = PropertyGrid_Restrictions.values(self.StackAlignment.values())
-        restrictions["position"] = PropertyGrid_Restrictions.values(self.Position.values())
+        restrictions["stack_preview"] = PropertyGrid_Restrictions.strValues(self.StackPreview.values())
+        restrictions["stack_alignment"] = PropertyGrid_Restrictions.strValues(self.StackAlignment.values())
+        restrictions["position"] = PropertyGrid_Restrictions.strValues(self.Position.values())
         return restrictions

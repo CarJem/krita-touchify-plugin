@@ -63,5 +63,5 @@ class TriggerMenuItem(Trigger):
 
     def propertygrid_restrictions(self):
         restrictions = super().propertygrid_restrictions()
-        restrictions["variant"] = PropertyGrid_Restrictions.values(self.Variants.values())
+        restrictions["variant"] = PropertyGrid_Restrictions.strValues(self.Variants.values())
         return restrictions

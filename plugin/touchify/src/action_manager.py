@@ -9,6 +9,7 @@ from touchify.src.cfg.resource_pack.ResourcePackMetadata import ResourcePackMeta
 from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
 from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
+from touchify.src.cfg.script.CustomScript import CustomScript
 from touchify.src.components.pyqt.event_filters.MouseReleaseListener import MouseReleaseListener
 
 from touchify.src.components.touchify.actions.TouchifyActionMenu import TouchifyActionMenu
@@ -119,7 +120,7 @@ class ActionManager(QObject):
             case Trigger.Variants.Action:
                 self.action_trigger(data)
             case Trigger.Variants.Script:
-                self.action_script(data.script_code)
+                self.action_script(data.script_id)
             
     def createButton(self, parent: QWidget, data: Trigger):
         if data.variant == Trigger.Variants.Action:
@@ -625,7 +626,7 @@ class ActionManager(QObject):
             case Trigger.Variants.CanvasPreset:
                 onClick = (lambda: self.action_canvas(data.canvas_preset_data))
             case Trigger.Variants.Script:
-                onClick = (lambda: self.action_script(data.script_code))
+                onClick = (lambda: self.action_script(data.script_id))
 
         btn = self.button_main(onClick, data.display_custom_text)
         self.__setButtonDisplay(data, btn)
@@ -764,9 +765,12 @@ class ActionManager(QObject):
             if (docker.objectName() == "KisLayerBox"):
                 slotConfigChanged(docker)
     
-    def action_script(self, script_code: str):
+    def action_script(self, script_registry_id: str):
+        data: CustomScript = TouchifySettings.instance().getRegistryItem(script_registry_id, CustomScript)
+        if not isinstance(data, CustomScript) or data == None: return
+
         try:
-            code = compile(script_code, '<string>', 'exec')
+            code = compile(data.script_code, '<string>', 'exec')
             exec(code, {'__name__': '__main__'})
         except Exception as ex:
             pass

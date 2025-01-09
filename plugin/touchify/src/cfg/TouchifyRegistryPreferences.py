@@ -104,9 +104,9 @@ class TouchifyRegistryPreferences:
         restrictions["Interface_ToolshelfHeaderScale"] = PropertyGrid_Restrictions.range(min=1)
         restrictions["Interface_ToolshelfActionSectionScale"] = PropertyGrid_Restrictions.range(min=1)
         restrictions["Interface_ColorOptionsDockerScale"] = PropertyGrid_Restrictions.range(min=1)
-        restrictions["Canvas_RightClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Actions)
-        restrictions["Canvas_LeftClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Actions)
-        restrictions["Canvas_MiddleClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Actions)
+        restrictions["Canvas_RightClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ActionSelection)
+        restrictions["Canvas_LeftClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ActionSelection)
+        restrictions["Canvas_MiddleClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ActionSelection)
         return restrictions
 
     def load(self):

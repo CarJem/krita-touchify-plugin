@@ -7,6 +7,7 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 from touchify.src.components.touchify.property_grid.fields.PropertyField import PropertyField
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import PropertyUtils_Extensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
 from touchify.src.helpers import TouchifyHelpers
@@ -135,17 +136,17 @@ class PropertyField_TypedList(PropertyField):
         sub_array_setup = False
 
         for restriction in restrictions:
-            if restriction["type"] == "sub_array" and sub_array_setup == False:
+            if restriction["type"] == PropertyGrid_Restrictions.ListMod.Subarray and sub_array_setup == False:
                 self.nested_list_id: str = restriction["sub_id"]
                 self.nested_list_nested_type: type = restriction["sub_type"]
                 self.has_sub_array = True
                 sub_array_setup = True
-            if restriction["type"] == "property_view":
+            if restriction["type"] == PropertyGrid_Restrictions.ListMod.PropertyView:
                 self.has_property_view = True
-            if restriction["type"] == "add_remove_edit_only":
+            if restriction["type"] == PropertyGrid_Restrictions.ListMod.AddRemoveEditOnly:
                 self.allow_move = False
                 self.allow_clipboard = False
-            if restriction["type"] == "inmovable_list":
+            if restriction["type"] == PropertyGrid_Restrictions.ListMod.Inmovable:
                 self.allow_move = False
 
 

@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
 from touchify.src.components.touchify.property_grid.PropertyGrid import *
 
@@ -49,41 +50,39 @@ class PropertyField(QWidget):
         setup_expandable = False
 
         for restriction in restrictions:
-            if restriction["type"] == "expandable" and setup_expandable == False:
-                self.nested_setup(restriction)
+            if restriction["type"] == PropertyGrid_Restrictions.OtherMod.Expandable and setup_expandable == False:
+                btnText = "Edit..."
+
+                if "text" in restriction:
+                    btnText = restriction["text"]
+
+                self.editor = QPushButton(self)
+                self.editor.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+                self.editor.clicked.connect(self.nested_edit)
+                self.editor.setText(btnText)
+                print(self.editor)
+
+                self.editor_button = QPushButton(self)
+                self.editor_button.setMaximumWidth(16)
+                self.editor_button.setContentsMargins(0,0,0,0)
+                self.editor_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+                print(self.editor_button)
+
+                moreMenu = QMenu(self.editor_button)
+                copyAct = moreMenu.addAction("Copy")
+                copyAct.triggered.connect(self.nested_copy)
+                pateAct = moreMenu.addAction("Paste")
+                pateAct.triggered.connect(self.nested_paste)
+                self.editor_button.setMenu(moreMenu)
+                
+                self.editorLayout = QHBoxLayout(self)
+                self.editorLayout.setSpacing(0)
+                self.editorLayout.setContentsMargins(0,0,0,0)
+                self.editorLayout.addWidget(self.editor, 1)
+                self.editorLayout.addWidget(self.editor_button)
+                self.setLayout(self.editorLayout)
+
                 setup_expandable = True
-
-    def nested_setup(self, variableData: dict[str, any]):
-        btnText = "Edit..."
-
-        if "text" in variableData:
-            btnText = variableData["text"]
-
-        self.editor = QPushButton(self)
-        self.editor.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        self.editor.clicked.connect(self.nested_edit)
-        self.editor.setText(btnText)
-        print(self.editor)
-
-        self.editor_button = QPushButton(self)
-        self.editor_button.setMaximumWidth(16)
-        self.editor_button.setContentsMargins(0,0,0,0)
-        self.editor_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-        print(self.editor_button)
-
-        moreMenu = QMenu(self.editor_button)
-        copyAct = moreMenu.addAction("Copy")
-        copyAct.triggered.connect(self.nested_copy)
-        pateAct = moreMenu.addAction("Paste")
-        pateAct.triggered.connect(self.nested_paste)
-        self.editor_button.setMenu(moreMenu)
-        
-        self.editorLayout = QHBoxLayout(self)
-        self.editorLayout.setSpacing(0)
-        self.editorLayout.setContentsMargins(0,0,0,0)
-        self.editorLayout.addWidget(self.editor, 1)
-        self.editorLayout.addWidget(self.editor_button)
-        self.setLayout(self.editorLayout)
 
     def nested_paste(self):
         item_type: type | None = type(self.variable_data)

@@ -89,6 +89,6 @@ class ToolshelfDataPage:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["toolshelf_tab_row"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["icon"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Icon)
-        restrictions["tab_type"] = PropertyGrid_Restrictions.values(self.TabType.values())
+        restrictions["icon"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.IconSelection)
+        restrictions["tab_type"] = PropertyGrid_Restrictions.strValues(self.TabType.values())
         return restrictions

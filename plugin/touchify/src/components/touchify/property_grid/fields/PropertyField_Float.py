@@ -5,6 +5,7 @@ import sys
 from touchify.src.components.pyqt.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
 from touchify.src.components.python.datatypes.TypedList import *
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.resources import *
 
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
@@ -28,7 +29,7 @@ class PropertyField_Float(PropertyField):
 
         restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source, variable_name)
         for restriction in restrictions:
-            if restriction["type"] == "range":
+            if restriction["type"] == PropertyGrid_Restrictions.NumberMod.Range:
                 if "min" in restriction:
                     self.editor.setMinimum(restriction["min"])
                 if "max" in restriction:

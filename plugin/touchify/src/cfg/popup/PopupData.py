@@ -284,15 +284,15 @@ class PopupData:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["docker_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Docker)
-        restrictions["type"] = PropertyGrid_Restrictions.values(self.Variants.values())
-        restrictions["window_type"] = PropertyGrid_Restrictions.values(self.WindowType.values())
-        restrictions["popup_position_x"] = PropertyGrid_Restrictions.values(self.PopupPosition.values())
-        restrictions["popup_position_y"] = PropertyGrid_Restrictions.values(self.PopupPosition.values())
-        restrictions["closing_method"] = PropertyGrid_Restrictions.values(self.ClosingMethod.values())
-        restrictions["dockers_tab_type"] = PropertyGrid_Restrictions.values(self.DockersTabType.values())
-        restrictions["window_fixed_layout"] = PropertyGrid_Restrictions.values(self.WindowFixedLayoutMode.values())
-        restrictions["toolshelf_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.Toolshelf)
+        restrictions["docker_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.DockerSelection)
+        restrictions["type"] = PropertyGrid_Restrictions.strValues(self.Variants.values())
+        restrictions["window_type"] = PropertyGrid_Restrictions.strValues(self.WindowType.values())
+        restrictions["popup_position_x"] = PropertyGrid_Restrictions.strValues(self.PopupPosition.values())
+        restrictions["popup_position_y"] = PropertyGrid_Restrictions.strValues(self.PopupPosition.values())
+        restrictions["closing_method"] = PropertyGrid_Restrictions.strValues(self.ClosingMethod.values())
+        restrictions["dockers_tab_type"] = PropertyGrid_Restrictions.strValues(self.DockersTabType.values())
+        restrictions["window_fixed_layout"] = PropertyGrid_Restrictions.strValues(self.WindowFixedLayoutMode.values())
+        restrictions["toolshelf_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ToolshelfRegistry)
 
         restrictions["actions_item_height"] = PropertyGrid_Restrictions.range(min=0)
         restrictions["actions_item_width"] = PropertyGrid_Restrictions.range(min=0)

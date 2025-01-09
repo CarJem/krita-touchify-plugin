@@ -1,6 +1,6 @@
 import copy
 import types
-from touchify.src.cfg.scripts.CustomScript import CustomScript
+from touchify.src.cfg.script.CustomScript import CustomScript
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.cfg.resource_pack.ResourcePackMetadata import ResourcePackMetadata
 import os

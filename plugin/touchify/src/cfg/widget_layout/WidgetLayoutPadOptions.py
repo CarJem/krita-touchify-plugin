@@ -87,6 +87,6 @@ class WidgetLayoutPadOptions:
         restrictions["stretch_y"] = PropertyGrid_Restrictions.range(min=0)
         restrictions["span_x"] = PropertyGrid_Restrictions.range(min=-1)
         restrictions["span_y"] = PropertyGrid_Restrictions.range(min=-1)
-        restrictions["alignment_x"] = PropertyGrid_Restrictions.values(self.HorizontalAlignment.values())
-        restrictions["alignment_y"] = PropertyGrid_Restrictions.values(self.VerticalAlignment.values())
+        restrictions["alignment_x"] = PropertyGrid_Restrictions.strValues(self.HorizontalAlignment.values())
+        restrictions["alignment_y"] = PropertyGrid_Restrictions.strValues(self.VerticalAlignment.values())
         return restrictions
