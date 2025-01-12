@@ -23,12 +23,12 @@ from touchify.src.components.krita.extensions import *
 from krita import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .ReferenceTabView import ReferenceTabView
+    from .PreviewSection import PreviewSection
 
 
-class ReferenceView(QGraphicsView):
+class PreviewView(QGraphicsView):
     
-    def __init__(self, parent: "ReferenceTabView" = None):
+    def __init__(self, parent: "PreviewSection" = None):
         super().__init__(parent)
         self.totalScaleFactor = 1
         self.viewport().setAttribute(Qt.WidgetAttribute.WA_AcceptTouchEvents)
@@ -37,7 +37,7 @@ class ReferenceView(QGraphicsView):
         self.setResizeAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         
-    def parent(self) -> "ReferenceTabView":
+    def parent(self) -> "PreviewSection":
         return super().parent()
         
     def updateScale(self, factor: float):

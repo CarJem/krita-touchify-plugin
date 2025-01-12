@@ -1,0 +1,4 @@
+APPLICATION_NAME="Touchify/ReferenceTabsDocker"
+SETTING_LAST_SELECTED_FOLDER="LastSelectedFolder"
+SETTING_CURRENT_GRID_DIRECTORY="CurrentGridDirectory"
+SETTING_CURRENT_GRID_FAVORITES="CurrentGridFavorites"

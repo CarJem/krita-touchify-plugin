@@ -16,7 +16,7 @@
 
 from PyQt5.QtCore import Qt, QPointF, QRectF
 from PyQt5.QtGui import QImage, QPixmap, QPalette
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QSpinBox, QToolButton, QPushButton, \
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QSpinBox, QToolButton, QPushButton, \
                             QColorDialog, QDialog, QGraphicsScene, QGraphicsPixmapItem, qApp
 from math import radians, sin, cos
 from krita import *
@@ -29,13 +29,13 @@ ZOOM_STEP = 10
 useAngleSelector = True
 
 from touchify.src.components.krita.ui.KisAngleSelector import KisAngleSelector as AngleSelector
-from .ReferenceView import ReferenceView
+from .PreviewView import PreviewView
 
 
 from krita import ManagedColor
+from ...DockerToolbar import DockerToolbar
 
-
-class ReferenceTabView(QWidget):
+class PreviewSection(QWidget):
 
     def __init__(self, parent=None, flags=None):
 
@@ -57,7 +57,7 @@ class ReferenceTabView(QWidget):
         # Layout init:
         # - image
         # Custom class for a hacky way to make sure input events are sent to the right place
-        self.view = ReferenceView(self) #QGraphicsView()
+        self.view = PreviewView(self) #QGraphicsView()
         self.view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         # Disabling interactive mode prevents it from taking the drop events
@@ -131,17 +131,29 @@ class ReferenceTabView(QWidget):
         layout.addWidget(self.view)
         self.view.setVisible(True)
         #
-        toolLayout = QHBoxLayout(self)
-        toolLayout.addWidget(self.zoomSpinBox, stretch=1)
-        toolLayout.addWidget(self.fitButton)
-        toolLayout.addWidget(self.hMirrorButton)
-        toolLayout.addWidget(self.vMirrorButton)
-        toolLayout.addWidget(self.rotateSelector, stretch=0)
-        toolLayout.addWidget(self.colorSamplerButton)
-        layout.addLayout(toolLayout)
+        self.tool_panel = DockerToolbar(self, Qt.Orientation.Horizontal)
+        self.tool_panel.setFixedHeight(25)
+        self.tool_panel.addWidget(self.zoomSpinBox, stretch=1)
+        self.tool_panel.addWidget(self.fitButton)
+        self.tool_panel.addWidget(self.hMirrorButton)
+        self.tool_panel.addWidget(self.vMirrorButton)
+        self.tool_panel.addWidget(self.rotateSelector, stretch=0)
+        self.tool_panel.addWidget(self.colorSamplerButton)
 
         self.toggleButtonsEnabled(False)
 
+
+
+    def openImage(self, filePath: str):
+        reader = QImageReader(filePath)
+        # Automatically use rotation metadata (typically found in photographs)
+        reader.setAutoTransform(True)
+        image = reader.read()
+        if image.isNull():
+            return
+        
+        self.setImage(image)
+        self.setFit(True)
 
     #region UI Functions
     
