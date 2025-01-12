@@ -65,6 +65,10 @@ class DockerWidget(QWidget):
         self.openFolderAction.triggered.connect(self.openFolder)
         self.openFolderAction.setEnabled(False)
 
+        self.openReferenceAction = QAction("Open Reference...", self.tabActionsGroup)
+        self.openReferenceAction.triggered.connect(self.openReference)
+        self.openReferenceAction.setEnabled(False)
+
         fileMenu.addActions(self.tabActionsGroup.actions())
         fileMenu.addSeparator()
 
@@ -147,6 +151,13 @@ class DockerWidget(QWidget):
     #endregion
 
     #region Menu Functions
+
+    def openReference(self):
+        tabIdx = self.tabWidget.currentIndex()
+        tab = self.tab(tabIdx)
+        if tab.reference_section.File_Open():
+            tab.openReference()
+
 
     def openImage(self, filePath=False):
         if not filePath:

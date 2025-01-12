@@ -32,6 +32,7 @@ from .sections.grid.GridSection import GridSection
 from .sections.reference.ReferenceSection import ReferenceSection
 
 from .sections.preview.PreviewMenu import PreviewMenu
+from .sections.reference.ReferenceMenu import ReferenceMenu
 
 from .DockerToolbar import DockerToolbar
 
@@ -78,6 +79,7 @@ class DockerPage(QWidget):
         self.toolView.addWidget(self.grid_section.tool_panel)
 
         self.reference_section = ReferenceSection(self)
+        self.reference_menu = ReferenceMenu(self.reference_section, self)
         self.view.addWidget(self.reference_section)
         self.toolView.addWidget(self.reference_section.tool_panel)
 
@@ -102,6 +104,9 @@ class DockerPage(QWidget):
         referenceAction.triggered.connect(lambda: self.changeSection("reference"))
 
         self.changeSection("preview")
+
+    def openReference(self):
+        self.changeSection("reference")
 
     def openPreview(self, imgPath: str):
         self.changeSection("preview")
@@ -131,7 +136,7 @@ class DockerPage(QWidget):
             case "grid":
                 switchTo(GRID_SECTION_ICON, self.grid_section)
             case "reference":
-                switchTo(REFERENCE_SECTION_ICON, self.reference_section)
+                switchTo(REFERENCE_SECTION_ICON, self.reference_section, self.reference_menu)
                 pass
 
         

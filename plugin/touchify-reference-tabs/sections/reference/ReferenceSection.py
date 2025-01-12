@@ -61,6 +61,8 @@ for e in extensions:
 qt_max = 16777215
 encode = "utf-8"
 
+from ...classes.settings import Settings
+
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ...DockerPage import DockerPage
@@ -82,7 +84,7 @@ class ReferenceSection(QWidget):
         self.imagine_pyid = "pykrita_imagine_board_docker"
 
         # Paths
-        self.directory_reference = os.path.dirname(os.path.abspath(__file__))
+        self.directory_reference = Settings.getFileDialogState()
 
         # State
         self.state_load = False
@@ -210,13 +212,7 @@ class ReferenceSection(QWidget):
         self.menu_button.clicked.connect(self.menu_button.showMenu)
         self.tool_panel.addWidget(self.menu_button)     
         
-        self.action_menu = QMenu(self.menu_button)
-        self.action_menu.addAction("New", self.File_New)
-        self.action_menu.addAction("Open", self.File_Open)
-        self.action_menu.addAction("Unload", self.File_Unload)
-        self.action_menu.addAction("Save", self.File_Save)
-        self.action_menu.addAction("Save As", self.File_Save_As)
-        self.menu_button.setMenu(self.action_menu)
+
 
         self.Theme_Changed()
 
@@ -236,7 +232,11 @@ class ReferenceSection(QWidget):
         if ref_board != None:
             self.EO_Load( ref_board )
             self.imagine_reference.setEnabled(True)
-        self.Data_Kritarc()
+            self.Data_Kritarc()
+            return True
+        else:
+            self.Data_Kritarc()
+            return False
 
     def File_Save_St( self, list_reference ):
         if self.imagine_reference.isEnabled():
@@ -700,19 +700,16 @@ class ReferenceSection(QWidget):
 
     #region Dialog
     def Dialog_Load( self, title ):
-        if self.ref_board in [ "", ".", None ]:
-            directory = self.directory_reference
-        else:
-            directory = self.ref_board
         file_dialog = QFileDialog( QWidget( self ) )
         file_dialog.setFileMode( QFileDialog.AnyFile )
-        file_path = file_dialog.getOpenFileName( self, title, directory, "File( *.eo )" )[0]
+        file_path = file_dialog.getOpenFileName( self, title, Settings.getFileDialogState(), "File( *.eo )" )[0]
         if file_path in [ "", ".", None ]:
             file_path = None
+        else: Settings.setFileDialogState(os.path.dirname(file_path))
         return file_path
     def Dialog_Save( self, title, name ):
         # Variabels
-        directory = self.directory_reference
+        directory = Settings.getFileDialogState()
         if ( self.canvas() is not None ) and ( self.canvas().view() is not None ):
             file_name = Krita.instance().activeDocument().fileName()
             directory = os.path.dirname( file_name )
@@ -725,13 +722,16 @@ class ReferenceSection(QWidget):
         file_path = file_dialog.getSaveFileName( self, title, directory, "File( *.eo )" )[0]
         if file_path in [ "", ".", None ]:
             file_path = None
+        else: Settings.setFileDialogState(os.path.dirname(file_path))
         return file_path
     def Dialog_Directory( self, title ):
+        directory = Settings.getFileDialogState()
         file_dialog = QFileDialog( QWidget( self ) )
         file_dialog.setFileMode( QFileDialog.DirectoryOnly )
-        folder_path = file_dialog.getExistingDirectory( self, title, "" )
+        folder_path = file_dialog.getExistingDirectory( self, title, directory )
         if folder_path in [ "", ".", None ]:
             folder_path = None
+        else: Settings.setFileDialogState(os.path.dirname(folder_path))
         return folder_path
     #endregion
 
