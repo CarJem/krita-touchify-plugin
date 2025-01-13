@@ -6,7 +6,7 @@ from PyQt5 import QtCore
 # Imagine Board
 from .ReferenceCalc import *
 
-class ReferenceViewWorker( QObject ):
+class ReferencePacker( QObject ):
 
     # Run Packer
     def run( self, source, mode, method ):

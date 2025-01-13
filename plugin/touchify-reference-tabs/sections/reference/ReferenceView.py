@@ -3,8 +3,8 @@ import urllib
 from krita import *
 from PyQt5 import QtCore, QtGui
 from .ReferenceCalc import *
-from .ReferenceViewWorker import ReferenceViewWorker
-from .ReferenceColorPicker import ColorPicker_Event, ColorPicker_Render
+from .ReferencePacker import ReferencePacker
+from .ReferenceColorPicker import *
 
 
 
@@ -32,13 +32,14 @@ class ReferenceView( QWidget ):
     SIGNAL_PACK_STOP = QtCore.pyqtSignal( bool )
     SIGNAL_LABEL_PANEL = QtCore.pyqtSignal( bool )
     SIGNAL_LABEL_INFO = QtCore.pyqtSignal( dict )
+    SIGNAL_ACTIONS_UPDATED = QtCore.pyqtSignal( )
+    SIGNAL_SNAP_TOGGLED = QtCore.pyqtSignal( bool )
+    SIGNAL_PREVIEW_REQUESTED = QtCore.pyqtSignal( QPixmap )
     #endregion
 
-    #region Init
     def __init__( self, parent ):
         super( ReferenceView, self ).__init__( parent )
-        self.Variables()
-    def Variables( self ):
+
         # Widget
         self.ww = 1
         self.hh = 1
@@ -59,12 +60,14 @@ class ReferenceView( QWidget ):
         self.state_pack = False
         self.state_pickcolor = False
         self.state_label = False
-        self.selection_transform = False
+        self.state_focused = False
+        self.state_autosave = False
         # Interaction
         self.click_operation = None
         self.press_operation = None
 
-        self.snap_transform = False
+        self.state_snaphold = False
+        self.state_snap = False
 
         # Camera
         self.cn = [
@@ -256,18 +259,21 @@ class ReferenceView( QWidget ):
 
         # Debug Packer Points
         # self.p = []
-    def sizeHint( self ):
-        return QtCore.QSize( 5000,5000 )
-    #endregion
     
     #region Relay
+
     def Set_File_Extension( self, file_extension ):
         self.file_extension = file_extension
-    def Set_Pigment_O( self, boolean ):
-        self.pigment_o = boolean
+        
+    def Find_Pigment_O( self ):
+        result = Import_Pigment_O()
+        if result != None:
+            self.pigment_o = result
+
     def Set_Theme( self, color_1, color_2 ):
         self.color_1 = color_1
         self.color_2 = color_2
+
     def Set_Size( self, ww, hh, state_maximized ):
         if self.state_pack == False:
             # Count
@@ -288,6 +294,7 @@ class ReferenceView( QWidget ):
             self.Board_Limit( "DRAW" )
             # Update
             self.resize( ww, hh )
+    
     def Set_Camera( self, position, zoom ):
         # Position
         self.Pin_Previous()
@@ -312,12 +319,15 @@ class ReferenceView( QWidget ):
 
         # Update
         self.Board_Update()
+    
     def Set_Scale_Method( self, scale_method ):
         self.scale_method = scale_method
         self.update()
+    
     def Set_Stop_Cycle( self ):
         try:self.worker_packer.STOP()
         except:pass
+    
     def Set_File_Path( self, path ):
         if path not in [ "", ".", None]:
             name = ( os.path.basename( path ) ).split( "." )[0]
@@ -326,10 +336,12 @@ class ReferenceView( QWidget ):
             file_path = ""
         self.file_path = file_path
         self.update()
+    
     def Set_Function( self, function_drop_panel, function_operation ):
         self.function_drop_panel = function_drop_panel
         self.function_operation = function_operation
         self.update()
+    
     #endregion
     
     #region Points
@@ -353,8 +365,6 @@ class ReferenceView( QWidget ):
     
     #region Pin
 
-
-    
     def Pin_Insert( self, pin ):
         # Pin
         self.pin_list.append( pin )
@@ -377,7 +387,7 @@ class ReferenceView( QWidget ):
         self.pin_path = None
         self.pin_basename = None
         self.pin_node = None
-        self.selection_transform = False
+        self.state_focused = False
 
     def Pin_Exists( self, ex, ey ):
         index = None
@@ -418,7 +428,7 @@ class ReferenceView( QWidget ):
             pin_index = self.pin_count - 1
             self.pin_index = pin_index
             self.pin_node = self.Pin_Node( self.pin_index )
-            self.selection_transform = True
+            self.state_focused = True
             if self.pin_list[pin_index]["tipo"] == "image":
                 self.pin_path = self.pin_list[pin_index]["path"]
                 try:self.pin_basename = str( os.path.basename( self.pin_path ) ) # local
@@ -520,23 +530,11 @@ class ReferenceView( QWidget ):
     def Pin_Preview( self, index ):
         # Logic
         if ( index == None or self.pin_preview != None ):
-            self.pin_preview = None
+            return
         else:
-            # Read
-            trz = self.pin_list[index]["trz"]
-            egs = self.pin_list[index]["egs"]
-            efx = self.pin_list[index]["efx"]
-            efy = self.pin_list[index]["efy"]
             qpixmap = self.pin_list[index]["qpixmap"]
-            # Pixmap
             if qpixmap != None:
-                draw = self.Edit_QPixmap( qpixmap, egs, efx, efy )
-                draw = self.Rotate_QPixmap( draw, trz )
-                self.pin_preview = draw
-            else:
-                self.pin_preview = None
-        # Update
-        self.update()
+                self.SIGNAL_PREVIEW_REQUESTED.emit(qpixmap)
     
     def Pin_Draw_Box( self, index ):
         if index != None:
@@ -636,17 +634,23 @@ class ReferenceView( QWidget ):
         for i in range( 0, self.pin_count ):
             if self.pin_list[i]["select"] == True:
                 lista.append( i )
+
+        if self.state_focused and self.select_count <= 0 and self.pin_index != None:
+            if self.pin_list[self.pin_index]["tipo"] == "label": lista.append(self.pin_index)
         return lista
     
     def Label_Panel( self, index ):
-        info = {
-            "text"   : self.pin_list[index]["text"],
-            "font"   : self.pin_list[index]["font"],
-            "letter" : self.pin_list[index]["letter"],
-            "pen"    : self.pin_list[index]["pen"],
-            "bg"     : self.pin_list[index]["bg"],
-            }
-        self.SIGNAL_LABEL_INFO.emit( info )
+        if index:
+            info = {
+                "text"   : self.pin_list[index]["text"],
+                "font"   : self.pin_list[index]["font"],
+                "letter" : self.pin_list[index]["letter"],
+                "pen"    : self.pin_list[index]["pen"],
+                "bg"     : self.pin_list[index]["bg"],
+                }
+            self.SIGNAL_LABEL_INFO.emit( info )
+        else:
+            self.SIGNAL_LABEL_INFO.emit( {} )            
 
     def Get_Label_Infomation( self ):
         lista = self.Label_List()
@@ -705,7 +709,7 @@ class ReferenceView( QWidget ):
         # Transformation
         if move == True:
             dx, dy = self.Point_Deltas( ex, ey )
-            self.Move_Pin( dx, dy, self.snap_transform )
+            self.Move_Pin( dx, dy )
         if scale == True:
             if self.pin_list[self.pin_index]["tipo"] == "image":
                 px, py = self.Point_Location( ex, ey )
@@ -718,7 +722,7 @@ class ReferenceView( QWidget ):
                 dx = ( ex - self.ox )
                 self.Rotate_Pin( dx )
     
-    def Move_Pin( self, dx, dy, boolean ):
+    def Move_Pin( self, dx, dy ):
         # Variabels
         sx = 0
         sy = 0
@@ -733,7 +737,7 @@ class ReferenceView( QWidget ):
         n_bb = self.pin_previous[self.pin_index]["bb"] + dy
 
         # Snap
-        if boolean == True:
+        if self.state_snap == True:
             for j in range( 0, len( self.limit_x ) ):
                 xj = self.limit_x[j]
                 ll = xj - snap_dist
@@ -1303,6 +1307,22 @@ class ReferenceView( QWidget ):
                 # QPixmaps
                 self.Pin_Draw_QPixmap( self.pin_list, i )
     
+    def Snap_Hold( self, boolean: bool ):
+        self.state_snaphold = boolean
+        if self.state_snap != boolean:
+            self.state_snap = boolean
+            self.SIGNAL_SNAP_TOGGLED.emit( self.state_snap )
+
+    def Snap_Toggle( self, boolean: bool = None ):
+        if self.state_snaphold: return
+
+        if boolean == None:
+            boolean = not self.state_snap
+
+        if self.state_snap != boolean:
+            self.state_snap = boolean
+            self.SIGNAL_SNAP_TOGGLED.emit( self.state_snap )
+
     #endregion
     
     #region Selection
@@ -1356,6 +1376,8 @@ class ReferenceView( QWidget ):
         if len( lista ) > 0:
             index = lista[-1]
             self.Label_Panel( index )
+        else:
+            self.Label_Panel( None )
     
     def Selection_Raise( self ):
         holder = list()
@@ -1448,7 +1470,7 @@ class ReferenceView( QWidget ):
         # Board
         self.Board_Limit( "DRAW" )
         self.Board_Render()
-        self.Board_Save()
+        if self.state_autosave: self.Board_Save()
         # Update
         self.update()
         self.Camera_Grab()
@@ -1619,6 +1641,7 @@ class ReferenceView( QWidget ):
         self.Board_Focus()
     
     def Relative_Delete( self, lista ):
+        self.Pin_Clear()
         for i in range( 0, len( lista ) ):
             self.pin_list.remove( lista[i] )
         self.pin_count = len( self.pin_list )
@@ -1723,14 +1746,14 @@ class ReferenceView( QWidget ):
             if thread == True:self.Packer_Thread_Start( method )
     
     def Packer_Single_Start( self, method ):
-        self.worker_packer = ReferenceViewWorker()
+        self.worker_packer = ReferencePacker()
         self.worker_packer.run( self, "SINGLE", method )
     
     def Packer_Thread_Start( self, method ):
         # Thread
         self.thread_packer = QThread()
         # Worker
-        self.worker_packer = ReferenceViewWorker()
+        self.worker_packer = ReferencePacker()
         self.worker_packer.moveToThread( self.thread_packer )
         # Thread
         self.thread_packer.started.connect( lambda : self.worker_packer.run( self, "THREAD", method ) )
@@ -1763,6 +1786,8 @@ class ReferenceView( QWidget ):
     #endregion
 
     #region Misc
+
+
 
     def Cursor_Shape( self, operation, pin_node ):
         if ( operation == "color_picker" ):
@@ -1854,17 +1879,19 @@ class ReferenceView( QWidget ):
         # General
         action_board_fit = qmenu.addAction( "Board Fit" )
         action_insert_pin = qmenu.addAction( "Insert Pin" )
-        action_full_screen = qmenu.addAction( "Full Screen" )
         qmenu.addSeparator()
+
         # Label
         menu_label = qmenu.addMenu( "Label" )
         action_label_create = menu_label.addAction( "Create" )
         action_label_edit = menu_label.addAction( "Edit" )
+
         # Pin
         menu_pin = qmenu.addMenu( "Pin" )
         action_pin_location = menu_pin.addAction( "File Location" )
         action_pin_copy     = menu_pin.addAction( "Copy Path" )
         action_pin_save     = menu_pin.addAction( "Save To" )
+
         # Packer
         menu_pack = qmenu.addMenu( f"Pack [ { self.select_count } ]" )
         action_pack_grid      = menu_pack.addAction( "Linear Grid" )
@@ -1875,33 +1902,35 @@ class ReferenceView( QWidget ):
         action_pack_perimeter = menu_pack.addAction( "Optimal Perimeter" )
         action_pack_ratio     = menu_pack.addAction( "Optimal Ratio" )
         action_pack_class     = menu_pack.addAction( "Optimal Class" )
+
         # Reset
         menu_reset = qmenu.addMenu( "Reset" )
         action_reset_rotation  = menu_reset.addAction( "Rotation" )
         action_reset_scale     = menu_reset.addAction( "Scale" )
+
         # Edit
         menu_edit = qmenu.addMenu( "Edit" )
         action_edit_grey   = menu_edit.addAction( "View Greyscale" )
         action_edit_flip_h = menu_edit.addAction( "Flip Horizontal" )
         action_edit_flip_v = menu_edit.addAction( "Flip Vertical" )
         action_edit_reset  = menu_edit.addAction( "Reset" )
+
         # Color
         menu_color = qmenu.addMenu( "Color" )
         action_color_picker  = menu_color.addAction( string_pickcolor )
         action_color_analyse = menu_color.addAction( "Analyse" )
+
         # Insert
         menu_insert = qmenu.addMenu( "Insert ")
         action_insert_document  = menu_insert.addAction( "Document" )
         action_insert_layer     = menu_insert.addAction( "Layer" )
         action_insert_reference = menu_insert.addAction( "Reference" )
         qmenu.addSeparator()
+
         # Context
         action_rebase = qmenu.addAction( "Rebase" )
         action_delete = qmenu.addAction( "Delete" )
 
-        # Check Full Screen
-        action_full_screen.setCheckable( True )
-        action_full_screen.setChecked( self.state_maximized )
         # Check Label
         action_label_edit.setCheckable( True )
         action_label_edit.setChecked( self.state_label )
@@ -1955,8 +1984,6 @@ class ReferenceView( QWidget ):
             bx = event.pos().x()
             by = event.pos().y()
             self.Pin_URL( bx, by )
-        if action == action_full_screen:
-            self.SIGNAL_FULL_SCREEN.emit( not self.state_maximized )
 
         # Label
         if action == action_label_create:
@@ -1964,6 +1991,7 @@ class ReferenceView( QWidget ):
         if action == action_label_edit:
             self.state_label = not self.state_label
             self.SIGNAL_LABEL_PANEL.emit( self.state_label )
+            self.SIGNAL_ACTIONS_UPDATED.emit()
 
         # Pin
         if action == action_pin_location:
@@ -2016,6 +2044,7 @@ class ReferenceView( QWidget ):
         # Color
         if action == action_color_picker:
             self.state_pickcolor = not self.state_pickcolor
+            self.SIGNAL_ACTIONS_UPDATED.emit()
         if action == action_color_analyse:
             qimage = pin_qpixmap.toImage()
             self.SIGNAL_ANALYSE.emit( qimage )
@@ -2085,6 +2114,9 @@ class ReferenceView( QWidget ):
     
     #region Events
 
+    def sizeHint( self ):
+        return QtCore.QSize( 5000,5000 )
+    
     def keyPressEvent( self, event ):
         # Spacebar
         if event.key() == Qt.Key.Key_Space:
@@ -2155,7 +2187,7 @@ class ReferenceView( QWidget ):
                     self.click_operation = "pin_move"
                     self.press_operation = "pin_select"
 
-                    if self.selection_transform and self.select_count <= 0 and self.select_box == False:
+                    if self.state_focused and self.select_count <= 0 and self.select_box == False:
                         self.pin_node = self.Pin_Node(self.pin_index)
                     else:
                         self.pin_node = 0
@@ -2168,7 +2200,7 @@ class ReferenceView( QWidget ):
             self.press_operation = "drag_drop"
         if (( event.modifiers() == ( QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier ) and event.buttons() == QtCore.Qt.LeftButton )):
             self.press_operation = "pin_transform"
-        if (self.selection_transform and self.state_pickcolor == False):
+        if (self.state_focused and self.state_pickcolor == False):
             self.press_operation = "pin_transform"
         if ( event.modifiers() == ( QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier | QtCore.Qt.AltModifier ) and event.buttons() == QtCore.Qt.LeftButton ):
             self.Pin_Preview( self.pin_index )
@@ -2201,9 +2233,9 @@ class ReferenceView( QWidget ):
         self.ey = ey
 
         if event.modifiers() == QtCore.Qt.NoModifier:
-            self.snap_transform = False
+            self.Snap_Toggle( False )
         else:
-            self.snap_transform = True
+            self.Snap_Toggle( True )
 
         # Operations
         if self.press_operation == "color_picker":
@@ -2211,7 +2243,7 @@ class ReferenceView( QWidget ):
 
         if self.press_operation == "pin_move":
             dx, dy = self.Point_Deltas( ex, ey )
-            self.Move_Pin( dx, dy,  self.snap_transform )
+            self.Move_Pin( dx, dy )
         if self.press_operation == "pin_transform":
             self.Pin_Transform( ex, ey, self.pin_node )
 
@@ -2369,7 +2401,7 @@ class ReferenceView( QWidget ):
         self.update()
 
     def showEvent( self, event ):
-        pass
+        self.Find_Pigment_O()
     
     def enterEvent( self, event ):
         # Variables

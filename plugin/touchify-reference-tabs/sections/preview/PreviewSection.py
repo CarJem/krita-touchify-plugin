@@ -149,9 +149,15 @@ class PreviewSection(QWidget):
         # Automatically use rotation metadata (typically found in photographs)
         reader.setAutoTransform(True)
         image = reader.read()
-        if image.isNull():
-            return
+        if image.isNull(): return
         
+        self.setImage(image)
+        self.setFit(True)
+
+    def openPixmap(self, pixmap: QPixmap):
+        image = pixmap.toImage()
+        if image.isNull(): return
+
         self.setImage(image)
         self.setFit(True)
 

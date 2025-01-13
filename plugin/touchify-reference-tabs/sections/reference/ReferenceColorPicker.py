@@ -1,6 +1,9 @@
 from krita import *
 from PyQt5 import QtCore
 from .ReferenceCalc import *
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .ReferenceView import ReferenceView
 
 colorpicker_size = 250
 cps_a = colorpicker_size * 0.015
@@ -12,7 +15,21 @@ cps_f = colorpicker_size - ( cps_e * 2 )
 cps_g = colorpicker_size * 0.120
 cps_h = colorpicker_size - ( cps_g * 2 )
 
-def ColorPicker_Event( self, ex, ey, qimage_grab ):
+
+
+def Import_Pigment_O( ):
+    pigment_o_module = None
+    try:
+        dockers = Krita.instance().dockers()
+        for d in dockers:
+            if d.objectName() == "pykrita_pigment_o_docker":
+                pigment_o_module = d
+                break
+    except:
+        pigment_o_module = None
+    return pigment_o_module
+
+def ColorPicker_Event( self: "ReferenceView", ex, ey, qimage_grab ):
     if ( self.state_pickcolor == True and qimage_grab != None ):
         # Event
         ex = Limit_Range( ex, 0, self.ww - 1 )
@@ -29,12 +46,13 @@ def ColorPicker_Event( self, ex, ey, qimage_grab ):
         blue = pixel.blueF()
 
         # Apply Color
-        if self.pigment_o != None:
+        pigment_o = self.pigment_o
+        if pigment_o != None:
             if self.state_press == True:
-                self.pigment_o.API_Input_Kelvin( 6500 )
-                cor = self.pigment_o.API_Input_Preview( "RGB", red, green, blue, 0 )
+                pigment_o.API_Input_Kelvin( 6500 )
+                cor = pigment_o.API_Input_Preview( "RGB", red, green, blue, 0 )
             if self.state_press == False:
-                cor = self.pigment_o.API_Input_Apply( "RGB", red, green, blue, 0 )
+                cor = pigment_o.API_Input_Apply( "RGB", red, green, blue, 0 )
             red   = cor[ "rgb_d1" ]
             green = cor[ "rgb_d2" ]
             blue  = cor[ "rgb_d3" ]
@@ -81,7 +99,8 @@ def ColorPicker_Event( self, ex, ey, qimage_grab ):
             clip_board = QApplication.clipboard()
             clip_board.clear()
             clip_board.setText( f"{ hex_code }" )
-def ColorPicker_Render( self, painter, ex, ey ):
+
+def ColorPicker_Render( self: "ReferenceView", painter, ex, ey ):
     # Values
     ex = Limit_Range( ex, 0, self.ww )
     ey = Limit_Range( ey, 0, self.hh )

@@ -1,65 +1,14 @@
-# Python
-# Krita
 from krita import *
-# PyQt5
-# Imagine Board
 from .ReferenceCalc import *
 from .ReferenceView import ReferenceView
 import subprocess
 import urllib
+from ...classes.common import REFERENCE_FILETYPE_DATA
 from ...DockerToolbar import DockerToolbar
-
-# File Formats
-extensions = [
-    # Native
-    "kra",
-    "krz",
-    "ora",
-    # Static
-    "bmp",
-    "jpg",
-    "jpeg",
-    "png",
-    "pbm",
-    "pgm",
-    "ppm",
-    "xbm",
-    "xpm",
-    "tiff",
-    "jfif",
-    "psd",
-    # Vector
-    "svg",
-    "svgz",
-    # Animation
-    "gif",
-    "webp",
-    # Compressed
-    "zip",
-    ]
-# File Sort
-file_normal = []
-for e in extensions:
-    file_normal.append( f"*.{ e }" )
-file_backup = []
-for e in extensions:
-    file_backup.append( f"*.{ e }~" )
-# File Type ( Preview )
-file_static = []
-file_anima = [ "gif", "webp" ]
-file_compact = [ "zip" ]
-for e in extensions:
-    if ( e not in file_anima and e not in file_compact ):
-        file_static.append( f"{ e }" )
-file_vector = [ "svg", "svgz" ]
-file_search = []
-for e in extensions:
-    if e not in file_compact:
-        file_search.append( f"{ e }" )
+from .ReferenceLabelEditor import ReferenceLabelEditor
 
 # Variables
-qt_max = 16777215
-encode = "utf-8"
+EO_ENCODING = "utf-8"
 
 from ...classes.settings import Settings
 
@@ -73,63 +22,35 @@ class ReferenceSection(QWidget):
         self.DockerPage: "DockerPage" = parent
         self.Variables()
         self.Components()
+        self.Connections()
+        self.Theme_Changed()
 
     def canvas(self):
         return self.DockerPage.view_widget.docker.canvas()
 
+    def setFullscreen(self, boolean: bool):
+        if boolean:
+            self.footer_panel.setVisible(False)
+        else:
+            self.footer_panel.setVisible(True)
+
+
     #region Setup Functions
 
     def Variables( self ):
-        # Pykrita
-        self.imagine_pyid = "pykrita_imagine_board_docker"
-
         # Paths
         self.directory_reference = Settings.getFileDialogState()
 
-        # State
-        self.state_load = False
-        self.state_inside = False
-        self.state_maximized = False
-
-        # UI
-        self.mode_index = 0
-        self.search = ""
-
         # Items
         self.sync_list = "Folder" # "Folder" "Reference" "Document"(recent documents)
-        self.sync_type = "Normal" # "Normal" "Backup~"
-        self.sync_sort = "Local Aware"
         self.insert_size = False
         self.insert_scale = 1 # Photobask legacy
         self.scale_method = False
         # Lists
-        self.list_folder = []
-        self.list_krita = []
         self.list_reference = []
         # Folder
         self.folder_path = None
         self.folder_shift = []
-        # Files
-        self.file_path = [ None ]
-        self.file_qpixmap = [ None ]
-        self.file_found = False
-        self.file_extension = file_normal
-        self.file_sort = QDir.LocaleAware
-
-        # Preview
-        self.preview_state = "NULL" # "NULL" "STATIC" "ANIM" "COMPACT"
-        self.preview_index = 0
-        self.preview_max = 0
-        self.preview_playpause = True  # True=Play  False=Pause
-        # Preview Slidshow
-        self.slideshow_sequence = "Linear" # "Linear" "Random"
-        self.slideshow_time = 1000
-        self.slideshow_play = False
-        self.slideshow_lottery = []
-
-        # Grid
-        self.grid_size = 200
-        self.grid_fit = False
 
         # Reference
         self.ref_kra = False
@@ -138,11 +59,6 @@ class ReferenceSection(QWidget):
         self.ref_zoom = 1
         self.ref_board = ""
         self.ref_doc = None
-        # Label Picker
-        self.picker_mode = None
-        self.picker_pen = QColor( 0, 0, 0 )
-        self.picker_bg = QColor( 0, 0, 0 )
-        self.picker_cancel = QColor( 0, 0, 0 )
 
         # System
         self.sow_imagine = False
@@ -168,53 +84,132 @@ class ReferenceSection(QWidget):
     
     def Components( self ):
         self.central_layout = QVBoxLayout(self)
+        self.central_layout.setContentsMargins(0,0,0,0)
+        self.central_layout.setSpacing(0)
         self.setLayout(self.central_layout)
+
+        self.refrence_container = QWidget( self )
+        self.refrence_container.setContentsMargins(0,0,0,4)
+        self.central_layout.addWidget(self.refrence_container)
     
-        self.imagine_reference = ReferenceView( self )
+        self.imagine_reference = ReferenceView( self.refrence_container )
+        self.imagine_reference.setContentsMargins(0, 0, 0, 0)
         self.imagine_reference.setEnabled(False)
-        self.imagine_reference.Set_File_Extension( file_normal )
-        # General
+        self.imagine_reference.Set_File_Extension( REFERENCE_FILETYPE_DATA["file_normal"] )
+
+        self.footer_panel = DockerToolbar(self, Qt.Orientation.Horizontal)
+        self.footer_panel.setContentsMargins(0, 0 ,0, 0)
+        self.footer_panel.widgetLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.footer_panel.setFixedHeight(25)
+        self.central_layout.addWidget(self.footer_panel)
+
+        self.properties_button = QPushButton(self.footer_panel)
+        self.properties_button.setIcon(Krita.instance().icon("document-properties"))
+        self.properties_button_menu = QMenu(self.properties_button)
+        self.properties_button.setMenu(self.properties_button_menu)
+        self.properties_button.clicked.connect(self.properties_button.showMenu)
+        self.footer_panel.addWidget(self.properties_button)
+
+        self.label_editor = ReferenceLabelEditor( self )
+        self.label_editor.setParent(self.footer_panel)
+        self.label_editor.setVisible( False )
+        self.footer_panel.addWidget(self.label_editor)     
+
+        self.progress_bar = QProgressBar(self.footer_panel)
+        self.progress_bar.setStyleSheet( "{ background-color: rgba( 0, 0, 0, 50 ); }" )
+        self.progress_bar.setVisible(False)
+        self.footer_panel.addWidget(self.progress_bar)
+
+        self.tool_panel = DockerToolbar(self, Qt.Orientation.Horizontal)
+        self.tool_panel.widgetLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.tool_panel.setFixedHeight(25)
+
+        self.label_editor_button = QtWidgets.QToolButton(self.tool_panel)
+        self.label_editor_button.setCheckable(True)
+        self.label_editor_button.setChecked(False)
+        self.label_editor_button.setIcon(Krita.instance().icon("draw-text"))
+        self.tool_panel.addWidget(self.label_editor_button)
+
+        self.color_picker_button = QtWidgets.QToolButton(self.tool_panel)
+        self.color_picker_button.setCheckable(True)
+        self.color_picker_button.setChecked(False)
+        self.color_picker_button.setIcon(Krita.instance().icon("krita_tool_color_sampler"))
+        self.tool_panel.addWidget(self.color_picker_button)
+
+        self.snap_button = QtWidgets.QToolButton(self.tool_panel)
+        self.snap_button.setCheckable(True)
+        self.snap_button.setChecked(False)
+        self.snap_button.setIcon(Krita.instance().icon("chain-broken-icon"))
+        self.tool_panel.addWidget(self.snap_button)
+
+        self.auto_save_checkbox = QtWidgets.QCheckBox(self.tool_panel)
+        self.auto_save_checkbox.setCheckable(True)
+        self.auto_save_checkbox.setChecked(False)
+        self.auto_save_checkbox.setText("Autosave")
+        self.auto_save_checkbox.clicked.connect(self.Action_AutoSaveToggle)
+        self.tool_panel.addWidget(self.auto_save_checkbox)
+    
+    def Connections( self ):
+        self.color_picker_button.clicked.connect(self.Action_ColorPickerToggle)
+        self.label_editor_button.clicked.connect(self.Action_LabelEditorToggle)
+        self.snap_button.clicked.connect(self.Action_SnapToggle)
         self.imagine_reference.SIGNAL_DRAG.connect( self.Drag_Drop )
         self.imagine_reference.SIGNAL_DROP.connect( self.Drop_Inside )
-        # Reference
         self.imagine_reference.SIGNAL_PIN_IMAGE.connect( self.Pin_Image )
         self.imagine_reference.SIGNAL_PIN_LABEL.connect( self.Pin_Label )
         self.imagine_reference.SIGNAL_PIN_SAVE.connect( self.Pin_Save )
         self.imagine_reference.SIGNAL_BOARD_SAVE.connect( self.File_Save_St )
         self.imagine_reference.SIGNAL_CAMERA.connect( self.Reference_Camera )
-        # Menu
         self.imagine_reference.SIGNAL_LOCATION.connect( self.File_Location )
         self.imagine_reference.SIGNAL_ANALYSE.connect( self.Color_Analyse )
         self.imagine_reference.SIGNAL_NEW_DOCUMENT.connect( self.Insert_Document )
         self.imagine_reference.SIGNAL_INSERT_LAYER.connect( self.Insert_Layer )
         self.imagine_reference.SIGNAL_INSERT_REFERENCE.connect( self.Insert_Reference )
-        # UI
         self.imagine_reference.SIGNAL_PB_VALUE.connect( self.Progress_Value )
         self.imagine_reference.SIGNAL_PB_MAX.connect( self.Progress_Max )
         self.imagine_reference.SIGNAL_PACK_STOP.connect( self.Reference_Pack_Stop )
-        self.imagine_reference.SIGNAL_LABEL_PANEL.connect( self.Reference_Label )
-        self.imagine_reference.SIGNAL_LABEL_INFO.connect( self.Reference_Information )
+        self.imagine_reference.SIGNAL_LABEL_PANEL.connect( self.label_editor.setVisible )
+        self.imagine_reference.SIGNAL_LABEL_INFO.connect( self.label_editor.setInformation )
+        self.imagine_reference.SIGNAL_ACTIONS_UPDATED.connect(self.OnEvent_ActionsUpdated)
+        self.imagine_reference.SIGNAL_SNAP_TOGGLED.connect(self.OnEvent_SnapToggled)
+        self.imagine_reference.SIGNAL_PREVIEW_REQUESTED.connect(self.OnEvent_PreviewRequested)
 
-        self.central_layout.addWidget(self.imagine_reference)
-    
-        self.tool_panel = DockerToolbar(self, Qt.Orientation.Horizontal)
-        self.tool_panel.widgetLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        self.tool_panel.setFixedHeight(25)
+    #endregion
 
-        self.progress_bar = QProgressBar(self.tool_panel)
-        self.progress_bar.setStyleSheet( "{ background-color: rgba( 0, 0, 0, 50 ); }" )
-        self.progress_bar.setVisible(False)
-        self.tool_panel.addWidget(self.progress_bar)
+    #region Actions
 
-        self.menu_button = QtWidgets.QToolButton(self.tool_panel)
-        self.menu_button.setFixedHeight(25)
-        self.menu_button.setText("...")
-        self.menu_button.clicked.connect(self.menu_button.showMenu)
-        self.tool_panel.addWidget(self.menu_button)     
-        
+    def Action_LabelEditorToggle(self):
+        self.imagine_reference.state_label = not self.imagine_reference.state_label
+        self.label_editor_button.setChecked(self.imagine_reference.state_label)
+        self.label_editor.setVisible(self.imagine_reference.state_label)
+
+    def Action_ColorPickerToggle(self):
+        self.imagine_reference.state_pickcolor = not self.imagine_reference.state_pickcolor
+        self.color_picker_button.setChecked(self.imagine_reference.state_pickcolor)
+
+    def Action_AutoSaveToggle(self):
+        self.imagine_reference.state_autosave = not self.imagine_reference.state_autosave
+        self.auto_save_checkbox.setChecked(self.imagine_reference.state_autosave)
+
+    def Action_SnapToggle(self):
+        self.imagine_reference.Snap_Hold(not self.imagine_reference.state_snaphold)
+
+    #endregion
+
+    #region OnEvent
+
+    def OnEvent_PreviewRequested(self, pixmap: QPixmap):
+        self.DockerPage.openPreview(pixmap=pixmap)
 
 
-        self.Theme_Changed()
+    def OnEvent_SnapToggled(self, boolean: bool):
+        self.snap_button.setChecked(boolean)
+        if boolean: self.snap_button.setIcon(Krita.instance().icon("chain-icon"))
+        else: self.snap_button.setIcon(Krita.instance().icon("chain-broken-icon"))
+
+    def OnEvent_ActionsUpdated(self):
+        self.color_picker_button.setChecked(self.imagine_reference.state_pickcolor)
+        self.label_editor_button.setChecked(self.imagine_reference.state_label)
 
     #endregion
 
@@ -324,7 +319,7 @@ class ReferenceSection(QWidget):
     #region Event Functions
 
     def resizeEvent(self, a0):
-        self.imagine_reference.Set_Size(self.width(), self.height(), False)
+        self.imagine_reference.Set_Size(self.refrence_container.width(), self.refrence_container.height() - 4, False)
         return super().resizeEvent(a0)
     
     #endregion
@@ -363,7 +358,7 @@ class ReferenceSection(QWidget):
     def Drag_Drop( self, image_path, clip ):
         # New Documents only consider the path so it excludes clip
         qimage = self.Image_Clip( image_path, clip )
-        check_vector = image_path.endswith( tuple( file_vector ) )
+        check_vector = image_path.endswith( tuple( REFERENCE_FILETYPE_DATA["file_vector"] ) )
         if check_vector == True:
             # Read SVG
             svg_shape = ""
@@ -409,6 +404,7 @@ class ReferenceSection(QWidget):
     #endregion
 
     #region Insert / Image Operations
+    
     def Insert_Document( self, image_path, clip ):
         if image_path not in ( "", None ):
             # Create Document
@@ -427,15 +423,17 @@ class ReferenceSection(QWidget):
             self.Message_Float( "INSERT", "New Document", "document-new" )
         else:
             self.Message_Float( "REPORT", "Null Image", "broken-preset" )
+    
     def Insert_Layer( self, image_path, clip ):
         if image_path not in ( "", None ) and ( self.canvas() is not None ) and ( self.canvas().view() is not None ):
-            check_vector = image_path.endswith( tuple( file_vector ) )
+            check_vector = image_path.endswith( tuple( REFERENCE_FILETYPE_DATA["file_vector"] ) )
             if check_vector == True:
                 self.Insert_Vector( image_path )
             else:
                 self.Insert_Pixel( image_path, clip )
         else:
             self.Message_Float( "REPORT", "Null Image", "broken-preset" )
+    
     def Insert_Reference( self, image_path, clip ):
         if image_path not in ( "", None ) and ( self.canvas() is not None ) and ( self.canvas().view() is not None ):
             # Image
@@ -458,6 +456,7 @@ class ReferenceSection(QWidget):
                 self.Message_Float( "REPORT", "Null Image", "broken-preset" )
         else:
             self.Message_Float( "REPORT", "Null Image", "broken-preset" )
+    
     def Insert_Vector( self, image_path ):
         report = "Vector"
         try:
@@ -478,6 +477,7 @@ class ReferenceSection(QWidget):
         except Exception as e:
             report = e
         self.Message_Float( "INSERT", report, "vectorLayer" )
+    
     def Insert_Pixel( self, image_path, clip ):
         report = "Pixel"
         try:
@@ -497,6 +497,7 @@ class ReferenceSection(QWidget):
         except Exception as e:
             report = e
         self.Message_Float( "INSERT", report, "paintLayer" )
+    
     def Image_Clip( self, image_path, clip ):
         qimage = QImage( image_path )
         if qimage.isNull() == False:
@@ -514,15 +515,18 @@ class ReferenceSection(QWidget):
                 ih = size
             qimage = qimage.scaled( iw * self.insert_scale, ih * self.insert_scale, Qt.KeepAspectRatio, Qt.SmoothTransformation )
         return qimage
+    
     #endregion
 
     #region Color
+    
     def Color_Analyse( self, qimage ):
         if ( self.pigment_o_module != None and qimage.isNull() == False ):
             report = self.pigment_o_module.API_Image_Analyse( qimage )
             self.Message_Log( "ANALYSE", f"{ report }" )
         else:
             self.Message_Log( "ERROR", "Pigment.O not present" )
+    
     #endregion
 
     #region Pin
@@ -736,24 +740,29 @@ class ReferenceSection(QWidget):
     #endregion
 
     #region EO file
+    
     def EO_Load( self, path ):
         if ( path not in [ "", ".", None ] and os.path.exists( path ) == True ):
-            with open( path, "r", encoding=encode ) as f:
+            with open( path, "r", encoding=EO_ENCODING ) as f:
                 board = f.readlines()
                 self.Data_Load( board, path )
+    
     def EO_Save( self, path ):
         if path not in [ "", ".", None ]:
             data = self.Data_Save()
-            with open( path, "w", encoding=encode ) as f:
+            with open( path, "w", encoding=EO_ENCODING ) as f:
                 f.write( data )
+    
     def EO_Export( self, path ):
         if path not in [ "", ".", None ]:
             data = self.Data_Export()
-            with open( path, "w", encoding=encode ) as f:
+            with open( path, "w", encoding=EO_ENCODING ) as f:
                 f.write( data )
+    
     #endregion
 
     #region Data
+    
     def Data_Load( self, board, ref_board ):
         # Variables
         count = len( board )
@@ -817,6 +826,7 @@ class ReferenceSection(QWidget):
         # Progress Bar
         self.Progress_Value( 0 )
         self.Progress_Max( 1 )
+    
     def Data_Save( self ):
         # Header
         data = "Imagine Board"
@@ -833,6 +843,7 @@ class ReferenceSection(QWidget):
             # String
             data += f"\n{ item }"
         return data
+    
     def Data_Export( self ):
         # Header
         data = "Imagine Board"
@@ -857,57 +868,11 @@ class ReferenceSection(QWidget):
             # String
             data += f"\n{ item }"
         return data
+    
     def Data_Kritarc( self ):
         self.imagine_reference.Set_File_Path( self.ref_board )
         Krita.instance().writeSetting( "Imagine Board", "ref_board", str( self.ref_board ) )
-    #endregion
-
-    #region Label Operations
-    def Reference_Label( self, boolean ):
-        if boolean == True:
-            value = qt_max
-        else:
-            value = 0
-        #self.layout.label_panel.setMaximumHeight( value )
-        pass
-    def LabelPanel_Shrink( self ):
-        #self.layout.label_panel.setMaximumHeight( 0 )
-        pass
-    def Reference_Information( self, info ):
-        # Variables
-        info_text = info["text"]
-        info_font = info["font"]
-        info_letter = info["letter"]
-        info_pen = info["pen"]
-        info_bg = info["bg"]
-        # Signals
-        #self.layout.label_font.blockSignals( True )
-        #self.layout.label_letter.blockSignals( True )
-        #self.layout.label_pen.blockSignals( True )
-        #self.layout.label_bg.blockSignals( True )
-        # ToolTip
-        #self.layout.label_font.setCurrentText( info_font )
-        #self.layout.label_letter.setValue( info_letter )
-        #self.layout.label_pen.setToolTip( info_pen )
-        #self.layout.label_bg.setToolTip( info_bg )
-        # Modules
-        #self.block_pen.Set_Color( QColor( info_pen ) )
-        #self.block_bg.Set_Color( QColor( info_bg ) )
-        # Signals
-        #self.layout.label_font.blockSignals( False )
-        #self.layout.label_letter.blockSignals( False )
-        #self.layout.label_pen.blockSignals( False )
-        #self.layout.label_bg.blockSignals( False )
-    def Label_Text( self ):
-        previous = self.imagine_reference.Get_Label_Infomation()
-        if previous != None:
-            string, ok = QInputDialog.getMultiLineText( self, "Imagine Board", "Input Text", previous["text"] )
-            if ( ok == True and string != None ):
-                self.imagine_reference.Set_Label_Text( string )
-    def Label_Font( self, font ):
-        self.imagine_reference.Set_Label_Font( font )
-    def Label_Letter( self, letter ):
-        self.imagine_reference.Set_Label_Letter( letter )
+    
     #endregion
 
     #region Packer
@@ -934,6 +899,7 @@ class ReferenceSection(QWidget):
     #endregion
     
     #region Theme
+    
     def Theme_Changed( self ):
         # Krita Theme
         theme_value = QApplication.palette().color( QPalette.Window ).value()
@@ -945,9 +911,11 @@ class ReferenceSection(QWidget):
             self.color_2 = QColor( "#191919" )
         # Update
         self.imagine_reference.Set_Theme( self.color_1, self.color_2 )
+    
     #endregion
 
     #region Internet
+    
     def Download_QPixmap( self, url ):
         data = self.Download_Data( url )
         try:
@@ -956,6 +924,7 @@ class ReferenceSection(QWidget):
         except:
             qpixmap = None
         return qpixmap
+    
     def Download_Data( self , url ):
         try:
             request = urllib.request.Request( url, headers={ "User-Agent": "Mozilla/5.0" } )
@@ -964,6 +933,7 @@ class ReferenceSection(QWidget):
         except:
             data = None
         return data
+    
     def Check_Html( self, url ):
         boolean = False
         result = urllib.parse.urlparse( url )
@@ -971,13 +941,17 @@ class ReferenceSection(QWidget):
         if scheme == "https":
             boolean = True
         return boolean
+    
     #endregion
     
     #region Progress Bar
+    
     def Progress_Value( self, value ):
         self.progress_bar.setValue( value )
+    
     def Progress_Max( self, value ):
         if value == 1: self.progress_bar.setVisible(False)
         else: self.progress_bar.setVisible(True)
         self.progress_bar.setMaximum( value )
+    
     #endregion

@@ -78,12 +78,19 @@ class DockerWidget(QWidget):
         closeMenu.addAction("Close Tabs to the Left", self.closeTabsLeft)
         closeMenu.addAction("Close Tabs to the Right", self.closeTabsRight)
 
+        # - View menu
+        viewMenu = self.menubar.addMenu("View")
+        self.fullscreenAction = viewMenu.addAction("Fullscreen", self.toggleFullscreen)
+        self.fullscreenAction.setCheckable(True)
+        self.fullscreenAction.setChecked(False)
+
         layout.setMenuBar(self.menubar)
         # Don't overwrite Krita's application menubar on macOS.
         self.menubar.setNativeMenuBar(False)
 
         # Tab bar
         self.tabWidget = QTabWidget(self)
+        self.tabWidget.setContentsMargins(0,0,0,0)
         self.tabWidget.setTabsClosable(True)
         self.tabWidget.tabCloseRequested.connect(self.onCloseRequestedTab)
         self.tabWidget.setMovable(True)
@@ -151,6 +158,14 @@ class DockerWidget(QWidget):
     #endregion
 
     #region Menu Functions
+
+    def toggleFullscreen(self):
+        full_screen_state = self.fullscreenAction.isChecked()
+        self.tabWidget.setTabBarAutoHide(full_screen_state)
+        for i in range(0, self.tabWidget.count()):
+            tab = self.tab(i)
+            tab.setFullscreen(full_screen_state)
+        
 
     def openReference(self):
         tabIdx = self.tabWidget.currentIndex()

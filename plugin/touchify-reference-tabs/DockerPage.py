@@ -105,12 +105,23 @@ class DockerPage(QWidget):
 
         self.changeSection("preview")
 
+    def setFullscreen(self, boolean: bool):
+        self.reference_section.setFullscreen(boolean)
+        if boolean:
+            self.toolLayout.setVisible(False)
+        else:
+            self.toolLayout.setVisible(True)
+
     def openReference(self):
         self.changeSection("reference")
 
-    def openPreview(self, imgPath: str):
-        self.changeSection("preview")
-        self.preview_section.openImage(imgPath)
+    def openPreview(self, imgPath: str=None, pixmap: QPixmap = None):
+        if imgPath != None:
+            self.changeSection("preview")
+            self.preview_section.openImage(imgPath)
+        elif pixmap != None:
+            self.changeSection("preview")
+            self.preview_section.openPixmap(pixmap)
 
     def openGrid(self, dirPath: str):
         self.changeSection("grid")
