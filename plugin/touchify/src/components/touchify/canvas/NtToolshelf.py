@@ -19,10 +19,14 @@ class NtToolshelf(NtWidgetPad):
         super().__init__(window, canvas, True)   
 
         self.toolshelf = ToolshelfCanvasWidget(panel_index, app_engine)
+        self.toolshelf.resizeByDefaultRequested.connect(self.onResizeByDefaultRequested)
         self.toolshelf.installEventFilter(self.adjustFilter)
 
         self.setObjectName("toolshelfPad")
         self.borrowDocker(self.toolshelf)
+
+    def onResizeByDefaultRequested(self):
+        self.updateResizingState(True)
     
     def close(self):
         self.toolshelf.removeEventFilter(self.adjustFilter)

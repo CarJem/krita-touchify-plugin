@@ -3,6 +3,7 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
+
 from touchify.src.components.touchify.dockers.toolshelf.Header import Header
 
 from touchify.src.components.touchify.dockers.toolshelf.TabList import TabList
@@ -18,12 +19,15 @@ if TYPE_CHECKING:
     from .ToolshelfCanvasWidget import ToolshelfCanvasWidget
     from .ToolshelfDockWidget import ToolshelfDockWidget
     from ...special.TouchifyPopup import TouchifyPopup
+    from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 
 class ToolshelfWidget(QWidget):
     toolshelfResized=pyqtSignal()
     toolshelfChanged=pyqtSignal()
 
     toolshelfPageChanged=pyqtSignal()
+    
+    resizeByDefaultRequested=pyqtSignal()
 
     class PreviousState:
         def __init__(self):
@@ -34,6 +38,8 @@ class ToolshelfWidget(QWidget):
 
     def __init__(self, parent: "ToolshelfCanvasWidget", cfg: ToolshelfData, registry_index: int = -2):
         super(ToolshelfWidget, self).__init__(parent)
+
+        self.INTERNAL_SHOW_EVENT_INIT = True
 
         self.pinned = False
         self.parent_docker: "ToolshelfCanvasWidget" | "ToolshelfDockWidget" | "TouchifyPopup"  = parent
@@ -98,11 +104,19 @@ class ToolshelfWidget(QWidget):
 
     #region Events
 
+    def firstShowEvent(self):
+        if self.cfg.header_options.default_to_resize_mode:
+            self.resizeByDefaultRequested.emit()
+
     def resizeEvent(self, event: QResizeEvent):
         self.toolshelfResized.emit()
         super().resizeEvent(event)
 
     def showEvent(self, event: QShowEvent):
+        if self.INTERNAL_SHOW_EVENT_INIT:
+            self.firstShowEvent()
+            self.INTERNAL_SHOW_EVENT_INIT = False
+
         self.activateWidget()
         super().showEvent(event)
 
@@ -113,13 +127,6 @@ class ToolshelfWidget(QWidget):
     #endregion
     
     #region Getters / Setters
-
-    def setResizable(self, value: bool | None = None):
-        if value == None:
-            self.resizable = not self.resizable
-        else:
-            self.resizable = value
-        self.header.pinButton.setChecked(self.pinned)
 
     def setPinned(self, value: bool | None = None):
         if value == None:

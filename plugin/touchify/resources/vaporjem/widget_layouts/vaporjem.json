@@ -1,7 +1,7 @@
 {
     "preset_name": "Default Layout",
     "toolbox_enabled": true,
-    "toolshelf_count": 3,
+    "toolshelf_count": 2,
     "toolbox": {
         "position_x": 0,
         "position_y": 0,

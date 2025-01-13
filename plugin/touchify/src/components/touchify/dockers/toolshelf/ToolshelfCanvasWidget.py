@@ -15,6 +15,9 @@ if TYPE_CHECKING:
 
  
 class ToolshelfCanvasWidget(QDockWidget):
+
+    resizeByDefaultRequested=pyqtSignal()
+
     def __init__(self, panel_index: int, app_engine: "TouchifyWindow"):
         super().__init__()
         self.setWindowTitle("Touchify Toolshelf")
@@ -47,9 +50,13 @@ class ToolshelfCanvasWidget(QDockWidget):
 
     def onToolshelfChanged(self):
         pass
+
+    def onResizeByDefaultRequested(self):
+        self.resizeByDefaultRequested.emit()
     
     def onLoaded(self):              
         self.mainWidget = ToolshelfWidget(self, TouchifySettings.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
+        self.mainWidget.resizeByDefaultRequested.connect(self.onResizeByDefaultRequested)
         self.mainWidget.toolshelfPageChanged.connect(self.onToolshelfPageChanged)
         self.mainWidget.toolshelfResized.connect(self.onToolshelfResize)
         self.mainWidget.toolshelfChanged.connect(self.onToolshelfChanged)

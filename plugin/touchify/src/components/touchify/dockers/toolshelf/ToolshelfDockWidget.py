@@ -19,6 +19,8 @@ DOCKER_TITLE = 'Touchify Toolshelf'
 
 class ToolshelfDockWidget(DockWidget):
 
+    resizeByDefaultRequested=pyqtSignal()
+
     def __init__(self): 
         super().__init__()
         self.toolshelfHost: ToolshelfWidget = None
@@ -34,9 +36,13 @@ class ToolshelfDockWidget(DockWidget):
         self.actions_manager = instance.action_management
         self.canvas_manager = instance.canvas_management
         self.onLoaded()
+
+    def onResizeByDefaultRequested(self):
+        self.resizeByDefaultRequested.emit()
     
     def onLoaded(self):              
         self.mainWidget = ToolshelfWidget(self, TouchifySettings.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
+        self.mainWidget.resizeByDefaultRequested.connect(self.onResizeByDefaultRequested)
         self.mainWidget.toolshelfPageChanged.connect(self.onToolshelfPageChanged)
         self.mainWidget.toolshelfResized.connect(self.onToolshelfResize)
         self.mainWidget.toolshelfChanged.connect(self.onToolshelfChanged)

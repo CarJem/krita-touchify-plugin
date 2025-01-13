@@ -8,6 +8,7 @@ from krita import *
 from touchify.src.settings import *
 from touchify.src.variables import *
 from touchify.src.features.docker_manager import *
+from touchify.src.components.touchify.dockers.toolshelf.Helpers import Helpers
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -30,9 +31,9 @@ class Menu(QMenu):
         self.editMode.setChecked(False)
 
         self.toggleResizeAct: QAction = QAction("Allow Resizing", self)
-        self.toggleResizeAct.changed.connect(self.toggleResize)
         self.toggleResizeAct.setCheckable(True)
         self.toggleResizeAct.setChecked(cfg.header_options.default_to_resize_mode)
+        self.toggleResizeAct.changed.connect(self.toggleResize)
 
         
         if self.registry_index != -2:
@@ -41,7 +42,7 @@ class Menu(QMenu):
 
     def setup(self):
         if self.setupWidgetPad:
-            self.parentNtWidget = self.findWidgetPad()
+            self.parentNtWidget = Helpers.findWidgetPad(self)
             if self.parentNtWidget != None:
                 if self.parentNtWidget.allowResizing:
                     self.parentNtWidget.updateResizingState(self.toggleResizeAct.isChecked())
@@ -49,7 +50,7 @@ class Menu(QMenu):
                     self.addSeparator()
             self.setupWidgetPad = False
         if self.setupPopup:
-            self.parentPopup = self.findPopup()
+            self.parentPopup = Helpers.findPopup(self)
             if self.parentPopup != None:
                 if self.parentPopup.resizing_allowed:
                     self.parentPopup.updateResizingState(self.toggleResizeAct.isChecked())
@@ -59,33 +60,6 @@ class Menu(QMenu):
         if self.setupGlobal:
             self.addAction(self.editMode)
             self.setupGlobal = False
-        
-
-
-    def findPopup(self):
-        from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
-        try:
-            widget = self.parent()
-            while (widget):
-                foo = widget
-                if isinstance(foo, TouchifyPopup):
-                    return foo
-                widget = widget.parent()
-            return None
-        except:
-            return None
-
-    def findWidgetPad(self):
-        try:
-            widget = self.parent()
-            while (widget):
-                foo = widget
-                if isinstance(foo, NtWidgetPad):
-                    return foo
-                widget = widget.parent()
-            return None
-        except:
-            return None
         
     def toggleResize(self):
         state = self.toggleResizeAct.isChecked()
