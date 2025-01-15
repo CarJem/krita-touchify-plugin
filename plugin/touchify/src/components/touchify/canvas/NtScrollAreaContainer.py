@@ -21,7 +21,10 @@ class NtScrollAreaContainer(QResizableWidget):
         Reimplemented function. If a QScrollArea as been set
         the size hint of it's widget will be returned."""
         if self.sa and self.sa.widget():
-            return self.sa.widget().sizeHint()
+            sizeHint = self.sa.widget().sizeHint()
+            sizeHint.setWidth(sizeHint.width() + self.sa.verticalScrollBar().width())
+            return sizeHint
+            
 
         return super().sizeHint()
 
@@ -44,8 +47,10 @@ class NtScrollAreaContainer(QResizableWidget):
             else:
                 self.layout().replaceWidget(self.sa, scrollArea)
                 ret = self.sa # set the old QScrollArea to be returned
-
+                
             self.sa = scrollArea
+            self.sa.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+            self.sa.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
             return ret
 
         return False

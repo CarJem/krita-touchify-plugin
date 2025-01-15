@@ -40,25 +40,21 @@ class NtWidgetPad(QWidget):
 
 
     def __init__(self, window: Window, canvas: "NtCanvas", allowResizing: bool = False):
-        super(NtWidgetPad, self).__init__(canvas)
-
-        self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, False)
-
-        self.__target_row: int = None
-        self.__target_column: int = None
-
+        super(NtWidgetPad, self).__init__(canvas.mdiArea)
         self.qWin = window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
         self.canvas = canvas
 
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowFlags(
-            Qt.WindowStaysOnTopHint | 
-            Qt.FramelessWindowHint
+            Qt.WindowType.WindowStaysOnTopHint | 
+            Qt.WindowType.FramelessWindowHint
             )
         self.setLayout(QVBoxLayout(self))
         self.layout().setContentsMargins(4,4,4,4)
 
+        self.canvas_x = 0
+        self.canvas_y = 0
         self.alignment_x = Qt.AlignmentFlag.AlignLeft
         self.alignment_y = Qt.AlignmentFlag.AlignTop
         self.collapsed = True
@@ -76,7 +72,7 @@ class NtWidgetPad(QWidget):
         
 
          # Visibility toggle
-        self.btnHide = NtTogglePadButton()
+        self.btnHide = NtTogglePadButton(self)
         self.btnHide.clicked.connect(self.setCollapsed)
         self.layout().addWidget(self.btnHide)
         self.updateArrow()
@@ -93,21 +89,6 @@ class NtWidgetPad(QWidget):
 
         #Install Event Filters
         self.mdiArea.subWindowActivated.connect(self.onSubWindowActivated)        
-
-    def setTargetCoords(self, row: int, column: int):
-        self.__target_row = row
-        self.__target_column = column
-
-    def targetLayout(self):
-        if self.canvas and self.__target_column != None and self.__target_row != None:
-            return self.canvas.size()
-            #targetGrid = self.canvas.canvasLayout
-            #result = targetGrid.itemAtPosition(self.__target_row, self.__target_column).sizeHint()
-            #if result: return result
-
-        return None
-
-
         
     #region States
     def mouseInGrip(self, mousePos: QPoint):
@@ -167,6 +148,10 @@ class NtWidgetPad(QWidget):
     #endregion
 
     #region Setters
+
+    def setCanvasCoords(self, x: int, y: int):
+        self.canvas_x = x
+        self.canvas_y = y
 
     def setLayoutAlignmentX(self, align_x: Qt.AlignmentFlag):
         if align_x == Qt.AlignmentFlag.AlignLeft:
@@ -235,54 +220,78 @@ class NtWidgetPad(QWidget):
     #endregion
 
     #region View / Rendering
+
+    def updatePosition(self):
+        if self.canvas == None: return
+        if self.widget == None: return
+
+        geometry = self.canvas.geometry()
+        local_geometry = self.canvas.localGeometry(self.canvas_x, self.canvas_y)
+        target_pos = local_geometry.topLeft()
+
+        center_x = int(local_geometry.center().x() - self.width() / 2)
+        center_y = int(local_geometry.center().y() - self.height() / 2)
+        
+        if self.alignment_x == Qt.AlignmentFlag.AlignLeft:
+            if self.alignment_y == Qt.AlignmentFlag.AlignTop: target_pos = local_geometry.topLeft()
+            elif self.alignment_y == Qt.AlignmentFlag.AlignBottom: target_pos = local_geometry.bottomLeft()
+            elif self.alignment_y == Qt.AlignmentFlag.AlignVCenter: target_pos = QPoint(local_geometry.left(), center_y)
+        elif self.alignment_x == Qt.AlignmentFlag.AlignRight:
+            if self.alignment_y == Qt.AlignmentFlag.AlignTop: target_pos = local_geometry.topRight()
+            elif self.alignment_y == Qt.AlignmentFlag.AlignBottom: target_pos = local_geometry.bottomRight()
+            elif self.alignment_y == Qt.AlignmentFlag.AlignVCenter: target_pos = QPoint(local_geometry.right(), center_y)
+        elif self.alignment_x == Qt.AlignmentFlag.AlignHCenter:
+            if self.alignment_y == Qt.AlignmentFlag.AlignTop: target_pos = QPoint(center_x, local_geometry.top())
+            elif self.alignment_y == Qt.AlignmentFlag.AlignBottom: target_pos = QPoint(center_x, local_geometry.bottom())
+            elif self.alignment_y == Qt.AlignmentFlag.AlignVCenter: target_pos = QPoint(center_x, center_y)
+
+        if target_pos.x() + self.width() >= geometry.right():
+            target_pos.setX(geometry.right() - self.width())
+
+        if target_pos.y() + self.height() >= geometry.bottom():
+            target_pos.setY(geometry.bottom() - self.height())
+
+        self.move(target_pos)
+
+    def updateSize(self, delta_x: int = 0, delta_y: int = 0):
+        if self.canvas == None: return
+        if self.widget == None: return
+
+        cellSize = self.canvas.size()
+
+        widgetSize = self.widgetSize()
+        widgetSizeHint = self.widgetSizeHint()
+        widgetNewSize = QSize(widgetSize.width() + delta_x, widgetSize.height() + delta_y)
+        
+        if self.resizingEnabled == False:
+            widgetNewSize = QSize(widgetSizeHint)
+
+        widgetNewSize = QSize(Ext.Geometry.fitToSource(widgetSizeHint, widgetNewSize))
+
+        height_scale = widgetNewSize.height() + self.btnHide.height() + 14
+        height_offset = cellSize.height() - self.btnHide.height() - 14
+
+        if cellSize.height() < height_scale:
+            widgetNewSize.setHeight(height_offset)
+    
+        if cellSize.width() < widgetNewSize.width():
+            widgetNewSize.setWidth(cellSize.width())         
+            
+        if widgetSize != widgetNewSize:
+            self.widget.setFixedSize(widgetNewSize)
+            
+        padSizeHint = self.sizeHint()
+        padSizeHint = Ext.Geometry.fitToTarget(padSizeHint, cellSize)
+
+        if self.size() != padSizeHint: self.setFixedSize(padSizeHint)
+
     def adjustToView(self, delta_x: int = 0, delta_y: int = 0):
         """
         Adjust the position and size of the Pad to that of the active View."""
+        self.updatePosition()
+        self.updateSize(delta_x, delta_y)
+        self.updatePosition()
         
-        
-        
-        def fitToView(_view: QRect, _sizeToFit: QSize):
-            def height_scale(input):
-                return input + self.btnHide.height() + 14
-            
-            def height_offset(input):
-                return input - self.btnHide.height() - 14
-            
-            def width_offset(input):
-                return input - 14
-            
-            def width_scale(input):
-                return input + 14
-            
-            result = QSize(_sizeToFit)
-
-            if _view.height() < height_scale(result.height()):
-                result.setHeight(height_offset(_view.height()))
-        
-            if _view.width() < width_scale(result.width()):
-                result.setWidth(width_offset(_view.width()))
-                    
-            return result
-        
-        
-        if self.canvas and self.widget != None and self.targetLayout():          
-            widgetSize = self.widgetSize()
-            widgetSizeHint = self.widgetSizeHint()
-            widgetNewSize = QSize(widgetSize.width() + delta_x, widgetSize.height() + delta_y)
-            
-            if self.resizingEnabled == False:
-                widgetNewSize = QSize(widgetSizeHint)
-                                           
-            widgetNewSize = fitToView(self.targetLayout(), Ext.Geometry.fitToSource(widgetSizeHint, widgetNewSize))                   
-            if widgetSize != widgetNewSize:
-                self.widget.setFixedSize(widgetNewSize)
-                
-            padSizeHint = self.sizeHint()
-            padSizeHint = Ext.Geometry.fitToTarget(padSizeHint, self.targetLayout())
-
-            if self.size() != padSizeHint:
-                self.resize(padSizeHint)
-
     def updateCursor(self, pos: QPoint):
         
         if self.resizingEnabled == False:
@@ -335,7 +344,7 @@ class NtWidgetPad(QWidget):
         self.updateCursor(self.cursor().pos())
         
     def onSubWindowActivated(self, subWin):
-        self.canvas.requestViewUpdate()
+        self.canvas.updateView()
     #endregion
   
     #region Events
@@ -374,7 +383,7 @@ class NtWidgetPad(QWidget):
         self.updateCursor(e.pos())
             
     def subWindowEvent(self):
-        self.canvas.requestViewUpdate()
+        self.canvas.updateView()
     
     def closeEvent(self, e):
         """

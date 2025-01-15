@@ -3,7 +3,7 @@
     "toolbox_enabled": true,
     "toolshelf_count": 2,
     "toolbox": {
-        "position_x": 0,
+        "position_x": 1,
         "position_y": 0,
         "alignment_y": "top",
         "alignment_x": "center",
@@ -16,7 +16,7 @@
     },
     "toolshelf_alpha": {
         "position_x": 2,
-        "position_y": 0,
+        "position_y": 1,
         "stretch_x": 0,
         "stretch_y": 0,
         "span_x": -1,
@@ -27,7 +27,7 @@
     },
     "toolshelf_beta": {
         "position_x": 0,
-        "position_y": 0,
+        "position_y": 1,
         "stretch_x": 0,
         "stretch_y": 0,
         "span_x": -1,

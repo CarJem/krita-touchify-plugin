@@ -7,12 +7,12 @@ from PyQt5.QtWidgets import QMdiArea
 from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
 from touchify.src.components.touchify.canvas.NtToolbox import NtToolbox
 from touchify.src.components.touchify.canvas.NtToolshelf import NtToolshelf
+from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from touchify.src.helpers import TouchifyHelpers
 from touchify.src.settings import TouchifySettings
 from krita import *
 from PyQt5.QtCore import QObject
 from touchify.src.variables import *
-from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from touchify.src.components.krita.settings import KritaSettings
 from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.cfg.widget_layout.WidgetLayoutPadOptions import WidgetLayoutPadOptions
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from touchify.src.window import TouchifyWindow
 
 
-class NtCanvas(QWidget):
+class NtCanvas(QObject):
     def __init__(self, parent: QObject, window: Window):
         super().__init__(parent)
 
@@ -35,15 +35,20 @@ class NtCanvas(QWidget):
         self.windowLoaded = False
         self.app_engine = None
 
+        self._size = QSize()
+        self._pos = QPoint()
+        self._coords: dict[int, dict[int, NtWidgetPad]] = {}
+
         self.toolbox: NtToolbox = None
         self.toolshelf_beta: NtToolshelf = None
         self.toolshelf_alpha: NtToolshelf = None
         self.toolshelf_gamma: NtToolshelf = None
         self.toolshelf_delta: NtToolshelf = None
 
-        self.view_update_timer = QTimer(self)
-        self.view_update_timer.setSingleShot(True)
-        self.view_update_timer.timeout.connect(self.updateView)
+        self.adjust_widget_timer = QTimer(self)
+        self.adjust_widget_timer.setInterval(1000)
+        self.adjust_widget_timer.timeout.connect(self.adjustWidgets)
+        self.adjust_widget_timer.start()
 
         self.toolshelf_count = 0
         self.toolbox_enabled = False
@@ -52,26 +57,121 @@ class NtCanvas(QWidget):
         self.presetsMenu.aboutToShow.connect(self.buildPresetMenu)
 
         self.installEventFilter(self)
-
-        self.resetCanvasLayout()
-
         self.reloadActivePreset()
 
-    def resetCanvasLayout(self):
-        self.canvasLayout = QGridLayout(self)
-        self.canvasLayout.setContentsMargins(0,0,0,0)
-        self.canvasLayout.setSpacing(0)
-        self.setLayout(self.canvasLayout)
+    #region Layout
+    def clearCanvasCoords(self):
+        self._coords.clear()
+
+    def setCanvasCoords(self, widget: NtWidgetPad, x: int, y: int):
+        if not x in self._coords: self._coords[x] = {}
+        self._coords[x][y] = widget
+        widget.setCanvasCoords(x, y)
+
+    def localSize(self, x: int, y: int):
+        return self.localGeometry(x,y).size()
+
+    def localPos(self, x: int, y: int):
+        return self.localGeometry(x,y).topLeft()
+    
+    def canvasBorderWidth(self):
+        ruler_padding = 15 if KritaSettings.showRulers() else 0
+        return ruler_padding
+    
+    def canvasBorderHeight(self):
+        ruler_padding = 15 if KritaSettings.showRulers() else 0
+        tab_padding = 32
+        return ruler_padding + tab_padding
+
+    def localGeometry(self, x: int, y: int):
+        if not x in self._coords: return self.geometry()
+        if not y in self._coords[x]: return self.geometry()
+        widget = self._coords[x][y]
+        if not widget: return self.geometry()
+
+        x_sibling: NtWidgetPad = None
+        if x + 1 in self._coords: 
+            if y in self._coords[x+1]: x_sibling = self._coords[x+1][y]
+            else: x_sibling = None
+        else: x_sibling = None
+
+        y_sibling: NtWidgetPad = None
+        if y + 1 in self._coords[x]: y_sibling = self._coords[x][y+1]
+        else: y_sibling = None
+        
+        canvas_size = self.size()
+        bounds = canvas_size
+        
+        #if x_sibling: 
+            #x_sibling.geometry().left()
+
+        #if y_sibling: 
+            #y_sibling.geometry().top()
+            
+
+        if y == 0: yrange = [0]
+        else: yrange = range(0, y)
+
+        local_x = self.pos().x()
+        local_y = self.pos().y()
+        local_width = self.size().width()
+        local_height = self.size().height()
+
+        for tx in range(0, x):
+            if not tx in self._coords: continue
+            lwv = 0
+
+            for ty in yrange:
+                if not ty in self._coords[tx]: continue
+                wi = self._coords[tx][ty].width()
+                if wi > lwv: lwv = wi
+            
+            local_x = local_x + lwv
+
+        if local_x + widget.width() > bounds.width():
+            local_x = bounds.width() - widget.width()
+
+            
+        for ty in range(0, y):
+            if not ty in self._coords[x]: continue
+            
+            hi = self._coords[x][ty]
+            local_y = local_y + hi.height()
+            
+        if local_y + widget.height() + widget.btnHide.height() > bounds.height():
+            local_y = bounds.height() - widget.height() - widget.btnHide.height()
+
+        if local_x < self.canvasBorderWidth(): local_x = self.canvasBorderWidth()
+        if local_y < self.canvasBorderHeight(): local_y = self.canvasBorderHeight()
+
+        return QRect(local_x, local_y, local_width, local_height)
+        
+        
+
+    def geometry(self):
+        return QRect(self._pos.x(), self._pos.y(), self._size.width(), self._size.height())
+
+    def size(self):
+        return self._size
+    
+    def pos(self):
+        return self._pos
+    
+    def setFixedSize(self, size: QSize):
+        self._size = size
+
+    def move(self, pos: QPoint):
+        self._pos = pos
+
+
+    #endregion
 
     #region States
 
+
+
     def isEmpty(self):
-        if self.toolbox: return False
-        elif self.toolshelf_alpha: return False
-        elif self.toolshelf_beta: return False
-        elif self.toolshelf_gamma: return False
-        elif self.toolshelf_delta: return False
-        else: return True
+        return False
 
     #endregion
 
@@ -79,7 +179,7 @@ class NtCanvas(QWidget):
     def windowCreated(self, app_engine: "TouchifyWindow"):
         self.app_engine = app_engine
 
-        Krita.instance().action("view_ruler").triggered.connect(self.requestViewUpdate)
+        Krita.instance().action("view_ruler").triggered.connect(self.updateView)
 
 
         self.krita_window = self.app_engine.windowSource
@@ -89,7 +189,7 @@ class NtCanvas(QWidget):
 
         self.windowEventFilter = NtSubWinFilter(self)
         self.windowEventFilter.SIGNAL_ACTIVATE_FORCE.connect(self.updateView)
-        self.windowEventFilter.SIGNAL_ACTIVATE_QUEUE.connect(self.requestViewUpdate)
+        self.windowEventFilter.SIGNAL_ACTIVATE_QUEUE.connect(self.updateView)
         self.qWin.installEventFilter(self.windowEventFilter)
 
         self.windowLoaded = True
@@ -205,9 +305,9 @@ class NtCanvas(QWidget):
     #endregion
 
     #region Event Functions
+    
 
     def eventFilter(self, a0, a1):
-        self.updateMask()
         return super().eventFilter(a0, a1)
 
     def onConfigUpdate(self):
@@ -231,110 +331,141 @@ class NtCanvas(QWidget):
 
     #region Update Functions
 
-
-
     def updateElements(self, full_unload: bool = False):
-        def onToolshelfCheck(toolshelf: NtToolshelf | None, allow_toolshelf: bool, config_index: int, action: QAction):
+
+        def createEmptySpace(x: int, y: int):
+            pass
+  
+        def deactivateToolshelf(allow_toolshelf: bool, config_index: int):
+            match config_index:
+                case 0: toolshelf = self.toolshelf_alpha
+                case 1: toolshelf = self.toolshelf_beta
+                case 2: toolshelf = self.toolshelf_gamma
+                case 3: toolshelf = self.toolshelf_delta
+                case _: return
+
+            if toolshelf and not allow_toolshelf:
+                toolshelf.close()
+                match config_index:
+                    case 0: self.toolshelf_alpha = None
+                    case 1: self.toolshelf_beta = None
+                    case 2: self.toolshelf_gamma = None
+                    case 3: self.toolshelf_delta = None
+                    case _: return
+      
+        def activateToolshelf(x: int, y: int, allow_toolshelf: bool, config_index: int, action: QAction, data: dict, options: WidgetLayoutPadOptions):
+            match config_index:
+                case 0: toolshelf = self.toolshelf_alpha
+                case 1: toolshelf = self.toolshelf_beta
+                case 2: toolshelf = self.toolshelf_gamma
+                case 3: toolshelf = self.toolshelf_delta
+                case _: return        
+                
             if toolshelf == None and allow_toolshelf:
                 actual_toolshelf = NtToolshelf(self, self.krita_window, config_index, self.app_engine)
+                self.setCanvasCoords(actual_toolshelf, x, y)
                 actual_toolshelf.btnHide.setDefaultAction(action)
-                self.canvasLayout.addWidget(actual_toolshelf)
+                actual_toolshelf.setLayoutAlignmentX(WidgetLayoutPadOptions.HorizontalAlignment.toAlignmentFlag(options.alignment_x))
+                actual_toolshelf.setLayoutAlignmentY(WidgetLayoutPadOptions.VerticalAlignment.toAlignmentFlag(options.alignment_y))
                 actual_toolshelf.show()
-                return actual_toolshelf
-            elif toolshelf and not allow_toolshelf:
-                toolshelf.close()
-                self.canvasLayout.removeWidget(toolshelf)
-                return None
-            else:
-                return "ignore"
+                match config_index:
+                    case 0: self.toolshelf_alpha = actual_toolshelf
+                    case 1: self.toolshelf_beta = actual_toolshelf
+                    case 2: self.toolshelf_gamma = actual_toolshelf
+                    case 3: self.toolshelf_delta = actual_toolshelf
+                    case _: return
         
-        def onToolboxCheck(allow_toolbox: bool):
-            if self.toolbox == None and allow_toolbox:
-                self.toolbox = NtToolbox(self, self.krita_window)
-                self.toolbox.btnHide.setDefaultAction(self.tlb_action)
-                self.canvasLayout.addWidget(self.toolbox)
-                self.toolbox.show()
-            elif self.toolbox and not allow_toolbox:
-                self.canvasLayout.removeWidget(self.toolbox)
+        def deactivateToolbox(allow_toolbox: bool):
+            if self.toolbox and not allow_toolbox:
                 self.toolbox.close()
                 self.toolbox = None
+        
+        def activateToolbox(x: int, y: int, allow_toolbox: bool, data: dict, options: WidgetLayoutToolboxOptions):
+            if self.toolbox == None and allow_toolbox:
+                self.toolbox = NtToolbox(self, self.krita_window)
+                self.setCanvasCoords(self.toolbox, x, y)
+                self.toolbox.btnHide.setDefaultAction(self.tlb_action)
+                self.toolbox.setLayoutAlignmentX(WidgetLayoutPadOptions.HorizontalAlignment.toAlignmentFlag(options.alignment_x))
+                self.toolbox.setLayoutAlignmentY(WidgetLayoutPadOptions.VerticalAlignment.toAlignmentFlag(options.alignment_y))
+                self.toolbox.show()
 
-        def insertWidgetPad(pad: NtWidgetPad, padOptions: WidgetLayoutPadOptions | WidgetLayoutToolboxOptions):
-            alignment_x = WidgetLayoutPadOptions.HorizontalAlignment.toAlignmentFlag(padOptions.alignment_x)
-            alignment_y = WidgetLayoutPadOptions.VerticalAlignment.toAlignmentFlag(padOptions.alignment_y)
-            pos_y = padOptions.position_y
-            pos_x = padOptions.position_x
-            span_x = padOptions.span_x
-            span_y = padOptions.span_y
-            pad.setLayoutAlignmentX(alignment_x)
-            pad.setLayoutAlignmentY(alignment_y)
-            pad.setTargetCoords(pos_y, pos_x)
-
-            if span_x != -1 and span_y != -1:
-                self.canvasLayout.addWidget(pad, pos_y, pos_x, padOptions.span_y, padOptions.span_x, alignment_x | alignment_y)
-            else:
-                self.canvasLayout.addWidget(pad, pos_y, pos_x, alignment_x | alignment_y)
-            self.canvasLayout.setColumnStretch(pos_x, padOptions.stretch_x)
-            self.canvasLayout.setRowStretch(pos_y, padOptions.stretch_y)
+        def ItemData(padOptions: WidgetLayoutPadOptions | WidgetLayoutToolboxOptions, widgetType: str) -> dict:
+                return {
+                    "x": padOptions.position_x,
+                    "y": padOptions.position_y,
+                    "widgetType": widgetType,
+                    "align_x": padOptions.alignment_x,
+                    "align_y": padOptions.alignment_y
+                }
 
         if self.windowLoaded == False:
             return
-        
 
-        if full_unload:
-            onToolboxCheck(False)
-
-            alpha = onToolshelfCheck(self.toolshelf_alpha, False, 0, self.tlshlf_alpha_action)
-            if alpha != "ignore": self.toolshelf_alpha = alpha
-
-            beta = onToolshelfCheck(self.toolshelf_beta,  False, 1, self.tlshlf_beta_action)
-            if beta != "ignore": self.toolshelf_beta = beta
-
-            gamma = onToolshelfCheck(self.toolshelf_gamma, False, 2, self.tlshlf_gamma_action)
-            if gamma != "ignore": self.toolshelf_gamma = gamma
-
-            delta = onToolshelfCheck(self.toolshelf_delta, False, 3, self.tlshlf_delta_action)
-            if delta != "ignore": self.toolshelf_delta = delta
-
-            #TODO: Implement Toggle Button Positions, NtWidgetPad Resize Constrations 
-            # to Prevent Overlap, and Better Overlay Bounds Calculations
-            if self.canvasLayout.count() != 0:
-                self.resetCanvasLayout()
-        
-        
-        
         allow_toolbox = self.toolbox_enabled
         allow_toolshelf_alpha = self.toolshelf_count >= 1
         allow_toolshelf_beta = self.toolshelf_count >= 2
         allow_toolshelf_gamma = self.toolshelf_count >= 3
         allow_toolshelf_delta = self.toolshelf_count >= 4
 
-        onToolboxCheck(allow_toolbox)
+        self.clearCanvasCoords()
 
-        alpha = onToolshelfCheck(self.toolshelf_alpha, allow_toolshelf_alpha, 0, self.tlshlf_alpha_action)
-        if alpha != "ignore": self.toolshelf_alpha = alpha
+        deactivateToolbox(False)
+        deactivateToolshelf(False, 0)
+        deactivateToolshelf(False, 1)
+        deactivateToolshelf(False, 2)
+        deactivateToolshelf(False, 3)
+        
+        preset_data = []
+        if allow_toolbox: preset_data.append(ItemData(self.active_preset.toolbox, "toolbox"))
+        if allow_toolshelf_alpha: preset_data.append(ItemData(self.active_preset.toolshelf_alpha, "toolshelf_1"))
+        if allow_toolshelf_beta: preset_data.append(ItemData(self.active_preset.toolshelf_beta, "toolshelf_2"))
+        if allow_toolshelf_gamma: preset_data.append(ItemData(self.active_preset.toolshelf_gamma, "toolshelf_3"))
+        if allow_toolshelf_delta: preset_data.append(ItemData(self.active_preset.toolshelf_delta, "toolshelf_4"))
 
-        beta = onToolshelfCheck(self.toolshelf_beta,  allow_toolshelf_beta, 1, self.tlshlf_beta_action)
-        if beta != "ignore": self.toolshelf_beta = beta
+        if len(preset_data) == 0: return
 
-        gamma = onToolshelfCheck(self.toolshelf_gamma, allow_toolshelf_gamma, 2, self.tlshlf_gamma_action)
-        if gamma != "ignore": self.toolshelf_gamma = gamma
+        grid_width = max(preset_data, key=lambda x:x['x'])['x'] + 1
+        grid_height = max(preset_data, key=lambda x:x['y'])['y'] + 1
+        grid_itemMap: dict[int, dict[int, dict]] = {}
 
-        delta = onToolshelfCheck(self.toolshelf_delta, allow_toolshelf_delta, 3, self.tlshlf_delta_action)
-        if delta != "ignore": self.toolshelf_delta = delta
+        for preset in preset_data:
+            x: int = preset['x']
+            y: int = preset['y']
 
+            if x not in grid_itemMap: grid_itemMap[x] = {}
+            if y not in grid_itemMap[x]: grid_itemMap[x][y] = {}
 
+            grid_itemMap[x][y] = preset
 
-        if self.toolbox: insertWidgetPad(self.toolbox, self.active_preset.toolbox)
-        if self.toolshelf_alpha: insertWidgetPad(self.toolshelf_alpha, self.active_preset.toolshelf_alpha)
-        if self.toolshelf_beta: insertWidgetPad(self.toolshelf_beta, self.active_preset.toolshelf_beta)
-        if self.toolshelf_gamma: insertWidgetPad(self.toolshelf_gamma, self.active_preset.toolshelf_gamma)
-        if self.toolshelf_delta: insertWidgetPad(self.toolshelf_delta, self.active_preset.toolshelf_delta)
+        for x in range(0, grid_width):
+            for y in range(0, grid_height):
+                if x not in grid_itemMap: grid_itemMap[x] = {}
+                if y not in grid_itemMap[x]:
+                    if len(grid_itemMap[x]) != 0:
+                        grid_itemMap[x][y] = {'widgetType': "reserved"}
+                    else:
+                        grid_itemMap[x][y] = {'widgetType': "empty"}
 
-    def requestViewUpdate(self):
-        if self.view_update_timer.isActive():
-            self.view_update_timer.stop()
-        self.view_update_timer.start(250)
+        for x in range(0, grid_width):
+            for y in range(0, grid_height):
+                print(f"{x,y} -- {grid_itemMap[x][y]}")
+                
+        for x in range(0, grid_width):
+            for y in range(0, grid_height):
+                data = grid_itemMap[x][y]
+
+                if data['widgetType'] == "toolbox":
+                    activateToolbox(x, y, allow_toolbox, data, self.active_preset.toolbox)
+                elif data['widgetType'] == "toolshelf_1":
+                    activateToolshelf(x, y, allow_toolshelf_alpha, 0, self.tlshlf_alpha_action, data, self.active_preset.toolshelf_alpha)
+                elif data['widgetType'] == "toolshelf_2":
+                    activateToolshelf(x, y, allow_toolshelf_beta, 1, self.tlshlf_beta_action, data, self.active_preset.toolshelf_beta)
+                elif data['widgetType'] == "toolshelf_3":
+                    activateToolshelf(x, y, allow_toolshelf_gamma, 2, self.tlshlf_gamma_action, data, self.active_preset.toolshelf_gamma)
+                elif data['widgetType'] == "toolshelf_4":
+                    activateToolshelf(x, y, allow_toolshelf_delta, 3, self.tlshlf_delta_action, data, self.active_preset.toolshelf_delta)
+                elif data['widgetType'] == "empty" or data['widgetType'] == "reserved":
+                    createEmptySpace(x, y)
 
     def updateView(self):
         if self.windowLoaded == False:
@@ -370,20 +501,16 @@ class NtCanvas(QWidget):
             self.move(position)
             self.setFixedSize(size)
 
+        self.adjustWidgets()
+
+
+    def adjustWidgets(self):
         if self.toolbox: self.toolbox.adjustToView()
         if self.toolshelf_alpha: self.toolshelf_alpha.adjustToView()
         if self.toolshelf_beta: self.toolshelf_beta.adjustToView()
         if self.toolshelf_gamma: self.toolshelf_gamma.adjustToView()
         if self.toolshelf_delta: self.toolshelf_delta.adjustToView()
     
-
-    def updateMask(self):
-        if not self.isEmpty():
-            maskedRegion = QRegion(self.frameGeometry())
-            maskedRegion -= QRegion(self.geometry())
-            maskedRegion += self.childrenRegion()
-            self.setMask(maskedRegion)
-
     def mouseMoveEvent(self, a0):
         pos = self.cursor().pos()
         if self.toolbox: self.toolbox.updateCursor(pos)
@@ -441,7 +568,7 @@ class NtCanvas(QWidget):
         if self.toolshelf_gamma: self.toolshelf_gamma.setCollapsed(show_toolshelf_gamma)
         if self.toolshelf_delta: self.toolshelf_delta.setCollapsed(show_toolshelf_delta)
 
-        self.requestViewUpdate()
+        self.updateView()
         
 
     #endregion
