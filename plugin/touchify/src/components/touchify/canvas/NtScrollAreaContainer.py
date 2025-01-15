@@ -23,6 +23,7 @@ class NtScrollAreaContainer(QResizableWidget):
         if self.sa and self.sa.widget():
             sizeHint = self.sa.widget().sizeHint()
             sizeHint.setWidth(sizeHint.width() + self.sa.verticalScrollBar().width())
+            sizeHint.setHeight(sizeHint.height() + self.sa.horizontalScrollBar().height())
             return sizeHint
             
 
