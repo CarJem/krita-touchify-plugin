@@ -23,7 +23,6 @@ from PyQt5.QtCore import Qt, QSize, QPoint
 from touchify.src.components.touchify.canvas.NtScrollAreaContainer import NtScrollAreaContainer
 from touchify.src.components.touchify.canvas.NtTogglePadButton import NtTogglePadButton
 
-from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
 
 from touchify.src.settings import *
 from touchify.src.components.pyqt.extensions import PyQtExtensions as Ext
@@ -42,6 +41,11 @@ class NtWidgetPad(QWidget):
 
     def __init__(self, window: Window, canvas: "NtCanvas", allowResizing: bool = False):
         super(NtWidgetPad, self).__init__(canvas)
+
+        self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, False)
+
+        self.__target_row: int = None
+        self.__target_column: int = None
 
         self.qWin = window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
@@ -88,13 +92,22 @@ class NtWidgetPad(QWidget):
         self.resizing = False
 
         #Install Event Filters
-        self.adjustFilter = NtSubWinFilter(self.mdiArea)
-        self.adjustFilter.setTargetWidget(self)
-
-        self.qWin.installEventFilter(self.adjustFilter)
-        self.installEventFilter(self.adjustFilter)
-
         self.mdiArea.subWindowActivated.connect(self.onSubWindowActivated)        
+
+    def setTargetCoords(self, row: int, column: int):
+        self.__target_row = row
+        self.__target_column = column
+
+    def targetLayout(self):
+        if self.canvas and self.__target_column != None and self.__target_row != None:
+            return self.canvas.size()
+            #targetGrid = self.canvas.canvasLayout
+            #result = targetGrid.itemAtPosition(self.__target_row, self.__target_column).sizeHint()
+            #if result: return result
+
+        return None
+
+
         
     #region States
     def mouseInGrip(self, mousePos: QPoint):
@@ -228,7 +241,7 @@ class NtWidgetPad(QWidget):
         
         
         
-        def fitToView(_view: QWidget, _sizeToFit: QSize):
+        def fitToView(_view: QRect, _sizeToFit: QSize):
             def height_scale(input):
                 return input + self.btnHide.height() + 14
             
@@ -252,9 +265,7 @@ class NtWidgetPad(QWidget):
             return result
         
         
-
-
-        if self.canvas and self.widget != None:          
+        if self.canvas and self.widget != None and self.targetLayout():          
             widgetSize = self.widgetSize()
             widgetSizeHint = self.widgetSizeHint()
             widgetNewSize = QSize(widgetSize.width() + delta_x, widgetSize.height() + delta_y)
@@ -262,12 +273,12 @@ class NtWidgetPad(QWidget):
             if self.resizingEnabled == False:
                 widgetNewSize = QSize(widgetSizeHint)
                                            
-            widgetNewSize = fitToView(self.canvas, Ext.Geometry.fitToSource(widgetSizeHint, widgetNewSize))                   
+            widgetNewSize = fitToView(self.targetLayout(), Ext.Geometry.fitToSource(widgetSizeHint, widgetNewSize))                   
             if widgetSize != widgetNewSize:
                 self.widget.setFixedSize(widgetNewSize)
                 
             padSizeHint = self.sizeHint()
-            padSizeHint = Ext.Geometry.fitToTarget(padSizeHint, self.canvas.size())
+            padSizeHint = Ext.Geometry.fitToTarget(padSizeHint, self.targetLayout())
 
             if self.size() != padSizeHint:
                 self.resize(padSizeHint)
@@ -324,9 +335,7 @@ class NtWidgetPad(QWidget):
         self.updateCursor(self.cursor().pos())
         
     def onSubWindowActivated(self, subWin):
-        if subWin:
-            subWin.installEventFilter(self.adjustFilter)
-            self.canvas.updateView()
+        self.canvas.requestViewUpdate()
     #endregion
   
     #region Events
@@ -365,17 +374,13 @@ class NtWidgetPad(QWidget):
         self.updateCursor(e.pos())
             
     def subWindowEvent(self):
-        self.canvas.updateView()
+        self.canvas.requestViewUpdate()
     
     def closeEvent(self, e):
         """
         Since the plugins works by borrowing the actual docker 
         widget we need to ensure its returned upon closing the pad"""
-        self.mdiArea.subWindowActivated.disconnect(self.onSubWindowActivated)
-
-        self.qWin.removeEventFilter(self.adjustFilter)
-        self.removeEventFilter(self.adjustFilter)
-        
+        self.mdiArea.subWindowActivated.disconnect(self.onSubWindowActivated)        
         self.returnDocker()
         return super().closeEvent(e)
 

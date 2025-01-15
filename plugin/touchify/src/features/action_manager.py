@@ -429,12 +429,12 @@ class ActionManager(QObject):
             self.__lastBrushBlendingMode = currentBrushBlendingMode
 
         if currentForegroundColor != self.__lastForegroundColor:
-            print("foreground changed")
+            #print("foreground changed")
             self.foregroundColorChanged.emit(currentForegroundColor)
             self.__lastForegroundColor = currentForegroundColor
 
         if currentBackgroundColor != self.__lastBackgroundColor:
-            print("foreground changed")
+            #print("foreground changed")
             self.backgroundColorChanged.emit(currentBackgroundColor)
             self.__lastBackgroundColor = currentBackgroundColor
 

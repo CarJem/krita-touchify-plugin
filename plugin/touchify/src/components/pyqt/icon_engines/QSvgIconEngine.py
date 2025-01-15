@@ -44,12 +44,12 @@ class QSvgIconEngine(QIconEngine):
         img = QPixmap(size)
         img.fill(Qt.GlobalColor.transparent)
         painter = QPainter(img)
-        painter.begin(img)
         self.updateData()
         self.renderer.render(painter, QRectF(img.rect()))
         painter.end()
         return img
 
     def paint(self, painter: QPainter, rect: QRect, mode: QIcon.Mode, state: QIcon.State):
+        self.updatePixmap
         self.updateData()
         self.renderer.render(painter, QRectF(rect))

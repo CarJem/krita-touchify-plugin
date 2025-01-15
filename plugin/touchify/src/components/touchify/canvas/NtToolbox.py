@@ -17,7 +17,6 @@ class NtToolbox(NtWidgetPad):
         super().__init__(window, canvas)
         self.reopenDockerOnReturn = False
         self.toolbox: ToolboxDocker = self.qWin.findChild(ToolboxDocker, TOUCHIFY_ID_DOCKER_TOOLBOX)
-        self.toolbox.installEventFilter(self.adjustFilter)
         
         self.setObjectName("toolBoxPad")
         self.borrowDocker(self.toolbox)
@@ -31,5 +30,4 @@ class NtToolbox(NtWidgetPad):
     def close(self):
         self.toolbox.toolboxWidget.horizontalModeAction.setEnabled(True)
         self.dockerAction.setEnabled(True)
-        self.toolbox.removeEventFilter(self.adjustFilter)
         return super().close()

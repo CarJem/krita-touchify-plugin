@@ -59,7 +59,7 @@ class ResourceManager:
                     if ResourceManager.__is_vaild_custom_icon__(icon_filename):
                         icon_name = ResourceManager.__get_icon_name_from_file__(icon_filename)
                         icon_data = QtGui.QIcon(icon_filepath)
-                        print(icon_name)
+                        #print(icon_name)
                         ResourceManager.resource_pack_icons[resource_pack][icon_name] = icon_data
 
 

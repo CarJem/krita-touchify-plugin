@@ -20,7 +20,7 @@ class TouchifyHelpers:
 
         afterAct = None
         for index, action in enumerate(dest.actions()):
-            print(action.objectName())
+            #print(action.objectName())
             if action.objectName() == after:
                 afterAct = dest.actions()[index+1]
                 break

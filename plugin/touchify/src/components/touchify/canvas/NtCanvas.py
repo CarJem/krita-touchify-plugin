@@ -3,8 +3,8 @@ from PyQt5.QtWidgets import QMdiArea
 
 
 
-from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
 
+from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
 from touchify.src.components.touchify.canvas.NtToolbox import NtToolbox
 from touchify.src.components.touchify.canvas.NtToolshelf import NtToolshelf
 from touchify.src.helpers import TouchifyHelpers
@@ -30,16 +30,20 @@ class NtCanvas(QWidget):
         self.qWin = None
         self.mdiArea = None
 
-        self.adjustFilter = None
+        self.windowEventFilter = None
         
         self.windowLoaded = False
         self.app_engine = None
 
-        self.toolbox = None
-        self.toolshelf_beta = None
-        self.toolshelf_alpha = None
-        self.toolshelf_gamma = None
-        self.toolshelf_delta = None
+        self.toolbox: NtToolbox = None
+        self.toolshelf_beta: NtToolshelf = None
+        self.toolshelf_alpha: NtToolshelf = None
+        self.toolshelf_gamma: NtToolshelf = None
+        self.toolshelf_delta: NtToolshelf = None
+
+        self.view_update_timer = QTimer(self)
+        self.view_update_timer.setSingleShot(True)
+        self.view_update_timer.timeout.connect(self.updateView)
 
         self.toolshelf_count = 0
         self.toolbox_enabled = False
@@ -47,12 +51,17 @@ class NtCanvas(QWidget):
         self.presetsMenu = QMenu("Canvas Layouts...")
         self.presetsMenu.aboutToShow.connect(self.buildPresetMenu)
 
+        self.installEventFilter(self)
+
+        self.resetCanvasLayout()
+
+        self.reloadActivePreset()
+
+    def resetCanvasLayout(self):
         self.canvasLayout = QGridLayout(self)
         self.canvasLayout.setContentsMargins(0,0,0,0)
         self.canvasLayout.setSpacing(0)
         self.setLayout(self.canvasLayout)
-
-        self.reloadActivePreset()
 
     #region States
 
@@ -70,24 +79,25 @@ class NtCanvas(QWidget):
     def windowCreated(self, app_engine: "TouchifyWindow"):
         self.app_engine = app_engine
 
-        Krita.instance().action("view_ruler").triggered.connect(self.updateView)
+        Krita.instance().action("view_ruler").triggered.connect(self.requestViewUpdate)
 
 
         self.krita_window = self.app_engine.windowSource
         self.qWin = self.krita_window.qwindow()
         self.mdiArea = self.qWin.findChild(QMdiArea)
-
-        self.adjustFilter = NtSubWinFilter(self.mdiArea)
-        self.adjustFilter.setTargetWidget(self)
-        self.qWin.installEventFilter(self.adjustFilter)
         self.setParent(self.mdiArea)
+
+        self.windowEventFilter = NtSubWinFilter(self)
+        self.windowEventFilter.SIGNAL_ACTIVATE_FORCE.connect(self.updateView)
+        self.windowEventFilter.SIGNAL_ACTIVATE_QUEUE.connect(self.requestViewUpdate)
+        self.qWin.installEventFilter(self.windowEventFilter)
 
         self.windowLoaded = True
 
-        
         self.krita_window.qwindow().themeChanged.connect(self.updatePalette)
         self.updateElements()
         self.updateActions()
+        
 
     def finishMenuActions(self):
         settings_menu = self.qWin.findChild(QMenu, 'settings')
@@ -196,15 +206,9 @@ class NtCanvas(QWidget):
 
     #region Event Functions
 
-    def subWindowEvent(self):
-        self.updateView()
-
-    def resizeEvent(self, e: QResizeEvent):
-        super().resizeEvent(e)
-        self.updateView()
-
-    def paintEvent(self, e: QPaintEvent):
-        super().paintEvent(e)
+    def eventFilter(self, a0, a1):
+        self.updateMask()
+        return super().eventFilter(a0, a1)
 
     def onConfigUpdate(self):
         self.reloadActivePreset()
@@ -258,15 +262,20 @@ class NtCanvas(QWidget):
         def insertWidgetPad(pad: NtWidgetPad, padOptions: WidgetLayoutPadOptions | WidgetLayoutToolboxOptions):
             alignment_x = WidgetLayoutPadOptions.HorizontalAlignment.toAlignmentFlag(padOptions.alignment_x)
             alignment_y = WidgetLayoutPadOptions.VerticalAlignment.toAlignmentFlag(padOptions.alignment_y)
+            pos_y = padOptions.position_y
+            pos_x = padOptions.position_x
+            span_x = padOptions.span_x
+            span_y = padOptions.span_y
             pad.setLayoutAlignmentX(alignment_x)
             pad.setLayoutAlignmentY(alignment_y)
+            pad.setTargetCoords(pos_y, pos_x)
 
-            if padOptions.span_x != -1 and padOptions.span_y != -1:
-                self.canvasLayout.addWidget(pad, padOptions.position_y, padOptions.position_x, padOptions.span_y, padOptions.span_x, alignment_x | alignment_y)
+            if span_x != -1 and span_y != -1:
+                self.canvasLayout.addWidget(pad, pos_y, pos_x, padOptions.span_y, padOptions.span_x, alignment_x | alignment_y)
             else:
-                self.canvasLayout.addWidget(pad, padOptions.position_y, padOptions.position_x, alignment_x | alignment_y)
-            self.canvasLayout.setColumnStretch(padOptions.position_x, padOptions.stretch_x)
-            self.canvasLayout.setRowStretch(padOptions.position_y, padOptions.stretch_y)
+                self.canvasLayout.addWidget(pad, pos_y, pos_x, alignment_x | alignment_y)
+            self.canvasLayout.setColumnStretch(pos_x, padOptions.stretch_x)
+            self.canvasLayout.setRowStretch(pos_y, padOptions.stretch_y)
 
         if self.windowLoaded == False:
             return
@@ -286,6 +295,11 @@ class NtCanvas(QWidget):
 
             delta = onToolshelfCheck(self.toolshelf_delta, False, 3, self.tlshlf_delta_action)
             if delta != "ignore": self.toolshelf_delta = delta
+
+            #TODO: Implement Toggle Button Positions, NtWidgetPad Resize Constrations 
+            # to Prevent Overlap, and Better Overlay Bounds Calculations
+            if self.canvasLayout.count() != 0:
+                self.resetCanvasLayout()
         
         
         
@@ -309,11 +323,7 @@ class NtCanvas(QWidget):
         delta = onToolshelfCheck(self.toolshelf_delta, allow_toolshelf_delta, 3, self.tlshlf_delta_action)
         if delta != "ignore": self.toolshelf_delta = delta
 
-        for x in range(self.canvasLayout.columnCount()):
-            self.canvasLayout.setColumnStretch(x, 0)
 
-        for y in range(self.canvasLayout.rowCount()):
-            self.canvasLayout.setRowStretch(y, 0)
 
         if self.toolbox: insertWidgetPad(self.toolbox, self.active_preset.toolbox)
         if self.toolshelf_alpha: insertWidgetPad(self.toolshelf_alpha, self.active_preset.toolshelf_alpha)
@@ -321,57 +331,66 @@ class NtCanvas(QWidget):
         if self.toolshelf_gamma: insertWidgetPad(self.toolshelf_gamma, self.active_preset.toolshelf_gamma)
         if self.toolshelf_delta: insertWidgetPad(self.toolshelf_delta, self.active_preset.toolshelf_delta)
 
+    def requestViewUpdate(self):
+        if self.view_update_timer.isActive():
+            self.view_update_timer.stop()
+        self.view_update_timer.start(250)
+
     def updateView(self):
         if self.windowLoaded == False:
             return
 
-        def rulerMargin():
-            padding = 4
-            # Canvas ruler pixel width on Windows
-            if KritaSettings.showRulers(): return 20 + padding
-            return 0
+        if not self.mdiArea: return
 
-        def scrollBarMargin():
-            padding = 4
-            # Canvas scrollbar pixel width/height on Windows 
-            if KritaSettings.hideScrollbars(): return 0
-            return 10 + padding
+        subWindow = self.mdiArea.activeSubWindow()
+        if not subWindow: return
 
-        if self.mdiArea:
-            position = self.mdiArea.viewport().pos()
-            size = self.mdiArea.viewport().size()
+        kis_view = subWindow.widget()
+        if not kis_view: return
 
-            position.setX(position.x() + rulerMargin())
-            position.setY(position.y() + rulerMargin())
+        canvas_controller = next((w for w in kis_view.findChildren(QAbstractScrollArea) if w.metaObject().className() == 'KisCanvasController'), None)
+        if not canvas_controller: return
 
-            size.setWidth(size.width() - rulerMargin() - scrollBarMargin())
-            size.setHeight(size.height() - rulerMargin() - scrollBarMargin())
+        viewport = next((w for w in canvas_controller.findChildren(QWidget) if w.metaObject().className() == 'Viewport'), None)
+        if not viewport: return
 
-            if self.isEmpty():
-                self.move(position)
-                self.setFixedSize(0, 0)
-            else:
-                self.move(position)
-                self.setFixedSize(size)
+        position = viewport.mapTo(self.mdiArea, QPoint(0,0))
+        size = viewport.size()
 
-                maskedRegion = QRegion(self.frameGeometry())
-                maskedRegion -= QRegion(self.geometry())
-                maskedRegion += self.childrenRegion()
-                self.setMask(maskedRegion)
+        position.setX(position.x())
+        position.setY(position.y())
 
+        size.setWidth(size.width())
+        size.setHeight(size.height())
+
+        if self.isEmpty():
+            self.move(position)
+            self.setFixedSize(0, 0)
+        else:
+            self.move(position)
+            self.setFixedSize(size)
+
+        if self.toolbox: self.toolbox.adjustToView()
+        if self.toolshelf_alpha: self.toolshelf_alpha.adjustToView()
+        if self.toolshelf_beta: self.toolshelf_beta.adjustToView()
+        if self.toolshelf_gamma: self.toolshelf_gamma.adjustToView()
+        if self.toolshelf_delta: self.toolshelf_delta.adjustToView()
     
-            if self.toolbox: self.toolbox.adjustToView()
-            if self.toolshelf_alpha: self.toolshelf_alpha.adjustToView()
-            if self.toolshelf_beta: self.toolshelf_beta.adjustToView()
-            if self.toolshelf_gamma: self.toolshelf_gamma.adjustToView()
-            if self.toolshelf_delta: self.toolshelf_delta.adjustToView()
+
+    def updateMask(self):
+        if not self.isEmpty():
+            maskedRegion = QRegion(self.frameGeometry())
+            maskedRegion -= QRegion(self.geometry())
+            maskedRegion += self.childrenRegion()
+            self.setMask(maskedRegion)
 
     def mouseMoveEvent(self, a0):
-        if self.toolbox: self.toolbox.updateCursor()
-        if self.toolshelf_alpha: self.toolshelf_alpha.updateCursor()
-        if self.toolshelf_beta: self.toolshelf_beta.updateCursor()
-        if self.toolshelf_gamma: self.toolshelf_gamma.updateCursor()
-        if self.toolshelf_delta: self.toolshelf_delta.updateCursor()
+        pos = self.cursor().pos()
+        if self.toolbox: self.toolbox.updateCursor(pos)
+        if self.toolshelf_alpha: self.toolshelf_alpha.updateCursor(pos)
+        if self.toolshelf_beta: self.toolshelf_beta.updateCursor(pos)
+        if self.toolshelf_gamma: self.toolshelf_gamma.updateCursor(pos)
+        if self.toolshelf_delta: self.toolshelf_delta.updateCursor(pos)
 
     def updatePalette(self):
         if self.windowLoaded == False:
@@ -422,7 +441,7 @@ class NtCanvas(QWidget):
         if self.toolshelf_gamma: self.toolshelf_gamma.setCollapsed(show_toolshelf_gamma)
         if self.toolshelf_delta: self.toolshelf_delta.setCollapsed(show_toolshelf_delta)
 
-        self.updateView()
+        self.requestViewUpdate()
         
 
     #endregion

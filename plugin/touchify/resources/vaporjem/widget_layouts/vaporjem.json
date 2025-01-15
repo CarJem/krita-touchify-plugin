@@ -1,7 +1,7 @@
 {
     "preset_name": "Default Layout",
     "toolbox_enabled": true,
-    "toolshelf_count": 2,
+    "toolshelf_count": 3,
     "toolbox": {
         "position_x": 0,
         "position_y": 0,
@@ -9,18 +9,18 @@
         "alignment_x": "center",
         "stretch_x": 0,
         "stretch_y": 0,
-        "span_x": -1,
-        "span_y": -1,
+        "span_x": 1,
+        "span_y": 2,
         "horizontal_mode": false,
         "json_version": 1
     },
     "toolshelf_alpha": {
         "position_x": 2,
         "position_y": 0,
-        "stretch_x": 0,
-        "stretch_y": 0,
-        "span_x": -1,
-        "span_y": -1,
+        "stretch_x": 1,
+        "stretch_y": 1,
+        "span_x": 1,
+        "span_y": 0,
         "alignment_y": "top",
         "alignment_x": "right",
         "json_version": 1
@@ -40,7 +40,7 @@
         "position_x": 1,
         "position_y": 1,
         "stretch_x": 1,
-        "stretch_y": 0,
+        "stretch_y": 1,
         "span_x": -1,
         "span_y": -1,
         "alignment_y": "bottom",
