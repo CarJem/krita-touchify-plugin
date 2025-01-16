@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMdiArea
 
 
 
-from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
+from touchify.src.components.touchify.canvas.NtEventFilter import NtEventFilter
 from touchify.src.components.touchify.canvas.NtToolbox import NtToolbox
 from touchify.src.components.touchify.canvas.NtToolshelf import NtToolshelf
 from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
@@ -63,10 +63,10 @@ class NtCanvas(QObject):
     def clearCanvasCoords(self):
         self._coords.clear()
 
-    def setCanvasCoords(self, widget: NtWidgetPad, x: int, y: int):
+    def setCanvasData(self, widget: NtWidgetPad, x: int, y: int, align_x: Qt.AlignmentFlag, align_y: Qt.AlignmentFlag):
         if not x in self._coords: self._coords[x] = {}
         self._coords[x][y] = widget
-        widget.setCanvasCoords(x, y)
+        widget.setCanvasData(x, y, align_x, align_y)
 
     def localSize(self, x: int, y: int):
         return self.localGeometry(x,y).size()
@@ -138,8 +138,8 @@ class NtCanvas(QObject):
             hi = self._coords[x][ty]
             local_y = local_y + hi.height()
             
-        if local_y + widget.height() + widget.btnHide.height() > bounds.height():
-            local_y = bounds.height() - widget.height() - widget.btnHide.height()
+        if local_y + widget.height() + widget.collapseBtn.height() > bounds.height():
+            local_y = bounds.height() - widget.height() - widget.collapseBtn.height()
 
         if local_x < self.canvasBorderWidth(): local_x = self.canvasBorderWidth()
         if local_y < self.canvasBorderHeight(): local_y = self.canvasBorderHeight()
@@ -187,14 +187,13 @@ class NtCanvas(QObject):
         self.mdiArea = self.qWin.findChild(QMdiArea)
         self.setParent(self.mdiArea)
 
-        self.windowEventFilter = NtSubWinFilter(self)
+        self.windowEventFilter = NtEventFilter(self)
         self.windowEventFilter.SIGNAL_ACTIVATE_FORCE.connect(self.updateView)
         self.windowEventFilter.SIGNAL_ACTIVATE_QUEUE.connect(self.updateView)
         self.qWin.installEventFilter(self.windowEventFilter)
 
         self.windowLoaded = True
 
-        self.krita_window.qwindow().themeChanged.connect(self.updatePalette)
         self.updateElements()
         self.updateActions()
         
@@ -312,20 +311,15 @@ class NtCanvas(QObject):
 
     def onConfigUpdate(self):
         self.reloadActivePreset()
-        if self.toolbox: self.toolbox.updateStyle()
 
         if self.toolshelf_delta:
             self.toolshelf_delta.toolshelf.onConfigUpdated()
-            self.toolshelf_delta.updateStyle()
         if self.toolshelf_gamma: 
             self.toolshelf_gamma.toolshelf.onConfigUpdated()
-            self.toolshelf_gamma.updateStyle()
         if self.toolshelf_beta: 
             self.toolshelf_beta.toolshelf.onConfigUpdated()
-            self.toolshelf_beta.updateStyle()
         if self.toolshelf_alpha: 
             self.toolshelf_alpha.toolshelf.onConfigUpdated()
-            self.toolshelf_alpha.updateStyle()
             
     #endregion
 
@@ -363,10 +357,10 @@ class NtCanvas(QObject):
                 
             if toolshelf == None and allow_toolshelf:
                 actual_toolshelf = NtToolshelf(self, self.krita_window, config_index, self.app_engine)
-                self.setCanvasCoords(actual_toolshelf, x, y)
-                actual_toolshelf.btnHide.setDefaultAction(action)
-                actual_toolshelf.setLayoutAlignmentX(WidgetLayoutPadOptions.HorizontalAlignment.toAlignmentFlag(options.alignment_x))
-                actual_toolshelf.setLayoutAlignmentY(WidgetLayoutPadOptions.VerticalAlignment.toAlignmentFlag(options.alignment_y))
+                align_x = WidgetLayoutPadOptions.HorizontalAlignment.toAlignmentFlag(options.alignment_x)
+                align_y = WidgetLayoutPadOptions.VerticalAlignment.toAlignmentFlag(options.alignment_y)
+                self.setCanvasData(actual_toolshelf, x, y, align_x, align_y)
+                actual_toolshelf.collapseBtn.setDefaultAction(action)
                 actual_toolshelf.show()
                 match config_index:
                     case 0: self.toolshelf_alpha = actual_toolshelf
@@ -383,10 +377,10 @@ class NtCanvas(QObject):
         def activateToolbox(x: int, y: int, allow_toolbox: bool, data: dict, options: WidgetLayoutToolboxOptions):
             if self.toolbox == None and allow_toolbox:
                 self.toolbox = NtToolbox(self, self.krita_window)
-                self.setCanvasCoords(self.toolbox, x, y)
-                self.toolbox.btnHide.setDefaultAction(self.tlb_action)
-                self.toolbox.setLayoutAlignmentX(WidgetLayoutPadOptions.HorizontalAlignment.toAlignmentFlag(options.alignment_x))
-                self.toolbox.setLayoutAlignmentY(WidgetLayoutPadOptions.VerticalAlignment.toAlignmentFlag(options.alignment_y))
+                align_x = WidgetLayoutPadOptions.HorizontalAlignment.toAlignmentFlag(options.alignment_x)
+                align_y = WidgetLayoutPadOptions.VerticalAlignment.toAlignmentFlag(options.alignment_y)
+                self.setCanvasData(self.toolbox, x, y, align_x, align_y)
+                self.toolbox.collapseBtn.setDefaultAction(self.tlb_action)
                 self.toolbox.show()
 
         def ItemData(padOptions: WidgetLayoutPadOptions | WidgetLayoutToolboxOptions, widgetType: str) -> dict:
@@ -513,26 +507,11 @@ class NtCanvas(QObject):
     
     def mouseMoveEvent(self, a0):
         pos = self.cursor().pos()
-        if self.toolbox: self.toolbox.updateCursor(pos)
-        if self.toolshelf_alpha: self.toolshelf_alpha.updateCursor(pos)
-        if self.toolshelf_beta: self.toolshelf_beta.updateCursor(pos)
-        if self.toolshelf_gamma: self.toolshelf_gamma.updateCursor(pos)
-        if self.toolshelf_delta: self.toolshelf_delta.updateCursor(pos)
-
-    def updatePalette(self):
-        if self.windowLoaded == False:
-            return
-        
-        if self.toolbox: 
-            self.toolbox.updateStyle()
-        if self.toolshelf_delta:
-            self.toolshelf_delta.updateStyle()
-        if self.toolshelf_gamma: 
-            self.toolshelf_gamma.updateStyle()
-        if self.toolshelf_beta: 
-            self.toolshelf_beta.updateStyle()
-        if self.toolshelf_alpha: 
-            self.toolshelf_alpha.updateStyle()
+        if self.toolbox: self.toolbox.adjustCursor(pos)
+        if self.toolshelf_alpha: self.toolshelf_alpha.adjustCursor(pos)
+        if self.toolshelf_beta: self.toolshelf_beta.adjustCursor(pos)
+        if self.toolshelf_gamma: self.toolshelf_gamma.adjustCursor(pos)
+        if self.toolshelf_delta: self.toolshelf_delta.adjustCursor(pos)
 
     def updateActions(self, pad: str = "", value: bool = None):
         if self.windowLoaded == False:

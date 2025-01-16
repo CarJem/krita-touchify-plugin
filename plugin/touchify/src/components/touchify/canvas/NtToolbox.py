@@ -1,10 +1,8 @@
-from PyQt5.QtWidgets import QDockWidget
 
 from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
 
 from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from krita import *
-from PyQt5.QtWidgets import QDockWidget
 from touchify.src.variables import *
 
 from typing import TYPE_CHECKING
@@ -16,18 +14,12 @@ class NtToolbox(NtWidgetPad):
     def __init__(self, canvas: "NtCanvas", window: Window):
         super().__init__(window, canvas)
         self.reopenDockerOnReturn = False
-        self.toolbox: ToolboxDocker = self.qWin.findChild(ToolboxDocker, TOUCHIFY_ID_DOCKER_TOOLBOX)
-        
+        self.toolbox = ToolboxDocker(self)
+        self.toolbox.setContentsMargins(0,0,0,0)
+        self.toolbox.setup(canvas.app_engine)
+        self.toolbox.toolboxWidget.horizontalModeAction.setEnabled(False)
         self.setObjectName("toolBoxPad")
         self.borrowDocker(self.toolbox)
 
-        # Disable the related QDockWidget
-        self.dockerAction = window.qwindow().findChild(QDockWidget, TOUCHIFY_ID_DOCKER_TOOLBOX).toggleViewAction()
-        self.dockerAction.setEnabled(False)
-
-        self.toolbox.toolboxWidget.horizontalModeAction.setEnabled(False)
-
     def close(self):
-        self.toolbox.toolboxWidget.horizontalModeAction.setEnabled(True)
-        self.dockerAction.setEnabled(True)
         return super().close()

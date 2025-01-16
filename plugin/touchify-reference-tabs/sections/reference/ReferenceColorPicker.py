@@ -15,8 +15,6 @@ cps_f = colorpicker_size - ( cps_e * 2 )
 cps_g = colorpicker_size * 0.120
 cps_h = colorpicker_size - ( cps_g * 2 )
 
-
-
 def Import_Pigment_O( ):
     pigment_o_module = None
     try:
@@ -50,7 +48,7 @@ def ColorPicker_Event( self: "ReferenceView", ex, ey, qimage_grab ):
         if pigment_o != None:
             if self.state_press == True:
                 pigment_o.API_Input_Kelvin( 6500 )
-                cor = pigment_o.API_Input_Preview( "RGB", red, green, blue, 0 )
+                cor = pigment_o.API_Input_Preview( "RGBImproved Resizing for On Canvas Widgets", red, green, blue, 0 )
             if self.state_press == False:
                 cor = pigment_o.API_Input_Apply( "RGB", red, green, blue, 0 )
             red   = cor[ "rgb_d1" ]

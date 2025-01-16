@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 
 
 
-class NtSubWinFilter(QObject):
+class NtEventFilter(QObject):
     """Event Filter object. Ensure that a target widget is moved
     to a desired position (corner of the view) when the subwindow area updates."""
 
@@ -11,7 +11,7 @@ class NtSubWinFilter(QObject):
     SIGNAL_ACTIVATE_QUEUE = pyqtSignal()
 
     def __init__(self, parent=None):
-        super(NtSubWinFilter, self).__init__(parent)
+        super(NtEventFilter, self).__init__(parent)
         self.target = None
 
     def eventFilter(self, obj: QObject, e: QEvent):
