@@ -17,6 +17,8 @@
 
 
 
+from dataclasses import dataclass
+from enum import Enum
 from PyQt5.QtWidgets import QWidget, QDockWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import Qt, QSize, QPoint
 
@@ -34,10 +36,31 @@ from touchify.src.stylesheet import Stylesheet
 if TYPE_CHECKING:
     from .NtCanvas import NtCanvas
 
+DEBUG_DRAW=False
+
+
 class NtWidgetPad(QWidget):
     """
     An on-canvas toolbox widget. I'm dubbing widgets that 'float' 
     on top of the canvas '(lily) pads' for the time being :) """
+
+    class HandleLocation(Enum):
+        Invalid=0
+        Top=1
+        TopRight=2
+        Right=3
+        BottomRight=4
+        Bottom=5
+        BottomLeft=6
+        Left=7
+        TopLeft=8
+    
+    @dataclass
+    class HandleDragData:
+        x: int
+        y: int
+        width: int
+        height: int
 
 
     def __init__(self, window: Window, canvas: "NtCanvas", allow_resizing: bool = False):
@@ -72,8 +95,7 @@ class NtWidgetPad(QWidget):
         self.option_resizing_enabled = False
 
         self.resizing_point_start = QPoint()
-        self.resizing_grip_size = QSize(10, 10)
-        self.resizing_corner: Qt.Corner | None = None
+        self.resizing_handle: NtWidgetPad.HandleLocation = NtWidgetPad.HandleLocation.Invalid
 
         self.collapseBtn = NtTogglePadButton(self)
         self.collapseBtn.clicked.connect(self.setCollapsed)
@@ -83,28 +105,106 @@ class NtWidgetPad(QWidget):
         
     #region States
 
-    def widgetGrip(self, mousePos: QPoint):
-        bottom_right = QRect(
-            self.width() - self.resizing_grip_size.width(),
-            self.height() - self.resizing_grip_size.height(),
-            self.resizing_grip_size.width(),
-            self.resizing_grip_size.height()
-        )
+    def currentOffset(self, mousePos: QPoint):
+        delta: QPoint = mousePos - self.resizing_point_start
+        self.resizing_point_start = mousePos
+    
+        match self.resizing_handle:
+            case NtWidgetPad.HandleLocation.BottomLeft:
+                x = 0
+                y = 0
+                width = -delta.x()
+                height = delta.y()   
+            case NtWidgetPad.HandleLocation.BottomRight:
+                x = 0
+                y = 0
+                width = delta.x()
+                height = delta.y()      
+            case NtWidgetPad.HandleLocation.TopLeft:
+                x = 0
+                y = 0
+                width = -delta.x()
+                height = -delta.y()   
+            case NtWidgetPad.HandleLocation.TopRight:
+                x = 0
+                y = 0
+                width = delta.x()
+                height = -delta.y()      
+            case NtWidgetPad.HandleLocation.Left:
+                x = 0
+                y = 0
+                width = -delta.x()
+                height = 0
+            case NtWidgetPad.HandleLocation.Right:
+                x = 0
+                y = 0
+                width = delta.x()
+                height = 0     
+            case NtWidgetPad.HandleLocation.Top:
+                x = 0
+                y = 0
+                width = 0
+                height = -delta.y()
+            case NtWidgetPad.HandleLocation.Bottom:
+                x = 0
+                y = 0
+                width = 0
+                height = delta.y()     
+            case _:
+                x = 0
+                y = 0
+                width = 0
+                height = 0
+
         
-        bottom_left = QRect(
-            int(0),
-            self.height() - self.resizing_grip_size.height(),
-            self.resizing_grip_size.width(),
-            self.resizing_grip_size.height(),
-        )
-            
-        if bottom_left.contains(mousePos):
-            return (True, Qt.Corner.BottomLeftCorner)
-        elif bottom_right.contains(mousePos):
-            return (True, Qt.Corner.BottomRightCorner)
-        else:
-            return (False, None)
-     
+
+        return NtWidgetPad.HandleDragData(x,y,width,height)
+
+    def currentGrip(self, mousePos: QPoint):
+        areas = self.widgetGrips()
+
+        #if areas["corner_bottom_left"].contains(mousePos):
+        #    return (True, NtWidgetPad.HandleLocation.BottomLeft)
+        #if areas["corner_bottom_right"].contains(mousePos):
+        #    return (True, NtWidgetPad.HandleLocation.BottomRight)
+        #if areas["corner_top_left"].contains(mousePos):
+        #    return (True, NtWidgetPad.HandleLocation.TopLeft)
+        #if areas["corner_top_right"].contains(mousePos):
+        #    return (True, NtWidgetPad.HandleLocation.TopRight)
+        
+        if areas["border_left"].contains(mousePos):
+            return (True, NtWidgetPad.HandleLocation.Left)
+        if areas["border_right"].contains(mousePos):
+            return (True, NtWidgetPad.HandleLocation.Right)
+        if areas["border_top"].contains(mousePos):
+            return (True, NtWidgetPad.HandleLocation.Top)
+        if areas["border_bottom"].contains(mousePos):
+            return (True, NtWidgetPad.HandleLocation.Bottom)
+        
+        return (False, None)
+    
+    def widgetGrips(self):
+        actual_size = self.size().grownBy(QMargins(1,1,1,1))
+
+        grip_width = 2
+        grip_height = 2
+        grip_offset_width = 5
+        grip_offset_height = 5
+
+        result = {}
+
+        result["border_left"] = QRect(0, 0, grip_width, grip_height + actual_size.height())
+        result["border_right"] = QRect(actual_size.width() - grip_offset_width, 0, grip_width, grip_height + actual_size.height())
+        result["border_top"] = QRect(0, 0, actual_size.width(), grip_height)
+        result["border_bottom"] = QRect(0, actual_size.height() - grip_offset_height, grip_width + actual_size.width(), grip_height)
+
+        result["corner_bottom_left"] = QRect(0, actual_size.height() - grip_offset_height, grip_width, grip_height)
+        result["corner_top_left"] = QRect(0, 0, grip_width, grip_height)
+        result["corner_bottom_right"] = QRect(actual_size.width() - grip_offset_width, actual_size.height() - grip_offset_height, grip_width, grip_height)
+        result["corner_top_right"] = QRect(actual_size.width() - grip_offset_width, 0, grip_width, grip_height)
+
+        return result
+
     def widgetSize(self) -> QSize:
         if self.docker_widget:
             return self.docker_widget.size()
@@ -193,11 +293,22 @@ class NtWidgetPad(QWidget):
             self.docker_widget = None
             self.docker_source = None
 
-    def adjustToView(self, delta_x: int = 0, delta_y: int = 0):
+    def adjustToView(self, drag_data: HandleDragData = None):
         """
         Adjust the position and size of the Pad to that of the active View."""
         if self.source_canvas == None: return
         if self.docker_widget == None: return
+
+        if drag_data:
+            offset_x = drag_data.x
+            offset_y = drag_data.y
+            offset_width = drag_data.width
+            offset_height = drag_data.height
+        else:
+            offset_x = 0
+            offset_y = 0
+            offset_width = 0
+            offset_height = 0
 
         geometry = self.source_canvas.geometry()
         local_geometry = self.source_canvas.localGeometry(self.canvas_x, self.canvas_y)
@@ -219,19 +330,21 @@ class NtWidgetPad(QWidget):
             elif self.canvas_alignment_y == Qt.AlignmentFlag.AlignBottom: target_pos = QPoint(center_x, local_geometry.bottom())
             elif self.canvas_alignment_y == Qt.AlignmentFlag.AlignVCenter: target_pos = QPoint(center_x, center_y)
 
-        if target_pos.x() + self.width() >= geometry.right():
-            target_pos.setX(geometry.right() - self.width())
+        actual_target_pos = QPoint(target_pos.x() + offset_x, target_pos.y() + offset_y)
 
-        if target_pos.y() + self.height() >= geometry.bottom():
-            target_pos.setY(geometry.bottom() - self.height())
+        if actual_target_pos.x() + self.width() >= geometry.right():
+            actual_target_pos.setX(geometry.right() - self.width())
 
-        self.move(target_pos)
+        if actual_target_pos.y() + self.height() >= geometry.bottom():
+            actual_target_pos.setY(geometry.bottom() - self.height())
+
+        self.move(actual_target_pos)
 
         cellSize = self.source_canvas.size()
 
         widgetSize = self.widgetSize()
         widgetSizeHint = self.widgetSizeHint()
-        widgetNewSize = QSize(widgetSize.width() + delta_x, widgetSize.height() + delta_y)
+        widgetNewSize = QSize(widgetSize.width() + offset_width, widgetSize.height() + offset_height)
         
         if self.option_resizing_enabled == False:
             widgetNewSize = QSize(widgetSizeHint)
@@ -258,23 +371,20 @@ class NtWidgetPad(QWidget):
             self.setCursor(Qt.CursorShape.ArrowCursor)
             return
              
-        result = self.state_resizing
-        corner = self.resizing_corner
-         
-        if not result:
-            (result, corner) = self.widgetGrip(pos)
+        (result, handle) = self.currentGrip(pos)
+        
+        match handle:
+            case NtWidgetPad.HandleLocation.BottomLeft | NtWidgetPad.HandleLocation.TopRight:
+                self.setCursor(Qt.CursorShape.SizeBDiagCursor)
+            case NtWidgetPad.HandleLocation.BottomRight | NtWidgetPad.HandleLocation.TopLeft:
+                self.setCursor(Qt.CursorShape.SizeFDiagCursor) 
+            case NtWidgetPad.HandleLocation.Left | NtWidgetPad.HandleLocation.Right:
+                self.setCursor(Qt.CursorShape.SizeHorCursor)
+            case NtWidgetPad.HandleLocation.Top | NtWidgetPad.HandleLocation.Bottom:
+                self.setCursor(Qt.CursorShape.SizeVerCursor)
+            case _:
+                self.setCursor(Qt.CursorShape.ArrowCursor)
             
-        if result:
-            match corner:
-                case Qt.Corner.BottomLeftCorner:
-                    self.setCursor(Qt.CursorShape.SizeBDiagCursor)
-                case Qt.Corner.BottomRightCorner:
-                    self.setCursor(Qt.CursorShape.SizeFDiagCursor) 
-                case _:
-                    self.setCursor(Qt.CursorShape.ArrowCursor)
-        else:
-            self.setCursor(Qt.CursorShape.ArrowCursor)
-
     def adjustArrow(self):
         self.collapseBtn.setArrow(self.canvas_alignment_x, self.canvas_alignment_y, self.state_collapsed)
 
@@ -286,39 +396,32 @@ class NtWidgetPad(QWidget):
         self.state_resizing = False
         self.adjustCursor(e.pos())
     
+    def leaveEvent(self, a0):
+        self.setCursor(Qt.CursorShape.ArrowCursor)
+        return super().leaveEvent(a0)
+
     def mousePressEvent(self, e: QMouseEvent):
         if self.option_resizing_enabled == True:
-            (result, corner) = self.widgetGrip(e.pos())
+            (result, corner) = self.currentGrip(e.pos())
             if result:
                 self.resizing_point_start = QPoint(e.pos())
-                self.resizing_corner = corner 
+                self.resizing_handle = corner 
                 self.state_resizing = True
             else:
                 self.state_resizing = False
         self.adjustCursor(e.pos())
     
     def mouseMoveEvent(self, e: QMouseEvent):
-        if self.state_resizing and self.docker_widget and self.resizing_corner != None:
+        if self.state_resizing and self.docker_widget and self.resizing_handle != None:
             #adapt the widget size based on mouse movement
-            delta: QPoint = e.pos() - self.resizing_point_start
-            self.resizing_point_start = QPoint(e.pos())
-            
-            
-            match self.resizing_corner:
-                case Qt.Corner.BottomLeftCorner:
-                    x = -delta.x()
-                    y = delta.y()   
-                case Qt.Corner.BottomRightCorner:
-                    x = delta.x()
-                    y = delta.y()      
-            
-            self.adjustToView(x, y)
+            self.adjustToView(self.currentOffset(e.pos()))
         self.adjustCursor(e.pos())
 
     def subWindowActivatedEvent(self, subWin):
         self.source_canvas.updateView()
 
     def subWindowEvent(self):
+        self.adjustCursor(self.cursor().pos())
         self.source_canvas.updateView()
 
     def closeEvent(self, e):
@@ -329,20 +432,34 @@ class NtWidgetPad(QWidget):
         self.returnDocker()
         return super().closeEvent(e)
 
-    def paintEvent(self, e):
+    def paintEvent(self, e: QPaintEvent):
         """
         Needed to resize the Pad if the user decides to 
         change the icon size of the toolbox"""
         self.adjustToView()
         super().paintEvent(e)
-        #p = QPainter(self)
-        
-        #if self.autoSize == False:
-            #gripAreas = self.gripAreas()
-            #p.setPen(Qt.GlobalColor.red)
-            #for area in gripAreas:      
-                #p.drawRect(gripAreas[area])
 
+        if DEBUG_DRAW: self.paintDebugEvent(e)
+
+    def paintDebugEvent(self, e: QPaintEvent):
+        if self.option_resizing_enabled == True:
+            p = QPainter(self)
+            gripAreas = self.widgetGrips()
+
+            for area in sorted(gripAreas):      
+                rect = gripAreas[area]
+
+                is_border = str(area).startswith("border_")
+
+                if is_border: 
+                    p.setBrush(Qt.GlobalColor.magenta)
+                    p.setPen(Qt.GlobalColor.magenta)
+                else: 
+                    p.setBrush(Qt.GlobalColor.white)
+                    p.setPen(Qt.GlobalColor.white)
+
+                p.drawRect(rect)
+    
     #endregion
     
 class NtTogglePadButton(QToolButton):

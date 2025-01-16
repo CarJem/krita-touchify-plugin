@@ -56,7 +56,6 @@ class NtCanvas(QObject):
         self.presetsMenu = QMenu("Canvas Layouts...")
         self.presetsMenu.aboutToShow.connect(self.buildPresetMenu)
 
-        self.installEventFilter(self)
         self.reloadActivePreset()
 
     #region Layout
@@ -392,8 +391,7 @@ class NtCanvas(QObject):
                     "align_y": padOptions.alignment_y
                 }
 
-        if self.windowLoaded == False:
-            return
+        if self.windowLoaded == False: return
 
         allow_toolbox = self.toolbox_enabled
         allow_toolshelf_alpha = self.toolshelf_count >= 1
