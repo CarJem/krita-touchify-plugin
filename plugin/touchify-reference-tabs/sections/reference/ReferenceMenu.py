@@ -7,11 +7,5 @@ class ReferenceMenu(QMenu):
         super().__init__("Reference Settings", parent)
         self.reference = section
 
-        self.addAction("New Reference...", self.reference.File_New)
-        self.addAction("Open Reference...", self.reference.File_Open)
-        self.addAction("Unload Reference...", self.reference.File_Unload)
-        self.addAction("Save Reference", self.reference.File_Save)
-        self.addAction("Save Reference As...", self.reference.File_Save_As)
-
     def onTabActivated(self):
         pass

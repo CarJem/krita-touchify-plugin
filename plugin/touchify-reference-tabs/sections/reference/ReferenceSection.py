@@ -256,9 +256,11 @@ class ReferenceSection(QWidget):
             self.Data_Kritarc()
 
     def File_Unload( self ):
-        self.ref_board = None
+        self.imagine_reference.Pin_Clear()
+        self.imagine_reference.Selection_Clear()
         self.imagine_reference.Board_Clear()
         self.imagine_reference.setEnabled(False)
+        self.ref_board = None
 
     def File_Export( self ):
         export_path = self.Dialog_Save( "Export File Location", "export_000000" )

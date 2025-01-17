@@ -22,7 +22,7 @@ from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QMenuBar, QTabWidget, \
                             QAction, QActionGroup, QFileDialog, QMenu
-from krita import DockWidget
+from krita import DockWidget, Krita
 from .classes.variables import *
 from .classes.settings import Settings
 from .classes.common import generateFiletypeFilter
@@ -43,40 +43,67 @@ class DockerWidget(QWidget):
         self.tab_menu_items: list[QAction] = []
         self.last_tab: DockerPage | None = None
 
-        self.setAcceptDrops(True)
-
         layout = QVBoxLayout(self)
         self.setLayout(layout)
 
         self.menubar = QMenuBar()
+        
 
-        # - File menu
-        fileMenu = self.menubar.addMenu("File")
-        fileMenu.addAction("New Tab", self.addTab)
+        # - Root menu
+        rootMenu = self.menubar.addMenu("")
+        rootMenu.setIcon(Krita.instance().icon("krita_tool_reference_images"))
+        rootMenu.addAction("New Tab", self.addTab)
 
+        rootMenu.addSeparator()
 
-        self.tabActionsGroup = QActionGroup(self)
-
-        self.openImageAction = QAction("Open Image...", self.tabActionsGroup)
-        self.openImageAction.triggered.connect(self.openImage)
-        self.openImageAction.setEnabled(False)
-
-        self.openFolderAction = QAction("Open Folder...", self.tabActionsGroup)
-        self.openFolderAction.triggered.connect(self.openFolder)
-        self.openFolderAction.setEnabled(False)
-
-        self.openReferenceAction = QAction("Open Reference...", self.tabActionsGroup)
-        self.openReferenceAction.triggered.connect(self.openReference)
-        self.openReferenceAction.setEnabled(False)
-
-        fileMenu.addActions(self.tabActionsGroup.actions())
-        fileMenu.addSeparator()
-
-        closeMenu = fileMenu.addMenu("Close Tabs...")
+        closeMenu = rootMenu.addMenu("Close Tabs...")
         closeMenu.addAction("Close Current Tab", self.closeTab)
         closeMenu.addAction("Close All Tabs", self.closeAllTabs)
         closeMenu.addAction("Close Tabs to the Left", self.closeTabsLeft)
         closeMenu.addAction("Close Tabs to the Right", self.closeTabsRight)
+
+        # - File menu   
+        fileMenu = self.menubar.addMenu("File")
+        self.fileActionsGroup = QActionGroup(self)
+
+        self.newRefrenceAction = QAction("New Reference...", self.fileActionsGroup)
+        self.newRefrenceAction.triggered.connect(self.createRef)
+        self.newRefrenceAction.setEnabled(False)
+
+        seperator1 = QAction(self.fileActionsGroup)
+        seperator1.setSeparator(True)
+
+        self.openImageAction = QAction("Open Image...", self.fileActionsGroup)
+        self.openImageAction.triggered.connect(self.openImage)
+        self.openImageAction.setEnabled(False)
+
+        self.openFolderAction = QAction("Open Folder...", self.fileActionsGroup)
+        self.openFolderAction.triggered.connect(self.openFolder)
+        self.openFolderAction.setEnabled(False)
+
+        self.openReferenceAction = QAction("Open Reference...", self.fileActionsGroup)
+        self.openReferenceAction.triggered.connect(self.openReference)
+        self.openReferenceAction.setEnabled(False)
+
+        seperator2 = QAction(self.fileActionsGroup)
+        seperator2.setSeparator(True)
+
+        self.saveReferenceAction = QAction("Save Reference", self.fileActionsGroup)
+        self.saveReferenceAction.triggered.connect(self.saveRef)
+        self.saveReferenceAction.setEnabled(False)
+
+        self.saveReferenceAsAction = QAction("Save Reference As...", self.fileActionsGroup)
+        self.saveReferenceAsAction.triggered.connect(self.saveRefAs)
+        self.saveReferenceAsAction.setEnabled(False)
+
+        seperator2 = QAction(self.fileActionsGroup)
+        seperator2.setSeparator(True)
+
+        self.unloadReferenceAction = QAction("Unload Reference...", self.fileActionsGroup)
+        self.unloadReferenceAction.triggered.connect(self.unloadRef)
+        self.unloadReferenceAction.setEnabled(False)
+
+        fileMenu.addActions(self.fileActionsGroup.actions())
 
         # - View menu
         viewMenu = self.menubar.addMenu("View")
@@ -99,6 +126,12 @@ class DockerWidget(QWidget):
         layout.addWidget(self.tabWidget)
 
         self.filter = generateFiletypeFilter()
+
+        self.tabWidget.setStyleSheet(f"""
+            QTabBar::tab {{
+                height: 25px;
+            }}
+        """)
 
 
 
@@ -127,8 +160,8 @@ class DockerWidget(QWidget):
     def onTabChanged(self):
         if self.last_tab: self.last_tab.onTabDeactivated()
 
-        if self.currentTab() != None: [i.setEnabled(True) for i in self.tabActionsGroup.actions()]
-        else: [i.setEnabled(False) for i in self.tabActionsGroup.actions()]
+        if self.currentTab() != None: [i.setEnabled(True) for i in self.fileActionsGroup.actions()]
+        else: [i.setEnabled(False) for i in self.fileActionsGroup.actions()]
         self.last_tab = self.currentTab()
 
         if self.last_tab: self.last_tab.onTabActivated()
@@ -141,22 +174,6 @@ class DockerWidget(QWidget):
 
     #endregion
 
-    #region Event Functions
-
-    def dragEnterEvent(self, event: QDragEnterEvent):
-        if event.mimeData().hasUrls():
-            event.acceptProposedAction()
-
-    def dropEvent(self, event: QDropEvent):
-        filePaths = event.mimeData().urls()
-        # for now, always open in new tab
-        for path in filePaths:
-            # toLocalFile removes "file:///" on Windows
-            # and "file://" on other OSes
-            self.openImage(path.toLocalFile())
-
-    #endregion
-
     #region Menu Functions
 
     def toggleFullscreen(self):
@@ -165,7 +182,30 @@ class DockerWidget(QWidget):
         for i in range(0, self.tabWidget.count()):
             tab = self.tab(i)
             tab.setFullscreen(full_screen_state)
-        
+
+    def createRef(self):   
+        tabIdx = self.tabWidget.currentIndex()
+        tab = self.tab(tabIdx)
+        tab.reference_section.File_New()
+        tab.openReference()
+
+    def saveRef(self):
+        tabIdx = self.tabWidget.currentIndex()
+        tab = self.tab(tabIdx)
+        tab.reference_section.File_Save()
+        tab.openReference()
+
+    def saveRefAs(self):
+        tabIdx = self.tabWidget.currentIndex()
+        tab = self.tab(tabIdx)
+        tab.reference_section.File_Save_As()
+        tab.openReference()
+
+    def unloadRef(self):
+        tabIdx = self.tabWidget.currentIndex()
+        tab = self.tab(tabIdx)
+        tab.reference_section.File_Unload()
+        tab.openReference()
 
     def openReference(self):
         tabIdx = self.tabWidget.currentIndex()

@@ -43,6 +43,7 @@ class PreviewSection(QWidget):
         self.setAttribute(Qt.WA_DeleteOnClose)
         layout = QVBoxLayout(self)
         self.setLayout(layout)
+        self.setAcceptDrops(True)
 
         # variables
         self.previous_scale_factor = 1.0
@@ -279,6 +280,18 @@ class PreviewSection(QWidget):
     #endregion
 
     #region Events
+
+    def dragEnterEvent(self, event: QDragEnterEvent):
+        if event.mimeData().hasUrls():
+            event.acceptProposedAction()
+
+    def dropEvent(self, event: QDropEvent):
+        filePaths = event.mimeData().urls()
+        # for now, always open in new tab
+        for path in filePaths:
+            # toLocalFile removes "file:///" on Windows
+            # and "file://" on other OSes
+            self.openImage(path.toLocalFile())
     
     def keyPressEvent(self, event: QKeyEvent):
         if event.key() == Qt.Key.Key_Space:
