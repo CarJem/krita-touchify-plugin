@@ -44,6 +44,10 @@ class ReferenceMenu(DockerMenu):
         self.export_action.triggered.connect(self.exportRef)
         self.export_action.setEnabled(False)
 
+        self.export_files = QAction("Download Files...", self.file_group)
+        self.export_files.triggered.connect(self.downloadRefFiles)
+        self.export_files.setEnabled(False)
+
         fileMenu.addActions(self.file_group.actions())
         #endregion
 
@@ -53,6 +57,7 @@ class ReferenceMenu(DockerMenu):
         #region Options Menu
 
         optionsMenu = self.addMenu("Options")
+        optionsMenu.aboutToShow.connect(self.updateMenus)
         
         self.autosave_action = optionsMenu.addAction("Autosave")
         self.autosave_action.setCheckable(True)
@@ -85,6 +90,9 @@ class ReferenceMenu(DockerMenu):
         self.reference.view.state_autosave = not self.reference.view.state_autosave
         self.autosave_action.setChecked(self.reference.view.state_autosave)
 
+    def downloadRefFiles(self):
+        self.reference.Action_FileDownload()
+
     def updateMenus(self):
         is_file_open = self.reference.ref_state.ref_board != None
 
@@ -92,6 +100,7 @@ class ReferenceMenu(DockerMenu):
         self.save_as_file_action.setEnabled(is_file_open)
         self.unload_action.setEnabled(is_file_open)
         self.export_action.setEnabled(is_file_open)
+        self.export_files.setEnabled(is_file_open)
 
         self.autosave_action.setChecked(self.reference.view.state_autosave)
         self.autosave_action.setEnabled(is_file_open)
