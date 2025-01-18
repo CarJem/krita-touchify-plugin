@@ -230,16 +230,16 @@ class NtWidgetPad(QWidget):
         
         def fitToView(_view: QWidget, _sizeToFit: QSize):
             def height_scale(input):
-                return input + self.btnHide.height() + 14
+                return input + self.btnHide.height()
             
             def height_offset(input):
-                return input - self.btnHide.height() - 14
+                return input - self.btnHide.height()
             
             def width_offset(input):
-                return input - 14
+                return input
             
             def width_scale(input):
-                return input + 14
+                return input
             
             result = QSize(_sizeToFit)
 

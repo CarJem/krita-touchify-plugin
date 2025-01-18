@@ -1,7 +1,7 @@
 {
     "preset_name": "Default Layout",
     "toolbox_enabled": true,
-    "toolshelf_count": 2,
+    "toolshelf_count": 3,
     "toolbox": {
         "position_x": 0,
         "position_y": 0,
@@ -29,7 +29,7 @@
         "position_x": 1,
         "position_y": 0,
         "stretch_x": 1,
-        "stretch_y": 0,
+        "stretch_y": 1,
         "span_x": -1,
         "span_y": -1,
         "alignment_y": "top",
@@ -38,9 +38,9 @@
     },
     "toolshelf_gamma": {
         "position_x": 1,
-        "position_y": 1,
+        "position_y": 0,
         "stretch_x": 1,
-        "stretch_y": 0,
+        "stretch_y": 1,
         "span_x": -1,
         "span_y": -1,
         "alignment_y": "bottom",
