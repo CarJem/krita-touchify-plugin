@@ -84,8 +84,6 @@ class NtCanvas(QWidget):
 
         self.windowLoaded = True
 
-        
-        self.krita_window.qwindow().themeChanged.connect(self.updatePalette)
         self.updateElements()
         self.updateActions()
 
@@ -208,20 +206,11 @@ class NtCanvas(QWidget):
 
     def onConfigUpdate(self):
         self.reloadActivePreset()
-        if self.toolbox: self.toolbox.updateStyle()
 
-        if self.toolshelf_delta:
-            self.toolshelf_delta.toolshelf.onConfigUpdated()
-            self.toolshelf_delta.updateStyle()
-        if self.toolshelf_gamma: 
-            self.toolshelf_gamma.toolshelf.onConfigUpdated()
-            self.toolshelf_gamma.updateStyle()
-        if self.toolshelf_beta: 
-            self.toolshelf_beta.toolshelf.onConfigUpdated()
-            self.toolshelf_beta.updateStyle()
-        if self.toolshelf_alpha: 
-            self.toolshelf_alpha.toolshelf.onConfigUpdated()
-            self.toolshelf_alpha.updateStyle()
+        if self.toolshelf_delta: self.toolshelf_delta.toolshelf.onConfigUpdated()
+        if self.toolshelf_gamma: self.toolshelf_gamma.toolshelf.onConfigUpdated()
+        if self.toolshelf_beta: self.toolshelf_beta.toolshelf.onConfigUpdated()
+        if self.toolshelf_alpha: self.toolshelf_alpha.toolshelf.onConfigUpdated()
             
     #endregion
 
@@ -233,7 +222,7 @@ class NtCanvas(QWidget):
         def onToolshelfCheck(toolshelf: NtToolshelf | None, allow_toolshelf: bool, config_index: int, action: QAction):
             if toolshelf == None and allow_toolshelf:
                 actual_toolshelf = NtToolshelf(self, self.krita_window, config_index, self.app_engine)
-                actual_toolshelf.btnHide.setDefaultAction(action)
+                actual_toolshelf.collapseBtn.setDefaultAction(action)
                 self.canvasLayout.addWidget(actual_toolshelf)
                 actual_toolshelf.show()
                 return actual_toolshelf
@@ -247,7 +236,7 @@ class NtCanvas(QWidget):
         def onToolboxCheck(allow_toolbox: bool):
             if self.toolbox == None and allow_toolbox:
                 self.toolbox = NtToolbox(self, self.krita_window)
-                self.toolbox.btnHide.setDefaultAction(self.tlb_action)
+                self.toolbox.collapseBtn.setDefaultAction(self.tlb_action)
                 self.canvasLayout.addWidget(self.toolbox)
                 self.toolbox.show()
             elif self.toolbox and not allow_toolbox:
@@ -258,8 +247,7 @@ class NtCanvas(QWidget):
         def insertWidgetPad(pad: NtWidgetPad, padOptions: WidgetLayoutPadOptions | WidgetLayoutToolboxOptions):
             alignment_x = WidgetLayoutPadOptions.HorizontalAlignment.toAlignmentFlag(padOptions.alignment_x)
             alignment_y = WidgetLayoutPadOptions.VerticalAlignment.toAlignmentFlag(padOptions.alignment_y)
-            pad.setLayoutAlignmentX(alignment_x)
-            pad.setLayoutAlignmentY(alignment_y)
+            pad.setCanvasData(alignment_x, alignment_y)
 
             if padOptions.span_x != -1 and padOptions.span_y != -1:
                 self.canvasLayout.addWidget(pad, padOptions.position_y, padOptions.position_x, padOptions.span_y, padOptions.span_x, alignment_x | alignment_y)
@@ -372,21 +360,6 @@ class NtCanvas(QWidget):
         if self.toolshelf_beta: self.toolshelf_beta.updateCursor()
         if self.toolshelf_gamma: self.toolshelf_gamma.updateCursor()
         if self.toolshelf_delta: self.toolshelf_delta.updateCursor()
-
-    def updatePalette(self):
-        if self.windowLoaded == False:
-            return
-        
-        if self.toolbox: 
-            self.toolbox.updateStyle()
-        if self.toolshelf_delta:
-            self.toolshelf_delta.updateStyle()
-        if self.toolshelf_gamma: 
-            self.toolshelf_gamma.updateStyle()
-        if self.toolshelf_beta: 
-            self.toolshelf_beta.updateStyle()
-        if self.toolshelf_alpha: 
-            self.toolshelf_alpha.updateStyle()
 
     def updateActions(self, pad: str = "", value: bool = None):
         if self.windowLoaded == False:

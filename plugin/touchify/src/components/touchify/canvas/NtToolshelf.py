@@ -26,7 +26,7 @@ class NtToolshelf(NtWidgetPad):
         self.borrowDocker(self.toolshelf)
 
     def onResizeByDefaultRequested(self):
-        self.updateResizingState(True)
+        self.setResizable(True)
     
     def close(self):
         self.toolshelf.removeEventFilter(self.adjustFilter)

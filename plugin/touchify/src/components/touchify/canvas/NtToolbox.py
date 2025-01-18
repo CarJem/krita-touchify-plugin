@@ -16,7 +16,7 @@ class NtToolbox(NtWidgetPad):
     def __init__(self, canvas: "NtCanvas", window: Window):
         super().__init__(window, canvas)
         self.reopenDockerOnReturn = False
-        self.toolbox: ToolboxDocker = self.qWin.findChild(ToolboxDocker, TOUCHIFY_ID_DOCKER_TOOLBOX)
+        self.toolbox: ToolboxDocker = self.source_window.findChild(ToolboxDocker, TOUCHIFY_ID_DOCKER_TOOLBOX)
         self.toolbox.installEventFilter(self.adjustFilter)
         
         self.setObjectName("toolBoxPad")

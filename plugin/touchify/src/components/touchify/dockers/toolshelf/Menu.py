@@ -44,8 +44,8 @@ class Menu(QMenu):
         if self.setupWidgetPad:
             self.parentNtWidget = Helpers.findWidgetPad(self)
             if self.parentNtWidget != None:
-                if self.parentNtWidget.allowResizing:
-                    self.parentNtWidget.updateResizingState(self.toggleResizeAct.isChecked())
+                if self.parentNtWidget.option_allow_resizing:
+                    self.parentNtWidget.setResizable(self.toggleResizeAct.isChecked())
                     self.addActions([self.toggleResizeAct])
                     self.addSeparator()
             self.setupWidgetPad = False
@@ -64,7 +64,7 @@ class Menu(QMenu):
     def toggleResize(self):
         state = self.toggleResizeAct.isChecked()
         if self.parentNtWidget != None:
-            self.parentNtWidget.updateResizingState(state)
+            self.parentNtWidget.setResizable(state)
         elif self.parentPopup != None:
             self.parentPopup.updateResizingState(state)
         
