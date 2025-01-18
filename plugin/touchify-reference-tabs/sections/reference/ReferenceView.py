@@ -5,6 +5,9 @@ from PyQt5 import QtCore, QtGui
 from .ReferenceCalc import *
 from .ReferencePacker import ReferencePacker
 from .ReferenceColorPicker import *
+from .ReferencePin import ReferencePin
+from .ReferenceContextMenu import ReferenceContextMenu
+from .ReferenceCommons import ReferenceCommons
 
 
 
@@ -39,6 +42,7 @@ class ReferenceView( QWidget ):
 
     def __init__( self, parent ):
         super( ReferenceView, self ).__init__( parent )
+        self.setAttribute(Qt.WidgetAttribute.WA_AcceptTouchEvents, True)
 
         # Widget
         self.ww = 1
@@ -206,8 +210,8 @@ class ReferenceView( QWidget ):
         self.file_path = ""
 
         # Pin
-        self.pin_list = []
-        self.pin_previous = []
+        self.pin_list: list[ReferencePin] = []
+        self.pin_previous: list[ReferencePin] = []
         self.pin_index = None
         self.pin_path = None
         self.pin_basename = None
@@ -365,7 +369,7 @@ class ReferenceView( QWidget ):
     
     #region Pin
 
-    def Pin_Insert( self, pin ):
+    def Pin_Insert( self, pin: ReferencePin ):
         # Pin
         self.pin_list.append( pin )
         self.pin_count = len( self.pin_list )
@@ -377,10 +381,32 @@ class ReferenceView( QWidget ):
         if ok and url != "":
             pin = { "bx" : bx, "by" : by, "image_path" : url }
             self.SIGNAL_PIN_IMAGE.emit( pin )
-    
+            
+    def Pin_ZData(self, index ):
+        path = self.pin_list[index].path
+        web = self.pin_list[index].web
+
+        if path != None:
+            zdata = ReferenceCommons.Bytes_Python( path )
+        elif web != None:
+            zdata = ReferenceCommons.Download_Data( web )
+        else:
+            zdata = None
+
+        if not zdata: return
+
+        qpixmap = QPixmap()
+        qpixmap.loadFromData( zdata )
+        if qpixmap.isNull(): return
+        
+        self.pin_list[index].zdata = str(zdata)
+        self.pin_list[index].qpixmap = qpixmap
+        self.pin_list[index].path = None
+        self.pin_list[index].web = None
+
     def Pin_Update( self ):
         for i in range( 0, self.pin_count ):
-            self.pin_list[i]["index"] = i
+            self.pin_list[i].index = i
     
     def Pin_Clear( self ):
         self.pin_index = None
@@ -429,8 +455,8 @@ class ReferenceView( QWidget ):
             self.pin_index = pin_index
             self.pin_node = self.Pin_Node( self.pin_index )
             self.state_focused = True
-            if self.pin_list[pin_index]["tipo"] == "image":
-                self.pin_path = self.pin_list[pin_index]["path"]
+            if self.pin_list[pin_index].tipo == "image":
+                self.pin_path = self.pin_list[pin_index].path
                 try:self.pin_basename = str( os.path.basename( self.pin_path ) ) # local
                 except:self.pin_basename = None # web
             else:
@@ -441,9 +467,9 @@ class ReferenceView( QWidget ):
     
     def Pin_Active( self, index ):
         for i in range( 0, self.pin_count ):
-            self.pin_list[i]["active"] = False
+            self.pin_list[i].active = False
         if index != None:
-            self.pin_list[index]["active"] = True
+            self.pin_list[index].active = True
     
     def Pin_Node( self, index ):
         # None = Board, 0 = No Node, 1-9 = Node
@@ -455,7 +481,7 @@ class ReferenceView( QWidget ):
             rot = 75
 
             # Read
-            img = self.pin_list[index]["tipo"] == "image"
+            img = self.pin_list[index].tipo == "image"
 
             # Read
             dx, dy, dl, dr, dt, db, dw, dh = self.Pin_Draw_Box( index )
@@ -489,17 +515,17 @@ class ReferenceView( QWidget ):
         set_limit_y = list()
         active_select = False
         if self.pin_index != None:
-            active_select = self.pin_list[self.pin_index]["select"]
+            active_select = self.pin_list[self.pin_index].select
         # Collect values
         for i in range( 0, self.pin_count ):
-            pin_select = self.pin_list[i]["select"]
+            pin_select = self.pin_list[i].select
             check_active = self.pin_index != i and active_select == False
             check_select = self.pin_index != i and active_select == True and pin_select == False
             if ( check_active == True or check_select == True ):
-                set_limit_x.append( self.pin_list[i]["bl"] )
-                set_limit_x.append( self.pin_list[i]["br"] )
-                set_limit_y.append( self.pin_list[i]["bt"] )
-                set_limit_y.append( self.pin_list[i]["bb"] )
+                set_limit_x.append( self.pin_list[i].bl )
+                set_limit_x.append( self.pin_list[i].br )
+                set_limit_y.append( self.pin_list[i].bt )
+                set_limit_y.append( self.pin_list[i].bb )
         # Update Limits
         self.limit_x = list( set( set_limit_x ) )
         self.limit_y = list( set( set_limit_y ) )
@@ -510,21 +536,21 @@ class ReferenceView( QWidget ):
             for i in range( 0, self.pin_count ):
                 dicta = {
                     # Transform
-                    "trz" : self.pin_list[i]["trz"],
-                    "tsk" : self.pin_list[i]["tsk"],
-                    "tsw" : self.pin_list[i]["tsw"],
-                    "tsh" : self.pin_list[i]["tsh"],
+                    "trz" : self.pin_list[i].trz,
+                    "tsk" : self.pin_list[i].tsk,
+                    "tsw" : self.pin_list[i].tsw,
+                    "tsh" : self.pin_list[i].tsh,
                     # Bounding Box
-                    "bx" : self.pin_list[i]["bx"],
-                    "by" : self.pin_list[i]["by"],
-                    "bl" : self.pin_list[i]["bl"],
-                    "br" : self.pin_list[i]["br"],
-                    "bt" : self.pin_list[i]["bt"],
-                    "bb" : self.pin_list[i]["bb"],
-                    "bw" : self.pin_list[i]["bw"],
-                    "bh" : self.pin_list[i]["bh"],
+                    "bx" : self.pin_list[i].bx,
+                    "by" : self.pin_list[i].by,
+                    "bl" : self.pin_list[i].bl,
+                    "br" : self.pin_list[i].br,
+                    "bt" : self.pin_list[i].bt,
+                    "bb" : self.pin_list[i].bb,
+                    "bw" : self.pin_list[i].bw,
+                    "bh" : self.pin_list[i].bh,
                     }
-                pin_previous.append( dicta )
+                pin_previous.append( ReferencePin(**dicta) )
             self.pin_previous = pin_previous
     
     def Pin_Preview( self, index ):
@@ -532,21 +558,21 @@ class ReferenceView( QWidget ):
         if ( index == None or self.pin_preview != None ):
             return
         else:
-            qpixmap = self.pin_list[index]["qpixmap"]
+            qpixmap = self.pin_list[index].qpixmap
             if qpixmap != None:
                 self.SIGNAL_PREVIEW_REQUESTED.emit(qpixmap)
     
     def Pin_Draw_Box( self, index ):
         if index != None:
             # Read
-            bx = self.pin_list[index]["bx"]
-            by = self.pin_list[index]["by"]
-            bl = self.pin_list[index]["bl"]
-            br = self.pin_list[index]["br"]
-            bt = self.pin_list[index]["bt"]
-            bb = self.pin_list[index]["bb"]
-            bw = self.pin_list[index]["bw"]
-            bh = self.pin_list[index]["bh"]
+            bx = self.pin_list[index].bx
+            by = self.pin_list[index].by
+            bl = self.pin_list[index].bl
+            br = self.pin_list[index].br
+            bt = self.pin_list[index].bt
+            bb = self.pin_list[index].bb
+            bw = self.pin_list[index].bw
+            bh = self.pin_list[index].bh
             # Transform
             dx = self.w2 + ( bx - self.w2 ) * self.cz
             dy = self.h2 + ( by - self.h2 ) * self.cz
@@ -559,29 +585,29 @@ class ReferenceView( QWidget ):
             # Return
             return dx, dy, dl, dr, dt, db, dw, dh
     
-    def Pin_Draw_QPixmap( self, lista, index ):
+    def Pin_Draw_QPixmap( self, lista: list[ReferencePin], index: int ):
         # Variables
-        tipo = lista[index]["tipo"]
-        render = lista[index]["render"]
+        tipo = lista[index].tipo
+        render = lista[index].render
         if ( index != None and tipo == "image" and render == True ):
             # Read
-            trz = lista[index]["trz"]
-            tsw = lista[index]["tsw"]
-            tsh = lista[index]["tsh"]
-            egs = lista[index]["egs"]
-            efx = lista[index]["efx"]
-            efy = lista[index]["efy"]
-            qpixmap = lista[index]["qpixmap"]
+            trz = lista[index].trz
+            tsw = lista[index].tsw
+            tsh = lista[index].tsh
+            egs = lista[index].egs
+            efx = lista[index].efx
+            efy = lista[index].efy
+            qpixmap = lista[index].qpixmap
             # Pixmap
             if qpixmap != None:
                 draw = self.Edit_QPixmap( qpixmap, egs, efx, efy )
                 draw = self.Scale_QPixmap( draw, tsw, tsh )
                 draw = self.Rotate_QPixmap( draw, trz )
-                lista[index]["draw"] = draw
+                lista[index].draw = draw
                 del draw
             else:
-                lista[index]["qpixmap"] = None
-                lista[index]["draw"] = None
+                lista[index].qpixmap = None
+                lista[index].draw = None
             # Garbage
             del qpixmap
     
@@ -620,8 +646,7 @@ class ReferenceView( QWidget ):
     
     #region Label
     
-    def Label_Insert( self, event ):
-        pos = event.pos()
+    def Label_Insert( self, pos: QPoint ):
         bx, by = self.Point_Location( pos.x(), pos.y() )
         pin = {
             "bx" : bx,
@@ -632,21 +657,21 @@ class ReferenceView( QWidget ):
     def Label_List( self ):
         lista = []
         for i in range( 0, self.pin_count ):
-            if self.pin_list[i]["select"] == True:
+            if self.pin_list[i].select == True:
                 lista.append( i )
 
         if self.state_focused and self.select_count <= 0 and self.pin_index != None:
-            if self.pin_list[self.pin_index]["tipo"] == "label": lista.append(self.pin_index)
+            if self.pin_list[self.pin_index].tipo == "label": lista.append(self.pin_index)
         return lista
     
     def Label_Panel( self, index ):
         if index:
             info = {
-                "text"   : self.pin_list[index]["text"],
-                "font"   : self.pin_list[index]["font"],
-                "letter" : self.pin_list[index]["letter"],
-                "pen"    : self.pin_list[index]["pen"],
-                "bg"     : self.pin_list[index]["bg"],
+                "text"   : self.pin_list[index].text,
+                "font"   : self.pin_list[index].font,
+                "letter" : self.pin_list[index].letter,
+                "pen"    : self.pin_list[index].pen,
+                "bg"     : self.pin_list[index].bg,
                 }
             self.SIGNAL_LABEL_INFO.emit( info )
         else:
@@ -657,11 +682,11 @@ class ReferenceView( QWidget ):
         if len( lista ) > 0:
             index = lista[-1]
             info = {
-                "text"   : self.pin_list[index]["text"],
-                "font"   : self.pin_list[index]["font"],
-                "letter" : self.pin_list[index]["letter"],
-                "pen"    : self.pin_list[index]["pen"],
-                "bg"     : self.pin_list[index]["bg"],
+                "text"   : self.pin_list[index].text,
+                "font"   : self.pin_list[index].font,
+                "letter" : self.pin_list[index].letter,
+                "pen"    : self.pin_list[index].pen,
+                "bg"     : self.pin_list[index].bg,
                 }
         else:
             info = None
@@ -670,31 +695,31 @@ class ReferenceView( QWidget ):
     def Set_Label_Text( self, text ):
         lista = self.Label_List()
         for i in lista:
-            self.pin_list[i]["text"] = text
+            self.pin_list[i].text = text
         self.update()
     
     def Set_Label_Font( self, font ):
         lista = self.Label_List()
         for i in lista:
-            self.pin_list[i]["font"] = font
+            self.pin_list[i].font = font
         self.update()
     
     def Set_Label_Letter( self, letter ):
         lista = self.Label_List()
         for i in lista:
-            self.pin_list[i]["letter"] = letter
+            self.pin_list[i].letter = letter
         self.update()
     
     def Set_Label_Pen( self, pen ):
         lista = self.Label_List()
         for i in lista:
-            self.pin_list[i]["pen"] = pen
+            self.pin_list[i].pen = pen
         self.update()
    
     def Set_Label_Bg( self, bg ):
         lista = self.Label_List()
         for i in lista:
-            self.pin_list[i]["bg"] = bg
+            self.pin_list[i].bg = bg
         self.update()
     
     #endregion
@@ -711,14 +736,14 @@ class ReferenceView( QWidget ):
             dx, dy = self.Point_Deltas( ex, ey )
             self.Move_Pin( dx, dy )
         if scale == True:
-            if self.pin_list[self.pin_index]["tipo"] == "image":
+            if self.pin_list[self.pin_index].tipo == "image":
                 px, py = self.Point_Location( ex, ey )
                 self.Scale_Pin( px, py, node )
-            if self.pin_list[self.pin_index]["tipo"] == "label":
+            if self.pin_list[self.pin_index].tipo == "label":
                 dx, dy = self.Point_Deltas( ex, ey )
                 self.Scale_Label( self.pin_previous, self.pin_index, node, dx, dy )
         if rotate == True:
-            if self.pin_list[self.pin_index]["tipo"] == "image":
+            if self.pin_list[self.pin_index].tipo == "image":
                 dx = ( ex - self.ox )
                 self.Rotate_Pin( dx )
     
@@ -729,12 +754,12 @@ class ReferenceView( QWidget ):
         snap_dist = 10 / self.cz
 
         # Preview Move
-        n_bx = self.pin_previous[self.pin_index]["bx"] + dx
-        n_by = self.pin_previous[self.pin_index]["by"] + dy
-        n_bl = self.pin_previous[self.pin_index]["bl"] + dx
-        n_br = self.pin_previous[self.pin_index]["br"] + dx
-        n_bt = self.pin_previous[self.pin_index]["bt"] + dy
-        n_bb = self.pin_previous[self.pin_index]["bb"] + dy
+        n_bx = self.pin_previous[self.pin_index].bx + dx
+        n_by = self.pin_previous[self.pin_index].by + dy
+        n_bl = self.pin_previous[self.pin_index].bl + dx
+        n_br = self.pin_previous[self.pin_index].br + dx
+        n_bt = self.pin_previous[self.pin_index].bt + dy
+        n_bb = self.pin_previous[self.pin_index].bb + dy
 
         # Snap
         if self.state_snap == True:
@@ -771,43 +796,43 @@ class ReferenceView( QWidget ):
         self.Move_Transform( self.pin_previous, self.pin_index, dx + sx, dy + sy )
 
         # Snap and Selection
-        if ( self.pin_list[self.pin_index]["select"] == True and self.select_count > 0 ):
+        if ( self.pin_list[self.pin_index].select == True and self.select_count > 0 ):
             for i in range( 0, self.pin_count ):
-                if self.pin_list[i]["select"] == True:
+                if self.pin_list[i].select == True:
                     self.Move_Transform( self.pin_previous, i, dx + sx, dy + sy )
     
     def Move_Transform( self, previous, index, dx, dy ):
-        self.pin_list[index]["bx"] = previous[index]["bx"] + dx
-        self.pin_list[index]["by"] = previous[index]["by"] + dy
-        self.pin_list[index]["bl"] = previous[index]["bl"] + dx
-        self.pin_list[index]["br"] = previous[index]["br"] + dx
-        self.pin_list[index]["bt"] = previous[index]["bt"] + dy
-        self.pin_list[index]["bb"] = previous[index]["bb"] + dy
+        self.pin_list[index].bx = previous[index].bx + dx
+        self.pin_list[index].by = previous[index].by + dy
+        self.pin_list[index].bl = previous[index].bl + dx
+        self.pin_list[index].br = previous[index].br + dx
+        self.pin_list[index].bt = previous[index].bt + dy
+        self.pin_list[index].bb = previous[index].bb + dy
     
     def Move_Point( self, lista, index, px, py ):
         # Read
-        bw = lista[index]["bw"]
-        bh = lista[index]["bh"]
+        bw = lista[index].bw
+        bh = lista[index].bh
         # Write
-        lista[index]["bx"] = px + bw * 0.5
-        lista[index]["by"] = py + bh * 0.5
-        lista[index]["bl"] = px
-        lista[index]["br"] = px + bw
-        lista[index]["bt"] = py
-        lista[index]["bb"] = py + bh
+        lista[index].bx = px + bw * 0.5
+        lista[index].by = py + bh * 0.5
+        lista[index].bl = px
+        lista[index].br = px + bw
+        lista[index].bt = py
+        lista[index].bb = py + bh
 
     def Scale_Pin( self, px, py, node ):
         # Variables
         snap_dist = 20 / self.cz
 
         # Read
-        tipo = self.pin_list[self.pin_index]["tipo"]
-        bx = self.pin_previous[self.pin_index]["bx"]
-        by = self.pin_previous[self.pin_index]["by"]
-        bl = self.pin_previous[self.pin_index]["bl"]
-        br = self.pin_previous[self.pin_index]["br"]
-        bt = self.pin_previous[self.pin_index]["bt"]
-        bb = self.pin_previous[self.pin_index]["bb"]
+        tipo = self.pin_list[self.pin_index].tipo
+        bx = self.pin_previous[self.pin_index].bx
+        by = self.pin_previous[self.pin_index].by
+        bl = self.pin_previous[self.pin_index].bl
+        br = self.pin_previous[self.pin_index].br
+        bt = self.pin_previous[self.pin_index].bt
+        bb = self.pin_previous[self.pin_index].bb
 
         # Point Neutral
         if node == 1:
@@ -890,14 +915,14 @@ class ReferenceView( QWidget ):
         # Snap and Selection
         if self.select_count > 0:
             for i in range( 0, self.pin_count ):
-                if self.pin_list[i]["select"] == True:
+                if self.pin_list[i].select == True:
                     # Read
-                    n_bx = self.pin_previous[i]["bx"]
-                    n_by = self.pin_previous[i]["by"]
-                    n_bl = self.pin_previous[i]["bl"]
-                    n_br = self.pin_previous[i]["br"]
-                    n_bt = self.pin_previous[i]["bt"]
-                    n_bb = self.pin_previous[i]["bb"]
+                    n_bx = self.pin_previous[i].bx
+                    n_by = self.pin_previous[i].by
+                    n_bl = self.pin_previous[i].bl
+                    n_br = self.pin_previous[i].br
+                    n_bt = self.pin_previous[i].bt
+                    n_bb = self.pin_previous[i].bb
 
                     # Points
                     if node == 1:
@@ -950,18 +975,18 @@ class ReferenceView( QWidget ):
         # sx, sy = scaling point
 
         # Read
-        trz = previous[index]["trz"]
-        tsk = previous[index]["tsk"]
-        tsw = previous[index]["tsw"]
-        tsh = previous[index]["tsh"]
-        bx = previous[index]["bx"]
-        by = previous[index]["by"]
-        bl = previous[index]["bl"]
-        br = previous[index]["br"]
-        bt = previous[index]["bt"]
-        bb = previous[index]["bb"]
-        bw = previous[index]["bw"]
-        bh = previous[index]["bh"]
+        trz = previous[index].trz
+        tsk = previous[index].tsk
+        tsw = previous[index].tsw
+        tsh = previous[index].tsh
+        bx = previous[index].bx
+        by = previous[index].by
+        bl = previous[index].bl
+        br = previous[index].br
+        bt = previous[index].bt
+        bb = previous[index].bb
+        bw = previous[index].bw
+        bh = previous[index].bh
 
         # Factor
         if node in ( 1, 3, 7, 9 ):
@@ -980,85 +1005,85 @@ class ReferenceView( QWidget ):
 
         # Write
         if ( fw != 0 and fh != 0 ):
-            self.pin_list[index]["tsk"] = tsk * factor
-            self.pin_list[index]["tsw"] = tsw * factor
-            self.pin_list[index]["tsh"] = tsh * factor
+            self.pin_list[index].tsk = tsk * factor
+            self.pin_list[index].tsw = tsw * factor
+            self.pin_list[index].tsh = tsh * factor
             if node == 1:
-                self.pin_list[index]["bx"] = nx - fw * 0.5
-                self.pin_list[index]["by"] = ny - fh * 0.5
-                self.pin_list[index]["bl"] = nx - fw
-                self.pin_list[index]["br"] = nx
-                self.pin_list[index]["bt"] = ny - fh
-                self.pin_list[index]["bb"] = ny
+                self.pin_list[index].bx = nx - fw * 0.5
+                self.pin_list[index].by = ny - fh * 0.5
+                self.pin_list[index].bl = nx - fw
+                self.pin_list[index].br = nx
+                self.pin_list[index].bt = ny - fh
+                self.pin_list[index].bb = ny
             if node == 2:
-                self.pin_list[index]["bx"] = nx
-                self.pin_list[index]["by"] = ny - fh * 0.5
-                self.pin_list[index]["bl"] = nx - fw * 0.5
-                self.pin_list[index]["br"] = nx + fw * 0.5
-                self.pin_list[index]["bt"] = ny - fh
-                self.pin_list[index]["bb"] = ny
+                self.pin_list[index].bx = nx
+                self.pin_list[index].by = ny - fh * 0.5
+                self.pin_list[index].bl = nx - fw * 0.5
+                self.pin_list[index].br = nx + fw * 0.5
+                self.pin_list[index].bt = ny - fh
+                self.pin_list[index].bb = ny
             if node == 3:
-                self.pin_list[index]["bx"] = nx + fw * 0.5
-                self.pin_list[index]["by"] = ny - fh * 0.5
-                self.pin_list[index]["bl"] = nx
-                self.pin_list[index]["br"] = nx + fw
-                self.pin_list[index]["bt"] = ny - fh
-                self.pin_list[index]["bb"] = ny
+                self.pin_list[index].bx = nx + fw * 0.5
+                self.pin_list[index].by = ny - fh * 0.5
+                self.pin_list[index].bl = nx
+                self.pin_list[index].br = nx + fw
+                self.pin_list[index].bt = ny - fh
+                self.pin_list[index].bb = ny
             if node == 4:
-                self.pin_list[index]["bx"] = nx - fw * 0.5
-                self.pin_list[index]["by"] = ny
-                self.pin_list[index]["bl"] = nx - fw
-                self.pin_list[index]["br"] = nx
-                self.pin_list[index]["bt"] = ny - fh * 0.5
-                self.pin_list[index]["bb"] = ny + fh * 0.5
+                self.pin_list[index].bx = nx - fw * 0.5
+                self.pin_list[index].by = ny
+                self.pin_list[index].bl = nx - fw
+                self.pin_list[index].br = nx
+                self.pin_list[index].bt = ny - fh * 0.5
+                self.pin_list[index].bb = ny + fh * 0.5
             if node == 6:
-                self.pin_list[index]["bx"] = nx + fw * 0.5
-                self.pin_list[index]["by"] = ny
-                self.pin_list[index]["bl"] = nx
-                self.pin_list[index]["br"] = nx + fw
-                self.pin_list[index]["bt"] = ny - fh * 0.5
-                self.pin_list[index]["bb"] = ny + fh * 0.5
+                self.pin_list[index].bx = nx + fw * 0.5
+                self.pin_list[index].by = ny
+                self.pin_list[index].bl = nx
+                self.pin_list[index].br = nx + fw
+                self.pin_list[index].bt = ny - fh * 0.5
+                self.pin_list[index].bb = ny + fh * 0.5
             if node == 7:
-                self.pin_list[index]["bx"] = nx - fw * 0.5
-                self.pin_list[index]["by"] = ny + fh * 0.5
-                self.pin_list[index]["bl"] = nx - fw
-                self.pin_list[index]["br"] = nx
-                self.pin_list[index]["bt"] = ny
-                self.pin_list[index]["bb"] = ny + fh
+                self.pin_list[index].bx = nx - fw * 0.5
+                self.pin_list[index].by = ny + fh * 0.5
+                self.pin_list[index].bl = nx - fw
+                self.pin_list[index].br = nx
+                self.pin_list[index].bt = ny
+                self.pin_list[index].bb = ny + fh
             if node == 8:
-                self.pin_list[index]["bx"] = nx
-                self.pin_list[index]["by"] = ny + fh * 0.5
-                self.pin_list[index]["bl"] = nx - fw * 0.5
-                self.pin_list[index]["br"] = nx + fw * 0.5
-                self.pin_list[index]["bt"] = ny
-                self.pin_list[index]["bb"] = ny + fh
+                self.pin_list[index].bx = nx
+                self.pin_list[index].by = ny + fh * 0.5
+                self.pin_list[index].bl = nx - fw * 0.5
+                self.pin_list[index].br = nx + fw * 0.5
+                self.pin_list[index].bt = ny
+                self.pin_list[index].bb = ny + fh
             if node == 9:
-                self.pin_list[index]["bx"] = nx + fw * 0.5
-                self.pin_list[index]["by"] = ny + fh * 0.5
-                self.pin_list[index]["bl"] = nx
-                self.pin_list[index]["br"] = nx + fw
-                self.pin_list[index]["bt"] = ny
-                self.pin_list[index]["bb"] = ny + fh
-            self.pin_list[index]["bw"] = fw
-            self.pin_list[index]["bh"] = fh
-            self.pin_list[index]["area"] = fw * fh
-            self.pin_list[index]["perimeter"] = 2 * fw + 2 * fh
-            self.pin_list[index]["ratio"] = fw / fh
+                self.pin_list[index].bx = nx + fw * 0.5
+                self.pin_list[index].by = ny + fh * 0.5
+                self.pin_list[index].bl = nx
+                self.pin_list[index].br = nx + fw
+                self.pin_list[index].bt = ny
+                self.pin_list[index].bb = ny + fh
+            self.pin_list[index].bw = fw
+            self.pin_list[index].bh = fh
+            self.pin_list[index].area = fw * fh
+            self.pin_list[index].perimeter = 2 * fw + 2 * fh
+            self.pin_list[index].ratio = fw / fh
     
     def Scale_Factor( self, previous, index, nx, ny, factor ):
         # Read
-        trz = previous[index]["trz"]
-        tsk = previous[index]["tsk"]
-        tsw = previous[index]["tsw"]
-        tsh = previous[index]["tsh"]
-        bx = previous[index]["bx"]
-        by = previous[index]["by"]
-        bl = previous[index]["bl"]
-        br = previous[index]["br"]
-        bt = previous[index]["bt"]
-        bb = previous[index]["bb"]
-        bw = previous[index]["bw"]
-        bh = previous[index]["bh"]
+        trz = previous[index].trz
+        tsk = previous[index].tsk
+        tsw = previous[index].tsw
+        tsh = previous[index].tsh
+        bx = previous[index].bx
+        by = previous[index].by
+        bl = previous[index].bl
+        br = previous[index].br
+        bt = previous[index].bt
+        bb = previous[index].bb
+        bw = previous[index].bw
+        bh = previous[index].bh
 
         # Calculation
         n_tsk = tsk * factor
@@ -1074,20 +1099,20 @@ class ReferenceView( QWidget ):
         n_bh = n_bb - n_bt
 
         # Write
-        self.pin_list[index]["tsk"] = n_tsk
-        self.pin_list[index]["tsw"] = n_tsw
-        self.pin_list[index]["tsh"] = n_tsh
-        self.pin_list[index]["bx"] = n_bx
-        self.pin_list[index]["by"] = n_by
-        self.pin_list[index]["bl"] = n_bl
-        self.pin_list[index]["br"] = n_br
-        self.pin_list[index]["bt"] = n_bt
-        self.pin_list[index]["bb"] = n_bb
-        self.pin_list[index]["bw"] = n_bw
-        self.pin_list[index]["bh"] = n_bh
-        self.pin_list[index]["area"] = n_bw * n_bh
-        self.pin_list[index]["perimeter"] = 2 * n_bw + 2 * n_bh
-        self.pin_list[index]["ratio"] = n_bw / n_bh
+        self.pin_list[index].tsk = n_tsk
+        self.pin_list[index].tsw = n_tsw
+        self.pin_list[index].tsh = n_tsh
+        self.pin_list[index].bx = n_bx
+        self.pin_list[index].by = n_by
+        self.pin_list[index].bl = n_bl
+        self.pin_list[index].br = n_br
+        self.pin_list[index].bt = n_bt
+        self.pin_list[index].bb = n_bb
+        self.pin_list[index].bw = n_bw
+        self.pin_list[index].bh = n_bh
+        self.pin_list[index].area = n_bw * n_bh
+        self.pin_list[index].perimeter = 2 * n_bw + 2 * n_bh
+        self.pin_list[index].ratio = n_bw / n_bh
     
     def Scale_Label( self, previous, index, node, dx, dy ):
         # dx, dy =  delta amount
@@ -1096,12 +1121,12 @@ class ReferenceView( QWidget ):
         snap_dist = 10 / self.cz
 
         # Read
-        bx = previous[index]["bx"]
-        by = previous[index]["by"]
-        bl = previous[index]["bl"]
-        br = previous[index]["br"]
-        bt = previous[index]["bt"]
-        bb = previous[index]["bb"]
+        bx = previous[index].bx
+        by = previous[index].by
+        bl = previous[index].bl
+        br = previous[index].br
+        bt = previous[index].bt
+        bb = previous[index].bb
         # Nodes
         if node == 1:
             n_bl = bl + dx
@@ -1206,29 +1231,29 @@ class ReferenceView( QWidget ):
         h = n_bb - n_bt
         # Write
         if w > 0:
-            self.pin_list[index]["bx"] = n_bl + w * 0.5
-            self.pin_list[index]["bl"] = n_bl
-            self.pin_list[index]["br"] = n_br
+            self.pin_list[index].bx = n_bl + w * 0.5
+            self.pin_list[index].bl = n_bl
+            self.pin_list[index].br = n_br
         if h > 0:
-            self.pin_list[index]["by"] = n_bt + h * 0.5
-            self.pin_list[index]["bt"] = n_bt
-            self.pin_list[index]["bb"] = n_bb
+            self.pin_list[index].by = n_bt + h * 0.5
+            self.pin_list[index].bt = n_bt
+            self.pin_list[index].bb = n_bb
         if w < 0:
             w = abs( w )
-            self.pin_list[index]["bx"] = n_br + w * 0.5
-            self.pin_list[index]["bl"] = n_br
-            self.pin_list[index]["br"] = n_bl
+            self.pin_list[index].bx = n_br + w * 0.5
+            self.pin_list[index].bl = n_br
+            self.pin_list[index].br = n_bl
         if h < 0:
             h = abs( h )
-            self.pin_list[index]["by"] = n_bb + h * 0.5
-            self.pin_list[index]["bt"] = n_bb
-            self.pin_list[index]["bb"] = n_bt
+            self.pin_list[index].by = n_bb + h * 0.5
+            self.pin_list[index].bt = n_bb
+            self.pin_list[index].bb = n_bt
         if ( w > 0 and h > 0 ):
-            self.pin_list[index]["bw"] = w
-            self.pin_list[index]["bh"] = h
-            self.pin_list[index]["area"] = w * h
-            self.pin_list[index]["perimeter"] = 2 * w + 2 * h
-            self.pin_list[index]["ratio"] = w / h
+            self.pin_list[index].bw = w
+            self.pin_list[index].bh = h
+            self.pin_list[index].area = w * h
+            self.pin_list[index].perimeter = 2 * w + 2 * h
+            self.pin_list[index].ratio = w / h
 
     def Rotate_Pin( self, dx ):
         # Angle
@@ -1240,18 +1265,18 @@ class ReferenceView( QWidget ):
         # Selection
         if self.select_count > 0:
             for i in range( 0, self.pin_count ):
-                if self.pin_list[i]["select"] == True:
+                if self.pin_list[i].select == True:
                     self.Rotate_Transform( self.pin_previous, i, angle )
                     self.Pin_Draw_QPixmap( self.pin_list, i )
     
     def Rotate_Transform( self, previous, index, angle ):
         # Read
-        bx = previous[index]["bx"]
-        by = previous[index]["by"]
-        trz = previous[index]["trz"]
-        tsk = previous[index]["tsk"]
-        tsw = previous[index]["tsw"]
-        tsh = previous[index]["tsh"]
+        bx = previous[index].bx
+        by = previous[index].by
+        trz = previous[index].trz
+        tsk = previous[index].tsk
+        tsw = previous[index].tsw
+        tsh = previous[index].tsh
 
         # Variables
         n_trz = Limit_Looper( trz + angle, 360 )
@@ -1285,25 +1310,25 @@ class ReferenceView( QWidget ):
         n_bh = ( n_bb - n_bt )
 
         # Write
-        self.pin_list[index]["trz"] = n_trz
-        self.pin_list[index]["bl"] = n_bl
-        self.pin_list[index]["br"] = n_br
-        self.pin_list[index]["bt"] = n_bt
-        self.pin_list[index]["bb"] = n_bb
-        self.pin_list[index]["bw"] = n_bw
-        self.pin_list[index]["bh"] = n_bh
-        self.pin_list[index]["area"] = n_bw * n_bh
-        self.pin_list[index]["perimeter"] = 2 * n_bw + 2 * n_bh
-        self.pin_list[index]["ratio"] = n_bw / n_bh
+        self.pin_list[index].trz = n_trz
+        self.pin_list[index].bl = n_bl
+        self.pin_list[index].br = n_br
+        self.pin_list[index].bt = n_bt
+        self.pin_list[index].bb = n_bb
+        self.pin_list[index].bw = n_bw
+        self.pin_list[index].bh = n_bh
+        self.pin_list[index].area = n_bw * n_bh
+        self.pin_list[index].perimeter = 2 * n_bw + 2 * n_bh
+        self.pin_list[index].ratio = n_bw / n_bh
 
     def Edit_Pin( self, egs, efx, efy ):
         for i in range( 0, self.pin_count ):
-            valid = self.pin_list[i]["active"] == True or self.pin_list[i]["select"] == True
+            valid = self.pin_list[i].active == True or self.pin_list[i].select == True
             if valid == True:
                 # Write
-                self.pin_list[i]["egs"] = egs
-                self.pin_list[i]["efx"] = efx
-                self.pin_list[i]["efy"] = efy
+                self.pin_list[i].egs = egs
+                self.pin_list[i].efx = efx
+                self.pin_list[i].efy = efy
                 # QPixmaps
                 self.Pin_Draw_QPixmap( self.pin_list, i )
     
@@ -1329,11 +1354,11 @@ class ReferenceView( QWidget ):
     
     def Selection_Click( self, index ):
         if index != None:
-            select = self.pin_list[index]["select"]
+            select = self.pin_list[index].select
             if select == True:
-                self.pin_list[index]["select"] = False
+                self.pin_list[index].select = False
             else:
-                self.pin_list[index]["select"] = True
+                self.pin_list[index].select = True
         self.Selection_Verify()
     
     def Selection_Box( self, ex, ey, operation ):
@@ -1353,12 +1378,12 @@ class ReferenceView( QWidget ):
                 check = ( dl >= sl ) and ( dr <= sr ) and ( dt >= st ) and ( db <= sb )
                 if check == True:
                     if operation in ( "add", "replace" ):
-                        self.pin_list[i]["select"] = True
+                        self.pin_list[i].select = True
                     if operation == "minus":
-                        self.pin_list[i]["select"] = False
+                        self.pin_list[i].select = False
                     self.select_count += 1
                 if ( check == False and operation == "replace" ):
-                    self.pin_list[i]["select"] = False
+                    self.pin_list[i].select = False
     
     def Selection_Verify( self ):
         # Variables
@@ -1367,7 +1392,7 @@ class ReferenceView( QWidget ):
 
         # Cycle
         for i in range( 0, self.pin_count ):
-            if self.pin_list[i]["select"] == True:
+            if self.pin_list[i].select == True:
                 self.state_select = True
                 self.select_count += 1
 
@@ -1383,7 +1408,7 @@ class ReferenceView( QWidget ):
         holder = list()
         # Collect Pin
         for pin in self.pin_list:
-            if pin["select"] == True:
+            if pin.select == True:
                 holder.append( pin )
                 self.pin_list.remove( pin )
         # Update
@@ -1398,8 +1423,8 @@ class ReferenceView( QWidget ):
         self.select_count = count
         # Pin
         for i in range( 0, count ):
-            self.pin_list[i]["select"] = True
-            self.pin_list[i]["active"] = False
+            self.pin_list[i].select = True
+            self.pin_list[i].active = False
     
     def Selection_Clear( self ):
         # Variables
@@ -1408,14 +1433,28 @@ class ReferenceView( QWidget ):
         self.select_count = 0
         # Pin
         for i in range( 0, self.pin_count ):
-            self.pin_list[i]["select"] = False
-            self.pin_list[i]["active"] = False
+            self.pin_list[i].select = False
+            self.pin_list[i].active = False
     
+    def Selection_ZData(self ):
+        ci = 1
+        self.SIGNAL_PB_MAX.emit( self.select_count )
+        self.SIGNAL_PB_VALUE.emit( 0 )
+        for i in range( 0, self.pin_count ):
+            if self.pin_list[i].select and self.pin_list[i].tipo == "image":
+                self.SIGNAL_PB_VALUE.emit( ci )
+                QApplication.processEvents()
+                self.Pin_ZData(i)
+                ci += 1
+
+        self.SIGNAL_PB_MAX.emit( 1 )
+        self.SIGNAL_PB_VALUE.emit( 0 )
+
     #endregion
     
     #region Boards
     
-    def Board_Insert( self, lista ):
+    def Board_Insert( self, lista: list[ReferencePin] ):
         # Insert Pins
         self.pin_list.clear()
         self.pin_count = len( lista )
@@ -1438,16 +1477,16 @@ class ReferenceView( QWidget ):
             board_l, board_r, board_t, board_b, board_w, board_h = self.Board_Limit( "PIN" )
             # Move to Neutral
             for i in range( 0, self.pin_count ):
-                px = nx + self.pin_list[i]["bl"] - board_l
-                py = ny + self.pin_list[i]["bt"] - board_t
+                px = nx + self.pin_list[i].bl - board_l
+                py = ny + self.pin_list[i].bt - board_t
                 self.Move_Point( self.pin_list, i, px, py )
 
             # Board
             board_l, board_r, board_t, board_b, board_w, board_h = self.Board_Limit( "PIN" )
             # Move to Center
             for i in range( 0, self.pin_count ):
-                px = self.w2 + ( self.pin_list[i]["bl"] - ( board_l + board_w * 0.5 ) )
-                py = self.h2 + ( self.pin_list[i]["bt"] - ( board_t + board_h * 0.5 ) )
+                px = self.w2 + ( self.pin_list[i].bl - ( board_l + board_w * 0.5 ) )
+                py = self.h2 + ( self.pin_list[i].bt - ( board_t + board_h * 0.5 ) )
                 self.Move_Point( self.pin_list, i, px, py )
 
             self.Camera_Zoom_Fit()
@@ -1484,10 +1523,10 @@ class ReferenceView( QWidget ):
         for i in range( 0, self.pin_count ):
             # Read
             if mode == "PIN":
-                bl = self.pin_list[i]["bl"]
-                br = self.pin_list[i]["br"]
-                bt = self.pin_list[i]["bt"]
-                bb = self.pin_list[i]["bb"]
+                bl = self.pin_list[i].bl
+                br = self.pin_list[i].br
+                bt = self.pin_list[i].bt
+                bb = self.pin_list[i].bb
             if mode == "DRAW":
                 bx, by, bl, br, bt, bb, bw, bh = self.Pin_Draw_Box( i )
             # Board Limit
@@ -1521,19 +1560,19 @@ class ReferenceView( QWidget ):
     def Board_Render( self ):
         for i in range( 0, self.pin_count ):
             # Read
-            render = self.pin_list[i]["render"]
+            render = self.pin_list[i].render
             # Calculations
             dx, dy, dl, dr, dt, db, dw, dh = self.Pin_Draw_Box( i )
             draw = not ( ( dl > self.ww ) or ( dr < 0 ) or ( dt > self.hh ) or ( db < 0 ) )
             # Write
-            self.pin_list[i]["render"] = draw
+            self.pin_list[i].render = draw
             # Update Draw Information
             if ( render == False and draw == True ):
                 self.Pin_Draw_QPixmap( self.pin_list, i )
     
     def Board_Focus( self ):
         for i in range( 0, self.pin_count ):
-            if self.pin_list[i]["render"] != None:
+            if self.pin_list[i].render != None:
                 self.Pin_Draw_QPixmap( self.pin_list, i )
     
     def Board_Save( self ):
@@ -1543,26 +1582,26 @@ class ReferenceView( QWidget ):
 
     #region Reset
     
-    def Reset_Rotation( self, lista ):
+    def Reset_Rotation( self, lista: list[ReferencePin] ):
         self.Pin_Previous()
         for item in lista:
-            index = item["index"]
-            angle = -self.pin_list[index]["trz"]
+            index = item.index
+            angle = -self.pin_list[index].trz
             self.Rotate_Transform( self.pin_previous, index, angle )
             self.Pin_Draw_QPixmap( self.pin_list, index )
     
-    def Reset_Scale( self, lista ):
+    def Reset_Scale( self, lista: list[ReferencePin] ):
         # Variables
         side = 200
         # Scaling
         self.Pin_Previous()
         for pin in lista:
             # Read
-            index = pin["index"]
-            nx = pin["bl"]
-            ny = pin["bt"]
-            width = pin["bw"]
-            height = pin["bh"]
+            index = pin.index
+            nx = pin.bl
+            ny = pin.bt
+            width = pin.bw
+            height = pin.bh
             # Calculations
             if width >= height:
                 factor = side / height
@@ -1576,12 +1615,12 @@ class ReferenceView( QWidget ):
     
     #region Relative
     
-    def Relative_Rebase( self, lista ):
+    def Relative_Rebase( self, lista: list[ReferencePin] ):
         # Variables
         count = self.pin_count
         suggestion = ""
         for item in lista:
-            path = item["path"]
+            path = item.path
             if path != None:
                 suggestion = os.path.dirname( path )
                 break
@@ -1603,22 +1642,22 @@ class ReferenceView( QWidget ):
         path_old = []
         for i in range( 0, self.pin_count ):
             item = self.pin_list[i]
-            path = item["path"]
+            path = item.path
             qpixmap = QPixmap( path )
             if qpixmap.isNull() == False:
-                item["qpixmap"] = qpixmap
-                item["draw"] = self.Pin_Draw_QPixmap( self.pin_list, i )
+                item.qpixmap = qpixmap
+                item.draw = self.Pin_Draw_QPixmap( self.pin_list, i )
             else:
-                item["qpixmap"] = None
-                item["draw"] = None
+                item.qpixmap = None
+                item.draw = None
             path_old.append( path )
         for item in lista:
-            tipo = item["tipo"]
-            bx = item["bx"]
-            by = item["by"]
-            path = item["path"]
-            web = item["web"]
-            qpixmap = item["qpixmap"]
+            tipo = item.tipo
+            bx = item.bx
+            by = item.by
+            path = item.path
+            web = item.web
+            qpixmap = item.qpixmap
             if path != None:basename = os.path.basename( path )
             elif web != None:basename = os.path.split( urllib.parse.urlparse( web ).path )[1]
             else:basename = None
@@ -1634,13 +1673,13 @@ class ReferenceView( QWidget ):
             if len( self.pin_list ) > count:
                 self.Selection_Clear()
                 for i in range( count, len( self.pin_list ) ):
-                    self.pin_list[i]["select"] = True
+                    self.pin_list[i].select = True
                 self.Selection_Verify()
         # Update
         self.Board_Update()
         self.Board_Focus()
     
-    def Relative_Delete( self, lista ):
+    def Relative_Delete( self, lista: list[ReferencePin] ):
         self.Pin_Clear()
         for i in range( 0, len( lista ) ):
             self.pin_list.remove( lista[i] )
@@ -1819,251 +1858,10 @@ class ReferenceView( QWidget ):
             QApplication.restoreOverrideCursor()
 
     def Context_Menu( self, event ):
-        #region Variables
-
-        # variables
         self.state_press = False
         self.press_operation = None
-        state_insert = self.Insert_Check()
+        ReferenceContextMenu.OpenContextMenu(self, event)
 
-        # Cursor
-        QApplication.restoreOverrideCursor()
-
-        # Path
-        if self.pin_index == None:
-            pin_tipo = None
-            pin_egs = False
-            pin_efx = False
-            pin_efy = False
-            pin_erz = 0
-            pin_path = None
-            pin_web = None
-            pin_qpixmap = None
-        else:
-            pin = self.pin_list[self.pin_index]
-            pin_tipo = pin["tipo"]
-            pin_erz = pin["trz"]
-            pin_egs = pin["egs"]
-            pin_efx = pin["efx"]
-            pin_efy = pin["efy"]
-            pin_path = pin["path"]
-            pin_web = pin["web"]
-            pin_qpixmap = pin["qpixmap"]
-
-        # Color
-        string_pickcolor = "Color Picker"
-        if self.pigment_o == None:
-            string_pickcolor += " [RGB]"
-
-        # Relative
-        relative = []
-        for i in range( 0, self.pin_count ):
-            if ( self.pin_list[i]["active"] == True or self.pin_list[i]["select"] == True ):
-                relative.append( self.pin_list[i] )
-
-        # Clip
-        clip = { 
-            "state" : False,
-            "cl": 0,
-            "ct": 0,
-            "cw": 1,
-            "ch": 1,
-            }
-
-    #endregion
-    #region Menu
-
-        # Menu
-        qmenu = QMenu( self )
-
-        # General
-        action_board_fit = qmenu.addAction( "Board Fit" )
-        action_insert_pin = qmenu.addAction( "Insert Pin" )
-        qmenu.addSeparator()
-
-        # Label
-        menu_label = qmenu.addMenu( "Label" )
-        action_label_create = menu_label.addAction( "Create" )
-        action_label_edit = menu_label.addAction( "Edit" )
-
-        # Pin
-        menu_pin = qmenu.addMenu( "Pin" )
-        action_pin_location = menu_pin.addAction( "File Location" )
-        action_pin_copy     = menu_pin.addAction( "Copy Path" )
-        action_pin_save     = menu_pin.addAction( "Save To" )
-
-        # Packer
-        menu_pack = qmenu.addMenu( f"Pack [ { self.select_count } ]" )
-        action_pack_grid      = menu_pack.addAction( "Linear Grid" )
-        action_pack_row       = menu_pack.addAction( "Linear Row" )
-        action_pack_column    = menu_pack.addAction( "Linear Column" )
-        action_pack_pile      = menu_pack.addAction( "Linear Pile" )
-        action_pack_area      = menu_pack.addAction( "Optimal Area" )
-        action_pack_perimeter = menu_pack.addAction( "Optimal Perimeter" )
-        action_pack_ratio     = menu_pack.addAction( "Optimal Ratio" )
-        action_pack_class     = menu_pack.addAction( "Optimal Class" )
-
-        # Reset
-        menu_reset = qmenu.addMenu( "Reset" )
-        action_reset_rotation  = menu_reset.addAction( "Rotation" )
-        action_reset_scale     = menu_reset.addAction( "Scale" )
-
-        # Edit
-        menu_edit = qmenu.addMenu( "Edit" )
-        action_edit_grey   = menu_edit.addAction( "View Greyscale" )
-        action_edit_flip_h = menu_edit.addAction( "Flip Horizontal" )
-        action_edit_flip_v = menu_edit.addAction( "Flip Vertical" )
-        action_edit_reset  = menu_edit.addAction( "Reset" )
-
-        # Color
-        menu_color = qmenu.addMenu( "Color" )
-        action_color_picker  = menu_color.addAction( string_pickcolor )
-        action_color_analyse = menu_color.addAction( "Analyse" )
-
-        # Insert
-        menu_insert = qmenu.addMenu( "Insert ")
-        action_insert_document  = menu_insert.addAction( "Document" )
-        action_insert_layer     = menu_insert.addAction( "Layer" )
-        action_insert_reference = menu_insert.addAction( "Reference" )
-        qmenu.addSeparator()
-
-        # Context
-        action_rebase = qmenu.addAction( "Rebase" )
-        action_delete = qmenu.addAction( "Delete" )
-
-        # Check Label
-        action_label_edit.setCheckable( True )
-        action_label_edit.setChecked( self.state_label )
-        # Check Edit
-        action_edit_grey.setCheckable( True )
-        action_edit_grey.setChecked( pin_egs )
-        action_edit_flip_h.setCheckable( True )
-        action_edit_flip_h.setChecked( pin_efx )
-        action_edit_flip_v.setCheckable( True )
-        action_edit_flip_v.setChecked( pin_efy )
-        # Check Color Picker
-        action_color_picker.setCheckable( True )
-        action_color_picker.setChecked( self.state_pickcolor )
-
-        # Disable Pin
-        if pin_tipo != "image":
-            menu_pin.setEnabled( False )
-        # Disable Pack
-        if self.select_count == 0:
-            menu_pack.setEnabled( False )
-        # Disable Reset
-        if self.pin_index == None:
-            menu_reset.setEnabled( False )
-        # Disable Edit
-        if self.pin_index == None:
-            menu_edit.setEnabled( False )
-        # Disable Color
-        if ( self.pin_index == None or self.pigment_o == None ):
-            action_color_analyse.setEnabled( False )
-        # Disable Insert
-        if self.pin_index == None:
-            action_insert_document.setEnabled( False )
-        if self.pin_index == None or state_insert == False:
-            action_insert_layer.setEnabled( False )
-            action_insert_reference.setEnabled( False )
-        # Disable Relative
-        if self.pin_index == None:
-            action_rebase.setEnabled( False )
-            action_delete.setEnabled( False )
-
-        #endregion
-    #region Actions
-
-        # Mapping
-        action = qmenu.exec_( self.mapToGlobal( event.pos() ) )
-
-        # General
-        if action == action_board_fit:
-            self.Board_Fit()
-        if action == action_insert_pin:
-            bx = event.pos().x()
-            by = event.pos().y()
-            self.Pin_URL( bx, by )
-
-        # Label
-        if action == action_label_create:
-            self.Label_Insert( event )
-        if action == action_label_edit:
-            self.state_label = not self.state_label
-            self.SIGNAL_LABEL_PANEL.emit( self.state_label )
-            self.SIGNAL_ACTIONS_UPDATED.emit()
-
-        # Pin
-        if action == action_pin_location:
-            self.SIGNAL_LOCATION.emit( pin_path )
-        if action == action_pin_copy:
-            copy = QApplication.clipboard()
-            copy.clear()
-            copy.setText( pin_path )
-        if action == action_pin_save:
-            self.SIGNAL_PIN_SAVE.emit( pin_qpixmap )
-
-        # Pack Linear
-        if action == action_pack_grid:
-            self.Packer_Process( "GRID" )
-        if action == action_pack_row:
-            self.Packer_Process( "ROW" )
-        if action == action_pack_column:
-            self.Packer_Process( "COLUMN" )
-        if action == action_pack_pile:
-            self.Packer_Process( "PILE" )
-        # Pack Optimal
-        if action == action_pack_area:
-            self.Packer_Process( "AREA" )
-        if action == action_pack_perimeter:
-            self.Packer_Process( "PERIMETER" )
-        if action == action_pack_ratio:
-            self.Packer_Process( "RATIO" )
-        if action == action_pack_class:
-            self.Packer_Process( "CLASS" )
-
-        # Reset
-        if action == action_reset_rotation:
-            self.Reset_Rotation( relative )
-        if action == action_reset_scale:
-            self.Reset_Scale( relative )
-
-        # Edit
-        if action == action_edit_grey:
-            pin_egs = not pin_egs
-            self.Edit_Pin( pin_egs, pin_efx, pin_efy )
-        if action == action_edit_flip_h:
-            pin_efx = not pin_efx
-            self.Edit_Pin( pin_egs, pin_efx, pin_efy )
-        if action == action_edit_flip_v:
-            pin_efy = not pin_efy
-            self.Edit_Pin( pin_egs, pin_efx, pin_efy )
-        if action == action_edit_reset:
-            self.Edit_Pin( False, False, False )
-
-        # Color
-        if action == action_color_picker:
-            self.state_pickcolor = not self.state_pickcolor
-            self.SIGNAL_ACTIONS_UPDATED.emit()
-        if action == action_color_analyse:
-            qimage = pin_qpixmap.toImage()
-            self.SIGNAL_ANALYSE.emit( qimage )
-
-        # Insert
-        if action == action_insert_document:
-            self.SIGNAL_NEW_DOCUMENT.emit( pin_path, clip )
-        if action == action_insert_layer:
-            self.SIGNAL_INSERT_LAYER.emit( pin_path, clip )
-        if action == action_insert_reference:
-            self.SIGNAL_INSERT_REFERENCE.emit( pin_path, clip )
-
-        # Relative
-        if action == action_rebase:
-            self.Relative_Rebase( relative )
-        if action == action_delete:
-            self.Relative_Delete( relative )
-
-        #endregion
 
     def Insert_Drag( self, path, clip ):
         if path != None:
@@ -2131,7 +1929,7 @@ class ReferenceView( QWidget ):
         if event.key() == Qt.Key.Key_Delete:
             selection = []
             for i in range( 0, self.pin_count ):
-                if self.pin_list[i]["select"] == True:
+                if self.pin_list[i].select == True:
                     selection.append( self.pin_list[i] )
             self.Relative_Delete( selection )
             self.update()
@@ -2155,7 +1953,7 @@ class ReferenceView( QWidget ):
         if event.key() == Qt.Key.Key_Delete:
             pass
 
-    def mousePressEvent( self, event ):
+    def mousePressEvent( self, event: QMouseEvent ):
         # Variable
         self.state_press = True
 
@@ -2473,7 +2271,7 @@ class ReferenceView( QWidget ):
         def Painter_BoundingBox(pin_index: int):
             # Read
             dx, dy, dl, dr, dt, db, dw, dh = self.Pin_Draw_Box( pin_index )
-            trz = self.pin_list[pin_index]["trz"]
+            trz = self.pin_list[pin_index].trz
 
             # Variables
             dw2 = dw * 0.5
@@ -2692,17 +2490,17 @@ class ReferenceView( QWidget ):
         # Images and Text
         painter.setBrush( QtCore.Qt.NoBrush )
         for i in range( 0, self.pin_count ):
-            render = self.pin_list[i]["render"]
+            render = self.pin_list[i].render
             if render == True:
                 # Read
-                tipo = self.pin_list[i]["tipo"]
+                tipo = self.pin_list[i].tipo
                 dx, dy, dl, dr, dt, db, dw, dh = self.Pin_Draw_Box( i )
 
                 # Render
                 if tipo == "image":
                     # Read
-                    pack = self.pin_list[i]["pack"]
-                    draw = self.pin_list[i]["draw"]
+                    pack = self.pin_list[i].pack
+                    draw = self.pin_list[i].draw
 
                     # Image
                     if ( pack == True or draw == None ):
@@ -2716,11 +2514,11 @@ class ReferenceView( QWidget ):
                     del draw
                 if tipo == "label":
                     # Read
-                    text = self.pin_list[i]["text"]
-                    font = self.pin_list[i]["font"]
-                    letter = self.pin_list[i]["letter"]
-                    pen = self.pin_list[i]["pen"]
-                    bg = self.pin_list[i]["bg"]
+                    text = self.pin_list[i].text
+                    font = self.pin_list[i].font
+                    letter = self.pin_list[i].letter
+                    pen = self.pin_list[i].pen
+                    bg = self.pin_list[i].bg
 
                     letter_size = int( letter * self.cz )
                     if letter_size > 0:
@@ -2752,10 +2550,10 @@ class ReferenceView( QWidget ):
                 painter.setBrush( QBrush( self.color_1, Qt.Dense6Pattern ) )
                 # Items
                 for i in range( 0, self.pin_count ):
-                    render = self.pin_list[i]["render"]
+                    render = self.pin_list[i].render
                     if render == True:
-                        select_i = self.pin_list[i]["select"] == True
-                        pack_i = self.pin_list[i]["pack"] == True
+                        select_i = self.pin_list[i].select == True
+                        pack_i = self.pin_list[i].pack == True
                         if ( select_i == True and pack_i == False ):
                             dx, dy, dl, dr, dt, db, dw, dh = self.Pin_Draw_Box( i )
                             painter.drawRect( int( dl ), int( dt ), int( dw ), int( dh ) )
@@ -2834,5 +2632,5 @@ class ReferenceView( QWidget ):
             # # Garbage
             # del qfont
         """
-    
+  
     #endregion

@@ -17,17 +17,16 @@
 
 
 
-import os
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QMenuBar, QTabWidget, \
-                            QAction, QActionGroup, QFileDialog, QMenu
+                            QAction, QMenu, QActionGroup
 from krita import DockWidget
 from .classes.variables import *
-from .classes.settings import Settings
-from .classes.common import generateFiletypeFilter
+
 
 from .DockerPage import DockerPage
+from .DockerMenu import DockerMenu
 
 
 # The main widget, containing the menu bar and tab bar.
@@ -40,36 +39,21 @@ class DockerWidget(QWidget):
         super().__init__(parent)
         self.docker: DockWidget = parent
         
-        self.tab_menu_items: list[QAction] = []
+        self.tab_menubar: DockerMenu | None = None
+        self.tab_menu_items: list[tuple[QMenuBar | QMenu, list[QAction]]] = []
         self.last_tab: DockerPage | None = None
-
-        self.setAcceptDrops(True)
 
         layout = QVBoxLayout(self)
         self.setLayout(layout)
 
         self.menubar = QMenuBar()
+        
 
-        # - File menu
+        # - File menu   
         fileMenu = self.menubar.addMenu("File")
+        fileMenu.aboutToShow.connect(self.updateTabMenus)
         fileMenu.addAction("New Tab", self.addTab)
 
-
-        self.tabActionsGroup = QActionGroup(self)
-
-        self.openImageAction = QAction("Open Image...", self.tabActionsGroup)
-        self.openImageAction.triggered.connect(self.openImage)
-        self.openImageAction.setEnabled(False)
-
-        self.openFolderAction = QAction("Open Folder...", self.tabActionsGroup)
-        self.openFolderAction.triggered.connect(self.openFolder)
-        self.openFolderAction.setEnabled(False)
-
-        self.openReferenceAction = QAction("Open Reference...", self.tabActionsGroup)
-        self.openReferenceAction.triggered.connect(self.openReference)
-        self.openReferenceAction.setEnabled(False)
-
-        fileMenu.addActions(self.tabActionsGroup.actions())
         fileMenu.addSeparator()
 
         closeMenu = fileMenu.addMenu("Close Tabs...")
@@ -80,9 +64,33 @@ class DockerWidget(QWidget):
 
         # - View menu
         viewMenu = self.menubar.addMenu("View")
+        viewMenu.aboutToShow.connect(self.updateTabMenus)
         self.fullscreenAction = viewMenu.addAction("Fullscreen", self.toggleFullscreen)
         self.fullscreenAction.setCheckable(True)
         self.fullscreenAction.setChecked(False)
+
+        viewMenu.addSeparator()
+
+        self.viewModeActionGroup = QActionGroup(self)
+
+        previewAction = QAction("Preview", self.viewModeActionGroup)
+        previewAction.setCheckable(True)
+        previewAction.setChecked(True)
+        previewAction.setEnabled(False)
+        previewAction.setData("preview")
+
+        gridAction = QAction("Grid", self.viewModeActionGroup)
+        gridAction.setCheckable(True)
+        gridAction.setEnabled(False)
+        gridAction.setData("grid")
+
+        referenceAction = QAction("Reference", self.viewModeActionGroup)
+        referenceAction.setCheckable(True)
+        referenceAction.setEnabled(False)
+        referenceAction.setData("reference")
+
+        self.viewModeActionGroup.triggered.connect(self.changeViewMode)
+        viewMenu.addActions(self.viewModeActionGroup.actions())
 
         layout.setMenuBar(self.menubar)
         # Don't overwrite Krita's application menubar on macOS.
@@ -98,7 +106,11 @@ class DockerWidget(QWidget):
         self.tabWidget.currentChanged.connect(self.onTabChanged)
         layout.addWidget(self.tabWidget)
 
-        self.filter = generateFiletypeFilter()
+        self.tabWidget.setStyleSheet(f"""
+            QTabBar::tab {{
+                height: 25px;
+            }}
+        """)
 
 
 
@@ -110,28 +122,15 @@ class DockerWidget(QWidget):
     def tab(self, index: int) -> (DockerPage | None):
         return self.tabWidget.widget(index)
 
-    def setTabSpecificMenus(self, menu_items: list[QMenu]):
-        for menu_item in self.tab_menu_items:
-            self.menubar.removeAction(menu_item)
-
-        self.tab_menu_items = []
-
-        for menu_item in menu_items:
-            action = self.menubar.addMenu(menu_item)
-            self.tab_menu_items.append(action)
-
     # endregion
 
     #region Signal Functions
 
     def onTabChanged(self):
         if self.last_tab: self.last_tab.onTabDeactivated()
-
-        if self.currentTab() != None: [i.setEnabled(True) for i in self.tabActionsGroup.actions()]
-        else: [i.setEnabled(False) for i in self.tabActionsGroup.actions()]
         self.last_tab = self.currentTab()
-
         if self.last_tab: self.last_tab.onTabActivated()
+        self.updateMenuActions()
 
     def onCloseRequestedTab(self, idx):
         tab = self.tab(idx)
@@ -141,23 +140,78 @@ class DockerWidget(QWidget):
 
     #endregion
 
-    #region Event Functions
+    #region Menu Updates
+    
+    def updateTabMenus(self):
+        if self.tab_menubar: self.tab_menubar.updateMenus()
 
-    def dragEnterEvent(self, event: QDragEnterEvent):
-        if event.mimeData().hasUrls():
-            event.acceptProposedAction()
+    def updateMenuActions(self):
+        def updateViewModeMenuActions():
+            tab = self.currentTab()
 
-    def dropEvent(self, event: QDropEvent):
-        filePaths = event.mimeData().urls()
-        # for now, always open in new tab
-        for path in filePaths:
-            # toLocalFile removes "file:///" on Windows
-            # and "file://" on other OSes
-            self.openImage(path.toLocalFile())
+            for action in self.viewModeActionGroup.actions():
+                action.setEnabled(tab != None)
 
-    #endregion
+            if not tab: return
+            current = tab.section()
+            
+            self.viewModeActionGroup.blockSignals(True)
+            for action in self.viewModeActionGroup.actions():
+                if action.data() == current: action.setChecked(True)
+            self.viewModeActionGroup.blockSignals(False)
+
+        updateViewModeMenuActions()
+
+    def updateSectionMenus(self, tab_menubar: DockerMenu):
+
+        def findMenuBarSection(title: str) -> QMenu | None:
+            for menubar_action in self.menubar.actions():
+                if menubar_action.menu() != None and menubar_action.text() == title:
+                    return menubar_action.menu()
+            return None
+
+        for menu_item in self.tab_menu_items:
+            source = menu_item[0]
+            actions = menu_item[1]
+
+            for action in actions:
+                source.removeAction(action)
+
+        self.tab_menubar = tab_menubar
+        self.tab_menu_items = []
+
+        if self.tab_menubar == None: return
+
+        for menu_item in self.tab_menubar.menus():
+            parent_menu = findMenuBarSection(menu_item.title())
+
+            if parent_menu != None:
+                result: tuple[QMenu, list[QAction]] = (parent_menu, [])
+                for action in menu_item.actions():
+                    result[0].addAction(action)
+                    result[1].append(action)
+                self.tab_menu_items.append(result)
+            else:
+                result: tuple[QMenuBar, list[QAction]] = (self.menubar, [])
+                action = result[0].addMenu(menu_item)
+                result[1].append(action)
+                self.tab_menu_items.append(result)
+
+        self.tab_menubar.updateMenus()           
+                
+
+
+
+    #endregion 
 
     #region Menu Functions
+
+    def changeViewMode(self, action: QAction):
+        data = str(action.data())
+        tab = self.currentTab()
+        current = tab.section()
+        if not tab: return
+        if current != data: tab.changeSection(data)
 
     def toggleFullscreen(self):
         full_screen_state = self.fullscreenAction.isChecked()
@@ -165,34 +219,6 @@ class DockerWidget(QWidget):
         for i in range(0, self.tabWidget.count()):
             tab = self.tab(i)
             tab.setFullscreen(full_screen_state)
-        
-
-    def openReference(self):
-        tabIdx = self.tabWidget.currentIndex()
-        tab = self.tab(tabIdx)
-        if tab.reference_section.File_Open():
-            tab.openReference()
-
-
-    def openImage(self, filePath=False):
-        if not filePath:
-            filePath, _filter = QFileDialog.getOpenFileName(self, "Open an image", filter=self.filter, directory=Settings.getFileDialogState())
-            if not filePath: return
-            Settings.setFileDialogState(os.path.dirname(filePath))
-
-        tabIdx = self.tabWidget.currentIndex()
-        tab = self.tab(tabIdx)
-        tab.openPreview(filePath)
-    
-    def openFolder(self, folderPath=False):
-        if not folderPath:
-            folderPath = QFileDialog.getExistingDirectory(self, "Open a folder", Settings.getFileDialogState(), QFileDialog.Option.ShowDirsOnly)
-            if not folderPath: return
-            Settings.setFileDialogState(os.path.dirname(folderPath))
-        
-        tabIdx = self.tabWidget.currentIndex()
-        tab = self.tab(tabIdx)
-        tab.openGrid(folderPath)
 
     def addTab(self):
         tab = DockerPage(self.tabWidget, self)

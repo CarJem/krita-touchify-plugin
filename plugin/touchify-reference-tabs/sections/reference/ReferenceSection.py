@@ -6,6 +6,9 @@ import urllib
 from ...classes.common import REFERENCE_FILETYPE_DATA
 from ...DockerToolbar import DockerToolbar
 from .ReferenceLabelEditor import ReferenceLabelEditor
+from .ReferenceSaveState import ReferenceSaveState
+from .ReferencePin import ReferencePin
+from .ReferenceCommons import ReferenceCommons
 
 # Variables
 EO_ENCODING = "utf-8"
@@ -17,23 +20,30 @@ if TYPE_CHECKING:
     from ...DockerPage import DockerPage
 
 class ReferenceSection(QWidget):
+
+    class ReferenceProgressBar(QProgressBar):
+        SIGNAL_VISIBILITY_CHANGED = pyqtSignal()
+        def __init__(self, parent: QWidget = None):
+            super().__init__(parent)
+
+        def hideEvent(self, a0):
+            self.SIGNAL_VISIBILITY_CHANGED.emit()
+            return super().hideEvent(a0)
+        
+        def showEvent(self, a0):
+            self.SIGNAL_VISIBILITY_CHANGED.emit()
+            return super().showEvent(a0)
+
     def __init__(self, parent: "DockerPage"):
         super().__init__(parent)
         self.DockerPage: "DockerPage" = parent
         self.Variables()
         self.Components()
         self.Connections()
-        self.Theme_Changed()
+        self.OnEvent_ThemeChanged()
 
     def canvas(self):
         return self.DockerPage.view_widget.docker.canvas()
-
-    def setFullscreen(self, boolean: bool):
-        if boolean:
-            self.footer_panel.setVisible(False)
-        else:
-            self.footer_panel.setVisible(True)
-
 
     #region Setup Functions
 
@@ -46,19 +56,18 @@ class ReferenceSection(QWidget):
         self.insert_size = False
         self.insert_scale = 1 # Photobask legacy
         self.scale_method = False
-        # Lists
-        self.list_reference = []
         # Folder
         self.folder_path = None
         self.folder_shift = []
 
+
+        self.ref_state = ReferenceSaveState(self)
+
         # Reference
         self.ref_kra = False
         self.ref_import = False
-        self.ref_position = [ 1, 1 ]
-        self.ref_zoom = 1
-        self.ref_board = ""
         self.ref_doc = None
+
 
         # System
         self.sow_imagine = False
@@ -92,30 +101,25 @@ class ReferenceSection(QWidget):
         self.refrence_container.setContentsMargins(0,0,0,4)
         self.central_layout.addWidget(self.refrence_container)
     
-        self.imagine_reference = ReferenceView( self.refrence_container )
-        self.imagine_reference.setContentsMargins(0, 0, 0, 0)
-        self.imagine_reference.setEnabled(False)
-        self.imagine_reference.Set_File_Extension( REFERENCE_FILETYPE_DATA["file_normal"] )
+        self.view = ReferenceView( self.refrence_container )
+        self.view.setContentsMargins(0, 0, 0, 0)
+        self.view.setEnabled(False)
+        self.view.Set_File_Extension( REFERENCE_FILETYPE_DATA["file_normal"] )
 
         self.footer_panel = DockerToolbar(self, Qt.Orientation.Horizontal)
-        self.footer_panel.setContentsMargins(0, 0 ,0, 0)
-        self.footer_panel.widgetLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        self.footer_panel.setFixedHeight(25)
+        self.footer_panel.setContentsMargins(0, 0 ,0, 4)
+        self.footer_panel.widgetLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.footer_panel.setFixedHeight(0)
         self.central_layout.addWidget(self.footer_panel)
 
-        self.properties_button = QPushButton(self.footer_panel)
-        self.properties_button.setIcon(Krita.instance().icon("document-properties"))
-        self.properties_button_menu = QMenu(self.properties_button)
-        self.properties_button.setMenu(self.properties_button_menu)
-        self.properties_button.clicked.connect(self.properties_button.showMenu)
-        self.footer_panel.addWidget(self.properties_button)
-
         self.label_editor = ReferenceLabelEditor( self )
+        self.label_editor.SIGNAL_VISIBILITY_CHANGED.connect(self.Footer_Update)
         self.label_editor.setParent(self.footer_panel)
-        self.label_editor.setVisible( False )
+        self.label_editor.setVisible(False)
         self.footer_panel.addWidget(self.label_editor)     
 
-        self.progress_bar = QProgressBar(self.footer_panel)
+        self.progress_bar = self.ReferenceProgressBar(self.footer_panel)
+        self.progress_bar.SIGNAL_VISIBILITY_CHANGED.connect(self.Footer_Update)
         self.progress_bar.setStyleSheet( "{ background-color: rgba( 0, 0, 0, 50 ); }" )
         self.progress_bar.setVisible(False)
         self.footer_panel.addWidget(self.progress_bar)
@@ -141,133 +145,94 @@ class ReferenceSection(QWidget):
         self.snap_button.setChecked(False)
         self.snap_button.setIcon(Krita.instance().icon("chain-broken-icon"))
         self.tool_panel.addWidget(self.snap_button)
-
-        self.auto_save_checkbox = QtWidgets.QCheckBox(self.tool_panel)
-        self.auto_save_checkbox.setCheckable(True)
-        self.auto_save_checkbox.setChecked(False)
-        self.auto_save_checkbox.setText("Autosave")
-        self.auto_save_checkbox.clicked.connect(self.Action_AutoSaveToggle)
-        self.tool_panel.addWidget(self.auto_save_checkbox)
     
     def Connections( self ):
         self.color_picker_button.clicked.connect(self.Action_ColorPickerToggle)
         self.label_editor_button.clicked.connect(self.Action_LabelEditorToggle)
         self.snap_button.clicked.connect(self.Action_SnapToggle)
-        self.imagine_reference.SIGNAL_DRAG.connect( self.Drag_Drop )
-        self.imagine_reference.SIGNAL_DROP.connect( self.Drop_Inside )
-        self.imagine_reference.SIGNAL_PIN_IMAGE.connect( self.Pin_Image )
-        self.imagine_reference.SIGNAL_PIN_LABEL.connect( self.Pin_Label )
-        self.imagine_reference.SIGNAL_PIN_SAVE.connect( self.Pin_Save )
-        self.imagine_reference.SIGNAL_BOARD_SAVE.connect( self.File_Save_St )
-        self.imagine_reference.SIGNAL_CAMERA.connect( self.Reference_Camera )
-        self.imagine_reference.SIGNAL_LOCATION.connect( self.File_Location )
-        self.imagine_reference.SIGNAL_ANALYSE.connect( self.Color_Analyse )
-        self.imagine_reference.SIGNAL_NEW_DOCUMENT.connect( self.Insert_Document )
-        self.imagine_reference.SIGNAL_INSERT_LAYER.connect( self.Insert_Layer )
-        self.imagine_reference.SIGNAL_INSERT_REFERENCE.connect( self.Insert_Reference )
-        self.imagine_reference.SIGNAL_PB_VALUE.connect( self.Progress_Value )
-        self.imagine_reference.SIGNAL_PB_MAX.connect( self.Progress_Max )
-        self.imagine_reference.SIGNAL_PACK_STOP.connect( self.Reference_Pack_Stop )
-        self.imagine_reference.SIGNAL_LABEL_PANEL.connect( self.label_editor.setVisible )
-        self.imagine_reference.SIGNAL_LABEL_INFO.connect( self.label_editor.setInformation )
-        self.imagine_reference.SIGNAL_ACTIONS_UPDATED.connect(self.OnEvent_ActionsUpdated)
-        self.imagine_reference.SIGNAL_SNAP_TOGGLED.connect(self.OnEvent_SnapToggled)
-        self.imagine_reference.SIGNAL_PREVIEW_REQUESTED.connect(self.OnEvent_PreviewRequested)
+
+        self.ref_state.SIGNAL_PROGRESS_VALUE.connect(self.Progress_Value)
+
+        self.view.SIGNAL_DRAG.connect( self.OnEvent_DragDrop )
+        self.view.SIGNAL_DROP.connect( self.OnEvent_DropInside )
+        self.view.SIGNAL_PIN_IMAGE.connect( self.Pin_Image )
+        self.view.SIGNAL_PIN_LABEL.connect( self.Pin_Label )
+        self.view.SIGNAL_PIN_SAVE.connect( self.Pin_Save )
+        self.view.SIGNAL_BOARD_SAVE.connect( self.OnEvent_SavePinsRequested )
+        self.view.SIGNAL_CAMERA.connect( self.OnEvent_CameraChanged )
+        self.view.SIGNAL_LOCATION.connect( self.OnEvent_FileLocationRequested )
+        self.view.SIGNAL_ANALYSE.connect( self.OnEvent_ColorAnalyseRequested )
+        self.view.SIGNAL_NEW_DOCUMENT.connect( self.Insert_Document )
+        self.view.SIGNAL_INSERT_LAYER.connect( self.Insert_Layer )
+        self.view.SIGNAL_INSERT_REFERENCE.connect( self.Insert_Reference )
+        self.view.SIGNAL_PB_VALUE.connect( self.Progress_Value )
+        self.view.SIGNAL_PB_MAX.connect( self.Progress_Max )
+        self.view.SIGNAL_PACK_STOP.connect( self.OnEvent_ReferencePackStop )
+        self.view.SIGNAL_LABEL_PANEL.connect( self.OnEvent_LabelEditorRequest )
+        self.view.SIGNAL_LABEL_INFO.connect( self.label_editor.setInformation )
+        self.view.SIGNAL_ACTIONS_UPDATED.connect(self.OnEvent_ActionsUpdated)
+        self.view.SIGNAL_SNAP_TOGGLED.connect(self.OnEvent_SnapToggled)
+        self.view.SIGNAL_PREVIEW_REQUESTED.connect(self.OnEvent_PreviewRequested)
 
     #endregion
 
     #region Actions
 
     def Action_LabelEditorToggle(self):
-        self.imagine_reference.state_label = not self.imagine_reference.state_label
-        self.label_editor_button.setChecked(self.imagine_reference.state_label)
-        self.label_editor.setVisible(self.imagine_reference.state_label)
+        self.view.state_label = not self.view.state_label
+        self.label_editor_button.setChecked(self.view.state_label)
+        self.label_editor.setVisible(self.view.state_label)
 
     def Action_ColorPickerToggle(self):
-        self.imagine_reference.state_pickcolor = not self.imagine_reference.state_pickcolor
-        self.color_picker_button.setChecked(self.imagine_reference.state_pickcolor)
-
-    def Action_AutoSaveToggle(self):
-        self.imagine_reference.state_autosave = not self.imagine_reference.state_autosave
-        self.auto_save_checkbox.setChecked(self.imagine_reference.state_autosave)
+        self.view.state_pickcolor = not self.view.state_pickcolor
+        self.color_picker_button.setChecked(self.view.state_pickcolor)
 
     def Action_SnapToggle(self):
-        self.imagine_reference.Snap_Hold(not self.imagine_reference.state_snaphold)
-
-    #endregion
-
-    #region OnEvent
-
-    def OnEvent_PreviewRequested(self, pixmap: QPixmap):
-        self.DockerPage.openPreview(pixmap=pixmap)
-
-
-    def OnEvent_SnapToggled(self, boolean: bool):
-        self.snap_button.setChecked(boolean)
-        if boolean: self.snap_button.setIcon(Krita.instance().icon("chain-icon"))
-        else: self.snap_button.setIcon(Krita.instance().icon("chain-broken-icon"))
-
-    def OnEvent_ActionsUpdated(self):
-        self.color_picker_button.setChecked(self.imagine_reference.state_pickcolor)
-        self.label_editor_button.setChecked(self.imagine_reference.state_label)
-
-    #endregion
-
-    #region File Actions
-
-    def File_New( self ):
+        self.view.Snap_Hold(not self.view.state_snaphold)
+    
+    def Action_CreateFile( self ):
         ref_board = self.Dialog_Save( "New File Location", "board_000000" )
         if ref_board != None:
-            self.ref_board = ref_board
-            self.imagine_reference.Board_Clear()
-        self.Data_Kritarc()
+            self.ref_state.ref_board = ref_board
+            self.Data_Load( ref_board )
+            self.view.setEnabled(True)
+            self.view.Set_File_Path( self.ref_state.ref_board )
 
-    def File_Open( self ):
+    def Action_OpenFile( self ):
         ref_board = self.Dialog_Load( "Open File Location" )
         if ref_board != None:
-            self.EO_Load( ref_board )
-            self.imagine_reference.setEnabled(True)
-            self.Data_Kritarc()
-            return True
-        else:
-            self.Data_Kritarc()
-            return False
-
-    def File_Save_St( self, list_reference ):
-        if self.imagine_reference.isEnabled():
-            # Variabels
-            self.list_reference = list_reference
-            # Save
-            self.EO_Save( self.ref_board )
-            self.Data_Kritarc()
+            self.ref_state.ref_board = ref_board
+            self.Data_Load( ref_board )
+            self.view.setEnabled(True)
+            self.view.Set_File_Path( self.ref_state.ref_board )
             
-    def File_Save( self ):
-        if self.ref_board != None: 
-            self.EO_Save( self.ref_board )
-            self.imagine_reference.Board_Save()
-        else: self.File_Save_As()
+    def Action_SaveFile( self ):
+        if self.ref_state.ref_board != None: 
+            self.view.Board_Save()
+        else: self.Action_SaveFileAs()
 
-    def File_Save_As( self ):
+    def Action_SaveFileAs( self ):
         ref_board = self.Dialog_Save( "Save File Location", "board_000000" )
         if ref_board != None:
-            self.list_reference = self.imagine_reference.pin_list
-            self.EO_Save( self.ref_board )
-            self.imagine_reference.Board_Save()
-            self.Data_Kritarc()
+            self.ref_state.ref_board = ref_board
+            self.view.Board_Save()
+            self.view.Set_File_Path( self.ref_state.ref_board )
 
-    def File_Unload( self ):
-        self.ref_board = None
-        self.imagine_reference.Board_Clear()
-        self.imagine_reference.setEnabled(False)
+    def Action_UnloadFile( self ):
+        self.view.Pin_Clear()
+        self.view.Selection_Clear()
+        self.view.Board_Clear()
+        self.view.setEnabled(False)
+        self.ref_state.ref_board = None
 
-    def File_Export( self ):
+    def Action_ExportFile( self ):
         export_path = self.Dialog_Save( "Export File Location", "export_000000" )
-        self.EO_Export( export_path )
+        self.Data_Export( export_path )
 
-    def File_Download( self ):
+    def Action_FileDownload( self ):
         download_folder = self.Dialog_Directory( "Download Folder Location" )
         if download_folder not in [ "", ".", None ]:
-            for item in self.list_reference:
+            for item in self.ref_state.ref_pins:
                 tipo = item["tipo"]
                 qpixmap = item["qpixmap"]
                 if tipo == "image":
@@ -279,7 +244,7 @@ class ReferenceSection(QWidget):
                         name = os.path.basename( path )
                         save_path = os.path.join( download_folder, name )
                     if web != None:
-                        qpixmap = self.Download_QPixmap( web )
+                        qpixmap = ReferenceCommons.Download_QPixmap( web )
                         name = os.path.split( urllib.parse.urlparse( web ).path )[1]
                         save_path = os.path.join( download_folder, name )
                     # Save
@@ -288,7 +253,38 @@ class ReferenceSection(QWidget):
                     else:
                         self.Message_Log( "ERROR", f"Path already exists { save_path }" )
 
-    def File_Location( self, image_path ):
+    #endregion
+
+    #region OnEvent
+
+    def OnEvent_LabelEditorRequest(self, show: bool):
+        self.label_editor.setVisible(show)
+
+    def OnEvent_PreviewRequested(self, pixmap: QPixmap):
+        self.DockerPage.openPreview(pixmap=pixmap)
+
+    def OnEvent_SnapToggled(self, boolean: bool):
+        self.snap_button.setChecked(boolean)
+        if boolean: self.snap_button.setIcon(Krita.instance().icon("chain-icon"))
+        else: self.snap_button.setIcon(Krita.instance().icon("chain-broken-icon"))
+
+    def OnEvent_ActionsUpdated(self):
+        self.color_picker_button.setChecked(self.view.state_pickcolor)
+        self.label_editor_button.setChecked(self.view.state_label)
+        self.auto_save_checkbox.setChecked(self.view.state_autosave)
+
+    def OnEvent_CameraChanged( self, ref_position, ref_zoom, len_board ):
+        self.ref_state.ref_position = ref_position
+        self.ref_state.ref_zoom = ref_zoom
+
+    def OnEvent_ColorAnalyseRequested( self, qimage ):
+        if ( self.pigment_o_module != None and qimage.isNull() == False ):
+            report = self.pigment_o_module.API_Image_Analyse( qimage )
+            self.Message_Log( "ANALYSE", f"{ report }" )
+        else:
+            self.Message_Log( "ERROR", "Pigment.O not present" )
+
+    def OnEvent_FileLocationRequested( self, image_path ):
         kernel = str( QSysInfo.kernelType() ) # WINDOWS=winnt & LINUX=linux
         if kernel == "winnt": # Windows
             FILEBROWSER_PATH = os.path.join( os.getenv( 'WINDIR' ), 'explorer.exe' )
@@ -300,37 +296,19 @@ class ReferenceSection(QWidget):
         else:
             QDesktopServices.openUrl( QUrl.fromLocalFile( os.path.dirname( image_path ) ) )
         self.Message_Log( "FILE LOCATION", f"{ image_path }" )
-    #endregion
-
-    #region Message
-
-    def Message_Log( self, operation, message ):
-        pass
-        
-    def Message_Warnning( self, operation, message ):
-        pass
-
-    def Message_Float( self, operation, message, icon ):
-        pass
-
-    #endregion
-
-
-    #region Event Functions
-
-    def resizeEvent(self, a0):
-        self.imagine_reference.Set_Size(self.refrence_container.width(), self.refrence_container.height() - 4, False)
-        return super().resizeEvent(a0)
     
-    #endregion
+    def OnEvent_SavePinsRequested( self, list_reference ):
+        if self.view.isEnabled():
+            self.ref_state.ref_pins = list_reference
+            self.Data_Save( self.ref_state.ref_board )
+            self.view.Set_File_Path( self.ref_state.ref_board )
 
-    #region Drag and Drop
-    def Drop_Inside( self, lista ):
+    def OnEvent_DropInside( self, lista ):
         if len( lista ) > 0:
             # Variables
             item = lista[0]
             # Check Source
-            check_html = self.Check_Html( item )
+            check_html = ReferenceCommons.Check_Html( item )
             if check_html == True:
                 if self.function_panel_drop == False:
                     self.Preview_Internet( item )
@@ -355,9 +333,23 @@ class ReferenceSection(QWidget):
                     self.Preview_String( basename )
                 if self.function_panel_drop == True:
                     self.Function_Process( lista )
-    def Drag_Drop( self, image_path, clip ):
+    
+    def OnEvent_DragDrop( self, image_path, clip ):
+        def Drag_Thumbnail( qimage, mimedata ):
+            # Display
+            size = 200
+            thumb = QPixmap().fromImage( qimage )
+            if thumb.isNull() == False:
+                thumb = thumb.scaled( size, size, Qt.KeepAspectRatio, Qt.FastTransformation )
+            # Drag
+            drag = QDrag( self )
+            drag.setMimeData( mimedata )
+            drag.setPixmap( thumb )
+            drag.setHotSpot( QPoint( int( thumb.width() * 0.5 ), int( thumb.height() * 0.5 ) ) )
+            drag.exec( Qt.CopyAction )
+
         # New Documents only consider the path so it excludes clip
-        qimage = self.Image_Clip( image_path, clip )
+        qimage = ReferenceCommons.Image_Clip( image_path, clip )
         check_vector = image_path.endswith( tuple( REFERENCE_FILETYPE_DATA["file_vector"] ) )
         if check_vector == True:
             # Read SVG
@@ -376,7 +368,7 @@ class ReferenceSection(QWidget):
                 mimedata.setText( svg_shape )
                 mimedata.setImageData( qimage )
                 # Thumbnail
-                self.Drag_Thumbnail( qimage, mimedata )
+                Drag_Thumbnail( qimage, mimedata )
         else:
             if qimage.isNull() == False:
                 # Clipboard
@@ -388,19 +380,48 @@ class ReferenceSection(QWidget):
                 mimedata.setText( image_path )
                 mimedata.setImageData( qimage )
                 # Thumbnail
-                self.Drag_Thumbnail( qimage, mimedata )
-    def Drag_Thumbnail( self, qimage, mimedata ):
-        # Display
-        size = 200
-        thumb = QPixmap().fromImage( qimage )
-        if thumb.isNull() == False:
-            thumb = thumb.scaled( size, size, Qt.KeepAspectRatio, Qt.FastTransformation )
-        # Drag
-        drag = QDrag( self )
-        drag.setMimeData( mimedata )
-        drag.setPixmap( thumb )
-        drag.setHotSpot( QPoint( int( thumb.width() * 0.5 ), int( thumb.height() * 0.5 ) ) )
-        drag.exec( Qt.CopyAction )
+                Drag_Thumbnail( qimage, mimedata )
+
+    def OnEvent_ThemeChanged( self ):
+        # Krita Theme
+        theme_value = QApplication.palette().color( QPalette.Window ).value()
+        if theme_value > 128:
+            self.color_1 = QColor( "#191919" )
+            self.color_2 = QColor( "#e5e5e5" )
+        else:
+            self.color_1 = QColor( "#e5e5e5" )
+            self.color_2 = QColor( "#191919" )
+        # Update
+        self.view.Set_Theme( self.color_1, self.color_2 )
+
+    def OnEvent_ReferencePackStop( self, boolean ):
+        pass
+        #if boolean == True:
+            #self.layout.stop.setIcon( self.qicon_stop_abort )
+        #elif boolean == False:
+            #self.layout.stop.setIcon( self.qicon_stop_idle )
+
+    #endregion
+
+    #region Message
+
+    def Message_Log( self, operation, message ):
+        pass
+        
+    def Message_Warnning( self, operation, message ):
+        pass
+
+    def Message_Float( self, operation, message, icon ):
+        pass
+
+    #endregion
+
+    #region Event Functions
+
+    def resizeEvent(self, a0):
+        self.view.Set_Size(self.refrence_container.width(), self.refrence_container.height() - 4, False)
+        return super().resizeEvent(a0)
+    
     #endregion
 
     #region Insert / Image Operations
@@ -437,7 +458,7 @@ class ReferenceSection(QWidget):
     def Insert_Reference( self, image_path, clip ):
         if image_path not in ( "", None ) and ( self.canvas() is not None ) and ( self.canvas().view() is not None ):
             # Image
-            qimage = self.Image_Clip( image_path, clip )
+            qimage = ReferenceCommons.Image_Clip( image_path, clip )
             if qimage.isNull() == False:
                 # MimeData
                 mimedata = QMimeData()
@@ -489,7 +510,7 @@ class ReferenceSection(QWidget):
             pl = ad.createNode( basename, "paintLayer" )
             rn.addChildNode( pl, None )
             # Qimage Data
-            qimage = self.Image_Clip( image_path, clip )
+            qimage = ReferenceCommons.Image_Clip( image_path, clip )
             ptr = qimage.constBits()
             ptr.setsize( qimage.byteCount() )
             pl.setPixelData( bytes( ptr.asarray() ), 0, 0, qimage.width(), qimage.height() )
@@ -516,29 +537,17 @@ class ReferenceSection(QWidget):
             qimage = qimage.scaled( iw * self.insert_scale, ih * self.insert_scale, Qt.KeepAspectRatio, Qt.SmoothTransformation )
         return qimage
     
-    #endregion
-
-    #region Color
-    
-    def Color_Analyse( self, qimage ):
-        if ( self.pigment_o_module != None and qimage.isNull() == False ):
-            report = self.pigment_o_module.API_Image_Analyse( qimage )
-            self.Message_Log( "ANALYSE", f"{ report }" )
-        else:
-            self.Message_Log( "ERROR", "Pigment.O not present" )
-    
-    #endregion
-
-    #region Pin
-    def Pin_Image( self, pin ):
+    def Pin_Image( self, pin: dict ):
         image_path = pin["image_path"]
-        check_html = self.Check_Html( image_path )
+        check_html = ReferenceCommons.Check_Html( image_path )
         if check_html == True:
             self.Pin_Insert( tipo="image", bx=pin["bx"], by=pin["by"], text=None, path=None, web=image_path )
         else:
             self.Pin_Insert( tipo="image", bx=pin["bx"], by=pin["by"], text=None, path=image_path, web=None )
-    def Pin_Label( self, pin ):
+    
+    def Pin_Label( self, pin: dict ):
         self.Pin_Insert( tipo="label", bx=pin["bx"], by=pin["by"], text="Text", path=None, web=None )
+
     def Pin_Insert( self, tipo, bx, by, text, path, web ):
         # Variables
         width = 0
@@ -552,7 +561,7 @@ class ReferenceSection(QWidget):
                 width = int( qpixmap.width() )
                 height = int( qpixmap.height() )
         if tipo == "image" and web != None:
-            qpixmap = self.Download_QPixmap( web )
+            qpixmap = ReferenceCommons.Download_QPixmap( web )
             try:
                 width = int( qpixmap.width() )
                 height = int( qpixmap.height() )
@@ -601,7 +610,7 @@ class ReferenceSection(QWidget):
             ch = 1
 
             # ID
-            index = len( self.list_reference )
+            index = len( self.ref_state.ref_pins )
             # State
             render = True
             active = False
@@ -628,14 +637,14 @@ class ReferenceSection(QWidget):
             bg = self.color_2.name()
             # QPixmap & Draw
             if tipo == "image":
-                draw = qpixmap.scaled( int( bw * self.ref_zoom ), int( bh * self.ref_zoom ), Qt.IgnoreAspectRatio, Qt.FastTransformation )
+                draw = qpixmap.scaled( int( bw * self.ref_state.ref_zoom ), int( bh * self.ref_state.ref_zoom ), Qt.IgnoreAspectRatio, Qt.FastTransformation )
             else:
                 qpixmap = None
                 draw = None
             zdata = None
 
             # PIN
-            pin = {
+            pin = ReferencePin(**{
                 # ID
                 "index"      : index, # integer
                 # Type
@@ -686,13 +695,14 @@ class ReferenceSection(QWidget):
                 "qpixmap"    : qpixmap, # QPixmap
                 "draw"       : draw, # QPixmap
                 "zdata"      : zdata, # string of bytes
-                }
+            })
 
             # Emit
-            self.imagine_reference.Pin_Insert( pin )
+            self.view.Pin_Insert( pin )
 
             # Garbage
             del qpixmap, draw, pin
+    
     def Pin_Save( self, qpixmap ):
         # File Dialog
         file_dialog = QFileDialog( QWidget( self ) )
@@ -700,9 +710,11 @@ class ReferenceSection(QWidget):
         file_path = file_dialog.getSaveFileName( self, "Save Pin Location", "", "File( *.png *.jpg *.jpeg *.bmp *.ppm *.xpm *.xbm )" )[0]
         if file_path not in [ "", ".", None ]:
             qpixmap.save( file_path )
+    
     #endregion
 
-    #region Dialog
+    #region Dialog & Data Loading/Saving
+
     def Dialog_Load( self, title ):
         file_dialog = QFileDialog( QWidget( self ) )
         file_dialog.setFileMode( QFileDialog.AnyFile )
@@ -711,23 +723,19 @@ class ReferenceSection(QWidget):
             file_path = None
         else: Settings.setFileDialogState(os.path.dirname(file_path))
         return file_path
+    
     def Dialog_Save( self, title, name ):
         # Variabels
-        directory = Settings.getFileDialogState()
-        if ( self.canvas() is not None ) and ( self.canvas().view() is not None ):
-            file_name = Krita.instance().activeDocument().fileName()
-            directory = os.path.dirname( file_name )
-            basename = os.path.basename( file_name )
-            name = os.path.splitext( basename )[0]
-        directory = os.path.join( directory, f"{ name }.eo")
+        directory = os.path.join(  Settings.getFileDialogState(), f"{ name }.eo")
         # File Dialog
         file_dialog = QFileDialog( QWidget( self ) )
         file_dialog.setFileMode( QFileDialog.AnyFile )
-        file_path = file_dialog.getSaveFileName( self, title, directory, "File( *.eo )" )[0]
+        file_path = file_dialog.getSaveFileName( self, title,  Settings.getFileDialogState(), "File( *.eo )" )[0]
         if file_path in [ "", ".", None ]:
             file_path = None
         else: Settings.setFileDialogState(os.path.dirname(file_path))
         return file_path
+    
     def Dialog_Directory( self, title ):
         directory = Settings.getFileDialogState()
         file_dialog = QFileDialog( QWidget( self ) )
@@ -737,215 +745,70 @@ class ReferenceSection(QWidget):
             folder_path = None
         else: Settings.setFileDialogState(os.path.dirname(folder_path))
         return folder_path
-    #endregion
 
-    #region EO file
-    
-    def EO_Load( self, path ):
+    def Data_Load( self, path: str, new_file: bool = False ):
+        board = None
+        ref_board = None
+
         if ( path not in [ "", ".", None ] and os.path.exists( path ) == True ):
             with open( path, "r", encoding=EO_ENCODING ) as f:
                 board = f.readlines()
-                self.Data_Load( board, path )
-    
-    def EO_Save( self, path ):
-        if path not in [ "", ".", None ]:
-            data = self.Data_Save()
-            with open( path, "w", encoding=EO_ENCODING ) as f:
-                f.write( data )
-    
-    def EO_Export( self, path ):
-        if path not in [ "", ".", None ]:
-            data = self.Data_Export()
-            with open( path, "w", encoding=EO_ENCODING ) as f:
-                f.write( data )
-    
-    #endregion
+                ref_board = path
 
-    #region Data
-    
-    def Data_Load( self, board, ref_board ):
-        # Variables
-        count = len( board )
-        # Progress Bar
+        if (board == None or ref_board == None) and not new_file: return
+
         self.Progress_Value( 0 )
-        self.Progress_Max( count )
-        # Construct Board
-        lista = []
-        ref_zoom = 1
-        ref_position = [ 0.5, 0.5 ]
-        if len( board ) > 0:
-            if board[0].startswith( "Imagine Board" ) == True:
-                for i in range( 1, count ):
-                    try:
-                        # Progress Bar
-                        self.Progress_Value( i )
-                        QApplication.processEvents()
-                        # Formating
-                        line = board[i]
-                        if line.endswith("\n") == True:
-                            line = line[:-1]
-                        # Evaluation
-                        if line == "connect": # Export
-                            self.ref_board = ref_board
-                        elif line.startswith( "ref_position=" ) == True: # Camera Position
-                            n = len( "ref_position=" )
-                            ref_position = eval( line[n:] )
-                        elif line.startswith( "ref_zoom=" ) == True: # Camera Scale
-                            n = len( "ref_zoom=" )
-                            ref_zoom = float( line[n:] )
-                        else: # Pin
-                            line = eval( line )
-                            # QPixmap
-                            path = line["path"]
-                            url = line["web"]
-                            zdata = line["zdata"]
-                            if path != None: # Local
-                                qpixmap = QPixmap( path )
-                                if qpixmap.isNull() == False:
-                                    line["qpixmap"] = qpixmap
-                            elif url != None: # Internet
-                                qpixmap = self.Download_QPixmap( url )
-                                if qpixmap.isNull() == False:
-                                    line["qpixmap"] = qpixmap
-                            elif zdata != None: # Import
-                                qpixmap = QPixmap()
-                                qpixmap.loadFromData( zdata )
-                                if qpixmap.isNull() == False:
-                                    line["qpixmap"] = qpixmap
-                            lista.append( line )
-                    except:
-                        pass
-        if len( lista ) > 0:
-            # Preview & Grid
-            self.list_reference = lista
-            if self.sync_list != "Folder":
-                self.Filter_Search()
-            # Reference
-            self.imagine_reference.Board_Insert( lista )
-            self.imagine_reference.Set_Camera( ref_position, ref_zoom )
-        # Progress Bar
+        self.Progress_Max( len( board ) )
+
+        self.ref_state.load(board, ref_board, new_file)
+    
+        if len( self.ref_state.ref_pins ) > 0:
+            self.view.Board_Insert( self.ref_state.ref_pins )
+            self.view.Set_Camera( self.ref_state.ref_position, self.ref_state.ref_zoom )
+        elif new_file:
+            self.view.Board_Insert( [ ] )
+            self.view.Set_Camera( self.ref_state.ref_position, self.ref_state.ref_zoom )
+
+
         self.Progress_Value( 0 )
         self.Progress_Max( 1 )
     
-    def Data_Save( self ):
-        # Header
-        data = "Imagine Board"
-        # Type of save
-        data += f"\nconnect"
-        # Camera
-        data += f"\nref_position={ self.ref_position }"
-        data += f"\nref_zoom={ self.ref_zoom }"
-        for item in self.list_reference:
-            # Clean
-            item["qpixmap"] = None
-            item["draw"] = None
-            item["zdata"] = None
-            # String
-            data += f"\n{ item }"
-        return data
+    def Data_Save( self, path ):
+        if path not in [ "", ".", None ]:
+            data = self.ref_state.save()
+            with open( path, "w", encoding=EO_ENCODING ) as f:
+                f.write( data )
     
-    def Data_Export( self ):
-        # Header
-        data = "Imagine Board"
-        # Type of save
-        data += f"\ndata"
-        # Camera
-        data += f"\nref_position={ self.ref_position }"
-        data += f"\nref_zoom={ self.ref_zoom }"
-        for item in self.list_reference:
-            # ZData
-            path = item["path"]
-            web = item["web"]
-            if path != None:
-                item["zdata"] = self.Bytes_Python( path )
-            elif web != None:
-                item["zdata"] = self.Download_Data( web )
-            else:
-                item["zdata"] = None
-            # Clean
-            item["qpixmap"] = None
-            item["draw"] = None
-            # String
-            data += f"\n{ item }"
-        return data
-    
-    def Data_Kritarc( self ):
-        self.imagine_reference.Set_File_Path( self.ref_board )
-        Krita.instance().writeSetting( "Imagine Board", "ref_board", str( self.ref_board ) )
+    def Data_Export( self, path ):
+        if path not in [ "", ".", None ]:
+            data = self.ref_state.export()
+            with open( path, "w", encoding=EO_ENCODING ) as f:
+                f.write( data )
     
     #endregion
 
-    #region Packer
-    def Reference_Pack_Stop( self, boolean ):
-        pass
-        #if boolean == True:
-            #self.layout.stop.setIcon( self.qicon_stop_abort )
-        #elif boolean == False:
-            #self.layout.stop.setIcon( self.qicon_stop_idle )
-    def Reference_Stop_Cycle( self ):
-        self.imagine_reference.Set_Stop_Cycle()
-    #endregion
+    #region Misc
 
-    #region Camera
-    def Reference_Camera( self, ref_position, ref_zoom, len_board ):
-        # Variables
-        self.ref_position = ref_position
-        self.ref_zoom = ref_zoom
-        # Interface
-        #self.layout.zoom.setText( f"z{ ref_zoom }:{ len_board }" )
-        # Save
-        Krita.instance().writeSetting( "Imagine Board", "ref_position", str( self.ref_position ) )
-        Krita.instance().writeSetting( "Imagine Board", "ref_zoom", str( self.ref_zoom ) )
-    #endregion
-    
-    #region Theme
-    
-    def Theme_Changed( self ):
-        # Krita Theme
-        theme_value = QApplication.palette().color( QPalette.Window ).value()
-        if theme_value > 128:
-            self.color_1 = QColor( "#191919" )
-            self.color_2 = QColor( "#e5e5e5" )
+    def Fullscreen_Set(self, boolean: bool):
+        if boolean:
+            self.footer_panel.setVisible(False)
         else:
-            self.color_1 = QColor( "#e5e5e5" )
-            self.color_2 = QColor( "#191919" )
-        # Update
-        self.imagine_reference.Set_Theme( self.color_1, self.color_2 )
-    
-    #endregion
+            self.footer_panel.setVisible(True)
 
-    #region Internet
+    def Packer_Stop_Cycle( self ):
+        self.view.Set_Stop_Cycle()
     
-    def Download_QPixmap( self, url ):
-        data = self.Download_Data( url )
-        try:
-            qpixmap = QPixmap()
-            qpixmap.loadFromData( data )
-        except:
-            qpixmap = None
-        return qpixmap
-    
-    def Download_Data( self , url ):
-        try:
-            request = urllib.request.Request( url, headers={ "User-Agent": "Mozilla/5.0" } )
-            response = urllib.request.urlopen( request )
-            data = response.read()
-        except:
-            data = None
-        return data
-    
-    def Check_Html( self, url ):
-        boolean = False
-        result = urllib.parse.urlparse( url )
-        scheme = result.scheme
-        if scheme == "https":
-            boolean = True
-        return boolean
-    
-    #endregion
-    
-    #region Progress Bar
-    
+    def Footer_Update( self ):
+        progress_bar = self.progress_bar.isVisible()
+        label_editor = self.label_editor.isVisible()
+        if progress_bar or label_editor:
+            #self.footer_panel.setVisible(True)
+            self.footer_panel.setFixedHeight(25)
+        else:
+            #self.footer_panel.setVisible(True)
+            self.footer_panel.setFixedHeight(0)
+            
+
     def Progress_Value( self, value ):
         self.progress_bar.setValue( value )
     

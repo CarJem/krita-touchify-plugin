@@ -5,51 +5,12 @@ from PyQt5.QtCore import *
 from krita import *
 
 
-from .....variables import *
-from .ToolboxWidget import ToolboxWidget
+from touchify.src.variables import *
+from touchify.src.components.touchify.dockers.toolbox.ToolboxWidget import ToolboxWidget
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .....window import TouchifyWindow
-
-TOOLBOX_ITEMS: dict[str, str] = {
-        "KisToolTransform": "KisToolTransform",
-        "KritaTransform/KisToolMove": "KritaTransform/KisToolMove",
-        "KisToolCrop": "KisToolCrop",
-        "InteractionTool": "InteractionTool",
-        "SvgTextTool": "SvgTextTool",
-        "PathTool": "PathTool",
-        "KarbonCalligraphyTool": "KarbonCalligraphyTool",
-        "KritaShape/KisToolBrush": "KritaShape/KisToolBrush",
-        "KritaShape/KisToolDyna": "KritaShape/KisToolDyna",
-        "KritaShape/KisToolMultiBrush": "KritaShape/KisToolMultiBrush",
-        "KritaShape/KisToolSmartPatch": "KritaShape/KisToolSmartPatch",
-        "KisToolPencil": "KisToolPencil",
-        "KritaFill/KisToolFill": "KritaFill/KisToolFill",
-        "KritaSelected/KisToolColorSampler": "KritaSelected/KisToolColorPicker",
-        "KritaShape/KisToolLazyBrush": "KritaShape/KisToolLazyBrush",
-        "KritaFill/KisToolGradient": "KritaFill/KisToolGradient",
-        "KritaShape/KisToolRectangle": "KritaShape/KisToolRectangle",
-        "KritaShape/KisToolLine": "KritaShape/KisToolLine",
-        "KritaShape/KisToolEllipse": "KritaShape/KisToolEllipse",
-        "KisToolPolygon": "KisToolPolygon",
-        "KisToolPolyline": "KisToolPolyline",
-        "KisToolPath": "KisToolPath",
-        "KisToolEncloseAndFill": "KisToolEncloseAndFill",
-        "KisToolSelectRectangular": "KisToolSelectRectangular",
-        "KisToolSelectElliptical": "KisToolSelectElliptical",
-        "KisToolSelectPolygonal": "KisToolSelectPolygonal",
-        "KisToolSelectPath": "KisToolSelectPath",
-        "KisToolSelectOutline": "KisToolSelectOutline",
-        "KisToolSelectContiguous": "KisToolSelectContiguous",
-        "KisToolSelectSimilar": "KisToolSelectSimilar",
-        "KisToolSelectMagnetic": "KisToolSelectMagnetic",
-        "ToolReferenceImages": "ToolReferenceImages",
-        "KisAssistantTool": "KisAssistantTool",
-        "KritaShape/KisToolMeasure": "KritaShape/KisToolMeasure",
-        "PanTool": "PanTool",
-        "ZoomTool": "ZoomTool"
-}
 
 class ToolboxDocker(QDockWidget):
     def __init__(self, parent: QWidget | None = None):

@@ -31,6 +31,7 @@ class PreviewView(QGraphicsView):
     def __init__(self, parent: "PreviewSection" = None):
         super().__init__(parent)
         self.totalScaleFactor = 1
+        self.pinching = False
         self.viewport().setAttribute(Qt.WidgetAttribute.WA_AcceptTouchEvents)
         self.setDragMode(QGraphicsView.DragMode.ScrollHandDrag)
         self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)

@@ -8,6 +8,8 @@ if TYPE_CHECKING:
     from .ReferenceSection import ReferenceSection
 
 class ReferenceLabelEditor(QWidget):
+    SIGNAL_VISIBILITY_CHANGED = pyqtSignal()
+
     def __init__(self, parent: "ReferenceSection"):
         super().__init__(parent)
         self.section_parent = parent
@@ -73,8 +75,16 @@ class ReferenceLabelEditor(QWidget):
         self.label_font.currentTextChanged.connect( self.updateLabelFont )
         self.label_letter.valueChanged.connect( self.updateLabelSize )
 
+    def hideEvent(self, a0):
+        self.SIGNAL_VISIBILITY_CHANGED.emit()
+        return super().hideEvent(a0)
+    
+    def showEvent(self, a0):
+        self.SIGNAL_VISIBILITY_CHANGED.emit()
+        return super().showEvent(a0)
+    
     def view(self):
-        return self.section_parent.imagine_reference
+        return self.section_parent.view
 
     def setInformation(self, info: dict):
         # Signals

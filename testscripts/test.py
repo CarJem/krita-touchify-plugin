@@ -4,11 +4,10 @@ from PyQt5.QtCore import *
 
 
 from krita import *
+from touchify.src.components.touchify.canvas.NtCanvas import NtToolshelf
 
-
-
-
-actual_window = Krita.instance().activeWindow().qwindow()
-mobj = next((w for w in actual_window.findChildren(QFrame) if w.metaObject().className() == 'KisGradientChooser'), None)
-print(mobj.currentResource())
-
+qwin = Krita.instance().activeWindow().qwindow()
+wobj = qwin.findChild(QMdiArea)
+toolshelves = wobj.findChildren(NtToolshelf)
+for toolshelf in toolshelves:
+    print(toolshelf.pos())

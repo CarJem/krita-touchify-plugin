@@ -32,9 +32,11 @@ from .sections.grid.GridSection import GridSection
 from .sections.reference.ReferenceSection import ReferenceSection
 
 from .sections.preview.PreviewMenu import PreviewMenu
+from .sections.grid.GridMenu import GridMenu
 from .sections.reference.ReferenceMenu import ReferenceMenu
 
 from .DockerToolbar import DockerToolbar
+from .DockerMenu import DockerMenu
 
 
 PREVIEW_SECTION_ICON = Krita.instance().icon("folder-pictures")
@@ -51,9 +53,10 @@ class DockerPage(QWidget):
     def __init__(self, tab_widget: QTabWidget, view_widget: "DockerWidget"):
         super().__init__(tab_widget)
 
-        self.tab_menus: list[QMenu] = []
+        self.tab_menus: DockerMenu = None
         self.tab_widget = tab_widget
         self.view_widget = view_widget
+        self.__current_section = "preview"
 
 
         self.setContentsMargins(0,0,0,0)
@@ -75,6 +78,7 @@ class DockerPage(QWidget):
         self.toolView.addWidget(self.preview_section.tool_panel)
 
         self.grid_section = GridSection(self)
+        self.grid_menu = GridMenu(self.grid_section, self)
         self.view.addWidget(self.grid_section)
         self.toolView.addWidget(self.grid_section.tool_panel)
 
@@ -105,8 +109,11 @@ class DockerPage(QWidget):
 
         self.changeSection("preview")
 
+    def section(self):
+        return self.__current_section
+
     def setFullscreen(self, boolean: bool):
-        self.reference_section.setFullscreen(boolean)
+        self.reference_section.Fullscreen_Set(boolean)
         if boolean:
             self.toolLayout.setVisible(False)
         else:
@@ -128,24 +135,29 @@ class DockerPage(QWidget):
         self.grid_section.changePath(dirPath)
 
     def onTabActivated(self):
-        self.view_widget.setTabSpecificMenus(self.tab_menus)
+        self.view_widget.updateSectionMenus(self.tab_menus)
 
     def onTabDeactivated(self):
-        self.view_widget.setTabSpecificMenus([])
+        self.view_widget.updateSectionMenus(None)
+
+    def updateTabMenus(self):
+        if self.tab_menus: self.tab_menus.updateMenus()
         
     def changeSection(self, section: str):
-        def switchTo(icon: QIcon, source: GridSection | PreviewSection, menu: QMenu | None = None):
-            self.tab_menus = [ menu ] if menu else [ ]
-            self.view_widget.setTabSpecificMenus(self.tab_menus)
+        def switchTo(icon: QIcon, source: GridSection | PreviewSection, menu: DockerMenu | None = None):
+            self.__current_section = section
+            self.tab_menus = menu
+            self.view_widget.updateSectionMenus(self.tab_menus)
             self.view.setCurrentWidget(source)
             self.toolView.setCurrentIndex(self.view.currentIndex())
             self.selection_box.setIcon(icon)
+            self.view_widget.updateMenuActions()
 
         match section:
             case "preview":
                 switchTo(PREVIEW_SECTION_ICON, self.preview_section, self.preview_menu)
             case "grid":
-                switchTo(GRID_SECTION_ICON, self.grid_section)
+                switchTo(GRID_SECTION_ICON, self.grid_section, self.grid_menu)
             case "reference":
                 switchTo(REFERENCE_SECTION_ICON, self.reference_section, self.reference_menu)
                 pass

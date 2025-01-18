@@ -60,13 +60,13 @@ class PropertyField(QWidget):
                 self.editor.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
                 self.editor.clicked.connect(self.nested_edit)
                 self.editor.setText(btnText)
-                print(self.editor)
+                #print(self.editor)
 
                 self.editor_button = QPushButton(self)
                 self.editor_button.setMaximumWidth(16)
                 self.editor_button.setContentsMargins(0,0,0,0)
                 self.editor_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-                print(self.editor_button)
+                #print(self.editor_button)
 
                 moreMenu = QMenu(self.editor_button)
                 copyAct = moreMenu.addAction("Copy")
