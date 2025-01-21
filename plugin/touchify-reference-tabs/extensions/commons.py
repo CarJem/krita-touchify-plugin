@@ -1,15 +1,27 @@
 import os
 from PyQt5.QtGui import *
 import urllib
-from PyQt5.QtWidgets import QFileDialog, QWidget
+from PyQt5.QtWidgets import QFileDialog
 from .settings import Settings
 
 class Commons:
 
     @staticmethod
+    def Message_Log( operation, message ):
+        pass
+    
+    @staticmethod
+    def Message_Warnning( operation, message ):
+        pass
+
+    @staticmethod
+    def Message_Float( operation, message, icon ):
+        pass
+
+    @staticmethod
     def Dialog_Load( self, title ):
-        file_dialog = QFileDialog( QWidget( self ) )
-        file_dialog.setFileMode( QFileDialog.AnyFile )
+        file_dialog = QFileDialog( self )
+        file_dialog.setFileMode( QFileDialog.FileMode.AnyFile )
         file_path = file_dialog.getOpenFileName( self, title, Settings.getFileDialogState(), "File( *.eo )" )[0]
         if file_path in [ "", ".", None ]:
             file_path = None
@@ -18,11 +30,9 @@ class Commons:
     
     @staticmethod
     def Dialog_Save( self, title, name ):
-        # Variabels
-        directory = os.path.join(  Settings.getFileDialogState(), f"{ name }.eo")
         # File Dialog
-        file_dialog = QFileDialog( QWidget( self ) )
-        file_dialog.setFileMode( QFileDialog.AnyFile )
+        file_dialog = QFileDialog( self )
+        file_dialog.setFileMode( QFileDialog.FileMode.AnyFile )
         file_path = file_dialog.getSaveFileName( self, title,  Settings.getFileDialogState(), "File( *.eo )" )[0]
         if file_path in [ "", ".", None ]:
             file_path = None
@@ -32,8 +42,8 @@ class Commons:
     @staticmethod
     def Dialog_Directory( self, title ):
         directory = Settings.getFileDialogState()
-        file_dialog = QFileDialog( QWidget( self ) )
-        file_dialog.setFileMode( QFileDialog.DirectoryOnly )
+        file_dialog = QFileDialog( self )
+        file_dialog.setFileMode( QFileDialog.FileMode.DirectoryOnly )
         folder_path = file_dialog.getExistingDirectory( self, title, directory )
         if folder_path in [ "", ".", None ]:
             folder_path = None

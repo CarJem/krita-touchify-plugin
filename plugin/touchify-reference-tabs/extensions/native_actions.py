@@ -1,9 +1,16 @@
 import subprocess
 from krita import *
 from .filetypes import REFERENCE_FILETYPE_DATA
-from ..dataclasses.Clip import Clip
+from ..dataclasses.images import ImageClip
+from .commons import Commons
 
 class NativeActions:
+
+    __Canvas: Canvas = None
+    
+    @staticmethod
+    def OnEvent_CanvasChanged(canvas: Canvas):
+        NativeActions.__Canvas = canvas
 
     @staticmethod
     def File_Location(self, image_path: str):
@@ -17,10 +24,10 @@ class NativeActions:
             QDesktopServices.openUrl( QUrl.fromLocalFile( os.path.dirname( image_path ) ) )
         else:
             QDesktopServices.openUrl( QUrl.fromLocalFile( os.path.dirname( image_path ) ) )
-        self.Message_Log( "FILE LOCATION", f"{ image_path }" )
+        Commons.Message_Log( "FILE LOCATION", f"{ image_path }" )
 
     @staticmethod
-    def Drag_Drop( self, image_path: str, clip: Clip):
+    def Drag_Drop( self, image_path: str, clip: ImageClip):
         def Drag_Thumbnail( qimage, mimedata ):
             # Display
             size = 200
@@ -69,7 +76,8 @@ class NativeActions:
                 Drag_Thumbnail( qimage, mimedata )
 
     @staticmethod
-    def Image_Clip( image_path: str, clip: Clip, insert_size: bool = False, insert_scale: int = 1, canvas: Canvas = None ):
+    def Image_Clip( image_path: str, clip: ImageClip, insert_size: bool = False, insert_scale: int = 1 ):
+        canvas = NativeActions.__Canvas
         qimage = QImage( image_path )
         if qimage.isNull() == False:
             if clip.state == True:
@@ -132,7 +140,7 @@ class NativeActions:
         # Return
         return mime_data
 
-    def Insert_Document( image_path: str, clip: Clip ):
+    def Insert_Document( image_path: str, clip: ImageClip ):
         if image_path not in ( "", None ):
             # Create Document
             document = Krita.instance().openDocument( image_path )
@@ -147,12 +155,13 @@ class NativeActions:
                 ad.refreshProjection()
                 Krita.instance().action('reset_display').trigger()
             # Show Message
-            #self.Message_Float( "INSERT", "New Document", "document-new" )
+            Commons.Message_Float( "INSERT", "New Document", "document-new" )
         else:
-            #self.Message_Float( "REPORT", "Null Image", "broken-preset" )
+            Commons.Message_Float( "REPORT", "Null Image", "broken-preset" )
             pass
     
-    def Insert_Layer( image_path: str, clip: Clip, canvas: Canvas = None ):
+    def Insert_Layer( image_path: str, clip: ImageClip ):
+        canvas = NativeActions.__Canvas
         if image_path not in ( "", None ) and ( canvas is not None ) and (canvas.view() is not None ):
             check_vector = image_path.endswith( tuple( REFERENCE_FILETYPE_DATA["file_vector"] ) )
             if check_vector == True:
@@ -160,10 +169,11 @@ class NativeActions:
             else:
                 NativeActions.Insert_Pixel( image_path, clip )
         else:
-            #self.Message_Float( "REPORT", "Null Image", "broken-preset" )
+            Commons.Message_Float( "REPORT", "Null Image", "broken-preset" )
             pass
     
-    def Insert_Reference( image_path: str, clip: Clip, canvas: Canvas = None ):
+    def Insert_Reference( image_path: str, clip: ImageClip ):
+        canvas = NativeActions.__Canvas
         if image_path not in ( "", None ) and ( canvas is not None ) and ( canvas.view() is not None ):
             # Image
             qimage = NativeActions.Image_Clip( image_path, clip )
@@ -181,13 +191,13 @@ class NativeActions:
                 Krita.instance().activeDocument().refreshProjection()
                 # Message
                 pass
-                #self.Message_Float( "INSERT", "Reference", "krita_tool_reference_images" )
+                Commons.Message_Float( "INSERT", "Reference", "krita_tool_reference_images" )
             else:
                 pass
-                #self.Message_Float( "REPORT", "Null Image", "broken-preset" )
+                Commons.Message_Float( "REPORT", "Null Image", "broken-preset" )
         else:
             pass
-            #self.Message_Float( "REPORT", "Null Image", "broken-preset" )
+            Commons.Message_Float( "REPORT", "Null Image", "broken-preset" )
     
     def Insert_Vector( image_path: str ):
         report = "Vector"
@@ -208,9 +218,9 @@ class NativeActions:
             vl.addShapesFromSvg( svg_shape )
         except Exception as e:
             report = e
-        #self.Message_Float( "INSERT", report, "vectorLayer" )
+        Commons.Message_Float( "INSERT", report, "vectorLayer" )
     
-    def Insert_Pixel( image_path: str, clip: Clip ):
+    def Insert_Pixel( image_path: str, clip: ImageClip ):
         report = "Pixel"
         try:
             # Variables
@@ -228,5 +238,5 @@ class NativeActions:
             ad.refreshProjection()
         except Exception as e:
             report = e
-        #self.Message_Float( "INSERT", report, "paintLayer" )
+        Commons.Message_Float( "INSERT", report, "paintLayer" )
     

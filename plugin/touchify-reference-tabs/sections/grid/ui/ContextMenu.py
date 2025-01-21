@@ -3,8 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from typing import TYPE_CHECKING
 from ....DockerMenu import DockerMenu
-from ....dataclasses.Clip import Clip
-from ....dataclasses.InsertInfo import InsertInfo
+from ....dataclasses.images import ImageClip, InsertablePin
 from ....extensions.native_actions import NativeActions
 if TYPE_CHECKING:
     from ..GridView import GridView
@@ -27,7 +26,7 @@ class ContextMenu(DockerMenu):
 
         self.ctx_state_null = self.view.grid_qpixmap == None
         self.ctx_state_insert = NativeActions.Insert_Check( )
-        self.ctx_clip = Clip(False, 0,0,1,1)
+        self.ctx_clip = ImageClip(False, 0,0,1,1)
         self.ctx_w2 = self.view.w2
         self.ctx_h2 = self.view.h2
         self.ctx_grid_item_path = self.view.grid_path[self.view.giy][self.view.gix]
@@ -131,12 +130,12 @@ class ContextMenu(DockerMenu):
 
         # General
         if action == self.action_pin:
-            pin = InsertInfo(self.ctx_w2, self.ctx_h2, self.ctx_grid_item_path)
+            pin = InsertablePin(self.ctx_w2, self.ctx_h2, self.ctx_grid_item_path)
             view.SIGNAL_PIN_IMAGE.emit( pin, self.ctx_clip_false )
 
         # File
         if action == self.action_file_location:
-            view.SIGNAL_LOCATION.emit( self.ctx_grid_item_path )
+            NativeActions.File_Location( self.ctx_grid_item_path )
         if action == self.action_file_copy:
             NativeActions.Path_Copy( self.ctx_grid_item_path )
 
@@ -145,15 +144,15 @@ class ContextMenu(DockerMenu):
             view.state_pickcolor = not self.ctx_state_pickcolor
         if action == self.action_analyse:
             qimage = self.ctx_grid_item_qpixmap.toImage()
-            view.SIGNAL_ANALYSE.emit( qimage )
+            view.ColorPicker.Analyse(qimage)
 
         # Insert
         if action == self.action_document:
-            view.SIGNAL_NEW_DOCUMENT.emit( self.ctx_grid_item_path, self.ctx_clip )
+            NativeActions.Insert_Document(self.ctx_grid_item_path, self.ctx_clip)
         if action == self.action_insert_layer:
-            view.SIGNAL_INSERT_LAYER.emit( self.ctx_grid_item_path, self.ctx_clip )
+            NativeActions.Insert_Layer(self.ctx_grid_item_path, self.ctx_clip)     
         if action == self.action_insert_ref:
-            view.SIGNAL_INSERT_REFERENCE.emit( self.ctx_grid_item_path, self.ctx_clip )
+            NativeActions.Insert_Reference(self.ctx_grid_item_path, self.ctx_clip)     
 
 
     @staticmethod

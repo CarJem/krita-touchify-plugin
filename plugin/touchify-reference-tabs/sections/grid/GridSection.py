@@ -4,11 +4,11 @@ from typing import TYPE_CHECKING
 from krita import *
 from ...DockerToolbar import DockerToolbar
 from .GridView import GridView
-from ...dataclasses.Clip import Clip
 from ...extensions.variables import *
 from ...extensions.native_actions import NativeActions
-from ...dataclasses.InsertInfo import InsertInfo
+from ...dataclasses.images import InsertablePin
 from ...extensions.filetypes import REFERENCE_FILETYPE_DATA
+from ...extensions.commons import Commons
 
 
 if TYPE_CHECKING:
@@ -31,7 +31,7 @@ class GridSection(QWidget):
         self.Connections()
         
     def Canvas(self):
-        return self.DockerPage.view_widget.docker.canvas()
+        return self.DockerPage.ParentWidget.docker.canvas()
 
     def Variables(self):
         self.folder_path = ""
@@ -118,13 +118,8 @@ class GridSection(QWidget):
 
         self.grid_view.SIGNAL_INDEX.connect(self.OnEvent_IndexChanged)
         self.grid_view.SIGNAL_PREVIEW_REQUESTED.connect(self.OnEvent_PreviewRequested)
-        self.grid_view.SIGNAL_DRAG.connect(self.OnEvent_FileLocationRequested)
-        self.grid_view.SIGNAL_LOCATION.connect(self.OnEvent_FileLocationRequested)
-        self.grid_view.SIGNAL_ANALYSE.connect( self.OnEvent_ColorAnalyseRequested )
         self.grid_view.SIGNAL_PIN_IMAGE.connect(self.OnEvent_PinImage)
-        self.grid_view.SIGNAL_NEW_DOCUMENT.connect( self.OnEvent_NewDocument )
-        self.grid_view.SIGNAL_INSERT_LAYER.connect( self.OnEvent_InsertLayer )
-        self.grid_view.SIGNAL_INSERT_REFERENCE.connect( self.OnEvent_InsertReference )
+
 
     #region Event Functions
 
@@ -162,25 +157,11 @@ class GridSection(QWidget):
         self.update_slider = True
         self.updatePageSlider()
 
-    def OnEvent_NewDocument(self, path: str, clip: Clip):
-        NativeActions.Insert_Document(path, clip)
-
-    def OnEvent_InsertLayer(self, path: str, clip: Clip):
-        NativeActions.Insert_Layer(path, clip, self.Canvas())
-
-    def OnEvent_InsertReference(self, path: str, clip: Clip):
-        NativeActions.Insert_Reference(path, clip, self.Canvas())     
 
     def OnEvent_FileLocationRequested( self, image_path: str ):
         NativeActions.File_Location(image_path)
-    
-    def OnEvent_DragDrop( self, image_path: str, clip: Clip ):
-        NativeActions.Drag_Drop(self, image_path, clip)
-    
-    def OnEvent_ColorAnalyseRequested( self, qimage: QImage ):
-        self.grid_view.ColorPicker.Analyse(qimage)
 
-    def OnEvent_PinImage( self, pin: InsertInfo ):
+    def OnEvent_PinImage( self, pin: InsertablePin ):
         self.DockerPage.PinImage(pin)
 
     def OnEvent_ThemeChanged( self ):
@@ -212,6 +193,7 @@ class GridSection(QWidget):
             start = QtCore.QDateTime.currentDateTimeUtc()
 
             # Lists
+            active_list = self.list_mode.upper()
             if self.list_mode == "Folder":
                 active_location = os.path.basename( self.folder_path )
                 qdir = QDir(self.folder_path)
@@ -221,6 +203,7 @@ class GridSection(QWidget):
                 files = qdir.entryInfoList()
                 count = len( files )
             else:
+                active_list = None
                 active_location = None
                 files = []
                 count = 0
@@ -304,7 +287,7 @@ class GridSection(QWidget):
             end = QtCore.QDateTime.currentDateTimeUtc()
             delta = start.msecsTo( end )
             time = QTime( 0,0 ).addMSecs( delta )
-            #self.Message_Log( "FILTER", f"{ time.toString( 'hh:mm:ss.zzz' ) } | { active_list } { active_location } | SEARCH { search }" )
+            Commons.Message_Log( "FILTER", f"{ time.toString( 'hh:mm:ss.zzz' ) } | { active_list } { active_location } | SEARCH { search }" )
         except Exception as e:
             print(e)
             self.max_items = 0

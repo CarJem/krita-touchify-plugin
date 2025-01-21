@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from typing import TYPE_CHECKING
 from ....DockerMenu import DockerMenu
-from ....dataclasses.Clip import Clip
+from ....dataclasses.images import ImageClip
 from ....extensions.native_actions import NativeActions
 if TYPE_CHECKING:
     from ..ReferenceView import ReferenceView
@@ -57,7 +57,7 @@ class ContextMenu(DockerMenu):
                 self.ctx_relative.append( self.view.pin_list[i] )
 
         # Clip
-        self.ctx_clip = Clip(False, 0,0,1,1)
+        self.ctx_clip = ImageClip(False, 0,0,1,1)
 
     def Update(self):
         self.Variables()
@@ -100,7 +100,7 @@ class ContextMenu(DockerMenu):
         # Disable Edit
         self.menu_edit.setEnabled( not self.view.pin_index == None )
         # Disable Color
-        self.action_color_analyse.setEnabled( not ( self.view.pin_index == None or self.view.pigment_o == None ) )
+        self.action_color_analyse.setEnabled( not ( self.view.pin_index == None or self.view.ColorPicker.pigment_o == None ) )
         # Disable Insert
         self.action_insert_document.setEnabled( not self.view.pin_index == None )
         self.action_insert_layer.setEnabled( not (self.view.pin_index == None or self.state_insert == False) )
@@ -254,7 +254,7 @@ class ContextMenu(DockerMenu):
             view.ModeSet_Label()
         # Pin
         if action == self.action_pin_location:
-            view.SIGNAL_LOCATION.emit( self.ctx_pin_path )
+            NativeActions.File_Location( self.ctx_pin_path )
         if action == self.action_pin_copy:
             NativeActions.Path_Copy( self.ctx_pin_path )
         if action == self.action_pin_save:
@@ -303,15 +303,15 @@ class ContextMenu(DockerMenu):
             view.ModeSet_ColorPicker()
         if action == self.action_color_analyse:
             qimage = self.ctx_pin_qpixmap.toImage()
-            view.SIGNAL_ANALYSE.emit( qimage )
+            view.ColorPicker.Analyse(qimage)
 
         # Insert
         if action == self.action_insert_document:
-            view.SIGNAL_NEW_DOCUMENT.emit( self.ctx_pin_path, self.ctx_clip )
+            NativeActions.Insert_Document(self.ctx_pin_path, self.ctx_clip)     
         if action == self.action_insert_layer:
-            view.SIGNAL_INSERT_LAYER.emit( self.ctx_pin_path, self.ctx_clip )
+            NativeActions.Insert_Layer(self.ctx_pin_path, self.ctx_clip)     
         if action == self.action_insert_reference:
-            view.SIGNAL_INSERT_REFERENCE.emit( self.ctx_pin_path, self.ctx_clip )
+            NativeActions.Insert_Reference(self.ctx_pin_path, self.ctx_clip)     
 
 
         # Relative

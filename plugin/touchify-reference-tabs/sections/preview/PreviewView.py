@@ -1,37 +1,33 @@
 import os
+import pathlib
 import time
 import zipfile
 from krita import *
 from PyQt5 import QtCore, QtGui
 from ...extensions.calculations import *
 from ...extensions.color_picker import *
-from ...dataclasses.Clip import Clip
-from ...dataclasses.InsertInfo import InsertInfo
+from ...extensions.commons import Commons
+from ...dataclasses.images import ImageClip, InsertablePin
 from ...extensions.native_actions import NativeActions
+from ...extensions.paintables import Paintables
 from .ui.ContextMenu import ContextMenu
+from ...extensions.filetypes import REFERENCE_FILETYPE_DATA
 
 class PreviewView( QWidget ):
-    # General
-    SIGNAL_DRAG = QtCore.pyqtSignal( [ str, Clip ] )
-    SIGNAL_DROP = QtCore.pyqtSignal( list )
+
     # Preview
     SIGNAL_RETURN_REQUESTED = QtCore.pyqtSignal()
     SIGNAL_INCREMENT = QtCore.pyqtSignal( int )
     # Menu
     SIGNAL_FUNCTION = QtCore.pyqtSignal( list )
-    SIGNAL_PIN_IMAGE = QtCore.pyqtSignal( [ InsertInfo, Clip ] )
+    SIGNAL_PIN_IMAGE = QtCore.pyqtSignal( [ InsertablePin, ImageClip ] )
     SIGNAL_RANDOM = QtCore.pyqtSignal()
-    SIGNAL_FULL_SCREEN = QtCore.pyqtSignal( bool )
-    SIGNAL_LOCATION = QtCore.pyqtSignal( str )
-    SIGNAL_ANALYSE = QtCore.pyqtSignal( [ QImage ] )
-    SIGNAL_NEW_DOCUMENT = QtCore.pyqtSignal( [ str, Clip ] )
-    SIGNAL_INSERT_LAYER = QtCore.pyqtSignal( [ str, Clip ] )
-    SIGNAL_INSERT_REFERENCE = QtCore.pyqtSignal( [ str, Clip ] )
     # UI
     SIGNAL_EXTRA_LABEL = QtCore.pyqtSignal( str )
     SIGNAL_EXTRA_PANEL = QtCore.pyqtSignal( bool )
     SIGNAL_EXTRA_VALUE = QtCore.pyqtSignal( int )
     SIGNAL_EXTRA_MAX = QtCore.pyqtSignal( int )
+    SIGNAL_ZOOM_UPDATED = QtCore.pyqtSignal( float )
 
 
     # Init
@@ -61,7 +57,6 @@ class PreviewView( QWidget ):
         self.file_search = []
 
         # State
-        self.state_maximized = False
         self.state_press = False
         self.state_pickcolor = False
         self.state_clip = False
@@ -129,10 +124,14 @@ class PreviewView( QWidget ):
         self.comp_index = 0
         self.comp_count = 0
 
+    #region Widget Overrides
+
     def sizeHint( self ):
         return QtCore.QSize( 5000,5000 )
 
-    # Relay
+    #endregion
+    
+    #region Relay
 
     def Set_FileSearch( self, file_search ):
         self.file_search = file_search
@@ -141,13 +140,13 @@ class PreviewView( QWidget ):
         self.color_1 = color_1
         self.color_2 = color_2
 
-    def Set_Size( self, ww, hh, state_maximized ):
+    def Set_Size( self, ww, hh ):
         self.ww = ww
         self.hh = hh
         self.w2 = ww * 0.5
         self.h2 = hh * 0.5
-        self.state_maximized = state_maximized
         self.resize( ww, hh )
+        self.ColorPicker.setSourceSize(ww, hh)
 
     def Set_Scale_Method( self, scale_method ):
         self.scale_method = scale_method
@@ -156,8 +155,10 @@ class PreviewView( QWidget ):
     def Set_Display( self, boolean ):
         self.display = boolean
         self.update()
+    
+    #endregion
 
-    # Display
+    #region Display
     def Display_Reset( self, state ):
         # Variables
         if state == True:
@@ -175,8 +176,30 @@ class PreviewView( QWidget ):
         self.preview_qpixmap = None
         self.update()
         self.Camera_Grab()
-    
-    def Display_Path( self, image_path ):
+
+    def Display_Path(self, image_path: str):
+        def File_Extension( path ):
+            if path == None:
+                extension = None
+            else:
+                extension = pathlib.Path( path ).suffix
+                extension = extension.replace( ".", "" )
+            return extension
+        
+        file_anima = REFERENCE_FILETYPE_DATA["file_anima"]
+        file_compact = REFERENCE_FILETYPE_DATA["file_compact"]
+
+        extension = File_Extension( image_path )
+
+        if extension in file_anima:
+            self.view.Display_Animation( image_path )
+
+        elif extension in file_compact:
+            self.Display_Compact( image_path )
+        else:
+            self.Display_Static( image_path )
+
+    def Display_Static( self, image_path: str ):
         qpixmap = QPixmap( image_path )
         if qpixmap.isNull() == False:
             if self.preview_path != image_path:
@@ -188,7 +211,11 @@ class PreviewView( QWidget ):
         self.preview_path = image_path
         self.update()
         self.Camera_Grab()
-    
+
+    def Display_Internet(self, url: str):
+        qpixmap = Commons.Download_QPixmap( url )
+        if qpixmap: self.Display_QPixmap(qpixmap)
+
     def Display_QPixmap( self, qpixmap ):
         if qpixmap.isNull() == False:
             self.Display_Reset( True )
@@ -210,7 +237,7 @@ class PreviewView( QWidget ):
             frames = qmovie.frameCount()
             speed = qmovie.speed() / 100
             if frames == 1:
-                self.Display_Path( image_path )
+                self.Display_Static( image_path )
             else:
                 # Variables
                 self.state_animation = True
@@ -240,7 +267,7 @@ class PreviewView( QWidget ):
                 del qmovie
             self.update()
         else:
-            self.Display_Path( image_path )
+            self.Display_Static( image_path )
     
     def Display_Compact( self, zip_path ):
         # Variables
@@ -276,9 +303,10 @@ class PreviewView( QWidget ):
             self.update()
             self.Camera_Grab()
         else:
-            self.Display_Path( zip_path )
+            self.Display_Static( zip_path )
+    # endregion
  
-    # Draw
+    #region Draw
     def Draw_Render( self, qpixmap ):
         # QPixmap
         if self.display == False:
@@ -303,8 +331,9 @@ class PreviewView( QWidget ):
             h = self.preview_qpixmap.height()
             qpixmap = qpixmap.copy( int( w * self.cl ), int( h * self.ct ), int( w * self.cw ), int( h * self.ch ) )
         return qpixmap
+    #endregion
 
-    # Animation
+    #region Animation
     def Anim_Timer( self ):
         self.anim_timer = QtCore.QTimer( self )
         self.anim_timer.timeout.connect( lambda: self.Anim_Increment( +1 ) )
@@ -344,7 +373,6 @@ class PreviewView( QWidget ):
                 self.Extra_Label( True )
                 self.update()
     
-    # Animation Export
     def Anim_Export_Cycle( self ):
         if self.state_animation == True:
             for i in range( 0, len( self.anim_sequence ) ):
@@ -371,8 +399,9 @@ class PreviewView( QWidget ):
                 except:pass
                 # Garbage
                 del screenshot_qpixmap
+    #endregion
 
-    # Compact
+    #region Compact
     def Comp_Read( self, archive, name ):
         if self.state_compact == True:
             try:
@@ -418,7 +447,6 @@ class PreviewView( QWidget ):
             self.update()
             self.Camera_Grab()
     
-    # Compct Export
     def Comp_Export_Index( self, index ):
         if self.state_compact == True:
             # File Path
@@ -441,21 +469,14 @@ class PreviewView( QWidget ):
             else:
                 string = f"Imagine Board | ERROR zip file not saved"
                 #QMessageBox.information( QWidget(), i18n( "Warnning" ), i18n( string ) )
+    #endregion
 
-    # Extra UI
-    def Extra_Label( self, mode ):
-        string = ""
-        if ( self.state_animation == True and mode == True ) == True:
-            string = f"{ self.anim_frame }:{ self.anim_count }"
-        if ( self.state_compact == True and mode == True and len( self.comp_path ) > 0 ) == True:
-            string = f"{ self.comp_path[self.comp_index] }"
-        self.SIGNAL_EXTRA_LABEL.emit( string )
-
-    # Camera
+    #region Camera
     def Camera_Reset( self ):
         self.cmx = 0
         self.cmy = 0
         self.cz = 1
+        self.SIGNAL_ZOOM_UPDATED.emit(self.cz)
     
     def Camera_Previous( self ):
         self.pcmx = self.cmx
@@ -470,12 +491,26 @@ class PreviewView( QWidget ):
     def Camera_Scale( self, ex, ey ):
         factor = 200
         self.cz = Limit_Range( self.pcz - ( ( ey - self.oy ) / factor ), 0, 100 )
+        self.SIGNAL_ZOOM_UPDATED.emit(self.cz)
     
     def Camera_Grab( self ):
         try:self.qimage_grab = self.grab().toImage()
         except:pass
+    
+    def Camera_Zoom(self, value: int, incremental: bool = True):
+        self.Camera_Previous()
+        if incremental:
+            zoom_amount = value * 10
+            factor = 200
+            self.cz = Limit_Range( self.pcz - (zoom_amount / factor), 0, 100 )
+        else:
+            self.cz = Limit_Range( value, 0, 100 )
+        self.update()
+        self.SIGNAL_ZOOM_UPDATED.emit(self.cz)
 
-    # Pagination
+    #endregion
+
+    #region Pagination
     def Pagination_Reset( self, ex, ey ):
         self.ox = ex
         self.oy = ey
@@ -496,8 +531,9 @@ class PreviewView( QWidget ):
         if dy <= -factor:
             self.SIGNAL_INCREMENT.emit( +1 )
             self.Pagination_Reset( ex, ey )
+    #endregion
 
-    # Clip
+    #region Clip
     def Clip_Reset( self ):
         self.state_clip = False
         self.cl = 0.1
@@ -552,8 +588,18 @@ class PreviewView( QWidget ):
             self.ct, self.cb = self.cb, self.ct
         self.cw = self.cr - self.cl
         self.ch = self.cb - self.ct
+    #endregion
 
-    # Information
+    #region Misc
+
+    def Extra_Label( self, mode ):
+        string = ""
+        if ( self.state_animation == True and mode == True ) == True:
+            string = f"{ self.anim_frame }:{ self.anim_count }"
+        if ( self.state_compact == True and mode == True and len( self.comp_path ) > 0 ) == True:
+            string = f"{ self.comp_path[self.comp_index] }"
+        self.SIGNAL_EXTRA_LABEL.emit( string )
+
     def Check_Vector( self, path ):
         self.state_vector = os.path.splitext( path )[1] in [ ".svg", ".svgz" ]
     
@@ -615,8 +661,7 @@ class PreviewView( QWidget ):
                 pass
         # Return
         return text
-
-    # Edit
+    
     def Edit_Reset( self ):
         self.edit_greyscale = False
         self.edit_invert_h = False
@@ -657,12 +702,14 @@ class PreviewView( QWidget ):
             QApplication.setOverrideCursor( Qt.CrossCursor )
         else:
             QApplication.restoreOverrideCursor()
-    
-    # Context Menu
+
     def Context_Menu( self, event ):
         self.state_press = False
         ContextMenu.OpenContextMenu(self, event)
-    # Mouse Events
+
+    #endregion
+
+    #region Events
     def mousePressEvent( self, event ):
         # Variable
         self.state_press = True
@@ -687,7 +734,7 @@ class PreviewView( QWidget ):
                 self.operation = "clip"
                 self.Clip_Node( ex, ey )
             else:
-                self.operation = None
+                self.operation = "camera_move"
         if ( event.modifiers() == QtCore.Qt.ShiftModifier and event.buttons() == QtCore.Qt.LeftButton ):
             self.operation = "camera_move"
             self.Camera_Previous()
@@ -740,10 +787,10 @@ class PreviewView( QWidget ):
             self.Pagination_Stylus( ex, ey )
         # Drag Drop
         if self.operation == "drag_drop":
-            clip = Clip(self.state_clip, self.cl, self.ct, self.cw, self.ch)
+            clip = ImageClip(self.state_clip, self.cl, self.ct, self.cw, self.ch)
             if self.preview_path != None:
                 self.drag = True
-                self.SIGNAL_DRAG.emit( self.preview_path, clip )
+                NativeActions.Drag_Drop(self, self.preview_path, clip)
 
         # Update
         self.update()
@@ -765,16 +812,16 @@ class PreviewView( QWidget ):
         self.update()
         self.Camera_Grab()
     
-    # Wheel Event
     def wheelEvent( self, event ):
         delta_y = event.angleDelta().y()
         angle = 5
         if delta_y >= angle:
             self.SIGNAL_INCREMENT.emit( +1 )
+            self.Camera_Zoom(-1)
         if delta_y <= -angle:
             self.SIGNAL_INCREMENT.emit( -1 )
-    
-    # Drag and Drop Event
+            self.Camera_Zoom(+1)
+
     def dragEnterEvent( self, event ):
         if event.mimeData().hasImage:
             self.drop = True
@@ -799,9 +846,26 @@ class PreviewView( QWidget ):
     def dropEvent( self, event ):
         if event.mimeData().hasImage:
             if ( self.drop == True and self.drag == False ):
-                event.setDropAction( Qt.CopyAction )
+                event.setDropAction( Qt.DropAction.CopyAction )
                 mime_data = NativeActions.Drop_Inside( event )
-                self.SIGNAL_DROP.emit( mime_data )
+
+                if len( mime_data ) > 0:
+                    # Variables
+                    item = mime_data[0]
+                    # Check Source
+                    check_html = Commons.Check_Html( item )
+                    if check_html == True:
+                        self.Display_Internet( item )
+                    else:
+                        # Checks
+                        item = os.path.abspath( item )
+                        check_dir = os.path.isdir( item )
+                        check_file = os.path.isfile( item )
+
+                        if item and check_file:
+                            self.Display_Path(item)
+
+
             event.accept()
         else:
             event.ignore()
@@ -809,14 +873,12 @@ class PreviewView( QWidget ):
         self.drag = False
         self.update()
     
-    # Widget
     def enterEvent( self, event ):
         self.Camera_Grab()
     
     def leaveEvent( self, event ):
         pass
     
-    # Painter
     def paintEvent( self, event ):
         # Variables
         ww = self.ww
@@ -932,20 +994,7 @@ class PreviewView( QWidget ):
 
         # Drag and Drop Triangle
         if ( self.drop == True and self.drag == False ):
-            self.Painter_Triangle( painter, w2, h2, side )
+            Paintables.Painter_Triangle( self.color_1, painter, w2, h2, side )
+    #endregion
 
-    def Painter_Triangle( self, painter, w2, h2, side ):
-        # Painter
-        painter.setPen( QtCore.Qt.NoPen )
-        painter.setBrush( QBrush( QColor( self.color_1 ) ) )
-        # Variables
-        kw = 0.3 * side
-        kh = 0.2 * side
-        d = 0.5
-        # Polygons
-        poly_tri = QPolygon( [
-            QPoint( int( w2 - kw ), int( h2 - kh ) ),
-            QPoint( int( w2 + kw ), int( h2 - kh ) ),
-            QPoint( int( w2 ),      int( h2 + kh ) ),
-            ] )
-        painter.drawPolygon( poly_tri )
+

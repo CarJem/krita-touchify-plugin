@@ -11,8 +11,8 @@ from .dataclasses.ReferencePin import ReferencePin
 from .ui.ContextMenu import ContextMenu
 from ...extensions.commons import Commons
 from ...extensions.native_actions import NativeActions
-from ...dataclasses.Clip import Clip
-from ...dataclasses.InsertInfo import InsertInfo
+from ...dataclasses.images import ImageClip, InsertablePin
+from ...extensions.paintables import Paintables
 
 
 
@@ -31,22 +31,14 @@ class ReferenceView( QWidget ):
 
 
     #region Signals
-    # General
-    SIGNAL_DRAG = QtCore.pyqtSignal( [ str, Clip ] )
-    SIGNAL_DROP = QtCore.pyqtSignal( list )
+
     # Reference
-    SIGNAL_PIN_IMAGE = QtCore.pyqtSignal( InsertInfo )
-    SIGNAL_PIN_LABEL = QtCore.pyqtSignal( InsertInfo )
+    SIGNAL_PIN_IMAGE = QtCore.pyqtSignal( InsertablePin )
+    SIGNAL_PIN_LABEL = QtCore.pyqtSignal( InsertablePin )
     SIGNAL_PIN_SAVE = QtCore.pyqtSignal( [ QPixmap ] )
     SIGNAL_BOARD_SAVE = QtCore.pyqtSignal( list )
     SIGNAL_CAMERA = QtCore.pyqtSignal( [ list, float, int ] )
-    # Menu
-    SIGNAL_FULL_SCREEN = QtCore.pyqtSignal( bool )
-    SIGNAL_LOCATION = QtCore.pyqtSignal( str )
-    SIGNAL_ANALYSE = QtCore.pyqtSignal( [ QImage ] )
-    SIGNAL_NEW_DOCUMENT = QtCore.pyqtSignal( [ str, Clip ] )
-    SIGNAL_INSERT_LAYER = QtCore.pyqtSignal( [ str, Clip ] )
-    SIGNAL_INSERT_REFERENCE = QtCore.pyqtSignal( [ str, Clip ] )
+
     # UI
     SIGNAL_PB_VALUE = QtCore.pyqtSignal( int )
     SIGNAL_PB_MAX = QtCore.pyqtSignal( int )
@@ -386,7 +378,7 @@ class ReferenceView( QWidget ):
     def Pin_URL( self, bx, by ):
         url, ok = QInputDialog.getText( self, "Insert Pin", "URL", QLineEdit.Normal, "" )
         if ok and url != "":
-            pin = ReferenceView.InsertInfo(bx, by, url)
+            pin = InsertablePin(bx, by, url)
             self.SIGNAL_PIN_IMAGE.emit( pin )
             
     def Pin_ZData(self, index ):
@@ -655,7 +647,7 @@ class ReferenceView( QWidget ):
     
     def Label_Insert( self, pos: QPoint ):
         bx, by = self.Point_Location( pos.x(), pos.y() )
-        pin = ReferenceView.InsertInfo(bx,by)
+        pin = InsertablePin(bx,by)
         self.SIGNAL_PIN_LABEL.emit( pin )
     
     def Label_List( self ):
@@ -1615,8 +1607,8 @@ class ReferenceView( QWidget ):
                 break
 
         # Select Directory
-        file_dialog = QFileDialog( QWidget( self ) )
-        file_dialog.setFileMode( QFileDialog.DirectoryOnly )
+        file_dialog = QFileDialog( self )
+        file_dialog.setFileMode( QFileDialog.FileMode.DirectoryOnly )
         directory = file_dialog.getExistingDirectory( self, "Select Directory", suggestion )
         if directory not in [ "", "." ]:
             qdir = QDir( directory )
@@ -1655,7 +1647,7 @@ class ReferenceView( QWidget ):
                     fn = f.fileName() # basename
                     fp = os.path.abspath( f.filePath() ) # path
                     if basename == fn and fp not in path_old:
-                        pin = ReferenceView.InsertInfo(bx + 20, by + 20, fp)
+                        pin = InsertablePin(bx + 20, by + 20, fp)
                         self.SIGNAL_PIN_IMAGE.emit( pin )
                         break
             # Selection
@@ -1853,7 +1845,7 @@ class ReferenceView( QWidget ):
     def Insert_Drag( self, path, clip ):
         if path != None:
             self.drag = True
-            self.SIGNAL_DRAG.emit( path, clip )
+            NativeActions.Drag_Drop(self, path, clip)
     
 
     
@@ -2029,6 +2021,154 @@ class ReferenceView( QWidget ):
 
     #endregion
 
+    #region Render
+
+    def Render_BoundingBox(self, painter: QPainter, ww: int, hh: int, pin_index: int):
+        # Read
+        dx, dy, dl, dr, dt, db, dw, dh = self.Pin_Draw_Box( pin_index )
+        trz = self.pin_list[pin_index].trz
+
+        # Variables
+        dw2 = dw * 0.5
+        dh2 = dh * 0.5
+        line = 200
+
+        # Bounding Box
+        painter.setPen( QPen( self.color_2, 1, Qt.SolidLine ) )
+        painter.setBrush( QtCore.Qt.NoBrush )
+        painter.drawRect( int( dl ), int( dt ), int( dw ), int( dh ) )
+
+        # Triangle
+        min_tri = 20
+        if ( ww > min_tri and hh > min_tri ):
+            # Variables
+            tri = 10
+            # Scale 1
+            if self.pin_node == 1:
+                painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
+            else:
+                painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
+            poly_t1 = QPolygon( [
+                QPoint( int( dl ),       int( dt ) ),
+                QPoint( int( dl + tri ), int( dt ) ),
+                QPoint( int( dl ),       int( dt + tri ) ),
+                ] )
+            painter.drawPolygon( poly_t1 )
+            # scale 3
+            if self.pin_node == 3:
+                painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
+            else:
+                painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
+            poly_t3 = QPolygon( [
+                QPoint( int( dr ),       int( dt ) ),
+                QPoint( int( dr ),       int( dt + tri ) ),
+                QPoint( int( dr - tri ), int( dt ) ),
+                ] )
+            painter.drawPolygon( poly_t3 )
+            # Scale 7
+            if self.pin_node == 7:
+                painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
+            else:
+                painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
+            poly_t7 = QPolygon( [
+                QPoint( int( dl ),       int( db ) ),
+                QPoint( int( dl ),       int( db - tri ) ),
+                QPoint( int( dl + tri ), int( db ) ),
+                ] )
+            painter.drawPolygon( poly_t7 )
+            # Scale 9
+            if self.pin_node == 9:
+                painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
+            else:
+                painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
+            poly_t9 = QPolygon( [
+                QPoint( int( dr ),       int( db ) ),
+                QPoint( int( dr - tri ), int( db ) ),
+                QPoint( int( dr ),       int( db - tri ) ),
+                ] )
+            painter.drawPolygon( poly_t9 )
+
+        # Squares
+        min_sq = 50
+        if ( ww > min_sq and hh > min_sq ):
+            # Variables
+            sq = 5
+            # Clip 2
+            if self.pin_node == 2:
+                painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
+            else:
+                painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
+            poly_s2 = QPolygon( [
+                QPoint( int( dl + dw2 - sq ), int( dt ) ),
+                QPoint( int( dl + dw2 - sq ), int( dt + sq ) ),
+                QPoint( int( dl + dw2 + sq ), int( dt + sq ) ),
+                QPoint( int( dl + dw2 + sq ), int( dt ) ),
+                ] )
+            painter.drawPolygon( poly_s2 )
+            # Clip 4
+            if self.pin_node == 4:
+                painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
+            else:
+                painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
+            poly_s4 = QPolygon( [
+                QPoint( int( dl ),      int( dt + dh2 - sq ) ),
+                QPoint( int( dl + sq ), int( dt + dh2 - sq ) ),
+                QPoint( int( dl + sq ), int( dt + dh2 + sq ) ),
+                QPoint( int( dl ),      int( dt + dh2 + sq ) ),
+                ] )
+            painter.drawPolygon( poly_s4 )
+            # Clip 6
+            if self.pin_node == 6:
+                painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
+            else:
+                painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
+            poly_s6 = QPolygon( [
+                QPoint( int( dr ),      int( dt + dh2 - sq ) ),
+                QPoint( int( dr - sq ), int( dt + dh2 - sq ) ),
+                QPoint( int( dr - sq ), int( dt + dh2 + sq ) ),
+                QPoint( int( dr ),      int( dt + dh2 + sq ) ),
+                ] )
+            painter.drawPolygon( poly_s6 )
+            # Clip 8
+            if self.pin_node == 8:
+                painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
+            else:
+                painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
+            poly_s8 = QPolygon( [
+                QPoint( int( dl + dw2 - sq ), int( db ) ),
+                QPoint( int( dl + dw2 - sq ), int( db - sq ) ),
+                QPoint( int( dl + dw2 + sq ), int( db - sq ) ),
+                QPoint( int( dl + dw2 + sq ), int( db ) ),
+                ] )
+            painter.drawPolygon( poly_s8 )
+
+        # Circle
+        min_cir = 30
+        if ( ww > min_cir and hh > min_cir ):
+            cir = 4
+            # Clip 5
+            if self.pin_node == 5:
+                # Lines
+                cir_x, cir_y = Trig_2D_Points_Rotate( dl + dw2 , dt + dh2, line, Limit_Looper( trz + 90, 360 ) )
+                neu_x, neu_y = Trig_2D_Points_Rotate( dl + dw2 , dt + dh2, line, Limit_Looper( 90, 360 ) )
+                painter.setPen( QPen( self.color_2, 4, Qt.SolidLine ) )
+                painter.drawLine( int( dl + dw2 ), int( dt + dh2 ), int( cir_x ), int( cir_y ) )
+                painter.drawLine( int( dl + dw2 ), int( dt + dh2 ), int( neu_x ), int( neu_y ) )
+                painter.setPen( QPen( self.color_1, 2, Qt.SolidLine ) )
+                painter.drawLine( int( dl + dw2 ), int( dt + dh2 ), int( cir_x ), int( cir_y ) )
+                painter.drawLine( int( dl + dw2 ), int( dt + dh2 ), int( neu_x ), int( neu_y ) )
+                # Circle
+                painter.setPen( QPen( self.color_2, 1, Qt.SolidLine ) )
+                painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
+                painter.drawEllipse( int( dl + dw2 - cir ), int( dt + dh2 - cir ), int( 2 * cir ), int( 2 * cir ) )
+            else:
+                painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
+                painter.drawEllipse( int( dl + dw2 - cir ), int( dt + dh2 - cir ), int( 2 * cir ), int( 2 * cir ) )
+
+
+
+    #endregion
+
     #region Events
 
     def sizeHint( self ):
@@ -2144,7 +2284,7 @@ class ReferenceView( QWidget ):
             case "select_replace":
                 self.Selection_Box( ex, ey, "replace" )
             case "drag_drop":
-                self.Insert_Drag( self.pin_path, Clip(False, 0,0,1,1) )
+                self.Insert_Drag( self.pin_path, ImageClip(False, 0,0,1,1) )
 
         # Update
         self.update()
@@ -2258,7 +2398,7 @@ class ReferenceView( QWidget ):
                     QApplication.processEvents()
                     # Pin
                     image_path = mime_data[i]
-                    pin = ReferenceView.InsertInfo(bx,by,image_path)
+                    pin = InsertablePin(bx,by,image_path)
                     self.SIGNAL_PIN_IMAGE.emit( pin )
                 # Progress Bar
                 self.ProgressBar_Value( 0 )
@@ -2308,165 +2448,6 @@ class ReferenceView( QWidget ):
         del self.worker_packer
 
     def paintEvent( self, event ):
-        def Painter_Triangle( painter, w2, h2, side ):
-            # Painter
-            painter.setPen( QtCore.Qt.NoPen )
-            painter.setBrush( QBrush( QColor( self.color_1 ) ) )
-            # Variables
-            kw = 0.3 * side
-            kh = 0.2 * side
-            d = 0.5
-            # Polygons
-            poly_tri = QPolygon( [
-                QPoint( int( w2 - kw ), int( h2 - kh ) ),
-                QPoint( int( w2 + kw ), int( h2 - kh ) ),
-                QPoint( int( w2 ),      int( h2 + kh ) ),
-                ] )
-            painter.drawPolygon( poly_tri )
-    
-        def Painter_BoundingBox(pin_index: int):
-            # Read
-            dx, dy, dl, dr, dt, db, dw, dh = self.Pin_Draw_Box( pin_index )
-            trz = self.pin_list[pin_index].trz
-
-            # Variables
-            dw2 = dw * 0.5
-            dh2 = dh * 0.5
-            line = 200
-
-            # Bounding Box
-            painter.setPen( QPen( self.color_2, 1, Qt.SolidLine ) )
-            painter.setBrush( QtCore.Qt.NoBrush )
-            painter.drawRect( int( dl ), int( dt ), int( dw ), int( dh ) )
-
-            # Triangle
-            min_tri = 20
-            if ( ww > min_tri and hh > min_tri ):
-                # Variables
-                tri = 10
-                # Scale 1
-                if self.pin_node == 1:
-                    painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
-                else:
-                    painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
-                poly_t1 = QPolygon( [
-                    QPoint( int( dl ),       int( dt ) ),
-                    QPoint( int( dl + tri ), int( dt ) ),
-                    QPoint( int( dl ),       int( dt + tri ) ),
-                    ] )
-                painter.drawPolygon( poly_t1 )
-                # scale 3
-                if self.pin_node == 3:
-                    painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
-                else:
-                    painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
-                poly_t3 = QPolygon( [
-                    QPoint( int( dr ),       int( dt ) ),
-                    QPoint( int( dr ),       int( dt + tri ) ),
-                    QPoint( int( dr - tri ), int( dt ) ),
-                    ] )
-                painter.drawPolygon( poly_t3 )
-                # Scale 7
-                if self.pin_node == 7:
-                    painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
-                else:
-                    painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
-                poly_t7 = QPolygon( [
-                    QPoint( int( dl ),       int( db ) ),
-                    QPoint( int( dl ),       int( db - tri ) ),
-                    QPoint( int( dl + tri ), int( db ) ),
-                    ] )
-                painter.drawPolygon( poly_t7 )
-                # Scale 9
-                if self.pin_node == 9:
-                    painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
-                else:
-                    painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
-                poly_t9 = QPolygon( [
-                    QPoint( int( dr ),       int( db ) ),
-                    QPoint( int( dr - tri ), int( db ) ),
-                    QPoint( int( dr ),       int( db - tri ) ),
-                    ] )
-                painter.drawPolygon( poly_t9 )
-
-            # Squares
-            min_sq = 50
-            if ( ww > min_sq and hh > min_sq ):
-                # Variables
-                sq = 5
-                # Clip 2
-                if self.pin_node == 2:
-                    painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
-                else:
-                    painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
-                poly_s2 = QPolygon( [
-                    QPoint( int( dl + dw2 - sq ), int( dt ) ),
-                    QPoint( int( dl + dw2 - sq ), int( dt + sq ) ),
-                    QPoint( int( dl + dw2 + sq ), int( dt + sq ) ),
-                    QPoint( int( dl + dw2 + sq ), int( dt ) ),
-                    ] )
-                painter.drawPolygon( poly_s2 )
-                # Clip 4
-                if self.pin_node == 4:
-                    painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
-                else:
-                    painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
-                poly_s4 = QPolygon( [
-                    QPoint( int( dl ),      int( dt + dh2 - sq ) ),
-                    QPoint( int( dl + sq ), int( dt + dh2 - sq ) ),
-                    QPoint( int( dl + sq ), int( dt + dh2 + sq ) ),
-                    QPoint( int( dl ),      int( dt + dh2 + sq ) ),
-                    ] )
-                painter.drawPolygon( poly_s4 )
-                # Clip 6
-                if self.pin_node == 6:
-                    painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
-                else:
-                    painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
-                poly_s6 = QPolygon( [
-                    QPoint( int( dr ),      int( dt + dh2 - sq ) ),
-                    QPoint( int( dr - sq ), int( dt + dh2 - sq ) ),
-                    QPoint( int( dr - sq ), int( dt + dh2 + sq ) ),
-                    QPoint( int( dr ),      int( dt + dh2 + sq ) ),
-                    ] )
-                painter.drawPolygon( poly_s6 )
-                # Clip 8
-                if self.pin_node == 8:
-                    painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
-                else:
-                    painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
-                poly_s8 = QPolygon( [
-                    QPoint( int( dl + dw2 - sq ), int( db ) ),
-                    QPoint( int( dl + dw2 - sq ), int( db - sq ) ),
-                    QPoint( int( dl + dw2 + sq ), int( db - sq ) ),
-                    QPoint( int( dl + dw2 + sq ), int( db ) ),
-                    ] )
-                painter.drawPolygon( poly_s8 )
-
-            # Circle
-            min_cir = 30
-            if ( ww > min_cir and hh > min_cir ):
-                cir = 4
-                # Clip 5
-                if self.pin_node == 5:
-                    # Lines
-                    cir_x, cir_y = Trig_2D_Points_Rotate( dl + dw2 , dt + dh2, line, Limit_Looper( trz + 90, 360 ) )
-                    neu_x, neu_y = Trig_2D_Points_Rotate( dl + dw2 , dt + dh2, line, Limit_Looper( 90, 360 ) )
-                    painter.setPen( QPen( self.color_2, 4, Qt.SolidLine ) )
-                    painter.drawLine( int( dl + dw2 ), int( dt + dh2 ), int( cir_x ), int( cir_y ) )
-                    painter.drawLine( int( dl + dw2 ), int( dt + dh2 ), int( neu_x ), int( neu_y ) )
-                    painter.setPen( QPen( self.color_1, 2, Qt.SolidLine ) )
-                    painter.drawLine( int( dl + dw2 ), int( dt + dh2 ), int( cir_x ), int( cir_y ) )
-                    painter.drawLine( int( dl + dw2 ), int( dt + dh2 ), int( neu_x ), int( neu_y ) )
-                    # Circle
-                    painter.setPen( QPen( self.color_2, 1, Qt.SolidLine ) )
-                    painter.setBrush( QBrush( self.color_blue, Qt.SolidPattern ) )
-                    painter.drawEllipse( int( dl + dw2 - cir ), int( dt + dh2 - cir ), int( 2 * cir ), int( 2 * cir ) )
-                else:
-                    painter.setBrush( QBrush( self.color_1, Qt.SolidPattern ) )
-                    painter.drawEllipse( int( dl + dw2 - cir ), int( dt + dh2 - cir ), int( 2 * cir ), int( 2 * cir ) )
-
-
         # Variables
         ww = self.ww
         hh = self.hh
@@ -2626,7 +2607,7 @@ class ReferenceView( QWidget ):
                     painter.drawRect( int( min_x ), int( min_y ), int( max_x - min_x ), int( max_y - min_y ) )
             # Active Nodes
             if ( self.pin_index != None and self.state_select == False and self.state_pack == False ):
-                Painter_BoundingBox( self.pin_index )
+                self.Render_BoundingBox( painter, ww, hh, self.pin_index )
 
         # Cursor Selection Square
         if ( self.state_press == True and self.select_box == True and self.state_pack == False ):
@@ -2658,7 +2639,7 @@ class ReferenceView( QWidget ):
 
         # Drag and Drop Triangle
         if ( self.drop == True and self.drag == False ):
-            Painter_Triangle( painter, w2, h2, side )
+            Paintables.Painter_Triangle( self.color_1, painter, w2, h2, side )
 
         """
         # Packing Points

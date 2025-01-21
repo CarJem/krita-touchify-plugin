@@ -2,27 +2,20 @@ import math
 import zipfile
 from krita import *
 from PyQt5 import QtCore, QtGui
-from ...dataclasses.Clip import Clip
-from ...dataclasses.InsertInfo import InsertInfo
+from ...dataclasses.images import ImageClip, InsertablePin
 from ...extensions.calculations import *
 from ...extensions.color_picker import *
 from ...extensions.native_actions import NativeActions
+from ...extensions.paintables import Paintables
 from .ui.ContextMenu import ContextMenu
 
 class GridView( QWidget ):
-    # General
-    SIGNAL_DRAG = QtCore.pyqtSignal( [ str, Clip ] )
-    SIGNAL_DROP = QtCore.pyqtSignal( list )
     # Grid
     SIGNAL_PREVIEW_REQUESTED = QtCore.pyqtSignal( str )
     SIGNAL_INDEX = QtCore.pyqtSignal( int )
     # Menu
-    SIGNAL_PIN_IMAGE = QtCore.pyqtSignal( [ InsertInfo, Clip ] )
-    SIGNAL_LOCATION = QtCore.pyqtSignal( str )
-    SIGNAL_ANALYSE = QtCore.pyqtSignal( [ QImage ] )
-    SIGNAL_NEW_DOCUMENT = QtCore.pyqtSignal( [ str, Clip ] )
-    SIGNAL_INSERT_LAYER = QtCore.pyqtSignal( [ str, Clip ] )
-    SIGNAL_INSERT_REFERENCE = QtCore.pyqtSignal( [ str, Clip ] )
+    SIGNAL_PIN_IMAGE = QtCore.pyqtSignal( [ InsertablePin, ImageClip ] )
+
 
     # Init
     def __init__( self, parent ):
@@ -69,7 +62,7 @@ class GridView( QWidget ):
         self.tw = 200
         self.th = 200
         # Clip
-        self.clip_false = Clip(False,0,0,1,1)
+        self.clip_false = ImageClip(False,0,0,1,1)
 
         # State
         self.state_maximized = False
@@ -233,7 +226,86 @@ class GridView( QWidget ):
         self.state_press = False
         grid_qpixmap = self.grid_qpixmap[self.giy][self.gix]
         if grid_qpixmap: ContextMenu.OpenContextMenu(self, event)
+
+    #region Render
     
+    def Render_Matrix( self ):
+        if len( self.line_path ) > 0:
+            # Grid Matrix
+            gmx = round( self.ww / self.grid_size )
+            gmy = round( ( self.hh * 0.8 ) / self.grid_size )
+            if gmx <= 0:gmx = 1
+            if gmy <= 0:gmy = 1
+            # Thumbnails
+            self.tw = int( self.ww / gmx )
+            self.th = int( self.hh / gmy )
+
+            # Screen Size
+            screen = self.gmx * self.gmy
+            # Screen Variation
+            if ( self.gmx != gmx or self.gmy != gmy ):
+                self.gmx = gmx
+                self.gmy = gmy
+            # Screen Inercia
+            if self.line_index < self.grid_start:
+                self.grid_start = math.floor( self.line_index / self.gmx ) * self.gmx
+            if self.line_index >= self.grid_end:
+                self.grid_start = math.ceil( ( self.line_index - screen + 1 ) / self.gmx ) * self.gmx
+            # Screen End
+            self.grid_end = self.grid_start + screen
+
+            # Clean
+            margin = 100
+            cs = self.grid_start - margin
+            ce = self.grid_end + margin
+            for i in range( 0, cs ):
+                self.line_qpixmap[i] = None
+            for i in range( ce, len( self.line_qpixmap ) ):
+                self.line_qpixmap[i] = None
+
+            # Construct
+            default = QPixmap()
+            archive = Paintables.Painter_Icon( "bundle_archive" )
+            string = []
+            render = []
+            for i in range( self.grid_start, self.grid_end ):
+                try:
+                    path = self.line_path[i]
+                    qpixmap = self.line_qpixmap[i]
+                    if qpixmap in [ None, False, True ]:
+                        qpixmap = QPixmap( path )
+                        if qpixmap.isNull() == False:
+                            self.line_qpixmap[i] = qpixmap
+                        elif zipfile.is_zipfile( path ) == True:
+                            archive = zipfile.ZipFile( path, "r" )
+                            name_list = archive.namelist()
+                            name_list.sort()
+                            qpixmap = True
+                            for name in name_list:
+                                try:
+                                    if name.split( "." )[1] in self.file_search:
+                                        extract = archive.open( name )
+                                        data = extract.read()
+                                        qpixmap = QPixmap()
+                                        qpixmap.loadFromData( data )
+                                        if qpixmap.isNull() == False:
+                                            self.line_qpixmap[i] = qpixmap
+                                            break
+                                except:
+                                    qpixmap = True
+                        else:
+                            qpixmap = True
+                except:
+                    qpixmap = None
+                string.append( path )
+                render.append( qpixmap )
+
+            # Lists
+            self.grid_path = preview_to_grid( string, self.gmx, self.gmy )
+            self.grid_qpixmap = preview_to_grid( render, self.gmx, self.gmy )
+
+    #endregion
+
     #region Events
     
     def mousePressEvent( self, event ):
@@ -309,10 +381,10 @@ class GridView( QWidget ):
         # Drag Drop
         if self.operation == "drag_drop":
             path = self.grid_path[self.giy][self.gix]       
-            clip = Clip(False, 0, 0, 1, 1)
+            clip = ImageClip(False, 0, 0, 1, 1)
             if path != None:
                 self.drag = True
-                self.SIGNAL_DRAG.emit( path, clip )
+                NativeActions.Drag_Drop(self, path, clip)
 
 
         # Update
@@ -366,7 +438,7 @@ class GridView( QWidget ):
             if ( self.drop == True and self.drag == False ):
                 event.setDropAction( Qt.CopyAction )
                 mime_data = NativeActions.Drop_Inside( event )
-                self.SIGNAL_DROP.emit( mime_data )
+                #TODO: Implement Drop Functionality
             event.accept()
         else:
             event.ignore()
@@ -416,7 +488,7 @@ class GridView( QWidget ):
 
                 # Render
                 qpixmap = self.grid_qpixmap[y][x]
-                broken = self.Painter_Icon( "broken-preset" )
+                broken = Paintables.Painter_Icon( "broken-preset" )
                 render = True
                 if qpixmap in [ None, False, True ]:
                     render = False
@@ -447,138 +519,7 @@ class GridView( QWidget ):
 
         # Drag and Drop Triangle
         if ( self.drop == True and self.drag == False ):
-            self.Painter_Triangle( painter, w2, h2, side )
-
-    #endregion
-
-    #region Painter / Render
-    
-    def Painter_Icon( self, name ):
-        # name = "warning"
-        # Variables
-        image_size = 500
-        icon_size = 200
-        icon_margin = int( ( image_size - icon_size ) * 0.5 )
-        # QPixmap
-        qpixmap = QPixmap( image_size, image_size )
-        qpixmap.fill( Qt.transparent )
-        qicon = Krita.instance().icon( name ).pixmap( QSize( icon_size, icon_size ) )    
-        painter = QPainter( qpixmap )
-        painter.drawPixmap( icon_margin, icon_margin, qicon )
-        painter.end()
-        return qpixmap
-
-    def Painter_Triangle( self, painter, w2, h2, side ):
-        # Painter
-        painter.setPen( QtCore.Qt.NoPen )
-        painter.setBrush( QBrush( QColor( self.color_1 ) ) )
-        # Variables
-        kw = 0.3 * side
-        kh = 0.2 * side
-        d = 0.5
-        # Polygons
-        if self.function_drop_panel == False:
-            poly_tri = QPolygon( [
-                QPoint( int( w2 - kw ), int( h2 - kh ) ),
-                QPoint( int( w2 + kw ), int( h2 - kh ) ),
-                QPoint( int( w2 ),      int( h2 + kh ) ),
-                ] )
-            painter.drawPolygon( poly_tri )
-        if self.function_drop_panel == True:
-            arrow_left = QPolygon( [
-                QPoint( int( w2 - kw * d ),     int( h2 - kh ) ),
-                QPoint( int( w2 ),              int( h2 ) ),
-                QPoint( int( w2 - kw * d ),     int( h2 + kh ) ),
-                QPoint( int( w2 - kw ),         int( h2 + kh ) ),
-                QPoint( int( w2 - kw * d ),     int( h2 ) ),
-                QPoint( int( w2 - kw ),         int( h2 - kh ) ),
-                ] )
-            arrow_right = QPolygon( [
-                QPoint( int( w2 + kw * d ),     int( h2 - kh ) ),
-                QPoint( int( w2 + kw ),         int( h2 ) ),
-                QPoint( int( w2 + kw * d ),     int( h2 + kh ) ),
-                QPoint( int( w2 ),              int( h2 + kh ) ),
-                QPoint( int( w2 + kw * d ),     int( h2 ) ),
-                QPoint( int( w2 ),              int( h2 - kh ) ),
-                ] )
-            painter.drawPolygon( arrow_left )
-            painter.drawPolygon( arrow_right )
-
-    def Render_Matrix( self ):
-        if len( self.line_path ) > 0:
-            # Grid Matrix
-            gmx = round( self.ww / self.grid_size )
-            gmy = round( ( self.hh * 0.8 ) / self.grid_size )
-            if gmx <= 0:gmx = 1
-            if gmy <= 0:gmy = 1
-            # Thumbnails
-            self.tw = int( self.ww / gmx )
-            self.th = int( self.hh / gmy )
-
-            # Screen Size
-            screen = self.gmx * self.gmy
-            # Screen Variation
-            if ( self.gmx != gmx or self.gmy != gmy ):
-                self.gmx = gmx
-                self.gmy = gmy
-            # Screen Inercia
-            if self.line_index < self.grid_start:
-                self.grid_start = math.floor( self.line_index / self.gmx ) * self.gmx
-            if self.line_index >= self.grid_end:
-                self.grid_start = math.ceil( ( self.line_index - screen + 1 ) / self.gmx ) * self.gmx
-            # Screen End
-            self.grid_end = self.grid_start + screen
-
-            # Clean
-            margin = 100
-            cs = self.grid_start - margin
-            ce = self.grid_end + margin
-            for i in range( 0, cs ):
-                self.line_qpixmap[i] = None
-            for i in range( ce, len( self.line_qpixmap ) ):
-                self.line_qpixmap[i] = None
-
-            # Construct
-            default = QPixmap()
-            archive = self.Painter_Icon( "bundle_archive" )
-            string = []
-            render = []
-            for i in range( self.grid_start, self.grid_end ):
-                try:
-                    path = self.line_path[i]
-                    qpixmap = self.line_qpixmap[i]
-                    if qpixmap in [ None, False, True ]:
-                        qpixmap = QPixmap( path )
-                        if qpixmap.isNull() == False:
-                            self.line_qpixmap[i] = qpixmap
-                        elif zipfile.is_zipfile( path ) == True:
-                            archive = zipfile.ZipFile( path, "r" )
-                            name_list = archive.namelist()
-                            name_list.sort()
-                            qpixmap = True
-                            for name in name_list:
-                                try:
-                                    if name.split( "." )[1] in self.file_search:
-                                        extract = archive.open( name )
-                                        data = extract.read()
-                                        qpixmap = QPixmap()
-                                        qpixmap.loadFromData( data )
-                                        if qpixmap.isNull() == False:
-                                            self.line_qpixmap[i] = qpixmap
-                                            break
-                                except:
-                                    qpixmap = True
-                        else:
-                            qpixmap = True
-                except:
-                    qpixmap = None
-                string.append( path )
-                render.append( qpixmap )
-
-            # Lists
-            self.grid_path = preview_to_grid( string, self.gmx, self.gmy )
-            self.grid_qpixmap = preview_to_grid( render, self.gmx, self.gmy )
-
+            Paintables.Painter_Triangle( self.color_1, painter, w2, h2, side )
 
     #endregion
 

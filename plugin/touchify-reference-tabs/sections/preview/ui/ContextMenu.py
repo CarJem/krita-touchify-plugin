@@ -3,8 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from typing import TYPE_CHECKING
 from ....DockerMenu import DockerMenu
-from ....dataclasses.Clip import Clip
-from ....dataclasses.InsertInfo import InsertInfo
+from ....dataclasses.images import ImageClip, InsertablePin
 from ....extensions.native_actions import NativeActions
 if TYPE_CHECKING:
     from ..PreviewView import PreviewView
@@ -21,7 +20,7 @@ class ContextMenu(DockerMenu):
         self.Items_Connect()
 
     def Variables(self):
-        self.clip = Clip(self.view.state_clip,self.view.cl,self.view.ct,self.view.cw,self.view.ch)
+        self.clip = ImageClip(self.view.state_clip,self.view.cl,self.view.ct,self.view.cw,self.view.ch)
 
         self.string_pickcolor = "Picker"
         if self.view.ColorPicker.pigment_o == None:
@@ -175,7 +174,7 @@ class ContextMenu(DockerMenu):
 
         # General
         if action == self.action_pin:
-            pin = InsertInfo(self.view.w2, self.view.h2, self.view.preview_path)
+            pin = InsertablePin(self.view.w2, self.view.h2, self.view.preview_path)
             self.view.SIGNAL_PIN_IMAGE.emit( pin, self.clip )
         if action == self.action_random:
             self.view.SIGNAL_RANDOM.emit()
@@ -184,7 +183,7 @@ class ContextMenu(DockerMenu):
 
         # File
         if action == self.action_file_location:
-            self.view.SIGNAL_LOCATION.emit( self.view.preview_path )
+            NativeActions.File_Location( self.view.preview_path )
         if action == self.action_file_copy:
             NativeActions.Path_Copy( self.view.preview_path )
         if action == self.action_file_information:
@@ -216,15 +215,15 @@ class ContextMenu(DockerMenu):
         if action == self.action_analyse:
             qpixmap = self.view.Draw_Clip( self.view.preview_qpixmap )
             qimage = qpixmap.toImage()
-            self.view.SIGNAL_ANALYSE.emit( qimage )
+            self.view.ColorPicker.Analyse(qimage)
 
         # Insert
         if action == self.action_document:
-            self.view.SIGNAL_NEW_DOCUMENT.emit( self.view.preview_path, self.clip )
+            NativeActions.Insert_Document(self.view.preview_path, self.clip)     
         if action == self.action_insert_layer:
-            self.view.SIGNAL_INSERT_LAYER.emit( self.view.preview_path, self.clip )
+            NativeActions.Insert_Layer(self.view.preview_path, self.clip)     
         if action == self.action_insert_ref:
-            self.view.SIGNAL_INSERT_REFERENCE.emit( self.view.preview_path, self.clip )
+            NativeActions.Insert_Reference(self.view.preview_path, self.clip)     
 
 
     @staticmethod

@@ -2,7 +2,6 @@ from krita import *
 from ...extensions.calculations import *
 from .ReferenceView import ReferenceView
 from ...extensions.filetypes import REFERENCE_FILETYPE_DATA
-from ...extensions.native_actions import NativeActions
 from ...DockerToolbar import DockerToolbar
 from .ui.LabelEditor import LabelEditor
 from .dataclasses.ReferenceState import ReferenceState
@@ -10,8 +9,8 @@ from .dataclasses.ReferencePin import ReferencePin
 from ...extensions.commons import Commons
 from .ReferenceToolbar import ReferenceToolbar
 from .ui.ProgressBar import ProgressBar
-from ...dataclasses.Clip import Clip
-from ...dataclasses.InsertInfo import InsertInfo
+from ...dataclasses.images import InsertablePin
+from ...extensions.commons import Settings
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -27,14 +26,10 @@ class ReferenceSection(QWidget):
         self.Connections()
 
     def Canvas(self):
-        return self.DockerPage.view_widget.docker.canvas()
+        return self.DockerPage.ParentWidget.docker.canvas()
 
     def Variables( self ):
-        self.insert_size = False
-        self.insert_scale = 1 # Photobask legacy
-
         self.ref_state = ReferenceState(self)
-        self.ref_import = False
     
     def Components( self ):
         self.central_layout = QVBoxLayout(self)
@@ -82,22 +77,16 @@ class ReferenceSection(QWidget):
         self.ref_state.SIGNAL_DATA_UNLOADED.connect(self.OnEvent_DataUnloaded)
         self.ref_state.SIGNAL_DATA_SAVE.connect(self.OnEvent_SaveDataRequested)
 
-        self.view.SIGNAL_DRAG.connect( self.OnEvent_DragDrop )
         self.view.SIGNAL_PIN_IMAGE.connect( self.OnEvent_PinImage )
         self.view.SIGNAL_PIN_LABEL.connect( self.OnEvent_PinLabel )
         self.view.SIGNAL_PIN_SAVE.connect( self.OnEvent_PinSave )
         self.view.SIGNAL_BOARD_SAVE.connect( self.OnEvent_SaveDataRecieved)
         self.view.SIGNAL_CAMERA.connect( self.OnEvent_CameraChanged )
-        self.view.SIGNAL_LOCATION.connect( self.OnEvent_FileLocationRequested )
-        self.view.SIGNAL_ANALYSE.connect( self.OnEvent_ColorAnalyseRequested )
-        self.view.SIGNAL_NEW_DOCUMENT.connect( self.OnEvent_NewDocument )
-        self.view.SIGNAL_INSERT_LAYER.connect( self.OnEvent_InsertLayer )
-        self.view.SIGNAL_INSERT_REFERENCE.connect( self.OnEvent_InsertReference )
         self.view.SIGNAL_PB_VALUE.connect( self.OnEvent_ProgressValueChanged )
         self.view.SIGNAL_PB_MAX.connect( self.OnEvent_ProgressMaxChanged )
         self.view.SIGNAL_PACK_STOP.connect( self.OnEvent_ReferencePackStop )
         self.view.SIGNAL_LABEL_PANEL.connect( self.OnEvent_LabelEditorRequest )
-        self.view.SIGNAL_LABEL_INFO.connect( self.label_editor.setInformation )
+        self.view.SIGNAL_LABEL_INFO.connect( self.OnEvent_LabelInfoUpdated )
         self.view.SIGNAL_ACTIONS_UPDATED.connect(self.OnEvent_ActionsUpdated)
         self.view.SIGNAL_PREVIEW_REQUESTED.connect(self.OnEvent_PreviewRequested)
 
@@ -113,15 +102,7 @@ class ReferenceSection(QWidget):
     def Action_PackerStopCycle( self ):
         self.view.Set_Stop_Cycle()
 
-    # Message
-    def Message_Log( self, operation, message ):
-        pass
-        
-    def Message_Warnning( self, operation, message ):
-        pass
 
-    def Message_Float( self, operation, message, icon ):
-        pass
 
     # OnEvent
     def OnEvent_LabelEditorRequest(self, show: bool):
@@ -133,17 +114,11 @@ class ReferenceSection(QWidget):
     def OnEvent_ActionsUpdated(self):
         pass
 
+    def OnEvent_LabelInfoUpdated(self, info: "ReferenceView.LabelInfo"):
+        self.label_editor.setInformation(info)
+
     def OnEvent_CameraChanged( self, ref_position, ref_zoom, len_board ):
         self.ref_state.Data_Update(ref_position, ref_zoom, len_board)
-
-    def OnEvent_ColorAnalyseRequested( self, qimage: QImage ):
-        self.view.ColorPicker.Analyse(qimage)
-
-    def OnEvent_FileLocationRequested( self, image_path: str ):
-        NativeActions.File_Location(image_path)
-    
-    def OnEvent_DragDrop( self, image_path: str, clip: Clip ):
-        NativeActions.Drag_Drop(self, image_path, clip)
         
     def OnEvent_ThemeChanged( self ):
         # Krita Theme
@@ -203,16 +178,7 @@ class ReferenceSection(QWidget):
         else:
             self.footer_panel.setFixedHeight(0)
 
-    def OnEvent_NewDocument(self, path: str, clip: Clip):
-        NativeActions.Insert_Document(path, clip)
-
-    def OnEvent_InsertLayer(self, path: str, clip: Clip):
-        NativeActions.Insert_Layer(path, clip, self.Canvas())
-
-    def OnEvent_InsertReference(self, path: str, clip: Clip):
-        NativeActions.Insert_Reference(path, clip, self.Canvas())     
-
-    def OnEvent_PinImage( self, pin: InsertInfo ):
+    def OnEvent_PinImage( self, pin: InsertablePin ):
         if not self.view.isEnabled(): return
 
         image_path = pin.image_path
@@ -222,13 +188,13 @@ class ReferenceSection(QWidget):
         else:
             self.Pin_Insert( tipo="image", bx=pin.bx, by=pin.by, text=None, path=image_path, web=None )
     
-    def OnEvent_PinLabel( self, pin: InsertInfo ):
+    def OnEvent_PinLabel( self, pin: InsertablePin ):
         self.Pin_Insert( tipo="label", bx=pin.bx, by=pin.by, text="Text", path=None, web=None )
 
     def OnEvent_PinSave( self, qpixmap: QPixmap ):
-        file_dialog = QFileDialog( QWidget( self ) )
-        file_dialog.setFileMode( QFileDialog.AnyFile )
-        file_path = file_dialog.getSaveFileName( self, "Save Pin Location", "", "File( *.png *.jpg *.jpeg *.bmp *.ppm *.xpm *.xbm )" )[0]
+        file_dialog = QFileDialog( self )
+        file_dialog.setFileMode( QFileDialog.FileMode.AnyFile )
+        file_path = file_dialog.getSaveFileName( self, "Save Pin Location", Settings.getFileDialogState(), "File( *.png *.jpg *.jpeg *.bmp *.ppm *.xpm *.xbm )" )[0]
         if file_path not in [ "", ".", None ]: qpixmap.save( file_path )
 
     # Event Overrides
@@ -236,9 +202,6 @@ class ReferenceSection(QWidget):
         self.view.Set_Size(self.refrence_container.width(), self.refrence_container.height() - 4, False)
         return super().resizeEvent(a0)
     
-
-
-
     def Pin_Insert( self, tipo: str, bx: int, by: int, text: str, path: str, web: str ):
         # Variables
         width = 0
@@ -257,7 +220,7 @@ class ReferenceSection(QWidget):
                 width = int( qpixmap.width() )
                 height = int( qpixmap.height() )
             except:
-                self.Message_Warnning( "ERROR", "access failed")
+                Commons.Message_Warnning( "ERROR", "access failed")
         # Label
         if tipo == "label":
             qpixmap = None
@@ -267,7 +230,7 @@ class ReferenceSection(QWidget):
         # Valid Reference Pin
         if ( width > 0 and height > 0 ):
             # Fit
-            if ( tipo == "image" and self.ref_import == False ):
+            if ( tipo == "image" ):
                 side = 200
                 fx = side / width
                 fy = side / height

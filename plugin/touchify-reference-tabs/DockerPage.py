@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from krita import *
-from .dataclasses.InsertInfo import InsertInfo
+from .dataclasses.images import InsertablePin
  
 # Zoom percent constants
 MAX_ZOOM = 800
@@ -53,63 +53,65 @@ if TYPE_CHECKING:
 class DockerPage(QWidget):
     def __init__(self, tab_widget: QTabWidget, view_widget: "DockerWidget"):
         super().__init__(tab_widget)
+        self.setContentsMargins(0,0,0,0)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
 
-        self.tab_menus: DockerMenu = None
-        self.tab_widget = tab_widget
-        self.view_widget = view_widget
+        self.TabMenus: DockerMenu = None
+        self.TabWidget = tab_widget
+        self.ParentWidget = view_widget
+
         self.__current_section = "preview"
 
+        self.__Layout = QVBoxLayout(self)
+        self.__Layout.setSpacing(0)
+        self.setLayout(self.__Layout)
 
-        self.setContentsMargins(0,0,0,0)
-        self.setAttribute(Qt.WA_DeleteOnClose)
-        layout = QVBoxLayout(self)
-        layout.setSpacing(0)
-        self.setLayout(layout)
+        self.ViewSet = QStackedWidget(self)
+        self.ViewSet.setContentsMargins(0,0,0,0)
+        self.__Layout.addWidget(self.ViewSet)
 
-        self.view = QStackedWidget(self)
-        self.view.setContentsMargins(0,0,0,0)
-        layout.addWidget(self.view)
+        self.ToolPanel = QStackedWidget(self)
+        self.ToolPanel.setContentsMargins(0,0,0,0)
 
-        self.toolView = QStackedWidget(self)
-        self.toolView.setContentsMargins(0,0,0,0)
+        self.PreviewSection = PreviewSection(self)
+        self.PreviewMenu = PreviewMenu(self.PreviewSection, self)
+        self.ViewSet.addWidget(self.PreviewSection)
+        self.ToolPanel.addWidget(self.PreviewSection.tool_panel)
 
-        self.preview_section = PreviewSection(self)
-        self.preview_menu = PreviewMenu(self.preview_section, self)
-        self.view.addWidget(self.preview_section)
-        self.toolView.addWidget(self.preview_section.tool_panel)
-
-        self.grid_section = GridSection(self)
-        self.grid_menu = GridMenu(self.grid_section, self)
-        self.view.addWidget(self.grid_section)
-        self.toolView.addWidget(self.grid_section.tool_panel)
+        self.GridSection = GridSection(self)
+        self.GridMenu = GridMenu(self.GridSection, self)
+        self.ViewSet.addWidget(self.GridSection)
+        self.ToolPanel.addWidget(self.GridSection.tool_panel)
 
         self.ReferenceSection = ReferenceSection(self)
-        self.reference_menu = ReferenceMenu(self.ReferenceSection, self)
-        self.view.addWidget(self.ReferenceSection)
-        self.toolView.addWidget(self.ReferenceSection.tool_panel)
+        self.ReferenceMenu = ReferenceMenu(self.ReferenceSection, self)
+        self.ViewSet.addWidget(self.ReferenceSection)
+        self.ToolPanel.addWidget(self.ReferenceSection.tool_panel)
 
-        self.selection_box = QPushButton(self)
-        self.selection_box.setIcon(PREVIEW_SECTION_ICON)
-        self.selection_box_menu = QMenu(self.selection_box)
-        self.selection_box.setMenu(self.selection_box_menu)
-        self.selection_box.clicked.connect(self.selection_box.showMenu)
+        self.ViewSetButton = QPushButton(self)
+        self.ViewSetButton.setIcon(PREVIEW_SECTION_ICON)
+        self.ViewSetButton.clicked.connect(self.ViewSetButton.showMenu)
+        self.ViewSetButtonMenu = QMenu(self.ViewSetButton)
+        self.ViewSetButton.setMenu(self.ViewSetButtonMenu)
 
-        self.toolLayout = DockerToolbar(self)
-        self.toolLayout.setFixedHeight(25)
-        self.toolLayout.widgetLayout.setSpacing(4)
-        self.toolLayout.addWidget(self.selection_box)
-        self.toolLayout.addWidget(self.toolView, stretch=1)
-        layout.addWidget(self.toolLayout)
+        self.ToolLayout = DockerToolbar(self)
+        self.ToolLayout.setFixedHeight(25)
+        self.ToolLayout.widgetLayout.setSpacing(4)
+        self.ToolLayout.addWidget(self.ViewSetButton)
+        self.ToolLayout.addWidget(self.ToolPanel, stretch=1)
+        self.__Layout.addWidget(self.ToolLayout)
         
-        previewAction = self.selection_box_menu.addAction(PREVIEW_SECTION_ICON, "Preview")
-        previewAction.setIconVisibleInMenu(True)
-        previewAction.triggered.connect(lambda: self.changeSection("preview"))
-        gridAction = self.selection_box_menu.addAction(GRID_SECTION_ICON, "Grid")
-        gridAction.setIconVisibleInMenu(True)
-        gridAction.triggered.connect(lambda: self.changeSection("grid"))
-        referenceAction = self.selection_box_menu.addAction(REFERENCE_SECTION_ICON, "Reference")
-        referenceAction.setIconVisibleInMenu(True)
-        referenceAction.triggered.connect(lambda: self.changeSection("reference"))
+        __PreviewAction = self.ViewSetButtonMenu.addAction(PREVIEW_SECTION_ICON, "Preview")
+        __PreviewAction.setIconVisibleInMenu(True)
+        __PreviewAction.triggered.connect(lambda: self.changeSection("preview"))
+
+        __GridAction = self.ViewSetButtonMenu.addAction(GRID_SECTION_ICON, "Grid")
+        __GridAction.setIconVisibleInMenu(True)
+        __GridAction.triggered.connect(lambda: self.changeSection("grid"))
+        
+        __ReferenceAction = self.ViewSetButtonMenu.addAction(REFERENCE_SECTION_ICON, "Reference")
+        __ReferenceAction.setIconVisibleInMenu(True)
+        __ReferenceAction.triggered.connect(lambda: self.changeSection("reference"))
 
         self.changeSection("preview")
 
@@ -119,10 +121,10 @@ class DockerPage(QWidget):
     def setToolbarVisibile(self, boolean: bool):
         if boolean:
             self.ReferenceSection.setToolbarVisibile(True)
-            self.toolLayout.setVisible(True)
+            self.ToolLayout.setVisible(True)
         else:
             self.ReferenceSection.setToolbarVisibile(False)
-            self.toolLayout.setVisible(False)
+            self.ToolLayout.setVisible(False)
 
 
     def OpenPreviousPage(self):
@@ -133,49 +135,45 @@ class DockerPage(QWidget):
 
     def OpenGrid(self, dirPath: str):
         self.changeSection("grid")
-        self.grid_section.changePath(dirPath)
+        self.GridSection.changePath(dirPath)
 
     def OpenPreview(self, imgPath: str=None, pixmap: QPixmap = None):
         if imgPath != None:
             self.changeSection("preview")
-            self.preview_section.Action_OpenImage(imgPath)
+            self.PreviewSection.Action_OpenImage(imgPath)
         elif pixmap != None:
             self.changeSection("preview")
-            self.preview_section.Action_OpenQPixmap(pixmap)
+            self.PreviewSection.Action_OpenQPixmap(pixmap)
 
-    def PinImage(self, pin: InsertInfo):
-        if self.ReferenceSection.view.isEnabled():
-            self.ReferenceSection.OnEvent_PinImage(pin)
-        
-
-
+    def PinImage(self, pin: InsertablePin):
+        self.ReferenceSection.OnEvent_PinImage(pin)
 
     def onTabActivated(self):
-        self.view_widget.updateSectionMenus(self.tab_menus)
+        self.ParentWidget.updateSectionMenus(self.TabMenus)
 
     def onTabDeactivated(self):
-        self.view_widget.updateSectionMenus(None)
+        self.ParentWidget.updateSectionMenus(None)
 
     def updateTabMenus(self):
-        if self.tab_menus: self.tab_menus.updateMenus()
+        if self.TabMenus: self.TabMenus.updateMenus()
         
     def changeSection(self, section: str):
         def switchTo(icon: QIcon, source: GridSection | PreviewSection, menu: DockerMenu | None = None):
             self.__current_section = section
-            self.tab_menus = menu
-            self.view_widget.updateSectionMenus(self.tab_menus)
-            self.view.setCurrentWidget(source)
-            self.toolView.setCurrentIndex(self.view.currentIndex())
-            self.selection_box.setIcon(icon)
-            self.view_widget.updateMenuActions()
+            self.TabMenus = menu
+            self.ParentWidget.updateSectionMenus(self.TabMenus)
+            self.ViewSet.setCurrentWidget(source)
+            self.ToolPanel.setCurrentIndex(self.ViewSet.currentIndex())
+            self.ViewSetButton.setIcon(icon)
+            self.ParentWidget.updateMenuActions()
 
         match section:
             case "preview":
-                switchTo(PREVIEW_SECTION_ICON, self.preview_section, self.preview_menu)
+                switchTo(PREVIEW_SECTION_ICON, self.PreviewSection, self.PreviewMenu)
             case "grid":
-                switchTo(GRID_SECTION_ICON, self.grid_section, self.grid_menu)
+                switchTo(GRID_SECTION_ICON, self.GridSection, self.GridMenu)
             case "reference":
-                switchTo(REFERENCE_SECTION_ICON, self.ReferenceSection, self.reference_menu)
+                switchTo(REFERENCE_SECTION_ICON, self.ReferenceSection, self.ReferenceMenu)
                 pass
 
         
