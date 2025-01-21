@@ -14,448 +14,182 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import Qt, QPointF, QRectF
-from PyQt5.QtGui import QImage, QPixmap, QPalette
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QSpinBox, QToolButton, QPushButton, \
-                            QColorDialog, QDialog, QGraphicsScene, QGraphicsPixmapItem, qApp
-from math import radians, sin, cos
+import pathlib
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, qApp
+from ...extensions.filetypes import REFERENCE_FILETYPE_DATA
 from krita import *
+from ...extensions.commons import Commons
  
 # Zoom percent constants
-MAX_ZOOM = 800
-MIN_ZOOM = 10
-ZOOM_STEP = 10
+MAX_ZOOM = 2000
+MIN_ZOOM = 100
+ZOOM_STEP = 100
 
 useAngleSelector = True
 
-from touchify.src.components.krita.ui.KisAngleSelector import KisAngleSelector as AngleSelector
 from .PreviewView import PreviewView
-
-
-from krita import ManagedColor
+from ...extensions.native_actions import NativeActions
+from ...dataclasses.InsertInfo import InsertInfo
+from ...dataclasses.Clip import Clip
 from ...DockerToolbar import DockerToolbar
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ...DockerPage import DockerPage
 
 class PreviewSection(QWidget):
 
-    def __init__(self, parent=None, flags=None):
-
+    def __init__(self, parent: "DockerPage"):
         super().__init__(parent)
-        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.DockerPage: "DockerPage" = parent
+        self.Variables()
+        self.Components()
+        self.Connections()
+
+    def Canvas(self):
+        return self.DockerPage.view_widget.docker.canvas()
+
+    def Variables( self ):
+        self.fitSetting = 1
+        self.scalingMode = 1
+
+    def Components( self ):
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(0,0,0,4)
+        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setContentsMargins(0,0,0,0)
         self.setLayout(layout)
         self.setAcceptDrops(True)
 
-        # variables
-        self.previous_scale_factor = 1.0
-        self.zoomMode = False
-        self.panMode = False
-        self.rotateMode = False
-        self.prevMousePos = False
-        self.fitSetting = 1
-        self.scalingMode = 1
-        self.isSamplingColor = False
+        self.preview_container = QWidget(self)
+        self.preview_container.setContentsMargins(0,0,0,0)
+        layout.addWidget(self.preview_container)
 
-        # Layout init:
-        # - image
-        # Custom class for a hacky way to make sure input events are sent to the right place
-        self.view = PreviewView(self) #QGraphicsView()
-        self.view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        # Disabling interactive mode prevents it from taking the drop events
-        self.view.setInteractive(False)
-        self.scene = QGraphicsScene()
-        self.view.setScene(self.scene)
-        self.imageItem = QGraphicsPixmapItem()
-        self.scene.addItem(self.imageItem)
+        self.view = PreviewView(self.preview_container) 
+        self.view.setContentsMargins(0,0,0,0)
 
-        # For consistency with previous plugin behavior;
-        # otherwise defaults to the base color.
-        self.setBackgroundColor(qApp.palette().window().color())
-
-        # - zoom level
-        self.zoomSpinBox = QSpinBox()
-        self.zoomSpinBox.setRange(MIN_ZOOM, MAX_ZOOM)
-        self.zoomSpinBox.setSingleStep(ZOOM_STEP)
-        self.zoomSpinBox.setSuffix("%")
-        self.zoomSpinBox.setValue(99) # workaround to make sure 100% mode gets initialized properly
-        self.zoomSpinBox.setToolTip("Zoom")
-        self.zoomSpinBox.valueChanged.connect(self.reloadTransforms)
-
-        # - page fit status
-        self.fitButton = QToolButton(self)
-        self.fitButton.setIcon(Krita.instance().icon("zoom-fit"))
-        self.fitButton.setToolTip("Fit to page")
-        self.fitButton.setCheckable(True)
-        self.fitButton.setChecked(False)
-        self.fitButton.toggled.connect(self.enactFit)
-
-        # - hmirrored status
-        self.hMirrorButton = QToolButton(self)
-        self.hMirrorButton.setIcon(Krita.instance().icon("transform_icons_mirror_x"))
-        self.hMirrorButton.setToolTip("Horizontal mirroring")
-        self.hMirrorButton.setCheckable(True)
-        self.hMirrorButton.setChecked(False)
-        self.hMirrorButton.toggled.connect(self.reloadTransforms)
-
-        # - vmirrored status
-        self.vMirrorButton = QToolButton(self)
-        self.vMirrorButton.setIcon(Krita.instance().icon("transform_icons_mirror_y"))
-        self.vMirrorButton.setToolTip("Vertical mirroring")
-        self.vMirrorButton.setCheckable(True)
-        self.vMirrorButton.setChecked(False)
-        self.vMirrorButton.toggled.connect(self.reloadTransforms)
-
-        # - rotate status
-        self.rotateSelector = AngleSelector()
-        self.rotateSelector.setFlipOptionsMode("ContextMenu")
-        self.rotateSelector.angleChanged.connect(self.reloadTransforms)
-
-
-        self.centerButton = QPushButton()
-        self.centerButton.setToolTip("Center view")
-        self.centerButton.pressed.connect(self.action_centerView)
-        self.view.horizontalScrollBar().rangeChanged.connect(self.action_toggleEnableCenterScroll)
-        self.view.verticalScrollBar().rangeChanged.connect(self.action_toggleEnableCenterScroll)
-        self.centerButton.setEnabled(False)
-
-        # - color picker
-        self.colorSamplerButton = QToolButton(self)
-        self.colorSamplerButton.setIcon(Krita.instance().icon("krita_tool_color_sampler"))
-        self.colorSamplerButton.setToolTip("Sample color from image")
-        self.colorSamplerButton.setCheckable(True)
-        self.colorSamplerButton.setChecked(False)
-        self.colorSamplerButton.toggled.connect(self.action_toggleSampleColor)
-        self.colorSamplerButton.setEnabled(False)
-
-        # add to layout
-        self.view.setCornerWidget(self.centerButton)
-        layout.addWidget(self.view)
-        self.view.setVisible(True)
-        #
         self.tool_panel = DockerToolbar(self, Qt.Orientation.Horizontal)
         self.tool_panel.setFixedHeight(25)
-        self.tool_panel.addWidget(self.zoomSpinBox, stretch=1)
-        self.tool_panel.addWidget(self.fitButton)
-        self.tool_panel.addWidget(self.hMirrorButton)
-        self.tool_panel.addWidget(self.vMirrorButton)
-        self.tool_panel.addWidget(self.rotateSelector, stretch=0)
-        self.tool_panel.addWidget(self.colorSamplerButton)
 
-        self.toggleButtonsEnabled(False)
+    def Connections( self ):
+        qApp.paletteChanged.connect(self.OnEvent_ThemeChanged)
+        self.OnEvent_ThemeChanged()
+
+        self.view.SIGNAL_INCREMENT.connect(self.OnEvent_Increment)
+        self.view.SIGNAL_DROP.connect( self.OnEvent_Drop )
+        self.view.SIGNAL_DRAG.connect( self.OnEvent_DragDrop )
+        self.view.SIGNAL_PIN_IMAGE.connect( self.OnEvent_PinImage )
+        self.view.SIGNAL_LOCATION.connect( self.OnEvent_FileLocationRequested )
+        self.view.SIGNAL_ANALYSE.connect( self.OnEvent_ColorAnalyseRequested )
+        self.view.SIGNAL_NEW_DOCUMENT.connect( self.OnEvent_NewDocument )
+        self.view.SIGNAL_INSERT_LAYER.connect( self.OnEvent_InsertLayer )
+        self.view.SIGNAL_INSERT_REFERENCE.connect( self.OnEvent_InsertReference )
+        self.view.SIGNAL_RETURN_REQUESTED.connect(self.OnEvent_ReturnRequested)
 
 
+    # OnEvent
 
-    def openImage(self, filePath: str):
-        reader = QImageReader(filePath)
-        # Automatically use rotation metadata (typically found in photographs)
-        reader.setAutoTransform(True)
-        image = reader.read()
-        if image.isNull(): return
-        
-        self.setImage(image)
-        self.setFit(True)
-
-    def openPixmap(self, pixmap: QPixmap):
-        image = pixmap.toImage()
-        if image.isNull(): return
-
-        self.setImage(image)
-        self.setFit(True)
-
-    #region UI Functions
-    
-    def toggleButtonsEnabled(self, value):
-        self.zoomSpinBox.setEnabled(value)
-        self.fitButton.setEnabled(value)
-        self.hMirrorButton.setEnabled(value)
-        self.vMirrorButton.setEnabled(value)
-        self.rotateSelector.setEnabled(value)
-        self.colorSamplerButton.setEnabled(value)
-    
-    #endregion
-
-    #region Transform Functions
-    def zoomBy(self, deltaX, deltaY):
-        currentZoom = self.zoomSpinBox.value()
-        viewSize = self.view.maximumViewportSize()
-        zoomX = 100 * deltaX / viewSize.width()
-        zoomY = 100 * deltaY / viewSize.height()
-        # Inverted: Mouse up/left zooms in, down/right zooms out
-        self.setZoom(currentZoom - int(zoomX + zoomY))
-        
-    def viewPos(self):
-        hBar = self.view.horizontalScrollBar()
-        vBar = self.view.verticalScrollBar()
-        return QPoint(hBar.value(), vBar.value())
-        
-    
-    def panBy(self, deltaX, deltaY):
-        hBar = self.view.horizontalScrollBar()
-        vBar = self.view.verticalScrollBar()
-        viewSize = self.view.maximumViewportSize()
-        # Inverted: Mouse up/left moves scrollbar to the bottom/right
-        hBar.setValue(hBar.value() - int(deltaX / viewSize.width() * hBar.maximum()))
-        vBar.setValue(vBar.value() - int(deltaY / viewSize.height() * vBar.maximum()))
-    
-    def rotateBy(self, deltaX, deltaY):
-        currentRotation = self.getRotation()
-        # From 90 to 270, increasing = left instead of right
-        if 90 <= currentRotation < 270:
-            deltaX *= -1
-        # From 180 to 360, increasing = up instead of down
-        if 180 <= currentRotation < 360:
-            deltaY *= -1
-        self.setRotation(currentRotation + deltaX + deltaY)
-        
-    def updateScale(self, value):
-        factor = value * 100
-        self.zoomSpinBox.setValue(self.zoomSpinBox.value() + factor)
-    
-    def scaleToFit(self):
-        """ get the available size and scale it to fit"""
-        if not self.imageItem.pixmap():
-            return
-
-        max_x = self.view.maximumViewportSize().width()
-        max_y = self.view.maximumViewportSize().height()
-        # Need to account for the rotated dimensions
-        rotatedRect = self.rotateRect()
-        image_x = rotatedRect.width()
-        image_y = rotatedRect.height()
-
-        scale_x = max_x/image_x
-        scale_y = max_y/image_y
-        
-        scale = 1
-        if self.fitSetting == 1:
-            scale = scale_x
-            if scale_y < scale_x:
-                scale = scale_y
-        elif self.fitSetting == 2:
-            scale = scale_x
-        elif self.fitSetting == 3:
-            scale = scale_y
-
-        self.setZoom(int(scale*100))
-    
-    def enactFit(self):
-        if self.fitButton.isChecked():
-            if self.fitSetting == 4:
-                self.setZoom(100)
+    def OnEvent_Drop(self, lista):
+        if len( lista ) > 0:
+            # Variables
+            item = lista[0]
+            # Check Source
+            check_html = Commons.Check_Html( item )
+            if check_html == True:
+                self.Action_OpenInternet( item )
             else:
-                self.scaleToFit()
-                # ...we flag that it is set to fit afterward
-                self.setFit(True)
+                # Checks
+                item = os.path.abspath( item )
+                check_dir = os.path.isdir( item )
+                check_file = os.path.isfile( item )
+
+                if item and check_file:
+                    self.Action_OpenImage(item)
+
+    def OnEvent_Increment(self, value: int):
+        pass
+
+    def OnEvent_ColorAnalyseRequested( self, qimage: QImage ):
+        self.view.ColorPicker.Analyse(qimage)
+
+    def OnEvent_FileLocationRequested( self, image_path: str ):
+        NativeActions.File_Location(image_path)
     
-    def reloadPan(self, old_x: int, old_y: int, old_x_max: int, old_y_max: int):
-        hBar = self.view.horizontalScrollBar()
-        vBar = self.view.verticalScrollBar()
+    def OnEvent_DragDrop( self, image_path: str, clip: Clip ):
+        NativeActions.Drag_Drop(self, image_path, clip)
         
-        x_diff = hBar.maximum() - old_x_max
-        new_x = old_x + int(x_diff / 2)
-        
-        y_diff = vBar.maximum() - old_y_max
-        new_y = old_y + int(y_diff / 2)
-        
-        hBar.setValue(new_x)
-        vBar.setValue(new_y)  
-    
-    def reloadTransforms(self):
-        
-        hBar = self.view.horizontalScrollBar()
-        vBar = self.view.verticalScrollBar()
-        
-        x_pos, y_pos, x_max, y_max = (hBar.value(), vBar.value(), hBar.maximum(), vBar.maximum())
-        
-        self.view.resetTransform()        
-        scale = self.zoomSpinBox.value() / 100
-        scaleX = scale if not self.hMirrorButton.isChecked() else -scale
-        scaleY = scale if not self.vMirrorButton.isChecked() else -scale
-        self.view.rotate(self.getRotation())
-        self.view.scale(scaleX, scaleY)
-        self.reloadPan(x_pos, y_pos, x_max, y_max)
-        # we don't know if it's fitting the window, unless...
-        self.setFit(False)
-    
-    #endregion
-
-    #region Events
-
-    def dragEnterEvent(self, event: QDragEnterEvent):
-        if event.mimeData().hasUrls():
-            event.acceptProposedAction()
-
-    def dropEvent(self, event: QDropEvent):
-        filePaths = event.mimeData().urls()
-        # for now, always open in new tab
-        for path in filePaths:
-            # toLocalFile removes "file:///" on Windows
-            # and "file://" on other OSes
-            self.openImage(path.toLocalFile())
-    
-    def keyPressEvent(self, event: QKeyEvent):
-        if event.key() == Qt.Key.Key_Space:
-            if event.modifiers() == Qt.KeyboardModifier.NoModifier:
-                self.panMode = True
-            elif event.modifiers() == Qt.KeyboardModifier.ControlModifier:
-                self.zoomMode = True
-            elif event.modifiers() == Qt.KeyboardModifier.ShiftModifier:
-                self.rotateMode = True
-
-        return super().keyPressEvent(event)
-
-    def keyReleaseEvent(self, event: QKeyEvent):
-        if event.key() == Qt.Key.Key_Space:
-            self.zoomMode = False
-            self.panMode = False
-            self.rotateMode = False
-            self.prevMousePos = False
-
-        return super().keyReleaseEvent(event)
-
-    def mouseMoveEvent(self, event: QMouseEvent):
-        if self.zoomMode or self.panMode or self.rotateMode:
-            if self.prevMousePos:
-                deltaMousePosX = event.pos().x() - self.prevMousePos.x()
-                deltaMousePosY = event.pos().y() - self.prevMousePos.y()
-                if self.zoomMode:
-                    self.zoomBy(deltaMousePosX, deltaMousePosY)
-                elif self.panMode:
-                    self.panBy(deltaMousePosX, deltaMousePosY)
-                elif self.rotateMode:
-                    self.rotateBy(deltaMousePosX, deltaMousePosY)
-            self.prevMousePos = event.pos()
-        elif self.isSamplingColor:
-            self.selectColor(self.getColorAt(event.pos()))
-
-    def mouseReleaseEvent(self, event: QMouseEvent):
-        if (self.isSamplingColor):
-            self.colorSamplerButton.setChecked(False)
-            self.selectColor(self.getColorAt(event.pos()))
-            
-    def resizeEvent(self, event):
-        # if it should fit, resize it
-        if not self.fitSetting == 4:
-            self.enactFit()
-    
-    #endregion
-    
-    #region Color Functions
-    
-    def getColorAt(self, pos):
-        return self.view.getColorAt(pos)
-
-    def selectColor(self, color):
-        color = ManagedColor.fromQColor(color)
-        Krita.instance().activeWindow().activeView().setForeGroundColor(color)
-
-    #endregion
-
-    #region Calculation Functions
-    
-    def rotateRect(self):
-        rads = radians(self.getRotation())
-        c = cos(rads)
-        s = sin(rads)
-        def rotatePt(x, y):
-            x2 = x * c - y * s
-            y2 = x * s + y * c
-            return QPointF(x2, y2)
-        # Put 0,0 as the center
-        halfWidth = self.imageItem.pixmap().width() / 2
-        halfHeight = self.imageItem.pixmap().height() / 2
-        pts = [rotatePt(-halfWidth, -halfHeight), rotatePt(halfWidth, -halfHeight),
-               rotatePt(-halfWidth, halfHeight), rotatePt(halfWidth, halfHeight)]
-        # Make a copy, not a reference...
-        smallPt = QPointF(pts[0])
-        largePt = QPointF(pts[0])
-        for pt in pts[1:]:
-            if pt.x() < smallPt.x():
-                smallPt.setX(pt.x())
-            if pt.y() < smallPt.y():
-                smallPt.setY(pt.y())
-            if pt.x() > largePt.x():
-                largePt.setX(pt.x())
-            if pt.y() > largePt.y():
-                largePt.setY(pt.y())
-        rotatedRect = QRectF(smallPt, largePt)
-        # Put back to 0,0 as topleft
-        # (unneeded as we are only using the width/height)
-        #rotatedRect.translate(-smallPt)
-
-        return rotatedRect
-
-    #endregion
-    
-    #region Get / Set
-    
-    def getZoom(self):
-        return self.zoomSpinBox.value()
-    
-    def setZoom(self, value):
-        self.zoomSpinBox.setValue(value)
-
-    def setFit(self, value):
-        self.fitButton.setChecked(value)
-
-    def setImage(self,image=QImage()):
-        self.imageItem.setPixmap(QPixmap.fromImage(image))
-        self.toggleButtonsEnabled(image != QImage())
-        
-    def setRotation(self, angle):
-        self.rotateSelector.setAngle(angle)
-        
-    def getRotation(self):
-        return self.rotateSelector.angle()
-
-    def getBackgroundColor(self):
-        return self.view.palette().base().color()
-
-    def setBackgroundColor(self, color):
-        palette = self.view.palette()
-        palette.setColor(QPalette.ColorRole.Base, color)
-        self.view.setPalette(palette)
-    
-    #endregion
-    
-    #region Action Functions
-
-    def action_changeFitSetting(self, setting):
-        self.fitSetting = setting
-    
-    def action_changeScaleSetting(self, setting):
-        self.scalingMode = setting
-        if setting == 1:
-            self.imageItem.setTransformationMode(Qt.SmoothTransformation)
-        elif setting == 2:
-            self.imageItem.setTransformationMode(Qt.FastTransformation)
-
-    def action_toggleEnableCenterScroll(self, min, max):
-        hBar = self.view.horizontalScrollBar()
-        vBar = self.view.verticalScrollBar()
-        if hBar.maximum() == 0 and vBar.maximum() == 0:
-            self.centerButton.setEnabled(False)
+    def OnEvent_ThemeChanged( self ):
+        # Krita Theme
+        theme_value = QApplication.palette().color( QPalette.Window ).value()
+        if theme_value > 128:
+            self.color_1 = QColor( "#191919" )
+            self.color_2 = QColor( "#e5e5e5" )
         else:
-            self.centerButton.setEnabled(True)
+            self.color_1 = QColor( "#e5e5e5" )
+            self.color_2 = QColor( "#191919" )
+        # Update
+        self.view.Set_Theme( self.color_1, self.color_2 )
+
+    def OnEvent_NewDocument(self, path: str, clip: Clip):
+        NativeActions.Insert_Document(path, clip)
+
+    def OnEvent_InsertLayer(self, path: str, clip: Clip):
+        NativeActions.Insert_Layer(path, clip, self.Canvas())
+
+    def OnEvent_InsertReference(self, path: str, clip: Clip):
+        NativeActions.Insert_Reference(path, clip, self.Canvas())     
+
+    def OnEvent_PinImage( self, pin: InsertInfo ):
+        self.DockerPage.PinImage(pin)
     
-    def action_toggleSampleColor(self, value):
-        self.isSamplingColor = value
-    
-    def action_centerView(self):
-        hBar = self.view.horizontalScrollBar()
-        vBar = self.view.verticalScrollBar()
-        hBar.setValue(int(hBar.maximum()/2))
-        vBar.setValue(int(vBar.maximum()/2))
+    def OnEvent_ReturnRequested(self):
+        self.DockerPage.OpenPreviousPage()
+
+    def Action_ChangeScaleSetting(self, setting):
+        self.scalingMode = setting
+        if setting == 1:  self.view.Set_Scale_Method(Qt.TransformationMode.SmoothTransformation)
+        elif setting == 2: self.view.Set_Scale_Method(Qt.TransformationMode.FastTransformation)
+
+    def Action_OpenInternet(self, url: str):
+        qpixmap = Commons.Download_QPixmap( url )
+        if qpixmap: self.Action_OpenQPixmap(qpixmap)
+
+    def Action_OpenImage(self, image_path: str):
+        def File_Extension( path ):
+            if path == None:
+                extension = None
+            else:
+                extension = pathlib.Path( path ).suffix
+                extension = extension.replace( ".", "" )
+            return extension
         
-    def action_changeBackgroundColor(self):
-        oldColor = self.getBackgroundColor()
-        colorPicker = QColorDialog(oldColor)
-        colorPicker.currentColorChanged.connect(self.setBackgroundColor)
-        result = colorPicker.exec()
-        if result == QDialog.DialogCode.Rejected:
-            self.setBackgroundColor(oldColor)
+        file_anima = REFERENCE_FILETYPE_DATA["file_anima"]
+        file_compact = REFERENCE_FILETYPE_DATA["file_compact"]
+
+        extension = File_Extension( image_path )
+
+        if extension in file_anima:
+            self.view.Display_Animation( image_path )
+
+        elif extension in file_compact:
+            self.preview_state = "COMPACT"
+            self.view.Display_Compact( image_path )
+
+        else:
+            self.preview_state = "STATIC"
+            self.view.Display_Path( image_path )
+
+    def Action_OpenQPixmap(self, pixmap: QPixmap):
+        self.view.Display_QPixmap(pixmap)
     
-    #endregion
+    def resizeEvent(self, event):
+        self.view.Set_Size(self.preview_container.width(), self.preview_container.height(), False)
+        super().resizeEvent(event)
+    
+
+    
+
 
 
 

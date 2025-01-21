@@ -1,12 +1,8 @@
-# Python
-# Krita
 from krita import *
-# PyQt5
 from PyQt5 import QtCore
-# Imagine Board
-from .ReferenceCalc import *
+from ....extensions.calculations import *
 
-class ReferencePacker( QObject ):
+class Packer( QObject ):
 
     # Run Packer
     def run( self, source, mode, method ):

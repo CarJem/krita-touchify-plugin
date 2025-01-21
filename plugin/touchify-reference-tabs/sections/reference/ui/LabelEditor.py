@@ -1,13 +1,14 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from typing import TYPE_CHECKING
-from .ReferenceColorPicker import *
+from ....extensions.color_picker import *
 from touchify.src.components.pyqt.widgets.ColorButton import ColorButton
 
 if TYPE_CHECKING:
-    from .ReferenceSection import ReferenceSection
+    from ..ReferenceSection import ReferenceSection
+    from ..ReferenceView import ReferenceView
 
-class ReferenceLabelEditor(QWidget):
+class LabelEditor(QWidget):
     SIGNAL_VISIBILITY_CHANGED = pyqtSignal()
 
     def __init__(self, parent: "ReferenceSection"):
@@ -83,28 +84,28 @@ class ReferenceLabelEditor(QWidget):
         self.SIGNAL_VISIBILITY_CHANGED.emit()
         return super().showEvent(a0)
     
-    def view(self):
+    def RefState(self):
         return self.section_parent.view
 
-    def setInformation(self, info: dict):
+    def setInformation(self, info: "ReferenceView.LabelInfo"):
         # Signals
         self.label_font.blockSignals( True )
         self.label_letter.blockSignals( True )
         self.label_pen.blockSignals( True )
         self.label_bg.blockSignals( True )
 
-        if len(info) != 0:
+        if info.valid:
             self.label_text.setEnabled( True )
             self.label_font.setEnabled( True )
             self.label_letter.setEnabled( True )
             self.label_pen.setEnabled( True )
             self.label_bg.setEnabled( True )
             # Variables
-            info_text = info["text"]
-            info_font = info["font"]
-            info_letter = info["letter"]
-            info_pen = info["pen"]
-            info_bg = info["bg"]
+            info_text = info.text
+            info_font = info.font
+            info_letter = info.letter
+            info_pen = info.pen
+            info_bg = info.bg
             # ToolTip
             self.label_font.setCurrentText( info_font )
             self.label_letter.setValue( info_letter )
@@ -127,25 +128,25 @@ class ReferenceLabelEditor(QWidget):
         self.label_bg.blockSignals( False )
 
     def updateLabelText( self ):
-        previous = self.view().Get_Label_Infomation()
+        previous = self.RefState().Get_Label_Infomation()
         if previous != None:
             string, ok = QInputDialog.getMultiLineText( self, "Input Text", "Input Text", previous["text"] )
             if ( ok == True and string != None ):
-                self.view().Set_Label_Text( string )
+                self.RefState().Set_Label_Text( string )
 
     def updateLabelFont( self, font ):
-        self.view().Set_Label_Font( font )
+        self.RefState().Set_Label_Font( font )
 
     def updateLabelSize( self, letter ):
-        self.view().Set_Label_Letter( letter )
+        self.RefState().Set_Label_Letter( letter )
 
     def updateLabelForeground( self, qcolor: QColor ):
         hex_code = qcolor.name()
-        self.view().Set_Label_Pen( hex_code )
+        self.RefState().Set_Label_Pen( hex_code )
 
     def updateLabelBackground( self, qcolor: QColor ):
         hex_code = qcolor.name()
-        self.view().Set_Label_Bg( hex_code )
+        self.RefState().Set_Label_Bg( hex_code )
 
 
         

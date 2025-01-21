@@ -1,0 +1,232 @@
+import subprocess
+from krita import *
+from .filetypes import REFERENCE_FILETYPE_DATA
+from ..dataclasses.Clip import Clip
+
+class NativeActions:
+
+    @staticmethod
+    def File_Location(self, image_path: str):
+        kernel = str( QSysInfo.kernelType() ) # WINDOWS=winnt & LINUX=linux
+        if kernel == "winnt": # Windows
+            FILEBROWSER_PATH = os.path.join( os.getenv( 'WINDIR' ), 'explorer.exe' )
+            subprocess.run( [ FILEBROWSER_PATH, '/select,', image_path ] )
+        elif kernel == "linux": # Linux
+            QDesktopServices.openUrl( QUrl.fromLocalFile( os.path.dirname( image_path ) ) )
+        elif kernel == "darwin": # MAC
+            QDesktopServices.openUrl( QUrl.fromLocalFile( os.path.dirname( image_path ) ) )
+        else:
+            QDesktopServices.openUrl( QUrl.fromLocalFile( os.path.dirname( image_path ) ) )
+        self.Message_Log( "FILE LOCATION", f"{ image_path }" )
+
+    @staticmethod
+    def Drag_Drop( self, image_path: str, clip: Clip):
+        def Drag_Thumbnail( qimage, mimedata ):
+            # Display
+            size = 200
+            thumb = QPixmap().fromImage( qimage )
+            if thumb.isNull() == False:
+                thumb = thumb.scaled( size, size, Qt.KeepAspectRatio, Qt.FastTransformation )
+            # Drag
+            drag = QDrag( self )
+            drag.setMimeData( mimedata )
+            drag.setPixmap( thumb )
+            drag.setHotSpot( QPoint( int( thumb.width() * 0.5 ), int( thumb.height() * 0.5 ) ) )
+            drag.exec( Qt.CopyAction )
+
+        # New Documents only consider the path so it excludes clip
+        qimage = NativeActions.Image_Clip( image_path, clip )
+        check_vector = image_path.endswith( tuple( REFERENCE_FILETYPE_DATA["file_vector"] ) )
+        if check_vector == True:
+            # Read SVG
+            svg_shape = ""
+            file_item = open( image_path, "r", encoding="UTF-8" )
+            for line in file_item:
+                svg_shape += line
+            # Drag and Drop
+            if svg_shape != "":
+                # Clipboard
+                clipboard = QApplication.clipboard().setText( svg_shape )
+                # MimeData
+                mimedata = QMimeData()
+                url = QUrl().fromLocalFile( image_path )
+                mimedata.setUrls( [ url ] )
+                mimedata.setText( svg_shape )
+                mimedata.setImageData( qimage )
+                # Thumbnail
+                Drag_Thumbnail( qimage, mimedata )
+        else:
+            if qimage.isNull() == False:
+                # Clipboard
+                clipboard = QApplication.clipboard().setImage( qimage )
+                # MimeData
+                mimedata = QMimeData()
+                url = QUrl().fromLocalFile( image_path )
+                mimedata.setUrls( [ url ] )
+                mimedata.setText( image_path )
+                mimedata.setImageData( qimage )
+                # Thumbnail
+                Drag_Thumbnail( qimage, mimedata )
+
+    @staticmethod
+    def Image_Clip( image_path: str, clip: Clip, insert_size: bool = False, insert_scale: int = 1, canvas: Canvas = None ):
+        qimage = QImage( image_path )
+        if qimage.isNull() == False:
+            if clip.state == True:
+                w = qimage.width()
+                h = qimage.height()
+                qimage = qimage.copy( int( w * clip.cl ), int( h * clip.ct ), int( w * clip.cw ), int( h * clip.ch ) )
+            if ( insert_size == False ) and ( canvas is not None ) and ( canvas.view() is not None ):
+                ad = Krita.instance().activeDocument()
+                iw = ad.width()
+                ih = ad.height()
+            else:
+                size = max( qimage.size().width(), qimage.size().height() )
+                iw = size
+                ih = size
+            qimage = qimage.scaled( iw * insert_scale, ih * insert_scale, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation )
+        return qimage
+
+    def Insert_Check():
+        doc = Krita.instance().documents()
+        insert = len( doc ) > 0
+        return insert
+
+    def Path_Copy( path ):
+        copy = QApplication.clipboard()
+        copy.clear()
+        copy.setText( path )
+
+    def Drop_Inside( event ):
+        # Mimedata
+        mimedata = event.mimeData()
+
+        # Has Boolean
+        has_text = mimedata.hasText()
+        has_html = mimedata.hasHtml()
+        has_urls = mimedata.hasUrls()
+        has_image = mimedata.hasImage()
+        # has_color = mimedata.hasColor()
+
+        # Data
+        data_text = mimedata.text()
+        data_html = mimedata.html()
+        data_urls = mimedata.urls()
+        data_image = mimedata.imageData()
+        # data_color = mimedata.colorData()
+
+        # Construct Mime Data
+        mime_data = []
+        if has_text == True and has_html == True and has_image == True:
+            mime_data.append( data_text )
+        else:
+            for i in range( 0, len( data_urls ) ):
+                url = os.path.abspath ( data_urls[i].toLocalFile() ) # Local File
+                exists = os.path.exists( url )
+                if exists == True:
+                    mime_data.append( url )
+        # Sort
+        if len( mime_data ) > 0:
+            mime_data.sort()
+
+        # Return
+        return mime_data
+
+    def Insert_Document( image_path: str, clip: Clip ):
+        if image_path not in ( "", None ):
+            # Create Document
+            document = Krita.instance().openDocument( image_path )
+            Krita.instance().activeWindow().addView( document )
+            w = document.width()
+            h = document.height()
+            # Crop
+            if clip.state == True:
+                ad = Krita.instance().activeDocument()
+                ad.crop( int( w * clip.cl ), int( h * clip.ct ), int( w * clip.cw ), int( h * clip.ch ) )
+                ad.waitForDone()
+                ad.refreshProjection()
+                Krita.instance().action('reset_display').trigger()
+            # Show Message
+            #self.Message_Float( "INSERT", "New Document", "document-new" )
+        else:
+            #self.Message_Float( "REPORT", "Null Image", "broken-preset" )
+            pass
+    
+    def Insert_Layer( image_path: str, clip: Clip, canvas: Canvas = None ):
+        if image_path not in ( "", None ) and ( canvas is not None ) and (canvas.view() is not None ):
+            check_vector = image_path.endswith( tuple( REFERENCE_FILETYPE_DATA["file_vector"] ) )
+            if check_vector == True:
+                NativeActions.Insert_Vector( image_path )
+            else:
+                NativeActions.Insert_Pixel( image_path, clip )
+        else:
+            #self.Message_Float( "REPORT", "Null Image", "broken-preset" )
+            pass
+    
+    def Insert_Reference( image_path: str, clip: Clip, canvas: Canvas = None ):
+        if image_path not in ( "", None ) and ( canvas is not None ) and ( canvas.view() is not None ):
+            # Image
+            qimage = NativeActions.Image_Clip( image_path, clip )
+            if qimage.isNull() == False:
+                # MimeData
+                mimedata = QMimeData()
+                url = QUrl().fromLocalFile( image_path )
+                mimedata.setUrls( [ url ] )
+                mimedata.setImageData( qimage )
+                mimedata.setData( image_path, image_path.encode() )
+                # Clipboard
+                clipboard = QApplication.clipboard().setMimeData( mimedata )
+                # Place Image
+                Krita.instance().action( 'paste_as_reference' ).trigger()
+                Krita.instance().activeDocument().refreshProjection()
+                # Message
+                pass
+                #self.Message_Float( "INSERT", "Reference", "krita_tool_reference_images" )
+            else:
+                pass
+                #self.Message_Float( "REPORT", "Null Image", "broken-preset" )
+        else:
+            pass
+            #self.Message_Float( "REPORT", "Null Image", "broken-preset" )
+    
+    def Insert_Vector( image_path: str ):
+        report = "Vector"
+        try:
+            # Variables
+            basename = os.path.basename( image_path )
+            # Read SVG
+            svg_shape = ""
+            file_item = open( image_path, "r", encoding="UTF-8" )
+            for line in file_item:
+                svg_shape += line
+            # Create Layer
+            ad = Krita.instance().activeDocument()
+            rn = ad.rootNode()
+            vl = ad.createVectorLayer( basename )
+            rn.addChildNode( vl, None )
+            # Input Shape to Layer
+            vl.addShapesFromSvg( svg_shape )
+        except Exception as e:
+            report = e
+        #self.Message_Float( "INSERT", report, "vectorLayer" )
+    
+    def Insert_Pixel( image_path: str, clip: Clip ):
+        report = "Pixel"
+        try:
+            # Variables
+            basename = os.path.basename( image_path )
+            # Create Layer
+            ad = Krita.instance().activeDocument()
+            rn = ad.rootNode()
+            pl = ad.createNode( basename, "paintLayer" )
+            rn.addChildNode( pl, None )
+            # Qimage Data
+            qimage = NativeActions.Image_Clip( image_path, clip )
+            ptr = qimage.constBits()
+            ptr.setsize( qimage.byteCount() )
+            pl.setPixelData( bytes( ptr.asarray() ), 0, 0, qimage.width(), qimage.height() )
+            ad.refreshProjection()
+        except Exception as e:
+            report = e
+        #self.Message_Float( "INSERT", report, "paintLayer" )
+    

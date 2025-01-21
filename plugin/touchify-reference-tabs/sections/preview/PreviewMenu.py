@@ -1,9 +1,10 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from .PreviewSection import PreviewSection
-from ...classes.common import generateFiletypeFilter
+from ...extensions.filetypes import Filetypes
 from ...DockerMenu import DockerMenu
-from ...classes.settings import *
+from ...extensions.settings import *
+from .ui.ContextMenu import ContextMenu
 
 class PreviewMenu(DockerMenu):
 
@@ -11,15 +12,17 @@ class PreviewMenu(DockerMenu):
         super().__init__("Preview Settings", parent)
         self.preview = section
 
-        self.filetype_filter = generateFiletypeFilter()
-
         file_menu = self.addMenu("File")
         file_menu.addAction("Open Image...", self.openImage)
-        
-        view_menu = self.addMenu("View")
-        view_menu.addSeparator()
 
-        zoomSettingsMenu = view_menu.addMenu("Zoom Setting")
+        self.context_menu = ContextMenu(self.preview.view, self, False)
+        self.mergeMenu(self.context_menu)
+        
+        options_menu = self.addMenu("Options")
+        options_menu.aboutToShow.connect(self.updateMenus)
+        options_menu.addSeparator()
+
+        zoomSettingsMenu = options_menu.addMenu("Zoom Setting")
         self.fitSettingGroup = QActionGroup(self)
         fitPageAction = QAction("Fit Page", self.fitSettingGroup)
         fitPageAction.setCheckable(True)
@@ -38,7 +41,7 @@ class PreviewMenu(DockerMenu):
         self.fitSettingGroup.triggered.connect(self.changeFitSetting)
         zoomSettingsMenu.addActions(self.fitSettingGroup.actions())
 
-        scaleSettingsMenu = view_menu.addMenu("Scaling Mode Setting")
+        scaleSettingsMenu = options_menu.addMenu("Scaling Mode Setting")
         self.scaleSettingGroup = QActionGroup(self)
         scaleSmoothAction = QAction("Smooth Scaling", self.scaleSettingGroup)
         scaleSmoothAction.setCheckable(True)
@@ -51,15 +54,14 @@ class PreviewMenu(DockerMenu):
         self.scaleSettingGroup.triggered.connect(self.changeScaleSetting)
         scaleSettingsMenu.addActions(self.scaleSettingGroup.actions())
 
-        view_menu.addAction("Change Background Color...", self.changeBGColor)
-
     def openImage(self, filePath=False):
+        filter = Filetypes.generateFiletypeFilter()
         if not filePath:
-            filePath, _filter = QFileDialog.getOpenFileName(self, "Open an image", filter=self.filetype_filter, directory=Settings.getFileDialogState())
+            filePath, _filter = QFileDialog.getOpenFileName(self, "Open an image", filter=filter, directory=Settings.getFileDialogState())
             if not filePath: return
             Settings.setFileDialogState(os.path.dirname(filePath))
 
-        self.preview.openImage(filePath)
+        self.preview.Action_OpenImage(filePath)
 
     def updateMenus(self):
         self.checkCorrectFitSetting()
@@ -78,13 +80,10 @@ class PreviewMenu(DockerMenu):
 
     def changeScaleSetting(self, action: QAction):
         tab = self.preview
-        tab.action_changeScaleSetting(action.data())
+        tab.Action_ChangeScaleSetting(action.data())
 
     def checkCorrectScaleSetting(self):
         tab = self.preview
         for action in self.scaleSettingGroup.actions():
             if action.data() == tab.scalingMode:
                 action.setChecked(True)
-
-    def changeBGColor(self):
-        self.preview.action_changeBackgroundColor()

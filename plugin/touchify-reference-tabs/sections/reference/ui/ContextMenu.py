@@ -2,11 +2,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from typing import TYPE_CHECKING
-from ...DockerMenu import DockerMenu
+from ....DockerMenu import DockerMenu
+from ....dataclasses.Clip import Clip
+from ....extensions.native_actions import NativeActions
 if TYPE_CHECKING:
-    from .ReferenceView import ReferenceView
+    from ..ReferenceView import ReferenceView
 
-class ReferenceContextMenu(DockerMenu):
+class ContextMenu(DockerMenu):
     def __init__(self, section: "ReferenceView", parent: QWidget | None = None, is_context_menu: bool = False):
         super().__init__("Reference Context", parent)
         self.view = section
@@ -19,13 +21,13 @@ class ReferenceContextMenu(DockerMenu):
 
     def Variables(self):
         self.event_position = QPoint(0,0)
-        self.state_insert = self.view.Insert_Check()
+        self.state_insert = NativeActions.Insert_Check()
     
         self.menu_pack_string = f"Pack [ { self.view.select_count } ]"
 
         # Color
         self.action_color_picker_string = "Color Picker"
-        if self.view.pigment_o == None: self.action_color_picker_string += " [RGB]"
+        if self.view.ColorPicker.pigment_o == None: self.action_color_picker_string += " [RGB]"
 
         # Path
         if self.view.pin_index == None:
@@ -55,13 +57,7 @@ class ReferenceContextMenu(DockerMenu):
                 self.ctx_relative.append( self.view.pin_list[i] )
 
         # Clip
-        self.ctx_clip = { 
-            "state" : False,
-            "cl": 0,
-            "ct": 0,
-            "cw": 1,
-            "ch": 1,
-            }
+        self.ctx_clip = Clip(False, 0,0,1,1)
 
     def Update(self):
         self.Variables()
@@ -72,7 +68,7 @@ class ReferenceContextMenu(DockerMenu):
         self.action_color_picker.setText(self.action_color_picker_string)
         # Check Label
         self.action_label_edit.setCheckable( True )
-        self.action_label_edit.setChecked( self.view.state_label )
+        self.action_label_edit.setChecked( self.view.mode_label )
         # Check Edit
         self.action_edit_grey.setCheckable( True )
         self.action_edit_grey.setChecked( self.ctx_pin_egs )
@@ -82,7 +78,7 @@ class ReferenceContextMenu(DockerMenu):
         self.action_edit_flip_v.setChecked( self.ctx_pin_efy )
         # Check Color Picker
         self.action_color_picker.setCheckable( True )
-        self.action_color_picker.setChecked( self.view.state_pickcolor )
+        self.action_color_picker.setChecked( self.view.mode_pickcolor )
 
 
         # Disable General (on nothing loaded)
@@ -255,17 +251,12 @@ class ReferenceContextMenu(DockerMenu):
         if action == self.action_label_create:
             view.Label_Insert( self.event_position )
         if action == self.action_label_edit:
-            view.state_label = not view.state_label
-            view.SIGNAL_LABEL_PANEL.emit( view.state_label )
-            view.SIGNAL_ACTIONS_UPDATED.emit()
-
+            view.ModeSet_Label()
         # Pin
         if action == self.action_pin_location:
             view.SIGNAL_LOCATION.emit( self.ctx_pin_path )
         if action == self.action_pin_copy:
-            copy = QApplication.clipboard()
-            copy.clear()
-            copy.setText( self.ctx_pin_path )
+            NativeActions.Path_Copy( self.ctx_pin_path )
         if action == self.action_pin_save:
             view.SIGNAL_PIN_SAVE.emit( self.ctx_pin_qpixmap )
 
@@ -309,8 +300,7 @@ class ReferenceContextMenu(DockerMenu):
 
         # Color
         if action == self.action_color_picker:
-            view.state_pickcolor = not view.state_pickcolor
-            view.SIGNAL_ACTIONS_UPDATED.emit()
+            view.ModeSet_ColorPicker()
         if action == self.action_color_analyse:
             qimage = self.ctx_pin_qpixmap.toImage()
             view.SIGNAL_ANALYSE.emit( qimage )
@@ -333,7 +323,7 @@ class ReferenceContextMenu(DockerMenu):
     @staticmethod
     def OpenContextMenu( view: "ReferenceView", event: QMouseEvent ):
         QApplication.restoreOverrideCursor()
-        qmenu = ReferenceContextMenu(view, view, True)
+        qmenu = ContextMenu(view, view, True)
         qmenu.Event_Set(event)
         action = qmenu.exec_( view.mapToGlobal( event.pos() ) )
         qmenu.Event_Execute(action)

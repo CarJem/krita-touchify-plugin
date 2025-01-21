@@ -18,6 +18,7 @@ from typing import TYPE_CHECKING
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from krita import *
+from .dataclasses.InsertInfo import InsertInfo
  
 # Zoom percent constants
 MAX_ZOOM = 800
@@ -82,10 +83,10 @@ class DockerPage(QWidget):
         self.view.addWidget(self.grid_section)
         self.toolView.addWidget(self.grid_section.tool_panel)
 
-        self.reference_section = ReferenceSection(self)
-        self.reference_menu = ReferenceMenu(self.reference_section, self)
-        self.view.addWidget(self.reference_section)
-        self.toolView.addWidget(self.reference_section.tool_panel)
+        self.ReferenceSection = ReferenceSection(self)
+        self.reference_menu = ReferenceMenu(self.ReferenceSection, self)
+        self.view.addWidget(self.ReferenceSection)
+        self.toolView.addWidget(self.ReferenceSection.tool_panel)
 
         self.selection_box = QPushButton(self)
         self.selection_box.setIcon(PREVIEW_SECTION_ICON)
@@ -101,10 +102,13 @@ class DockerPage(QWidget):
         layout.addWidget(self.toolLayout)
         
         previewAction = self.selection_box_menu.addAction(PREVIEW_SECTION_ICON, "Preview")
+        previewAction.setIconVisibleInMenu(True)
         previewAction.triggered.connect(lambda: self.changeSection("preview"))
         gridAction = self.selection_box_menu.addAction(GRID_SECTION_ICON, "Grid")
+        gridAction.setIconVisibleInMenu(True)
         gridAction.triggered.connect(lambda: self.changeSection("grid"))
         referenceAction = self.selection_box_menu.addAction(REFERENCE_SECTION_ICON, "Reference")
+        referenceAction.setIconVisibleInMenu(True)
         referenceAction.triggered.connect(lambda: self.changeSection("reference"))
 
         self.changeSection("preview")
@@ -112,27 +116,39 @@ class DockerPage(QWidget):
     def section(self):
         return self.__current_section
 
-    def setFullscreen(self, boolean: bool):
-        self.reference_section.Fullscreen_Set(boolean)
+    def setToolbarVisibile(self, boolean: bool):
         if boolean:
-            self.toolLayout.setVisible(False)
-        else:
+            self.ReferenceSection.setToolbarVisibile(True)
             self.toolLayout.setVisible(True)
+        else:
+            self.ReferenceSection.setToolbarVisibile(False)
+            self.toolLayout.setVisible(False)
 
-    def openReference(self):
+
+    def OpenPreviousPage(self):
+        pass
+
+    def OpenReference(self):
         self.changeSection("reference")
 
-    def openPreview(self, imgPath: str=None, pixmap: QPixmap = None):
-        if imgPath != None:
-            self.changeSection("preview")
-            self.preview_section.openImage(imgPath)
-        elif pixmap != None:
-            self.changeSection("preview")
-            self.preview_section.openPixmap(pixmap)
-
-    def openGrid(self, dirPath: str):
+    def OpenGrid(self, dirPath: str):
         self.changeSection("grid")
         self.grid_section.changePath(dirPath)
+
+    def OpenPreview(self, imgPath: str=None, pixmap: QPixmap = None):
+        if imgPath != None:
+            self.changeSection("preview")
+            self.preview_section.Action_OpenImage(imgPath)
+        elif pixmap != None:
+            self.changeSection("preview")
+            self.preview_section.Action_OpenQPixmap(pixmap)
+
+    def PinImage(self, pin: InsertInfo):
+        if self.ReferenceSection.view.isEnabled():
+            self.ReferenceSection.OnEvent_PinImage(pin)
+        
+
+
 
     def onTabActivated(self):
         self.view_widget.updateSectionMenus(self.tab_menus)
@@ -159,7 +175,7 @@ class DockerPage(QWidget):
             case "grid":
                 switchTo(GRID_SECTION_ICON, self.grid_section, self.grid_menu)
             case "reference":
-                switchTo(REFERENCE_SECTION_ICON, self.reference_section, self.reference_menu)
+                switchTo(REFERENCE_SECTION_ICON, self.ReferenceSection, self.reference_menu)
                 pass
 
         

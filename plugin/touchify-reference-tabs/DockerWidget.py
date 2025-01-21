@@ -22,7 +22,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QMenuBar, QTabWidget, \
                             QAction, QMenu, QActionGroup
 from krita import DockWidget
-from .classes.variables import *
+from .extensions.variables import *
 
 
 from .DockerPage import DockerPage
@@ -62,35 +62,47 @@ class DockerWidget(QWidget):
         closeMenu.addAction("Close Tabs to the Left", self.closeTabsLeft)
         closeMenu.addAction("Close Tabs to the Right", self.closeTabsRight)
 
+        editMenu = self.menubar.addMenu("Edit")
+        editMenu.aboutToShow.connect(self.updateTabMenus)
+
+        renameTabAction = editMenu.addAction("Rename tab...")
+
         # - View menu
         viewMenu = self.menubar.addMenu("View")
         viewMenu.aboutToShow.connect(self.updateTabMenus)
-        self.fullscreenAction = viewMenu.addAction("Fullscreen", self.toggleFullscreen)
-        self.fullscreenAction.setCheckable(True)
-        self.fullscreenAction.setChecked(False)
 
-        viewMenu.addSeparator()
+        self.showTabBarAction = viewMenu.addAction("Show Tabs", self.toggleTabs)
+        self.showTabBarAction.setCheckable(True)
+        self.showTabBarAction.setChecked(True)
 
-        self.viewModeActionGroup = QActionGroup(self)
+        self.showToolbarAction = viewMenu.addAction("Show Toolbar", self.toggleToolbar)
+        self.showToolbarAction.setCheckable(True)
+        self.showToolbarAction.setChecked(True)
 
-        previewAction = QAction("Preview", self.viewModeActionGroup)
+        # - Mode menu
+        modeMenu = self.menubar.addMenu("Mode")
+        modeMenu.aboutToShow.connect(self.updateTabMenus)
+
+        self.displayModeActionGroup = QActionGroup(self)
+
+        previewAction = QAction("Preview", self.displayModeActionGroup)
         previewAction.setCheckable(True)
         previewAction.setChecked(True)
         previewAction.setEnabled(False)
         previewAction.setData("preview")
 
-        gridAction = QAction("Grid", self.viewModeActionGroup)
+        gridAction = QAction("Grid", self.displayModeActionGroup)
         gridAction.setCheckable(True)
         gridAction.setEnabled(False)
         gridAction.setData("grid")
 
-        referenceAction = QAction("Reference", self.viewModeActionGroup)
+        referenceAction = QAction("Reference", self.displayModeActionGroup)
         referenceAction.setCheckable(True)
         referenceAction.setEnabled(False)
         referenceAction.setData("reference")
 
-        self.viewModeActionGroup.triggered.connect(self.changeViewMode)
-        viewMenu.addActions(self.viewModeActionGroup.actions())
+        self.displayModeActionGroup.triggered.connect(self.changeViewMode)
+        modeMenu.addActions(self.displayModeActionGroup.actions())
 
         layout.setMenuBar(self.menubar)
         # Don't overwrite Krita's application menubar on macOS.
@@ -149,16 +161,16 @@ class DockerWidget(QWidget):
         def updateViewModeMenuActions():
             tab = self.currentTab()
 
-            for action in self.viewModeActionGroup.actions():
+            for action in self.displayModeActionGroup.actions():
                 action.setEnabled(tab != None)
 
             if not tab: return
             current = tab.section()
             
-            self.viewModeActionGroup.blockSignals(True)
-            for action in self.viewModeActionGroup.actions():
+            self.displayModeActionGroup.blockSignals(True)
+            for action in self.displayModeActionGroup.actions():
                 if action.data() == current: action.setChecked(True)
-            self.viewModeActionGroup.blockSignals(False)
+            self.displayModeActionGroup.blockSignals(False)
 
         updateViewModeMenuActions()
 
@@ -213,12 +225,14 @@ class DockerWidget(QWidget):
         if not tab: return
         if current != data: tab.changeSection(data)
 
-    def toggleFullscreen(self):
-        full_screen_state = self.fullscreenAction.isChecked()
-        self.tabWidget.setTabBarAutoHide(full_screen_state)
+    def toggleToolbar(self):
+        full_screen_state = self.showToolbarAction.isChecked()
         for i in range(0, self.tabWidget.count()):
             tab = self.tab(i)
-            tab.setFullscreen(full_screen_state)
+            tab.setToolbarVisibile(full_screen_state)
+
+    def toggleTabs(self):
+        self.tabWidget.setTabBarAutoHide(not self.showTabBarAction.isChecked())
 
     def addTab(self):
         tab = DockerPage(self.tabWidget, self)

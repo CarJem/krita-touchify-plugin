@@ -1,16 +1,26 @@
+import os
+
+import urllib
 from .ReferencePin import ReferencePin
-from .ReferenceCommons import ReferenceCommons
+from ....extensions.commons import Commons
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import pyqtSignal, QObject
 from PyQt5.QtWidgets import QApplication
-class ReferenceSaveState(QObject):
+
+EO_ENCODING = "utf-8"
+
+class ReferenceState(QObject):
 
     ref_position: list[int] = [ 1, 1 ]
     ref_zoom: float = 1
     ref_pins: list[ReferencePin] = []
-    ref_board: str = None
+    ref_path: str = None
 
     SIGNAL_PROGRESS_VALUE = pyqtSignal(int)
+    SIGNAL_PROGRESS_MAX = pyqtSignal(int)
+    SIGNAL_DATA_LOADED = pyqtSignal(bool)
+    SIGNAL_DATA_UNLOADED = pyqtSignal()
+    SIGNAL_DATA_SAVE = pyqtSignal()
 
 
     def __init__(self, parent: QObject = None):
@@ -18,10 +28,25 @@ class ReferenceSaveState(QObject):
         self.ref_zoom = 1
         self.ref_position = [ 1, 1 ]
         self.ref_pins = []
-        self.ref_board = None
+        self.ref_path = None
+
+    def path(self):
+        return self.ref_path
+
+    def pins(self):
+        return self.ref_pins
+
+    def zoom(self):
+        return self.ref_zoom
+
+    def pos(self):
+        return self.ref_position
+
+    def loaded(self):
+        return self.ref_path != None
 
     
-    def load(self, board: list[str], ref_board: str, new_file: bool):
+    def __Private_Data_Load(self, board: list[str], ref_board: str, new_file: bool):
 
         if new_file:
             self.ref_pins = []
@@ -49,7 +74,7 @@ class ReferenceSaveState(QObject):
                             line = line[:-1]
                         # Evaluation
                         if line == "connect": # Export
-                            self.ref_board = ref_board
+                            self.ref_path = ref_board
                         elif line.startswith( "ref_position=" ) == True: # Camera Position
                             n = len( "ref_position=" )
                             self.ref_position = eval( line[n:] )
@@ -82,7 +107,7 @@ class ReferenceSaveState(QObject):
 
         #endregion
 
-    def save( self ):
+    def __Private_Data_Save( self ):
         # Header
         data = "Imagine Board"
         # Type of save
@@ -100,7 +125,7 @@ class ReferenceSaveState(QObject):
             data += f"\n{ result }"
         return data
     
-    def export( self ):
+    def __Private_Data_Export( self ):
         # Header
         data = "Imagine Board"
         # Type of save
@@ -114,9 +139,9 @@ class ReferenceSaveState(QObject):
             path = result["path"]
             web = result["web"]
             if path != None:
-                result["zdata"] = ReferenceCommons.Bytes_Python( path )
+                result["zdata"] = Commons.Bytes_Python( path )
             elif web != None:
-                result["zdata"] = ReferenceCommons.Download_Data( web )
+                result["zdata"] = Commons.Download_Data( web )
             else:
                 result["zdata"] = None
             # Clean
@@ -125,3 +150,79 @@ class ReferenceSaveState(QObject):
             # String
             data += f"\n{ result }"
         return data
+
+    def __Private_Data_Download( self, download_folder: str ):
+        for item in self.ref_pins:
+            tipo = item["tipo"]
+            qpixmap = item["qpixmap"]
+            if tipo == "image":
+                # Variables
+                path = item["path"]
+                web = item["web"]
+                if path != None:
+                    qpixmap = QPixmap( path )
+                    name = os.path.basename( path )
+                    save_path = os.path.join( download_folder, name )
+                if web != None:
+                    qpixmap = Commons.Download_QPixmap( web )
+                    name = os.path.split( urllib.parse.urlparse( web ).path )[1]
+                    save_path = os.path.join( download_folder, name )
+                # Save
+                if os.path.exists( save_path ) == False:
+                    qpixmap.save( save_path )
+                else:
+                    self.Message_Log( "ERROR", f"Path already exists { save_path }" )
+
+
+    def Data_Load( self, path: str, new_file: bool = False ):
+        self.ref_path = path
+
+        board = None
+        ref_board = None
+
+        if ( path not in [ "", ".", None ] and os.path.exists( path ) == True ):
+            with open( path, "r", encoding=EO_ENCODING ) as f:
+                board = f.readlines()
+                ref_board = path
+
+        if (board == None or ref_board == None) and not new_file: return
+
+        self.SIGNAL_PROGRESS_VALUE.emit(0)
+        self.SIGNAL_PROGRESS_MAX.emit(len(board))
+
+        self.__Private_Data_Load(board, ref_board, new_file)
+
+        self.SIGNAL_PROGRESS_VALUE.emit(0)
+        self.SIGNAL_PROGRESS_MAX.emit(1)
+
+        self.SIGNAL_DATA_LOADED.emit(new_file)
+
+    def Data_Save( self ):
+        self.SIGNAL_DATA_SAVE.emit()
+
+    def Data_Save_St( self, list_reference: list[ReferencePin] ):
+        self.ref_pins = list_reference
+        path = self.ref_path
+
+        if path not in [ "", ".", None ]:
+            data = self.__Private_Data_Save()
+            with open( path, "w", encoding=EO_ENCODING ) as f:
+                f.write( data )
+
+    def Data_Update( self, ref_position: list[int], ref_zoom: float, len_board: int ):
+        self.ref_position = ref_position
+        self.ref_zoom = ref_zoom
+
+    def Data_Export( self, path ):
+        if path not in [ "", ".", None ]:
+            data = self.__Private_Data_Export()
+            with open( path, "w", encoding=EO_ENCODING ) as f:
+                f.write( data )
+
+    def Data_Download( self, download_folder: str ):
+        if download_folder not in [ "", ".", None ]:
+            self.__Private_Data_Download(download_folder)
+
+    def Data_Unload(self):
+        self.ref_path = None
+        self.SIGNAL_DATA_UNLOADED.emit()

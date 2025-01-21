@@ -1,346 +1,584 @@
-from krita import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-from .GridViewItem import GridViewItem
-import copy
 import math
-import os.path
-from ...classes.variables import *
-from ...classes.settings import Settings
+import zipfile
+from krita import *
+from PyQt5 import QtCore, QtGui
+from ...dataclasses.Clip import Clip
+from ...dataclasses.InsertInfo import InsertInfo
+from ...extensions.calculations import *
+from ...extensions.color_picker import *
+from ...extensions.native_actions import NativeActions
+from .ui.ContextMenu import ContextMenu
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .GridSection import GridSection
+class GridView( QWidget ):
+    # General
+    SIGNAL_DRAG = QtCore.pyqtSignal( [ str, Clip ] )
+    SIGNAL_DROP = QtCore.pyqtSignal( list )
+    # Grid
+    SIGNAL_PREVIEW_REQUESTED = QtCore.pyqtSignal( str )
+    SIGNAL_INDEX = QtCore.pyqtSignal( int )
+    # Menu
+    SIGNAL_PIN_IMAGE = QtCore.pyqtSignal( [ InsertInfo, Clip ] )
+    SIGNAL_LOCATION = QtCore.pyqtSignal( str )
+    SIGNAL_ANALYSE = QtCore.pyqtSignal( [ QImage ] )
+    SIGNAL_NEW_DOCUMENT = QtCore.pyqtSignal( [ str, Clip ] )
+    SIGNAL_INSERT_LAYER = QtCore.pyqtSignal( [ str, Clip ] )
+    SIGNAL_INSERT_REFERENCE = QtCore.pyqtSignal( [ str, Clip ] )
 
+    # Init
+    def __init__( self, parent ):
+        super( GridView, self ).__init__( parent )
+        self.Variables()
 
+    def Variables( self ):
+        # Widget
+        self.ww = 1
+        self.hh = 1
+        self.w2 = 0.5
+        self.h2 = 0.5
 
-class GridView(QWidget):
+        # Event
+        self.ox = 0
+        self.oy = 0
+        self.ex = 0
+        self.ey = 0
 
-    pageChanged = pyqtSignal(int,int)
+        # Display
+        self.scale_method = Qt.FastTransformation
 
-    def __init__(self, parent: "GridSection" = None):
-        super().__init__(parent)
-        self.GridSection = parent
+        # Compact
+        self.file_search = []
 
-        self.directoryPath = ""
+        # Line
+        self.line_index = 0
+        self.line_path = [ None ]
+        self.line_qpixmap = [ None ]
+        # Grid
+        self.grid_size = 200
+        self.grid_fit = Qt.KeepAspectRatioByExpanding
+        self.gix = 0
+        self.giy = 0
+        self.gmx = 3
+        self.gmy = 3
+        self.grid_path = [ [ None ] * self.gmx ] * self.gmy
+        self.grid_qpixmap = [ [ None ] * self.gmx ] * self.gmy
+        self.grid_start = 0
+        self.grid_end = self.gmx * self.gmy
+        self.glt = 0
+        self.glb = 0
+        # Thumbnails
+        self.tw = 200
+        self.th = 200
+        # Clip
+        self.clip_false = Clip(False,0,0,1,1)
 
+        # State
+        self.state_maximized = False
+        self.state_press = False
+        self.state_pickcolor = False
 
-        self.allImages: list[str] = []
-        self.imagesButtons: list[GridViewItem] = []
-        self.foundImages: list[str] = []
-        self.favouriteImages: list[str] = []
-        self.Cache_Images: dict[str, QImage] = {}
-        self.Cache_Paths: list[str] = []
+        # State
+        self.state_maximized = False
+        # Interaction
+        self.operation = None
 
-        self.bg_alpha = str("background-color: rgba(0, 0, 0, 50); ")
-        self.bg_hover = str("background-color: rgba(0, 0, 0, 100); ")
+        # Colors
+        self.color_1 = QColor( "#ffffff" )
+        self.color_2 = QColor( "#000000" )
+        self.color_alpha = QColor( 0, 0, 0, 50 )
 
-        self.cache_limit = 0
-        self.item_size = 0
-        self.item_export_scale = 0
-        self.item_export_fit_canvas = False
+        # Function>>
+        self.function_drop_panel = False
+        self.function_operation = ""
 
-        self.zoom_scale = 1
-        self.current_page = 0
+        # Color Picker
+        self.ColorPicker = ColorPicker(self)
+
+        # Drag and Drop
+        self.setAcceptDrops( True )
+        self.drop = False
+        self.drag = False
         
-        self.column_count = 1
-        self.row_count = 1
+    def sizeHint( self ):
+        return QtCore.QSize( 5000,5000 )
 
+    # Relay
 
-        self.grid_view_layout = QGridLayout(self)
-        self.setLayout(self.grid_view_layout)
+    def Set_FileSearch( self, file_search ):
+        self.file_search = file_search
 
-    def readOptions(self):
-        options = Settings.getGridPreferences()
-        self.cache_limit: int = options["GRID_MAX_CACHED_IMAGES"]
-        self.item_size: int = options["GRID_ITEM_SIZE"]        
-        self.item_export_scale: int = options["GRID_ITEM_EXPORT_SCALE"]
-        self.item_export_fit_canvas: int = options["GRID_ITEM_EXPORT_FIT_CANVAS"]
+    def Set_Theme( self, color_1, color_2 ):
+        self.color_1 = color_1
+        self.color_2 = color_2
 
-    def initalize(self):
-        self.readOptions()
-        self.resizeView()
-        self.reorganizeImages()
-        self.refreshImages()
+    def Set_Size( self, ww, hh, state_maximized ):
+        self.ww = ww
+        self.hh = hh
+        self.w2 = ww * 0.5
+        self.h2 = hh * 0.5
+        self.state_maximized = state_maximized
+        self.resize( ww, hh )
+        self.Render_Matrix()
+        self.ColorPicker.setSourceSize(ww, hh)
 
-    def resizeView(self):
+    def Set_Scale_Method( self, scale_method ):
+        self.scale_method = scale_method
+        self.update()
 
+    # Display
 
-        def fitToFavor(favored: int, flexible: int, restriction: int):
-                if favored >= restriction:
-                    return restriction, 1, restriction
-                else:
-                    final_restriction = (restriction * flexible)
-                    while final_restriction > restriction:
-                        flexible -= 1
-                        final_restriction = (restriction * flexible)
-                    return restriction, flexible, final_restriction
+    def Display_Default( self ):
+        self.grid_path = [ [ None ] * self.gmx ] * self.gmy
+        self.grid_qpixmap = [ [ None ] * self.gmx ] * self.gmy
+        self.update()
+        self.Camera_Grab()
 
-        def updateButtonCount(iip: int):
-            if iip == len(self.imagesButtons):
-                pass
-            elif iip > len(self.imagesButtons):
-                iip_last = len(self.imagesButtons)
-                for i in range(iip_last, iip): 
-                    imageButton = GridViewItem(self)
-                    imageButton.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Preferred,QSizePolicy.Policy.Preferred))
-                    imageButton.setGridIndex(i)
-                    imageButton.SIGNAL_HOVER.connect(self.Item_OnHover)
-                    imageButton.SIGNAL_LMB.connect(self.Item_OnClick)
-                    imageButton.SIGNAL_LMB_DOUBLE.connect(self.Item_OnDoubleClick)
-                    imageButton.SIGNAL_WUP.connect(lambda: self.navigateFromIncrement(-1))
-                    imageButton.SIGNAL_WDN.connect(lambda: self.navigateFromIncrement(1))
-                    imageButton.SIGNAL_PREVIEW.connect(self.GridSection.openPreview)
-                    imageButton.SIGNAL_FAVOURITE.connect(self.Action_PinToFavourites)
-                    imageButton.SIGNAL_UN_FAVOURITE.connect(self.Action_UnpinFromFavourites)
-                    imageButton.SIGNAL_OPEN_NEW.connect(self.GridSection.NativeFn.openNewDocument)
-                    imageButton.SIGNAL_REFERENCE.connect(self.GridSection.NativeFn.placeReference)
-                    self.grid_view_layout.addWidget(imageButton)
-                    self.imagesButtons.append(imageButton)
-            else:
-                while len(self.imagesButtons) != iip: 
-                    imageButton: GridViewItem = self.imagesButtons[-1]
-                    imageButton.SIGNAL_HOVER.disconnect()
-                    imageButton.SIGNAL_LMB.disconnect()
-                    imageButton.SIGNAL_LMB_DOUBLE.disconnect()
-                    imageButton.SIGNAL_WUP.disconnect()
-                    imageButton.SIGNAL_WDN.disconnect()
-                    imageButton.SIGNAL_PREVIEW.disconnect()
-                    imageButton.SIGNAL_FAVOURITE.disconnect()
-                    imageButton.SIGNAL_UN_FAVOURITE.disconnect()
-                    imageButton.SIGNAL_OPEN_NEW.disconnect()
-                    imageButton.SIGNAL_REFERENCE.disconnect()
-                    self.grid_view_layout.removeWidget(imageButton)
-                    self.imagesButtons.pop()
+    def Display_Path( self, line_path, line_index ):
+        if self.line_path != line_path:
+            self.line_path = line_path
+            self.line_qpixmap = [ None ] * len( line_path )
+        self.line_index = line_index
+        # Update
+        self.Render_Matrix()
+        self.update()
+        self.Camera_Grab()
 
-        item_size = round(self.item_size * self.zoom_scale)
-        max_columns = round(self.width() / item_size)
-        max_rows = round(self.height() / item_size)
-        max_items = max_columns * max_rows
+    # Grid
+    def Grid_Size( self, value: int ):
+        self.grid_size = value
+        self.Render_Matrix()
+        self.update()
+        self.Camera_Grab()
 
-        if max_items >= self.cache_limit: # Don't allow more than the cache limit premits
-            if max_rows > max_columns: # Distribute in Favor of Rows
-                max_rows, max_columns, max_items = fitToFavor(max_rows, max_columns, self.cache_limit)
-            elif max_rows < max_columns: # Distribute in Favor of Columns
-                max_columns, max_rows, max_items = fitToFavor(max_columns, max_rows, self.cache_limit)
-            else: #Equal Number of Columns and Rows, Distribute Equally
-                count = round(math.sqrt(self.cache_limit))
-                max_columns = count; max_rows = count; max_items = self.cache_limit
+    def Grid_Fit( self, boolean: bool ):
+        if boolean == False:
+            self.grid_fit = Qt.AspectRatioMode.KeepAspectRatioByExpanding
+        elif boolean == True:
+            self.grid_fit = Qt.AspectRatioMode.KeepAspectRatio
+        self.update()
+        self.Camera_Grab()
 
-        if self.column_count == max_columns or self.row_count == max_rows:
-            self.max_items = max_items
-            return
+    def Grid_Index( self, ex: int, ey: int ):
+        # Grid Index
+        self.gix = Limit_Range( int( ( ex / self.ww ) * self.gmx ), 0, self.gmx - 1 )
+        self.giy = Limit_Range( int( ( ey / self.hh ) * self.gmy ), 0, self.gmy - 1 )
+        # Line Index
+        line_index = self.grid_start + gi_to_pi( self.gix, self.giy, self.gmx )
+        line_limit = len( self.line_path ) - 1
+        self.line_index = Limit_Range( line_index, 0, line_limit )
+        # Signal
+        self.SIGNAL_INDEX.emit( self.line_index )
 
+    def Grid_Increment( self, increment: int ):
+        # Variables
+        limit = len( self.line_path ) - 1
+        # Calculations
+        gix, giy = pi_to_gi( self.line_index, self.gmx, self.gmy )
+        if increment < 0:
+            delta = self.gmx * increment
+            self.line_index = Limit_Range( self.grid_start + gix + delta, 0, limit )
+        if increment > 0:
+            self.line_index = Limit_Range( self.grid_end + gix, 0, limit )
+        # Signal
+        self.SIGNAL_INDEX.emit( self.line_index )
+        # Update
+        self.Render_Matrix()
+        self.update()
+        self.Camera_Grab()
 
-        updateButtonCount(max_items)
-        self.max_items = max_items
-        
-        current_col = 0
-        current_row = 0
+    # Render
 
-        for i in range(0, max_items):
-            self.grid_view_layout.addWidget(self.imagesButtons[i], current_row, current_col)
-            current_col += 1
-            if current_col == max_columns:
-                current_col = 0
-                current_row += 1
-
-        self.reorganizeImages()
-        self.refreshImages()
-
-    #region Widget Methods
-
-    def navigateFromIncrement(self, increment: int):
-        if (self.current_page == 0 and increment == -1) or \
-            ((self.current_page + 1) * len(self.imagesButtons) > len(self.foundImages) and increment == 1) or \
-            len(self.foundImages) == 0:
-            return
-
-        self.current_page += increment
-        maxNumPage = math.ceil(len(self.foundImages) / self.max_items)
-        self.current_page = max(0, min(self.current_page, maxNumPage - 1))
-        self.refreshImages()
-
-    def navigateToIndex(self, pageNum: int):
-        maxNumPage = math.ceil(len(self.foundImages) / self.max_items)
-        self.current_page = max(0, min(pageNum, maxNumPage - 1))
-        self.refreshImages()
-
-    def setFilter(self, filter: str):
-        stringsInText = filter.lower().split(" ")
-        if filter.lower() == "":
-            self.foundImages = copy.deepcopy(self.allImages)
-            self.reorganizeImages()
-            self.refreshImages()
-            return 
-
-        newImages = []
-        for word in stringsInText:
-            for path in self.allImages:
-                # exclude path outside from search
-                if word in path.replace(self.directoryPath, "").lower() and not path in newImages and word != "" and word != " ":
-                    newImages.append(path)
-
-        self.foundImages = newImages
-        self.reorganizeImages()
-        self.refreshImages()
+    # Pagination
+    def Pagination_Reset( self, ey ):
+        oz = ey % self.th
+        self.glt = ey - oz
+        self.glb = self.glt + self.th
     
-    def setDirectoryPath(self, path: str):
-        self.directoryPath = path
-        self.favouriteImages = []
-        self.foundImages = []
-        self.updateImages()
-    
-    def setZoom(self, zoom_scale: int):
-        self.zoom_scale = float(zoom_scale / 100)        
-        self.resizeView()
+    def Pagination_Stylus( self, ey ):
+        # Event
+        ey = Limit_Range( ey, 0, self.hh )
+        # Variables
+        margin = 2
+        limit = len( self.line_path )
+        update = False
+        # Logic
+        if ey > ( self.glb + margin ):
+            self.grid_start = Limit_Range( self.grid_start - self.gmx, 0, limit )
+            self.grid_end = Limit_Range( self.grid_end - self.gmx, 0, limit )
+            self.Pagination_Reset( ey )
+            update = True
+        if ey < ( self.glt - margin ):
+            self.grid_start = Limit_Range( self.grid_start + self.gmx, 0, limit )
+            self.grid_end = Limit_Range( self.grid_end + self.gmx, 0, limit )
+            self.Pagination_Reset( ey )
+            update = True
+        # Update
+        if update == True:
+            self.Render_Matrix()
+            self.update()
+            self.Camera_Grab()
 
-    #endregion        
-
-    #region Image Methods
-
-    def refreshImages(self):
-
-        def checkPath(path):
-            if not os.path.isfile(path):
-                if path in self.foundImages:
-                    self.foundImages.remove(path)
-                if path in self.allImages:
-                    self.allImages.remove(path)
-                if path in self.favouriteImages:
-                    self.favouriteImages.remove(path)
-
-                dlg = QMessageBox(self)
-                dlg.setWindowTitle("Missing Image!")
-                dlg.setText("This image you tried to open was not found. Removing from the list.")
-                dlg.exec()
-
-                return False
-
-            return True
-
-        def checkValidImages():
-            found = 0
-            max_items = self.max_items
-            for path in self.foundImages:
-                if found == max_items:
-                    return
-
-                if checkPath(path):
-                    found = found + 1
-
-
-        checkValidImages()
-        buttonsSize = len(self.imagesButtons)
-
-        # don't try to access image that isn't there
-        maxRange = min(len(self.foundImages) - self.current_page * buttonsSize, buttonsSize)
-
-        for i in range(0, len(self.imagesButtons)):
-            if i < maxRange:
-                # image is within valid range, apply it
-                path = self.foundImages[i + buttonsSize * self.current_page]
-                self.imagesButtons[i].setFavourite(path in self.favouriteImages)
-                self.imagesButtons[i].setImage(path)
-                self.imagesButtons[i].setExportOptions(self.item_export_fit_canvas, self.item_export_scale)
-            else:
-                # image is outside the range
-                self.imagesButtons[i].setFavourite(False)
-                self.imagesButtons[i].setImage("")
-                self.imagesButtons[i].setExportOptions(self.item_export_fit_canvas, self.item_export_scale)
-
-        # update text for pagination
-        if len(self.foundImages) == 0 or self.max_items == 0:
-            maxNumPage = 0
+    def Cursor_Icon( self ):
+        if ( self.state_pickcolor == True and self.state_press == True ):
+            QApplication.setOverrideCursor( Qt.CrossCursor )
         else:
-            maxNumPage = math.ceil(len(self.foundImages) / self.max_items)
-        self.pageChanged.emit(maxNumPage, self.current_page)
+            QApplication.restoreOverrideCursor()
 
-    def updateImages(self):
-        newImages = []
-        self.current_page = 0
+    # Camera
+    def Camera_Grab( self ):
+        try:self.qimage_grab = self.grab().toImage()
+        except:pass
 
-        if self.directoryPath == "":
-            self.foundImages = []
-            self.favouriteImages = []
-            self.refreshImages()
-            return 
-
-        it = QDirIterator(self.directoryPath, QDirIterator.Subdirectories)
-
-
-        while(it.hasNext()):
-            if (".webp" in it.filePath() or ".png" in it.filePath() or ".jpg" in it.filePath() or ".jpeg" in it.filePath()) and \
-                (not ".webp~" in it.filePath() and not ".png~" in it.filePath() and not ".jpg~" in it.filePath() and not ".jpeg~" in it.filePath()):
-                newImages.append(it.filePath())
-
-            it.next()
-
-        self.foundImages = copy.deepcopy(newImages)
-        self.allImages = copy.deepcopy(newImages)
-        self.reorganizeImages()
-        self.refreshImages()
-
-    def reorganizeImages(self):
-        # organize images, taking into account favourites
-        # and their respective order
-        favouriteFoundImages = []
-        for image in self.favouriteImages:
-            if image in self.foundImages:
-                self.foundImages.remove(image)
-                favouriteFoundImages.append(image)
-
-        self.foundImages = favouriteFoundImages + self.foundImages
-
-    #endregion
-
-    #region Item Event Methods
-
-    def Item_OnHover(self, SIGNAL_HOVER):
-        # normal images
-        for i in range(0, len(self.imagesButtons)):
-            self.imagesButtons[i].setStyleSheet(self.bg_alpha)
-
-            if SIGNAL_HOVER == str(i):
-                self.imagesButtons[i].setStyleSheet(self.bg_hover)
-
-    def Item_OnClick(self, position):
-        pass
-
-    def Item_OnDoubleClick(self, position):
-        if position < len(self.foundImages) - len(self.imagesButtons) * self.current_page:
-            self.GridSection.openPreview(self.foundImages[position + len(self.imagesButtons) * self.current_page])
-
-    #endregion
-
-    #region Action Methods
+    # Context Menu
+    def Context_Menu( self, event ):
+        self.state_press = False
+        grid_qpixmap = self.grid_qpixmap[self.giy][self.gix]
+        if grid_qpixmap: ContextMenu.OpenContextMenu(self, event)
     
-    def Action_UnpinFromFavourites(self, path):
-        if path in self.favouriteImages:
-            self.favouriteImages.remove(path)
-        # resets order to the default, but checks if foundImages is only a subset
-        # in case it is searching
-        orderedImages = []
-        for image in self.allImages:
-            if image in self.foundImages:
-                orderedImages.append(image)
+    #region Events
+    
+    def mousePressEvent( self, event ):
+        # Variable
+        self.state_press = True
 
-        self.foundImages = orderedImages
-        self.reorganizeImages()
-        self.refreshImages()
+        # Event
+        ex = event.x()
+        ey = event.y()
+        self.ox = ex
+        self.oy = ey
+        self.ex = ex
+        self.ey = ey
 
-    def Action_PinToFavourites(self, path):
-        self.current_page = 0
-        self.favouriteImages = [path] + self.favouriteImages
-        self.reorganizeImages()
-        self.refreshImages()
+        # Functions
+        self.Cursor_Icon( )
+        self.Grid_Index( ex, ey )
+
+        # LMB
+        if ( event.modifiers() == QtCore.Qt.NoModifier and event.buttons() == QtCore.Qt.LeftButton ):
+            if self.state_pickcolor == True:
+                self.operation = "color_picker"
+                self.ColorPicker.Event( ex, ey, self.qimage_grab, self.state_press, self.state_pickcolor )
+            else:
+                self.operation = "neutral_press"
+        if ( event.modifiers() == QtCore.Qt.ShiftModifier and event.buttons() == QtCore.Qt.LeftButton ):
+            self.operation = "camera_move"
+        if ( event.modifiers() == QtCore.Qt.ControlModifier and event.buttons() == QtCore.Qt.LeftButton ):
+            self.operation = "pagination"
+            self.Pagination_Reset( ey )
+        if ( event.modifiers() == QtCore.Qt.AltModifier and event.buttons() == QtCore.Qt.LeftButton ):
+            self.operation = "drag_drop"
+
+        # MMB
+        if ( event.modifiers() == QtCore.Qt.NoModifier and event.buttons() == QtCore.Qt.MiddleButton ):
+            self.operation = "camera_move"
+
+        # RMB
+        if ( event.modifiers() == QtCore.Qt.NoModifier and event.buttons() == QtCore.Qt.RightButton ):
+            self.operation = None
+            self.Context_Menu( event )
+        if ( event.modifiers() == QtCore.Qt.ShiftModifier and event.buttons() == QtCore.Qt.RightButton ):
+            self.operation = "camera_scale"
+        if ( event.modifiers() == QtCore.Qt.ControlModifier and event.buttons() == QtCore.Qt.RightButton ):
+            self.operation = "pagination"
+            self.Pagination_Reset( ey )
+        if ( event.modifiers() == QtCore.Qt.AltModifier and event.buttons() == QtCore.Qt.RightButton ):
+            self.operation = "drag_drop"
+
+        # Update
+        self.update()
+    
+    def mouseMoveEvent( self, event ):
+        # Event
+        ex = event.x()
+        ey = event.y()
+        self.ex = ex
+        self.ey = ey
+
+        # Neutral
+        if self.operation == "neutral_press":
+            self.Grid_Index( ex, ey )
+        if self.operation == "color_picker":
+            self.ColorPicker.Event( ex, ey, self.qimage_grab, self.state_press, self.state_pickcolor )
+        # Camera
+        if self.operation == "camera_move":
+            pass
+        if self.operation == "camera_scale":
+            pass
+        # Pagination
+        if self.operation == "pagination":
+            self.Pagination_Stylus( ey )
+        # Drag Drop
+        if self.operation == "drag_drop":
+            path = self.grid_path[self.giy][self.gix]       
+            clip = Clip(False, 0, 0, 1, 1)
+            if path != None:
+                self.drag = True
+                self.SIGNAL_DRAG.emit( path, clip )
+
+
+        # Update
+        self.update()
+    
+    def mouseDoubleClickEvent( self, event ):
+        self.SIGNAL_PREVIEW_REQUESTED.emit( self.grid_path[self.giy][self.gix] )
+    
+    def mouseReleaseEvent( self, event ):
+        # Variables
+        self.operation = None
+        self.state_press = False
+        # Function
+        self.ColorPicker.Event( self.ex, self.ey, self.qimage_grab, self.state_press, self.state_pickcolor )
+        self.Cursor_Icon( )
+        # Update
+        self.update()
+        self.Camera_Grab()
+
+    def wheelEvent( self, event ):
+        delta_y = event.angleDelta().y()
+        angle = 5
+        if delta_y >= angle:
+            self.Grid_Increment( +1 )
+        if delta_y <= -angle:
+            self.Grid_Increment( -1 )
+
+    def dragEnterEvent( self, event ):
+        if event.mimeData().hasImage:
+            self.drop = True
+            event.accept()
+        else:
+            event.ignore()
+        self.update()
+    
+    def dragMoveEvent( self, event ):
+        if event.mimeData().hasImage:
+            self.drop = True
+            event.accept()
+        else:
+            event.ignore()
+        self.update()
+    
+    def dragLeaveEvent( self, event ):
+        self.drop = False
+        event.accept()
+        self.update()
+    
+    def dropEvent( self, event ):
+        if event.mimeData().hasImage:
+            if ( self.drop == True and self.drag == False ):
+                event.setDropAction( Qt.CopyAction )
+                mime_data = NativeActions.Drop_Inside( event )
+                self.SIGNAL_DROP.emit( mime_data )
+            event.accept()
+        else:
+            event.ignore()
+        self.drop = False
+        self.drag = False
+        self.update()
+
+    def enterEvent( self, event ):
+        self.Camera_Grab()
+    
+    def leaveEvent( self, event ):
+        self.update()
+
+    def paintEvent( self, event ):
+        # Variables
+        ww = self.ww
+        hh = self.hh
+        w2 = self.w2
+        h2 = self.h2
+        if ww < hh:
+            side = ww
+        else:
+            side = hh
+        if self.tw < self.th:
+            thumb = self.tw
+        else:
+            thumb = self.th
+
+        # Painter
+        painter = QPainter( self )
+        painter.setRenderHint( QtGui.QPainter.Antialiasing, True )
+
+        # Background Hover
+        painter.setPen( QtCore.Qt.NoPen )
+        painter.setBrush( QBrush( self.color_alpha ) )
+        painter.drawRect( 0, 0, ww, hh )
+
+        # Draw QPixmaps
+        for y in range( 0, len( self.grid_qpixmap ) ):
+            row = self.grid_qpixmap[y]
+            for x in range( 0, len( row ) ):
+                # Clip Mask
+                px = self.tw * x
+                py = self.th * y
+                thumbnail = QRect( int( px ), int( py ), int( self.tw ), int( self.th ) )
+                painter.setClipRect( thumbnail, Qt.ReplaceClip )
+
+                # Render
+                qpixmap = self.grid_qpixmap[y][x]
+                broken = self.Painter_Icon( "broken-preset" )
+                render = True
+                if qpixmap in [ None, False, True ]:
+                    render = False
+                if render == True:
+                    try:draw = qpixmap.scaled( int( self.tw + 1 ), int( self.th + 1 ), self.grid_fit, self.scale_method )
+                    except:draw = broken.scaled( int( self.tw + 1 ), int( self.th + 1 ), self.grid_fit, self.scale_method )
+                    rw = draw.width()
+                    rh = draw.height()
+                    ox = ( self.tw - rw ) * 0.5
+                    oy = ( self.th - rh ) * 0.5
+                    painter.drawPixmap( int( px + ox ), int( py + oy ), draw )
+                else:
+                    painter.setPen( QtCore.Qt.NoPen )
+                    if qpixmap == None or self.drop == True:
+                        painter.setBrush( QBrush( self.color_2 ) )
+                    else:
+                        painter.setBrush( QBrush( self.color_1 ) )
+                    ox = ( self.tw * 0.5 ) - ( 0.3 * thumb )
+                    oy = ( self.th * 0.5 ) - ( 0.3 * thumb )
+                    painter.drawEllipse( int( px + ox ), int( py + oy ), int( 0.6 * thumb ), int( 0.6 * thumb ) )
+
+        # Clean Mask
+        painter.setClipping( False )
+
+        # Display Color Picker
+        if self.operation == "color_picker":
+            self.ColorPicker.Render( painter, self.ex, self.ey )
+
+        # Drag and Drop Triangle
+        if ( self.drop == True and self.drag == False ):
+            self.Painter_Triangle( painter, w2, h2, side )
 
     #endregion
 
-    #region Event Methods
+    #region Painter / Render
+    
+    def Painter_Icon( self, name ):
+        # name = "warning"
+        # Variables
+        image_size = 500
+        icon_size = 200
+        icon_margin = int( ( image_size - icon_size ) * 0.5 )
+        # QPixmap
+        qpixmap = QPixmap( image_size, image_size )
+        qpixmap.fill( Qt.transparent )
+        qicon = Krita.instance().icon( name ).pixmap( QSize( icon_size, icon_size ) )    
+        painter = QPainter( qpixmap )
+        painter.drawPixmap( icon_margin, icon_margin, qicon )
+        painter.end()
+        return qpixmap
 
-    def resizeEvent(self, a0):
-        self.resizeView()
-        return super().resizeEvent(a0)
+    def Painter_Triangle( self, painter, w2, h2, side ):
+        # Painter
+        painter.setPen( QtCore.Qt.NoPen )
+        painter.setBrush( QBrush( QColor( self.color_1 ) ) )
+        # Variables
+        kw = 0.3 * side
+        kh = 0.2 * side
+        d = 0.5
+        # Polygons
+        if self.function_drop_panel == False:
+            poly_tri = QPolygon( [
+                QPoint( int( w2 - kw ), int( h2 - kh ) ),
+                QPoint( int( w2 + kw ), int( h2 - kh ) ),
+                QPoint( int( w2 ),      int( h2 + kh ) ),
+                ] )
+            painter.drawPolygon( poly_tri )
+        if self.function_drop_panel == True:
+            arrow_left = QPolygon( [
+                QPoint( int( w2 - kw * d ),     int( h2 - kh ) ),
+                QPoint( int( w2 ),              int( h2 ) ),
+                QPoint( int( w2 - kw * d ),     int( h2 + kh ) ),
+                QPoint( int( w2 - kw ),         int( h2 + kh ) ),
+                QPoint( int( w2 - kw * d ),     int( h2 ) ),
+                QPoint( int( w2 - kw ),         int( h2 - kh ) ),
+                ] )
+            arrow_right = QPolygon( [
+                QPoint( int( w2 + kw * d ),     int( h2 - kh ) ),
+                QPoint( int( w2 + kw ),         int( h2 ) ),
+                QPoint( int( w2 + kw * d ),     int( h2 + kh ) ),
+                QPoint( int( w2 ),              int( h2 + kh ) ),
+                QPoint( int( w2 + kw * d ),     int( h2 ) ),
+                QPoint( int( w2 ),              int( h2 - kh ) ),
+                ] )
+            painter.drawPolygon( arrow_left )
+            painter.drawPolygon( arrow_right )
+
+    def Render_Matrix( self ):
+        if len( self.line_path ) > 0:
+            # Grid Matrix
+            gmx = round( self.ww / self.grid_size )
+            gmy = round( ( self.hh * 0.8 ) / self.grid_size )
+            if gmx <= 0:gmx = 1
+            if gmy <= 0:gmy = 1
+            # Thumbnails
+            self.tw = int( self.ww / gmx )
+            self.th = int( self.hh / gmy )
+
+            # Screen Size
+            screen = self.gmx * self.gmy
+            # Screen Variation
+            if ( self.gmx != gmx or self.gmy != gmy ):
+                self.gmx = gmx
+                self.gmy = gmy
+            # Screen Inercia
+            if self.line_index < self.grid_start:
+                self.grid_start = math.floor( self.line_index / self.gmx ) * self.gmx
+            if self.line_index >= self.grid_end:
+                self.grid_start = math.ceil( ( self.line_index - screen + 1 ) / self.gmx ) * self.gmx
+            # Screen End
+            self.grid_end = self.grid_start + screen
+
+            # Clean
+            margin = 100
+            cs = self.grid_start - margin
+            ce = self.grid_end + margin
+            for i in range( 0, cs ):
+                self.line_qpixmap[i] = None
+            for i in range( ce, len( self.line_qpixmap ) ):
+                self.line_qpixmap[i] = None
+
+            # Construct
+            default = QPixmap()
+            archive = self.Painter_Icon( "bundle_archive" )
+            string = []
+            render = []
+            for i in range( self.grid_start, self.grid_end ):
+                try:
+                    path = self.line_path[i]
+                    qpixmap = self.line_qpixmap[i]
+                    if qpixmap in [ None, False, True ]:
+                        qpixmap = QPixmap( path )
+                        if qpixmap.isNull() == False:
+                            self.line_qpixmap[i] = qpixmap
+                        elif zipfile.is_zipfile( path ) == True:
+                            archive = zipfile.ZipFile( path, "r" )
+                            name_list = archive.namelist()
+                            name_list.sort()
+                            qpixmap = True
+                            for name in name_list:
+                                try:
+                                    if name.split( "." )[1] in self.file_search:
+                                        extract = archive.open( name )
+                                        data = extract.read()
+                                        qpixmap = QPixmap()
+                                        qpixmap.loadFromData( data )
+                                        if qpixmap.isNull() == False:
+                                            self.line_qpixmap[i] = qpixmap
+                                            break
+                                except:
+                                    qpixmap = True
+                        else:
+                            qpixmap = True
+                except:
+                    qpixmap = None
+                string.append( path )
+                render.append( qpixmap )
+
+            # Lists
+            self.grid_path = preview_to_grid( string, self.gmx, self.gmy )
+            self.grid_qpixmap = preview_to_grid( render, self.gmx, self.gmy )
+
 
     #endregion
+

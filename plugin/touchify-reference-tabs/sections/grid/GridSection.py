@@ -1,27 +1,14 @@
-# Photobash Images is a Krita plugin to get CC0 images based on a search,
-# straight from the Krita Interface. Useful for textures and concept art!
-# Copyright (C) 2020  Pedro Reis.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
+import copy
+import re
 from typing import TYPE_CHECKING
 from krita import *
 from ...DockerToolbar import DockerToolbar
 from .GridView import GridView
-from .GridNativeActions import GridNativeActions
-from ...classes.variables import *
+from ...dataclasses.Clip import Clip
+from ...extensions.variables import *
+from ...extensions.native_actions import NativeActions
+from ...dataclasses.InsertInfo import InsertInfo
+from ...extensions.filetypes import REFERENCE_FILETYPE_DATA
 
 
 if TYPE_CHECKING:
@@ -29,7 +16,7 @@ if TYPE_CHECKING:
 
 # Zoom percent constants
 MAX_ZOOM = 800
-MIN_ZOOM = 10
+MIN_ZOOM = 80
 ZOOM_STEP = 10
 
 
@@ -37,31 +24,45 @@ ZOOM_STEP = 10
 class GridSection(QWidget):
     def __init__(self, parent = None):
         super().__init__(parent)
+        self.DockerPage: "DockerPage" = parent
 
-        self.section_parent: "DockerPage" = parent
-        self.NativeFn: GridNativeActions = GridNativeActions(self)
-
-        #region Interface
+        self.Variables()
+        self.Components()
+        self.Connections()
         
+    def Canvas(self):
+        return self.DockerPage.view_widget.docker.canvas()
+
+    def Variables(self):
+        self.folder_path = ""
+        self.file_paths = []
+        self.list_mode = "Folder"
+        self.krita_sort = "Name"
+        self.folder_sort = QDir.SortFlag.LocaleAware
+        self.preview_index = 0
+        self.max_items = 0
+        self.update_slider = True
+    
+    def Components(self):
         self.central_layout = QtWidgets.QVBoxLayout(self)
         self.central_layout.setContentsMargins(0, 0, 0, 4)
         self.central_layout.setSpacing(0)
         self.central_layout.setObjectName("verticalLayout")
 
+        self.grid_container = QWidget( self )
+        self.grid_container.setContentsMargins(0,0,0,4)
+        self.central_layout.addWidget(self.grid_container)
 
-
-        self.grid_view = GridView(self)
-        self.grid_view.pageChanged.connect(self.onPageChanged)
+        self.grid_view = GridView(self.grid_container)
         self.grid_view.setContentsMargins(0,0,0,0)
-        self.central_layout.addWidget(self.grid_view)
+        self.grid_view.Set_FileSearch(REFERENCE_FILETYPE_DATA["file_search"])
 
         self.filter_bar = QtWidgets.QLineEdit(self)
         self.filter_bar.setFixedHeight(25)
         self.filter_bar.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
         self.filter_bar.setContentsMargins(0,0,0,4)
         self.filter_bar.setObjectName("filterTextEdit")
-        self.filter_bar.setPlaceholderText("Filter images by words...")
-        self.filter_bar.textChanged.connect(self.onTextFilterChanged)
+        self.filter_bar.setPlaceholderText("Filter...")
         self.central_layout.addWidget(self.filter_bar)
 
         self.tool_panel = DockerToolbar(self, Qt.Orientation.Horizontal)
@@ -71,10 +72,9 @@ class GridSection(QWidget):
         self.zoom_scale = QSpinBox()
         self.zoom_scale.setRange(MIN_ZOOM, MAX_ZOOM)
         self.zoom_scale.setSingleStep(ZOOM_STEP)
-        self.zoom_scale.setSuffix("%")
-        self.zoom_scale.setValue(100)
+        self.zoom_scale.setSuffix("px")
+        self.zoom_scale.setValue(200)
         self.zoom_scale.setToolTip("Zoom")
-        self.zoom_scale.valueChanged.connect(self.onZoomSizeChanged)
         self.tool_panel.addWidget(self.zoom_scale)
 
         self.paginationLabel = QtWidgets.QLabel(self.tool_panel)
@@ -86,33 +86,50 @@ class GridSection(QWidget):
         self.paginationSlider.setOrientation(QtCore.Qt.Horizontal)
         self.paginationSlider.setObjectName("paginationSlider")
         self.paginationSlider.setMinimum(0)
-        self.paginationSlider.valueChanged.connect(self.onSliderChanged)
         self.tool_panel.addWidget(self.paginationSlider)
 
         self.previousButton = QtWidgets.QToolButton(self.tool_panel)
         self.previousButton.setFixedSize(QtCore.QSize(25,25))
         self.previousButton.setArrowType(QtCore.Qt.LeftArrow)
         self.previousButton.setText("...")
-        self.previousButton.clicked.connect(lambda: self.onSliderIncremented(-1))
+
         self.previousButton.setObjectName("previousButton")
         self.tool_panel.addWidget(self.previousButton)
 
         self.nextButton = QtWidgets.QToolButton(self.tool_panel)
         self.nextButton.setFixedSize(QtCore.QSize(25,25))
         self.nextButton.setArrowType(QtCore.Qt.RightArrow)
-        self.nextButton.clicked.connect(lambda: self.onSliderIncremented(1))
         self.nextButton.setObjectName("nextButton")
         self.nextButton.setText("...")
         self.tool_panel.addWidget(self.nextButton)        
-        #endregion
 
-        self.grid_view.initalize()
+    def Connections(self):
+        qApp.paletteChanged.connect(self.OnEvent_ThemeChanged)
+        self.OnEvent_ThemeChanged()
+    
+        self.nextButton.clicked.connect(lambda: self.OnEvent_SliderIncremented(1))
+        self.previousButton.clicked.connect(lambda: self.OnEvent_SliderIncremented(-1))
+        self.zoom_scale.valueChanged.connect(self.OnEvent_SizeChanged)
+        self.filter_bar.textChanged.connect(self.OnEvent_FilterChanged)
 
+        self.paginationSlider.valueChanged.connect(self.OnEvent_SliderValueChanged)
+        self.paginationSlider.sliderReleased.connect(self.OnEvent_SliderReleased)
+        self.paginationSlider.sliderPressed.connect(self.OnEvent_SliderPressed)
 
+        self.grid_view.SIGNAL_INDEX.connect(self.OnEvent_IndexChanged)
+        self.grid_view.SIGNAL_PREVIEW_REQUESTED.connect(self.OnEvent_PreviewRequested)
+        self.grid_view.SIGNAL_DRAG.connect(self.OnEvent_FileLocationRequested)
+        self.grid_view.SIGNAL_LOCATION.connect(self.OnEvent_FileLocationRequested)
+        self.grid_view.SIGNAL_ANALYSE.connect( self.OnEvent_ColorAnalyseRequested )
+        self.grid_view.SIGNAL_PIN_IMAGE.connect(self.OnEvent_PinImage)
+        self.grid_view.SIGNAL_NEW_DOCUMENT.connect( self.OnEvent_NewDocument )
+        self.grid_view.SIGNAL_INSERT_LAYER.connect( self.OnEvent_InsertLayer )
+        self.grid_view.SIGNAL_INSERT_REFERENCE.connect( self.OnEvent_InsertReference )
 
     #region Event Functions
 
     def resizeEvent(self, a0):
+        self.grid_view.Set_Size(self.grid_container.width(), self.grid_container.height() - 4, False)
         return super().resizeEvent(a0)
 
     def leaveEvent(self, event):
@@ -120,43 +137,207 @@ class GridSection(QWidget):
 
     #endregion
 
+    def OnEvent_PreviewRequested(self, path: str):
+        self.DockerPage.OpenPreview(path)
 
+    def OnEvent_SizeChanged(self):
+        self.grid_view.Grid_Size(self.zoom_scale.value())
+        self.updatePageLabel()
 
-    #region Signal Functions
+    def OnEvent_FilterChanged(self):
+        self.reload()
+        self.updatePageLabel()
 
-    def onZoomSizeChanged(self):
-        self.grid_view.setZoom(self.zoom_scale.value())
+    def OnEvent_SliderIncremented(self, increment):
+        self.grid_view.Grid_Increment(increment)
 
-    def onTextFilterChanged(self):
-        self.grid_view.setFilter(self.filter_bar.text())
+    def OnEvent_SliderValueChanged(self, value: int):
+        increment = value - self.grid_view.line_index
+        self.grid_view.Grid_Increment(increment)
 
-    def onSliderIncremented(self, increment):
-        self.grid_view.navigateFromIncrement(increment)
+    def OnEvent_SliderPressed(self):
+        self.update_slider = False
 
-    def onSliderChanged(self, value):
-        self.grid_view.navigateToIndex(value)
+    def OnEvent_SliderReleased(self):
+        self.update_slider = True
+        self.updatePageSlider()
 
-    def onPageChanged(self, maxNumPage: int, currPage: int):
-        if maxNumPage == 0: self.paginationLabel.setText(f"Page: 0/0")
-        else: self.paginationLabel.setText(f"Page: {str(currPage + 1)}/{str(maxNumPage)}")
-        self.paginationSlider.setRange(0, maxNumPage - 1)
-        self.paginationSlider.setSliderPosition(currPage)
+    def OnEvent_NewDocument(self, path: str, clip: Clip):
+        NativeActions.Insert_Document(path, clip)
+
+    def OnEvent_InsertLayer(self, path: str, clip: Clip):
+        NativeActions.Insert_Layer(path, clip, self.Canvas())
+
+    def OnEvent_InsertReference(self, path: str, clip: Clip):
+        NativeActions.Insert_Reference(path, clip, self.Canvas())     
+
+    def OnEvent_FileLocationRequested( self, image_path: str ):
+        NativeActions.File_Location(image_path)
+    
+    def OnEvent_DragDrop( self, image_path: str, clip: Clip ):
+        NativeActions.Drag_Drop(self, image_path, clip)
+    
+    def OnEvent_ColorAnalyseRequested( self, qimage: QImage ):
+        self.grid_view.ColorPicker.Analyse(qimage)
+
+    def OnEvent_PinImage( self, pin: InsertInfo ):
+        self.DockerPage.PinImage(pin)
+
+    def OnEvent_ThemeChanged( self ):
+        # Krita Theme
+        theme_value = QApplication.palette().color( QPalette.Window ).value()
+        if theme_value > 128:
+            self.color_1 = QColor( "#191919" )
+            self.color_2 = QColor( "#e5e5e5" )
+        else:
+            self.color_1 = QColor( "#e5e5e5" )
+            self.color_2 = QColor( "#191919" )
+        # Update
+        self.grid_view.Set_Theme( self.color_1, self.color_2 )
+
+    def OnEvent_IndexChanged(self, current_index: int):
+        self.updatePageLabel(current_index)
+        if self.update_slider: self.updatePageSlider(current_index)
+
 
     #endregion
 
     #region Action Functions
 
-    def openPreview(self, path):
-        self.section_parent.openPreview(path)
+    def reload( self ):
+        search = self.filter_bar.text().lower()
 
-    def pinToFavourites(self, path):
-        self.grid_view.Action_PinToFavourites(path)
+        try:
+            # Time Watcher
+            start = QtCore.QDateTime.currentDateTimeUtc()
 
-    def unpinFromFavourites(self, path):
-        self.grid_view.Action_UnpinFromFavourites(path)
+            # Lists
+            if self.list_mode == "Folder":
+                active_location = os.path.basename( self.folder_path )
+                qdir = QDir(self.folder_path)
+                qdir.setSorting( self.folder_sort )
+                qdir.setFilter( QDir.Files | QDir.NoSymLinks | QDir.NoDotAndDotDot )
+                qdir.setNameFilters( REFERENCE_FILETYPE_DATA["file_normal"] )
+                files = qdir.entryInfoList()
+                count = len( files )
+            else:
+                active_location = None
+                files = []
+                count = 0
+
+            # Progress Bar
+            #self.Progress_Value( 0 )
+            #self.Progress_Max( count )
+
+            # Keywords
+            keywords = []
+            remove = []
+            elements = r'[0-9A-Za-z\\/|!"#$%&()=?@£§{[\]\}\'«»,;.:-_çºª¨´~^*-+]+'
+            words = re.findall( elements, search )
+            try:
+                n = words.index( "not" )
+                keywords = words[:n]
+                remove = words[n+1:]
+            except:
+                keywords = words
+            len_key = len( keywords )
+            len_rem = len( remove )
+
+            # Search Cycle
+            path_new = []
+            for i in range( 0, count ):
+                # Progress Bar
+                #self.Progress_Value( i + 1 )
+
+                # Variables
+                item = files[i]
+                if self.list_mode in ( "Krita", "Reference" ):
+                    fn = os.path.basename( item ).lower()
+                    fp = os.path.abspath( item )
+                else:
+                    fn = item.fileName().lower()
+                    fp = os.path.abspath( item.filePath() )
+                # Logic
+                if ( len_key == 0 and len_rem == 0 ):
+                    path_new.append( fp )
+                else:
+                    # Variables
+                    check_add = False
+                    check_rem = False
+                    # Add
+                    for key in keywords:
+                        if key in fn:
+                            check_add = True
+                            break
+                    # Remove
+                    for rem in remove:
+                        if rem in fn:
+                            check_rem = True
+                            break
+                    # Operation
+                    if ( check_add == True and check_rem == False ):
+                        path_new.append( fp )
+
+            # Variables
+            self.file_paths.clear()
+            self.file_paths = copy.deepcopy( path_new )
+            if len( path_new ) > 0:
+                self.file_found = True
+                self.max_items = len( path_new ) - 1
+                self.paginationSlider.setMinimum(1)
+                self.paginationSlider.setMaximum(self.max_items)
+            else:
+                self.file_found = False
+                self.max_items = 0
+                self.paginationSlider.setMinimum(0)
+                self.paginationSlider.setMaximum(0)
+
+            # Update List and Display
+            self.grid_view.Display_Path(self.file_paths, self.paginationSlider.value())
+            self.updatePageLabel()
+
+            # Progress Bar
+            #self.Progress_Value( 0 )
+            #self.Progress_Max( 1 )
+
+            # Time Watcher
+            end = QtCore.QDateTime.currentDateTimeUtc()
+            delta = start.msecsTo( end )
+            time = QTime( 0,0 ).addMSecs( delta )
+            #self.Message_Log( "FILTER", f"{ time.toString( 'hh:mm:ss.zzz' ) } | { active_list } { active_location } | SEARCH { search }" )
+        except Exception as e:
+            print(e)
+            self.max_items = 0
+            self.paginationSlider.setMinimum(0)
+            self.paginationSlider.setMaximum(0)
+
+    def updatePageSlider(self, current_index: int = None):
+        if current_index == None:
+            current_index = self.grid_view.line_index
+    
+        self.paginationSlider.blockSignals(True)
+        self.paginationSlider.valueChanged.disconnect(self.OnEvent_SliderValueChanged)
+        self.paginationSlider.setSliderPosition(current_index)
+        self.paginationSlider.valueChanged.connect(self.OnEvent_SliderValueChanged)
+        self.paginationSlider.blockSignals(False)
+
+    def updatePageLabel(self, current_index: int = None):
+        if current_index == None:
+            current_index = self.grid_view.line_index
+
+        ipp = self.grid_view.gmx * self.grid_view.gmy
+
+        actual_page = int(current_index / ipp)
+        max_pages = int(self.max_items / ipp)
+
+        if self.max_items == 0: 
+            self.paginationLabel.setText(f"Page: 0/0")
+        else: 
+            self.paginationLabel.setText(f"Page: {str(actual_page+1)}/{max_pages+1}")
 
     def changePath(self, folderPath: str):
-        self.grid_view.setDirectoryPath(folderPath)
+        self.folder_path = folderPath
+        self.reload()
 
     
     #endregion

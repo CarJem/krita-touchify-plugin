@@ -1,24 +1,42 @@
+from dataclasses import dataclass
 import os
+from typing import Optional
 import urllib
 from krita import *
 from PyQt5 import QtCore, QtGui
-from .ReferenceCalc import *
-from .ReferencePacker import ReferencePacker
-from .ReferenceColorPicker import *
-from .ReferencePin import ReferencePin
-from .ReferenceContextMenu import ReferenceContextMenu
-from .ReferenceCommons import ReferenceCommons
+from ...extensions.calculations import *
+from .extensions.packer import Packer
+from ...extensions.color_picker import *
+from .dataclasses.ReferencePin import ReferencePin
+from .ui.ContextMenu import ContextMenu
+from ...extensions.commons import Commons
+from ...extensions.native_actions import NativeActions
+from ...dataclasses.Clip import Clip
+from ...dataclasses.InsertInfo import InsertInfo
 
 
 
 class ReferenceView( QWidget ):
+
+
+    @dataclass
+    class LabelInfo:
+        valid: bool
+        text: Optional[str] = None
+        font: Optional[str] = None
+        letter: Optional[int] = None
+        pen: Optional[str] = None
+        bg: Optional[str] = None
+        
+
+
     #region Signals
     # General
-    SIGNAL_DRAG = QtCore.pyqtSignal( [ str, dict ] )
+    SIGNAL_DRAG = QtCore.pyqtSignal( [ str, Clip ] )
     SIGNAL_DROP = QtCore.pyqtSignal( list )
     # Reference
-    SIGNAL_PIN_IMAGE = QtCore.pyqtSignal( dict )
-    SIGNAL_PIN_LABEL = QtCore.pyqtSignal( dict )
+    SIGNAL_PIN_IMAGE = QtCore.pyqtSignal( InsertInfo )
+    SIGNAL_PIN_LABEL = QtCore.pyqtSignal( InsertInfo )
     SIGNAL_PIN_SAVE = QtCore.pyqtSignal( [ QPixmap ] )
     SIGNAL_BOARD_SAVE = QtCore.pyqtSignal( list )
     SIGNAL_CAMERA = QtCore.pyqtSignal( [ list, float, int ] )
@@ -26,17 +44,16 @@ class ReferenceView( QWidget ):
     SIGNAL_FULL_SCREEN = QtCore.pyqtSignal( bool )
     SIGNAL_LOCATION = QtCore.pyqtSignal( str )
     SIGNAL_ANALYSE = QtCore.pyqtSignal( [ QImage ] )
-    SIGNAL_NEW_DOCUMENT = QtCore.pyqtSignal( [ str, dict ] )
-    SIGNAL_INSERT_LAYER = QtCore.pyqtSignal( [ str, dict ] )
-    SIGNAL_INSERT_REFERENCE = QtCore.pyqtSignal( [ str, dict ] )
+    SIGNAL_NEW_DOCUMENT = QtCore.pyqtSignal( [ str, Clip ] )
+    SIGNAL_INSERT_LAYER = QtCore.pyqtSignal( [ str, Clip ] )
+    SIGNAL_INSERT_REFERENCE = QtCore.pyqtSignal( [ str, Clip ] )
     # UI
     SIGNAL_PB_VALUE = QtCore.pyqtSignal( int )
     SIGNAL_PB_MAX = QtCore.pyqtSignal( int )
     SIGNAL_PACK_STOP = QtCore.pyqtSignal( bool )
     SIGNAL_LABEL_PANEL = QtCore.pyqtSignal( bool )
-    SIGNAL_LABEL_INFO = QtCore.pyqtSignal( dict )
+    SIGNAL_LABEL_INFO = QtCore.pyqtSignal( [LabelInfo], [type(None)] )
     SIGNAL_ACTIONS_UPDATED = QtCore.pyqtSignal( )
-    SIGNAL_SNAP_TOGGLED = QtCore.pyqtSignal( bool )
     SIGNAL_PREVIEW_REQUESTED = QtCore.pyqtSignal( QPixmap )
     #endregion
 
@@ -62,16 +79,24 @@ class ReferenceView( QWidget ):
         self.state_press = False
         self.state_select = False
         self.state_pack = False
-        self.state_pickcolor = False
-        self.state_label = False
         self.state_focused = False
-        self.state_autosave = False
-        # Interaction
-        self.click_operation = None
-        self.press_operation = None
-
-        self.state_snaphold = False
         self.state_snap = False
+
+        # Mode
+        self.mode_autosave = False
+        self.mode_label = False
+        self.mode_pickcolor = False
+        self.mode_snap = False
+        self.mode_base_selection = False
+        self.mode_base_cameramove = False
+        self.mode_base_camerascale = False
+        self.mode_base_selectionmove = False
+        self.mode_lock = False
+
+        # Interaction
+        self.operation = None
+
+
 
         # Camera
         self.cn = [
@@ -252,27 +277,13 @@ class ReferenceView( QWidget ):
         self.color_blue = QColor( "#3daee9" )
 
         # Color Picker
-        self.pigment_o = None
-        self.qimage_grab = None
-        self.color_active = QColor( 0, 0, 0 )
-        self.color_previous = QColor( 0, 0, 0 )
-
-        # Function>>
-        self.function_drop_panel = False
-        self.function_operation = ""
-
-        # Debug Packer Points
-        # self.p = []
+        self.ColorPicker = ColorPicker(self)
     
     #region Relay
 
     def Set_File_Extension( self, file_extension ):
         self.file_extension = file_extension
         
-    def Find_Pigment_O( self ):
-        result = Import_Pigment_O()
-        if result != None:
-            self.pigment_o = result
 
     def Set_Theme( self, color_1, color_2 ):
         self.color_1 = color_1
@@ -298,6 +309,7 @@ class ReferenceView( QWidget ):
             self.Board_Limit( "DRAW" )
             # Update
             self.resize( ww, hh )
+            self.ColorPicker.setSourceSize(ww, hh)
     
     def Set_Camera( self, position, zoom ):
         # Position
@@ -341,11 +353,6 @@ class ReferenceView( QWidget ):
         self.file_path = file_path
         self.update()
     
-    def Set_Function( self, function_drop_panel, function_operation ):
-        self.function_drop_panel = function_drop_panel
-        self.function_operation = function_operation
-        self.update()
-    
     #endregion
     
     #region Points
@@ -379,7 +386,7 @@ class ReferenceView( QWidget ):
     def Pin_URL( self, bx, by ):
         url, ok = QInputDialog.getText( self, "Insert Pin", "URL", QLineEdit.Normal, "" )
         if ok and url != "":
-            pin = { "bx" : bx, "by" : by, "image_path" : url }
+            pin = ReferenceView.InsertInfo(bx, by, url)
             self.SIGNAL_PIN_IMAGE.emit( pin )
             
     def Pin_ZData(self, index ):
@@ -387,9 +394,9 @@ class ReferenceView( QWidget ):
         web = self.pin_list[index].web
 
         if path != None:
-            zdata = ReferenceCommons.Bytes_Python( path )
+            zdata = Commons.Bytes_Python( path )
         elif web != None:
-            zdata = ReferenceCommons.Download_Data( web )
+            zdata = Commons.Download_Data( web )
         else:
             zdata = None
 
@@ -648,10 +655,7 @@ class ReferenceView( QWidget ):
     
     def Label_Insert( self, pos: QPoint ):
         bx, by = self.Point_Location( pos.x(), pos.y() )
-        pin = {
-            "bx" : bx,
-            "by" : by,
-            }
+        pin = ReferenceView.InsertInfo(bx,by)
         self.SIGNAL_PIN_LABEL.emit( pin )
     
     def Label_List( self ):
@@ -666,16 +670,17 @@ class ReferenceView( QWidget ):
     
     def Label_Panel( self, index ):
         if index:
-            info = {
-                "text"   : self.pin_list[index].text,
-                "font"   : self.pin_list[index].font,
-                "letter" : self.pin_list[index].letter,
-                "pen"    : self.pin_list[index].pen,
-                "bg"     : self.pin_list[index].bg,
-                }
+            info = ReferenceView.LabelInfo(
+                True,
+                self.pin_list[index].text,
+                self.pin_list[index].font,
+                self.pin_list[index].letter,
+                self.pin_list[index].pen,
+                self.pin_list[index].bg 
+            )
             self.SIGNAL_LABEL_INFO.emit( info )
         else:
-            self.SIGNAL_LABEL_INFO.emit( {} )            
+            self.SIGNAL_LABEL_INFO.emit( ReferenceView.LabelInfo(False) )            
 
     def Get_Label_Infomation( self ):
         lista = self.Label_List()
@@ -1332,22 +1337,6 @@ class ReferenceView( QWidget ):
                 # QPixmaps
                 self.Pin_Draw_QPixmap( self.pin_list, i )
     
-    def Snap_Hold( self, boolean: bool ):
-        self.state_snaphold = boolean
-        if self.state_snap != boolean:
-            self.state_snap = boolean
-            self.SIGNAL_SNAP_TOGGLED.emit( self.state_snap )
-
-    def Snap_Toggle( self, boolean: bool = None ):
-        if self.state_snaphold: return
-
-        if boolean == None:
-            boolean = not self.state_snap
-
-        if self.state_snap != boolean:
-            self.state_snap = boolean
-            self.SIGNAL_SNAP_TOGGLED.emit( self.state_snap )
-
     #endregion
     
     #region Selection
@@ -1509,7 +1498,7 @@ class ReferenceView( QWidget ):
         # Board
         self.Board_Limit( "DRAW" )
         self.Board_Render()
-        if self.state_autosave: self.Board_Save()
+        if self.mode_autosave: self.Board_Save()
         # Update
         self.update()
         self.Camera_Grab()
@@ -1666,7 +1655,7 @@ class ReferenceView( QWidget ):
                     fn = f.fileName() # basename
                     fp = os.path.abspath( f.filePath() ) # path
                     if basename == fn and fp not in path_old:
-                        pin = { "bx" : bx + 20, "by" : by + 20, "image_path" : fp }
+                        pin = ReferenceView.InsertInfo(bx + 20, by + 20, fp)
                         self.SIGNAL_PIN_IMAGE.emit( pin )
                         break
             # Selection
@@ -1785,14 +1774,14 @@ class ReferenceView( QWidget ):
             if thread == True:self.Packer_Thread_Start( method )
     
     def Packer_Single_Start( self, method ):
-        self.worker_packer = ReferencePacker()
+        self.worker_packer = Packer()
         self.worker_packer.run( self, "SINGLE", method )
     
     def Packer_Thread_Start( self, method ):
         # Thread
         self.thread_packer = QThread()
         # Worker
-        self.worker_packer = ReferencePacker()
+        self.worker_packer = Packer()
         self.worker_packer.moveToThread( self.thread_packer )
         # Thread
         self.thread_packer.started.connect( lambda : self.worker_packer.run( self, "THREAD", method ) )
@@ -1859,57 +1848,187 @@ class ReferenceView( QWidget ):
 
     def Context_Menu( self, event ):
         self.state_press = False
-        self.press_operation = None
-        ReferenceContextMenu.OpenContextMenu(self, event)
-
+        ContextMenu.OpenContextMenu(self, event)
 
     def Insert_Drag( self, path, clip ):
         if path != None:
             self.drag = True
             self.SIGNAL_DRAG.emit( path, clip )
     
-    def Insert_Check( self ):
-        doc = Krita.instance().documents()
-        insert = len( doc ) > 0
-        return insert
-    
-    def Drop_Inside( self, event ):
-        # Mimedata
-        mimedata = event.mimeData()
 
-        # Has Boolean
-        has_text = mimedata.hasText()
-        has_html = mimedata.hasHtml()
-        has_urls = mimedata.hasUrls()
-        has_image = mimedata.hasImage()
-        # has_color = mimedata.hasColor()
-
-        # Data
-        data_text = mimedata.text()
-        data_html = mimedata.html()
-        data_urls = mimedata.urls()
-        data_image = mimedata.imageData()
-        # data_color = mimedata.colorData()
-
-        # Construct Mime Data
-        mime_data = []
-        if has_text == True and has_html == True and has_image == True:
-            mime_data.append( data_text )
-        else:
-            for i in range( 0, len( data_urls ) ):
-                url = os.path.abspath ( data_urls[i].toLocalFile() ) # Local File
-                exists = os.path.exists( url )
-                if exists == True:
-                    mime_data.append( url )
-        # Sort
-        if len( mime_data ) > 0:
-            mime_data.sort()
-
-        # Return
-        return mime_data
     
     #endregion
-    
+
+    #region ModeSets / StateSet / Operations
+
+    def ModeSet_Snap( self, boolean: bool = None ):
+        if boolean == None:
+            boolean = not self.mode_snap
+
+        self.mode_snap = boolean
+        if self.state_snap != boolean:
+            self.state_snap = boolean
+            self.SIGNAL_ACTIONS_UPDATED.emit(  )
+
+    def ModeSet_Base_Reset(self):
+        self.mode_base_selectionmove = False
+        self.mode_base_cameramove = False
+        self.mode_base_camerascale = False
+        self.mode_base_selection = False
+        self.SIGNAL_ACTIONS_UPDATED.emit( )
+
+    def ModeSet_Base_Selection( self, boolean: bool = None ):
+        if boolean == None:
+            boolean = not self.mode_base_selection
+
+        self.mode_base_selection = boolean
+        self.mode_base_selectionmove = False
+        self.mode_base_cameramove = False
+        self.mode_base_camerascale = False
+        self.SIGNAL_ACTIONS_UPDATED.emit( )       
+
+    def ModeSet_Base_SelectionMove( self, boolean: bool = None ):
+        if boolean == None:
+            boolean = not self.mode_base_selectionmove
+
+        self.mode_base_selectionmove = boolean
+        self.mode_base_selection = False
+        self.mode_base_cameramove = False
+        self.mode_base_camerascale = False
+        self.SIGNAL_ACTIONS_UPDATED.emit( )       
+
+
+    def ModeSet_Base_CameraMove( self, boolean: bool = None ):
+        if boolean == None:
+            boolean = not self.mode_base_cameramove
+
+        self.mode_base_cameramove = boolean
+        self.mode_base_camerascale = False
+        self.mode_base_selectionmove = False
+        self.mode_base_selection = False
+        self.SIGNAL_ACTIONS_UPDATED.emit( )
+
+    def ModeSet_Base_CameraScale( self, boolean: bool = None ):
+        if boolean == None:
+            boolean = not self.mode_base_camerascale
+
+        self.mode_base_camerascale = boolean
+        self.mode_base_selectionmove = False
+        self.mode_base_cameramove = False
+        self.mode_base_selection = False
+        self.SIGNAL_ACTIONS_UPDATED.emit( )
+
+    def ModeSet_Lock( self, boolean: bool = None ):
+        if boolean == None:
+            boolean = not self.mode_lock
+
+        self.mode_lock = boolean
+        self.SIGNAL_ACTIONS_UPDATED.emit( )
+
+    def ModeSet_ColorPicker(self, boolean: bool = None):
+        if boolean == None:
+            boolean = not self.mode_pickcolor
+
+        self.mode_pickcolor = boolean
+        self.SIGNAL_ACTIONS_UPDATED.emit( )
+
+    def ModeSet_AutoSave(self, boolean: bool = None):
+        if boolean == None:
+            boolean = not self.mode_autosave
+
+        self.mode_autosave = boolean
+        self.SIGNAL_ACTIONS_UPDATED.emit( )
+
+    def ModeSet_Label(self, boolean: bool = None):
+        if boolean == None:
+            boolean = not self.mode_label
+
+        self.mode_label = boolean
+        self.SIGNAL_LABEL_PANEL.emit( self.mode_label )
+        self.SIGNAL_ACTIONS_UPDATED.emit()
+
+    def StateSet_Snap( self, boolean: bool = None ):
+        if self.mode_snap: return
+
+        if boolean == None:
+            boolean = not self.state_snap
+
+        if self.state_snap != boolean:
+            self.state_snap = boolean
+            self.SIGNAL_ACTIONS_UPDATED.emit(  )
+
+    def Operation_DoubleClick(self, event: QMouseEvent):
+        modifiers = event.modifiers()
+        buttons = event.buttons()
+
+        operation = None
+
+        match buttons:
+            case QtCore.Qt.MouseButton.LeftButton:
+                match modifiers:
+                    case QtCore.Qt.KeyboardModifier.NoModifier:
+                        operation = "preview"
+                    case QtCore.Qt.KeyboardModifier.ControlModifier:
+                        if self.mode_lock == False: operation ="select_all"
+            case QtCore.Qt.MouseButton.RightButton:
+                match modifiers:
+                    case QtCore.Qt.KeyboardModifier.ControlModifier:
+                        if self.mode_lock == False: operation ="select_clear"
+        
+        return operation
+
+    def Operation_Press(self, event: QMouseEvent):
+        modifiers = event.modifiers()
+        buttons = event.buttons()
+        operation = None
+
+        match buttons:
+                case QtCore.Qt.MouseButton.LeftButton:
+                    match modifiers:
+                        case QtCore.Qt.KeyboardModifier.NoModifier:
+                            if self.mode_base_selectionmove:
+                                if self.state_focused: operation = "pin_move"
+                            elif self.mode_base_cameramove: operation = "camera_move"
+                            elif self.mode_base_camerascale: operation = "camera_scale"
+                            elif self.mode_pickcolor == True: operation = "color_picker"
+                            elif self.mode_base_selection and self.mode_lock == False: operation = "select_add"
+                            elif self.mode_lock == False:
+                                if self.pin_index == None: operation = "select_replace"
+                                elif self.state_focused: operation = "pin_transform"
+                                else: operation = "pin_move"
+                        case QtCore.Qt.KeyboardModifier.ShiftModifier:
+                            operation = "camera_move"
+                        case QtCore.Qt.KeyboardModifier.ControlModifier:
+                            if self.mode_lock == False: operation = "select_add"
+                        case QtCore.Qt.KeyboardModifier.AltModifier:
+                            operation = "drag_drop"
+                        case ( QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier ):
+                            if self.mode_lock == False: operation = "pin_transform"
+                        case ( QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier | QtCore.Qt.AltModifier ):
+                            operation = "pin_preview"
+                case QtCore.Qt.MouseButton.MiddleButton:
+                    match modifiers:
+                        case QtCore.Qt.KeyboardModifier.NoModifier:
+                            operation = "camera_move"
+                case QtCore.Qt.MouseButton.RightButton:
+                    match modifiers:
+                        case QtCore.Qt.KeyboardModifier.NoModifier:
+                            operation = "context_menu"
+                        case QtCore.Qt.KeyboardModifier.ShiftModifier:
+                            operation = "camera_scale"
+                        case QtCore.Qt.KeyboardModifier.ControlModifier:
+                            if self.mode_lock == False: operation = "select_minus"
+                        case QtCore.Qt.KeyboardModifier.AltModifier:
+                            operation = "drag_drop"
+        
+        return operation
+            
+    def Operation_Release(self):
+        return None
+
+
+    #endregion
+
     #region Events
 
     def sizeHint( self ):
@@ -1971,56 +2090,27 @@ class ReferenceView( QWidget ):
         self.Pin_Active( self.pin_index )
         self.Pin_Limits()
 
-        # LMB
-        if ( event.modifiers() == QtCore.Qt.NoModifier and event.buttons() == QtCore.Qt.LeftButton ):
-
-
-            if self.state_pickcolor == True:
-                self.press_operation = "color_picker"
-                ColorPicker_Event( self, ex, ey, self.qimage_grab )
-            if self.state_pickcolor == False:
-                if self.pin_index == None:
-                    self.press_operation = "select_replace"
+        self.operation = self.Operation_Press(event)
+        
+        match self.operation:
+            case "pin_move":
+                if self.state_focused and self.select_count <= 0 and self.select_box == False:
+                    self.pin_node = self.Pin_Node(self.pin_index)
                 else:
-                    self.click_operation = "pin_move"
-                    self.press_operation = "pin_select"
-
-                    if self.state_focused and self.select_count <= 0 and self.select_box == False:
-                        self.pin_node = self.Pin_Node(self.pin_index)
-                    else:
-                        self.pin_node = 0
-        if ( event.modifiers() == QtCore.Qt.ShiftModifier and event.buttons() == QtCore.Qt.LeftButton ):
-            self.press_operation = "camera_move"
-        if ( event.modifiers() == QtCore.Qt.ControlModifier and event.buttons() == QtCore.Qt.LeftButton ):
-            self.press_operation = "select_add"
-            self.Selection_Click( self.pin_index )
-        if ( event.modifiers() == QtCore.Qt.AltModifier and event.buttons() == QtCore.Qt.LeftButton ):
-            self.press_operation = "drag_drop"
-        if (( event.modifiers() == ( QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier ) and event.buttons() == QtCore.Qt.LeftButton )):
-            self.press_operation = "pin_transform"
-        if (self.state_focused and self.state_pickcolor == False):
-            self.press_operation = "pin_transform"
-        if ( event.modifiers() == ( QtCore.Qt.ShiftModifier | QtCore.Qt.ControlModifier | QtCore.Qt.AltModifier ) and event.buttons() == QtCore.Qt.LeftButton ):
-            self.Pin_Preview( self.pin_index )
-
-        # MMB
-        if ( event.modifiers() == QtCore.Qt.NoModifier and event.buttons() == QtCore.Qt.MiddleButton ):
-            self.press_operation = "camera_move"
-
-        # RMB
-        if ( event.modifiers() == QtCore.Qt.NoModifier and event.buttons() == QtCore.Qt.RightButton ):
-            self.press_operation = None
-            self.Context_Menu( event )
-        if ( event.modifiers() == QtCore.Qt.ShiftModifier and event.buttons() == QtCore.Qt.RightButton ):
-            self.press_operation = "camera_scale"
-        if ( event.modifiers() == QtCore.Qt.ControlModifier and event.buttons() == QtCore.Qt.RightButton ):
-            self.press_operation = "select_minus"
-            self.Selection_Click( self.pin_index )
-        if ( event.modifiers() == QtCore.Qt.AltModifier and event.buttons() == QtCore.Qt.RightButton ):
-            self.press_operation = "drag_drop"
+                    self.pin_node = 0
+            case "color_picker":
+                self.ColorPicker.Event( ex, ey, self.qimage_grab, self.state_press, self.mode_pickcolor )
+            case "select_add":
+                self.Selection_Click( self.pin_index )
+            case "select_minus":
+                self.Selection_Click( self.pin_index )
+            case "context_menu":
+                self.Context_Menu( event )
+            case "pin_preview":
+                self.Pin_Preview( self.pin_index )
 
         # Update
-        self.Cursor_Shape( self.press_operation, self.pin_node )
+        self.Cursor_Shape( self.operation, self.pin_node )
         self.update()
     
     def mouseMoveEvent( self, event ):
@@ -2031,41 +2121,30 @@ class ReferenceView( QWidget ):
         self.ey = ey
 
         if event.modifiers() == QtCore.Qt.NoModifier:
-            self.Snap_Toggle( False )
+            self.StateSet_Snap( False )
         else:
-            self.Snap_Toggle( True )
+            self.StateSet_Snap( True )
 
-        # Operations
-        if self.press_operation == "color_picker":
-            ColorPicker_Event( self, ex, ey, self.qimage_grab )
-
-        if self.press_operation == "pin_move":
-            dx, dy = self.Point_Deltas( ex, ey )
-            self.Move_Pin( dx, dy )
-        if self.press_operation == "pin_transform":
-            self.Pin_Transform( ex, ey, self.pin_node )
-
-        if self.press_operation == "camera_move":
-            self.Camera_Move( ex, ey ) 
-        if self.press_operation == "camera_scale":
-            self.Camera_Scale( ex, ey )
-
-        if self.press_operation == "select_add":
-            self.Selection_Box( ex, ey, "add" )
-        if self.press_operation == "select_minus":
-            self.Selection_Box( ex, ey, "minus" )
-        if self.press_operation == "select_replace":
-            self.Selection_Box( ex, ey, "replace" )
-
-        if self.press_operation == "drag_drop":
-            clip = { 
-                "state" : False,
-                "cl": 0,
-                "ct": 0,
-                "cw": 1,
-                "ch": 1,
-                }
-            self.Insert_Drag( self.pin_path, clip )
+        match self.operation:
+            case "color_picker":
+                self.ColorPicker.Event( ex, ey, self.qimage_grab, self.state_press, self.mode_pickcolor )
+            case "pin_move":
+                dx, dy = self.Point_Deltas( ex, ey )
+                self.Move_Pin( dx, dy )
+            case "pin_transform":
+                self.Pin_Transform( ex, ey, self.pin_node )
+            case "camera_move":
+                self.Camera_Move( ex, ey ) 
+            case "camera_scale":
+                self.Camera_Scale( ex, ey )
+            case "select_add":
+                self.Selection_Box( ex, ey, "add" )
+            case "select_minus":
+                self.Selection_Box( ex, ey, "minus" )
+            case "select_replace":
+                self.Selection_Box( ex, ey, "replace" )
+            case "drag_drop":
+                self.Insert_Drag( self.pin_path, Clip(False, 0,0,1,1) )
 
         # Update
         self.update()
@@ -2075,15 +2154,16 @@ class ReferenceView( QWidget ):
         ex = event.x()
         ey = event.y()
 
-        # LMB
-        if ( event.modifiers() == QtCore.Qt.NoModifier and event.buttons() == QtCore.Qt.LeftButton ):
-            self.Pin_Index( ex, ey )
-            self.Pin_Preview( self.pin_index )
-        if ( event.modifiers() == QtCore.Qt.ControlModifier and event.buttons() == QtCore.Qt.LeftButton ):
-            self.Selection_All()
-        # RMB
-        if ( event.modifiers() == QtCore.Qt.ControlModifier and event.buttons() == QtCore.Qt.RightButton ):
-            self.Selection_Clear()
+        operation = self.Operation_DoubleClick(event)
+
+        match operation:
+            case "preview":
+                self.Pin_Index( ex, ey )
+                self.Pin_Preview( self.pin_index )
+            case "select_all":
+                self.Selection_All()
+            case "select_clear":
+                self.Selection_Clear()
     
     def mouseReleaseEvent( self, event ):
         # Variables
@@ -2091,13 +2171,13 @@ class ReferenceView( QWidget ):
         self.drop = False
         self.drag = False
         # Color Picker
-        ColorPicker_Event( self, self.ex, self.ey, self.qimage_grab )
+        self.ColorPicker.Event(self.ex, self.ey, self.qimage_grab, self.state_press, self.mode_pickcolor )
         # Release
         self.releaseEvent()
     
     def releaseEvent( self ):
         # Variables General
-        self.press_operation = None
+        self.operation = self.Operation_Release()
         self.select_box = False
         # Variables Pin
         self.Pin_Update()
@@ -2162,31 +2242,27 @@ class ReferenceView( QWidget ):
                 pos = event.pos()
                 bx, by = self.Point_Location( pos.x(), pos.y() )
                 # Data
-                mime_data = self.Drop_Inside( event )
+                mime_data = NativeActions.Drop_Inside( event )
                 # Insert Pin
-                if self.function_drop_panel == False:
-                    count = len( mime_data )
-                    # Board
-                    self.state_press = True
+                count = len( mime_data )
+                # Board
+                self.state_press = True
+                # Progress Bar
+                self.ProgressBar_Value( 0 )
+                self.ProgressBar_Maximum( count )
+                # Pin References
+                self.drop = False
+                for i in range( 0, count ):
                     # Progress Bar
-                    self.ProgressBar_Value( 0 )
-                    self.ProgressBar_Maximum( count )
-                    # Pin References
-                    self.drop = False
-                    for i in range( 0, count ):
-                        # Progress Bar
-                        self.ProgressBar_Value( i + 1 )
-                        QApplication.processEvents()
-                        # Pin
-                        image_path = mime_data[i]
-                        pin = { "bx" : bx, "by" : by, "image_path" : image_path }
-                        self.SIGNAL_PIN_IMAGE.emit( pin )
-                    # Progress Bar
-                    self.ProgressBar_Value( 0 )
-                    self.ProgressBar_Maximum( 1 )
-                # Run Function
-                if self.function_drop_panel == True:
-                    self.SIGNAL_DROP.emit( mime_data )
+                    self.ProgressBar_Value( i + 1 )
+                    QApplication.processEvents()
+                    # Pin
+                    image_path = mime_data[i]
+                    pin = ReferenceView.InsertInfo(bx,by,image_path)
+                    self.SIGNAL_PIN_IMAGE.emit( pin )
+                # Progress Bar
+                self.ProgressBar_Value( 0 )
+                self.ProgressBar_Maximum( 1 )
                 # Board
                 self.state_press = False
                 self.Board_Update()
@@ -2199,7 +2275,7 @@ class ReferenceView( QWidget ):
         self.update()
 
     def showEvent( self, event ):
-        self.Find_Pigment_O()
+        self.ColorPicker.Find_Pigment_O()
     
     def enterEvent( self, event ):
         # Variables
@@ -2241,32 +2317,12 @@ class ReferenceView( QWidget ):
             kh = 0.2 * side
             d = 0.5
             # Polygons
-            if self.function_drop_panel == False:
-                poly_tri = QPolygon( [
-                    QPoint( int( w2 - kw ), int( h2 - kh ) ),
-                    QPoint( int( w2 + kw ), int( h2 - kh ) ),
-                    QPoint( int( w2 ),      int( h2 + kh ) ),
-                    ] )
-                painter.drawPolygon( poly_tri )
-            if self.function_drop_panel == True:
-                arrow_left = QPolygon( [
-                    QPoint( int( w2 - kw * d ),     int( h2 - kh ) ),
-                    QPoint( int( w2 ),              int( h2 ) ),
-                    QPoint( int( w2 - kw * d ),     int( h2 + kh ) ),
-                    QPoint( int( w2 - kw ),         int( h2 + kh ) ),
-                    QPoint( int( w2 - kw * d ),     int( h2 ) ),
-                    QPoint( int( w2 - kw ),         int( h2 - kh ) ),
-                    ] )
-                arrow_right = QPolygon( [
-                    QPoint( int( w2 + kw * d ),     int( h2 - kh ) ),
-                    QPoint( int( w2 + kw ),         int( h2 ) ),
-                    QPoint( int( w2 + kw * d ),     int( h2 + kh ) ),
-                    QPoint( int( w2 ),              int( h2 + kh ) ),
-                    QPoint( int( w2 + kw * d ),     int( h2 ) ),
-                    QPoint( int( w2 ),              int( h2 - kh ) ),
-                    ] )
-                painter.drawPolygon( arrow_left )
-                painter.drawPolygon( arrow_right )
+            poly_tri = QPolygon( [
+                QPoint( int( w2 - kw ), int( h2 - kh ) ),
+                QPoint( int( w2 + kw ), int( h2 - kh ) ),
+                QPoint( int( w2 ),      int( h2 + kh ) ),
+                ] )
+            painter.drawPolygon( poly_tri )
     
         def Painter_BoundingBox(pin_index: int):
             # Read
@@ -2539,7 +2595,7 @@ class ReferenceView( QWidget ):
                         del qfont
 
         # Decorators
-        if self.state_pickcolor == False:
+        if self.mode_pickcolor == False:
             # Dots Over
             if ( self.select_box == True or self.state_select == True ):
                 # Variables
@@ -2597,8 +2653,8 @@ class ReferenceView( QWidget ):
             painter.drawPixmap( int( px ), int( py ), preview )
 
         # Display Color Picker
-        if self.press_operation == "color_picker":
-            ColorPicker_Render( self, painter, self.ex, self.ey )
+        if self.operation == "color_picker":
+            self.ColorPicker.Render( painter, self.ex, self.ey )
 
         # Drag and Drop Triangle
         if ( self.drop == True and self.drag == False ):
