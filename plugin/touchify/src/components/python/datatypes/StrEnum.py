@@ -1,12 +1,12 @@
 from enum import EnumMeta
-from enum import StrEnum as StrEnumPy
+from enum import Enum
 
 
 class __StrEnumMeta(EnumMeta):
     def __contains__(cls, item):
         return item in [str(member) for member in cls]
 
-class StrEnum(StrEnumPy, metaclass=__StrEnumMeta):
+class StrEnum(str, Enum, metaclass=__StrEnumMeta):
 
     """
     StrEnum where enum.auto() returns the field name.
