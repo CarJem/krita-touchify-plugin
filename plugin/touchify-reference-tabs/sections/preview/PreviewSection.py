@@ -17,19 +17,16 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, qApp
+from ...extensions.filetypes import REFERENCE_FILETYPE_DATA
 
 from krita import *
- 
-# Zoom percent constants
-MAX_ZOOM = 5000
-MIN_ZOOM = 0
-ZOOM_STEP = 1
-
-useAngleSelector = True
 
 from .PreviewView import PreviewView
+from .PreviewToolbar import PreviewToolbar
+from .ui.PaginationSlider import PaginationSlider
 from ...dataclasses.images import InsertablePin
-from ...DockerToolbar import DockerToolbar
+from ...dataclasses.session import SessionPreview
+from ...extensions.commons import Commons
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ...DockerPage import DockerPage
@@ -59,98 +56,58 @@ class PreviewSection(QWidget):
         self.setAcceptDrops(True)
 
         self.preview_container = QWidget(self)
+        self.preview_container.installEventFilter(self)
         self.preview_container.setContentsMargins(0,0,0,0)
         layout.addWidget(self.preview_container)
 
         self.view = PreviewView(self.preview_container) 
         self.view.setContentsMargins(0,0,0,0)
+        self.view.Set_FileSearch(REFERENCE_FILETYPE_DATA["file_search"])
 
-        self.tool_panel = DockerToolbar(self, Qt.Orientation.Horizontal)
-        self.tool_panel.setFixedHeight(25)
+        self.page_slider = PaginationSlider(self)
+        self.page_slider.setVisible(False)
+        layout.addWidget(self.page_slider)
 
-
-
-        self.zoom_spinbox = QDoubleSpinBox(self)
-        self.zoom_spinbox.setRange(MIN_ZOOM, MAX_ZOOM)
-        self.zoom_spinbox.setSingleStep(ZOOM_STEP)
-        self.zoom_spinbox.setSuffix("%")
-        self.zoom_spinbox.setValue(100)
-        self.zoom_spinbox.setToolTip("Zoom")
-
-        # - page fit status
-        #self.fitButton = QToolButton(self)
-        #self.fitButton.setIcon(Krita.instance().icon("zoom-fit"))
-        #self.fitButton.setToolTip("Fit to page")
-        #self.fitButton.setCheckable(True)
-        #self.fitButton.setChecked(False)
-        #self.fitButton.toggled.connect(self.enactFit)
-
-        # - hmirrored status
-        #self.hMirrorButton = QToolButton(self)
-        #self.hMirrorButton.setIcon(Krita.instance().icon("transform_icons_mirror_x"))
-        #self.hMirrorButton.setToolTip("Horizontal mirroring")
-        #self.hMirrorButton.setCheckable(True)
-        #self.hMirrorButton.setChecked(False)
-        #self.hMirrorButton.toggled.connect(self.reloadTransforms)
-
-        # - vmirrored status
-        #self.vMirrorButton = QToolButton(self)
-        #self.vMirrorButton.setIcon(Krita.instance().icon("transform_icons_mirror_y"))
-        #self.vMirrorButton.setToolTip("Vertical mirroring")
-        #self.vMirrorButton.setCheckable(True)
-        #self.vMirrorButton.setChecked(False)
-        #self.vMirrorButton.toggled.connect(self.reloadTransforms)
-
-        # - rotate status
-        #self.rotateSelector = AngleSelector()
-        #self.rotateSelector.setFlipOptionsMode("ContextMenu")
-        #self.rotateSelector.angleChanged.connect(self.reloadTransforms)
-
-        # - color picker
-        #self.colorSamplerButton = QToolButton(self)
-        #self.colorSamplerButton.setIcon(Krita.instance().icon("krita_tool_color_sampler"))
-        #self.colorSamplerButton.setToolTip("Sample color from image")
-        #self.colorSamplerButton.setCheckable(True)
-        #self.colorSamplerButton.setChecked(False)
-        #self.colorSamplerButton.toggled.connect(self.action_toggleSampleColor)
-        #self.colorSamplerButton.setEnabled(False)
-
-        self.tool_panel.addWidget(self.zoom_spinbox, stretch=1)
-        #self.tool_panel.addWidget(self.fitButton)
-        #self.tool_panel.addWidget(self.hMirrorButton)
-        #self.tool_panel.addWidget(self.vMirrorButton)
-        #self.tool_panel.addWidget(self.rotateSelector, stretch=0)
-        #self.tool_panel.addWidget(self.colorSamplerButton)
+        self.tool_panel = PreviewToolbar(self)
+        layout.addWidget(self.tool_panel)
 
     def Connections( self ):
         qApp.paletteChanged.connect(self.OnEvent_ThemeChanged)
         self.OnEvent_ThemeChanged()
 
-
-        self.zoom_spinbox.valueChanged.connect(self.OnEvent_ZoomIncremented)
-
-        self.view.SIGNAL_INCREMENT.connect(self.OnEvent_Increment)
         self.view.SIGNAL_PIN_IMAGE.connect( self.OnEvent_PinImage )
         self.view.SIGNAL_RETURN_REQUESTED.connect(self.OnEvent_ReturnRequested)
-        self.view.SIGNAL_ZOOM_UPDATED.connect(self.OnEvent_ZoomUpdate)
+        self.view.SIGNAL_EXTRA_PANEL.connect(self.OnEvent_ExtraPanel)
 
+
+    def Session_Load(self, session: SessionPreview):
+        match session.path_type:
+            case "path":
+                self.view.Display_Path(session.path)
+            case "pixmap":
+                self.view.Display_QPixmap(Commons.Data_QPixmap(session.path))
+
+    def Session_Save(self):
+        if self.view.preview_path != None: 
+            resulting_path = self.view.preview_path
+            resulting_type = "path"
+        elif self.view.preview_path == None and self.view.preview_qpixmap != None and isinstance(self.view.preview_qpixmap, QPixmap):
+            resulting_path = Commons.Bytes_QPixmap(self.view.preview_qpixmap)
+            resulting_type = "pixmap"
+        else:
+            resulting_path = ""
+            resulting_type = ""
+
+        return SessionPreview(
+            path=resulting_path,
+            path_type=resulting_type
+        )
 
     # OnEvent
 
-    def OnEvent_ZoomUpdate(self, value: float):
-        factor = 100
-        self.zoom_spinbox.valueChanged.disconnect(self.OnEvent_ZoomIncremented)
-        self.zoom_spinbox.setValue(value*factor)
-        self.zoom_spinbox.valueChanged.connect(self.OnEvent_ZoomIncremented)
-
-
-    def OnEvent_ZoomIncremented(self, value: float):
-        factor = 100
-        if value == 0: self.view.Camera_Zoom(0, False)
-        else: self.view.Camera_Zoom(value / factor, False)
-
-    def OnEvent_Increment(self, value: int):
-        pass
+    def OnEvent_ExtraPanel( self, state: bool ):
+        self.page_slider.setVisible(state)
+        self.update()
         
     def OnEvent_ThemeChanged( self ):
         # Krita Theme
@@ -180,10 +137,11 @@ class PreviewSection(QWidget):
 
     def Action_OpenQPixmap(self, pixmap: QPixmap):
         self.view.Display_QPixmap(pixmap)
-    
-    def resizeEvent(self, event):
-        self.view.Set_Size(self.preview_container.width(), self.preview_container.height())
-        super().resizeEvent(event)
+
+    def eventFilter(self, a0: QObject, a1: QEvent):
+        if a0 == self.preview_container and a1.type() == QEvent.Type.Resize:
+            self.view.Set_Size(self.preview_container.width(), self.preview_container.height())    
+        return super().eventFilter(a0, a1)
     
 
     

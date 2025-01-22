@@ -61,7 +61,7 @@ class ContextMenu(DockerMenu):
 
         # Disable General
         self.action_pin.setEnabled( not (state_null == True) )
-        self.action_random.setEnabled( not (state_null == True) )
+        self.action_random.setEnabled(state_null == False and (state_animation == True or state_compact == True) )
         # Disable Clip
         self.action_clip.setEnabled( not (state_null == True or state_vector == True or path_none == True) )
         # Disable File
@@ -211,7 +211,7 @@ class ContextMenu(DockerMenu):
 
         # Color
         if action == self.action_pick_color:
-            self.view.state_pickcolor = not self.view.state_pickcolor
+            self.view.Toggle_ColorPicker()
         if action == self.action_analyse:
             qpixmap = self.view.Draw_Clip( self.view.preview_qpixmap )
             qimage = qpixmap.toImage()

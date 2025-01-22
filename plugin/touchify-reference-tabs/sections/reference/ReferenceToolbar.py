@@ -65,6 +65,11 @@ class ReferenceToolbar(DockerToolbar):
         self.snap_button.setIcon(Krita.instance().icon("chain-broken-icon"))
         self.addWidget(self.snap_button)
 
+        self.referencepack_stop_button = QtWidgets.QToolButton(self)
+        self.referencepack_stop_button.setIcon(Krita.instance().icon( "snapshot-load" ))
+        self.referencepack_stop_button.setVisible(False)
+        self.addWidget(self.referencepack_stop_button)
+
         self.lock_button = QtWidgets.QToolButton(self)
         self.lock_button.setCheckable(True)
         self.lock_button.setChecked(False)
@@ -76,6 +81,7 @@ class ReferenceToolbar(DockerToolbar):
         self.label_editor_button.clicked.connect(self.Action_LabelEditorToggled)
         self.snap_button.clicked.connect(self.Action_SnapToggle)
         self.lock_button.clicked.connect(self.Action_LockToggled)
+        self.referencepack_stop_button.clicked.connect(self.Action_StopPackingProcess)
 
         self.base_modeset_button.clicked.connect(self.base_modeset_button.showMenu)
         self.mode_normal_action.triggered.connect(self.Action_Base_NormalToggled)
@@ -84,6 +90,8 @@ class ReferenceToolbar(DockerToolbar):
         self.mode_move_action.triggered.connect(self.Action_Base_MoveToggled)
         self.mode_zoom_action.triggered.connect(self.Action_Base_ZoomToggled)
         self.Board().SIGNAL_ACTIONS_UPDATED.connect(self.OnEvent_ActionsUpdated)
+        self.Board().SIGNAL_PACK_STOP.connect(self.OnEvent_ReferencePackStop)
+        
 
     def Board(self):
         return self.Section.view
@@ -114,6 +122,15 @@ class ReferenceToolbar(DockerToolbar):
 
     def Action_LockToggled(self):
         self.Board().ModeSet_Lock()
+
+    def Action_StopPackingProcess(self):
+        self.Board().Packer_Stop()
+
+    def OnEvent_ReferencePackStop( self, boolean: bool ):
+        if boolean == True:
+            self.referencepack_stop_button.setVisible(True)
+        elif boolean == False:
+            self.referencepack_stop_button.setVisible(False)
 
     def OnEvent_ActionsUpdated(self):
         self.snap_button.setChecked(self.Board().state_snap)

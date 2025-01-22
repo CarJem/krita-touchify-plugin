@@ -13,7 +13,7 @@ class NativeActions:
         NativeActions.__Canvas = canvas
 
     @staticmethod
-    def File_Location(self, image_path: str):
+    def File_Location( image_path: str):
         kernel = str( QSysInfo.kernelType() ) # WINDOWS=winnt & LINUX=linux
         if kernel == "winnt": # Windows
             FILEBROWSER_PATH = os.path.join( os.getenv( 'WINDIR' ), 'explorer.exe' )

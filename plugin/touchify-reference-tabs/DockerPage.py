@@ -19,13 +19,6 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from krita import *
 from .dataclasses.images import InsertablePin
- 
-# Zoom percent constants
-MAX_ZOOM = 800
-MIN_ZOOM = 10
-ZOOM_STEP = 10
-
-useAngleSelector = True
 
 
 from .sections.preview.PreviewSection import PreviewSection
@@ -35,6 +28,8 @@ from .sections.reference.ReferenceSection import ReferenceSection
 from .sections.preview.PreviewMenu import PreviewMenu
 from .sections.grid.GridMenu import GridMenu
 from .sections.reference.ReferenceMenu import ReferenceMenu
+
+from .dataclasses.session import SessionTab
 
 from .DockerToolbar import DockerToolbar
 from .DockerMenu import DockerMenu
@@ -114,6 +109,44 @@ class DockerPage(QWidget):
         __ReferenceAction.triggered.connect(lambda: self.changeSection("reference"))
 
         self.changeSection("preview")
+
+    def Get_TabTitle(self):
+        index = self.TabWidget.indexOf(self)
+        if index != -1: return self.TabWidget.tabText(index)
+        else: return ""
+
+    def Set_TabTitle(self, title: str):
+        index = self.TabWidget.indexOf(self)
+        if index == -1: return
+
+        self.TabWidget.setTabText(index, title)
+
+    def Session_Load(self, session: SessionTab):
+        self.Set_TabTitle(session.name)
+        self.PreviewSection.Session_Load(session.preview)
+        self.GridSection.Session_Load(session.grid)
+        self.ReferenceSection.Session_Load(session.ref)
+
+        if session.active_mode:
+            self.changeSection(session.active_mode)
+
+
+    def Session_Save(self):
+        preview = self.PreviewSection.Session_Save()
+        grid = self.GridSection.Session_Save()
+        ref = self.ReferenceSection.Session_Save()
+        tab_name = self.Get_TabTitle()
+        active_mode = self.__current_section
+
+        return SessionTab(
+            name=tab_name,
+            preview=preview,
+            grid=grid,
+            ref=ref,
+            active_mode=active_mode
+        )
+
+
 
     def section(self):
         return self.__current_section

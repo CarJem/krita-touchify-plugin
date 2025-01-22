@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import os
 from typing import Optional
 import urllib
+from urllib.parse import urlparse
 from krita import *
 from PyQt5 import QtCore, QtGui
 from ...extensions.calculations import *
@@ -13,6 +14,8 @@ from ...extensions.commons import Commons
 from ...extensions.native_actions import NativeActions
 from ...dataclasses.images import ImageClip, InsertablePin
 from ...extensions.paintables import Paintables
+from ...extensions.settings import Settings
+from ...extensions.filetypes import Filetypes
 
 
 
@@ -67,7 +70,6 @@ class ReferenceView( QWidget ):
 
         # State
         self.state_inside = False
-        self.state_maximized = False
         self.state_press = False
         self.state_select = False
         self.state_pack = False
@@ -84,6 +86,7 @@ class ReferenceView( QWidget ):
         self.mode_base_camerascale = False
         self.mode_base_selectionmove = False
         self.mode_lock = False
+        self.mode_savewebimages = True
 
         # Interaction
         self.operation = None
@@ -281,7 +284,7 @@ class ReferenceView( QWidget ):
         self.color_1 = color_1
         self.color_2 = color_2
 
-    def Set_Size( self, ww, hh, state_maximized ):
+    def Set_Size( self, ww, hh ):
         if self.state_pack == False:
             # Count
             self.pin_count = len( self.pin_list )
@@ -295,8 +298,6 @@ class ReferenceView( QWidget ):
             self.hh = hh
             self.w2 = ww * 0.5
             self.h2 = hh * 0.5
-            # Maximized State
-            self.state_maximized = state_maximized
             # Board
             self.Board_Limit( "DRAW" )
             # Update
@@ -378,9 +379,28 @@ class ReferenceView( QWidget ):
     def Pin_URL( self, bx, by ):
         url, ok = QInputDialog.getText( self, "Insert Pin", "URL", QLineEdit.Normal, "" )
         if ok and url != "":
-            pin = InsertablePin(bx, by, url)
-            self.SIGNAL_PIN_IMAGE.emit( pin )
-            
+            if self.mode_savewebimages:
+                parsed_url = urlparse(url)
+                file_bytes: bytes = Commons.Download_Data(url)
+                file_name = os.path.join(Settings.getFileDialogState(), os.path.basename(parsed_url.path))
+                file_path = Commons.Dialog_Save(self, "Downloaded Image Location", file_name, "File( *.* )" )
+
+                if file_path not in [ "", ".", None ]: 
+                    with open( file_path, "wb" ) as f:
+                        f.write( file_bytes )
+                    pin = InsertablePin(bx, by, url)
+                    self.SIGNAL_PIN_IMAGE.emit( pin )
+            else:
+                pin = InsertablePin(bx, by, url)
+                self.SIGNAL_PIN_IMAGE.emit( pin )
+                
+    def Pin_File(self, bx, by):
+        filter = Filetypes.generateFiletypeFilter()
+        filePath = Commons.Dialog_Load(self, "Open an image", filter=filter)
+        if filePath in [ "", ".", None ]: return
+        pin = InsertablePin(bx, by, filePath)
+        self.SIGNAL_PIN_IMAGE.emit( pin )
+
     def Pin_ZData(self, index ):
         path = self.pin_list[index].path
         web = self.pin_list[index].web

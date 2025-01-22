@@ -82,7 +82,7 @@ class ContextMenu(DockerMenu):
 
 
         # Disable General (on nothing loaded)
-        self.action_insert_pin.setEnabled(self.view.isEnabled())
+        self.menu_insert_pin.setEnabled(self.view.isEnabled())
         self.action_board_fit.setEnabled(self.view.isEnabled())
 
         # Disable Menus (on nothing loaded)
@@ -119,7 +119,11 @@ class ContextMenu(DockerMenu):
 
         # General
         self.action_board_fit = view_source.addAction( "Board Fit" )
-        self.action_insert_pin = view_source.addAction( "Insert Pin" )
+        self.menu_insert_pin = view_source.addMenu( "Insert Pin" )
+
+        self.action_insert_pin_path = self.menu_insert_pin.addAction("Path")
+        self.action_insert_pin_url = self.menu_insert_pin.addAction("URL")
+
         view_source.addSeparator()
 
         # Label
@@ -180,7 +184,10 @@ class ContextMenu(DockerMenu):
         actions: list[QAction] = [
             # General
             self.action_board_fit,
-            self.action_insert_pin, 
+
+            # Insert Pin
+            self.action_insert_pin_path,
+            self.action_insert_pin_url, 
 
             # Label
             self.action_label_create,
@@ -242,10 +249,17 @@ class ContextMenu(DockerMenu):
         # General
         if action == self.action_board_fit:
             view.Board_Fit()
-        if action == self.action_insert_pin:
+
+        # Insert Pin
+        if action == self.action_insert_pin_url:
             bx = self.event_position.x()
             by = self.event_position.y()
             view.Pin_URL( bx, by )
+
+        if action == self.action_insert_pin_path:
+            bx = self.event_position.x()
+            by = self.event_position.y()
+            view.Pin_File( bx, by )
 
         # Label
         if action == self.action_label_create:

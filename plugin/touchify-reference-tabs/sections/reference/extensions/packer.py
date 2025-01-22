@@ -1,11 +1,17 @@
 from krita import *
 from PyQt5 import QtCore
 from ....extensions.calculations import *
+from ..dataclasses.ReferencePin import ReferencePin
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..ReferenceView import ReferenceView
+
 
 class Packer( QObject ):
 
     # Run Packer
-    def run( self, source, mode, method ):
+    def run( self, source: "ReferenceView", mode: str, method: str ):
         # Variables
         self.stop = False
         pin_list = source.pin_list
@@ -24,48 +30,48 @@ class Packer( QObject ):
         pack_other = [] # No Packing
         for i in range( 0, count ):
             # Index
-            pin_list[i]["index"] = i
+            pin_list[i].index = i
 
             # Entry
-            entry = {
-                "index"    : pin_list[i]["index"],
-                "bx"        : pin_list[i]["bx"],
-                "by"        : pin_list[i]["by"],
-                "bl"        : pin_list[i]["bl"],
-                "br"        : pin_list[i]["br"],
-                "bt"        : pin_list[i]["bt"],
-                "bb"        : pin_list[i]["bb"],
-                "bw"        : pin_list[i]["bw"],
-                "bh"        : pin_list[i]["bh"],
-                "perimeter" : pin_list[i]["perimeter"],
-                "area"      : pin_list[i]["area"],
-                "ratio"     : pin_list[i]["ratio"],
-                }
+            entry = ReferencePin(**{
+                "index"    : pin_list[i].index,
+                "bx"        : pin_list[i].bx,
+                "by"        : pin_list[i].by,
+                "bl"        : pin_list[i].bl,
+                "br"        : pin_list[i].br,
+                "bt"        : pin_list[i].bt,
+                "bb"        : pin_list[i].bb,
+                "bw"        : pin_list[i].bw,
+                "bh"        : pin_list[i].bh,
+                "perimeter" : pin_list[i].perimeter,
+                "area"      : pin_list[i].area,
+                "ratio"     : pin_list[i].ratio
+                })
 
             # Selection
-            select = pin_list[i]["select"]
+            select = pin_list[i].select
             if select == True:
                 # List
                 pack_sort.append( entry )
                 # Area
-                area = pin_list[i]["area"]
+                area = pin_list[i].area
                 perfect_area += area
                 # Write
-                pin_list[i]["pack"] = True
-                pin_list[i]["draw"] = None
+                pin_list[i].pack = True
+                pin_list[i].draw = None
             else:
                 # List
                 pack_other.append( entry )
                 # Write
-                pin_list[i]["pack"] = False
+                pin_list[i].pack = False
         
         # Reorder Pin List
-        list_order = list()
-        reorder = list()
+        list_order = list[ReferencePin]()
+        reorder = list[ReferencePin]()
         reorder.extend( pack_other )
         reorder.extend( pack_sort )
         for i in range( 0, len( reorder ) ):
-            list_order.append( pin_list[ reorder[i]["index"] ] )
+            list_order.append( pin_list[ reorder[i].index ] )
         source.pin_list = list_order
         del list_order, reorder
 
@@ -101,14 +107,14 @@ class Packer( QObject ):
         self.stop = True
 
     # Cycles
-    def Pack_Linear( self, source, mode, method, pack_sort, pack_other, pin_list ):
+    def Pack_Linear( self, source: "ReferenceView", mode: str, method: str, pack_sort: list[ReferencePin], pack_other: list[ReferencePin], pin_list: list[ReferencePin] ):
         # Sorting List
         if method in ( "GRID", "ROW" ):
-            pack_sort = sorted( pack_sort, reverse=True, key=lambda entry:entry["bh"] )
+            pack_sort = sorted( pack_sort, reverse=True, key=lambda entry:entry.bh )
         if method == "COLUMN":
-            pack_sort = sorted( pack_sort, reverse=True, key=lambda entry:entry["bw"] )
+            pack_sort = sorted( pack_sort, reverse=True, key=lambda entry:entry.bw )
         if method == "PILE":
-            pack_sort = sorted( pack_sort, reverse=False, key=lambda entry:entry["area"] )
+            pack_sort = sorted( pack_sort, reverse=False, key=lambda entry:entry.area )
 
         # Starting Points
         start_x = min( self.List_Key( pack_sort, "bl" ) )
@@ -116,7 +122,7 @@ class Packer( QObject ):
         if method == "GRID":
             total_area = 0
             for i in range( 0, len( pack_sort ) ):
-                total_area += pack_sort[i]["area"]
+                total_area += pack_sort[i].area
             side = math.sqrt( total_area )
             end_x = start_x + side
         if method == "PILE":
@@ -132,13 +138,13 @@ class Packer( QObject ):
             # Stop Cycle
             if self.stop == True:
                 message = "Continue Packing ?"
-                loop = QMessageBox.question( QWidget(), "Imagine Board", message, QMessageBox.Yes, QMessageBox.Abort )
+                loop = QMessageBox.question( QWidget(), "Stop Cycle", message, QMessageBox.Yes, QMessageBox.Abort )
                 if loop == QMessageBox.Abort:
                     break
                 self.stop = False
 
             # Index
-            pin_index = pack_sort[s]["index"]
+            pin_index = pack_sort[s].index
 
             # Calculation
             if s == 0:
@@ -146,28 +152,28 @@ class Packer( QObject ):
                     px = start_x
                     py = start_y
                 if method == "GRID":
-                    above = start_y + pack_sort[s]["bh"]
+                    above = start_y + pack_sort[s].bh
                 if method == "PILE":
-                    px = start_x - pack_sort[s]["bw"] * 0.5 + lx * 0.5
-                    py = start_y - pack_sort[s]["bh"] * 0.5 + ly * 0.5
+                    px = start_x - pack_sort[s].bw * 0.5 + lx * 0.5
+                    py = start_y - pack_sort[s].bh * 0.5 + ly * 0.5
             else:
                 if method == "GRID":
-                    if pack_sort[s-1]["br"] >= end_x:
+                    if pack_sort[s-1].br >= end_x:
                         px = start_x
                         py = above
-                        above += pack_sort[s]["bh"]
+                        above += pack_sort[s].bh
                     else:
-                        px = pack_sort[s-1]["br"]
-                        py = pack_sort[s-1]["bt"]
+                        px = pack_sort[s-1].br
+                        py = pack_sort[s-1].bt
                 if method == "ROW":
-                    px = pack_sort[s-1]["br"]
-                    py = pack_sort[s-1]["bt"]
+                    px = pack_sort[s-1].br
+                    py = pack_sort[s-1].bt
                 if method == "COLUMN":
-                    px = pack_sort[s-1]["bl"]
-                    py = pack_sort[s-1]["bb"]
+                    px = pack_sort[s-1].bl
+                    py = pack_sort[s-1].bb
                 if method == "PILE":
-                    px = start_x - pack_sort[s]["bw"] * 0.5 + lx * 0.5
-                    py = start_y - pack_sort[s]["bh"] * 0.5 + ly * 0.5
+                    px = start_x - pack_sort[s].bw * 0.5 + lx * 0.5
+                    py = start_y - pack_sort[s].bh * 0.5 + ly * 0.5
 
             # Move to Point
             source.Move_Point( pack_sort, s, px, py )
@@ -175,24 +181,24 @@ class Packer( QObject ):
 
         # Draw
         for s in range( 0 , len( pack_sort ) ):
-            pin_index = pack_sort[s]["index"]
-            pin_list[pin_index]["pack"] = False
+            pin_index = pack_sort[s].index
+            pin_list[pin_index].pack = False
             source.Pin_Draw_QPixmap( pin_list, pin_index )
 
         # Finish
         pack_area = self.Report_Area( pack_sort )
         return pack_area
-    def Pack_Optimal( self, source, mode, method, pack_sort, pack_other, pin_list ):
+    def Pack_Optimal( self, source: "ReferenceView", mode: str, method: str, pack_sort: list[ReferencePin], pack_other: list[ReferencePin], pin_list: list[ReferencePin] ):
         # Variables
         ru = 5
 
         # Sorting List
         if method == "AREA":
-            pack_sort = sorted( pack_sort, reverse=True, key = lambda entry:entry["area"] )
+            pack_sort = sorted( pack_sort, reverse=True, key = lambda entry:entry.area )
         if method == "PERIMETER":
-            pack_sort = sorted( pack_sort, reverse=True, key = lambda entry:entry["perimeter"] )
+            pack_sort = sorted( pack_sort, reverse=True, key = lambda entry:entry.perimeter )
         if method == "RATIO":
-            pack_sort = sorted( pack_sort, reverse=False, key = lambda entry:entry["ratio"] )
+            pack_sort = sorted( pack_sort, reverse=False, key = lambda entry:entry.ratio )
         if method == "CLASS":
             # Variables
             ratio_0 = []
@@ -200,7 +206,7 @@ class Packer( QObject ):
             ratio_2 = []
             # Sorting
             for i in range( 0, len( pack_sort ) ):
-                ratio = pack_sort[i]["ratio"]
+                ratio = pack_sort[i].ratio
                 if ratio < 1:
                     ratio_0.append( pack_sort[i] )
                 if ratio == 1:
@@ -208,9 +214,9 @@ class Packer( QObject ):
                 if ratio > 1:
                     ratio_2.append( pack_sort[i] )
             pack_sort = []
-            ratio_0 = sorted( ratio_0, reverse=True, key = lambda entry:entry["area"] )
-            ratio_1 = sorted( ratio_1, reverse=True, key = lambda entry:entry["area"] )
-            ratio_2 = sorted( ratio_2, reverse=True, key = lambda entry:entry["area"] )
+            ratio_0 = sorted( ratio_0, reverse=True, key = lambda entry:entry.area )
+            ratio_1 = sorted( ratio_1, reverse=True, key = lambda entry:entry.area )
+            ratio_2 = sorted( ratio_2, reverse=True, key = lambda entry:entry.area )
             if len( ratio_0 ) >= len( ratio_2 ):
                 pack_sort.extend( ratio_0 )
                 pack_sort.extend( ratio_1 )
@@ -226,10 +232,10 @@ class Packer( QObject ):
 
         # Reset Location
         for s in range( 0, len( pack_sort ) ):
-            ox = start_x - pack_sort[s]["bw"]
-            oy = start_y - pack_sort[s]["bh"]
+            ox = start_x - pack_sort[s].bw
+            oy = start_y - pack_sort[s].bh
             source.Move_Point( pack_sort, s, ox, oy )
-            source.Move_Point( pin_list, pack_sort[s]["index"], ox, oy )
+            source.Move_Point( pin_list, pack_sort[s].index, ox, oy )
         QApplication.processEvents()
 
         # Variables
@@ -250,16 +256,16 @@ class Packer( QObject ):
             # Stop Cycle
             if self.stop == True:
                 message = "Continue Packing ?"
-                loop = QMessageBox.question( QWidget(), "Imagine Board", message, QMessageBox.Yes, QMessageBox.Abort )
+                loop = QMessageBox.question( QWidget(), "Stop Cycle", message, QMessageBox.Yes, QMessageBox.Abort )
                 if loop == QMessageBox.Abort:
                     break
                 self.stop = False
 
             # Item
             item = pack_sort[s]
-            bw = item["bw"]
-            bh = item["bh"]
-            pin_index = item["index"]
+            bw = item.bw
+            bh = item.bh
+            pin_index = item.index
 
             # Points XY update
             if s == 0:
@@ -308,10 +314,10 @@ class Packer( QObject ):
                     # State Delete
                     for e in range( 0, len_ext ):
                         # E Point
-                        el = extended[e]["bl"]
-                        er = extended[e]["br"]
-                        et = extended[e]["bt"]
-                        eb = extended[e]["bb"]
+                        el = extended[e].bl
+                        er = extended[e].br
+                        et = extended[e].bt
+                        eb = extended[e].bb
 
                         # Overlaps
                         overlap = (( round(gl,ru) >= round(el,ru) and round(gl,ru) < round(er,ru) ) and ( round(gt,ru) >= round(et,ru) and round(gt,ru) < round(eb,ru) ))
@@ -323,10 +329,10 @@ class Packer( QObject ):
                     if valid != False:
                         for e in range( 0, len_ext ):
                             # E Point
-                            el = extended[e]["bl"]
-                            er = extended[e]["br"]
-                            et = extended[e]["bt"]
-                            eb = extended[e]["bb"]
+                            el = extended[e].bl
+                            er = extended[e].br
+                            et = extended[e].bt
+                            eb = extended[e].bb
 
                             # Test Fit
                             fit = ( round(gl,ru) < round(er,ru) and round(gr,ru) > round(el,ru) ) and ( round(gt,ru) < round(eb,ru) and round(gb,ru) > round(et,ru) )
@@ -453,11 +459,11 @@ class Packer( QObject ):
         for s in range( 0 , count ):
             # Variables
             item = pack_sort[s]
-            index = item["index"]
-            px = item["bl"]
-            py = item["bt"]
+            index = item.index
+            px = item.bl
+            py = item.bt
             # Render
-            pin_list[index]["pack"] = False
+            pin_list[index].pack = False
             source.Pin_Draw_QPixmap( pin_list, index )
 
         # Finish
@@ -468,14 +474,14 @@ class Packer( QObject ):
         del pack_sort, pack_other, extended, grid_points
 
     # Support
-    def List_Key( self, lista, key ):
+    def List_Key( self, lista: list[ReferencePin], key: str ):
         check = list()
         for i in lista:
-            value = i[key]
+            value = i.__getattribute__(key)
             if value not in check:
                 check.append( value )
         return check
-    def Report_Area( self, lista ):
+    def Report_Area( self, lista: list[ReferencePin] ):
         # Lists
         min_x = min( self.List_Key( lista, "bl" ) )
         max_x = max( self.List_Key( lista, "br" ) )
@@ -487,7 +493,7 @@ class Packer( QObject ):
         area = w * h
         # Return
         return area
-    def Extra_Points( self, gl, gr, gt, gb, arranged, grid_points, start_x, start_y, source ):
+    def Extra_Points( self, gl, gr, gt, gb, arranged: list[ReferencePin], grid_points, start_x, start_y, source ):
         # Variables
         pl = list(); pr = list(); pt = list(); pb = list()
         sw = list(); sh = list()
@@ -501,10 +507,10 @@ class Packer( QObject ):
         # Cycle
         for a in range( 0, len( arranged ) ):
             # E Point
-            al = arranged[a]["bl"]
-            ar = arranged[a]["br"]
-            at = arranged[a]["bt"]
-            ab = arranged[a]["bb"]
+            al = arranged[a].bl
+            ar = arranged[a].br
+            at = arranged[a].bt
+            ab = arranged[a].bb
 
             # Projecting Points to Minor
             if ab <= gt:
@@ -597,16 +603,16 @@ class Packer( QObject ):
                     grid_points.append( a2 )
         # Return
         return grid_points
-    def Connection_Valid( self, lista, a, p1x, p1y, p2x, p2y ):
+    def Connection_Valid( self, lista: list[ReferencePin], a, p1x, p1y, p2x, p2y ):
         # Variables
         boolean = True
         for i in range( 0, len( lista ) ):
             if i != a:
                 # Read
-                il = lista[i]["bl"]
-                ir = lista[i]["br"]
-                it = lista[i]["bt"]
-                ib = lista[i]["bb"]
+                il = lista[i].bl
+                ir = lista[i].br
+                it = lista[i].bt
+                ib = lista[i].bb
                 # Checks
                 check = ( ir > p1x and il < p2x ) and ( ib > p1y and it < p2y )
                 if check == True:

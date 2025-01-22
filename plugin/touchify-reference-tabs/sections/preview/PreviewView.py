@@ -28,6 +28,9 @@ class PreviewView( QWidget ):
     SIGNAL_EXTRA_VALUE = QtCore.pyqtSignal( int )
     SIGNAL_EXTRA_MAX = QtCore.pyqtSignal( int )
     SIGNAL_ZOOM_UPDATED = QtCore.pyqtSignal( float )
+    SIGNAL_ROTATION_UPDATED = QtCore.pyqtSignal( float )
+    SIGNAL_EDIT_OPERATIONS_TOGGLED = QtCore.pyqtSignal()
+    SIGNAL_FINISHED_LOADING = QtCore.pyqtSignal()
 
 
     # Init
@@ -43,6 +46,8 @@ class PreviewView( QWidget ):
         self.h2 = 0.5
 
         # Event
+        self.rx = 0
+        self.ry = 0
         self.ox = 0
         self.oy = 0
         self.ex = 0
@@ -72,7 +77,8 @@ class PreviewView( QWidget ):
         self.pcz = 1
         self.cmx = 0 # Moxe X
         self.cmy = 0 # Move Y
-        self.cz = 1 # Zoom
+        self.cmr = 0 # Rotation
+        self.cmz = 1 # Zoom
         self.display = False
 
         # Colors
@@ -156,6 +162,10 @@ class PreviewView( QWidget ):
         self.display = boolean
         self.update()
     
+    def Toggle_ColorPicker(self):
+        self.state_pickcolor = not self.state_pickcolor
+        self.SIGNAL_EDIT_OPERATIONS_TOGGLED.emit()
+
     #endregion
 
     #region Display
@@ -164,11 +174,13 @@ class PreviewView( QWidget ):
         if state == True:
             self.state_animation = False
             self.state_compact = False
+            self.SIGNAL_EXTRA_PANEL.emit( False )
         # Functions
         self.Camera_Reset()
         self.Clip_Reset()
         self.Edit_Reset()
         self.Anim_Pause()
+        self.SIGNAL_FINISHED_LOADING.emit()
     
     def Display_Default( self ):
         self.Display_Reset( True )
@@ -176,6 +188,7 @@ class PreviewView( QWidget ):
         self.preview_qpixmap = None
         self.update()
         self.Camera_Grab()
+        self.SIGNAL_FINISHED_LOADING.emit()
 
     def Display_Path(self, image_path: str):
         def File_Extension( path ):
@@ -192,7 +205,7 @@ class PreviewView( QWidget ):
         extension = File_Extension( image_path )
 
         if extension in file_anima:
-            self.view.Display_Animation( image_path )
+            self.Display_Animation( image_path )
 
         elif extension in file_compact:
             self.Display_Compact( image_path )
@@ -211,10 +224,12 @@ class PreviewView( QWidget ):
         self.preview_path = image_path
         self.update()
         self.Camera_Grab()
+        self.SIGNAL_FINISHED_LOADING.emit()
 
     def Display_Internet(self, url: str):
         qpixmap = Commons.Download_QPixmap( url )
         if qpixmap: self.Display_QPixmap(qpixmap)
+        else: self.Display_Default()
 
     def Display_QPixmap( self, qpixmap ):
         if qpixmap.isNull() == False:
@@ -223,6 +238,7 @@ class PreviewView( QWidget ):
             self.preview_qpixmap = qpixmap
             self.update()
             self.Camera_Grab()
+            self.SIGNAL_FINISHED_LOADING.emit()
         else:
             self.Display_Default()
     
@@ -266,6 +282,7 @@ class PreviewView( QWidget ):
                 # Garbage
                 del qmovie
             self.update()
+            self.SIGNAL_FINISHED_LOADING.emit()
         else:
             self.Display_Static( image_path )
     
@@ -302,30 +319,34 @@ class PreviewView( QWidget ):
             # Update
             self.update()
             self.Camera_Grab()
+            self.SIGNAL_FINISHED_LOADING.emit()
         else:
             self.Display_Static( zip_path )
     # endregion
  
     #region Draw
-    def Draw_Render( self, qpixmap ):
+    def Draw_Render( self, qpixmap: QPixmap ):
         # QPixmap
         if self.display == False:
-            draw = qpixmap.scaled( int( self.ww * self.cz ), int( self.hh * self.cz ), Qt.KeepAspectRatio, self.scale_method )
+            draw = qpixmap.scaled( int( self.ww * self.cmz ), int( self.hh * self.cmz ), Qt.KeepAspectRatio, self.scale_method )
         else:
             ww = qpixmap.width()
             hh = qpixmap.height()
-            draw = qpixmap.scaled( int( ww * self.cz ), int( hh * self.cz ), Qt.KeepAspectRatio, self.scale_method )
+            draw = qpixmap.scaled( int( ww * self.cmz ), int( hh * self.cmz ), Qt.KeepAspectRatio, self.scale_method )
+
         self.bw = draw.width()
         self.bh = draw.height()
+
         # Variables
-        self.bl = self.w2 - ( self.bw * 0.5 ) + ( self.cmx * self.cz )
-        self.bt = self.h2 - ( self.bh * 0.5 ) + ( self.cmy * self.cz )
+        self.bl = self.w2 - ( self.bw * 0.5 ) + ( self.cmx * self.cmz )
+        self.bt = self.h2 - ( self.bh * 0.5 ) + ( self.cmy * self.cmz )
         self.br = self.bl + self.bw
         self.bb = self.bt + self.bh
+
         # Return
         return draw
     
-    def Draw_Clip( self, qpixmap ):
+    def Draw_Clip( self, qpixmap: QPixmap ):
         if self.state_clip == True:
             w = self.preview_qpixmap.width()
             h = self.preview_qpixmap.height()
@@ -372,6 +393,7 @@ class PreviewView( QWidget ):
             if self.anim_timer.isActive() == False:
                 self.Extra_Label( True )
                 self.update()
+                self.SIGNAL_EXTRA_VALUE.emit( self.anim_frame )
     
     def Anim_Export_Cycle( self ):
         if self.state_animation == True:
@@ -475,23 +497,25 @@ class PreviewView( QWidget ):
     def Camera_Reset( self ):
         self.cmx = 0
         self.cmy = 0
-        self.cz = 1
-        self.SIGNAL_ZOOM_UPDATED.emit(self.cz)
-    
+        self.cmz = 1
+        self.cmr = 0
+        self.SIGNAL_ROTATION_UPDATED.emit(self.cmr)
+        self.SIGNAL_ZOOM_UPDATED.emit(self.cmz)
+
     def Camera_Previous( self ):
         self.pcmx = self.cmx
         self.pcmy = self.cmy
-        self.pcz = self.cz
+        self.pcz = self.cmz
     
     def Camera_Move( self, ex, ey ):
-        if self.cz != 0:
-            self.cmx = self.pcmx + ( ( ex - self.ox ) / self.cz )
-            self.cmy = self.pcmy + ( ( ey - self.oy ) / self.cz )
+        if self.cmz != 0:
+            self.cmx = self.pcmx + ( ( ex - self.ox ) / self.cmz )
+            self.cmy = self.pcmy + ( ( ey - self.oy ) / self.cmz )
     
     def Camera_Scale( self, ex, ey ):
         factor = 200
-        self.cz = Limit_Range( self.pcz - ( ( ey - self.oy ) / factor ), 0, 100 )
-        self.SIGNAL_ZOOM_UPDATED.emit(self.cz)
+        self.cmz = Limit_Range( self.pcz - ( ( ey - self.oy ) / factor ), 0, 100 )
+        self.SIGNAL_ZOOM_UPDATED.emit(self.cmz)
     
     def Camera_Grab( self ):
         try:self.qimage_grab = self.grab().toImage()
@@ -502,11 +526,27 @@ class PreviewView( QWidget ):
         if incremental:
             zoom_amount = value * 10
             factor = 200
-            self.cz = Limit_Range( self.pcz - (zoom_amount / factor), 0, 100 )
+            self.cmz = Limit_Range( self.pcz - (zoom_amount / factor), 0, 100 )
         else:
-            self.cz = Limit_Range( value, 0, 100 )
+            self.cmz = Limit_Range( value, 0, 100 )
         self.update()
-        self.SIGNAL_ZOOM_UPDATED.emit(self.cz)
+        self.SIGNAL_ZOOM_UPDATED.emit(self.cmz)
+
+    def Camera_Coords(self, ex: int, ey: int):
+        source_rect = QRect(0, 0, self.ww, self.hh)
+        source_center = source_rect.center()
+        transform = QTransform()
+        transform = transform.translate(source_center.x(), source_center.y())
+        transform = transform.rotate(-self.cmr)
+        transform = transform.translate(-source_center.x(), -source_center.y())
+        x, y = transform.map(ex, ey)
+        if x == None or y == None: return ex, ey
+        else: return int(x), int(y)
+
+    def Camera_Rotate(self, value: float):
+        self.cmr = value
+        self.update()
+        self.SIGNAL_ROTATION_UPDATED.emit(value)
 
     #endregion
 
@@ -542,7 +582,7 @@ class PreviewView( QWidget ):
         self.cb = 0.9
         self.cw = self.cr - self.cl
         self.ch = self.cb - self.ct
-    
+
     def Clip_Node( self, ex, ey ):
         # Nodes
         n1 = [ self.bl + self.bw * self.cl, self.bt + self.bh * self.ct ]
@@ -666,15 +706,19 @@ class PreviewView( QWidget ):
         self.edit_greyscale = False
         self.edit_invert_h = False
         self.edit_invert_v = False
+        self.SIGNAL_EDIT_OPERATIONS_TOGGLED.emit()
     
     def Edit_Display( self, operation ):
         # Operations Boolean Toggle
         if operation == "egs":
             self.edit_greyscale = not self.edit_greyscale
+            self.SIGNAL_EDIT_OPERATIONS_TOGGLED.emit()
         if operation == "efx":
             self.edit_invert_h = not self.edit_invert_h
+            self.SIGNAL_EDIT_OPERATIONS_TOGGLED.emit()
         if operation == "efy":
             self.edit_invert_v = not self.edit_invert_v
+            self.SIGNAL_EDIT_OPERATIONS_TOGGLED.emit()
         if operation == None:
             self.Edit_Reset()
 
@@ -717,10 +761,21 @@ class PreviewView( QWidget ):
         # Event
         ex = event.x()
         ey = event.y()
+
+        ex, ey = self.Camera_Coords(ex, ey)
+
         self.ox = ex
         self.oy = ey
         self.ex = ex
         self.ey = ey
+
+        rx = event.x()
+        ry = event.y()
+
+        self.rx = rx
+        self.ry = ry
+
+
 
         # Cursor
         self.Cursor_Icon( )
@@ -729,12 +784,13 @@ class PreviewView( QWidget ):
         if ( event.modifiers() == QtCore.Qt.NoModifier and event.buttons() == QtCore.Qt.LeftButton ):
             if self.state_pickcolor == True:
                 self.operation = "color_picker"
-                self.ColorPicker.Event( ex, ey, self.qimage_grab, self.state_press, self.state_pickcolor )
+                self.ColorPicker.Event( rx, ry, self.qimage_grab, self.state_press, self.state_pickcolor )
             elif self.state_clip == True:
                 self.operation = "clip"
                 self.Clip_Node( ex, ey )
             else:
                 self.operation = "camera_move"
+                self.Camera_Previous()
         if ( event.modifiers() == QtCore.Qt.ShiftModifier and event.buttons() == QtCore.Qt.LeftButton ):
             self.operation = "camera_move"
             self.Camera_Previous()
@@ -769,12 +825,23 @@ class PreviewView( QWidget ):
         # Event
         ex = event.x()
         ey = event.y()
+
+        ex, ey = self.Camera_Coords(ex, ey)
+
         self.ex = ex
         self.ey = ey
 
+        rx = event.x()
+        ry = event.y()
+
+        self.rx = rx
+        self.ry = ry
+
+
+
         # Neutral
         if ( self.operation == "color_picker" and self.anim_timer.isActive() == False ):
-            self.ColorPicker.Event( ex, ey, self.qimage_grab, self.state_press, self.state_pickcolor )
+            self.ColorPicker.Event( rx, ry, self.qimage_grab, self.state_press, self.state_pickcolor )
         if self.operation == "clip":
             self.Clip_Edit( ex, ey, self.clip_node )
         # Camera
@@ -784,7 +851,7 @@ class PreviewView( QWidget ):
             self.Camera_Scale( ex, ey )
         # Pagination
         if self.operation == "pagination":
-            self.Pagination_Stylus( ex, ey )
+            self.Pagination_Stylus( rx, ry )
         # Drag Drop
         if self.operation == "drag_drop":
             clip = ImageClip(self.state_clip, self.cl, self.ct, self.cw, self.ch)
@@ -806,7 +873,7 @@ class PreviewView( QWidget ):
         self.drag = False
         # Function
         self.Clip_Flip()
-        self.ColorPicker.Event( self.ex, self.ey, self.qimage_grab, self.state_press, self.state_pickcolor )
+        self.ColorPicker.Event( self.rx, self.ry, self.qimage_grab, self.state_press, self.state_pickcolor )
         self.Cursor_Icon( )
         # Update
         self.update()
@@ -816,10 +883,10 @@ class PreviewView( QWidget ):
         delta_y = event.angleDelta().y()
         angle = 5
         if delta_y >= angle:
-            self.SIGNAL_INCREMENT.emit( +1 )
+            #self.SIGNAL_INCREMENT.emit( +1 )
             self.Camera_Zoom(-1)
         if delta_y <= -angle:
-            self.SIGNAL_INCREMENT.emit( -1 )
+            #self.SIGNAL_INCREMENT.emit( -1 )
             self.Camera_Zoom(+1)
 
     def dragEnterEvent( self, event ):
@@ -890,6 +957,7 @@ class PreviewView( QWidget ):
         else:
             side = hh
 
+
         # Painter
         painter = QPainter( self )
         painter.setRenderHint( QtGui.QPainter.Antialiasing, True )
@@ -902,6 +970,14 @@ class PreviewView( QWidget ):
         # Mask
         painter.setClipRect( QRect( int( 0 ), int( 0 ), int( ww ), int( hh ) ), Qt.ReplaceClip )
 
+        #Rotation
+        painter_rect = QRect(0, 0, ww, hh)
+        painter.translate(painter_rect.center())
+        painter.rotate(self.cmr)
+        painter.translate(-painter_rect.center())
+
+
+
         # Render Image
         qpixmap = self.preview_qpixmap
         render = True
@@ -910,7 +986,7 @@ class PreviewView( QWidget ):
         if render == True:
             # Draw Pixmap
             draw = self.Draw_Render( qpixmap )
-            painter.drawPixmap( int( self.bl ), int( self.bt ), draw )
+            painter.drawPixmap(int(self.bl), int(self.bt), draw )
 
             # Clip Area
             if self.state_clip == True:
@@ -964,6 +1040,11 @@ class PreviewView( QWidget ):
             else:painter.setBrush( QBrush( self.color_1 ) )
             painter.drawEllipse( int( w2 - 0.2 * side ), int( h2 - 0.2 * side ), int( 0.4 * side ), int( 0.4 * side ) )
 
+        #Rotation
+        painter.translate(painter_rect.center())
+        painter.rotate(-self.cmr)
+        painter.translate(-painter_rect.center())
+
         # Information
         if self.state_information == True:
             # Variables
@@ -990,7 +1071,7 @@ class PreviewView( QWidget ):
 
         # Display Color Picker
         if self.operation == "color_picker":
-            self.ColorPicker.Render(painter, self.ex, self.ey )
+            self.ColorPicker.Render(painter, self.rx, self.ry )
 
         # Drag and Drop Triangle
         if ( self.drop == True and self.drag == False ):

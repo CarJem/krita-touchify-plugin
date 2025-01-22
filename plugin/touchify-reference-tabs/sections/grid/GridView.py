@@ -64,13 +64,9 @@ class GridView( QWidget ):
         # Clip
         self.clip_false = ImageClip(False,0,0,1,1)
 
-        # State
-        self.state_maximized = False
         self.state_press = False
         self.state_pickcolor = False
 
-        # State
-        self.state_maximized = False
         # Interaction
         self.operation = None
 
@@ -103,12 +99,11 @@ class GridView( QWidget ):
         self.color_1 = color_1
         self.color_2 = color_2
 
-    def Set_Size( self, ww, hh, state_maximized ):
+    def Set_Size( self, ww, hh ):
         self.ww = ww
         self.hh = hh
         self.w2 = ww * 0.5
         self.h2 = hh * 0.5
-        self.state_maximized = state_maximized
         self.resize( ww, hh )
         self.Render_Matrix()
         self.ColorPicker.setSourceSize(ww, hh)

@@ -75,11 +75,11 @@ class ReferenceMenu(DockerMenu):
 
 
     def Action_CreateFile( self ):
-        ref_board = Commons.Dialog_Save(self, "New File Location", "board_000000" )
+        ref_board = Commons.Dialog_Save(self, "New File Location", "board_000000", "File( *.eo )" )
         if ref_board != None: self.RefState().Data_Load( ref_board )
 
     def Action_OpenFile( self ):
-        ref_board = Commons.Dialog_Load(self, "Open File Location" )
+        ref_board = Commons.Dialog_Load(self, "Open File Location", "File( *.eo )" )
         if ref_board != None: self.RefState().Data_Load( ref_board )
             
     def Action_SaveFile( self ):
@@ -89,7 +89,7 @@ class ReferenceMenu(DockerMenu):
         self.RefState().Data_Unload()
 
     def Action_ExportFile( self ):
-        export_path = Commons.Dialog_Save(self, "Export File Location", "export_000000" )
+        export_path = Commons.Dialog_Save(self, "Export File Location", "export_000000", "File( *.eo )" )
         if export_path != None: self.RefState().Data_Export( export_path )
 
     def Action_DownloadFile( self ):

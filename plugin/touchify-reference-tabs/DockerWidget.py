@@ -20,13 +20,15 @@
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QMenuBar, QTabWidget, \
-                            QAction, QMenu, QActionGroup
-from krita import DockWidget
+                            QAction, QMenu, QActionGroup, QInputDialog, QLineEdit
+from krita import DockWidget, Krita
 from .extensions.variables import *
+from .dataclasses.session import Session
 
 
 from .DockerPage import DockerPage
 from .DockerMenu import DockerMenu
+from .extensions.commons import Commons
 
 
 # The main widget, containing the menu bar and tab bar.
@@ -52,36 +54,23 @@ class DockerWidget(QWidget):
         # - File menu   
         fileMenu = self.menubar.addMenu("File")
         fileMenu.aboutToShow.connect(self.updateTabMenus)
-        fileMenu.addAction("New Tab", self.addTab)
-
-        fileMenu.addSeparator()
-
-        closeMenu = fileMenu.addMenu("Close Tabs...")
-        closeMenu.addAction("Close Current Tab", self.closeTab)
-        closeMenu.addAction("Close All Tabs", self.closeAllTabs)
-        closeMenu.addAction("Close Tabs to the Left", self.closeTabsLeft)
-        closeMenu.addAction("Close Tabs to the Right", self.closeTabsRight)
-
+        
         editMenu = self.menubar.addMenu("Edit")
         editMenu.aboutToShow.connect(self.updateTabMenus)
-
-        renameTabAction = editMenu.addAction("Rename tab...")
 
         # - View menu
         viewMenu = self.menubar.addMenu("View")
         viewMenu.aboutToShow.connect(self.updateTabMenus)
 
-        self.showTabBarAction = viewMenu.addAction("Show Tabs", self.toggleTabs)
+        self.showTabBarAction = viewMenu.addAction("Show Tabs", self.Action_ToggleTabs)
         self.showTabBarAction.setCheckable(True)
         self.showTabBarAction.setChecked(True)
 
-        self.showToolbarAction = viewMenu.addAction("Show Toolbar", self.toggleToolbar)
+        self.showToolbarAction = viewMenu.addAction("Show Toolbar", self.Action_ToggleToolbar)
         self.showToolbarAction.setCheckable(True)
         self.showToolbarAction.setChecked(True)
 
-        # - Mode menu
-        modeMenu = self.menubar.addMenu("Mode")
-        modeMenu.aboutToShow.connect(self.updateTabMenus)
+        viewMenu.addSection("Mode")
 
         self.displayModeActionGroup = QActionGroup(self)
 
@@ -101,8 +90,27 @@ class DockerWidget(QWidget):
         referenceAction.setEnabled(False)
         referenceAction.setData("reference")
 
-        self.displayModeActionGroup.triggered.connect(self.changeViewMode)
-        modeMenu.addActions(self.displayModeActionGroup.actions())
+        self.displayModeActionGroup.triggered.connect(self.Action_ChangeViewMode)
+        viewMenu.addActions(self.displayModeActionGroup.actions())
+
+        viewMenu.addSeparator()
+
+        viewMenu.addAction("Tab Properties...", self.Action_RenameTab)
+
+
+        sessionMenu = self.menubar.addMenu("Session")
+        sessionMenu.addAction("Load Session", self.Session_LoadFile)
+        sessionMenu.addAction("Save Session", self.Session_SaveFile)
+
+        sessionMenu.addSeparator()
+
+        sessionMenu.addAction("New Tab", self.Action_AddTab)
+
+        closeTabsMenu = sessionMenu.addMenu("Close Tabs...")
+        closeTabsMenu.addAction("Close Current Tab", self.Action_CloseTab)
+        closeTabsMenu.addAction("Close All Tabs", self.Action_CloseAllTabs)
+        closeTabsMenu.addAction("Close Tabs to the Left", self.Action_CloseTabsLeft)
+        closeTabsMenu.addAction("Close Tabs to the Right", self.Action_CloseTabsRight)
 
         layout.setMenuBar(self.menubar)
         # Don't overwrite Krita's application menubar on macOS.
@@ -124,7 +132,80 @@ class DockerWidget(QWidget):
             }}
         """)
 
+        self.Session_Restore()
 
+    def hideEvent(self, a0):
+        self.Session_Backup()
+        return super().hideEvent(a0)
+
+    def closeEvent(self, a0):
+        self.Session_Backup()
+        return super().closeEvent(a0)
+
+
+    #region Session Functions
+
+    def Session_Load(self, session_state: Session):
+        self.Action_CloseAllTabs()
+        for tab in session_state.tabs:
+            page, index = self.Action_AddTab()
+            page.Session_Load(tab)
+
+        if session_state.active_tab:
+            self.tabWidget.setCurrentIndex(session_state.active_tab)
+
+    def Session_Save(self):
+        tabs = []
+
+        for i in range(0, self.tabWidget.count()):
+            tab = self.tab(i)
+            if not tab: continue
+
+            result = tab.Session_Save()
+            tabs.append(result)
+        
+        active_tab = self.tabWidget.currentIndex()
+
+        result = Session(
+            tabs=tabs,
+            active_tab=active_tab
+        ).write()
+
+        return result
+
+    def Session_Restore(self):
+        try:
+            session_string = Krita.instance().readSetting("Touchify/ReferenceTabsDocker", "LastSession", "")
+            session_state: Session = Session.read(session_string)
+            self.Session_Load(session_state)
+        except:
+            pass
+
+    def Session_Backup(self):
+        try:
+            session_state = self.Session_Save()
+            Krita.instance().writeSetting("Touchify/ReferenceTabsDocker", "LastSession", session_state)
+        except:
+            pass
+
+    def Session_LoadFile(self):
+        path = Commons.Dialog_Load(self, "Load Session File", "File (*.session)")
+        if path == None: return
+
+        with open( path, "r", encoding="utf-8" ) as f:
+            data = f.read()
+            state: Session = Session.read(data)
+            self.Session_Load(state)
+
+    def Session_SaveFile(self):
+        path = Commons.Dialog_Save(self, "Load Session File", "unnamed_session.session", "File (*.session)")
+        if path == None: return
+
+        data = self.Session_Save()
+        with open( path, "w", encoding="utf-8" ) as f:
+            f.write( data )
+
+    #endregion
 
     #region Widget Functions
 
@@ -218,52 +299,60 @@ class DockerWidget(QWidget):
 
     #region Menu Functions
 
-    def changeViewMode(self, action: QAction):
+    def Action_ChangeViewMode(self, action: QAction):
         data = str(action.data())
         tab = self.currentTab()
         current = tab.section()
         if not tab: return
         if current != data: tab.changeSection(data)
 
-    def toggleToolbar(self):
+    def Action_ToggleToolbar(self):
         full_screen_state = self.showToolbarAction.isChecked()
         for i in range(0, self.tabWidget.count()):
             tab = self.tab(i)
             tab.setToolbarVisibile(full_screen_state)
 
-    def toggleTabs(self):
+    def Action_ToggleTabs(self):
         self.tabWidget.setTabBarAutoHide(not self.showTabBarAction.isChecked())
 
-    def addTab(self):
+    def Action_AddTab(self):
         tab = DockerPage(self.tabWidget, self)
         index = self.tabWidget.addTab(tab, "")
         self.tabWidget.setTabText(index, f"#{index}")
         self.tabWidget.setCurrentIndex(index)
+        return tab, index
 
-    def closeTab(self):
+    def Action_CloseTab(self):
         idx = self.tabWidget.currentIndex()
         self.onCloseRequestedTab(idx)
 
-    def closeAllTabs(self):
+    def Action_CloseAllTabs(self):
        while True:
             idx = self.tabWidget.currentIndex()
             if idx == -1:
                 return
             self.onCloseRequestedTab(idx)
 
-    def closeTabsLeft(self):
+    def Action_CloseTabsLeft(self):
        while True:
             idxLeft = self.tabWidget.currentIndex() - 1
             if not self.tab(idxLeft):
                 return
             self.onCloseRequestedTab(idxLeft)
 
-    def closeTabsRight(self):
+    def Action_CloseTabsRight(self):
        while True:
             idxRight = self.tabWidget.currentIndex() + 1
             if not self.tab(idxRight):
                 return
             self.onCloseRequestedTab(idxRight)
+    
+    def Action_RenameTab(self):
+        current_tab = self.currentTab()
+        old_title = current_tab.Get_TabTitle()
+
+        new_title, ok = QInputDialog.getText( self, "Tab Name", "Tab Properties", QLineEdit.EchoMode.Normal, old_title )
+        if ok and new_title != "": current_tab.Set_TabTitle(new_title)
     
     #endregion
 

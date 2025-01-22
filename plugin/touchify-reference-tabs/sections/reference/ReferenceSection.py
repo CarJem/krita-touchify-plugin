@@ -1,3 +1,4 @@
+from urllib.parse import urlparse
 from krita import *
 from ...extensions.calculations import *
 from .ReferenceView import ReferenceView
@@ -11,6 +12,7 @@ from .ReferenceToolbar import ReferenceToolbar
 from .ui.ProgressBar import ProgressBar
 from ...dataclasses.images import InsertablePin
 from ...extensions.commons import Settings
+from ...dataclasses.session import SessionRef
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -38,6 +40,7 @@ class ReferenceSection(QWidget):
         self.setLayout(self.central_layout)
 
         self.refrence_container = QWidget( self )
+        self.refrence_container.installEventFilter(self)
         self.refrence_container.setContentsMargins(0,0,0,4)
         self.central_layout.addWidget(self.refrence_container)
     
@@ -84,7 +87,6 @@ class ReferenceSection(QWidget):
         self.view.SIGNAL_CAMERA.connect( self.OnEvent_CameraChanged )
         self.view.SIGNAL_PB_VALUE.connect( self.OnEvent_ProgressValueChanged )
         self.view.SIGNAL_PB_MAX.connect( self.OnEvent_ProgressMaxChanged )
-        self.view.SIGNAL_PACK_STOP.connect( self.OnEvent_ReferencePackStop )
         self.view.SIGNAL_LABEL_PANEL.connect( self.OnEvent_LabelEditorRequest )
         self.view.SIGNAL_LABEL_INFO.connect( self.OnEvent_LabelInfoUpdated )
         self.view.SIGNAL_ACTIONS_UPDATED.connect(self.OnEvent_ActionsUpdated)
@@ -102,7 +104,16 @@ class ReferenceSection(QWidget):
     def Action_PackerStopCycle( self ):
         self.view.Set_Stop_Cycle()
 
+    def Session_Load(self, session: SessionRef):
+        match session.path_type:
+            case "path":
+                self.ref_state.Data_Load(session.path)
 
+    def Session_Save(self):
+        return SessionRef(
+            path=self.ref_state.path(),
+            path_type="path"
+        )
 
     # OnEvent
     def OnEvent_LabelEditorRequest(self, show: bool):
@@ -131,13 +142,6 @@ class ReferenceSection(QWidget):
             self.color_2 = QColor( "#191919" )
         # Update
         self.view.Set_Theme( self.color_1, self.color_2 )
-
-    def OnEvent_ReferencePackStop( self, boolean: bool ):
-        pass
-        #if boolean == True:
-            #self.layout.stop.setIcon( self.qicon_stop_abort )
-        #elif boolean == False:
-            #self.layout.stop.setIcon( self.qicon_stop_idle )
     
     def OnEvent_DataLoaded(self, new_file: bool):
         if len( self.ref_state.pins() ) > 0:
@@ -192,15 +196,28 @@ class ReferenceSection(QWidget):
         self.Pin_Insert( tipo="label", bx=pin.bx, by=pin.by, text="Text", path=None, web=None )
 
     def OnEvent_PinSave( self, qpixmap: QPixmap ):
-        file_dialog = QFileDialog( self )
-        file_dialog.setFileMode( QFileDialog.FileMode.AnyFile )
-        file_path = file_dialog.getSaveFileName( self, "Save Pin Location", Settings.getFileDialogState(), "File( *.png *.jpg *.jpeg *.bmp *.ppm *.xpm *.xbm )" )[0]
-        if file_path not in [ "", ".", None ]: qpixmap.save( file_path )
+        pin_index = self.view.pin_index
+
+        if self.view.pin_list[pin_index].web != None:
+            parsed_url = urlparse(self.view.pin_list[pin_index].web)
+            file_name = os.path.basename(parsed_url.path)
+        elif self.view.pin_list[pin_index].path != None:
+            file_name = os.path.basename(self.view.pin_list[pin_index].path)
+        else:
+            file_name = "unknown.png"
+
+        file_path = os.path.join(Settings.getFileDialogState(), file_name)
+        file_path = Commons.Dialog_Save(self, "Save Pin Location", file_path, "File( *.png *.jpg *.jpeg *.bmp *.ppm *.xpm *.xbm )" )
+        if file_path not in [ "", ".", None ]: 
+            qpixmap.save( file_path )
+            self.view.pin_list[self.view.pin_index].web = None
+            self.view.pin_list[self.view.pin_index].path = file_path
 
     # Event Overrides
-    def resizeEvent(self, a0):
-        self.view.Set_Size(self.refrence_container.width(), self.refrence_container.height() - 4, False)
-        return super().resizeEvent(a0)
+    def eventFilter(self, a0: QObject, a1: QEvent):
+        if a0 == self.refrence_container and a1.type() == QEvent.Type.Resize:
+            self.view.Set_Size(self.refrence_container.width(), self.refrence_container.height() - 4)    
+        return super().eventFilter(a0, a1)
     
     def Pin_Insert( self, tipo: str, bx: int, by: int, text: str, path: str, web: str ):
         # Variables

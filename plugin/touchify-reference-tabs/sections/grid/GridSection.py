@@ -9,6 +9,7 @@ from ...extensions.native_actions import NativeActions
 from ...dataclasses.images import InsertablePin
 from ...extensions.filetypes import REFERENCE_FILETYPE_DATA
 from ...extensions.commons import Commons
+from ...dataclasses.session import SessionGrid
 
 
 if TYPE_CHECKING:
@@ -50,6 +51,7 @@ class GridSection(QWidget):
         self.central_layout.setObjectName("verticalLayout")
 
         self.grid_container = QWidget( self )
+        self.grid_container.installEventFilter(self)
         self.grid_container.setContentsMargins(0,0,0,4)
         self.central_layout.addWidget(self.grid_container)
 
@@ -120,12 +122,27 @@ class GridSection(QWidget):
         self.grid_view.SIGNAL_PREVIEW_REQUESTED.connect(self.OnEvent_PreviewRequested)
         self.grid_view.SIGNAL_PIN_IMAGE.connect(self.OnEvent_PinImage)
 
+    def Session_Load(self, session: SessionGrid):
+        match session.path_type:
+            case "path":
+                self.changePath(session.path)
+        
+        self.filter_bar.setText(session.filter)
+                
+
+    def Session_Save(self):
+        return SessionGrid(
+            filter=self.filter_bar.text(),
+            path=self.folder_path,
+            path_type="path"
+        )
 
     #region Event Functions
 
-    def resizeEvent(self, a0):
-        self.grid_view.Set_Size(self.grid_container.width(), self.grid_container.height() - 4, False)
-        return super().resizeEvent(a0)
+    def eventFilter(self, a0: QObject, a1: QEvent):
+        if a0 == self.grid_container and a1.type() == QEvent.Type.Resize:
+            self.grid_view.Set_Size(self.grid_container.width(), self.grid_container.height() - 4)    
+        return super().eventFilter(a0, a1)
 
     def leaveEvent(self, event):
         self.filter_bar.clearFocus()

@@ -171,7 +171,7 @@ class ReferenceState(QObject):
                 if os.path.exists( save_path ) == False:
                     qpixmap.save( save_path )
                 else:
-                    Commons.Message_Log( "ERROR", f"Path already exists { save_path }" )
+                    self.Message_Log( "ERROR", f"Path already exists { save_path }" )
 
 
     def Data_Load( self, path: str, new_file: bool = False ):

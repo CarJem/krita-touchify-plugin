@@ -3,6 +3,7 @@ from PyQt5.QtGui import *
 import urllib
 from PyQt5.QtWidgets import QFileDialog
 from .settings import Settings
+from PyQt5.QtCore import *
 
 class Commons:
 
@@ -19,21 +20,22 @@ class Commons:
         pass
 
     @staticmethod
-    def Dialog_Load( self, title ):
+    def Dialog_Load( self, title: str, filter: str ):
         file_dialog = QFileDialog( self )
         file_dialog.setFileMode( QFileDialog.FileMode.AnyFile )
-        file_path = file_dialog.getOpenFileName( self, title, Settings.getFileDialogState(), "File( *.eo )" )[0]
+        file_path = file_dialog.getOpenFileName( self, title, Settings.getFileDialogState(), filter )[0]
         if file_path in [ "", ".", None ]:
             file_path = None
         else: Settings.setFileDialogState(os.path.dirname(file_path))
         return file_path
     
     @staticmethod
-    def Dialog_Save( self, title, name ):
+    def Dialog_Save( self, title, name: str, filter: str ):
+        inital_file_path = os.path.join(Settings.getFileDialogState(), name)
         # File Dialog
         file_dialog = QFileDialog( self )
         file_dialog.setFileMode( QFileDialog.FileMode.AnyFile )
-        file_path = file_dialog.getSaveFileName( self, title,  Settings.getFileDialogState(), "File( *.eo )" )[0]
+        file_path = file_dialog.getSaveFileName( self, title, inital_file_path, filter )[0]
         if file_path in [ "", ".", None ]:
             file_path = None
         else: Settings.setFileDialogState(os.path.dirname(file_path))
@@ -52,23 +54,21 @@ class Commons:
 
 
     @staticmethod
-    def Data_QPixmap( tipo: str, path: str, web: str):
+    def Data_QPixmap( str_data: str):
+        data = bytes(str_data, "utf-8")
+        pixmap: QPixmap = QPixmap()
+        return pixmap.loadFromData(data)
+        
+    @staticmethod    
+    def Bytes_QPixmap( pixmap: QPixmap ):
+        byte_array = QByteArray()
+        buffer = QBuffer(byte_array)
+        buffer.open(QIODevice.WriteOnly)
+        pixmap.save(buffer, 'PNG')
+        return byte_array.data().decode("utf-8")
 
-        if tipo == "image" and path != None:
-            path = os.path.abspath( path )
-            with open( path, "r" ) as f:
-                data = f.read()
-            return data
 
-        elif tipo == "image" and web != None:
-            qpixmap = Commons.Download_Data( web )
-            try:
-                width = int( qpixmap.width() )
-                height = int( qpixmap.height() )
-            except:
-                Commons.Message_Warnning( "ERROR", "access failed")
-        else:
-            return None
+
     
     @staticmethod
     def Bytes_Python( path ):

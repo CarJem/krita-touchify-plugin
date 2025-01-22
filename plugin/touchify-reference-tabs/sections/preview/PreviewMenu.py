@@ -1,9 +1,11 @@
+from urllib.parse import urlparse
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from .PreviewSection import PreviewSection
 from ...extensions.filetypes import Filetypes
 from ...DockerMenu import DockerMenu
 from ...extensions.settings import *
+from ...extensions.commons import Commons
 from .ui.ContextMenu import ContextMenu
 
 class PreviewMenu(DockerMenu):
@@ -14,6 +16,7 @@ class PreviewMenu(DockerMenu):
 
         file_menu = self.addMenu("File")
         file_menu.addAction("Open Image...", self.openImage)
+        file_menu.addAction("Open URL...", self.openUrl)
 
         self.context_menu = ContextMenu(self.preview.view, self, False)
         self.mergeMenu(self.context_menu)
@@ -22,37 +25,33 @@ class PreviewMenu(DockerMenu):
         options_menu.aboutToShow.connect(self.updateMenus)
         options_menu.addSeparator()
 
-        zoomSettingsMenu = options_menu.addMenu("Zoom Setting")
-        self.fitSettingGroup = QActionGroup(self)
-        fitPageAction = QAction("Fit Page", self.fitSettingGroup)
-        fitPageAction.setCheckable(True)
-        fitPageAction.setData(1)
-        fitWidthAction = QAction("Fit Width", self.fitSettingGroup)
-        fitWidthAction.setCheckable(True)
-        fitWidthAction.setData(2)
-        fitHeightAction = QAction("Fit Height", self.fitSettingGroup)
-        fitHeightAction.setCheckable(True)
-        fitHeightAction.setData(3)
-        fitFullsizeAction = QAction("Zoom 100%", self.fitSettingGroup)
-        fitFullsizeAction.setCheckable(True)
-        fitFullsizeAction.setData(4)
-
-        fitPageAction.setChecked(True)
-        self.fitSettingGroup.triggered.connect(self.changeFitSetting)
-        zoomSettingsMenu.addActions(self.fitSettingGroup.actions())
-
-        scaleSettingsMenu = options_menu.addMenu("Scaling Mode Setting")
+        options_menu.addSection("Image Scaling")
         self.scaleSettingGroup = QActionGroup(self)
+        ############################################
         scaleSmoothAction = QAction("Smooth Scaling", self.scaleSettingGroup)
         scaleSmoothAction.setCheckable(True)
+        scaleSmoothAction.setChecked(True)
         scaleSmoothAction.setData(1)
+        ############################################
         scaleFastAction = QAction("Sharp Scaling", self.scaleSettingGroup)
         scaleFastAction.setCheckable(True)
         scaleFastAction.setData(2)
-
-        scaleSmoothAction.setChecked(True)
+        ############################################
         self.scaleSettingGroup.triggered.connect(self.changeScaleSetting)
-        scaleSettingsMenu.addActions(self.scaleSettingGroup.actions())
+        options_menu.addActions(self.scaleSettingGroup.actions())
+
+    def openUrl(self):
+        url, ok = QInputDialog.getText( self, "Open Image", "URL", QLineEdit.Normal, "" )
+        if ok and url != "":
+            parsed_url = urlparse(url)
+            file_bytes: bytes = Commons.Download_Data(url)
+            file_name = os.path.join(Settings.getFileDialogState(), os.path.basename(parsed_url.path))
+            file_path = Commons.Dialog_Save(self, "Downloaded Image Location", file_name, "File( *.* )" )
+
+            if file_path not in [ "", ".", None ]: 
+                with open( file_path, "wb" ) as f:
+                    f.write( file_bytes )
+                self.preview.Action_OpenImage(file_path)
 
     def openImage(self, filePath=False):
         filter = Filetypes.generateFiletypeFilter()
@@ -64,19 +63,9 @@ class PreviewMenu(DockerMenu):
         self.preview.Action_OpenImage(filePath)
 
     def updateMenus(self):
-        self.checkCorrectFitSetting()
         self.checkCorrectScaleSetting()
+        self.context_menu.Update()
         super().updateMenus()
-
-    def changeFitSetting(self, action: QAction):
-        tab = self.preview
-        tab.action_changeFitSetting(action.data())
-
-    def checkCorrectFitSetting(self):
-        tab = self.preview
-        for action in self.fitSettingGroup.actions():
-            if action.data() == tab.fitSetting:
-                action.setChecked(True)
 
     def changeScaleSetting(self, action: QAction):
         tab = self.preview
