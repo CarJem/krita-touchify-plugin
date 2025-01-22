@@ -75,7 +75,7 @@ class ColorPicker(QObject):
             if pigment_o != None:
                 if state_press == True:
                     pigment_o.API_Input_Kelvin( 6500 )
-                    cor = pigment_o.API_Input_Preview( "RGBImproved Resizing for On Canvas Widgets", red, green, blue, 0 )
+                    cor = pigment_o.API_Input_Preview( "RGB", red, green, blue, 0 )
                 if state_press == False:
                     cor = pigment_o.API_Input_Apply( "RGB", red, green, blue, 0 )
                 red   = cor[ "rgb_d1" ]

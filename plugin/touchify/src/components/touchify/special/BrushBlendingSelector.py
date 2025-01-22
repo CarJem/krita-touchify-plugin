@@ -2,12 +2,7 @@ from PyQt5.QtWidgets import *
 from touchify.src.variables import *
 from touchify.src.features.docker_manager import *
 from krita import *
-
-try:
-    from api_krita.enums.blending_mode import BlendingMode, PRETTY_NAMES
-    SHORTCUT_COMPOSER_LOADED = True
-except:
-    SHORTCUT_COMPOSER_LOADED = False
+from touchify.src.components.touchify.enums.blending_mode import BlendingMode, PRETTY_NAMES
 
 
 class BrushBlendingOption(QWidgetAction):
@@ -68,12 +63,7 @@ class BrushBlendingOption(QWidgetAction):
 class BrushBlendingSelector(QPushButton):
     def __init__(self, parent: QWidget=None):
         super().__init__(parent)
-
-        if SHORTCUT_COMPOSER_LOADED:
-            self.HAS_LOADED = True
-            self.constructLayout()
-        else:
-            self.HAS_LOADED = False
+        self.constructLayout()
 
     def constructLayout(self):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)

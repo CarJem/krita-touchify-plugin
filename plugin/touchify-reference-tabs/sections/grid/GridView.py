@@ -446,6 +446,9 @@ class GridView( QWidget ):
     
     def leaveEvent( self, event ):
         self.update()
+    
+    def showEvent( self, event ):
+        self.ColorPicker.Find_Pigment_O()
 
     def paintEvent( self, event ):
         # Variables

@@ -946,6 +946,9 @@ class PreviewView( QWidget ):
     def leaveEvent( self, event ):
         pass
     
+    def showEvent( self, event ):
+        self.ColorPicker.Find_Pigment_O()
+
     def paintEvent( self, event ):
         # Variables
         ww = self.ww

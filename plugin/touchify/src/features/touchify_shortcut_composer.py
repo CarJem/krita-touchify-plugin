@@ -1,8 +1,3 @@
-
-from touchify.src.components.touchify.shortcut_composer.PieActionController import PieActionController
-from touchify.src.components.touchify.shortcut_composer.PieMenu import PieMenu
-from touchify.src.components.krita.extensions import *
-
 from touchify.src.variables import *
 
 from touchify.src.settings import *
@@ -16,6 +11,9 @@ if TYPE_CHECKING:
 try:
     from input_adapter import ActionManager
     import templates
+    from touchify.src.components.touchify.shortcut_composer.PieActionController import PieActionController
+    from touchify.src.components.touchify.shortcut_composer.PieMenu import PieMenu
+    from touchify.src.components.krita.extensions import *
     SHORTCUT_COMPOSER_LOADED = True
 except:
     SHORTCUT_COMPOSER_LOADED = False
@@ -95,9 +93,3 @@ class TouchifyShortcutComposer(object):
 
         for action in createInstructions():
             self.action_manager.bind_action(action)
-
-
-
-
-
-            
