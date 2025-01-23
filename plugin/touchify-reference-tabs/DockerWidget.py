@@ -101,7 +101,6 @@ class DockerWidget(QWidget):
         sessionMenu = self.menubar.addMenu("Session")
         sessionMenu.addAction("Load Session", self.Session_LoadFile)
         sessionMenu.addAction("Save Session", self.Session_SaveFile)
-
         sessionMenu.addSeparator()
 
         sessionMenu.addAction("New Tab", self.Action_AddTab)

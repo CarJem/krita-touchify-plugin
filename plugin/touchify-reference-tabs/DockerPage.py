@@ -56,6 +56,7 @@ class DockerPage(QWidget):
         self.ParentWidget = view_widget
 
         self.__current_section = "preview"
+        self.__previous_section = "preview"
 
         self.__Layout = QVBoxLayout(self)
         self.__Layout.setSpacing(0)
@@ -127,16 +128,14 @@ class DockerPage(QWidget):
         self.GridSection.Session_Load(session.grid)
         self.ReferenceSection.Session_Load(session.ref)
 
-        if session.active_mode:
-            self.changeSection(session.active_mode)
-
+        if session.active_mode: self.changeSection(session.active_mode)
 
     def Session_Save(self):
+        active_mode = self.__current_section
         preview = self.PreviewSection.Session_Save()
         grid = self.GridSection.Session_Save()
         ref = self.ReferenceSection.Session_Save()
         tab_name = self.Get_TabTitle()
-        active_mode = self.__current_section
 
         return SessionTab(
             name=tab_name,
@@ -161,7 +160,7 @@ class DockerPage(QWidget):
 
 
     def OpenPreviousPage(self):
-        pass
+        self.changeSection(self.__previous_section)
 
     def OpenReference(self):
         self.changeSection("reference")
@@ -192,6 +191,7 @@ class DockerPage(QWidget):
         
     def changeSection(self, section: str):
         def switchTo(icon: QIcon, source: GridSection | PreviewSection, menu: DockerMenu | None = None):
+            self.__previous_section = self.__current_section
             self.__current_section = section
             self.TabMenus = menu
             self.ParentWidget.updateSectionMenus(self.TabMenus)

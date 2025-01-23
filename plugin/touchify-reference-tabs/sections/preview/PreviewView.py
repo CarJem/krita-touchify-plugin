@@ -56,7 +56,7 @@ class PreviewView( QWidget ):
         # Display
         self.preview_path = None
         self.preview_qpixmap = None
-        self.scale_method = Qt.TransformationMode.FastTransformation
+        self.scale_method = Qt.TransformationMode.SmoothTransformation
 
         # Compact
         self.file_search = []
