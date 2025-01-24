@@ -27,12 +27,14 @@ class NtWorker(QObject):
     def PROCESS_ELEMENTS (self: "NtWorker", canvas: "NtCanvas", full_unload: bool = False ):
         def onToolshelfCheck(toolshelf: NtToolshelf | None, allow_toolshelf: bool, config_index: int, action: QAction):
             if toolshelf == None and allow_toolshelf:
-                actual_toolshelf = NtToolshelf(canvas, canvas.krita_window, config_index, canvas.app_engine)
+                actual_toolshelf = NtToolshelf(canvas, canvas.Window(), config_index, canvas.app_engine)
+                actual_toolshelf.SIGNAL_RESIZED.connect(canvas.widgetResizeEvent)
                 actual_toolshelf.collapseBtn.setDefaultAction(action)
                 canvas.canvasLayout.addWidget(actual_toolshelf)
                 actual_toolshelf.show()
                 return actual_toolshelf
             elif toolshelf and not allow_toolshelf:
+                toolshelf.SIGNAL_RESIZED.disconnect(canvas.widgetResizeEvent)
                 toolshelf.close()
                 canvas.canvasLayout.removeWidget(toolshelf)
                 return None
@@ -41,12 +43,14 @@ class NtWorker(QObject):
         
         def onToolboxCheck(allow_toolbox: bool):
             if canvas.toolbox == None and allow_toolbox:
-                canvas.toolbox = NtToolbox(canvas, canvas.krita_window)
+                canvas.toolbox = NtToolbox(canvas, canvas.Window())
+                canvas.toolbox.SIGNAL_RESIZED.connect(canvas.widgetResizeEvent)
                 canvas.toolbox.collapseBtn.setDefaultAction(canvas.tlb_action)
                 canvas.canvasLayout.addWidget(canvas.toolbox)
                 canvas.toolbox.show()
             elif canvas.toolbox and not allow_toolbox:
                 canvas.canvasLayout.removeWidget(canvas.toolbox)
+                canvas.toolbox.SIGNAL_RESIZED.connect(canvas.widgetResizeEvent)
                 canvas.toolbox.close()
                 canvas.toolbox = None
 
@@ -125,7 +129,7 @@ class NtWorker(QObject):
         #print(f"NtCanvas | updateElements | end | {QTime.currentTime().toString()}")
 
     def PROCESS_ACTIONS(self: "NtWorker", canvas: "NtCanvas", pad: str = "", value: bool = None):
-        if canvas.windowLoaded == False:
+        if canvas.State_WindowLoaded() == False:
             return
         
 
@@ -158,10 +162,10 @@ class NtWorker(QObject):
         if canvas.toolshelf_gamma: canvas.toolshelf_gamma.setCollapsed(show_toolshelf_gamma)
         if canvas.toolshelf_delta: canvas.toolshelf_delta.setCollapsed(show_toolshelf_delta)
 
-        canvas.updateView()
+        canvas.Update_View()
 
     def PROCESS_VIEW(self: "NtWorker", canvas: "NtCanvas",):
-        if canvas.windowLoaded == False:
+        if canvas.State_WindowLoaded() == False:
             return
 
         def rulerMargin():
@@ -176,9 +180,9 @@ class NtWorker(QObject):
             if KritaSettings.hideScrollbars(): return 0
             return 10 + padding
 
-        if canvas.mdiArea:
-            position = canvas.mdiArea.viewport().pos()
-            size = canvas.mdiArea.viewport().size()
+        if canvas.MdiArea():
+            position = canvas.MdiArea().viewport().pos()
+            size = canvas.MdiArea().viewport().size()
 
             position.setX(position.x() + rulerMargin())
             position.setY(position.y() + rulerMargin())
@@ -186,7 +190,7 @@ class NtWorker(QObject):
             size.setWidth(size.width() - rulerMargin() - scrollBarMargin())
             size.setHeight(size.height() - rulerMargin() - scrollBarMargin())
 
-            if canvas.isEmpty():
+            if canvas.State_IsEmpty():
                 canvas.move(position)
                 canvas.setFixedSize(0, 0)
             else:

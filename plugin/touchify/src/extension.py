@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.src.variables import *
-from touchify.src.global_events import TouchifyEvents
+from touchify.src.global_events import GlobalEvents
 
 
 
@@ -19,11 +19,9 @@ class TouchifyExtension(Extension):
     setup_instance: bool = False
     new_instance: TouchifyWindow = None
 
-    timerTicked=pyqtSignal()
-
     def __init__(self, parent):
         super().__init__(parent)
-        self.event_handler = TouchifyEvents(self)
+        self.event_handler = GlobalEvents(self)
         self.DEV_HOOK_FIND_PLUGIN = "TOUCHIFY"
 
         self.settings_clipboard_type: type | None = None
@@ -36,12 +34,12 @@ class TouchifyExtension(Extension):
 
 
         self.intervalTimer = QTimer(self)
-        self.intervalTimer.timeout.connect(TouchifyEvents.EMIT_SIGNAL_TIMER_TICKED)
+        self.intervalTimer.timeout.connect(GlobalEvents.EMIT_SIGNAL_TIMER_TICKED)
         self.intervalTimer.start(TOUCHIFY_TIMER_MAIN_INTERVAL)
     
     def onWindowDestroyed(self, windowId: str):
         item: TouchifyWindow = self.instances[windowId]
-        item.unload()
+        item.Window_Unload()
         item.deleteLater()
         del self.instances[windowId]
 
@@ -60,17 +58,17 @@ class TouchifyExtension(Extension):
 
         window.windowClosed.connect(lambda: self.onWindowDestroyed(window_id))
         self.instances[window_id] = self.new_instance
-        self.instances[window_id].onWindowCreated(self, window)
+        self.instances[window_id].Window_Load(window)
 
         self.setup_instance = False
 
     def onConfigurationChanged(self):
-        TouchifyEvents.EMIT_SIGNAL_KRITA_CONFIG_UPDATED()
+        GlobalEvents.EMIT_SIGNAL_KRITA_CONFIG_UPDATED()
 
     def createActions(self, window: Window):
         self.setup_instance = True
         self.new_instance = TouchifyWindow(self)
-        self.new_instance.setupActions(window)
+        self.new_instance.Actions_Init(window)
 
     def getSettingsClipboard(self, requested_type: type):
         if self.settings_clipboard_type == requested_type:

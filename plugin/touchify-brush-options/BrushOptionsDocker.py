@@ -158,7 +158,7 @@ class BrushOptionsDocker(DockWidget):
         self.brushOptions = BrushOptionsWidget(self)
         self.setWidget(self.brushOptions)
 
-    def addonSetup(self, instance: "TouchifyWindow"):
+    def TOUCHIFY_ADDON_SETUP(self, instance: "TouchifyWindow"):
         self.brushOptions.setup(instance)
 
     def showEvent(self, event):

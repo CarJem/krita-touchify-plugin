@@ -276,11 +276,11 @@ class CanvasGradientPicker(QPushButton):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.appEngine.action_management.gradientChanged.connect(self.onGradientChanged)
-        self.onGradientChanged(self.appEngine.action_management.getCurrentGradient())
+        self.appEngine.mgr_actions.gradientChanged.connect(self.onGradientChanged)
+        self.onGradientChanged(self.appEngine.mgr_actions.getCurrentGradient())
 
     def openBrushPicker(self):
-        self.appEngine.action_management.openPopup("gradient_chooser_popup", self)
+        self.appEngine.mgr_actions.openPopup("gradient_chooser_popup", self)
     
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)

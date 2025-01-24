@@ -149,12 +149,12 @@ class TouchifyPopup(QDockWidget):
 
 
         self.app_engine: "TouchifyWindow" = app_engine
-        self.docker_manager: "DockerManager" = app_engine.docker_management
-        self.actions_manager: "ActionManager" = app_engine.action_management
-        self.canvas_manager: "CanvasManager" = app_engine.canvas_management
+        self.docker_manager: "DockerManager" = app_engine.mgr_dockers
+        self.actions_manager: "ActionManager" = app_engine.mgr_actions
+        self.canvas_manager: "CanvasManager" = app_engine.mgr_canvas
         self.toolshelf_data = toolshelf_data
 
-        self.main_window = self.app_engine.windowSource.qwindow()
+        self.main_window = self.app_engine.krita_window.qwindow()
         self.closing_method = args.closing_method
         self.clamp_to_main_window = args.clamp_to_main_window
         self.dock_widget_type = args.window_type
@@ -200,7 +200,7 @@ class TouchifyPopup(QDockWidget):
         if self.window_docking_allowed: self.setAllowedAreas(Qt.DockWidgetArea.AllDockWidgetAreas)
         else: self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
 
-        self.app_engine.canvas_management.normalFocus.connect(self.canvasFocusEvent)
+        self.app_engine.mgr_canvas.normalFocus.connect(self.canvasFocusEvent)
 
 
 

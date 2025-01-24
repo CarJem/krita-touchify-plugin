@@ -12,32 +12,6 @@ from krita import *
     
 class TouchifyTweaks(QObject):
 
-    class WindowChangedEventFilter(QObject):
-        """Event Filter object. Ensure that a target widget is moved
-        to a desired position (corner of the view) when the subwindow area updates."""
-
-        def __init__(self, parent=None):
-            super().__init__(parent)
-            self.target = None
-            self.function = None
-
-        def eventFilter(self, obj, e):
-
-            if (self.target == obj and
-                self.function and
-                (e.type() == QEvent.Type.Move or
-                e.type() == QEvent.Type.Resize or
-                e.type() == QEvent.Type.WindowActivate)):
-                self.target()
-
-            return False
-        
-        def setFunction(self, function):
-            self.function = function
-
-        def setTarget(self, wdgt):
-            self.target = wdgt
-
     def __init__(self, instance: "TouchifyWindow"):
         super().__init__(instance)
         self.appEngine = instance
@@ -45,13 +19,9 @@ class TouchifyTweaks(QObject):
 
     #region Signals
 
-    def onWindowCreated(self):
+    def Window_Load(self):
         Krita.instance().action("show_brush_editor").triggered.connect(self.onBrushEditorTrigged)
-        self.window_event_filter = self.WindowChangedEventFilter(self)
-        self.window_event_filter.setFunction(self.updateBrushEditor)
-        self.window_event_filter.setTarget(self.qWin)
-        self.qWin = self.appEngine.windowSource.qwindow()
-        self.qWin.installEventFilter(self.window_event_filter)
+        self.qWin = self.appEngine.krita_window.qwindow()
         self.qWin.themeChanged.connect(self.rebuildStyleSheet)
         qApp.focusWindowChanged.connect(self.onFocusWindowChanged)
         self.rebuildStyleSheet()
@@ -66,7 +36,7 @@ class TouchifyTweaks(QObject):
 
     #region Actions
 
-    def createActions(self, window: Window, subPathName: str):
+    def Actions_Init(self, window: Window, subPathName: str):
 
         def createAction(id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
             result = window.createAction(id, text, menuLocation)
@@ -91,7 +61,7 @@ class TouchifyTweaks(QObject):
         nu_options_menu.addAction(createAction(TOUCHIFY_ID_ACTION_STYLES_DOCKEDBRUSHEDITOR, "Docked Brush Editor", sublocation_path, True, config.Styles_DockedBrushEditor, self.dockedBrushEditorToggled))
         nu_options_menu.addAction(createAction(TOUCHIFY_ID_ACTION_STYLES_DOCKEDBRUSHEDITORZOOMFIX, "Brush Editor Zoom Fix", sublocation_path, True, config.Styles_BrushEditorZoomFix, self.brushEditorZoomFixToggled))
 
-    def finalizeActions(self):
+    def Actions_Post(self):
         settings_menu = self.qWin.findChild(QMenu, 'settings')
         TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_STYLES_MENU, settings_menu, settings_menu, 'style_menu')
 
@@ -157,7 +127,7 @@ class TouchifyTweaks(QObject):
             brushEditorFrame.resize(size)
 
         if TouchifySettings.instance().preferences().Styles_BrushEditorZoomFix:
-            canvas = self.appEngine.action_management.getCurrentCanvas()
+            canvas = self.appEngine.mgr_actions.getCurrentCanvas()
             if canvas: canvas.resetZoom()
 
     def rebuildStyleSheet(self):

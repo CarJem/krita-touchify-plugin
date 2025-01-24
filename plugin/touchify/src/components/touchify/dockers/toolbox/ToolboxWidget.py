@@ -83,8 +83,8 @@ class ToolboxWidget(QResizableWidget):
 
 
     def setup(self, instance: "TouchifyWindow"):
-        self.sourceWindow = instance.windowSource
-        self.actionEngine = instance.action_management
+        self.sourceWindow = instance.krita_window
+        self.actionEngine = instance.mgr_actions
         self.reload()
     
 

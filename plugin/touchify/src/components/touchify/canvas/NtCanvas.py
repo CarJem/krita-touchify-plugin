@@ -3,10 +3,13 @@ from PyQt5.QtWidgets import QMdiArea
 
 
 
-from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
+from touchify.src.components.touchify.canvas.NtCanvasFilter import NtCanvasFilter
 
+from touchify.src.components.touchify.canvas.NtToolbox import NtToolbox
+from touchify.src.components.touchify.canvas.NtToolshelf import NtToolshelf
+from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from touchify.src.components.touchify.canvas.NtWorker import NtWorker
-from touchify.src.global_events import TouchifyEvents
+from touchify.src.global_events import GlobalEvents
 from touchify.src.helpers import TouchifyHelpers
 from touchify.src.settings import TouchifySettings
 from krita import *
@@ -22,142 +25,137 @@ if TYPE_CHECKING:
 class NtCanvas(QWidget):
     def __init__(self, parent: QObject, window: Window):
         super().__init__(parent)
+        self.Variables_Init(window)
+        self.Components_Init()
+        self.Connections_Init()
+        self.Preset_Reload()
 
-        self.krita_window = window
-        self.qWin = None
-        self.mdiArea = None
+    #region Init Functions
 
-        self.adjustFilter = None
+    def Variables_Init(self, window: Window):
+        self.__window_loaded = False
+        self.__krita_window = window
+        self.__mdi_area = None
+
+        self.adjust_filter = None
         
-        self.windowLoaded = False
         self.app_engine = None
 
-        self.toolbox = None
-        self.toolshelf_beta = None
-        self.toolshelf_alpha = None
-        self.toolshelf_gamma = None
-        self.toolshelf_delta = None
+        self.toolbox: NtToolbox = None
+        self.toolshelf_beta: NtToolshelf = None
+        self.toolshelf_alpha: NtToolshelf = None
+        self.toolshelf_gamma: NtToolshelf = None
+        self.toolshelf_delta: NtToolshelf = None
 
         self.toolshelf_count = 0
         self.toolbox_enabled = False
 
         self.selected_preset_id = None
-
+    
+    def Components_Init(self):
         self.presetsMenu = QMenu("Canvas Layouts...")
-        self.presetsMenu.aboutToShow.connect(self.buildPresetMenu)
 
         self.canvasLayout = QGridLayout(self)
         self.canvasLayout.setContentsMargins(0,0,0,0)
         self.canvasLayout.setSpacing(0)
         self.setLayout(self.canvasLayout)
+    
+    def Connections_Init(self):
+        self.presetsMenu.aboutToShow.connect(self.Preset_Menu)
+    
+    def Actions_Init(self, window: Window): 
+        layouts_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_PRESETS_MENU, "Configure Layout...", "settings")
+        layouts_action.setIcon(Krita.instance().icon("configure"))
+        layouts_action.setMenu(self.presetsMenu)
 
-        self.reloadActivePreset()
+        options_menu = QMenu("Widgets Shown", window.qwindow())
+        options_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_MENU, "Widgets Shown", "settings")
+        options_action.setMenu(options_menu)
 
-    #region States
+        self.tlb_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLBOX, "Toolbox", "")
+        self.tlb_action.setCheckable(True)
+        self.tlb_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolbox"), True))
 
-    def isEmpty(self):
-        if self.toolbox: return False
-        elif self.toolshelf_alpha: return False
-        elif self.toolshelf_beta: return False
-        elif self.toolshelf_gamma: return False
-        elif self.toolshelf_delta: return False
-        else: return True
+        self.tlshlf_alpha_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_ALPHA, "Toolshelf (Alpha)", "")
+        self.tlshlf_alpha_action.setCheckable(True)
+        self.tlshlf_alpha_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_alpha"), True))
 
+        self.tlshlf_beta_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_BETA, "Toolshelf (Beta)", "")
+        self.tlshlf_beta_action.setCheckable(True)
+        self.tlshlf_beta_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_beta"), True))
+
+        self.tlshlf_gamma_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_GAMMA, "Toolshelf (Gamma)", "")
+        self.tlshlf_gamma_action.setCheckable(True)
+        self.tlshlf_gamma_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_gamma"), True))
+
+        self.tlshlf_delta_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_DELTA, "Toolshelf (Delta)", "")
+        self.tlshlf_delta_action.setCheckable(True)
+        self.tlshlf_delta_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_delta"), True))
+        
+        self.tlb_action.triggered.connect(lambda a: self.Update_Actions("toolbox", a))
+        self.tlshlf_alpha_action.triggered.connect(lambda a: self.Update_Actions("toolshelf_alpha", a))
+        self.tlshlf_beta_action.triggered.connect(lambda a: self.Update_Actions("toolshelf_beta", a))
+        self.tlshlf_gamma_action.triggered.connect(lambda a: self.Update_Actions("toolshelf_gamma", a))
+        self.tlshlf_delta_action.triggered.connect(lambda a: self.Update_Actions("toolshelf_delta", a))
+
+        options_menu.addAction(self.tlb_action)
+        options_menu.addAction(self.tlshlf_alpha_action)
+        options_menu.addAction(self.tlshlf_beta_action)
+        options_menu.addAction(self.tlshlf_gamma_action)
+        options_menu.addAction(self.tlshlf_delta_action)
+    
     #endregion
 
-    #region Setup Stuff
-    def windowCreated(self, app_engine: "TouchifyWindow"):
+    #region Post-Init Functions
+
+    def Variables_Post(self, app_engine: "TouchifyWindow"):
         self.app_engine = app_engine
+        self.__krita_window = self.app_engine.krita_window
+        self.__mdi_area = self.QWindow().findChild(QMdiArea)
+        self.__window_loaded = True
 
-        Krita.instance().action("view_ruler").triggered.connect(self.updateView)
+    def Components_Post(self):
+        self.setParent(self.MdiArea())
 
+        self.adjust_filter = NtCanvasFilter(self.MdiArea())
+        self.adjust_filter.setTargetWidget(self)
 
-        self.krita_window = self.app_engine.windowSource
-        self.qWin = self.krita_window.qwindow()
-        self.mdiArea = self.qWin.findChild(QMdiArea)
+    def Connections_Post(self):
+        self.adjust_filter.SIGNAL_EVENT_REQUESTED.connect(self.Update_View)
+        self.MdiArea().installEventFilter(self.adjust_filter)
+        Krita.instance().action("view_ruler").triggered.connect(self.Update_View)
+        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.Preset_Reload)
+        GlobalEvents.instance().SIGNAL_CANVAS_LAYOUT_CHANGED.connect(self.Preset_Reload)
 
-        self.adjustFilter = NtSubWinFilter(self.mdiArea)
-        self.adjustFilter.SIGNAL_EVENT_REQUESTED.connect(self.subWindowEvent)
-        self.adjustFilter.setTargetWidget(self)
-        self.qWin.installEventFilter(self.adjustFilter)
-        self.setParent(self.mdiArea)
-
-        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.reloadActivePreset)
-        TouchifyEvents.instance().SIGNAL_CANVAS_LAYOUT_CHANGED.connect(self.reloadActivePreset)
-
-        self.windowLoaded = True
-
-        self.updateElements()
-
-    def finishMenuActions(self):
-        settings_menu = self.qWin.findChild(QMenu, 'settings')
+    def Actions_Post(self):
+        settings_menu = self.QWindow().findChild(QMenu, 'settings')
 
         layoutsMenuAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_WIDGETPAD_MENU, settings_menu, settings_menu, 'toolbars_submenu_action')
         optionsMenuAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_WIDGETPAD_PRESETS_MENU, settings_menu, settings_menu, 'toolbars_submenu_action')
         seperator = settings_menu.insertSeparator(optionsMenuAction)
 
-    def createMenuActions(self, window: Window, menu: QMenuBar): 
+    #endregion
 
+    #region Window Functions
 
-
-        layouts_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_PRESETS_MENU, "Configure Layout...", "settings")
-        layouts_action.setIcon(Krita.instance().icon("configure"))
-        layouts_action.setMenu(self.presetsMenu)
-
-        optionsMenu = QMenu("Widgets Shown", window.qwindow())
-        options_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_MENU, "Widgets Shown", "settings")
-        options_action.setMenu(optionsMenu)
-
-
-
-        show_toolbox = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolbox"), True)
-        show_toolshelf_alpha = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_alpha"), True)
-        show_toolshelf_beta = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_beta"), True)
-        show_toolshelf_gamma = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_gamma"), True)
-        show_toolshelf_delta = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_delta"), True)
-
-
-        self.tlb_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLBOX, "Toolbox", "")
-        self.tlb_action.triggered.connect(lambda a: self.updateActions("toolbox", a))
-        self.tlb_action.setCheckable(True)
-        self.tlb_action.setChecked(show_toolbox)
-        optionsMenu.addAction(self.tlb_action)
-
-        self.tlshlf_alpha_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_ALPHA, "Toolshelf (Alpha)", "")
-        self.tlshlf_alpha_action.triggered.connect(lambda a: self.updateActions("toolshelf_alpha", a))
-        self.tlshlf_alpha_action.setCheckable(True)
-        self.tlshlf_alpha_action.setChecked(show_toolshelf_alpha)
-        optionsMenu.addAction(self.tlshlf_alpha_action)
-
-        self.tlshlf_beta_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_BETA, "Toolshelf (Beta)", "")
-        self.tlshlf_beta_action.triggered.connect(lambda a: self.updateActions("toolshelf_beta", a))
-        self.tlshlf_beta_action.setCheckable(True)
-        self.tlshlf_beta_action.setChecked(show_toolshelf_beta)
-        optionsMenu.addAction(self.tlshlf_beta_action)
-
-        self.tlshlf_gamma_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_GAMMA, "Toolshelf (Gamma)", "")
-        self.tlshlf_gamma_action.triggered.connect(lambda a: self.updateActions("toolshelf_gamma", a))
-        self.tlshlf_gamma_action.setCheckable(True)
-        self.tlshlf_gamma_action.setChecked(show_toolshelf_gamma)
-        optionsMenu.addAction(self.tlshlf_gamma_action)
-
-        self.tlshlf_delta_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_DELTA, "Toolshelf (Delta)", "")
-        self.tlshlf_delta_action.triggered.connect(lambda a: self.updateActions("toolshelf_delta", a))
-        self.tlshlf_delta_action.setCheckable(True)
-        self.tlshlf_delta_action.setChecked(show_toolshelf_delta)
-        optionsMenu.addAction(self.tlshlf_delta_action)
+    def Window_Load(self, app_engine: "TouchifyWindow"):
+        self.Variables_Post(app_engine)
+        self.Components_Post()
+        self.Connections_Post()
+        self.Update_Widgets()
+        
     #endregion
 
     #region Preset Functions
 
-    def changePreset(self):
+    def Preset_Change(self):
         ac: QAction = self.sender()
         if isinstance(ac, QAction):
             id: str = ac.data()
             if isinstance(id, str):
                 TouchifySettings.instance().setActiveWidgetLayout(id)
 
-    def buildPresetMenu(self):
+    def Preset_Menu(self):
         self.presetsMenu.clear()
         menus: dict[str, QMenu] = {}
         index = 0
@@ -172,13 +170,12 @@ class NtCanvas(QWidget):
                 if self.selected_preset_id == key.actual_key:
                     action.setChecked(True)
                 action.setData(key.actual_key)
-                action.triggered.connect(self.changePreset)
+                action.triggered.connect(self.Preset_Change)
                 index += 1
                 
                 menus[key.id].addAction(action)
 
-    def reloadActivePreset(self):
-
+    def Preset_Reload(self):
         last_preset_id = self.selected_preset_id
         self.active_preset: WidgetLayout = TouchifySettings.instance().getActiveWidgetLayout()
         self.selected_preset_id = TouchifySettings.instance().getActiveWidgetLayoutId()
@@ -192,28 +189,13 @@ class NtCanvas(QWidget):
         if self.toolbox: 
             self.toolbox.toolbox.toolboxWidget.setHorizontalMode(self.active_preset.toolbox.horizontal_mode)
 
-        self.updateElements(True)
+        self.Update_Widgets(True)
 
-    #endregion
-
-    #region Event Functions
-
-    def subWindowEvent(self):
-        self.updateView()
-
-    def resizeEvent(self, e: QResizeEvent):
-        super().resizeEvent(e)
-        self.updateView()
-
-    def paintEvent(self, e: QPaintEvent):
-        super().paintEvent(e)
-            
     #endregion
 
     #region Update Functions
 
-
-    def updateStart(self, mode: str, args: dict = {}):
+    def Update_Core(self, mode: str, args: dict = {}):
 
         if hasattr(self, "thread_packer"):
             if self.thread_packer.isRunning(): return
@@ -227,18 +209,59 @@ class NtCanvas(QWidget):
         self.thread_packer.started.connect( lambda : self.worker_packer.run( self, mode, args ) )
         self.thread_packer.start()
 
-    def updateElements(self, full_unload: bool = False):
-        if self.windowLoaded == False:
+    def Update_Widgets(self, full_unload: bool = False):
+        if self.State_WindowLoaded() == False:
             return
-        if full_unload: self.updateStart("LOAD_ELEMENTS")
-        else: self.updateStart("RELOAD_ELEMENTS")
+        if full_unload: self.Update_Core("LOAD_ELEMENTS")
+        else: self.Update_Core("RELOAD_ELEMENTS")
 
-    def updateView(self):
-        self.updateStart("VIEW")
+    def Update_View(self):
+        self.Update_Core("VIEW")
 
-    def updateActions(self, pad: str = "", value: bool = None):
-        self.updateStart("ACTIONS", {"pad": pad, "value": value})
-        
+    def Update_Actions(self, pad: str = "", value: bool = None):
+        self.Update_Core("ACTIONS", {"pad": pad, "value": value})
+
+    #endregion
+
+    #region Component Relay
+
+    def MdiArea(self):
+        return self.__mdi_area
+
+    def QWindow(self):
+        return self.__krita_window.qwindow()
+
+    def Window(self):
+        return self.__krita_window
+
+    #endregion
+
+    #region State Functions
+
+    def State_IsEmpty(self):
+        if self.toolbox: return False
+        elif self.toolshelf_alpha: return False
+        elif self.toolshelf_beta: return False
+        elif self.toolshelf_gamma: return False
+        elif self.toolshelf_delta: return False
+        else: return True
+
+    def State_WindowLoaded(self):
+        return self.__window_loaded
+
+    #endregion
+
+    #region Event Functions
+
+    def resizeEvent(self, e: QResizeEvent):
+        super().resizeEvent(e)
+
+    def paintEvent(self, e: QPaintEvent):
+        super().paintEvent(e)
+
+    def widgetResizeEvent(self, target: NtWidgetPad):
+        self.Update_View()
+
     def mouseMoveEvent(self, a0):
         if self.toolbox: self.toolbox.updateCursor()
         if self.toolshelf_alpha: self.toolshelf_alpha.updateCursor()
@@ -246,9 +269,6 @@ class NtCanvas(QWidget):
         if self.toolshelf_gamma: self.toolshelf_gamma.updateCursor()
         if self.toolshelf_delta: self.toolshelf_delta.updateCursor()
 
-
-        
-
     #endregion
-
+ 
 

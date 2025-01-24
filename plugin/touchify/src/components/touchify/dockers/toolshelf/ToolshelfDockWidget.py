@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 from typing import TYPE_CHECKING
 
 from touchify.src.features.canvas_manager import CanvasManager
-from touchify.src.global_events import TouchifyEvents
+from touchify.src.global_events import GlobalEvents
 from touchify.src.settings import TouchifySettings
 
 from touchify.src.features.docker_manager import DockerManager
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import ToolshelfWidget
 
 
-DOCKER_TITLE = 'Touchify Toolshelf'
+DOCKER_TITLE = 'Touchify Core: Toolshelf'
 
 class ToolshelfDockWidget(DockWidget):
 
@@ -31,15 +31,15 @@ class ToolshelfDockWidget(DockWidget):
         self.PanelIndex = -1
         self.previous_state: ToolshelfWidget.PreviousState = ToolshelfWidget.PreviousState()
         self.setWindowTitle(DOCKER_TITLE)
-        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
-        TouchifyEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.connect(self.onPresetChanged)
+        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
+        GlobalEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.connect(self.onPresetChanged)
 
 
       
     def setup(self, instance: "TouchifyWindow"):
-        self.docker_manager = instance.docker_management
-        self.actions_manager = instance.action_management
-        self.canvas_manager = instance.canvas_management
+        self.docker_manager = instance.mgr_dockers
+        self.actions_manager = instance.mgr_actions
+        self.canvas_manager = instance.mgr_canvas
         self.onLoaded()
 
     def onResizeByDefaultRequested(self):
@@ -112,8 +112,8 @@ class ToolshelfDockWidget(DockWidget):
         super().showEvent(event)
 
     def closeEvent(self, event):
-        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.disconnect(self.onConfigUpdated)
-        TouchifyEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.disconnect(self.onPresetChanged)
+        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.disconnect(self.onConfigUpdated)
+        GlobalEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.disconnect(self.onPresetChanged)
         return super().closeEvent(event)
 
     # notifies when views are added or removed

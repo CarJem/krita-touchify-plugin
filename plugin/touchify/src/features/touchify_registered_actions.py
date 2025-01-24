@@ -15,9 +15,9 @@ class TouchifyRegisteredActions(object):
     def __init__(self, instance: "TouchifyWindow"):
         self.appEngine = instance  
 
-    def buildMenu(self, menu: QMenu):
+    def Actions_Post(self, menu: QMenu):
         menu.addMenu(self.root_menu)
 
-    def createActions(self, window: Window, actionPath: str):
-        self.root_menu = self.appEngine.action_management.createRegisteredActions(window, actionPath)
+    def Actions_Init(self, window: Window, actionPath: str):
+        self.root_menu = self.appEngine.mgr_actions.createRegisteredActions(window, actionPath)
             

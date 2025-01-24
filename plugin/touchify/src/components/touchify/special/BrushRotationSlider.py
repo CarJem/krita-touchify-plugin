@@ -27,10 +27,10 @@ class BrushRotationSlider(KisAngleSelector):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.appEngine.action_management.viewChanged.connect(self.onViewChanged)
-        self.onViewChanged(self.appEngine.action_management.getCurrentView())
-        self.appEngine.action_management.brushRotationChanged.connect(self.onRotationChanged)
-        self.onRotationChanged(window.action_management.getBrushRotation())
+        self.appEngine.mgr_actions.viewChanged.connect(self.onViewChanged)
+        self.onViewChanged(self.appEngine.mgr_actions.getCurrentView())
+        self.appEngine.mgr_actions.brushRotationChanged.connect(self.onRotationChanged)
+        self.onRotationChanged(window.mgr_actions.getBrushRotation())
 
     def onViewChanged(self, view: View):
         self.view = view

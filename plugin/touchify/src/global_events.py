@@ -1,10 +1,10 @@
 from PyQt5.QtCore import *
 
-class TouchifyEvents(QObject):
+class GlobalEvents(QObject):
     @staticmethod
     def instance():
         try:
-            return TouchifyEvents.__instance
+            return GlobalEvents.__instance
         except AttributeError:
             return None
         
@@ -18,25 +18,25 @@ class TouchifyEvents(QObject):
         
     @staticmethod
     def EMIT_SIGNAL_TIMER_TICKED():
-        if TouchifyEvents.instance(): TouchifyEvents.instance().SIGNAL_TIMER_TICKED.emit()
+        if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_TIMER_TICKED.emit()
     @staticmethod
     def EMIT_SIGNAL_KRITA_CONFIG_UPDATED():
-        if TouchifyEvents.instance(): TouchifyEvents.instance().SIGNAL_KRITA_CONFIG_UPDATED.emit()
+        if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_KRITA_CONFIG_UPDATED.emit()
     @staticmethod
     def EMIT_SIGNAL_TOUCHIFY_CONFIG_UPDATED():
-        if TouchifyEvents.instance(): TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.emit()
+        if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.emit()
     @staticmethod
     def EMIT_SIGNAL_TOOLSHELF_PRESET_CHANGED(index: int):
-        if TouchifyEvents.instance(): TouchifyEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.emit(index)
+        if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.emit(index)
     @staticmethod
     def EMIT_SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED():
-        if TouchifyEvents.instance(): TouchifyEvents.instance().SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED.emit()
+        if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED.emit()
     @staticmethod
     def EMIT_SIGNAL_CANVAS_LAYOUT_CHANGED():
-        if TouchifyEvents.instance(): TouchifyEvents.instance().SIGNAL_CANVAS_LAYOUT_CHANGED.emit()
+        if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_CANVAS_LAYOUT_CHANGED.emit()
 
     def __init__(self, parent: QObject = None):
         super().__init__(parent)
-        TouchifyEvents.__instance = self
+        GlobalEvents.__instance = self
         
         

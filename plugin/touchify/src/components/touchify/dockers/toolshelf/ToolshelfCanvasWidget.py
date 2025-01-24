@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
-from touchify.src.global_events import TouchifyEvents
+from touchify.src.global_events import GlobalEvents
 from touchify.src.settings import *
 from touchify.src.variables import *
 from touchify.src.features.docker_manager import *
@@ -24,9 +24,9 @@ class ToolshelfCanvasWidget(QDockWidget):
         self.setWindowTitle("Touchify Toolshelf")
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.PanelIndex = panel_index
-        self.docker_manager = app_engine.docker_management
-        self.actions_manager = app_engine.action_management
-        self.canvas_manager = app_engine.canvas_management
+        self.docker_manager = app_engine.mgr_dockers
+        self.actions_manager = app_engine.mgr_actions
+        self.canvas_manager = app_engine.mgr_canvas
 
         stylesheet = f"""QScrollArea {{ background: transparent; }}
         QScrollArea > QWidget > ToolshelfContainer {{ background: transparent; }}
@@ -44,12 +44,12 @@ class ToolshelfCanvasWidget(QDockWidget):
         self.setWidget(self.scrollArea)
         self.onLoaded()
 
-        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
-        TouchifyEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.connect(self.onPresetChanged)
+        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
+        GlobalEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.connect(self.onPresetChanged)
 
     def closeEvent(self, event):
-        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.disconnect(self.onConfigUpdated)
-        TouchifyEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.disconnect(self.onPresetChanged)
+        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.disconnect(self.onConfigUpdated)
+        GlobalEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.disconnect(self.onPresetChanged)
         super().closeEvent(event)
 
     def onToolshelfPageChanged(self):

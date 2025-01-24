@@ -17,7 +17,7 @@ from touchify.src.components.touchify.actions.TouchifyActionMenu import Touchify
 
 from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
 
-from touchify.src.global_events import TouchifyEvents
+from touchify.src.global_events import GlobalEvents
 from touchify.src.variables import *
 
 from functools import partial
@@ -81,7 +81,7 @@ class ActionManager(QObject):
         self.composer_action_down: bool = False
         self.composer_listener = MouseReleaseListener()
         self.composer_listener.mouseReleased.connect(self.onMouseRelease)
-        qApp.installEventFilter(self.composer_listener)
+        #qApp.installEventFilter(self.composer_listener)
 
 
         self.__lastView: View = None
@@ -106,8 +106,8 @@ class ActionManager(QObject):
         self.__lastSelectedNodes: list[Node] = []
         self.__lastNodeColors: list[int] = []
 
-        TouchifyEvents.instance().SIGNAL_TIMER_TICKED.connect(self.onTimerTick)
-        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
+        GlobalEvents.instance().SIGNAL_TIMER_TICKED.connect(self.onTimerTick)
+        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
 
 
 
@@ -194,7 +194,7 @@ class ActionManager(QObject):
             data.popup_width = 300
             data.popup_height = 500
         elif id == "gradient_chooser_popup" or id == "pattern_chooser_popup":    
-            main_window = self.appEngine.windowSource.qwindow()
+            main_window = self.appEngine.krita_window.qwindow()
             frames = main_window.findChildren(QFrame,'KisPopupButtonFrame')
             for frame in frames:
                 result = frame.findChild(QWidget, id)
@@ -225,7 +225,7 @@ class ActionManager(QObject):
             if popup_id in self.active_popups: 
                 del self.active_popups[popup_id]
 
-            popup = TouchifyPopup.construct(id, self.appEngine.windowSource.qwindow().window(), data, self.appEngine)
+            popup = TouchifyPopup.construct(id, self.appEngine.krita_window.qwindow().window(), data, self.appEngine)
             if popup == None: return
             
             self.active_popups[popup_id] = popup
@@ -277,7 +277,7 @@ class ActionManager(QObject):
     #endregion
 
     #region Event Functions
-    def onWindowCreated(self):
+    def Window_Load(self):
         qwin = Krita.instance().activeWindow().qwindow()
         mobj = next((w for w in qwin.findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
         wobj = mobj.findChild(QButtonGroup)
@@ -369,7 +369,7 @@ class ActionManager(QObject):
         selectedNodeColors: list[int] = []
 
         try:
-            win = self.appEngine.windowSource
+            win = self.appEngine.krita_window
             if win: 
                 currentView = win.activeView()
                 if currentView: 
@@ -526,7 +526,7 @@ class ActionManager(QObject):
                 data: Trigger
                 id = '{0}{1}_{2}'.format(TOUCHIFY_REGISTRY_PREFIX, packMeta.registry_id, data.registry_id)
                 
-                action = self.appEngine.action_management.installRegisteredAction(id, data, window, subItemPath)
+                action = self.appEngine.mgr_actions.installRegisteredAction(id, data, window, subItemPath)
                 registered_elements[packMeta.registry_id][1].append(self.createRegisteredElement(id))
                 pack_menu.addAction(action)
             
@@ -719,16 +719,16 @@ class ActionManager(QObject):
         brush_presets = ResourceManager.brushPresets()
         if id in brush_presets:
             preset = brush_presets[id]
-            self.appEngine.windowSource.activeView().setCurrentBrushPreset(preset)
+            self.appEngine.krita_window.activeView().setCurrentBrushPreset(preset)
     
     def action_docker(self, path):
-        dockersList = self.appEngine.windowSource.dockers()
+        dockersList = self.appEngine.krita_window.dockers()
         for docker in dockersList:
             if (docker.objectName() == path):
                 docker.setVisible(not docker.isVisible())
                     
     def action_workspace(self, path):
-        main_menu = self.appEngine.windowSource.qwindow().menuBar()
+        main_menu = self.appEngine.krita_window.qwindow().menuBar()
         for root_items in main_menu.actions():
             if root_items.objectName() == 'window':
                 for sub_item in root_items.menu().actions():
@@ -743,7 +743,7 @@ class ActionManager(QObject):
         if not isinstance(data, DockerGroup) or data == None: return
 
 
-        dockersList = self.appEngine.windowSource.dockers()
+        dockersList = self.appEngine.krita_window.dockers()
         
         if data.id not in self.custom_docker_states:
             paths = []
@@ -793,8 +793,8 @@ class ActionManager(QObject):
                 
         data.activate()
 
-        qwin = self.appEngine.windowSource.qwindow()
-        for i, view in enumerate(self.appEngine.windowSource.views()):
+        qwin = self.appEngine.krita_window.qwindow()
+        for i, view in enumerate(self.appEngine.krita_window.views()):
             view_obj = qwin.findChild(QWidget,'view_' + str(i))     
             for child in view_obj.children():
                 slotConfigChanged(child)
@@ -802,7 +802,7 @@ class ActionManager(QObject):
             canvas_obj = view_obj.findChild(QOpenGLWidget)
             slotConfigChanged(canvas_obj)
             
-        for docker in self.appEngine.windowSource.dockers():
+        for docker in self.appEngine.krita_window.dockers():
             if (docker.objectName() == "KisLayerBox"):
                 slotConfigChanged(docker)
     

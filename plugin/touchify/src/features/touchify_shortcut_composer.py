@@ -32,7 +32,7 @@ class TouchifyShortcutComposer(object):
         self.action_manager: ActionManager = None
 
 
-    def buildMenu(self, menu: QMenu):
+    def Actions_Post(self, menu: QMenu):
         if not SHORTCUT_COMPOSER_LOADED: return
         if not FEATURE_ENABLED: return
 
@@ -45,7 +45,7 @@ class TouchifyShortcutComposer(object):
 
         menu.addMenu(self.root_menu)
 
-    def createActions(self, window: Window, actionPath: str):
+    def Actions_Init(self, window: Window, actionPath: str):
         if not SHORTCUT_COMPOSER_LOADED: return
         if not FEATURE_ENABLED: return
 

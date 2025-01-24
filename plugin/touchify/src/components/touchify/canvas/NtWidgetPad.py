@@ -24,7 +24,6 @@ from PyQt5.QtCore import Qt, QSize, QPoint
 
 from touchify.src.components.touchify.canvas.NtScrollAreaContainer import NtScrollAreaContainer
 
-from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
 
 from touchify.src.settings import *
 from touchify.src.components.pyqt.extensions import PyQtExtensions as Ext
@@ -62,8 +61,11 @@ class NtWidgetPad(QWidget):
         width: int
         height: int
 
+
+    SIGNAL_RESIZED = pyqtSignal(QWidget)
+
     def __init__(self, window: Window, canvas: "NtCanvas", allow_resizing: bool = False):
-        super(NtWidgetPad, self).__init__(canvas.mdiArea)
+        super(NtWidgetPad, self).__init__(canvas.MdiArea())
         self.setMouseTracking(True)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.FramelessWindowHint)
@@ -74,9 +76,6 @@ class NtWidgetPad(QWidget):
 
         self.source_window = window.qwindow()
         self.source_canvas = canvas
-
-        self.source_mdi_area = self.source_window.findChild(QMdiArea)
-        self.source_mdi_area.subWindowActivated.connect(self.subWindowActivatedEvent)        
 
         self.docker_widget = None
         self.docker_source = None
@@ -101,14 +100,6 @@ class NtWidgetPad(QWidget):
         self.padLayout.addWidget(self.collapseBtn)
 
         self.adjustArrow()
-
-        #Install Event Filters
-        self.adjustFilter = NtSubWinFilter(self)
-        self.adjustFilter.SIGNAL_EVENT_REQUESTED.connect(self.subWindowEvent)
-        self.adjustFilter.setTargetWidget(self)
-
-        self.source_window.installEventFilter(self.adjustFilter)
-        self.installEventFilter(self.adjustFilter)   
         
     #region States
 
@@ -362,6 +353,11 @@ class NtWidgetPad(QWidget):
 
             if self.size() != padSizeHint:
                 self.resize(padSizeHint)
+                
+
+    def resizeEvent(self, a0: QResizeEvent):
+        self.SIGNAL_RESIZED.emit(self)
+        return super().resizeEvent(a0)
 
     def adjustCursor(self, pos: QPoint):
         
@@ -389,11 +385,6 @@ class NtWidgetPad(QWidget):
     #endregion
   
     #region Events
-    
-    def subWindowActivatedEvent(self, subWin):
-        if subWin:
-            subWin.installEventFilter(self.adjustFilter)
-            self.source_canvas.updateView()
 
     def mouseReleaseEvent(self, e: QMouseEvent):
         self.state_resizing = False
@@ -419,18 +410,11 @@ class NtWidgetPad(QWidget):
             #adapt the widget size based on mouse movement
             self.adjustToView(self.currentOffset(e.pos()))
         self.adjustCursor(e.pos())
-            
-    def subWindowEvent(self):
-        self.adjustCursor(self.cursor().pos())
-        self.source_canvas.updateView()
     
     def closeEvent(self, e):
         """
         Since the plugins works by borrowing the actual docker 
         widget we need to ensure its returned upon closing the pad"""
-        self.source_mdi_area.subWindowActivated.disconnect(self.subWindowActivatedEvent)
-        self.source_window.removeEventFilter(self.adjustFilter)
-        self.removeEventFilter(self.adjustFilter)
         self.returnDocker()
         return super().closeEvent(e)
 
@@ -468,7 +452,7 @@ class NtTogglePadButton(QToolButton):
     def __init__(self, parent: "NtWidgetPad"):
         super(NtTogglePadButton, self).__init__(parent)
         self.widget_pad = parent
-        self.krita_window = self.widget_pad.source_canvas.app_engine.windowSource.qwindow()
+        self.krita_window = self.widget_pad.source_canvas.app_engine.krita_window.qwindow()
         self.krita_window.themeChanged.connect(self.themeChangedEvent)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         qApp.paletteChanged.connect(self.themeChangedEvent)

@@ -93,8 +93,8 @@ class DockerManager(QObject):
         self._hiddenDockers[2] = TouchifySettings.instance().preferences().DockerUtils_HiddenDockersRight.split(",")
         self._hiddenDockers[4] = TouchifySettings.instance().preferences().DockerUtils_HiddenDockersUp.split(",")
         self._hiddenDockers[8] = TouchifySettings.instance().preferences().DockerUtils_HiddenDockersDown.split(",")
-        self.mainWindow = self.touchify.windowSource
-        self.qWin = self.touchify.windowSource.qwindow()
+        self.mainWindow = self.touchify.krita_window
+        self.qWin = self.touchify.krita_window.qwindow()
 
     def registerListener(self, type: SignalType, source: Callable):
         if type not in self._listeners:

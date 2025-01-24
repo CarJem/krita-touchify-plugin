@@ -108,8 +108,8 @@ class LayerBlendingSelector(QPushButton):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.appEngine.action_management.layerBlendingModeChanged.connect(self.onBlendingModeChanged)
-        self.onBlendingModeChanged(self.appEngine.action_management.getLayerBlendingMode())
+        self.appEngine.mgr_actions.layerBlendingModeChanged.connect(self.onBlendingModeChanged)
+        self.onBlendingModeChanged(self.appEngine.mgr_actions.getLayerBlendingMode())
 
     def beforeShow(self):
         self.updateFavs()

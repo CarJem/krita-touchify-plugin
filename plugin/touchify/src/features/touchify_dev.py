@@ -18,10 +18,10 @@ class TouchifyDev(object):
         self.appEngine = instance  
 
 
-    def buildMenu(self, menu: QMenu):
+    def Actions_Post(self, menu: QMenu):
         menu.addMenu(self.root_menu)
 
-    def createActions(self, window: Window, actionPath: str):
+    def Actions_Init(self, window: Window, actionPath: str):
         subItemPath = actionPath + "/" + "developer"
         self.root_menu = QtWidgets.QMenu("Developer...")
     

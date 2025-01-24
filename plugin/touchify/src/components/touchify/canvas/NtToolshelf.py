@@ -20,8 +20,6 @@ class NtToolshelf(NtWidgetPad):
 
         self.toolshelf = ToolshelfCanvasWidget(self, panel_index, app_engine)
         self.toolshelf.resizeByDefaultRequested.connect(self.onResizeByDefaultRequested)
-        self.toolshelf.installEventFilter(self.adjustFilter)
-
         self.setObjectName("toolshelfPad")
         self.borrowDocker(self.toolshelf)
 
@@ -29,7 +27,6 @@ class NtToolshelf(NtWidgetPad):
         self.setResizable(True)
     
     def close(self):
-        self.toolshelf.removeEventFilter(self.adjustFilter)
         self.toolshelf.onUnload()
         result = super().close()
         self.toolshelf.close()

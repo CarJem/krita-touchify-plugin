@@ -13,7 +13,7 @@ from touchify.src.cfg.TouchifyRegistryPreferences import TouchifyRegistryPrefere
 from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
 from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.components.krita.settings import KritaSettings
-from touchify.src.global_events import TouchifyEvents
+from touchify.src.global_events import GlobalEvents
 from touchify.src.variables import *
 
 from touchify.src.components.python.extensions import *
@@ -51,7 +51,7 @@ class TouchifySettings:
     @staticmethod  
     def reload():
         TouchifySettings.instance().cfg.load()
-        TouchifyEvents.EMIT_SIGNAL_TOUCHIFY_CONFIG_UPDATED()
+        GlobalEvents.EMIT_SIGNAL_TOUCHIFY_CONFIG_UPDATED()
 
     def __init__(self) -> None:
         self.notify_hooks = []
@@ -215,7 +215,7 @@ class TouchifySettings:
         elif registry_index == 3:
             KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Delta", id, False)
 
-        TouchifyEvents.EMIT_SIGNAL_TOOLSHELF_PRESET_CHANGED(registry_index)
+        GlobalEvents.EMIT_SIGNAL_TOOLSHELF_PRESET_CHANGED(registry_index)
     
     #endregion
 
@@ -236,7 +236,7 @@ class TouchifySettings:
 
     def setActiveToolbox(self, id: str):
         KritaSettings.writeSetting(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", id, False)
-        TouchifyEvents.EMIT_SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED()
+        GlobalEvents.EMIT_SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED()
     
     #endregion
 
@@ -257,7 +257,7 @@ class TouchifySettings:
 
     def setActiveWidgetLayout(self, id: str):
         KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", id, False)
-        TouchifyEvents.EMIT_SIGNAL_CANVAS_LAYOUT_CHANGED()
+        GlobalEvents.EMIT_SIGNAL_CANVAS_LAYOUT_CHANGED()
     
     #endregion
 

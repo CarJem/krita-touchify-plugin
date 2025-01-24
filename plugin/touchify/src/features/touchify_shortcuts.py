@@ -21,8 +21,8 @@ class TouchifyShortcuts(object):
 
     #region Signals
 
-    def onWindowCreated(self):
-        self.qWin = self.appEngine.windowSource.qwindow()
+    def Window_Load(self):
+        self.qWin = self.appEngine.krita_window.qwindow()
 
     #endregion
 
@@ -145,7 +145,7 @@ class TouchifyShortcuts(object):
         source.click()
 
     def showPopupPalette(self):
-        activeWindow = self.appEngine.windowSource
+        activeWindow = self.appEngine.krita_window
         if not activeWindow: return
 
         views = activeWindow.views()
@@ -184,20 +184,20 @@ class TouchifyShortcuts(object):
                 else:
                     destination.addAction(action)
 
-        activeWindow = self.appEngine.windowSource.qwindow()
+        activeWindow = self.appEngine.krita_window.qwindow()
         popupMenu = QMenu(activeWindow)
         menuBar = activeWindow.menuBar()
         iterateActions(popupMenu, menuBar)
         popupMenu.exec(QCursor.pos())
 
     def toggleDirectionalDockers(self, area: int):
-        self.appEngine.docker_management.toggleDockersPerArea(area)
+        self.appEngine.mgr_dockers.toggleDockersPerArea(area)
 
     #endregion
 
     #region Action Registration
 
-    def finalizeActions(self):
+    def Actions_Post(self):
         settings_menu = self.qWin.findChild(QMenu, 'settings')
 
         configureAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_CONFIGURE, settings_menu, settings_menu, 'options_configure')
@@ -209,7 +209,7 @@ class TouchifyShortcuts(object):
 
         TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_DOCKERUTILS_MENU, settings_menu, settings_menu, 'view_toggledockers')
 
-    def createActions(self, window: Window, subItemPath: str):
+    def Actions_Init(self, window: Window, subItemPath: str):
 
 
 

@@ -79,7 +79,7 @@ class LayerLabelBox(QComboBox):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.appEngine.action_management.selectedNodeColorsChanged.connect(self.updateInterface)
+        self.appEngine.mgr_actions.selectedNodeColorsChanged.connect(self.updateInterface)
         self.updateInterface()
         
     def showEvent(self, event):

@@ -7,6 +7,14 @@ if TYPE_CHECKING:
 
 class TouchifyHelpers:
 
+    @staticmethod
+    def getDockerMenu(window: Window):
+        for m in window.qwindow().actions():
+            if m.objectName() == "settings_dockers_menu":
+                return m
+        return None
+    
+    @staticmethod
     def getExtension() -> "TouchifyExtension":
         extensions = Krita.instance().extensions()
         for ext in extensions:
@@ -15,6 +23,7 @@ class TouchifyHelpers:
                     return ext
         return None
     
+    @staticmethod
     def moveActionTo(action_id: str, source: QMenu, dest: QMenu, after: str):
         actionToMove = Krita.instance().action(action_id)
 

@@ -18,11 +18,11 @@ class CanvasPatternPicker(QPushButton):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.appEngine.action_management.patternChanged.connect(self.onPatternChanged)
-        self.onPatternChanged(self.appEngine.action_management.getCurrentPattern())
+        self.appEngine.mgr_actions.patternChanged.connect(self.onPatternChanged)
+        self.onPatternChanged(self.appEngine.mgr_actions.getCurrentPattern())
 
     def openBrushPicker(self):
-        self.appEngine.action_management.openPopup("pattern_chooser_popup", self)
+        self.appEngine.mgr_actions.openPopup("pattern_chooser_popup", self)
     
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)

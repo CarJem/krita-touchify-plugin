@@ -1,7 +1,7 @@
 from krita import *
 from PyQt5.QtGui import QColor
 from touchify.src.components.python.extensions import Extensions
-from touchify.src.global_events import TouchifyEvents
+from touchify.src.global_events import GlobalEvents
 
 
 
@@ -108,7 +108,7 @@ class KritaSettings:
 
     def writeSetting(group:str, name:str, value:str, notify: bool = True):
         result = Krita.instance().writeSetting(group, name, value)
-        if notify: TouchifyEvents.instance().EMIT_SIGNAL_KRITA_CONFIG_UPDATED()
+        if notify: GlobalEvents.instance().EMIT_SIGNAL_KRITA_CONFIG_UPDATED()
         return result
 
     def showDockerTitlebars():
