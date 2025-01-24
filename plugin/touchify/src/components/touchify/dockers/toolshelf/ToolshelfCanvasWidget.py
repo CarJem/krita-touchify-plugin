@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
+from touchify.src.global_events import TouchifyEvents
 from touchify.src.settings import *
 from touchify.src.variables import *
 from touchify.src.features.docker_manager import *
@@ -18,9 +19,10 @@ class ToolshelfCanvasWidget(QDockWidget):
 
     resizeByDefaultRequested=pyqtSignal()
 
-    def __init__(self, panel_index: int, app_engine: "TouchifyWindow"):
-        super().__init__()
+    def __init__(self, parent: QWidget, panel_index: int, app_engine: "TouchifyWindow"):
+        super().__init__(parent)
         self.setWindowTitle("Touchify Toolshelf")
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.PanelIndex = panel_index
         self.docker_manager = app_engine.docker_management
         self.actions_manager = app_engine.action_management
@@ -41,6 +43,14 @@ class ToolshelfCanvasWidget(QDockWidget):
         self.scrollArea.setStyleSheet(stylesheet)
         self.setWidget(self.scrollArea)
         self.onLoaded()
+
+        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
+        TouchifyEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.connect(self.onPresetChanged)
+
+    def closeEvent(self, event):
+        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.disconnect(self.onConfigUpdated)
+        TouchifyEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.disconnect(self.onPresetChanged)
+        super().closeEvent(event)
 
     def onToolshelfPageChanged(self):
         pass
@@ -64,14 +74,19 @@ class ToolshelfCanvasWidget(QDockWidget):
         self.mainWidget.restorePreviousState(self.previous_state)
 
     def onUnload(self):
-        self.previous_state = self.mainWidget.backupPreviousState()
-        self.mainWidget.toolshelfPageChanged.disconnect(self.onToolshelfPageChanged)
-        self.mainWidget.toolshelfResized.disconnect(self.onToolshelfResize)
-        self.mainWidget.toolshelfChanged.disconnect(self.onToolshelfChanged)
-        self.mainWidget.shutdownWidget()
-        self.scrollArea.takeWidget()
-        self.mainWidget.deleteLater()
-        self.mainWidget = None
+        if self.mainWidget:
+            self.previous_state = self.mainWidget.backupPreviousState()
+            self.mainWidget.toolshelfPageChanged.disconnect(self.onToolshelfPageChanged)
+            self.mainWidget.toolshelfResized.disconnect(self.onToolshelfResize)
+            self.mainWidget.toolshelfChanged.disconnect(self.onToolshelfChanged)
+            self.mainWidget.shutdownWidget()
+            self.scrollArea.takeWidget()
+            self.mainWidget.deleteLater()
+            self.mainWidget = None
+
+    def onPresetChanged(self, index: int):
+        if self.PanelIndex == index:
+            self.onConfigUpdated()
 
     def onConfigUpdated(self):
         self.onUnload()

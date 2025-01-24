@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 from krita import *
     
-class TouchifyTweaks(object):
+class TouchifyTweaks(QObject):
 
     class WindowChangedEventFilter(QObject):
         """Event Filter object. Ensure that a target widget is moved
@@ -19,20 +19,27 @@ class TouchifyTweaks(object):
         def __init__(self, parent=None):
             super().__init__(parent)
             self.target = None
+            self.function = None
 
         def eventFilter(self, obj, e):
-            if (self.target and
+
+            if (self.target == obj and
+                self.function and
                 (e.type() == QEvent.Type.Move or
                 e.type() == QEvent.Type.Resize or
                 e.type() == QEvent.Type.WindowActivate)):
                 self.target()
 
             return False
+        
+        def setFunction(self, function):
+            self.function = function
 
         def setTarget(self, wdgt):
             self.target = wdgt
 
     def __init__(self, instance: "TouchifyWindow"):
+        super().__init__(instance)
         self.appEngine = instance
         self.qWin: QMainWindow | None = None
 
@@ -40,8 +47,9 @@ class TouchifyTweaks(object):
 
     def onWindowCreated(self):
         Krita.instance().action("show_brush_editor").triggered.connect(self.onBrushEditorTrigged)
-        self.window_event_filter = self.WindowChangedEventFilter()
-        self.window_event_filter.setTarget(self.updateBrushEditor)
+        self.window_event_filter = self.WindowChangedEventFilter(self)
+        self.window_event_filter.setFunction(self.updateBrushEditor)
+        self.window_event_filter.setTarget(self.qWin)
         self.qWin = self.appEngine.windowSource.qwindow()
         self.qWin.installEventFilter(self.window_event_filter)
         self.qWin.themeChanged.connect(self.rebuildStyleSheet)

@@ -85,8 +85,7 @@ class PageStack(QStackedWidget):
         super().addWidget(panel)
 
     def goHome(self):
-        if self.currentWidget() != self._mainWidget:
-            self.changePanel('ROOT')
+        self.changePanel('ROOT')
     
     def onPanelItemUpdated(self):
         self.contentsChanged.emit()
@@ -98,11 +97,11 @@ class PageStack(QStackedWidget):
         new_panel = self.panel(panel_id)
         old_panel = self.panel(self._current_panel_id)
 
-
-        old_panel.unloadPage()
-        self._current_panel_id = panel_id
-        new_panel.loadPage()
-        self.setCurrentWidget(new_panel)
+        if new_panel != old_panel:
+            old_panel.unloadPage()
+            self._current_panel_id = panel_id
+            new_panel.loadPage()
+            self.setCurrentWidget(new_panel)
         self.rootWidget.onPageChanged(panel_id)
 
     def onCurrentChanged(self, index):

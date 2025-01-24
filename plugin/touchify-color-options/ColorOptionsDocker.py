@@ -3,6 +3,7 @@ from krita import *
 from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.special.CanvasColorPicker import CanvasColorPicker
+from touchify.src.global_events import TouchifyEvents
 from touchify.src.settings import TouchifySettings
 from touchify.src.variables import *
 
@@ -97,6 +98,7 @@ class ColorOptionsDocker(DockWidget):
         self.colorToggle = ColorSourceToggle(self, 25)
         self.setWidget(self.colorToggle)
         self.colorToggle.onCanvasChanged(self.canvas())
+        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.addonUpdateStyle)
         self.addonUpdateStyle()
 
     def addonSetup(self, instance: "TouchifyWindow"):

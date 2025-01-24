@@ -17,6 +17,7 @@ from touchify.src.components.touchify.actions.TouchifyActionMenu import Touchify
 
 from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
 
+from touchify.src.global_events import TouchifyEvents
 from touchify.src.variables import *
 
 from functools import partial
@@ -104,6 +105,9 @@ class ActionManager(QObject):
 
         self.__lastSelectedNodes: list[Node] = []
         self.__lastNodeColors: list[int] = []
+
+        TouchifyEvents.instance().SIGNAL_TIMER_TICKED.connect(self.onTimerTick)
+        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
 
 
 

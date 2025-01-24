@@ -129,7 +129,7 @@ class TabList(QWidget):
 
         rowWid = QWidget(self)
         rowWid.setObjectName("toolshelf-tablist-row")
-        rowWid.setLayout(QVBoxLayout(self) if isVertical else QHBoxLayout(self))
+        rowWid.setLayout(QVBoxLayout(rowWid) if isVertical else QHBoxLayout(rowWid))
         rowWid.layout().setSpacing(0)
         rowWid.layout().setContentsMargins(0, 0, 0, 0)
         rowWid.setSizePolicy(self.button_size_policy)

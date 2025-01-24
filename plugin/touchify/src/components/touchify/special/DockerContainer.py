@@ -24,7 +24,7 @@ class DockerContainer(QWidget):
         self.setAutoFillBackground(False)
         self.size = None
 
-        self.setLayout(QVBoxLayout())
+        self.setLayout(QVBoxLayout(self))
         self.layout().setContentsMargins(0,0,0,0)
         self.layout().setSpacing(0)
 
@@ -32,7 +32,7 @@ class DockerContainer(QWidget):
         self.container.setContentsMargins(0,0,0,0)
         self.layout().addWidget(self.container)
 
-        self.container_layout = QVBoxLayout(self)
+        self.container_layout = QVBoxLayout(self.container)
         self.container_layout.setContentsMargins(2, 2, 2, 2)
         self.container_layout.setSpacing(0)
         self.container_layout.removeWidget

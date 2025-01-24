@@ -184,7 +184,7 @@ class Panel(QWidget):
             self.actions_panel._buttons[btnKey].setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
 
         self.sections_container = QWidget(self)
-        self.sections_container.setLayout(QVBoxLayout(self))
+        self.sections_container.setLayout(QVBoxLayout(self.sections_container))
         self.sections_container.layout().setSpacing(0)
         self.sections_container.layout().setContentsMargins(0,0,0,0)
         self.sections_container.setAutoFillBackground(True)
@@ -411,7 +411,7 @@ class Panel(QWidget):
 
             widget_groups[sectionInfo.panel_y][sectionInfo.panel_x].append(sectionWidget)
 
-        self.sections_stack = Panel.SectionSplit(Qt.Orientation.Vertical, "root")
+        self.sections_stack = Panel.SectionSplit(Qt.Orientation.Vertical, "root", self)
         self.sections_container.layout().addWidget(self.sections_stack)
 
         for row_key in sorted(widget_groups.keys()):

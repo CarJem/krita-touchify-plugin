@@ -3,11 +3,10 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.src.variables import *
+from touchify.src.global_events import TouchifyEvents
 
-from touchify.src.settings import TouchifySettings
 
 
-from touchify.src.components.krita.settings import KritaSettings
 
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget
 from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
@@ -21,11 +20,10 @@ class TouchifyExtension(Extension):
     new_instance: TouchifyWindow = None
 
     timerTicked=pyqtSignal()
-    touchifyConfigUpdated=pyqtSignal()
-    kritaConfigUpdated=pyqtSignal()
 
     def __init__(self, parent):
         super().__init__(parent)
+        self.event_handler = TouchifyEvents(self)
         self.DEV_HOOK_FIND_PLUGIN = "TOUCHIFY"
 
         self.settings_clipboard_type: type | None = None
@@ -34,22 +32,12 @@ class TouchifyExtension(Extension):
 
     def setup(self):
         Krita.instance().notifier().windowCreated.connect(self.onWindowCreated)
-        TouchifySettings.instance().notifyConnect(self.onTouchifyConfigUpdated)
-        Krita.instance().notifier().configurationChanged.connect(self.onKritaConfigUpdated)
-        KritaSettings.notifyConnect(self.onKritaConfigUpdated)
+        Krita.instance().notifier().configurationChanged.connect(self.onConfigurationChanged)
+
 
         self.intervalTimer = QTimer(self)
-        self.intervalTimer.timeout.connect(self.onTimerTick)
+        self.intervalTimer.timeout.connect(TouchifyEvents.EMIT_SIGNAL_TIMER_TICKED)
         self.intervalTimer.start(TOUCHIFY_TIMER_MAIN_INTERVAL)
-
-    def onTimerTick(self):
-        self.timerTicked.emit()
-
-    def onKritaConfigUpdated(self):
-        self.kritaConfigUpdated.emit()
-
-    def onTouchifyConfigUpdated(self):
-        self.touchifyConfigUpdated.emit()
     
     def onWindowDestroyed(self, windowId: str):
         item: TouchifyWindow = self.instances[windowId]
@@ -75,6 +63,9 @@ class TouchifyExtension(Extension):
         self.instances[window_id].onWindowCreated(self, window)
 
         self.setup_instance = False
+
+    def onConfigurationChanged(self):
+        TouchifyEvents.EMIT_SIGNAL_KRITA_CONFIG_UPDATED()
 
     def createActions(self, window: Window):
         self.setup_instance = True

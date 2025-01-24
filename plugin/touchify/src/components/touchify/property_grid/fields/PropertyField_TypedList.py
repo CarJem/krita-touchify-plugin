@@ -40,11 +40,16 @@ class PropertyField_TypedList(PropertyField):
         self.field_layout = QHBoxLayout(self)
         self.field_layout.setSpacing(0)
         self.field_layout.setContentsMargins(0,0,0,0)
+        self.setLayout(self.field_layout)
 
-        self.view_layout = QVBoxLayout(self)
+        self.view_widget = QWidget(self)
+        self.view_widget.setContentsMargins(0,0,0,0)
+        self.field_layout.addWidget(self.view_widget)
+
+        self.view_layout = QVBoxLayout(self.view_widget)
         self.view_layout.setSpacing(0)
         self.view_layout.setContentsMargins(0,0,0,0)
-        self.field_layout.addLayout(self.view_layout)
+        self.view_widget.setLayout(self.view_layout)
 
         self.view_editor = None
 
@@ -73,44 +78,49 @@ class PropertyField_TypedList(PropertyField):
         self.selection_model = self.view.selectionModel()
         self.selection_model.currentChanged.connect(self.updateSelected)
 
-        btns = QHBoxLayout(self)
+
+        self.btns_widget = QWidget(self)
+        self.btns_widget.setContentsMargins(0,0,0,0)
+        self.view_layout.addWidget(self.btns_widget)
+
+        btns = QHBoxLayout(self.btns_widget)
         btns.setAlignment(Qt.AlignmentFlag.AlignBottom)
-        self.view_layout.addLayout(btns)
+        self.btns_widget.setLayout(btns)
 
 
-        addButton = QPushButton(self)
+        addButton = QPushButton(self.btns_widget)
         addButton.setIcon(ResourceManager.iconLoader("material:plus"))
         addButton.setFixedHeight(24)
         addButton.clicked.connect(self.list_add)
         btns.addWidget(addButton)
 
-        removeButton = QPushButton(self)
+        removeButton = QPushButton(self.btns_widget)
         removeButton.setIcon(ResourceManager.iconLoader("material:minus"))
         removeButton.setFixedHeight(24)
         removeButton.clicked.connect(self.list_remove)
         btns.addWidget(removeButton)
 
         if self.allow_move == True:
-            moveUpButton = QPushButton(self)
+            moveUpButton = QPushButton(self.btns_widget)
             moveUpButton.setIcon(ResourceManager.iconLoader("material:arrow-up"))
             moveUpButton.setFixedHeight(24)
             moveUpButton.clicked.connect(self.list_moveUp)
             btns.addWidget(moveUpButton)
 
-            moveDownButton = QPushButton(self)
+            moveDownButton = QPushButton(self.btns_widget)
             moveDownButton.setIcon(ResourceManager.iconLoader("material:arrow-down"))  
             moveDownButton.setFixedHeight(24)
             moveDownButton.clicked.connect(self.list_moveDown)
             btns.addWidget(moveDownButton)
 
-        editButton = QPushButton(self)
+        editButton = QPushButton(self.btns_widget)
         editButton.setIcon(ResourceManager.iconLoader("material:pencil"))                                                                                                                                                                                                                                                                                                                                 
         editButton.setFixedHeight(24)
         editButton.clicked.connect(self.list_edit)
         btns.addWidget(editButton)
 
         if self.allow_clipboard == True:
-            moreButton = QPushButton(self)
+            moreButton = QPushButton(self.btns_widget)
             moreButton.setIcon(ResourceManager.iconLoader("material:menu"))                                                                                                                                                                                                                                                                                                              
             moreButton.setFixedHeight(24)
             btns.addWidget(moreButton)
@@ -124,7 +134,7 @@ class PropertyField_TypedList(PropertyField):
             pateAct.triggered.connect(self.list_paste)
             moreButton.setMenu(moreMenu)
 
-        self.setLayout(self.field_layout)
+
 
     def test_restrictions(self, manual_restrictions: list[dict[str, any]] = []):
         restrictions: list[dict[str, any]] = []

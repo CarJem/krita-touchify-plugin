@@ -1,4 +1,4 @@
-from typing import Callable, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
@@ -34,9 +34,6 @@ class TouchifyWindow(QObject):
         self.windowUUID = WINDOW_ID
         WINDOW_ID += 1
 
-
-        self.update_style_calls: list[Callable] = []
-
         self.toolboxDocker: ToolboxDocker = None
 
         self.touchify_actions = TouchifyRegisteredActions(self)
@@ -66,30 +63,12 @@ class TouchifyWindow(QObject):
 
     def onWindowCreated(self, extension: "TouchifyExtension", window: Window):
         self.setParent(window.qwindow())
-        extension.timerTicked.connect(self.onTimerTick)
-        extension.kritaConfigUpdated.connect(self.onKritaConfigUpdated)
-        extension.touchifyConfigUpdated.connect(self.onTouchifyConfigUpdated)
         self.windowSource = window
         self.docker_management = DockerManager(self)
         self.canvas_management = CanvasManager(self)
         self.setupAddons(window)
         self.setupSoftActions()
 
-    def onTimerTick(self):
-        self.action_management.onTimerTick()    
-
-    def onKritaConfigUpdated(self):
-        self.touchify_canvas.onKritaConfigUpdated()
-        for call in self.update_style_calls: call()
-
-    def onTouchifyConfigUpdated(self):
-        toolshelf_docker = self.getToolshelfDocker()
-        if toolshelf_docker: toolshelf_docker.onConfigUpdated()
-        toolbox_docker = self.getToolboxDocker()
-        if toolbox_docker: toolbox_docker.onConfigUpdated()
-        self.touchify_canvas.onConfigUpdated()    
-        self.action_management.onConfigUpdated()
-        for call in self.update_style_calls: call()
 
     #endregion
 
@@ -146,11 +125,8 @@ class TouchifyWindow(QObject):
                     self.toolboxDocker.setup(self)
                 elif docker.objectName().startswith("Touchify/"):
                     addonSetupFn = getattr(docker, "addonSetup", None)
-                    addonUpdateStyleFn = getattr(docker, "addonUpdateStyle", None)
                     if callable(addonSetupFn):
                         addonSetupFn(self)
-                    if callable(addonUpdateStyleFn):
-                        self.update_style_calls.append(addonUpdateStyleFn)
 
         def setupDockerMenu():
             dockerMenu = None

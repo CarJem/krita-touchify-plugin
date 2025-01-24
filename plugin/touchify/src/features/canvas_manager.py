@@ -55,8 +55,19 @@ class CanvasManager(QObject):
         return True
 
     def eventFilter(self, obj: QObject, event: QEvent):
+        valid_events = [
+            QEvent.Type.FocusIn,
+            QEvent.Type.MouseButtonPress,
+            QEvent.Type.TabletPress,
+            QEvent.Type.MouseButtonRelease,
+            QEvent.Type.TabletRelease,
+        ]
+
+        if not event.type() in valid_events:
+            return False
         if not self.__IsCanvasWidget__(obj): 
-            return super().eventFilter(obj, event)
+            return False
+
         
         if event.type() == QEvent.Type.MouseButtonPress or event.type() == QEvent.Type.TabletPress:
                 match event.button():
@@ -85,4 +96,4 @@ class CanvasManager(QObject):
             if obj.hasFocus(): 
                 self.lastCanvasFocus = obj
                 self.normalFocus.emit()
-        return super().eventFilter(obj, event)
+        return False

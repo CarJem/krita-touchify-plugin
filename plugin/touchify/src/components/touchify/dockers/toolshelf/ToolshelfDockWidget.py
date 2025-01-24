@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 from typing import TYPE_CHECKING
 
 from touchify.src.features.canvas_manager import CanvasManager
+from touchify.src.global_events import TouchifyEvents
 from touchify.src.settings import TouchifySettings
 
 from touchify.src.features.docker_manager import DockerManager
@@ -30,6 +31,10 @@ class ToolshelfDockWidget(DockWidget):
         self.PanelIndex = -1
         self.previous_state: ToolshelfWidget.PreviousState = ToolshelfWidget.PreviousState()
         self.setWindowTitle(DOCKER_TITLE)
+        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
+        TouchifyEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.connect(self.onPresetChanged)
+
+
       
     def setup(self, instance: "TouchifyWindow"):
         self.docker_manager = instance.docker_management
@@ -58,6 +63,10 @@ class ToolshelfDockWidget(DockWidget):
             self.mainWidget.shutdownWidget()
             self.mainWidget.deleteLater()
             self.mainWidget = None
+
+    def onPresetChanged(self, index: int):
+        if self.PanelIndex == index:
+            self.onConfigUpdated()
 
     def onConfigUpdated(self):
         self.onUnload()
@@ -103,7 +112,9 @@ class ToolshelfDockWidget(DockWidget):
         super().showEvent(event)
 
     def closeEvent(self, event):
-        super().closeEvent(event)
+        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.disconnect(self.onConfigUpdated)
+        TouchifyEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.disconnect(self.onPresetChanged)
+        return super().closeEvent(event)
 
     # notifies when views are added or removed
     # 'pass' means do not do anything

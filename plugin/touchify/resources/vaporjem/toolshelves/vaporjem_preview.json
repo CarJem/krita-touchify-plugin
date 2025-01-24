@@ -439,7 +439,7 @@
     "header_options": {
         "button_size": 32,
         "header_size": 16,
-        "default_to_resize_mode": true,
+        "default_to_resize_mode": false,
         "default_to_pinned": false,
         "show_pin_button": true,
         "show_menu_button": true,

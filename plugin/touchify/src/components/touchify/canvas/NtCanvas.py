@@ -5,18 +5,15 @@ from PyQt5.QtWidgets import QMdiArea
 
 from touchify.src.components.touchify.canvas.NtSubWinFilter import NtSubWinFilter
 
-from touchify.src.components.touchify.canvas.NtToolbox import NtToolbox
-from touchify.src.components.touchify.canvas.NtToolshelf import NtToolshelf
+from touchify.src.components.touchify.canvas.NtWorker import NtWorker
+from touchify.src.global_events import TouchifyEvents
 from touchify.src.helpers import TouchifyHelpers
 from touchify.src.settings import TouchifySettings
 from krita import *
 from PyQt5.QtCore import QObject
 from touchify.src.variables import *
-from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from touchify.src.components.krita.settings import KritaSettings
 from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
-from touchify.src.cfg.widget_layout.WidgetLayoutPadOptions import WidgetLayoutPadOptions
-from touchify.src.cfg.widget_layout.WidgetLayoutToolboxOptions import WidgetLayoutToolboxOptions
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from touchify.src.window import TouchifyWindow
@@ -43,6 +40,8 @@ class NtCanvas(QWidget):
 
         self.toolshelf_count = 0
         self.toolbox_enabled = False
+
+        self.selected_preset_id = None
 
         self.presetsMenu = QMenu("Canvas Layouts...")
         self.presetsMenu.aboutToShow.connect(self.buildPresetMenu)
@@ -78,14 +77,17 @@ class NtCanvas(QWidget):
         self.mdiArea = self.qWin.findChild(QMdiArea)
 
         self.adjustFilter = NtSubWinFilter(self.mdiArea)
+        self.adjustFilter.SIGNAL_EVENT_REQUESTED.connect(self.subWindowEvent)
         self.adjustFilter.setTargetWidget(self)
         self.qWin.installEventFilter(self.adjustFilter)
         self.setParent(self.mdiArea)
 
+        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.reloadActivePreset)
+        TouchifyEvents.instance().SIGNAL_CANVAS_LAYOUT_CHANGED.connect(self.reloadActivePreset)
+
         self.windowLoaded = True
 
         self.updateElements()
-        self.updateActions()
 
     def finishMenuActions(self):
         settings_menu = self.qWin.findChild(QMenu, 'settings')
@@ -154,7 +156,6 @@ class NtCanvas(QWidget):
             id: str = ac.data()
             if isinstance(id, str):
                 TouchifySettings.instance().setActiveWidgetLayout(id)
-                self.reloadActivePreset()
 
     def buildPresetMenu(self):
         self.presetsMenu.clear()
@@ -177,18 +178,21 @@ class NtCanvas(QWidget):
                 menus[key.id].addAction(action)
 
     def reloadActivePreset(self):
+
+        last_preset_id = self.selected_preset_id
         self.active_preset: WidgetLayout = TouchifySettings.instance().getActiveWidgetLayout()
         self.selected_preset_id = TouchifySettings.instance().getActiveWidgetLayoutId()
 
         self.toolshelf_count = self.active_preset.toolshelf_count
         self.toolbox_enabled = self.active_preset.toolbox_enabled
         
-        KritaSettings.writeSettingInt(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", self.selected_preset_id)
+        if last_preset_id != self.selected_preset_id:
+            KritaSettings.writeSettingInt(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", self.selected_preset_id)
         
-        if self.toolbox: self.toolbox.toolbox.toolboxWidget.setHorizontalMode(self.active_preset.toolbox.horizontal_mode)
+        if self.toolbox: 
+            self.toolbox.toolbox.toolboxWidget.setHorizontalMode(self.active_preset.toolbox.horizontal_mode)
 
         self.updateElements(True)
-        self.updateActions()
 
     #endregion
 
@@ -203,157 +207,38 @@ class NtCanvas(QWidget):
 
     def paintEvent(self, e: QPaintEvent):
         super().paintEvent(e)
-
-    def onConfigUpdate(self):
-        self.reloadActivePreset()
-
-        if self.toolshelf_delta: self.toolshelf_delta.toolshelf.onConfigUpdated()
-        if self.toolshelf_gamma: self.toolshelf_gamma.toolshelf.onConfigUpdated()
-        if self.toolshelf_beta: self.toolshelf_beta.toolshelf.onConfigUpdated()
-        if self.toolshelf_alpha: self.toolshelf_alpha.toolshelf.onConfigUpdated()
             
     #endregion
 
     #region Update Functions
 
 
+    def updateStart(self, mode: str, args: dict = {}):
+
+        if hasattr(self, "thread_packer"):
+            if self.thread_packer.isRunning(): return
+
+        # Thread
+        self.thread_packer = QThread()
+        # Worker
+        self.worker_packer = NtWorker()
+        self.worker_packer.moveToThread( self.thread_packer )
+        # Thread
+        self.thread_packer.started.connect( lambda : self.worker_packer.run( self, mode, args ) )
+        self.thread_packer.start()
 
     def updateElements(self, full_unload: bool = False):
-        def onToolshelfCheck(toolshelf: NtToolshelf | None, allow_toolshelf: bool, config_index: int, action: QAction):
-            if toolshelf == None and allow_toolshelf:
-                actual_toolshelf = NtToolshelf(self, self.krita_window, config_index, self.app_engine)
-                actual_toolshelf.collapseBtn.setDefaultAction(action)
-                self.canvasLayout.addWidget(actual_toolshelf)
-                actual_toolshelf.show()
-                return actual_toolshelf
-            elif toolshelf and not allow_toolshelf:
-                toolshelf.close()
-                self.canvasLayout.removeWidget(toolshelf)
-                return None
-            else:
-                return "ignore"
-        
-        def onToolboxCheck(allow_toolbox: bool):
-            if self.toolbox == None and allow_toolbox:
-                self.toolbox = NtToolbox(self, self.krita_window)
-                self.toolbox.collapseBtn.setDefaultAction(self.tlb_action)
-                self.canvasLayout.addWidget(self.toolbox)
-                self.toolbox.show()
-            elif self.toolbox and not allow_toolbox:
-                self.canvasLayout.removeWidget(self.toolbox)
-                self.toolbox.close()
-                self.toolbox = None
-
-        def insertWidgetPad(pad: NtWidgetPad, padOptions: WidgetLayoutPadOptions | WidgetLayoutToolboxOptions):
-            alignment_x = WidgetLayoutPadOptions.HorizontalAlignment.toAlignmentFlag(padOptions.alignment_x)
-            alignment_y = WidgetLayoutPadOptions.VerticalAlignment.toAlignmentFlag(padOptions.alignment_y)
-            pad.setCanvasData(alignment_x, alignment_y)
-
-            if padOptions.span_x != -1 and padOptions.span_y != -1:
-                self.canvasLayout.addWidget(pad, padOptions.position_y, padOptions.position_x, padOptions.span_y, padOptions.span_x, alignment_x | alignment_y)
-            else:
-                self.canvasLayout.addWidget(pad, padOptions.position_y, padOptions.position_x, alignment_x | alignment_y)
-            self.canvasLayout.setColumnStretch(padOptions.position_x, padOptions.stretch_x)
-            self.canvasLayout.setRowStretch(padOptions.position_y, padOptions.stretch_y)
-
         if self.windowLoaded == False:
             return
-        
-
-        if full_unload:
-            onToolboxCheck(False)
-
-            alpha = onToolshelfCheck(self.toolshelf_alpha, False, 0, self.tlshlf_alpha_action)
-            if alpha != "ignore": self.toolshelf_alpha = alpha
-
-            beta = onToolshelfCheck(self.toolshelf_beta,  False, 1, self.tlshlf_beta_action)
-            if beta != "ignore": self.toolshelf_beta = beta
-
-            gamma = onToolshelfCheck(self.toolshelf_gamma, False, 2, self.tlshlf_gamma_action)
-            if gamma != "ignore": self.toolshelf_gamma = gamma
-
-            delta = onToolshelfCheck(self.toolshelf_delta, False, 3, self.tlshlf_delta_action)
-            if delta != "ignore": self.toolshelf_delta = delta
-        
-        
-        
-        allow_toolbox = self.toolbox_enabled
-        allow_toolshelf_alpha = self.toolshelf_count >= 1
-        allow_toolshelf_beta = self.toolshelf_count >= 2
-        allow_toolshelf_gamma = self.toolshelf_count >= 3
-        allow_toolshelf_delta = self.toolshelf_count >= 4
-
-        onToolboxCheck(allow_toolbox)
-
-        alpha = onToolshelfCheck(self.toolshelf_alpha, allow_toolshelf_alpha, 0, self.tlshlf_alpha_action)
-        if alpha != "ignore": self.toolshelf_alpha = alpha
-
-        beta = onToolshelfCheck(self.toolshelf_beta,  allow_toolshelf_beta, 1, self.tlshlf_beta_action)
-        if beta != "ignore": self.toolshelf_beta = beta
-
-        gamma = onToolshelfCheck(self.toolshelf_gamma, allow_toolshelf_gamma, 2, self.tlshlf_gamma_action)
-        if gamma != "ignore": self.toolshelf_gamma = gamma
-
-        delta = onToolshelfCheck(self.toolshelf_delta, allow_toolshelf_delta, 3, self.tlshlf_delta_action)
-        if delta != "ignore": self.toolshelf_delta = delta
-
-        for x in range(self.canvasLayout.columnCount()):
-            self.canvasLayout.setColumnStretch(x, 0)
-
-        for y in range(self.canvasLayout.rowCount()):
-            self.canvasLayout.setRowStretch(y, 0)
-
-        if self.toolbox: insertWidgetPad(self.toolbox, self.active_preset.toolbox)
-        if self.toolshelf_alpha: insertWidgetPad(self.toolshelf_alpha, self.active_preset.toolshelf_alpha)
-        if self.toolshelf_beta: insertWidgetPad(self.toolshelf_beta, self.active_preset.toolshelf_beta)
-        if self.toolshelf_gamma: insertWidgetPad(self.toolshelf_gamma, self.active_preset.toolshelf_gamma)
-        if self.toolshelf_delta: insertWidgetPad(self.toolshelf_delta, self.active_preset.toolshelf_delta)
+        if full_unload: self.updateStart("LOAD_ELEMENTS")
+        else: self.updateStart("RELOAD_ELEMENTS")
 
     def updateView(self):
-        if self.windowLoaded == False:
-            return
+        self.updateStart("VIEW")
 
-        def rulerMargin():
-            padding = 4
-            # Canvas ruler pixel width on Windows
-            if KritaSettings.showRulers(): return 20 + padding
-            return 0
-
-        def scrollBarMargin():
-            padding = 4
-            # Canvas scrollbar pixel width/height on Windows 
-            if KritaSettings.hideScrollbars(): return 0
-            return 10 + padding
-
-        if self.mdiArea:
-            position = self.mdiArea.viewport().pos()
-            size = self.mdiArea.viewport().size()
-
-            position.setX(position.x() + rulerMargin())
-            position.setY(position.y() + rulerMargin())
-
-            size.setWidth(size.width() - rulerMargin() - scrollBarMargin())
-            size.setHeight(size.height() - rulerMargin() - scrollBarMargin())
-
-            if self.isEmpty():
-                self.move(position)
-                self.setFixedSize(0, 0)
-            else:
-                self.move(position)
-                self.setFixedSize(size)
-
-                maskedRegion = QRegion(self.frameGeometry())
-                maskedRegion -= QRegion(self.geometry())
-                maskedRegion += self.childrenRegion()
-                self.setMask(maskedRegion)
-
-    
-            if self.toolbox: self.toolbox.adjustToView()
-            if self.toolshelf_alpha: self.toolshelf_alpha.adjustToView()
-            if self.toolshelf_beta: self.toolshelf_beta.adjustToView()
-            if self.toolshelf_gamma: self.toolshelf_gamma.adjustToView()
-            if self.toolshelf_delta: self.toolshelf_delta.adjustToView()
-
+    def updateActions(self, pad: str = "", value: bool = None):
+        self.updateStart("ACTIONS", {"pad": pad, "value": value})
+        
     def mouseMoveEvent(self, a0):
         if self.toolbox: self.toolbox.updateCursor()
         if self.toolshelf_alpha: self.toolshelf_alpha.updateCursor()
@@ -361,41 +246,7 @@ class NtCanvas(QWidget):
         if self.toolshelf_gamma: self.toolshelf_gamma.updateCursor()
         if self.toolshelf_delta: self.toolshelf_delta.updateCursor()
 
-    def updateActions(self, pad: str = "", value: bool = None):
-        if self.windowLoaded == False:
-            return
-        
 
-        show_toolbox = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolbox"), True)
-        show_toolshelf_alpha = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_alpha"), True)
-        show_toolshelf_beta = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_beta"), True)
-        show_toolshelf_gamma = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_gamma"), True)
-        show_toolshelf_delta = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_delta"), True)
-        
-        if pad != "" and value != None:
-            KritaSettings.writeSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format(pad), value, False)
-            match pad:
-                case "toolbox": show_toolbox = value
-                case "toolshelf_alpha": show_toolshelf_alpha = value
-                case "toolshelf_beta":  show_toolshelf_beta = value
-                case "toolshelf_gamma": show_toolshelf_gamma = value
-                case "toolshelf_delta": show_toolshelf_delta = value
-                case _: pass
-
-
-        self.tlb_action.setChecked(show_toolbox)
-        self.tlshlf_alpha_action.setChecked(show_toolshelf_alpha)
-        self.tlshlf_beta_action.setChecked(show_toolshelf_beta)
-        self.tlshlf_gamma_action.setChecked(show_toolshelf_gamma)
-        self.tlshlf_delta_action.setChecked(show_toolshelf_delta)
-    
-        if self.toolbox: self.toolbox.setCollapsed(show_toolbox)
-        if self.toolshelf_alpha: self.toolshelf_alpha.setCollapsed(show_toolshelf_alpha)
-        if self.toolshelf_beta:  self.toolshelf_beta.setCollapsed(show_toolshelf_beta)
-        if self.toolshelf_gamma: self.toolshelf_gamma.setCollapsed(show_toolshelf_gamma)
-        if self.toolshelf_delta: self.toolshelf_delta.setCollapsed(show_toolshelf_delta)
-
-        self.updateView()
         
 
     #endregion

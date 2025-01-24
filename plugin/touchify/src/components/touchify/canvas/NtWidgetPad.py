@@ -104,6 +104,7 @@ class NtWidgetPad(QWidget):
 
         #Install Event Filters
         self.adjustFilter = NtSubWinFilter(self)
+        self.adjustFilter.SIGNAL_EVENT_REQUESTED.connect(self.subWindowEvent)
         self.adjustFilter.setTargetWidget(self)
 
         self.source_window.installEventFilter(self.adjustFilter)
@@ -320,10 +321,10 @@ class NtWidgetPad(QWidget):
         
         def fitToView(_view: QWidget, _sizeToFit: QSize):
             def height_scale(input):
-                return input + self.collapseBtn.height()
+                return input + self.collapseBtn.height() + 14
             
             def height_offset(input):
-                return input - self.collapseBtn.height()
+                return input - self.collapseBtn.height() - 14
             
             def width_offset(input):
                 return input

@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 from krita import *
 
 
+from touchify.src.global_events import TouchifyEvents
 from touchify.src.variables import *
 from touchify.src.components.touchify.dockers.toolbox.ToolboxWidget import ToolboxWidget
 
@@ -28,6 +29,9 @@ class ToolboxDocker(QDockWidget):
 
         self.toolboxWidget = ToolboxWidget(self)
         self.setWidget(self.toolboxWidget)
+
+        TouchifyEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
+        TouchifyEvents.instance().SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED.connect(self.onConfigUpdated)
 
     def onConfigUpdated(self):
         self.toolboxWidget.reload()

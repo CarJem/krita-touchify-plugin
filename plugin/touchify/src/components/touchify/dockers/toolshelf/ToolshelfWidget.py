@@ -42,6 +42,7 @@ class ToolshelfWidget(QWidget):
         self.INTERNAL_SHOW_EVENT_INIT = True
 
         self.pinned = False
+        self.resizable = cfg.header_options.default_to_resize_mode
         self.parent_docker: "ToolshelfCanvasWidget" | "ToolshelfDockWidget" | "TouchifyPopup"  = parent
         self.registry_index = registry_index
         self.cfg = cfg
@@ -85,7 +86,8 @@ class ToolshelfWidget(QWidget):
         self.mainLayout.addWidget(self.tabs)
         self.mainLayout.addWidget(self.pages)
 
-        self.header.optionsMenu.editMode.changed.connect(self.onEditModeChanged)
+        self.header.optionsMenu.editModeAction.changed.connect(self.onEditModeChanged)
+        self.header.optionsMenu.SIGNAL_RESIZE_STATE_CHANGED.connect(self.onResizableChanged)
 
 
         if headerOrientation == Qt.Orientation.Horizontal:
@@ -159,7 +161,7 @@ class ToolshelfWidget(QWidget):
         state = ToolshelfWidget.PreviousState()
         state._last_toolshelf_id = self.toolshelf_id
         state._last_pinned = self.pinned
-        state._last_resizable = self.header.optionsMenu.toggleResizeAct.isChecked()
+        state._last_resizable = self.resizable
         state._last_panel_id = self.pages._current_panel_id
         return state
     
@@ -188,8 +190,11 @@ class ToolshelfWidget(QWidget):
 
     #region Signals
 
+    def onResizableChanged(self, state: bool):
+        self.resizable = state
+
     def onEditModeChanged(self):
-        edit_mode = self.header.optionsMenu.editMode.isChecked()
+        edit_mode = self.header.optionsMenu.editModeAction.isChecked()
         self.pages.setEditMode(edit_mode)
     
     def onPageChanged(self, current_panel_id: str):

@@ -45,10 +45,12 @@ class PropertyLabel(QWidget):
         self.setContentsMargins(0,0,0,0)
 
         titleSection.addWidget(self.varLabel)
-        titleSection.addWidget(self.hintLabel, 1, Qt.AlignmentFlag.AlignRight)
+        if self.hintLabel:
+            titleSection.addWidget(self.hintLabel, 1, Qt.AlignmentFlag.AlignRight)
 
 
     def showHint(self):
-        QToolTip.showText(self.hintLabel.mapToGlobal(QPoint(0,0)), self.hint_text)
+        if self.hintLabel:
+            QToolTip.showText(self.hintLabel.mapToGlobal(QPoint(0,0)), self.hint_text)
 
 

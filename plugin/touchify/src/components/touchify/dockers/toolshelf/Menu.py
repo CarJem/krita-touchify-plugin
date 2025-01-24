@@ -16,6 +16,8 @@ if TYPE_CHECKING:
     from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
 
 class Menu(QMenu):
+    SIGNAL_RESIZE_STATE_CHANGED = pyqtSignal(bool)
+
     def __init__(self, parent: QWidget, cfg: ToolshelfData, registry_index: int):
         super(Menu, self).__init__(parent)
         self.cfg = cfg
@@ -26,9 +28,9 @@ class Menu(QMenu):
         self.setupPopup = True
         self.setupGlobal = True
 
-        self.editMode: QAction = QAction("Edit Mode", self)
-        self.editMode.setCheckable(True)
-        self.editMode.setChecked(False)
+        self.editModeAction: QAction = QAction("Edit Mode", self)
+        self.editModeAction.setCheckable(True)
+        self.editModeAction.setChecked(False)
 
         self.toggleResizeAct: QAction = QAction("Allow Resizing", self)
         self.toggleResizeAct.setCheckable(True)
@@ -58,7 +60,7 @@ class Menu(QMenu):
                     self.addSeparator()
             self.setupPopup = False
         if self.setupGlobal:
-            self.addAction(self.editMode)
+            self.addAction(self.editModeAction)
             self.setupGlobal = False
         
     def toggleResize(self):
@@ -67,6 +69,8 @@ class Menu(QMenu):
             self.parentNtWidget.setResizable(state)
         elif self.parentPopup != None:
             self.parentPopup.updateResizingState(state)
+
+        self.SIGNAL_RESIZE_STATE_CHANGED.emit(state)
         
 
     def loadPresets(self):

@@ -18,7 +18,7 @@ class NtToolshelf(NtWidgetPad):
     def __init__(self, canvas: "NtCanvas", window: Window, panel_index: int, app_engine: "TouchifyWindow"):
         super().__init__(window, canvas, True)   
 
-        self.toolshelf = ToolshelfCanvasWidget(panel_index, app_engine)
+        self.toolshelf = ToolshelfCanvasWidget(self, panel_index, app_engine)
         self.toolshelf.resizeByDefaultRequested.connect(self.onResizeByDefaultRequested)
         self.toolshelf.installEventFilter(self.adjustFilter)
 

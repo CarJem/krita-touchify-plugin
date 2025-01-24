@@ -18,9 +18,7 @@ class SettingsDialog(QDialog):
         super().__init__(qwin.qwindow().window())
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.qwin = qwin.qwindow()
-
         
-
         self.editableConfig = copy.deepcopy(TouchifySettings.instance().getConfig())
         self.propertyGrid = PropertyGrid(self)
         self.propertyGrid.updateDataObject(self.editableConfig)
@@ -42,7 +40,7 @@ class SettingsDialog(QDialog):
     
     def _saveFile(self):
         self.editableConfig.save()
-        TouchifySettings.instance().notifyUpdate()
+        TouchifySettings.reload()
 
     def onSave(self):
         self._saveFile()

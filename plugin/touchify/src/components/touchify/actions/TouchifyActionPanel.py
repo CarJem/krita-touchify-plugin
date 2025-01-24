@@ -75,7 +75,7 @@ class TouchifyActionPanel(QWidget):
      
     def appendRow(self, row: int):
         if self.type == "toolbar_flat":
-            rowWid = TouchifyActionToolbar()
+            rowWid = TouchifyActionToolbar(self)
             rowWid.setObjectName("touchify_actionpanel_toolbar")
             rowWid.layout().setSpacing(0)
             rowWid.layout().setContentsMargins(0,0,0,0)        
@@ -87,10 +87,11 @@ class TouchifyActionPanel(QWidget):
             self.layout().addWidget(rowWid)
         else:
             rowWid = QWidget(self)
-            rowWid.setLayout(QHBoxLayout(self))
-            rowWid.layout().setSpacing(0)
-            rowWid.layout().setContentsMargins(0, 0, 0, 0)
+            rowLay = QHBoxLayout(rowWid)
+            rowWid.setLayout(rowLay)
             rowWid.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+            rowLay.setSpacing(0)
+            rowLay.setContentsMargins(0, 0, 0, 0)
             self._rows[row] = rowWid
             self.layout().addWidget(rowWid)
      

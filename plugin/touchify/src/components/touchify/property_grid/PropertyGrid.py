@@ -18,7 +18,7 @@ class PropertyGrid(QWidget):
 
         self.naviBarRow = QWidget(self)
         self.naviBarRow.setContentsMargins(0,0,0,0)
-        self.naviBarLayout = QHBoxLayout(self)
+        self.naviBarLayout = QHBoxLayout(self.naviBarRow)
         self.naviBarLayout.setSpacing(0)
         self.naviBarLayout.setContentsMargins(0,0,0,0)
         self.naviBarRow.setLayout(self.naviBarLayout)
