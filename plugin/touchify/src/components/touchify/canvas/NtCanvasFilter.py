@@ -13,15 +13,7 @@ class NtCanvasFilter(QObject):
         super(NtCanvasFilter, self).__init__(parent)
         self.target = None
 
-    def eventFilter(self, obj: QObject, e: QEvent):
-        """Event filter: Update the Target's position to match to the current view 
-        if the (sub-)window has moved, changed in size or been activated."""
 
-        if not self.target: return False
-        elif not (e.type() in [ QEvent.Type.Move, QEvent.Type.Resize, QEvent.Type.WindowActivate ]): return False
-        else: self.SIGNAL_EVENT_REQUESTED.emit()
-
-        return False
 
     def setTargetWidget(self, wdgt):
         """Set which QWidget to adjust the position of."""

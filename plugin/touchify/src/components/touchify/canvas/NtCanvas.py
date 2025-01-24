@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QMdiArea
 
 
 
-from touchify.src.components.touchify.canvas.NtCanvasFilter import NtCanvasFilter
 
 from touchify.src.components.touchify.canvas.NtToolbox import NtToolbox
 from touchify.src.components.touchify.canvas.NtToolshelf import NtToolshelf
@@ -117,12 +116,8 @@ class NtCanvas(QWidget):
     def Components_Post(self):
         self.setParent(self.MdiArea())
 
-        self.adjust_filter = NtCanvasFilter(self.MdiArea())
-        self.adjust_filter.setTargetWidget(self)
-
     def Connections_Post(self):
-        self.adjust_filter.SIGNAL_EVENT_REQUESTED.connect(self.Update_View)
-        self.MdiArea().installEventFilter(self.adjust_filter)
+        self.MdiArea().installEventFilter(self)
         Krita.instance().action("view_ruler").triggered.connect(self.Update_View)
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.Preset_Reload)
         GlobalEvents.instance().SIGNAL_CANVAS_LAYOUT_CHANGED.connect(self.Preset_Reload)
@@ -143,7 +138,7 @@ class NtCanvas(QWidget):
         self.Components_Post()
         self.Connections_Post()
         self.Update_Widgets()
-        
+
     #endregion
 
     #region Preset Functions
@@ -207,7 +202,7 @@ class NtCanvas(QWidget):
         self.worker_packer.moveToThread( self.thread_packer )
         # Thread
         self.thread_packer.started.connect( lambda : self.worker_packer.run( self, mode, args ) )
-        self.thread_packer.start()
+        self.thread_packer.start(QThread.Priority.LowestPriority)
 
     def Update_Widgets(self, full_unload: bool = False):
         if self.State_WindowLoaded() == False:
@@ -252,6 +247,13 @@ class NtCanvas(QWidget):
     #endregion
 
     #region Event Functions
+    
+    def eventFilter(self, obj: QObject, e: QEvent):
+        if obj == self.MdiArea() and (e.type() == QEvent.Type.Move or \
+                  e.type() == QEvent.Type.Resize or \
+                  e.type() ==  QEvent.Type.WindowActivate): 
+            self.Update_View()
+        return False
 
     def resizeEvent(self, e: QResizeEvent):
         super().resizeEvent(e)

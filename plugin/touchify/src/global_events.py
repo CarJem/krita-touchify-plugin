@@ -1,4 +1,5 @@
 from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
 class GlobalEvents(QObject):
     @staticmethod
@@ -15,6 +16,7 @@ class GlobalEvents(QObject):
     SIGNAL_CANVAS_LAYOUT_CHANGED = pyqtSignal()
     SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED = pyqtSignal()
     SIGNAL_TOOLSHELF_PRESET_CHANGED = pyqtSignal(int)
+    SIGNAL_MOUSE_RELEASED = pyqtSignal()
         
     @staticmethod
     def EMIT_SIGNAL_TIMER_TICKED():
@@ -35,8 +37,17 @@ class GlobalEvents(QObject):
     def EMIT_SIGNAL_CANVAS_LAYOUT_CHANGED():
         if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_CANVAS_LAYOUT_CHANGED.emit()
 
+
+
+    def eventFilter(self, obj: QObject, event: QEvent):
+        if event.type() == QEvent.Type.MouseButtonRelease or \
+           event.type() == QEvent.Type.TabletRelease:
+            self.SIGNAL_MOUSE_RELEASED.emit()
+        return False
+
     def __init__(self, parent: QObject = None):
         super().__init__(parent)
         GlobalEvents.__instance = self
+        qApp.installEventFilter(self)
         
         

@@ -201,9 +201,6 @@ class TouchifyActionButton(QToolButton):
             if self.is_toolbox_menu:
                 self.trigger()
 
-        elif self.trigger_sc_compat:
-            self.trigger()
-
     def onPressed(self):
         if self.is_toolbox_child:
             if not self.is_toolbox_menu:

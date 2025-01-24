@@ -10,7 +10,6 @@ from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
 from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
 from touchify.src.cfg.script.CustomScript import CustomScript
-from touchify.src.components.pyqt.event_filters.MouseReleaseListener import MouseReleaseListener
 
 from touchify.src.components.pyqt.extensions import PyQtExtensions as QtExt
 from touchify.src.components.touchify.actions.TouchifyActionMenu import TouchifyActionMenu
@@ -79,9 +78,7 @@ class ActionManager(QObject):
         self.queue_update_running = False
 
         self.composer_action_down: bool = False
-        self.composer_listener = MouseReleaseListener()
-        self.composer_listener.mouseReleased.connect(self.onMouseRelease)
-        #qApp.installEventFilter(self.composer_listener)
+        GlobalEvents.instance().SIGNAL_MOUSE_RELEASED.connect(self.onMouseRelease)
 
 
         self.__lastView: View = None
