@@ -165,7 +165,7 @@ class TouchifyActionPanel(QWidget):
             row: TriggerGroup
             for entry in row.actions:
                 act: Trigger = entry
-                btn = self.actions_manager.createButton(self, act)
+                btn = self.actions_manager.Create_Button(self, act)
                 if btn:
                     btn.triggerActivated.connect(self.onButtonClicked)
                     self.stylizeButton(btn)

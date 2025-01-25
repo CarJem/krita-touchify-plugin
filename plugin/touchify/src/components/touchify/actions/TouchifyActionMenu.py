@@ -19,4 +19,4 @@ class TouchifyActionMenu(QMenu):
         
         for entry in self.act.context_menu_actions:
             action_cfg: TriggerMenuItem = entry
-            action_mgr.createMenuItem(self, action_cfg)
+            action_mgr.Create_MenuItem(self, action_cfg)

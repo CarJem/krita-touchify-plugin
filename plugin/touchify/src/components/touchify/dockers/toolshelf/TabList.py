@@ -185,7 +185,7 @@ class TabList(QWidget):
         return btn
     
     def createAction(self, properties: Trigger, action_row: int):
-        btn = self.actions_manager.createButton(self, properties)
+        btn = self.actions_manager.Create_Button(self, properties)
         if btn:
             btn.setContentsMargins(0,0,0,0)
             self._actions.append(btn)

@@ -310,7 +310,7 @@ class ToolboxWidget(QResizableWidget):
 
         is_toolbox_menu = len(tool.items) >= 1
 
-        btn: TouchifyActionButton = self.actionEngine.createButton(self, trigger)
+        btn: TouchifyActionButton = self.actionEngine.Create_Button(self, trigger)
         if btn:
             tool_names: list[str] = [item.name for item in tool.items]
             tool_names.append(tool.name)

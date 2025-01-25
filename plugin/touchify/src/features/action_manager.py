@@ -69,6 +69,8 @@ class ActionManager(QObject):
         self.Variables()
         self.Connections()
 
+    #region Init Functions
+
     def Variables(self):
         self.custom_docker_states = {}
         self.registeredActions = {}
@@ -103,30 +105,77 @@ class ActionManager(QObject):
         GlobalEvents.instance().SIGNAL_TIMER_TICKED.connect(self.OnEvent_TimerTicked)
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.OnEvent_ConfigUpdated)
 
-    def runAction(self, data: Trigger, action: QAction):
-        match data.variant:
-            case Trigger.Variants.CanvasPreset:
-                self.Execute_CanvasCfg(data.canvas_preset_data)
-            case Trigger.Variants.Docker:
-                self.Execute_Docker(data.docker_id)
-            case Trigger.Variants.Workspace:
-                self.Execute_Workspace(data.workspace_id)
-            case Trigger.Variants.Popup:
-                self.Execute_Popup(action, data.popup_data)
-            case Trigger.Variants.Brush:
-                self.Execute_Brush(data.brush_name)
-            case Trigger.Variants.DockerGroup:
-                self.Execute_DockerGroup(data.docker_group_data)
-            case Trigger.Variants.Menu:
-                self.Execute_Menu(action, data.context_menu_id)
-            case Trigger.Variants.Action:
-                self.Execute_Trigger(data)
-            case Trigger.Variants.Script:
-                self.Execute_Script(data.script_id)
-            case Trigger.Variants.PieWheel:
-                self.Execute_PieWheel(data.piewheel_id)
-            
-    def createButton(self, parent: QWidget, data: Trigger):
+    #endregion
+
+    #region Window Functions
+
+    def Window_Load(self):
+        qwin = Krita.instance().activeWindow().qwindow()
+        mobj = next((w for w in qwin.findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
+        wobj = mobj.findChild(QButtonGroup)
+        wobj.buttonToggled.connect(self.OnEvent_ToolChanged)
+
+    #endregion
+
+    #region Get Functions
+
+    def getCurrentGradient(self):
+        return self.__lastGradient
+    
+    def getCurrentPattern(self):
+        return self.__lastPattern
+
+    def getCurrentView(self):
+        return self.__lastView
+
+    def getCurrentTool(self):
+        return self.__lastToolboxTool
+
+    def getBrushBlendingMode(self):
+        return self.__lastBrushBlendingMode
+    
+    def getLayerBlendingMode(self):
+        return self.__lastLayerBlendingMode
+
+    def getCurrentCanvas(self):
+        return self.__lastCanvas
+    
+    def getCurrentBrush(self):
+        return self.__lastBrushPreset
+    
+    def getBrushSize(self):
+        return self.__lastBrushSize
+    
+    def getBrushOpacity(self):
+        return self.__lastBrushOpacity
+    
+    def getBrushFlow(self):
+        return self.__lastBrushFlow
+    
+    def getBrushRotation(self):
+        return self.__lastBrushRotation
+
+    def getCanvasColor(self, is_background: bool = False):
+        if is_background: return self.__lastBackgroundColor
+        else: return self.__lastForegroundColor
+
+    #endregion
+
+    #region Create Functions
+
+    def Create_RegistryAction(self, actionIdentifier: str, data: Trigger, window: Window, actionPath: str):
+        displayName = data.display_custom_text
+        action = window.createAction(actionIdentifier, displayName, actionPath)
+
+        self.registeredActions[actionIdentifier] = action
+        self.registeredActionsData[actionIdentifier] = data  
+        action.triggered.connect(partial(self.Execute_RegistryAction, actionIdentifier, action))
+             
+        (has_text, text, has_icon, icon, using_action_icon) = self.Helper_GetTriggerDisplay(data)
+        if has_icon: action.setIcon(icon)
+        return action   
+    
+    def Create_Button(self, parent: QWidget, data: Trigger):
         if data.variant == Trigger.Variants.Action:
             if data.action_id and data.action_id in self.registeredActions:
                 data = self.registeredActionsData[data.action_id]
@@ -150,7 +199,7 @@ class ActionManager(QObject):
 
         return result
     
-    def createMenuItem(self, parent: TouchifyActionMenu, data: TriggerMenuItem):
+    def Create_MenuItem(self, parent: TouchifyActionMenu, data: TriggerMenuItem):
         if data.variant == TriggerMenuItem.Variants.Action:
             if data.action_id and data.action_id in self.registeredActions:
                 data = self.registeredActionsData[data.action_id]
@@ -175,10 +224,10 @@ class ActionManager(QObject):
             case _:
                 actual_action = QAction(parent)
                 actual_action.setText(data.display_custom_text)
-                actual_action.triggered.connect(lambda: self.runAction(data, actual_action))
+                actual_action.triggered.connect(lambda: self.Actions_Run(data, actual_action))
                 if actual_action: parent.addAction(actual_action)
 
-    def openPopup(self, id: str, _parent: QWidget = None):
+    def Create_Popup(self, id: str, _parent: QWidget = None):
 
         if id == "touchify_internal_brush_picker":
             data: PopupData = PopupData()
@@ -226,60 +275,152 @@ class ActionManager(QObject):
 
         popup.triggerPopup(_parent)
 
-    #region Getters
+    #endregion
 
-    def getCurrentGradient(self):
-        return self.__lastGradient
-    
-    def getCurrentPattern(self):
-        return self.__lastPattern
+    #region Registered Action Functions
 
-    def getCurrentView(self):
-        return self.__lastView
+    def Actions_Post(self, menu: QMenu):
+        menu.addMenu(self.__registry_menu)
 
-    def getCurrentTool(self):
-        return self.__lastToolboxTool
+    def Actions_Init(self, window: Window, subItemPath: str):
+        cfg = TouchifySettings.instance().getConfig()
 
-    def getBrushBlendingMode(self):
-        return self.__lastBrushBlendingMode
-    
-    def getLayerBlendingMode(self):
-        return self.__lastLayerBlendingMode
+        self.__registry_menu = QtWidgets.QMenu("Registered Actions", window.qwindow())
+        root_action = window.createAction(TOUCHIFY_ID_ACTION_REGISTERED_ACTIONS_MENU, "Registered Actions", subItemPath)
+        root_action.setMenu(self.__registry_menu)
+        registryItemsPath = "{0}/{1}".format(subItemPath, TOUCHIFY_ID_ACTION_REGISTERED_ACTIONS_MENU)
 
-    def getCurrentCanvas(self):
-        return self.__lastCanvas
-    
-    def getCurrentBrush(self):
-        return self.__lastBrushPreset
-    
-    def getBrushSize(self):
-        return self.__lastBrushSize
-    
-    def getBrushOpacity(self):
-        return self.__lastBrushOpacity
-    
-    def getBrushFlow(self):
-        return self.__lastBrushFlow
-    
-    def getBrushRotation(self):
-        return self.__lastBrushRotation
+        registered_elements: dict[str, tuple[ResourcePackMetadata, list[ET.Element]]] = {}
 
-    def getCanvasColor(self, is_background: bool = False):
-        if is_background: return self.__lastBackgroundColor
-        else: return self.__lastForegroundColor
+        for pack in cfg.resources.presets:
+            pack: ResourcePack
+            packMeta = pack.metadata
+            pack_name = packMeta.registry_name
+            pack_id = packMeta.registry_id
+
+            pack_menu = QtWidgets.QMenu(pack_name, window.qwindow())
+            pack_action = window.createAction(pack_id, pack_name, registryItemsPath)
+            pack_action.setMenu(pack_menu)
+            packItemsPath = "{0}/{1}".format(registryItemsPath, pack_id)
+
+            registered_elements[packMeta.registry_id] = packMeta, []
+            for data in pack.triggers:
+                data: Trigger
+                id = '{0}{1}_{2}'.format(TOUCHIFY_REGISTRY_PREFIX, packMeta.registry_id, data.registry_id)
+                action = self.appEngine.mgr_actions.Create_RegistryAction(id, data, window, packItemsPath)
+                registered_elements[packMeta.registry_id][1].append(self.Actions_Add(id))
+                pack_menu.addAction(action)
+            
+        self.Actions_Write(registered_elements)
+
+    def Actions_Run(self, data: Trigger, action: QAction):
+        match data.variant:
+            case Trigger.Variants.CanvasPreset:
+                self.Execute_CanvasCfg(data.canvas_preset_data)
+            case Trigger.Variants.Docker:
+                self.Execute_Docker(data.docker_id)
+            case Trigger.Variants.Workspace:
+                self.Execute_Workspace(data.workspace_id)
+            case Trigger.Variants.Popup:
+                self.Execute_Popup(action, data.popup_data)
+            case Trigger.Variants.Brush:
+                self.Execute_Brush(data.brush_name)
+            case Trigger.Variants.DockerGroup:
+                self.Execute_DockerGroup(data.docker_group_data)
+            case Trigger.Variants.Menu:
+                self.Execute_Menu(action, data.context_menu_id)
+            case Trigger.Variants.Action:
+                self.Execute_Trigger(data)
+            case Trigger.Variants.Script:
+                self.Execute_Script(data.script_id)
+            case Trigger.Variants.PieWheel:
+                self.Execute_PieWheel(data.piewheel_id)
+
+    def Actions_Add(self, actionname):
+        element = ET.Element("Action",{"name":"{0}".format(actionname)})
+        ET.SubElement(element,"text").text = actionname
+        ET.SubElement(element,"shortcut").text = "none"
+        return element
+    
+    def Actions_Write(self, registry: dict[str, tuple[ResourcePackMetadata, list[ET.Element]]]):
+        tree = ET.ElementTree(ET.Element("ActionCollection",{"version":"2","name":"Touchify"}))
+        action_collection = tree.getroot()
+
+
+        for registry_name, registry_data in registry.items():
+            registry_meta = registry_data[0]
+            registry_actions = registry_data[1]
+
+            pack_collection = ET.SubElement(action_collection, "Actions", {"category":"Touchify"})
+            ET.SubElement(pack_collection, "text").text = "{0}".format(registry_meta.registry_name)
+
+            for action in registry_actions:
+                pack_collection.append(action)
+
+        xmlstr = MiniDOM.parseString(ET.tostring(action_collection, encoding='UTF-8', xml_declaration=True, short_empty_elements=False)).toprettyxml(indent="   ")
+        with open(REGISTERED_ACTIONS_FILE, "w") as f:
+            f.write(xmlstr)
 
     #endregion
 
-    #region Window Functions
+    #region Helper Functions
 
-    def Window_Load(self):
-        qwin = Krita.instance().activeWindow().qwindow()
-        mobj = next((w for w in qwin.findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
-        wobj = mobj.findChild(QButtonGroup)
-        wobj.buttonToggled.connect(self.OnEvent_ToolChanged)
+    def Helper_GetActionSource(self, action: QAction):
+        _sender: QObject = action
+        _parent: QWidget | None = None  
+        
+        if isinstance(_sender, QWidgetAction):
+            _sender: QWidgetAction
 
-    #endregion
+            for widget in _sender.associatedWidgets():
+                if isinstance(widget, QToolButton) or isinstance(widget, QPushButton):
+                    if widget.underMouse():
+                        _parent = widget
+                        break
+            return _parent
+        else:
+            return _sender
+    
+    def Helper_GetTriggerDisplay(self, data: Trigger):
+        use_custom_icon: bool = data.display_custom_icon_enabled
+        use_custom_text: bool = data.display_custom_text_enabled
+        is_brush: bool = data.variant == Trigger.Variants.Brush
+        is_action: bool = data.variant == Trigger.Variants.Action
+        using_action_icon: bool = False
 
+        if use_custom_icon:
+            icon = ResourceManager.iconLoader(data.display_custom_icon)
+        else:
+            if is_brush: icon = ResourceManager.brushIcon(data.brush_name)
+            elif is_action: 
+                icon = ResourceManager.actionIcon(data.action_id)
+                using_action_icon = True
+            else: icon = QIcon()
+
+        if use_custom_text:
+            text: str = data.display_custom_text  
+        else:
+            if is_brush: text = data.brush_name
+            elif is_action: text = ResourceManager.actionText(data.action_id)
+            else: text = ""
+
+        has_icon = not icon.isNull()
+        has_text = text != ""
+
+        if data.display_text_hide: has_text = False
+        if data.display_icon_hide: has_icon = False
+
+        return (has_text, text, has_icon, icon, using_action_icon)
+
+    def Helper_SetButtonDisplay(self, act: Trigger, btn: TouchifyActionButton):
+        (has_text, text, has_icon, icon, using_action_icon) = self.Helper_GetTriggerDisplay(act)  
+        if has_text: btn.setText(text)      
+        if has_icon: btn.setIcon(icon) 
+        if using_action_icon: btn.setupActionIcon()        
+        btn.setMetadata(text, icon)
+
+    #endregion    
+    
     #region OnEvent Functions
 
     def OnEvent_ConfigUpdated(self):
@@ -442,146 +583,7 @@ class ActionManager(QObject):
 
     #endregion
         
-    #region Registered Actions
-
-    def Actions_Post(self, menu: QMenu):
-        menu.addMenu(self.__registry_menu)
-
-    def Actions_Init(self, window: Window, subItemPath: str):
-        cfg = TouchifySettings.instance().getConfig()
-
-        self.__registry_menu = QtWidgets.QMenu("Registered Actions", window.qwindow())
-        root_action = window.createAction(TOUCHIFY_ID_ACTION_REGISTERED_ACTIONS_MENU, "Registered Actions", subItemPath)
-        root_action.setMenu(self.__registry_menu)
-        registryItemsPath = "{0}/{1}".format(subItemPath, TOUCHIFY_ID_ACTION_REGISTERED_ACTIONS_MENU)
-
-        registered_elements: dict[str, tuple[ResourcePackMetadata, list[ET.Element]]] = {}
-
-        for pack in cfg.resources.presets:
-            pack: ResourcePack
-            packMeta = pack.metadata
-            pack_name = packMeta.registry_name
-            pack_id = packMeta.registry_id
-
-            pack_menu = QtWidgets.QMenu(pack_name, window.qwindow())
-            pack_action = window.createAction(pack_id, pack_name, registryItemsPath)
-            pack_action.setMenu(pack_menu)
-            packItemsPath = "{0}/{1}".format(registryItemsPath, pack_id)
-
-            registered_elements[packMeta.registry_id] = packMeta, []
-            for data in pack.triggers:
-                data: Trigger
-                id = '{0}{1}_{2}'.format(TOUCHIFY_REGISTRY_PREFIX, packMeta.registry_id, data.registry_id)
-                action = self.appEngine.mgr_actions.Actions_Install(id, data, window, packItemsPath)
-                registered_elements[packMeta.registry_id][1].append(self.Actions_Create(id))
-                pack_menu.addAction(action)
-            
-        self.Actions_Write(registered_elements)
-
-    def Actions_Create(self, actionname):
-        element = ET.Element("Action",{"name":"{0}".format(actionname)})
-        ET.SubElement(element,"text").text = actionname
-        ET.SubElement(element,"shortcut").text = "none"
-        return element
-    
-    def Actions_Run(self, identifier: str, action: QAction):
-        if identifier in self.registeredActions:
-            data: Trigger = self.registeredActionsData[identifier]
-            if isinstance(data, Trigger):
-                self.runAction(data, action)
-
-    def Actions_Install(self, actionIdentifier: str, data: Trigger, window: Window, actionPath: str):
-        displayName = data.display_custom_text
-        action = window.createAction(actionIdentifier, displayName, actionPath)
-
-        self.registeredActions[actionIdentifier] = action
-        self.registeredActionsData[actionIdentifier] = data  
-        action.triggered.connect(partial(self.Actions_Run, actionIdentifier, action))
-             
-        (has_text, text, has_icon, icon, using_action_icon) = self.Helper_GetTriggerDisplay(data)
-        if has_icon: action.setIcon(icon)
-        return action
-    
-    def Actions_Write(self, registry: dict[str, tuple[ResourcePackMetadata, list[ET.Element]]]):
-        tree = ET.ElementTree(ET.Element("ActionCollection",{"version":"2","name":"Touchify"}))
-        action_collection = tree.getroot()
-
-
-        for registry_name, registry_data in registry.items():
-            registry_meta = registry_data[0]
-            registry_actions = registry_data[1]
-
-            pack_collection = ET.SubElement(action_collection, "Actions", {"category":"Touchify"})
-            ET.SubElement(pack_collection, "text").text = "{0}".format(registry_meta.registry_name)
-
-            for action in registry_actions:
-                pack_collection.append(action)
-
-        xmlstr = MiniDOM.parseString(ET.tostring(action_collection, encoding='UTF-8', xml_declaration=True, short_empty_elements=False)).toprettyxml(indent="   ")
-        with open(REGISTERED_ACTIONS_FILE, "w") as f:
-            f.write(xmlstr)
-
-    #endregion
-
-    #region Helper Functions
-
-    def Helper_GetActionSource(self, action: QAction):
-        _sender: QObject = action
-        _parent: QWidget | None = None  
-        
-        if isinstance(_sender, QWidgetAction):
-            _sender: QWidgetAction
-
-            for widget in _sender.associatedWidgets():
-                if isinstance(widget, QToolButton) or isinstance(widget, QPushButton):
-                    if widget.underMouse():
-                        _parent = widget
-                        break
-            return _parent
-        else:
-            return _sender
-    
-    def Helper_GetTriggerDisplay(self, data: Trigger):
-        use_custom_icon: bool = data.display_custom_icon_enabled
-        use_custom_text: bool = data.display_custom_text_enabled
-        is_brush: bool = data.variant == Trigger.Variants.Brush
-        is_action: bool = data.variant == Trigger.Variants.Action
-        using_action_icon: bool = False
-
-        if use_custom_icon:
-            icon = ResourceManager.iconLoader(data.display_custom_icon)
-        else:
-            if is_brush: icon = ResourceManager.brushIcon(data.brush_name)
-            elif is_action: 
-                icon = ResourceManager.actionIcon(data.action_id)
-                using_action_icon = True
-            else: icon = QIcon()
-
-        if use_custom_text:
-            text: str = data.display_custom_text  
-        else:
-            if is_brush: text = data.brush_name
-            elif is_action: text = ResourceManager.actionText(data.action_id)
-            else: text = ""
-
-        has_icon = not icon.isNull()
-        has_text = text != ""
-
-        if data.display_text_hide: has_text = False
-        if data.display_icon_hide: has_icon = False
-
-        return (has_text, text, has_icon, icon, using_action_icon)
-
-    def Helper_SetButtonDisplay(self, act: Trigger, btn: TouchifyActionButton):
-        (has_text, text, has_icon, icon, using_action_icon) = self.Helper_GetTriggerDisplay(act)  
-        if has_text: btn.setText(text)      
-        if has_icon: btn.setIcon(icon) 
-        if using_action_icon: btn.setupActionIcon()        
-        btn.setMetadata(text, icon)
-
-    #endregion    
-    
-    #region Button Events
+    #region ButtonEvent Functions
 
     def ButtonEvent_ShortcutComposer(self, btn: TouchifyActionButton, onClick: any):
         def tryFindParentPopup(source: QWidget):
@@ -658,7 +660,7 @@ class ActionManager(QObject):
     def Button_Popup(self, data: Trigger):
         btn: TouchifyActionButton | None = None
         btn = self.Button_Core(None, data.display_custom_text)
-        btn.triggerActivated.connect((lambda: self.openPopup(data.popup_data, btn)))
+        btn.triggerActivated.connect((lambda: self.Create_Popup(data.popup_data, btn)))
         self.Helper_SetButtonDisplay(data, btn)
         return btn
 
@@ -709,6 +711,12 @@ class ActionManager(QObject):
     #endregion
 
     #region Execution Functions    
+
+    def Execute_RegistryAction(self, identifier: str, action: QAction):
+        if identifier in self.registeredActions:
+            data: Trigger = self.registeredActionsData[identifier]
+            if isinstance(data, Trigger):
+                self.Actions_Run(data, action)
 
     def Execute_Trigger(self, data: Trigger):
         if data.action_id in self.registeredActions:
@@ -792,7 +800,7 @@ class ActionManager(QObject):
                             
     def Execute_Popup(self, action: QAction, id: str):    
         _parent = self.Helper_GetActionSource(action)            
-        self.openPopup(id, _parent)
+        self.Create_Popup(id, _parent)
     
     def Execute_CanvasCfg(self, id: str):
         data: CanvasPreset = TouchifySettings.instance().getRegistryItem(id, CanvasPreset)

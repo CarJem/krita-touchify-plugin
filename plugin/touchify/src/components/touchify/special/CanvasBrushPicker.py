@@ -21,7 +21,7 @@ class CanvasBrushPicker(QPushButton):
         self.onBrushChanged(self.appEngine.mgr_actions.getCurrentBrush())
 
     def openBrushPicker(self):
-        self.appEngine.mgr_actions.openPopup("touchify_internal_brush_picker", self)
+        self.appEngine.mgr_actions.Create_Popup("touchify_internal_brush_picker", self)
     
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)

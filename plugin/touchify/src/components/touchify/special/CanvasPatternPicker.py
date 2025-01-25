@@ -22,7 +22,7 @@ class CanvasPatternPicker(QPushButton):
         self.onPatternChanged(self.appEngine.mgr_actions.getCurrentPattern())
 
     def openBrushPicker(self):
-        self.appEngine.mgr_actions.openPopup("pattern_chooser_popup", self)
+        self.appEngine.mgr_actions.Create_Popup("pattern_chooser_popup", self)
     
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)
