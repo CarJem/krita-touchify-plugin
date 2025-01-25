@@ -92,7 +92,6 @@ class TouchifyWindow(QObject):
         self.mgr_dev.Actions_Post(self.__main_menu_bar)
     
     def Addons_Post(self):
-        dockers = self.krita_window.dockers()
         dockers_menu_action = TouchifyHelpers.getDockerMenu(self.krita_window)
         if dockers_menu_action == None: return
 
@@ -102,14 +101,35 @@ class TouchifyWindow(QObject):
         addon_id_prefix = "Touchify/"
         addon_setup_method = "TOUCHIFY_ADDON_SETUP"
         
-        for docker in dockers:
+        addons_list: list[QAction] = []
+        core_list: list[QAction] = []
+
+        for docker_action in dockers_menu_action.menu().actions():
+            docker_text = docker_action.text()
+
+            if docker_text.startswith(addon_title_prefix): 
+                docker_action.setText(docker_text.removeprefix(addon_title_prefix))
+                addons_list.append(docker_action)
+                
+            if docker_text.startswith(touchify_title_prefix):
+                docker_action.setText(docker_text.removeprefix(touchify_title_prefix))
+                core_list.append(docker_action)
+                
+        dockers_menu_action.menu().addSection("Touchify Core")
+        for act in core_list: dockers_menu_action.menu().addAction(act)
+
+        dockers_menu_action.menu().addSection("Touchify Addons")
+        for act in addons_list: dockers_menu_action.menu().addAction(act)
+
+        for docker in self.krita_window.dockers():
             window_title = docker.windowTitle()
             docker_id = docker.objectName()
 
             if window_title.startswith(addon_title_prefix):
-                docker.setWindowTitle(window_title.strip(addon_title_prefix))
-            elif window_title.startswith(touchify_title_prefix):
-                docker.setWindowTitle(window_title.strip(addon_title_prefix))
+                docker.setWindowTitle(window_title.removeprefix(addon_title_prefix))
+
+            if window_title.startswith(touchify_title_prefix):
+                docker.setWindowTitle(window_title.removeprefix(touchify_title_prefix))
 
             if docker_id == TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER:
                 toolshelfDocker: ToolshelfDockWidget = docker
@@ -123,26 +143,6 @@ class TouchifyWindow(QObject):
                 elif not callable(getattr(docker, addon_setup_method, False)): pass
                 else: getattr(docker, addon_setup_method)(self)
 
-
-        addons_list: list[QAction] = []
-        normal_list: list[QAction] = []
-
-        for docker_action in dockers_menu_action.menu().actions():
-            docker_text = docker_action.text()
-
-            if docker_text.startswith(addon_title_prefix): 
-                docker_action.setText(docker_text.strip(touchify_title_prefix))
-                normal_list.append(docker_action)
-
-            elif docker_text.startswith(touchify_title_prefix):
-                docker_action.setText(docker_text.strip(addon_title_prefix))
-                addons_list.append(docker_action)
-                
-        dockers_menu_action.menu().addSection("Touchify")
-        for docker in normal_list: dockers_menu_action.menu().addAction(docker)
-
-        dockers_menu_action.menu().addSection("Touchify Addons")
-        for docker in addons_list: dockers_menu_action.menu().addAction(docker)
         
     #endregion
 

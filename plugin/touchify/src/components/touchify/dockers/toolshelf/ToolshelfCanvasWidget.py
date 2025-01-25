@@ -12,8 +12,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from touchify.src.window import TouchifyWindow
 
-
-
  
 class ToolshelfCanvasWidget(QDockWidget):
 
@@ -21,7 +19,6 @@ class ToolshelfCanvasWidget(QDockWidget):
 
     def __init__(self, parent: QWidget, panel_index: int, app_engine: "TouchifyWindow"):
         super().__init__(parent)
-        self.setWindowTitle("Touchify Toolshelf")
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.PanelIndex = panel_index
         self.docker_manager = app_engine.mgr_dockers

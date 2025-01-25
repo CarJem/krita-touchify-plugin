@@ -13,12 +13,14 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .....window import TouchifyWindow
 
+DOCKER_TITLE="Touchify Core: Toolbox"
+
 class ToolboxDocker(QDockWidget):
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
 
         self.floating = False
-        self.setWindowTitle('Touchify Core: Toolbox') # window title also acts as the Docker title in Settings > Dockers
+        self.setWindowTitle(DOCKER_TITLE) # window title also acts as the Docker title in Settings > Dockers
         self.setContentsMargins(0,0,0,0)
 
         label = QLabel(" ") # label conceals the 'exit' buttons and Docker title
