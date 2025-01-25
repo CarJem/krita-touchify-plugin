@@ -32,7 +32,6 @@ from krita import *
 
 from typing import TYPE_CHECKING
 
-from touchify.src.stylesheet import Stylesheet
 if TYPE_CHECKING:
     from .NtCanvas import NtCanvas
 
@@ -476,9 +475,28 @@ class NtTogglePadButton(QToolButton):
             self.setArrowType(Qt.ArrowType.RightArrow if not enabled else Qt.ArrowType.LeftArrow)
 
     def themeChangedEvent(self):
+
         iconSize: int = int(11 * TouchifySettings.instance().preferences().Interface_CanvasToggleScale)
+        stylesheet = f"""
+            QToolButton, QPushButton {{
+                background-color: palette(window);
+                border: none;
+                border-radius: 4px;
+            }}
+            
+            QToolButton:hover, QPushButton:hover {{
+                background-color: palette(highlight);
+            }}
+            
+            QToolButton:pressed, QPushButton:pressed {{
+                background-color: palette(alternate-base);
+            }}
+            
+            QToolButton::menu-indicator, QPushButton::menu-indicator {{ image: none; }}
+        """
+
         self.setIconSize(QSize(iconSize, iconSize))
-        self.setStyleSheet(Stylesheet.instance().touchify_toggle_button)
+        self.setStyleSheet(stylesheet)
 
     def mousePressEvent(self, e: QMouseEvent):
         if e.button() == Qt.MouseButton.RightButton:

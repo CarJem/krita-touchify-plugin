@@ -12,7 +12,6 @@ from touchify.src.components.touchify.actions.TouchifyActionButton import Touchi
 from touchify.src.cfg.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
 
 from touchify.src.settings import TouchifySettings
-from touchify.src.stylesheet import Stylesheet
 from touchify.src.variables import *
 from touchify.src.resources import ResourceManager
 
@@ -233,7 +232,64 @@ class TabList(QWidget):
             btn.setChecked(False)
             
     def updateStyleSheet(self):
-        self.setStyleSheet(Stylesheet.instance().touchify_toolshelf_header)        
+        stylesheet = f"""
+            QWidget#toolshelf-header {{
+                background-color: palette(alternate-base);
+                border: none;
+            }}
+
+            QWidget#toolshelf-tablist-row {{
+                background-color: palette(alternate-base);
+                border: none;
+            }}
+
+            QPushButton, QToolButton {{
+                background-color: palette(alternate-base);
+                border: none;
+            }}
+
+            QPushButton:hover, QToolButton:hover {{
+                background-color: palette(highlight);
+            }}
+
+            QPushButton:checked, QToolButton:checked {{
+                background-color: palette(highlight);
+            }}
+            
+            QPushButton:pressed, QToolButton:pressed {{
+                background-color: palette(alternate-base);
+            }}
+
+            QPushButton#back-widget {{
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+                border: none;
+            }}
+
+            QPushButton#pin-widget {{
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+                border: none;
+            }}
+
+            QPushButton::menu-indicator, QToolButton::menu-indicator {{ 
+                image: none; 
+            }}
+
+            QPushButton#menu-widget {{
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+                border: none;
+            }}
+
+            QWidget#filler-widget {{
+                background-color: palette(alternate-base);
+                border: none;
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+            }}
+        """
+        self.setStyleSheet(stylesheet)  
 
     def applyActionRules(self, btn: TouchifyActionButton, page_id: str):
         preview_type = self.header_options.stack_preview

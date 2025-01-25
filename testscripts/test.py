@@ -4,10 +4,14 @@ from PyQt5.QtCore import *
 
 
 from krita import *
-from touchify.src.components.touchify.canvas.NtCanvas import NtToolshelf
 
 qwin = Krita.instance().activeWindow().qwindow()
-wobj = qwin.findChild(QMdiArea)
-toolshelves = wobj.findChildren(NtToolshelf)
-for toolshelf in toolshelves:
-    print(toolshelf.pos())
+wobj = qwin.centralWidget()
+
+stylesheet = f"""\n 
+            QTabBar {{ icon-size: 12px 12px; }}
+            QTabBar::tab {{ height: {20}px;  }} 
+            QTabBar::close-button {{ margin: 2px 2px 2px 2px; }} 
+            \n"""
+
+wobj.setStyleSheet(stylesheet)

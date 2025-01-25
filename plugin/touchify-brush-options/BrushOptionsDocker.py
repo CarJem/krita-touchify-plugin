@@ -9,7 +9,6 @@ from touchify.src.components.touchify.special.BrushRotationSlider import BrushRo
 from touchify.src.components.touchify.special.BrushSizeSlider import BrushSizeSlider
 from touchify.src.variables import *
 
-from touchify.src.stylesheet import Stylesheet
 from touchify.src.components.krita.settings import *
 from touchify.src.components.krita.ui.KisSliderSpinBox import KisSliderSpinBox
 
@@ -67,7 +66,7 @@ class BrushOptionsWidget(QWidget):
         self.optionsButton.setIcon(Krita.instance().icon("configure"))
         self.optionsButton.setMenu(self.optionsMenu)
         self.optionsButton.setFixedHeight(15)
-        self.optionsButton.setStyleSheet(Stylesheet.instance().hide_menu_indicator)
+        self.optionsButton.setStyleSheet(f"""QPushButton::menu-indicator {{ image: none; }} QToolButton::menu-indicator {{ image: none; }}""")
         self.optionsButton.clicked.connect(self.optionsButton.showMenu)
         self.gridLayout.addWidget(self.optionsButton)
         

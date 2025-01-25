@@ -10,7 +10,6 @@ from PyQt5.QtGui import *
 
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
-from touchify.src.stylesheet import Stylesheet
 from touchify.src.variables import *
 from touchify.src.settings import *
 from typing import TYPE_CHECKING
@@ -133,15 +132,32 @@ class TouchifyActionPanel(QWidget):
             btn.setFixedHeight(self.item_height)
             
         if self.type == "popup":
-            btn.setStyleSheet(Stylesheet.instance().touchify_action_btn_popup())
+            stylesheet = f"""
+                QToolButton, QPushButton {{
+                    border-radius: 0px; 
+                    background-color: palette(window);
+                    padding: 5px 5px;
+                    border: 0px solid transparent; 
+                    font-size: 12px;
+                }}
+                
+                QToolButton:hover, QPushButton:hover {{
+                    background-color: palette(highlight);
+                }}
+                                
+                QToolButton:pressed, QToolButton:pressed {{
+                    background-color: palette(alternate-base);
+                }}
+            """
+            btn.setStyleSheet(stylesheet)
             btn.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
             btn.setText(btn.meta_text)
         elif self.type == "toolbar":
-            btn.setStyleSheet(Stylesheet.instance().hide_menu_indicator)
+            btn.setStyleSheet(f"""QPushButton::menu-indicator {{ image: none; }} QToolButton::menu-indicator {{ image: none; }}""")
             btn.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         elif self.type == "toolbar_flat":
             btn.setContentsMargins(0,0,0,0)
-            btn.setStyleSheet(Stylesheet.instance().hide_menu_indicator)
+            btn.setStyleSheet(f"""QPushButton::menu-indicator {{ image: none; }} QToolButton::menu-indicator {{ image: none; }}""")
 
     def onButtonClicked(self):
         self.action_triggered.emit()

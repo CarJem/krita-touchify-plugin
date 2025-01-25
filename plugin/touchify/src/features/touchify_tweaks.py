@@ -2,13 +2,16 @@ from PyQt5.QtWidgets import *
 from touchify.src.helpers import TouchifyHelpers
 from touchify.src.variables import *
 from touchify.src.settings import *
-from touchify.src.stylesheet import Stylesheet
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..window import TouchifyWindow
 
 
 from krita import *
+
+SMALL_TAB_SIZE = 22
+SMALL_TAB_ICON_SIZE = 12
+SMALL_TAB_CLOSE_BUTTON_MARGIN = 2
     
 class TouchifyTweaks(QObject):
 
@@ -138,7 +141,7 @@ class TouchifyTweaks(QObject):
         # region No Toolbar Borders
         full_style_sheet = ""
         if config.Styles_BorderlessToolbar:
-            full_style_sheet += f"\n {Stylesheet.instance().no_borders_style} \n"    
+            full_style_sheet += f"\n QToolBar {{ border: none; }} \n"    
         self.qWin.setStyleSheet(full_style_sheet)
         #endregion
 
@@ -146,7 +149,11 @@ class TouchifyTweaks(QObject):
         canvas_style_sheet = ""
         
         if config.Styles_ThinDocumentTabs:
-            canvas_style_sheet += f"\n {Stylesheet.instance().small_tab_style} \n"
+            canvas_style_sheet += f"""\n 
+            QTabBar {{ icon-size: {SMALL_TAB_ICON_SIZE}px {SMALL_TAB_ICON_SIZE}px; }}
+            QTabBar::tab {{ height: {SMALL_TAB_SIZE}px;  }} 
+            QTabBar::close-button {{ margin: {SMALL_TAB_CLOSE_BUTTON_MARGIN}px; }} 
+            \n"""
 
         canvas = self.qWin.centralWidget()
         if canvas:

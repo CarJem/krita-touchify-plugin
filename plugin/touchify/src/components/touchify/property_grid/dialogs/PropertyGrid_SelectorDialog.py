@@ -11,7 +11,6 @@ from touchify.src.cfg.script.CustomScript import CustomScript
 from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.settings import TouchifySettings
-from touchify.src.stylesheet import Stylesheet
 from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 
 from touchify.src.resources import ResourceManager
@@ -113,7 +112,14 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
 
     def load_list(self, mode):
         self.list_view.setSelectionRectVisible(True)
-        self.list_view.setStyleSheet(Stylesheet.instance().propertygrid_selectordialog_listview)
+        
+        self.list_view.setStyleSheet(f"""
+            QListWidget::item:selected {{ 
+                background-color: palette(alternate-base);
+            }}
+        """)
+
+
         if mode == PropertyGrid_Restrictions.StrMod.IconSelection:
             self.show_status_bar = True
             self.list_view.setViewMode(QListView.ViewMode.IconMode)

@@ -20,7 +20,6 @@ from touchify.src.components.touchify.special.DockerContainer import DockerConta
 from touchify.src.components.touchify.special.LayerBlendingSelector import LayerBlendingSelector
 from touchify.src.components.touchify.special.LayerLabelBox import LayerLabelBox
 from touchify.src.settings import TouchifySettings
-from touchify.src.stylesheet import Stylesheet
 
 
 from krita import *
@@ -68,10 +67,25 @@ class Panel(QWidget):
             result.setFlat(True)
             result.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
             result.setContentsMargins(0,0,0,0)
-            result.setStyleSheet(Stylesheet.instance().touchify_edit_mode_selector())
+            result.setStyleSheet(self.getEditSelectorStylesheet())
             result.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
             result.setVisible(False)
             return result
+        
+        def getEditSelectorStylesheet(self):
+            base_color = qApp.palette().highlight().color()
+            base_factor = 25
+
+            normal_color = f"rgba({base_color.red()},{base_color.green()},{base_color.blue()},{0})"
+            hover_color = f"rgba({base_color.red() + base_factor},{base_color.green() + base_factor},{base_color.blue() + base_factor},{150})"
+            press_color = f"rgba({base_color.red() - base_factor},{base_color.green() - base_factor},{base_color.blue() - base_factor},{150})"
+
+            normal_style = f"QPushButton {{ background-color: {normal_color}; border: none; }}"
+            hover_style = f"QPushButton:hover {{ background-color: {hover_color}; border: none; }}"
+            pressed_style = f"QPushButton:pressed {{ background-color: {press_color}; border: none; }}"
+            
+            stylesheet = f"{normal_style} {hover_style} {pressed_style}"
+            return stylesheet
 
         def addWidget(self, widget: QWidget, x: int, y: int):
             edit_container = self.createEditSelector()
@@ -466,7 +480,64 @@ class Panel(QWidget):
         self.size = QSize(size[0], size[1])
     
     def updateStyleSheet(self):
-        self.actions_panel.setStyleSheet(Stylesheet.instance().touchify_toolshelf_header)
+        stylesheet = f"""
+            QWidget#toolshelf-header {{
+                background-color: palette(alternate-base);
+                border: none;
+            }}
+
+            QWidget#toolshelf-tablist-row {{
+                background-color: palette(alternate-base);
+                border: none;
+            }}
+
+            QPushButton, QToolButton {{
+                background-color: palette(alternate-base);
+                border: none;
+            }}
+
+            QPushButton:hover, QToolButton:hover {{
+                background-color: palette(highlight);
+            }}
+
+            QPushButton:checked, QToolButton:checked {{
+                background-color: palette(highlight);
+            }}
+            
+            QPushButton:pressed, QToolButton:pressed {{
+                background-color: palette(alternate-base);
+            }}
+
+            QPushButton#back-widget {{
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+                border: none;
+            }}
+
+            QPushButton#pin-widget {{
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+                border: none;
+            }}
+
+            QPushButton::menu-indicator, QToolButton::menu-indicator {{ 
+                image: none; 
+            }}
+
+            QPushButton#menu-widget {{
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+                border: none;
+            }}
+
+            QWidget#filler-widget {{
+                background-color: palette(alternate-base);
+                border: none;
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+            }}
+        """
+        self.actions_panel.setStyleSheet(stylesheet)
 
     def sizeHint(self):
         resultingSize = super().sizeHint()
