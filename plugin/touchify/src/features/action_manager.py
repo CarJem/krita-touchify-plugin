@@ -306,7 +306,7 @@ class ActionManager(QObject):
             registered_elements[packMeta.registry_id] = packMeta, []
             for data in pack.triggers:
                 data: Trigger
-                id = '{0}{1}_{2}'.format(TOUCHIFY_REGISTRY_PREFIX, packMeta.registry_id, data.registry_id)
+                id = '{0}{1}_{2}'.format(TOUCHIFY_ID_ACTION_REGISTERED_ACTION_PREFIX, packMeta.registry_id, data.registry_id)
                 action = self.appEngine.mgr_actions.Create_RegistryAction(id, data, window, packItemsPath)
                 registered_elements[packMeta.registry_id][1].append(self.Actions_Add(id))
                 pack_menu.addAction(action)
@@ -444,7 +444,7 @@ class ActionManager(QObject):
             meta: ResourcePackMetadata = pack.metadata
             for data in pack.triggers:
                 data: Trigger
-                subActionIdentifier = '{0}{1}_{2}'.format(TOUCHIFY_REGISTRY_PREFIX, meta.registry_id, data.registry_id)
+                subActionIdentifier = '{0}{1}_{2}'.format(TOUCHIFY_ID_ACTION_REGISTERED_ACTION_PREFIX, meta.registry_id, data.registry_id)
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
         

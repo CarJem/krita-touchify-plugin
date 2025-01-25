@@ -35,7 +35,7 @@ class TouchifyExtension(Extension):
 
         self.intervalTimer = QTimer(self)
         self.intervalTimer.timeout.connect(GlobalEvents.EMIT_SIGNAL_TIMER_TICKED)
-        self.intervalTimer.start(TOUCHIFY_TIMER_MAIN_INTERVAL)
+        self.intervalTimer.start(250)
     
     def onWindowDestroyed(self, windowId: str):
         item: TouchifyWindow = self.instances[windowId]
@@ -81,5 +81,5 @@ class TouchifyExtension(Extension):
 
 
 Krita.instance().addExtension(TouchifyExtension(Krita.instance()))
-Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ToolshelfDockWidget))
-Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_ID_DOCKER_TOOLBOX, DockWidgetFactoryBase.DockPosition.DockRight, ToolboxDocker))
+Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ToolshelfDockWidget))
+Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_DOCKERID_DOCKER_TOOLBOX, DockWidgetFactoryBase.DockPosition.DockRight, ToolboxDocker))

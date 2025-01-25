@@ -195,15 +195,15 @@ class TouchifySettings:
         fallback_val = "none"
 
         if registry_index == -1:
-            return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Docker", fallback_val)
+            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Docker", fallback_val)
         elif registry_index == 0:
-            return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Main", fallback_val)
+            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Main", fallback_val)
         elif registry_index == 1:
-            return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Alt", fallback_val)
+            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Alt", fallback_val)
         elif registry_index == 2:
-            return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Gamma", fallback_val)
+            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Gamma", fallback_val)
         elif registry_index == 3:
-            return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Delta", fallback_val)
+            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Delta", fallback_val)
         else:
             return fallback_val
 
@@ -218,15 +218,15 @@ class TouchifySettings:
 
     def setActiveToolshelf(self, registry_index: int, id: str):
         if registry_index == -1:
-            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Docker", id, False)
+            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Docker", id, False)
         elif registry_index == 0:
-            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Main", id, False)
+            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Main", id, False)
         elif registry_index == 1:
-            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Alt", id, False)
+            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Alt", id, False)
         elif registry_index == 2:
-            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Gamma", id, False)
+            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Gamma", id, False)
         elif registry_index == 3:
-            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_TOOLSHELF, "SelectedPreset_Delta", id, False)
+            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Delta", id, False)
 
         GlobalEvents.EMIT_SIGNAL_TOOLSHELF_PRESET_CHANGED(registry_index)
     
@@ -236,7 +236,7 @@ class TouchifySettings:
 
     def getActiveToolboxId(self) -> str:
         fallback_val = "none"
-        return KritaSettings.readSetting(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", fallback_val)
+        return KritaSettings.readSetting(TOUCHIFY_DOCKERID_DOCKER_TOOLBOX, "SelectedPreset", fallback_val)
 
     def getActiveToolbox(self) -> ToolboxData:
         registry = self.getRegistry(ToolboxData)
@@ -248,7 +248,7 @@ class TouchifySettings:
             return ToolboxData()
 
     def setActiveToolbox(self, id: str):
-        KritaSettings.writeSetting(TOUCHIFY_ID_DOCKER_TOOLBOX, "SelectedPreset", id, False)
+        KritaSettings.writeSetting(TOUCHIFY_DOCKERID_DOCKER_TOOLBOX, "SelectedPreset", id, False)
         GlobalEvents.EMIT_SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED()
     
     #endregion
@@ -257,7 +257,7 @@ class TouchifySettings:
 
     def getActiveWidgetLayoutId(self) -> str:
         fallback_val = "none"
-        return KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", fallback_val)
+        return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_WIDGETPAD, "SelectedPreset", fallback_val)
 
     def getActiveWidgetLayout(self) -> WidgetLayout:
         registry = self.getRegistry(WidgetLayout)
@@ -269,7 +269,7 @@ class TouchifySettings:
             return WidgetLayout()
 
     def setActiveWidgetLayout(self, id: str):
-        KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", id, False)
+        KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_WIDGETPAD, "SelectedPreset", id, False)
         GlobalEvents.EMIT_SIGNAL_CANVAS_LAYOUT_CHANGED()
     
     #endregion

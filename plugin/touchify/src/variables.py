@@ -1,9 +1,5 @@
-# Internals
-TOUCHIFY_REGISTRY_PREFIX="touchify_registry_"
-TOUCHIFY_TIMER_MAIN_INTERVAL=250
 #-----------------#
 # Action IDs
-TOUCHIFY_ID_ACTION_ROOT="Touchify"
 TOUCHIFY_ID_ACTION_CONFIGURE="touchify_configure"
 
 TOUCHIFY_ID_ACTION_STYLES_MENU="touchify_styles_menu"
@@ -46,16 +42,17 @@ TOUCHIFY_ID_ACTION_CROPTOOLS_LOCKHEIGHT="Touchify_CropToolActions_LockHeight"
 TOUCHIFY_ID_ACTION_CROPTOOLS_LOCKRATIO="Touchify_CropToolActions_LockRatio"
 
 TOUCHIFY_ID_ACTION_REGISTERED_ACTIONS_MENU="Touchify_RegisteredActions_Menu"
+TOUCHIFY_ID_ACTION_REGISTERED_ACTION_PREFIX="touchify_registry_"
 #-----------------#
 # Docker IDs
-TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER="Touchify/ToolshelfDocker"
-TOUCHIFY_ID_DOCKER_TOOLBOX="Touchify/TouchifyToolbox"
+TOUCHIFY_DOCKERID_TOOLSHELFDOCKER="Touchify/ToolshelfDocker"
+TOUCHIFY_DOCKERID_DOCKER_TOOLBOX="Touchify/TouchifyToolbox"
 #-----------------#
-# Setting Sections
-TOUCHIFY_ID_SETTINGS_TOOLSHELF="Touchify/Toolshelfs"
-TOUCHIFY_ID_SETTINGS_WIDGETPAD="Touchify/WidgetPads"
-TOUCHIFY_ID_SETTINGS_POPUPS_FIXED_LOCATIONS="Touchify/Popups/Fixed/Locations"
-TOUCHIFY_ID_SETTINGS_POPUPS_LAST_LOCATIONS="Touchify/Popups/Normal/Locations"
+# Setting Paths
+TOUCHIFY_SETTINGPATH_TOOLSHELF="Touchify/Toolshelfs"
+TOUCHIFY_SETTINGPATH_WIDGETPAD="Touchify/WidgetPads"
+TOUCHIFY_SETTINGPATH_POPUPS_FIXED_LOCATIONS="Touchify/Popups/Fixed/Locations"
+TOUCHIFY_SETTINGPATH_POPUPS_LAST_LOCATIONS="Touchify/Popups/Normal/Locations"
 
 
 

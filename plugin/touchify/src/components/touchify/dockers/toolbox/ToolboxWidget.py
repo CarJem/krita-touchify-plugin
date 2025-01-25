@@ -42,7 +42,7 @@ class ToolboxWidget(QResizableWidget):
 
         self.loadConfig()
         
-        self.horizontalMode: bool = KritaSettings.readSettingBool(TOUCHIFY_ID_DOCKER_TOOLBOX, "IsHorizontal", False)
+        self.horizontalMode: bool = KritaSettings.readSettingBool(TOUCHIFY_DOCKERID_DOCKER_TOOLBOX, "IsHorizontal", False)
         self.categories: list[ToolboxCategory] = []
         self.lastActiveTool = ""
         self.registeredToolBtns: list[TouchifyActionButton] = []
@@ -403,12 +403,12 @@ class ToolboxWidget(QResizableWidget):
     
     def setHorizontalMode(self, state: bool):
         self.horizontalMode = state
-        KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_TOOLBOX, "IsHorizontal", self.horizontalMode)
+        KritaSettings.writeSettingBool(TOUCHIFY_DOCKERID_DOCKER_TOOLBOX, "IsHorizontal", self.horizontalMode)
         self.reload()
 
     def toggleHorizontalMode(self):
         self.horizontalMode = not self.horizontalMode
-        KritaSettings.writeSettingBool(TOUCHIFY_ID_DOCKER_TOOLBOX, "IsHorizontal", self.horizontalMode)
+        KritaSettings.writeSettingBool(TOUCHIFY_DOCKERID_DOCKER_TOOLBOX, "IsHorizontal", self.horizontalMode)
         self.reload()
     #endregion
 

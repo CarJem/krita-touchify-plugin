@@ -76,23 +76,23 @@ class NtCanvas(QWidget):
 
         self.tlb_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLBOX, "Toolbox", menu_path)
         self.tlb_action.setCheckable(True)
-        self.tlb_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolbox"), True))
+        self.tlb_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_SETTINGPATH_WIDGETPAD, "show_{0}".format("toolbox"), True))
 
         self.tlshlf_alpha_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_ALPHA, "Toolshelf (Alpha)", menu_path)
         self.tlshlf_alpha_action.setCheckable(True)
-        self.tlshlf_alpha_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_alpha"), True))
+        self.tlshlf_alpha_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_SETTINGPATH_WIDGETPAD, "show_{0}".format("toolshelf_alpha"), True))
 
         self.tlshlf_beta_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_BETA, "Toolshelf (Beta)", menu_path)
         self.tlshlf_beta_action.setCheckable(True)
-        self.tlshlf_beta_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_beta"), True))
+        self.tlshlf_beta_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_SETTINGPATH_WIDGETPAD, "show_{0}".format("toolshelf_beta"), True))
 
         self.tlshlf_gamma_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_GAMMA, "Toolshelf (Gamma)", menu_path)
         self.tlshlf_gamma_action.setCheckable(True)
-        self.tlshlf_gamma_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_gamma"), True))
+        self.tlshlf_gamma_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_SETTINGPATH_WIDGETPAD, "show_{0}".format("toolshelf_gamma"), True))
 
         self.tlshlf_delta_action = window.createAction(TOUCHIFY_ID_ACTION_WIDGETPAD_SHOWTOOLSHELF_DELTA, "Toolshelf (Delta)", menu_path)
         self.tlshlf_delta_action.setCheckable(True)
-        self.tlshlf_delta_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_delta"), True))
+        self.tlshlf_delta_action.setChecked(KritaSettings.readSettingBool(TOUCHIFY_SETTINGPATH_WIDGETPAD, "show_{0}".format("toolshelf_delta"), True))
         
         self.tlb_action.triggered.connect(lambda a: self.Update_Actions("toolbox", a))
         self.tlshlf_alpha_action.triggered.connect(lambda a: self.Update_Actions("toolshelf_alpha", a))
@@ -182,7 +182,7 @@ class NtCanvas(QWidget):
         self.toolbox_enabled = self.active_preset.toolbox_enabled
         
         if last_preset_id != self.selected_preset_id:
-            KritaSettings.writeSettingInt(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "SelectedPreset", self.selected_preset_id)
+            KritaSettings.writeSettingInt(TOUCHIFY_SETTINGPATH_WIDGETPAD, "SelectedPreset", self.selected_preset_id)
         
         if self.toolbox: 
             self.toolbox.toolbox.toolboxWidget.setHorizontalMode(self.active_preset.toolbox.horizontal_mode)

@@ -452,14 +452,14 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
 
     def getLastLayoutState(self) -> LayoutState | None:
         if self.isFloating() and self.is_collapsed == False:
-            state_str: str = KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_POPUPS_LAST_LOCATIONS, self.registry_id, "")
+            state_str: str = KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_POPUPS_LAST_LOCATIONS, self.registry_id, "")
             return TouchifyPopup.LayoutState.prase(state_str)
         else:
             return None
 
     def getFixedLayoutState(self) -> LayoutState | None:
         if self.isFloating() and self.is_collapsed == False:
-            state_str: str = KritaSettings.readSetting(TOUCHIFY_ID_SETTINGS_POPUPS_FIXED_LOCATIONS, self.registry_id, "")
+            state_str: str = KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_POPUPS_FIXED_LOCATIONS, self.registry_id, "")
             return TouchifyPopup.LayoutState.prase(state_str)
         else:
             return None
@@ -472,12 +472,12 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
     def storeLastLayoutState(self):
         if self.isFloating() and self.is_collapsed == False:
             current_state = self.getCurrentLayoutState()
-            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_POPUPS_LAST_LOCATIONS, self.registry_id, current_state.value(), False)
+            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_POPUPS_LAST_LOCATIONS, self.registry_id, current_state.value(), False)
 
     def storeFixedLayoutState(self):
         if self.isFloating() and self.is_collapsed == False:
             current_state = self.getCurrentLayoutState()
-            KritaSettings.writeSetting(TOUCHIFY_ID_SETTINGS_POPUPS_FIXED_LOCATIONS, self.registry_id, current_state.value(), False)
+            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_POPUPS_FIXED_LOCATIONS, self.registry_id, current_state.value(), False)
 
     def restoreFixedLayoutState(self):
         state = self.getFixedLayoutState()

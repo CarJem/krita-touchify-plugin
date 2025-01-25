@@ -16,13 +16,13 @@ class NtToolbox(NtWidgetPad):
     def __init__(self, canvas: "NtCanvas", window: Window):
         super().__init__(window, canvas)
         self.reopenDockerOnReturn = False
-        self.toolbox: ToolboxDocker = self.source_window.findChild(ToolboxDocker, TOUCHIFY_ID_DOCKER_TOOLBOX)
+        self.toolbox: ToolboxDocker = self.source_window.findChild(ToolboxDocker, TOUCHIFY_DOCKERID_DOCKER_TOOLBOX)
         
         self.setObjectName("toolBoxPad")
         self.borrowDocker(self.toolbox)
 
         # Disable the related QDockWidget
-        self.dockerAction = window.qwindow().findChild(QDockWidget, TOUCHIFY_ID_DOCKER_TOOLBOX).toggleViewAction()
+        self.dockerAction = window.qwindow().findChild(QDockWidget, TOUCHIFY_DOCKERID_DOCKER_TOOLBOX).toggleViewAction()
         self.dockerAction.setEnabled(False)
 
         self.toolbox.toolboxWidget.horizontalModeAction.setEnabled(False)

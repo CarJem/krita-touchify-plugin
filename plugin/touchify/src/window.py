@@ -125,10 +125,10 @@ class TouchifyWindow(QObject):
             if window_title.startswith(touchify_title_prefix):
                 docker.setWindowTitle(window_title.removeprefix(touchify_title_prefix))
 
-            if docker_id == TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER:
+            if docker_id == TOUCHIFY_DOCKERID_TOOLSHELFDOCKER:
                 toolshelfDocker: ToolshelfDockWidget = docker
                 toolshelfDocker.setup(self)
-            elif docker_id == TOUCHIFY_ID_DOCKER_TOOLBOX:
+            elif docker_id == TOUCHIFY_DOCKERID_DOCKER_TOOLBOX:
                 toolboxDocker: ToolboxDocker = docker
                 toolboxDocker.setup(self)
             else:

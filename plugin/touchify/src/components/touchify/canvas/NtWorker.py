@@ -9,7 +9,7 @@ from touchify.src.components.krita.settings import KritaSettings
 from touchify.src.components.touchify.canvas.NtToolbox import NtToolbox
 from touchify.src.components.touchify.canvas.NtToolshelf import NtToolshelf
 from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
-from touchify.src.variables import TOUCHIFY_ID_SETTINGS_WIDGETPAD
+from touchify.src.variables import TOUCHIFY_SETTINGPATH_WIDGETPAD
 
 if TYPE_CHECKING:
     from touchify.src.components.touchify.canvas.NtCanvas import NtCanvas
@@ -135,14 +135,14 @@ class NtWorker(QObject):
             return
         
 
-        show_toolbox = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolbox"), True)
-        show_toolshelf_alpha = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_alpha"), True)
-        show_toolshelf_beta = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_beta"), True)
-        show_toolshelf_gamma = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_gamma"), True)
-        show_toolshelf_delta = KritaSettings.readSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format("toolshelf_delta"), True)
+        show_toolbox = KritaSettings.readSettingBool(TOUCHIFY_SETTINGPATH_WIDGETPAD, "show_{0}".format("toolbox"), True)
+        show_toolshelf_alpha = KritaSettings.readSettingBool(TOUCHIFY_SETTINGPATH_WIDGETPAD, "show_{0}".format("toolshelf_alpha"), True)
+        show_toolshelf_beta = KritaSettings.readSettingBool(TOUCHIFY_SETTINGPATH_WIDGETPAD, "show_{0}".format("toolshelf_beta"), True)
+        show_toolshelf_gamma = KritaSettings.readSettingBool(TOUCHIFY_SETTINGPATH_WIDGETPAD, "show_{0}".format("toolshelf_gamma"), True)
+        show_toolshelf_delta = KritaSettings.readSettingBool(TOUCHIFY_SETTINGPATH_WIDGETPAD, "show_{0}".format("toolshelf_delta"), True)
         
         if pad != "" and value != None:
-            KritaSettings.writeSettingBool(TOUCHIFY_ID_SETTINGS_WIDGETPAD, "show_{0}".format(pad), value, False)
+            KritaSettings.writeSettingBool(TOUCHIFY_SETTINGPATH_WIDGETPAD, "show_{0}".format(pad), value, False)
             match pad:
                 case "toolbox": show_toolbox = value
                 case "toolshelf_alpha": show_toolshelf_alpha = value
