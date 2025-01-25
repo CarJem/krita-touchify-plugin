@@ -24,6 +24,8 @@ class TouchifyTweaks(QObject):
         self.qWin = self.appEngine.krita_window.qwindow()
         self.qWin.themeChanged.connect(self.rebuildStyleSheet)
         qApp.focusWindowChanged.connect(self.onFocusWindowChanged)
+        GlobalEvents.instance().SIGNAL_WINDOW_MOVED.connect(self.updateBrushEditor)
+        GlobalEvents.instance().SIGNAL_WINDOW_RESIZED.connect(self.updateBrushEditor)
         self.rebuildStyleSheet()
 
     def onBrushEditorTrigged(self):
