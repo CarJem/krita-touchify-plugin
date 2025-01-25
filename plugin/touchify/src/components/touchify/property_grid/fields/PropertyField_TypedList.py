@@ -84,6 +84,8 @@ class PropertyField_TypedList(PropertyField):
         self.view_layout.addWidget(self.btns_widget)
 
         btns = QHBoxLayout(self.btns_widget)
+        btns.setContentsMargins(0,0,0,0)
+        btns.setSpacing(0)
         btns.setAlignment(Qt.AlignmentFlag.AlignBottom)
         self.btns_widget.setLayout(btns)
 

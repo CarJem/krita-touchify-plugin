@@ -48,14 +48,11 @@ class TouchifyTweaks(QObject):
             return result
     
         config = TouchifySettings.instance().preferences()
-        
-        sublocation_name = "Tweaks"
-        sublocation_path = ""#path + "/" + sublocation_name
 
-
-        nu_options_menu = QMenu(sublocation_name, window.qwindow())
-        options_action = window.createAction(TOUCHIFY_ID_ACTION_STYLES_MENU, sublocation_name, path)
+        nu_options_menu = QMenu("Tweaks", window.qwindow())
+        options_action = window.createAction(TOUCHIFY_ID_ACTION_STYLES_MENU, "Tweaks", path)
         options_action.setMenu(nu_options_menu)
+        sublocation_path = "{0}/{1}".format(path, TOUCHIFY_ID_ACTION_STYLES_MENU)
 
         nu_options_menu.addAction(createAction(TOUCHIFY_ID_ACTION_STYLES_PRIVACYMODE, "Privacy Mode", sublocation_path, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
         nu_options_menu.addAction(createAction(TOUCHIFY_ID_ACTION_STYLES_BORDERLESSTOOLBARS, "Borderless Toolbars", sublocation_path, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))
