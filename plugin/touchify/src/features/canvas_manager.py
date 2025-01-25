@@ -40,9 +40,9 @@ class CanvasManager(QObject):
     def Actions_Post(self):
         self.nt_canvas.Actions_Post()
 
-    def Actions_Init(self, window: Window):
+    def Actions_Init(self, window: Window, path: str):
         self.nt_canvas = NtCanvas(window.qwindow().window(), window)
-        self.nt_canvas.Actions_Init(window)
+        self.nt_canvas.Actions_Init(window, path)
 
     def OnEvent_ActiveViewChanged(self):
         if self.active_canvas != None:

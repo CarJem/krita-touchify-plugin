@@ -15,7 +15,6 @@ from touchify.src.components.touchify.util.settings_dialog import SettingsDialog
 
 from touchify.src.features.touchify_shortcuts import TouchifyShortcuts
 from touchify.src.features.touchify_tweaks import TouchifyTweaks
-from touchify.src.features.touchify_registered_actions import TouchifyRegisteredActions
 
 from touchify.src.components.pyqt.extensions import PyQtExtensions
 
@@ -34,11 +33,8 @@ class TouchifyWindow(QObject):
 
     #region Init Functions
     def Variables_Init(self):
-        global WINDOW_ID
-        self.windowUUID = WINDOW_ID
-        WINDOW_ID += 1
+        global WINDOW_ID; self.__UUID = WINDOW_ID; WINDOW_ID += 1
         
-        self.mgr_registry = TouchifyRegisteredActions(self)
         self.mgr_tweaker = TouchifyTweaks(self)
         self.mgr_shortcuts = TouchifyShortcuts(self)
         self.mgr_canvas = CanvasManager(self)
@@ -48,20 +44,19 @@ class TouchifyWindow(QObject):
         self.settings_dlg: SettingsDialog | None = None
 
     def Actions_Init(self, window: Window):
-        self.__main_menu_bar = QMenu(TOUCHIFY_ID_ACTION_ROOT, window.qwindow())
+        self.__main_menu_bar = QMenu(None, window.qwindow())
 
         openSettingsAction = window.createAction(TOUCHIFY_ID_ACTION_CONFIGURE, "Configure Touchify...", "settings")
         openSettingsAction.triggered.connect(self.Trigger_OpenSettings)
 
-        menuAction = window.createAction("touchify", TOUCHIFY_ID_ACTION_ROOT, "tools")
+        menuAction = window.createAction("touchify", "Touchify", "tools")
         menuAction.setMenu(self.__main_menu_bar)
 
-        self.mgr_shortcuts.Actions_Init(window, TOUCHIFY_ID_ACTION_ROOT)
-        self.mgr_registry.Actions_Init(window, TOUCHIFY_ID_ACTION_ROOT)  
-        self.mgr_dev.Actions_Init(window, TOUCHIFY_ID_ACTION_ROOT)
-        self.mgr_tweaker.Actions_Init(window, TOUCHIFY_ID_ACTION_ROOT)
-        self.mgr_canvas.Actions_Init(window)
-        self.mgr_sc.Actions_Init(window, self.__main_menu_bar)
+        self.mgr_shortcuts.Actions_Init(window, "tools/touchify", "settings")
+        self.mgr_actions.Actions_Init(window, "tools/touchify")  
+        self.mgr_dev.Actions_Init(window, "settings")
+        self.mgr_tweaker.Actions_Init(window, "settings")
+        self.mgr_canvas.Actions_Init(window, "settings")
     #endregion
 
     #region Post-Init Functions
@@ -79,7 +74,7 @@ class TouchifyWindow(QObject):
 
     def Actions_Post(self):
         instance_seperator = QAction("", self.__main_menu_bar)
-        instance_seperator.setText(f"Instance: #{self.windowUUID}")
+        instance_seperator.setText(f"Instance: #{self.__UUID}")
         instance_seperator.setEnabled(False)
         instance_seperator.setSeparator(True)
         self.__main_menu_bar.addAction(instance_seperator)
@@ -87,8 +82,7 @@ class TouchifyWindow(QObject):
         self.mgr_shortcuts.Actions_Post()
         self.mgr_tweaker.Actions_Post()
         self.mgr_canvas.Actions_Post()
-        self.mgr_registry.Actions_Post(self.__main_menu_bar)
-        self.mgr_sc.Actions_Post(self.__main_menu_bar)
+        self.mgr_actions.Actions_Post(self.__main_menu_bar)
         self.mgr_dev.Actions_Post(self.__main_menu_bar)
     
     def Addons_Post(self):
@@ -147,6 +141,9 @@ class TouchifyWindow(QObject):
     #endregion
 
     #region Window Functions
+
+    def Window_UUID(self):
+        return self.__UUID
 
     def Window_Unload(self):
         pass

@@ -36,35 +36,6 @@ class TouchifyShortcutComposer(QObject):
         
         self.action_manager: ActionManager = None
 
-
-    def Actions_Post(self, menu: QMenu):
-        if not SHORTCUT_COMPOSER_LOADED: return
-        if not FEATURE_ENABLED: return
-
-        for name, container in self.action_manager._stored_actions.items():
-            self.root_menu.addAction(container.krita_action)
-            
-        if len(self.root_menu.actions()) == 0:
-            testUIAction = self.root_menu.addAction("No Actions")
-            testUIAction.setEnabled(False)
-
-        menu.addMenu(self.root_menu)
-
-    def Actions_Init(self, window: Window, actionPath: str):
-        if not SHORTCUT_COMPOSER_LOADED: return
-        if not FEATURE_ENABLED: return
-
-        def createInstructions() -> list[templates.RawInstructions]:
-
-            return []
-
-        self.root_menu = QtWidgets.QMenu("Shortcut Composer...")
-    
-        self.action_manager = ActionManager(window)
-
-        for action in createInstructions():
-            self.action_manager.bind_action(action)
-
     def PieWheel_TestObject(self):
             return PieMenu(
                 name="[Touchify] Pie Menu #1",

@@ -44,6 +44,8 @@ TOUCHIFY_ID_ACTION_CROPTOOLS_GROW="Touchify_CropToolActions_Grow"
 TOUCHIFY_ID_ACTION_CROPTOOLS_LOCKWIDTH="Touchify_CropToolActions_LockWidth"
 TOUCHIFY_ID_ACTION_CROPTOOLS_LOCKHEIGHT="Touchify_CropToolActions_LockHeight"
 TOUCHIFY_ID_ACTION_CROPTOOLS_LOCKRATIO="Touchify_CropToolActions_LockRatio"
+
+TOUCHIFY_ID_ACTION_REGISTERED_ACTIONS_MENU="Touchify_RegisteredActions_Menu"
 #-----------------#
 # Docker IDs
 TOUCHIFY_ID_DOCKER_TOOLSHELFDOCKER="Touchify/ToolshelfDocker"

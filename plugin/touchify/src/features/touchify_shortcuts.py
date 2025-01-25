@@ -209,24 +209,22 @@ class TouchifyShortcuts(object):
 
         TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_DOCKERUTILS_MENU, settings_menu, settings_menu, 'view_toggledockers')
 
-    def Actions_Init(self, window: Window, subItemPath: str):
-
-
+    def Actions_Init(self, window: Window, subItemPath: str, settingsItemPath: str):
 
         # Show Popup Palette
-        popupPaletteToggle = window.createAction(TOUCHIFY_ID_ACTION_OTHER_SHOWPOPUPPALETTE, "Show Popup Palette", "settings")
+        popupPaletteToggle = window.createAction(TOUCHIFY_ID_ACTION_OTHER_SHOWPOPUPPALETTE, "Show Popup Palette", settingsItemPath)
         popupPaletteToggle.setCheckable(False)
         popupPaletteToggle.triggered.connect(self.showPopupPalette)
 
         # Show Popup Menu
-        popupMenuToggle = window.createAction(TOUCHIFY_ID_ACTION_OTHER_SHOWMENUBARPOPUP, "Show Popup Menu", "settings")
+        popupMenuToggle = window.createAction(TOUCHIFY_ID_ACTION_OTHER_SHOWMENUBARPOPUP, "Show Popup Menu", settingsItemPath)
         popupMenuToggle.setCheckable(False)
         popupMenuToggle.triggered.connect(self.showMenubarPopup)
 
         # region Toggle Dockers
-        docker_utils_path = "{0}/{1}".format(subItemPath, "Toggle Dockers...")
+        docker_utils_path = "{0}/{1}".format(settingsItemPath, TOUCHIFY_ID_ACTION_DOCKERUTILS_MENU)
         self.docker_utils_menu = QtWidgets.QMenu("Docker Utils", window.qwindow())
-        self.docker_utils_action = window.createAction(TOUCHIFY_ID_ACTION_DOCKERUTILS_MENU, "Toggle Dockers...", "settings")
+        self.docker_utils_action = window.createAction(TOUCHIFY_ID_ACTION_DOCKERUTILS_MENU, "Toggle Dockers...", settingsItemPath)
         self.docker_utils_action.setMenu(self.docker_utils_menu)
 
         toggleDockersLeft = window.createAction(TOUCHIFY_ID_ACTION_DOCKERUTILS_TOGGLELEFT, "Toggle Left Dockers", docker_utils_path)
@@ -247,9 +245,9 @@ class TouchifyShortcuts(object):
         #endregion
 
         # region Transform Tool Selection Actions
-        transform_selection_utils_path = "{0}/{1}".format(subItemPath, "Transform Tool Actions")
+        transform_selection_utils_path = "{0}/{1}".format(subItemPath, TOUCHIFY_ID_ACTION_TRANSFORMTOOL_MENU)
         self.transform_selection_menu = QtWidgets.QMenu("Transform Tool Actions", window.qwindow())
-        self.transform_selection_action = window.createAction(TOUCHIFY_ID_ACTION_TRANSFORMTOOL_MENU, "Transform Tool Actions", "tools/Touchify")
+        self.transform_selection_action = window.createAction(TOUCHIFY_ID_ACTION_TRANSFORMTOOL_MENU, "Transform Tool Actions", subItemPath)
         self.transform_selection_action.setMenu(self.transform_selection_menu)
 
         transform_selection_flip_x = window.createAction(TOUCHIFY_ID_ACTION_TRANSFORMTOOL_FREE_FLIPX, "Mirror Horizontal", transform_selection_utils_path)
@@ -280,9 +278,9 @@ class TouchifyShortcuts(object):
         #endregion
 
         # region Crop Tool Actions
-        crop_tool_actions_path = "{0}/{1}".format(subItemPath, "Crop Tool Actions")
+        crop_tool_actions_path = "{0}/{1}".format(subItemPath, TOUCHIFY_ID_ACTION_CROPTOOLS_MENU)
         self.crop_tool_actions_menu = QtWidgets.QMenu("Crop Tool Actions", window.qwindow())
-        self.crop_tool_actions_menu_action = window.createAction(TOUCHIFY_ID_ACTION_CROPTOOLS_MENU, "Crop Tool Actions", "tools/Touchify")
+        self.crop_tool_actions_menu_action = window.createAction(TOUCHIFY_ID_ACTION_CROPTOOLS_MENU, "Crop Tool Actions", subItemPath)
         self.crop_tool_actions_menu_action.setMenu(self.crop_tool_actions_menu)
 
         self.crop_tools_actions_center = window.createAction(TOUCHIFY_ID_ACTION_CROPTOOLS_CENTER, "Center", crop_tool_actions_path)

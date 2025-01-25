@@ -47,7 +47,7 @@ class TouchifyExtension(Extension):
         if not self.setup_instance: return
 
         window: Window | None = None
-        window_id = self.new_instance.windowUUID
+        window_id = self.new_instance.Window_UUID()
 
         for __window in Krita.instance().windows():
             if __window.qwindow().property("KRITA_TOUCHIFY_IS_LOADED") != True:

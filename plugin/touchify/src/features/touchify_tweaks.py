@@ -38,7 +38,7 @@ class TouchifyTweaks(QObject):
 
     #region Actions
 
-    def Actions_Init(self, window: Window, subPathName: str):
+    def Actions_Init(self, window: Window, path: str):
 
         def createAction(id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
             result = window.createAction(id, text, menuLocation)
@@ -50,11 +50,11 @@ class TouchifyTweaks(QObject):
         config = TouchifySettings.instance().preferences()
         
         sublocation_name = "Tweaks"
-        sublocation_path = subPathName + "/" + sublocation_name
+        sublocation_path = ""#path + "/" + sublocation_name
 
 
         nu_options_menu = QMenu(sublocation_name, window.qwindow())
-        options_action = window.createAction(TOUCHIFY_ID_ACTION_STYLES_MENU, sublocation_name, "settings")
+        options_action = window.createAction(TOUCHIFY_ID_ACTION_STYLES_MENU, sublocation_name, path)
         options_action.setMenu(nu_options_menu)
 
         nu_options_menu.addAction(createAction(TOUCHIFY_ID_ACTION_STYLES_PRIVACYMODE, "Privacy Mode", sublocation_path, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
