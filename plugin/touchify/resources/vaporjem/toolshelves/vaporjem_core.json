@@ -647,6 +647,7 @@
                         "popup_data": "vaporjem/popup/vaporjem_popups_undohistory",
                         "canvas_preset_data": "none",
                         "script_id": "",
+                        "piewheel_id": "",
                         "json_version": 2
                     },
                     {
@@ -669,6 +670,7 @@
                         "popup_data": "none",
                         "canvas_preset_data": "none",
                         "script_id": "",
+                        "piewheel_id": "",
                         "json_version": 2
                     }
                 ]

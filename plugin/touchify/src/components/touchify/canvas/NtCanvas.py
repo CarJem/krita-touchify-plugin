@@ -202,7 +202,7 @@ class NtCanvas(QWidget):
         self.worker_packer.moveToThread( self.thread_packer )
         # Thread
         self.thread_packer.started.connect( lambda : self.worker_packer.run( self, mode, args ) )
-        self.thread_packer.start(QThread.Priority.LowestPriority)
+        self.thread_packer.start()
 
     def Update_Widgets(self, full_unload: bool = False):
         if self.State_WindowLoaded() == False:
@@ -259,17 +259,30 @@ class NtCanvas(QWidget):
         super().resizeEvent(e)
 
     def paintEvent(self, e: QPaintEvent):
-        super().paintEvent(e)
+        maskedRegion = QRegion(self.frameGeometry())
+        maskedRegion -= QRegion(self.geometry())
+
+        if self.toolbox: 
+            maskedRegion += self.toolbox.geometry()
+
+        if self.toolshelf_alpha: 
+            maskedRegion += self.toolshelf_alpha.geometry()
+
+        if self.toolshelf_beta: 
+            maskedRegion += self.toolshelf_beta.geometry()
+
+        if self.toolshelf_gamma: 
+            maskedRegion += self.toolshelf_gamma.geometry()
+
+        if self.toolshelf_delta: 
+            maskedRegion += self.toolshelf_delta.geometry()
+
+        self.setMask(maskedRegion)
+
 
     def widgetResizeEvent(self, target: NtWidgetPad):
         self.Update_View()
 
-    def mouseMoveEvent(self, a0):
-        if self.toolbox: self.toolbox.updateCursor()
-        if self.toolshelf_alpha: self.toolshelf_alpha.updateCursor()
-        if self.toolshelf_beta: self.toolshelf_beta.updateCursor()
-        if self.toolshelf_gamma: self.toolshelf_gamma.updateCursor()
-        if self.toolshelf_delta: self.toolshelf_delta.updateCursor()
 
     #endregion
  

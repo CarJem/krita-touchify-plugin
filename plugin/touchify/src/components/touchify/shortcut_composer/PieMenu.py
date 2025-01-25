@@ -6,6 +6,7 @@ from typing import TypeVar
 from functools import cached_property
 from api_krita.pyqt import RoundButton
 from krita import *
+from touchify.src.global_events import GlobalEvents
 T = TypeVar('T')
 
 class PieMenu(templates.PieMenu):
@@ -38,7 +39,24 @@ class PieMenu(templates.PieMenu):
             deadzone_strategy=deadzone_strategy, 
             short_vs_long_press_time=short_vs_long_press_time
         )
+
+
     
+    def PieWheel_OnKeyRelease(self):
+        self.Close()
+        
+    def PieWheel_OnMouseRelease(self):
+        self.Close()
+
+    def Show(self):
+        self.on_key_press()
+        GlobalEvents.instance().SIGNAL_KEY_RELEASED.connect(self.PieWheel_OnKeyRelease)
+
+    def Close(self):
+        self.on_every_key_release()
+        GlobalEvents.instance().SIGNAL_KEY_RELEASED.disconnect(self.PieWheel_OnKeyRelease)
+
+
     @cached_property
     def settings_button(self) -> RoundButton:
         """Create button with which user can enter the edit mode."""

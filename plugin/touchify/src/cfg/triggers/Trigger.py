@@ -15,6 +15,7 @@ class Trigger:
         Workspace = "workspace"
         DockerGroup = "docker_group"
         CanvasPreset = "canvas_preset"
+        PieWheel = "pie_wheel"
         Script = "script"
 
     def __defaults__(self):
@@ -60,6 +61,9 @@ class Trigger:
         #Script Params
         self.script_id: str = ""
 
+        #Pie Wheel Params
+        self.piewheel_id: str = ""
+
         self.json_version: int = 2
     
 
@@ -99,6 +103,9 @@ class Trigger:
                 suffix = self.display_custom_text
             case Trigger.Variants.Script:
                 prefix = "[Script]"
+                suffix = self.display_custom_text
+            case Trigger.Variants.PieWheel:
+                prefix = "[Pie Wheel]"
                 suffix = self.display_custom_text
             case _:
                 prefix = f"[{self.variant}]"
@@ -144,6 +151,7 @@ class Trigger:
             "popup_data",
             "canvas_preset_data",
             "script_id",
+            "piewheel_id",
             "extra_opt"
         ]
 
@@ -167,6 +175,8 @@ class Trigger:
             result.append("canvas_preset_data")
         if self.variant != Trigger.Variants.Script:
             result.append("script_id")
+        if self.variant != Trigger.Variants.PieWheel:
+            result.append("piewheel_id")
 
         return result
     
@@ -222,4 +232,5 @@ class Trigger:
         restrictions["canvas_preset_data"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.CanvasPresetRegistry)
         restrictions["context_menu_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.MenuRegistry)
         restrictions["script_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ScriptRegistry)
+        restrictions["piewheel_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.PieWheelRegistry)
         return restrictions

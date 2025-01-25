@@ -21,6 +21,7 @@ class PropertyGrid_Restrictions:
         CanvasPresetRegistry="registry_canvas_preset_selection"
         MenuRegistry="registry_menu_selection"
         ScriptRegistry="registry_script_selection"
+        PieWheelRegistry="registry_piewheel_selection"
         ToolshelfRegistry="registry_toolshelf_selection"
 
     class NumberMod(StrEnum):
@@ -60,6 +61,7 @@ class PropertyGrid_Restrictions:
             PropertyGrid_Restrictions.StrMod.CanvasPresetRegistry,
             PropertyGrid_Restrictions.StrMod.MenuRegistry,
             PropertyGrid_Restrictions.StrMod.ScriptRegistry,
+            PropertyGrid_Restrictions.StrMod.PieWheelRegistry,
             PropertyGrid_Restrictions.StrMod.ToolshelfRegistry
         ]
 

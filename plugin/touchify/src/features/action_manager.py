@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 
 from touchify.paths import REGISTERED_ACTIONS_FILE
 from touchify.src.cfg.menu.TriggerMenuItem import TriggerMenuItem
+from touchify.src.cfg.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
 from touchify.src.cfg.resource_pack.ResourcePackMetadata import ResourcePackMetadata
 from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
@@ -128,6 +129,8 @@ class ActionManager(QObject):
                 self.action_trigger(data)
             case Trigger.Variants.Script:
                 self.action_script(data.script_id)
+            case Trigger.Variants.PieWheel:
+                self.action_piewheel(data.piewheel_id)
             
     def createButton(self, parent: QWidget, data: Trigger):
         if data.variant == Trigger.Variants.Action:
@@ -812,4 +815,14 @@ class ActionManager(QObject):
             exec(code, {'__name__': '__main__'})
         except Exception as ex:
             pass
+
+    def action_piewheel(self, pie_wheel_registry_id: str):
+        data: PieWheelData = TouchifySettings.instance().getRegistryItem(pie_wheel_registry_id, PieWheelData)
+        if not isinstance(data, PieWheelData) or data == None: return
+        
+        result = self.appEngine.mgr_sc.PieWheel_Generate(data)
+        if result != None: 
+            result.Show()
+            self.composer_action_down = True
+
     #endregion

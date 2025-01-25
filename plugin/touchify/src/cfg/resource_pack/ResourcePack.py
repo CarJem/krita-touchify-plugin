@@ -1,5 +1,6 @@
 import copy
 import types
+from touchify.src.cfg.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.cfg.script.CustomScript import CustomScript
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.cfg.resource_pack.ResourcePackMetadata import ResourcePackMetadata
@@ -34,6 +35,7 @@ class ResourcePack:
         self.toolshelves: TypedList[ToolshelfData] = []
         self.widget_layouts: TypedList[WidgetLayout] = []
         self.scripts: TypedList[CustomScript] = []
+        self.pie_wheels: TypedList[PieWheelData] = []
 
     def __init__(self, location: str = "") -> None:
         self.__defaults__()
@@ -60,6 +62,7 @@ class ResourcePack:
         self.toolshelves = TypedList(self.toolshelves, ToolshelfData)
         self.widget_layouts = TypedList(self.widget_layouts, WidgetLayout)
         self.scripts = TypedList(self.scripts, CustomScript)
+        self.pie_wheels = TypedList(self.pie_wheels, PieWheelData)
 
 
     def __str__(self):
@@ -127,6 +130,9 @@ class ResourcePack:
 
                 elif os.path.isdir(contentPath) and contentName == "scripts":
                     self.scripts = loadItems(contentPath, CustomScript)
+
+                elif os.path.isdir(contentPath) and contentName == "pie_wheels":
+                    self.pie_wheels = loadItems(contentPath, PieWheelData)
 
             self.INTERNAL_has_loaded = True
         except Exception as err:
@@ -201,6 +207,7 @@ class ResourcePack:
         saveItems(self.docker_groups, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "docker_groups"))
         saveItems(self.canvas_presets, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "canvas_presets"))
         saveItems(self.scripts, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "scripts"))
+        saveItems(self.pie_wheels, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "pie_wheels"))
 
         removed_files: list[str] = list(set(self.INTERNAL_active_files).difference(found_files))
         for file in removed_files:
@@ -235,6 +242,7 @@ class ResourcePack:
             "popups",
             "docker_groups",
             "canvas_presets",
+            "pie_wheels",
             "scripts"
         ]
 
@@ -249,6 +257,7 @@ class ResourcePack:
         labels["docker_groups"] = "Docker Groups"
         labels["canvas_presets"] = "Canvas Presets"
         labels["metadata"] = "Metadata"
+        labels["pie_wheels"] = "Pie Wheels"
         labels["scripts"] = "Scripts"
         return labels
 
@@ -264,4 +273,5 @@ class ResourcePack:
         restrictions["docker_groups"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         restrictions["canvas_presets"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         restrictions["scripts"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
+        restrictions["pie_wheels"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         return restrictions

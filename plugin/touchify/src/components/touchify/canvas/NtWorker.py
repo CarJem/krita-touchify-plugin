@@ -22,7 +22,9 @@ class NtWorker(QObject):
         elif mode == "ACTIONS":  self.PROCESS_ACTIONS(canvas, str(args.get("pad")), bool(args.get("value")) )
         elif mode == "VIEW": self.PROCESS_VIEW(canvas)
 
-        if canvas.thread_packer: canvas.thread_packer.quit()
+        if canvas.thread_packer: 
+            canvas.thread_packer.quit()
+            canvas.clearMask()
 
     def PROCESS_ELEMENTS (self: "NtWorker", canvas: "NtCanvas", full_unload: bool = False ):
         def onToolshelfCheck(toolshelf: NtToolshelf | None, allow_toolshelf: bool, config_index: int, action: QAction):
@@ -162,7 +164,7 @@ class NtWorker(QObject):
         if canvas.toolshelf_gamma: canvas.toolshelf_gamma.setCollapsed(show_toolshelf_gamma)
         if canvas.toolshelf_delta: canvas.toolshelf_delta.setCollapsed(show_toolshelf_delta)
 
-        canvas.Update_View()
+        self.PROCESS_VIEW(canvas)
 
     def PROCESS_VIEW(self: "NtWorker", canvas: "NtCanvas",):
         if canvas.State_WindowLoaded() == False:
@@ -196,12 +198,6 @@ class NtWorker(QObject):
             else:
                 canvas.move(position)
                 canvas.setFixedSize(size)
-
-                maskedRegion = QRegion(canvas.frameGeometry())
-                maskedRegion -= QRegion(canvas.geometry())
-                maskedRegion += canvas.childrenRegion()
-                canvas.setMask(maskedRegion)
-
     
             if canvas.toolbox: canvas.toolbox.adjustToView()
             if canvas.toolshelf_alpha: canvas.toolshelf_alpha.adjustToView()

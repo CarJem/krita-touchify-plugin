@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
+from touchify.src.cfg.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.cfg.popup.PopupData import PopupData
 from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
 from touchify.src.cfg.script.CustomScript import CustomScript
@@ -135,6 +136,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             mode == PropertyGrid_Restrictions.StrMod.CanvasPresetRegistry or \
             mode == PropertyGrid_Restrictions.StrMod.MenuRegistry or \
             mode == PropertyGrid_Restrictions.StrMod.ScriptRegistry or \
+            mode == PropertyGrid_Restrictions.StrMod.PieWheelRegistry or \
             mode == PropertyGrid_Restrictions.StrMod.ToolshelfRegistry:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
@@ -145,6 +147,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             elif mode == PropertyGrid_Restrictions.StrMod.MenuRegistry: self.selector_registry_type = TriggerMenu
             elif mode == PropertyGrid_Restrictions.StrMod.ToolshelfRegistry: self.selector_registry_type = ToolshelfData
             elif mode == PropertyGrid_Restrictions.StrMod.ScriptRegistry: self.selector_registry_type = CustomScript
+            elif mode == PropertyGrid_Restrictions.StrMod.PieWheelRegistry: self.selector_registry_type = PieWheelData
             else: return
 
             presets = TouchifySettings.instance().getRegistry(self.selector_registry_type)

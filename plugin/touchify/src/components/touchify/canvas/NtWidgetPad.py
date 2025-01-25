@@ -243,11 +243,13 @@ class NtWidgetPad(QWidget):
 
         self.adjustArrow()
         self.adjustToView()  
+        self.repaint()
 
     def setResizable(self, value: bool):
         if self.option_allow_resizing: self.option_resizing_enabled = value
         self.adjustToView()
         self.adjustCursor(self.cursor().pos())
+        self.repaint()
     
     #endregion
 

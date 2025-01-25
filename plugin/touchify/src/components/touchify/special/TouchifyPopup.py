@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 
 from touchify.src.cfg.popup.PopupData import PopupData
 from touchify.src.components.pyqt.extensions import PyQtExtensions
+from touchify.src.components.pyqt.widgets.AnimatedWidget import AnimatedWidget
 from touchify.src.components.pyqt.widgets.ElidedLabel import ElidedLabel
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import ToolshelfWidget
 from touchify.src.settings import *
@@ -21,7 +22,7 @@ if TYPE_CHECKING:
     from touchify.src.features.canvas_manager import CanvasManager
 
 
-class TouchifyPopup(QDockWidget):
+class TouchifyPopup(QDockWidget, AnimatedWidget):
 
     class LayoutState:
         def __init__(self, x: int, y: int, width: int, height: int):
@@ -130,7 +131,9 @@ class TouchifyPopup(QDockWidget):
             if self.restoreLocation: self.restoreLocation.setVisible(value)
     
     def __init__(self, parent: QWidget, id: str, args: PopupData, toolshelf_data: ToolshelfData, app_engine: "TouchifyWindow"):     
-        super().__init__(parent)  
+        QDockWidget.__init__(self, parent)  
+        AnimatedWidget.__init__(self, parent, 0.1)
+        
 
         self.isVisibleAction = self.toggleViewAction()
         self.dockLocationChanged.connect(self.onDockLocationChanged)
@@ -570,8 +573,8 @@ class TouchifyPopup(QDockWidget):
 
         return super().leaveEvent(event)
 
-    def closeEvent(self, event):
-        super().closeEvent(event)
+    def hideEvent(self, event):
+        AnimatedWidget.hideEvent(self, event)
 
     def mousePressEvent(self, e: QMouseEvent):
         return super().mousePressEvent(e)

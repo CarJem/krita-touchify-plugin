@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from touchify.src.cfg.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
 from touchify.src.cfg.TouchifyRegistry import TouchifyRegistry
 from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
@@ -71,6 +72,7 @@ class TouchifySettings:
                                                         ToolshelfData |\
                                                         ToolboxData |\
                                                         CustomScript |\
+                                                        PieWheelData |\
                                                         WidgetLayout:
         cfg = self.getConfig()
         for pack in cfg.resources.presets:
@@ -116,6 +118,11 @@ class TouchifySettings:
                     item: CustomScript
                     id = f"{pack.INTERNAL_UUID_ID}/scripts/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
+            elif type == PieWheelData:
+                for item in pack.pie_wheels:
+                    item: PieWheelData
+                    id = f"{pack.INTERNAL_UUID_ID}/pie_wheels/{item.INTERNAL_UUID_ID}"
+                    if item_id == id: return item
 
         return None
     
@@ -127,6 +134,7 @@ class TouchifySettings:
                                         dict[RegistryKey,ToolshelfData] |\
                                         dict[RegistryKey,ToolboxData] |\
                                         dict[RegistryKey,CustomScript] |\
+                                        dict[RegistryKey,PieWheelData] |\
                                         dict[RegistryKey,WidgetLayout]:
         cfg = self.getConfig()
         results: dict = {}
@@ -172,6 +180,11 @@ class TouchifySettings:
                 for item in pack.scripts:
                     item: CustomScript
                     id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "scripts", item.INTERNAL_UUID_ID)
+                    results[id] = item
+            elif type == PieWheelData:
+                for item in pack.pie_wheels:
+                    item: PieWheelData
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "pie_wheels", item.INTERNAL_UUID_ID)
                     results[id] = item
 
         return results

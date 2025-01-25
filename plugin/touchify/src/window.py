@@ -7,7 +7,6 @@ from touchify.src.features.canvas_manager import CanvasManager
 from touchify.src.features.touchify_dev import TouchifyDev
 from touchify.src.features.touchify_shortcut_composer import TouchifyShortcutComposer
 from touchify.src.helpers import TouchifyHelpers
-from touchify.src.local_events import LocalEvents
 from touchify.src.variables import *
 from touchify.src.features.docker_manager import DockerManager
 from touchify.src.features.action_manager import ActionManager
@@ -38,8 +37,7 @@ class TouchifyWindow(QObject):
         global WINDOW_ID
         self.windowUUID = WINDOW_ID
         WINDOW_ID += 1
-
-        self.event_handler = LocalEvents(self)
+        
         self.mgr_registry = TouchifyRegisteredActions(self)
         self.mgr_tweaker = TouchifyTweaks(self)
         self.mgr_shortcuts = TouchifyShortcuts(self)

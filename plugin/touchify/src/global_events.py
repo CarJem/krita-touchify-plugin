@@ -17,6 +17,8 @@ class GlobalEvents(QObject):
     SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED = pyqtSignal()
     SIGNAL_TOOLSHELF_PRESET_CHANGED = pyqtSignal(int)
     SIGNAL_MOUSE_RELEASED = pyqtSignal()
+    SIGNAL_KEY_RELEASED = pyqtSignal()
+    SIGNAL_WINDOW_RESIZED = pyqtSignal()
         
     @staticmethod
     def EMIT_SIGNAL_TIMER_TICKED():
@@ -37,12 +39,15 @@ class GlobalEvents(QObject):
     def EMIT_SIGNAL_CANVAS_LAYOUT_CHANGED():
         if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_CANVAS_LAYOUT_CHANGED.emit()
 
-
-
     def eventFilter(self, obj: QObject, event: QEvent):
-        if event.type() == QEvent.Type.MouseButtonRelease or \
+        if isinstance(obj, QMainWindow) and event.type() == QEvent.Type.Resize:
+            self.SIGNAL_WINDOW_RESIZED.emit()
+            return False
+        elif event.type() == QEvent.Type.MouseButtonRelease or \
            event.type() == QEvent.Type.TabletRelease:
             self.SIGNAL_MOUSE_RELEASED.emit()
+        elif event.type() == QEvent.Type.KeyRelease:
+            self.SIGNAL_KEY_RELEASED.emit()
         return False
 
     def __init__(self, parent: QObject = None):
