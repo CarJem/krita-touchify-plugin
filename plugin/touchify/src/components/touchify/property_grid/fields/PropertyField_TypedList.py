@@ -11,7 +11,7 @@ from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restricti
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import PropertyUtils_Extensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
 from touchify.src.helpers import TouchifyHelpers
-from touchify.src.resources import *
+from touchify.src.features.resource_manager import *
 
 
 

@@ -8,7 +8,7 @@ from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
 from touchify.src.components.touchify.property_grid.fields.PropertyField_TypedList import PropertyField_TypedList
 from touchify.src.components.python.datatypes.TypedList import TypedList
 from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
-from touchify.src.resources import *
+from touchify.src.features.resource_manager import *
 
 
 

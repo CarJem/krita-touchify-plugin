@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
 from touchify.src.helpers import TouchifyHelpers
-from touchify.src.resources import ResourceManager
+from touchify.src.features.resource_manager import ResourceManager
 from touchify.src.variables import *
 from touchify.src.settings import *
 from typing import TYPE_CHECKING
@@ -16,7 +16,7 @@ SMALL_TAB_CLOSE_BUTTON_MARGIN = 2
 
 
 
-class TouchifyTweaks(QObject):
+class TweakManager(QObject):
 
     def __init__(self, instance: "TouchifyWindow"):
         super().__init__(instance)

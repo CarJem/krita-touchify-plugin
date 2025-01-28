@@ -23,7 +23,7 @@ from touchify.src.cfg.toolbox.ToolboxDataItem import ToolboxDataItem
 from touchify.src.cfg.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
 from touchify.src.cfg.toolbox.ToolboxDataCategory import ToolboxDataCategory
 from touchify.src.components.pyqt.widgets.QResizableWidget import QResizableWidget
-from touchify.src.resources import ResourceManager
+from touchify.src.features.resource_manager import ResourceManager
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

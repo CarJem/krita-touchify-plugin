@@ -11,7 +11,7 @@ from touchify.src.components.touchify.property_grid.PropertyGrid import *
 
 from touchify.src.components.python.datatypes.TypedList import *
 from touchify.src.helpers import TouchifyHelpers
-from touchify.src.resources import *
+from touchify.src.features.resource_manager import *
 
 
 class PropertyField(QWidget):

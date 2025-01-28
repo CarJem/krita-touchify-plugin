@@ -4,8 +4,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.src.features.canvas_manager import CanvasManager
-from touchify.src.features.touchify_dev import TouchifyDev
-from touchify.src.features.touchify_shortcut_composer import TouchifyShortcutComposer
+from touchify.src.features.developer_manager import DeveloperManager
 from touchify.src.helpers import TouchifyHelpers
 from touchify.src.variables import *
 from touchify.src.features.docker_manager import DockerManager
@@ -13,8 +12,8 @@ from touchify.src.features.action_manager import ActionManager
 
 from touchify.src.components.touchify.util.settings_dialog import SettingsDialog
 
-from touchify.src.features.touchify_shortcuts import TouchifyShortcuts
-from touchify.src.features.touchify_tweaks import TouchifyTweaks
+from touchify.src.features.shortcuts_manager import ShortcutsManager
+from touchify.src.features.tweak_manager import TweakManager
 
 from touchify.src.components.pyqt.extensions import PyQtExtensions
 
@@ -35,11 +34,10 @@ class TouchifyWindow(QObject):
     def Variables_Init(self):
         global WINDOW_ID; self.__UUID = WINDOW_ID; WINDOW_ID += 1
         
-        self.mgr_tweaker = TouchifyTweaks(self)
-        self.mgr_shortcuts = TouchifyShortcuts(self)
+        self.mgr_tweaker = TweakManager(self)
+        self.mgr_shortcuts = ShortcutsManager(self)
         self.mgr_canvas = CanvasManager(self)
-        self.mgr_dev = TouchifyDev(self)
-        self.mgr_sc = TouchifyShortcutComposer(self)
+        self.mgr_dev = DeveloperManager(self)
         self.mgr_actions = ActionManager(self)
         self.settings_dlg: SettingsDialog | None = None
 

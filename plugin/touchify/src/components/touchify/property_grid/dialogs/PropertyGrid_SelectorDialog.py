@@ -13,7 +13,7 @@ from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restricti
 from touchify.src.settings import TouchifySettings
 from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 
-from touchify.src.resources import ResourceManager
+from touchify.src.features.resource_manager import ResourceManager
 
 
 DATA_INDEX = 3

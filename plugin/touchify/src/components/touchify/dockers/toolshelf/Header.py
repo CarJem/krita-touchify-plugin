@@ -11,7 +11,7 @@ from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 
 from touchify.src.settings import TouchifySettings
 from touchify.src.variables import *
-from touchify.src.resources import ResourceManager
+from touchify.src.features.resource_manager import ResourceManager
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

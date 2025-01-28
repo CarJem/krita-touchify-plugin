@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QTabBar, QSizePolicy, QPushButton, QDialog
 from PyQt5.QtCore import QEvent
 
-from touchify.src.resources import ResourceManager
+from touchify.src.features.resource_manager import ResourceManager
 
 
 class PropertyGrid(QWidget):

@@ -1,5 +1,5 @@
 import typing
-from touchify.src.resources import ResourceManager
+from touchify.src.features.resource_manager import ResourceManager
 from touchify.src.variables import *
 from touchify.src.components.krita.extensions import *
 from krita import *

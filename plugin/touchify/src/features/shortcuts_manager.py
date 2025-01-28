@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 from krita import *
     
-class TouchifyShortcuts(object):
+class ShortcutsManager(object):
 
 
     def __init__(self, instance: "TouchifyWindow"):

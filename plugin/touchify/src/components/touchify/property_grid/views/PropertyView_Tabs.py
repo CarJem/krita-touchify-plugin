@@ -11,7 +11,7 @@ from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Selecto
 
 from touchify.src.components.touchify.property_grid.views.PropertyView import PropertyView
 from touchify.src.components.python.datatypes.TypedList import *
-from touchify.src.resources import *
+from touchify.src.features.resource_manager import *
 
 
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored

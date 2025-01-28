@@ -3,7 +3,7 @@ from touchify.src.components.krita.extensions import *
 from touchify.src.variables import *
 
 from touchify.src.settings import *
-from touchify.src.resources import *
+from touchify.src.features.resource_manager import *
 
 from krita import *
 from typing import TYPE_CHECKING
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
     
-class TouchifyDev(object):
+class DeveloperManager(object):
     
     def __init__(self, instance: "TouchifyWindow"):
         self.appEngine = instance  

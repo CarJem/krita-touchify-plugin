@@ -9,7 +9,7 @@ from touchify.src.components.pyqt.widgets.AnimatedWidget import AnimatedWidget
 from touchify.src.components.pyqt.widgets.ElidedLabel import ElidedLabel
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import ToolshelfWidget
 from touchify.src.settings import *
-from touchify.src.resources import *
+from touchify.src.features.resource_manager import *
 
 from krita import *
 

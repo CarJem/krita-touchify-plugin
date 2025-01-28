@@ -5,7 +5,7 @@ from touchify.src.variables import *
 
 from touchify.src.settings import *
 from touchify.src.cfg.pie_wheel.PieWheelData import PieWheelData
-from touchify.src.resources import *
+from touchify.src.features.resource_manager import *
 
 from krita import *
 from typing import TYPE_CHECKING
@@ -24,19 +24,10 @@ except:
 
 FEATURE_ENABLED = True
     
-class TouchifyShortcutComposer(QObject):
-    
+class ShortcutComposerUtil:
 
-
-    def __init__(self, instance: "TouchifyWindow"):
-        super().__init__(instance)
-        self.appEngine = instance  
-        if not SHORTCUT_COMPOSER_LOADED: return
-        if not FEATURE_ENABLED: return
-        
-        self.action_manager: ActionManager = None
-
-    def PieWheel_TestObject(self):
+    @staticmethod
+    def PieWheel_TestObject():
             return PieMenu(
                 name="[Touchify] Pie Menu #1",
                 controller=PieActionController(),
@@ -71,7 +62,8 @@ class TouchifyShortcutComposer(QObject):
                 ]
             )
 
-    def PieWheel_Generate(self, data: PieWheelData):
+    @staticmethod
+    def PieWheel_Generate(data: PieWheelData):
         if not SHORTCUT_COMPOSER_LOADED: return None
         if not FEATURE_ENABLED: return None
     

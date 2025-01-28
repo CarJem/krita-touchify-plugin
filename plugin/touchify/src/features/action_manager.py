@@ -17,6 +17,7 @@ from touchify.src.components.touchify.actions.TouchifyActionMenu import Touchify
 
 from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
 
+from touchify.src.components.touchify.util.shortcut_composer_utils import ShortcutComposerUtil
 from touchify.src.global_events import GlobalEvents
 from touchify.src.variables import *
 
@@ -27,7 +28,7 @@ from touchify.src.cfg.popup.PopupData import PopupData
 from touchify.src.components.krita.extensions import *
 
 from touchify.src.settings import TouchifySettings
-from touchify.src.resources import ResourceManager
+from touchify.src.features.resource_manager import ResourceManager
 
 from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
 
@@ -840,7 +841,7 @@ class ActionManager(QObject):
         data: PieWheelData = TouchifySettings.instance().getRegistryItem(pie_wheel_registry_id, PieWheelData)
         if not isinstance(data, PieWheelData) or data == None: return
         
-        result = self.appEngine.mgr_sc.PieWheel_Generate(data)
+        result = ShortcutComposerUtil.PieWheel_Generate(data)
         if result != None: 
             result.Show()
             self.composer_action_down = True
