@@ -132,8 +132,8 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
     
     def __init__(self, parent: QWidget, id: str, args: PopupData, toolshelf_data: ToolshelfData, app_engine: "TouchifyWindow"):     
         QDockWidget.__init__(self, parent)  
-        AnimatedWidget.__init__(self, parent, 0.1)
-        
+        #TODO: Improve Performance
+        AnimatedWidget.__init__(self, parent, 0) #0.1        
 
         self.isVisibleAction = self.toggleViewAction()
         self.dockLocationChanged.connect(self.onDockLocationChanged)
