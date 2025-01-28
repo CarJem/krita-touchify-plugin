@@ -46,7 +46,9 @@ class CanvasManager(QObject):
 
     def OnEvent_ActiveViewChanged(self):
         if self.active_canvas != None:
-            self.active_canvas.removeEventFilter(self)
+            try: self.active_canvas.removeEventFilter(self)
+            except: pass
+            
             self.active_canvas = None
         
         current_view = self.nt_canvas.Window().activeView()
@@ -55,8 +57,13 @@ class CanvasManager(QObject):
         window_views = self.nt_canvas.Window().views()
         if current_view not in window_views: return
 
-        current_view_index = self.nt_canvas.Window().views().index(current_view)
-        view_container = self.nt_canvas.MdiArea().findChild(QWidget, f"view_{current_view_index}")
+        mdi_area = self.nt_canvas.MdiArea()
+        if not mdi_area: return
+
+        mdi_subwindow = mdi_area.activeSubWindow()
+        if not mdi_subwindow: return
+
+        view_container = next((w for w in mdi_subwindow.findChildren(QWidget) if w.metaObject().className() == 'KisView'), None)
         if not view_container: return
         
         active_canvas = next((w for w in view_container.findChildren(QOpenGLWidget) if w.metaObject().className() == 'KisOpenGLCanvas2'), None)
@@ -82,7 +89,10 @@ class CanvasManager(QObject):
             action = Krita.instance().action(actionName)
             if action: action.trigger()
 
-        if not self.active_canvas == obj: return False
+        try:
+            if not self.active_canvas == obj: return False
+        except:
+            return False
 
         if not Check_Event(): return False
 

@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 from touchify.src.helpers import TouchifyHelpers
+from touchify.src.resources import ResourceManager
 from touchify.src.variables import *
 from touchify.src.settings import *
 from typing import TYPE_CHECKING
@@ -12,13 +13,16 @@ from krita import *
 SMALL_TAB_SIZE = 22
 SMALL_TAB_ICON_SIZE = 12
 SMALL_TAB_CLOSE_BUTTON_MARGIN = 2
-    
+
+
+
 class TouchifyTweaks(QObject):
 
     def __init__(self, instance: "TouchifyWindow"):
         super().__init__(instance)
         self.appEngine = instance
         self.qWin: QMainWindow | None = None
+        self.brush_editor_tweak: Tweak_BrushEditor | None = None
 
     #region Signals
 
@@ -26,16 +30,12 @@ class TouchifyTweaks(QObject):
         Krita.instance().action("show_brush_editor").triggered.connect(self.onBrushEditorTrigged)
         self.qWin = self.appEngine.krita_window.qwindow()
         self.qWin.themeChanged.connect(self.rebuildStyleSheet)
-        qApp.focusWindowChanged.connect(self.onFocusWindowChanged)
-        GlobalEvents.instance().SIGNAL_WINDOW_MOVED.connect(self.updateBrushEditor)
-        GlobalEvents.instance().SIGNAL_WINDOW_RESIZED.connect(self.updateBrushEditor)
+        self.brush_editor_tweak = Tweak_BrushEditor(self.qWin, self.appEngine)
+
         self.rebuildStyleSheet()
 
     def onBrushEditorTrigged(self):
-        self.updateBrushEditor()
-    
-    def onFocusWindowChanged(self):
-        self.updateBrushEditor()
+        self.brush_editor_tweak.Update_State()
 
     #endregion
 
@@ -74,19 +74,16 @@ class TouchifyTweaks(QObject):
     def brushEditorZoomFixToggled(self, toggled):
         TouchifySettings.instance().preferences().Styles_BrushEditorZoomFix = toggled
         TouchifySettings.instance().preferences().save()
-
-        self.updateBrushEditor()
+        self.brush_editor_tweak.Update_State()
 
     def dockedBrushEditorToggled(self, toggled):
         TouchifySettings.instance().preferences().Styles_DockedBrushEditor = toggled
         TouchifySettings.instance().preferences().save()
-
-        self.updateBrushEditor()
+        self.brush_editor_tweak.Update_State()
 
     def toolbarBorderToggled(self, toggled):
         TouchifySettings.instance().preferences().Styles_BorderlessToolbar = toggled
         TouchifySettings.instance().preferences().save()
-        
         self.qWin.themeChanged.emit()
 
     def tabHeightToggled(self, toggled):
@@ -102,35 +99,6 @@ class TouchifyTweaks(QObject):
     #endregion
 
     #region Methods
-
-    
-
-
-    def updateBrushEditor(self):
-        brushEditorWidget = self.qWin.findChild(QWidget, "KisPaintOpPresetsEditor")
-        if not brushEditorWidget: return
-        if not brushEditorWidget.isVisible(): return
-            
-        brushEditorFrame = brushEditorWidget.parentWidget()
-        if not brushEditorFrame: return
-
-        parentMdiArea: QMdiArea = self.qWin.findChild(QMdiArea)
-        if not parentMdiArea: return
-        
-        pos = parentMdiArea.mapToGlobal(QPoint(0,0))
-        margins = QMargins(2,2,2,2)
-        size = parentMdiArea.frameSize().shrunkBy(margins)
-
-        if self.qWin.isMaximized():
-            brushEditorFrame.resize(brushEditorFrame.size().shrunkBy(margins))
-            
-        if TouchifySettings.instance().preferences().Styles_DockedBrushEditor: 
-            brushEditorFrame.move(pos)
-            brushEditorFrame.resize(size)
-
-        if TouchifySettings.instance().preferences().Styles_BrushEditorZoomFix:
-            canvas = self.appEngine.mgr_actions.getCurrentCanvas()
-            if canvas: canvas.resetZoom()
 
     def rebuildStyleSheet(self):
         if self.qWin == None:
@@ -177,3 +145,108 @@ class TouchifyTweaks(QObject):
         #endregion
 
     #endregion
+
+
+class Tweak_BrushEditor_Container(QWidget):
+    def __init__(self, parent: QStackedWidget, tweak: "Tweak_BrushEditor", editor: QWidget):
+        super().__init__(parent)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
+        self.setContentsMargins(0,0,0,0)
+
+        self.Stack = parent
+        self.Tweak = tweak
+
+        self.lay = QVBoxLayout(self)
+        self.lay.setContentsMargins(0,0,0,0)
+        self.lay.setSpacing(0)
+        self.setLayout(self.lay)
+
+        self.close_action = QAction(self)
+        self.close_action.setIcon(ResourceManager.kritaIcon("window-close"))
+        self.close_action.setText("Close")
+        self.close_action.setToolTip("Close")
+        self.close_action.triggered.connect(self.OnEvent_Close) 
+
+        self.toolbar = QToolBar(self)
+        self.toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
+        self.toolbar.addAction(self.close_action)
+        self.lay.addWidget(self.toolbar)
+
+        self.OnEvent_Show(editor)
+
+    def OnEvent_Close(self):
+        self.editor.setParent(self.__widget_last_parent)
+        self.editor.setWindowFlags(self.__widget_last_winflags)
+
+        self.Stack.removeWidget(self)
+        self.Tweak.stack_docker = None
+        self.close()
+
+    def OnEvent_Show(self, editor: QWidget):
+        self.editor = editor
+        self.__widget_last_parent = editor.parent()
+        self.__widget_last_winflags = editor.windowFlags()
+        self.lay.addWidget(editor)
+
+
+class Tweak_BrushEditor(QObject):
+
+    def __init__(self, qWin: QMainWindow, instance: "TouchifyWindow"):
+        self.appEngine = instance
+        self.qWin = qWin
+
+        self.stack_docker: Tweak_BrushEditor_Container | None = None
+        self.stack_index: int | None = None
+
+    def Get_DockArea(self) -> QStackedWidget | None:
+        mdi_area: QMdiArea = self.qWin.findChild(QMdiArea)
+        if not mdi_area: return None
+
+        stack_area: QStackedWidget = mdi_area.parentWidget()
+        if not stack_area: return None
+        if not isinstance(stack_area, QStackedWidget): return None
+
+        return stack_area
+
+    def Get_Editor(self):
+        container = self.qWin.findChild(QWidget, "KisPaintOpPresetsEditor")
+        if not container: return None
+        if not container.isVisible(): return None
+
+        editor = container.parentWidget()
+        if not editor: return None
+
+        return editor
+
+    def Subwindow_Spawn(self):
+        if self.stack_docker: return
+        
+        docking_area = self.Get_DockArea()
+        if not docking_area: return None
+            
+        editor = self.Get_Editor()
+        if not editor: return
+
+        self.stack_docker = Tweak_BrushEditor_Container(docking_area, self, editor)
+        stack_index = docking_area.addWidget(self.stack_docker)
+        docking_area.setCurrentIndex(stack_index)
+
+    def Subwindow_Kill(self):
+        if self.stack_docker == None: return
+        self.stack_docker.OnEvent_Close()
+
+    def Update_State(self):
+        is_docked = TouchifySettings.instance().preferences().Styles_DockedBrushEditor
+        fix_zoom = TouchifySettings.instance().preferences().Styles_BrushEditorZoomFix
+
+        if is_docked: self.Subwindow_Spawn()
+        else: self.Subwindow_Kill()
+
+        if fix_zoom:
+            canvas = self.appEngine.mgr_actions.getCurrentCanvas()
+            if canvas: canvas.resetZoom()
+    
+
+
+
+    
