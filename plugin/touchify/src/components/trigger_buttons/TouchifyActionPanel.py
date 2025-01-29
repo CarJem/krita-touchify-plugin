@@ -2,8 +2,8 @@ import uuid
 from krita import *
 from touchify.src.datatypes.metaclass.EnumStr import EnumStr
 
-from touchify.src.components.touchify.actions.TouchifyActionButton import *
-from touchify.src.components.touchify.actions.TouchifyActionToolbar import TouchifyActionToolbar
+from touchify.src.components.trigger_buttons.TouchifyActionButton import *
+from touchify.src.components.trigger_buttons.TouchifyActionToolbar import TouchifyActionToolbar
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -14,7 +14,7 @@ from touchify.__env__ import *
 from touchify.src.managers.shared.settings import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ....managers.normal.action_manager import ActionManager
+    from ...managers.normal.action_manager import ActionManager
 
 class TouchifyActionPanel(QWidget):
 

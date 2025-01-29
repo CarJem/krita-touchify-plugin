@@ -13,7 +13,7 @@ from touchify.src.components.toolshelf.Helpers import Helpers
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .Header import Header
-    from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
+    from touchify.src.components.special.TouchifyPopup import TouchifyPopup
 
 class Menu(QMenu):
     SIGNAL_RESIZE_STATE_CHANGED = pyqtSignal(bool)

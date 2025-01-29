@@ -13,9 +13,9 @@ from touchify.src.config.menu.TriggerMenu import TriggerMenu
 from touchify.src.config.script.CustomScript import CustomScript
 
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
-from touchify.src.components.touchify.actions.TouchifyActionMenu import TouchifyActionMenu
+from touchify.src.components.trigger_buttons.TouchifyActionMenu import TouchifyActionMenu
 
-from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
+from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
 
 from touchify.src.components.shortcut_composer.ShortcutComposerUtils import ShortcutComposerUtils
 from touchify.src.managers.shared.events import GlobalEvents
@@ -30,7 +30,7 @@ from touchify.src.extensions.krita_extensions import *
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.managers.shared.resources import ResourceManager
 
-from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
+from touchify.src.components.special.TouchifyPopup import TouchifyPopup
 
 from touchify.src.datatypes.constants.KritaActions import KritaActions
 
@@ -588,7 +588,7 @@ class ActionManager(QObject):
 
     def ButtonEvent_ShortcutComposer(self, btn: TouchifyActionButton, onClick: any):
         def tryFindParentPopup(source: QWidget):
-            from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
+            from touchify.src.components.special.TouchifyPopup import TouchifyPopup
             try:
                 widget = source.parent()
                 while (widget):

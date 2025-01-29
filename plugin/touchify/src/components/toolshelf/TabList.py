@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import *
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from touchify.src.config.toolshelf.ToolshelfDataPage import ToolshelfDataPage
-from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
+from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
 
 from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
 

@@ -291,7 +291,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
     #region Helper Methods
 
     def getParentPopup(self, source: QWidget):
-        from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
+        from touchify.src.components.special.TouchifyPopup import TouchifyPopup
         try:
             widget = source.parentWidget()
             while (widget):

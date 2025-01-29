@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 from touchify.src.components.toolshelf.Page import Page
-from touchify.src.components.touchify.special.DockerContainer import DockerContainer
+from touchify.src.components.special.DockerContainer import DockerContainer
 
 from touchify.src.managers.shared.settings import *
 from touchify.__env__ import *

@@ -7,7 +7,7 @@ from krita import *
 
 from touchify.src.managers.normal.action_manager import ActionManager
 from touchify.src.config.triggers.Trigger import Trigger
-from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
+from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
 from touchify.__env__ import *
 
 from touchify.src.managers.shared.settings_krita import KritaSettings

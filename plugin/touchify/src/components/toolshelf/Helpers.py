@@ -2,12 +2,12 @@ from PyQt5.QtCore import QObject
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
+    from touchify.src.components.special.TouchifyPopup import TouchifyPopup
     from touchify.src.components.canvas.NtWidgetPad import NtWidgetPad
 
 class Helpers():
     def findPopup(self: QObject) -> "TouchifyPopup":
-        from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
+        from touchify.src.components.special.TouchifyPopup import TouchifyPopup
         try:
             widget = self.parent()
             while (widget):

@@ -1,5 +1,5 @@
 
-from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
+from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
 
 
 from krita import *

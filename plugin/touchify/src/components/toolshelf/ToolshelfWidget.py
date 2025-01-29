@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ToolshelfCanvasWidget import ToolshelfCanvasWidget
     from .ToolshelfDockWidget import ToolshelfDockWidget
-    from ..touchify.special.TouchifyPopup import TouchifyPopup
+    from ..special.TouchifyPopup import TouchifyPopup
     from touchify.src.components.canvas.NtWidgetPad import NtWidgetPad
 
 class ToolshelfWidget(QWidget):

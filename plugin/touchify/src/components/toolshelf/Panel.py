@@ -2,7 +2,7 @@ from copy import deepcopy
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.components.touchify.actions.TouchifyActionPanel import TouchifyActionPanel
+from touchify.src.components.trigger_buttons.TouchifyActionPanel import TouchifyActionPanel
 from touchify.src.components.widgets.CanvasDualColorButton import CanvasDualColorButton
 from touchify.src.config.toolshelf.ToolshelfData import ToolshelfData, ToolshelfDataPage
 from touchify.src.config.toolshelf.ToolshelfDataSection import ToolshelfDataSection
@@ -15,7 +15,7 @@ from touchify.src.components.widgets.BrushPresetPicker import BrushPresetPicker
 from touchify.src.components.widgets.CanvasColorPicker import CanvasColorPicker
 from touchify.src.components.widgets.CanvasGradientPicker import CanvasGradientPicker
 from touchify.src.components.widgets.CanvasPatternPicker import CanvasPatternPicker
-from touchify.src.components.touchify.special.DockerContainer import DockerContainer
+from touchify.src.components.special.DockerContainer import DockerContainer
 
 from touchify.src.components.widgets.LayerBlendingSelector import LayerBlendingSelector
 from touchify.src.components.widgets.LayerLabelBox import LayerLabelBox
