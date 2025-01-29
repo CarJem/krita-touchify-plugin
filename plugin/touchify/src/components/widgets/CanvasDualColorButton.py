@@ -26,20 +26,18 @@ class CanvasDualColorButton(QWidget):
         self.__foreground_color: QColor = self.palette().color(self.backgroundRole())
 
     def updateIcons(self):
-        self.__swapIcon: QIcon = ResourceManager.kritaIcon("arrow-topright")
         self.__resetIcon: QIcon = ResourceManager.kritaIcon("color-to-alpha")
 
     def metrics(self):
-        PADDING = 2
-        widget_rect = QRect(0, 0, self.width() - PADDING, self.height() - PADDING)
+        PADDING = 4
 
-        BASE_SIZE = widget_rect.width()
-        BASE_HALF_SIZE = int(widget_rect.width() / 2.5)
+        width = self.width() - PADDING
+        half_width = int(width / 3)
 
-        foreground_rect = QRect(0, 0, BASE_SIZE - BASE_HALF_SIZE, BASE_SIZE - BASE_HALF_SIZE)
-        background_rect = QRect(BASE_HALF_SIZE, BASE_HALF_SIZE, BASE_SIZE - BASE_HALF_SIZE, BASE_SIZE - BASE_HALF_SIZE)
+        foreground_rect = QRect(0, 0, width - half_width, width - half_width)
+        background_rect = QRect(half_width, half_width, width - half_width, width - half_width)
 
-        widget_region = QRegion(widget_rect)
+        widget_region = QRegion(QRect(0,0,width, width))
         widget_region -= QRegion(foreground_rect)
         widget_region -= QRegion(background_rect)
 
@@ -58,7 +56,6 @@ class CanvasDualColorButton(QWidget):
 
         return foreground_rect, background_rect, swap_rect, reset_rect
     
-
     def drawBorder(self, painter: QPainter, rect: QRect):
         x = rect.x()
         y = rect.y()
@@ -84,22 +81,49 @@ class CanvasDualColorButton(QWidget):
         painter.setPen(QPen(dark_color, border_width))
         painter.drawLine(x + width, y + height, x, y + height)
 
+    def drawArrows(self, painter: QPainter, rect: QRect):
+        border_width = 1
+        arrow_size = int(rect.width() / 4)
+
+        x = rect.x() + arrow_size
+        y = rect.y() + arrow_size
+        
+        width = rect.width() - arrow_size * 2
+        height = rect.height() - arrow_size * 2
+
+        color = self.palette().color(self.foregroundRole())
+
+        painter.setPen(QPen(color, border_width))
+        painter.drawLine(x, y, x + width, y)
+        painter.drawLine(x, y, x + arrow_size, y + arrow_size)
+        painter.drawLine(x, y, x + arrow_size, y - arrow_size)
+
+        painter.setPen(QPen(color, border_width))
+        painter.drawLine(x + width, y, x + width, y + height)
+        painter.drawLine(x + width, y + height, x + width - arrow_size, y + height - arrow_size)
+        painter.drawLine(x + width, y + height, x + width + arrow_size, y + height - arrow_size)
+
+    def drawResetIcon(self, painter: QPainter, rect: QRect):
+
+        x = rect.x()
+        y = rect.y()
+
+        width = rect.width() 
+
+        pos = QPoint(x, y)
+        half_size = int(width / 2)
+
+        foreground_rect = QRect(pos.x(), pos.y(), width - half_size, width - half_size)
+        background_rect = QRect(pos.x() + half_size, pos.y() + half_size, width - half_size, width - half_size)
+
+        painter.fillRect(foreground_rect, QBrush(Qt.GlobalColor.black))
+        painter.fillRect(background_rect, QBrush(Qt.GlobalColor.white))
 
 
     def paintEvent(self, event):
-
-        
-
-
         foreground_rect, background_rect, swap_rect, reset_rect = self.metrics()
 
         painter = QPainter(self)
-
-
-        pen = QPen()
-        pen.setWidth(1)
-        pen.setColor(Qt.GlobalColor.black)
-        painter.setPen(pen)
 
         foreground_brush = QBrush(self.__foreground_color, Qt.SolidPattern)
         painter.fillRect(foreground_rect, foreground_brush)
@@ -110,10 +134,8 @@ class CanvasDualColorButton(QWidget):
         self.drawBorder(painter, background_rect)
 
     
-        if swap_rect: 
-            painter.drawPixmap(swap_rect, self.__swapIcon.pixmap(swap_rect.size()))
-        if reset_rect: 
-            painter.drawPixmap(reset_rect, self.__resetIcon.pixmap(reset_rect.size()))
+        if swap_rect: self.drawArrows(painter, swap_rect)
+        if reset_rect: self.drawResetIcon(painter, reset_rect)
 
         painter.end()
 
