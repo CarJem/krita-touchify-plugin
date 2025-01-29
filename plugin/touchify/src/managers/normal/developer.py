@@ -1,4 +1,4 @@
-from touchify.src.components.krita.extensions import *
+from touchify.src.extensions.krita_extensions import *
 
 from touchify.__env__ import *
 
@@ -8,7 +8,7 @@ from touchify.src.managers.shared.resources import *
 from krita import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.PluginWindow import TouchifyWindow
+    from touchify.src.PluginWindow import TouchifyWindow
 
 
     

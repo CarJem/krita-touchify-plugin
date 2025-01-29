@@ -1,8 +1,8 @@
 from krita import Krita, DockWidgetFactoryBase, DockWidgetFactory
-from touchify.Plugin import TouchifyPlugin
+from touchify.src.Plugin import TouchifyPlugin
 from touchify.__env__ import *
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget
-from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
+from touchify.src.components.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget
+from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
 
 Krita.instance().addExtension(TouchifyPlugin(Krita.instance()))
 Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ToolshelfDockWidget))

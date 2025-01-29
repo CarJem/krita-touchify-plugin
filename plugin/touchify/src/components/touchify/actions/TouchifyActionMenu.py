@@ -2,9 +2,9 @@ from typing import TYPE_CHECKING
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
-from touchify.src.cfg.menu.TriggerMenuItem import TriggerMenuItem
-from touchify.src.cfg.triggers.Trigger import *
+from touchify.src.config.menu.TriggerMenu import TriggerMenu
+from touchify.src.config.menu.TriggerMenuItem import TriggerMenuItem
+from touchify.src.config.triggers.Trigger import *
 from krita import *
 
 if TYPE_CHECKING:

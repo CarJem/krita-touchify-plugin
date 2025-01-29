@@ -2,13 +2,13 @@ from krita import *
 from PyQt5.QtCore import *
 
 
-from touchify.src.components.krita.settings import *
-from touchify.src.components.krita.ui.KisSliderSpinBox import KisSliderSpinBox
+from touchify.src.managers.shared.settings_krita import *
+from touchify.src.components.krita.KisSliderSpinBox import KisSliderSpinBox
 from touchify.__env__ import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.PluginWindow import TouchifyWindow
+    from touchify.src.PluginWindow import TouchifyWindow
 
 class BrushSizeSlider(KisSliderSpinBox):
 

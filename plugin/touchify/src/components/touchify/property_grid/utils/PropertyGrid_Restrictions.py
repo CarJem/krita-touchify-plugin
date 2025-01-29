@@ -1,11 +1,11 @@
-from touchify.src.components.python.datatypes.StrEnum import StrEnum
+from touchify.src.datatypes.metaclass.EnumStr import EnumStr
 
 class PropertyGrid_Restrictions:
 
-    class OtherMod(StrEnum):
+    class OtherMod(EnumStr):
         Expandable="expandable"
 
-    class StrMod(StrEnum):
+    class StrMod(EnumStr):
         Values="values"
         Multiline="multiline_string"
         PythonEdtior="python_editor"
@@ -24,10 +24,10 @@ class PropertyGrid_Restrictions:
         PieWheelRegistry="registry_piewheel_selection"
         ToolshelfRegistry="registry_toolshelf_selection"
 
-    class NumberMod(StrEnum):
+    class NumberMod(EnumStr):
         Range="range"
 
-    class ListMod(StrEnum):
+    class ListMod(EnumStr):
         Inmovable="inmovable"
         NestedTabs="nested_tabs"
         AddRemoveEditOnly="add_remove_edit_only"

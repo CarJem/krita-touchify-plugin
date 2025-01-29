@@ -2,13 +2,13 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
-from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
-from touchify.src.cfg.pie_wheel.PieWheelData import PieWheelData
-from touchify.src.cfg.popup.PopupData import PopupData
-from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
-from touchify.src.cfg.script.CustomScript import CustomScript
-from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
+from touchify.src.config.canvas_preset.CanvasPreset import CanvasPreset
+from touchify.src.config.docker_group.DockerGroup import DockerGroup
+from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
+from touchify.src.config.popup.PopupData import PopupData
+from touchify.src.config.menu.TriggerMenu import TriggerMenu
+from touchify.src.config.script.CustomScript import CustomScript
+from touchify.src.config.toolshelf.ToolshelfData import ToolshelfData
 from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog

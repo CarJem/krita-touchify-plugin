@@ -2,20 +2,20 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.components.python.datatypes.TypedList import *
+from touchify.src.datatypes.sequence.TypedList import *
 from touchify.src.managers.shared.resources import *
 
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
 from touchify.src.components.touchify.property_grid.PropertyGrid import *
 from touchify.src.components.touchify.property_grid.fields.PropertyField import *
-from touchify.src.components.krita.settings import KS_Color
+from touchify.src.datatypes.dataclass.KisColor import KisColor
 from touchify.src.components.pyqt.widgets.ColorButton import ColorButton
 
 
 
 
 class PropertyField_KsColor(PropertyField):
-    def __init__(self, variable_name=str, variable_data=KS_Color, variable_source=any):
+    def __init__(self, variable_name=str, variable_data=KisColor, variable_source=any):
         super(PropertyField, self).__init__()
         self.setup(variable_name, variable_data, variable_source)
         
@@ -30,5 +30,5 @@ class PropertyField_KsColor(PropertyField):
         self.setLayout(editorLayout)
 
     def updateColor(self):
-        self.variable_data = KS_Color.fromQt(self.editor.color())
+        self.variable_data = KisColor.fromQt(self.editor.color())
         super().setVariable(self.variable_source, self.variable_name, self.variable_data)

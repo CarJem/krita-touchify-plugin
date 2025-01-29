@@ -24,8 +24,6 @@ class CheckerBoardPainter:
         brush.setTransform(QTransform.fromTranslate(patternOrigin.x(), patternOrigin.y()))
         painter.fillRect(rect, brush)
 
-
-
     def createChecker(self):
         self.__checker = QPixmap(2 * self.__checkerSize, 2 * self.__checkerSize)
         p = QPainter(self.__checker)

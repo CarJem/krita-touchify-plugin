@@ -1,23 +1,21 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.cfg.pie_wheel.PieWheelData import PieWheelData
-from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
-from touchify.src.cfg.TouchifyRegistry import TouchifyRegistry
-from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
-from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
-from touchify.src.cfg.popup.PopupData import PopupData
-from touchify.src.cfg.script.CustomScript import CustomScript
-from touchify.src.cfg.toolbox.ToolboxData import ToolboxData
-from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
-from touchify.src.cfg.TouchifyRegistryPreferences import TouchifyRegistryPreferences
-from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
-from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
-from touchify.src.components.krita.settings import KritaSettings
+from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
+from touchify.src.config.resource_pack.ResourcePack import ResourcePack
+from touchify.src.config.TouchifyRegistry import TouchifyRegistry
+from touchify.src.config.canvas_preset.CanvasPreset import CanvasPreset
+from touchify.src.config.docker_group.DockerGroup import DockerGroup
+from touchify.src.config.popup.PopupData import PopupData
+from touchify.src.config.script.CustomScript import CustomScript
+from touchify.src.config.toolbox.ToolboxData import ToolboxData
+from touchify.src.config.toolshelf.ToolshelfData import ToolshelfData
+from touchify.src.config.TouchifyRegistryPreferences import TouchifyRegistryPreferences
+from touchify.src.config.menu.TriggerMenu import TriggerMenu
+from touchify.src.config.widget_layout.WidgetLayout import WidgetLayout
+from touchify.src.managers.shared.settings_krita import KritaSettings
 from touchify.src.managers.shared.events import GlobalEvents
 from touchify.__env__ import *
-
-from touchify.src.components.python.extensions import *
 
 
 

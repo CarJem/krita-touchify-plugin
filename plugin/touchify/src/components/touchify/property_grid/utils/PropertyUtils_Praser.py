@@ -13,7 +13,7 @@ from touchify.src.components.touchify.property_grid.special_fields.PropertyField
 from touchify.src.components.touchify.property_grid.special_fields.PropertyField_TriggerList import PropertyField_TriggerList
 
 #Type Imports
-from touchify.src.components.python.datatypes.TypedList import TypedList
+from touchify.src.datatypes.sequence.TypedList import TypedList
 
 class PropertyUtils_Praser:
 
@@ -28,9 +28,9 @@ class PropertyUtils_Praser:
         return None
 
     def isSpecialType(varName, variable, item):
-        from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
-        from touchify.src.cfg.triggers.Trigger import Trigger
-        from touchify.src.components.krita.settings import KS_Color
+        from touchify.src.config.triggers.TriggerGroup import TriggerGroup
+        from touchify.src.config.triggers.Trigger import Trigger
+        from touchify.src.datatypes.dataclass.KisColor import KisColor
         varType = type(variable)
         listType = PropertyUtils_Praser.getListType(variable)
         
@@ -38,15 +38,15 @@ class PropertyUtils_Praser:
             return True
         if listType == Trigger:
             return True
-        elif varType == KS_Color:
+        elif varType == KisColor:
             return True
         else:
             return False
 
     def getSpecialType(varName, variable, item):
-        from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
-        from touchify.src.cfg.triggers.Trigger import Trigger
-        from touchify.src.components.krita.settings import KS_Color
+        from touchify.src.config.triggers.TriggerGroup import TriggerGroup
+        from touchify.src.config.triggers.Trigger import Trigger
+        from touchify.src.datatypes.dataclass.KisColor import KisColor
         varType = type(variable)
         listType = PropertyUtils_Praser.getListType(variable)
         
@@ -54,7 +54,7 @@ class PropertyUtils_Praser:
             return PropertyField_TriggerGroups(varName, variable, item)
         if listType == Trigger:
             return PropertyField_TriggerList(varName, variable, item)
-        elif varType == KS_Color:
+        elif varType == KisColor:
             return PropertyField_KsColor(varName, variable, item)
         else:
             return PropertyField(varName, variable, item)

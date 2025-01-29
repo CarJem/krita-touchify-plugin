@@ -1,11 +1,11 @@
 from PyQt5.QtWidgets import *
-from touchify.src.components.krita.extensions import KritaExtensions
+from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.shared.resources import ResourceManager
 from touchify.__env__ import *
 from touchify.src.managers.shared.settings import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ....PluginWindow import TouchifyWindow
+    from ...PluginWindow import TouchifyWindow
 
 
 from krita import *

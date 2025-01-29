@@ -9,7 +9,7 @@ from touchify.__env__ import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.PluginWindow import TouchifyWindow
+    from touchify.src.PluginWindow import TouchifyWindow
 
 class CanvasDualColorPicker(QWidget):
     

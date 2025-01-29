@@ -1,0 +1,302 @@
+from touchify.src.config.docker_group.DockerItem import DockerItem
+from touchify.src.extensions.file_extensions import FileExtensions
+from touchify.src.extensions.json_extensions import JsonExtensions
+from touchify.src.datatypes.sequence.TypedList import TypedList
+from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
+from touchify.src.datatypes.metaclass.EnumStr import EnumStr
+
+from typing import TYPE_CHECKING
+
+from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+if TYPE_CHECKING:
+    from touchify.src.config.triggers.TriggerGroup import TriggerGroup
+
+class PopupData:
+
+    class WindowFixedLayoutMode(EnumStr):
+        Off = "off"
+        OnRequest = "on_request"
+        On = "on"
+
+    class DockersTabType(EnumStr):
+        Buttons = "buttons"
+        Tabs = "tabs"
+
+    class Variants(EnumStr):
+        Actions = "actions"
+        Docker = "docker"
+        MultipleDockers = "multiple_dockers"
+        Toolshelf = "toolshelf"
+
+    class WindowType(EnumStr):
+        Popup = "popup"
+        Window = "window"
+
+    class ClosingMethod(EnumStr):
+        Default = "default"
+        Deactivation = "deactivation"
+        MouseLeave = "mouse_leave"
+
+    class PopupPosition(EnumStr):
+        Default = "default"
+        Start = "start"
+        Center = "center"
+        End = "end"
+
+    def __defaults__(self):
+        self.registry_name: str = "New Popup"
+
+        self.id: str = "NewPopup"
+        self.window_type: str = "popup"
+        self.window_title: str = ""
+
+        self.window_docking_allowed: bool = False
+        self.window_remember_layout: bool = False
+        self.window_fixed_layout: str = "off"
+        
+        self.type: str = "actions"
+        self.closing_method: str = "default"
+        self.clamp_to_main_window: bool = True
+
+        self.popup_position_x: str = "default"
+        self.popup_position_y: str = "default"
+
+        self.popup_width: int = 0
+        self.popup_height: int = 0
+
+        self.popup_min_width: int = 0
+        self.popup_min_height: int = 0
+        
+        self.actions_item_width: int = 100
+        self.actions_item_height: int = 100
+        self.actions_icon_size: int = 30
+
+        from touchify.src.config.triggers.TriggerGroup import TriggerGroup
+        self.actions_items: TypedList[TriggerGroup] = []
+
+        self.docker_id: str = ""
+
+        self.dockers_list: TypedList[DockerItem] = []
+        self.dockers_tab_type: str = "tabs"
+        
+        
+        
+        self.toolshelf_id: str = ""
+
+        self.json_version: int = 5
+
+
+
+
+    def __init__(self, **args) -> None:
+        self.__defaults__()
+        args = BackwardsCompatibility.PopupData(args)        
+        JsonExtensions.dictToObject(self, args, [])
+        
+        from touchify.src.config.triggers.TriggerGroup import TriggerGroup
+        self.actions_items = JsonExtensions.init_list(args, "actions_items", TriggerGroup)
+
+        self.dockers_list = JsonExtensions.init_list(args, "dockers_list", DockerItem)
+
+    def __str__(self):
+        return self.registry_name
+    
+    def getFileName(self):
+        return FileExtensions.fileStringify(self.id)
+
+    def forceLoad(self):
+        from touchify.src.config.triggers.TriggerGroup import TriggerGroup
+        self.actions_items = TypedList(self.actions_items, TriggerGroup)
+        self.dockers_list = TypedList(self.dockers_list, DockerItem)
+
+
+
+    def propertygrid_sisters(self):
+        row: dict[str, list[str]] = {}
+        row["actions_item_size"] = {"items": ["actions_item_width","actions_item_height"]}
+        row["popup_position"] = {"items": ["popup_position_x","popup_position_y"]}
+        row["popup_min_size"] = {"items": ["popup_min_width","popup_min_height"]}
+        row["popup_size"] = {"items": ["popup_width","popup_height"]}
+        return row
+     
+    def propertygrid_sorted(self):
+        common_settings = [
+            "registry_name",
+            "id",
+            "window_title",
+            "closing_method",
+            "popup_position",
+            "popup_size",
+            "popup_min_size",
+            "clamp_to_main_window",
+            "window_type"   
+        ]
+
+        window_type_settings = [
+            "window_docking_allowed",
+            "window_remember_layout",
+            "window_fixed_layout"
+        ]
+
+        popup_type_settings = [
+
+        ]
+
+        mode_settings = [
+            "type"
+        ]
+        
+        action_mode_settings = [
+            "actions_items",
+            "actions_item_size",
+            "actions_icon_size"
+        ]
+
+        docker_mode_single_settings = [
+            "docker_id"
+        ]
+
+        docker_mode_multiple_settings = [
+            "dockers_list",
+            "dockers_tab_type"
+        ]
+
+        docker_mode_settings = [
+
+        ]
+
+        toolshelf_mode_settings = [
+            "toolshelf_id"
+        ]
+
+
+        return common_settings + \
+                window_type_settings + \
+                popup_type_settings + \
+                mode_settings + \
+                action_mode_settings + \
+                docker_mode_settings + \
+                docker_mode_single_settings + \
+                docker_mode_multiple_settings + \
+                toolshelf_mode_settings
+    
+    def propertygrid_hidden(self):
+        result = []
+
+        common_settings = [
+            "id",
+            "window_title",
+            "closing_method",
+            "popup_position",
+            "popup_size",
+            "popup_min_size",
+            "clamp_to_main_window",
+            "window_type"   
+        ]
+
+        window_type_settings = [
+            "window_docking_allowed",
+            "window_remember_layout",
+            "window_fixed_layout"
+        ]
+
+        popup_type_settings = [
+
+        ]
+
+        mode_settings = [
+            "type"
+        ]
+        
+        action_mode_settings = [
+            "actions_items",
+            "actions_item_size",
+            "actions_icon_size"
+        ]
+
+        docker_mode_single_settings = [
+            "docker_id"
+        ]
+
+        docker_mode_multiple_settings = [
+            "dockers_list",
+            "dockers_tab_type"
+        ]
+
+        docker_mode_settings = [
+
+        ]
+
+        toolshelf_mode_settings = [
+            "toolshelf_id"
+        ]
+
+        if self.window_type != PopupData.WindowType.Window:
+            for item in window_type_settings:
+                result.append(item)
+        if self.window_type != PopupData.WindowType.Popup:
+            for item in popup_type_settings:
+                result.append(item)
+
+
+        if self.type != PopupData.Variants.Docker:
+            for item in docker_mode_single_settings:
+                result.append(item)
+        if self.type != PopupData.Variants.MultipleDockers:
+            for item in docker_mode_multiple_settings:
+                result.append(item)
+        if self.type != PopupData.Variants.Docker and self.type != PopupData.Variants.MultipleDockers:
+            for item in docker_mode_settings:
+                result.append(item)
+            
+
+        if self.type != PopupData.Variants.Actions:
+            for item in action_mode_settings:
+                result.append(item)
+        if self.type != PopupData.Variants.Toolshelf:
+            for item in toolshelf_mode_settings:
+                result.append(item)
+
+        return result
+
+    def propertygrid_labels(self):
+        labels = {}
+        labels["registry_name"] = "Registry display name"
+        labels["id"] = "Popup ID"
+        labels["window_type"] = "Window Type"
+        labels["window_docking_allowed"] = "Allow window docking"
+        labels["window_remember_layout"] = "Remember layout"
+        labels["window_fixed_layout"] = "Fixed layout"
+        labels["type"] = "Popup Type"
+        labels["docker_id"] = "Docker ID"
+        labels["dockers_list"] = "Dockers"
+        labels["popup_size"] = "Base Size"
+        labels["popup_min_size"] = "Minimum Size"
+        labels["actions_item_size"] = "Item Size"
+        labels["actions_icon_size"] = "Icon Size"
+        labels["actions_items"] = "Actions"
+        labels["toolshelf_id"] = "Toolshelf ID"
+        labels["window_title"] = "Window Title"
+        labels["closing_method"] = "Closing Method"
+        labels["popup_position"] = "Popup Position"
+        labels["clamp_to_main_window"] = "Clamp to main window"
+        return labels
+
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        restrictions["docker_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.DockerSelection)
+        restrictions["type"] = PropertyGrid_Restrictions.strValues(self.Variants.values())
+        restrictions["window_type"] = PropertyGrid_Restrictions.strValues(self.WindowType.values())
+        restrictions["popup_position_x"] = PropertyGrid_Restrictions.strValues(self.PopupPosition.values())
+        restrictions["popup_position_y"] = PropertyGrid_Restrictions.strValues(self.PopupPosition.values())
+        restrictions["closing_method"] = PropertyGrid_Restrictions.strValues(self.ClosingMethod.values())
+        restrictions["dockers_tab_type"] = PropertyGrid_Restrictions.strValues(self.DockersTabType.values())
+        restrictions["window_fixed_layout"] = PropertyGrid_Restrictions.strValues(self.WindowFixedLayoutMode.values())
+        restrictions["toolshelf_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ToolshelfRegistry)
+
+        restrictions["actions_item_height"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["actions_item_width"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["popup_width"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["popup_height"] = PropertyGrid_Restrictions.range(min=0)
+
+        return restrictions

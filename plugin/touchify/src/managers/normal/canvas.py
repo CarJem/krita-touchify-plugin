@@ -4,12 +4,12 @@ from PyQt5.QtWidgets import *
 
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.__env__ import *
-from touchify.src.components.touchify.canvas.NtCanvas import NtCanvas
+from touchify.src.components.canvas.NtCanvas import NtCanvas
 
-from touchify.src.components.krita.extensions import *
+from touchify.src.extensions.krita_extensions import *
 
 if TYPE_CHECKING:
-    from ....PluginWindow import TouchifyWindow
+    from ...PluginWindow import TouchifyWindow
 
 class CanvasManager(QObject):
 

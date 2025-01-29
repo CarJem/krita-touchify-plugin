@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.components.krita.extensions import KritaExtensions
+from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.__env__ import *
 from touchify.src.managers.shared.settings import *
 
@@ -10,7 +10,7 @@ from enum import Enum
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ....PluginWindow import TouchifyWindow
+    from ...PluginWindow import TouchifyWindow
 
 from krita import *
     

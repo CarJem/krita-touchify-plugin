@@ -9,7 +9,7 @@ from touchify.src.components.pyqt.widgets.ColorFramedButton import ColorFramedBu
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.PluginWindow import TouchifyWindow
+    from touchify.src.PluginWindow import TouchifyWindow
 
 class CanvasColorPicker(ColorFramedButton):
 

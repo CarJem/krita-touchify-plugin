@@ -3,14 +3,11 @@ from krita import *
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import *
 
-
-
-from touchify.src.components.python.extensions import *
 from touchify.src.managers.shared.settings import *
 
 from typing import TYPE_CHECKING, Callable
 if TYPE_CHECKING:
-    from ....PluginWindow import TouchifyWindow
+    from ...PluginWindow import TouchifyWindow
 
 class DockerManager(QObject):
     class BorrowData:

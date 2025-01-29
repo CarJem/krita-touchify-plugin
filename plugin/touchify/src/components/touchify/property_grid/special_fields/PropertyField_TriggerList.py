@@ -3,9 +3,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 
-from touchify.src.cfg.triggers.Trigger import Trigger
+from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.components.touchify.property_grid.fields.PropertyField_TypedList import PropertyField_TypedList
-from touchify.src.components.python.datatypes.TypedList import TypedList
+from touchify.src.datatypes.sequence.TypedList import TypedList
 from touchify.src.managers.shared.resources import *
 
 

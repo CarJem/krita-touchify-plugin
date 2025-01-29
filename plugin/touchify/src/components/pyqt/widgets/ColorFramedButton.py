@@ -10,7 +10,6 @@ class ColorFramedButton(QPushButton):
         self.__color = color
         self.__padding = 6
 
-
     @pyqtProperty(int)
     def padding(self):
         return self.__padding
@@ -44,8 +43,7 @@ class ColorFramedButton(QPushButton):
         if self.__color:
             p.fillRect(int(x), int(y), int(width + frame_size), int(height + frame_size), frame_color)
             p.fillRect(int(x + frame_size), int(y + frame_size), int(width - frame_size), int(height - frame_size), fill_color)
-
-        
+      
     def setColor(self, color: QColor | None = None):
         self.__color = color
         self.repaint()

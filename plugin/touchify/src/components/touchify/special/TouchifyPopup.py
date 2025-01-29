@@ -3,11 +3,11 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from touchify.src.cfg.popup.PopupData import PopupData
-from touchify.src.components.pyqt.extensions import PyQtExtensions
+from touchify.src.config.popup.PopupData import PopupData
+from touchify.src.extensions.pyqt_extensions import PyQtExtensions
 from touchify.src.components.pyqt.widgets.AnimatedWidget import AnimatedWidget
 from touchify.src.components.pyqt.widgets.ElidedLabel import ElidedLabel
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import ToolshelfWidget
+from touchify.src.components.toolshelf.ToolshelfWidget import ToolshelfWidget
 from touchify.src.managers.shared.settings import *
 from touchify.src.managers.shared.resources import *
 
@@ -16,7 +16,7 @@ from krita import *
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from touchify.PluginWindow import TouchifyWindow
+    from touchify.src.PluginWindow import TouchifyWindow
     from touchify.src.managers.normal.action_manager import ActionManager
     from touchify.src.managers.normal.dockers import DockerManager
     from touchify.src.managers.normal.canvas import CanvasManager
@@ -208,9 +208,9 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
 
 
     def construct(id: str, parent: QWidget, data: PopupData, app_engine: "TouchifyWindow"):      
-        from touchify.src.cfg.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
-        from touchify.src.cfg.toolshelf.ToolshelfDataPage import ToolshelfDataPage
-        from touchify.src.cfg.toolshelf.ToolshelfDataSection import ToolshelfDataSection
+        from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
+        from touchify.src.config.toolshelf.ToolshelfDataPage import ToolshelfDataPage
+        from touchify.src.config.toolshelf.ToolshelfDataSection import ToolshelfDataSection
         
         def constructDockerType(metadata: PopupData):  
             toolshelf_data: ToolshelfData = ToolshelfData()
@@ -226,7 +226,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
             dockers = [ ]
 
             if metadata.type == PopupData.Variants.MultipleDockers:
-                from touchify.src.cfg.docker_group.DockerItem import DockerItem
+                from touchify.src.config.docker_group.DockerItem import DockerItem
                 for item in metadata.dockers_list:
                     item: DockerItem
                     dockers.append(item.id)

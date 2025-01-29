@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtCore import Qt
-from touchify.src.components.krita.ui.KisAngleSelector import KisAngleSelector
+from touchify.src.components.krita.KisAngleSelector import KisAngleSelector
 
 from krita import *
  

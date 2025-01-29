@@ -1,6 +1,6 @@
 import uuid
 from krita import *
-from touchify.src.components.python.datatypes.StrEnum import StrEnum
+from touchify.src.datatypes.metaclass.EnumStr import EnumStr
 
 from touchify.src.components.touchify.actions.TouchifyActionButton import *
 from touchify.src.components.touchify.actions.TouchifyActionToolbar import TouchifyActionToolbar
@@ -8,8 +8,8 @@ from touchify.src.components.touchify.actions.TouchifyActionToolbar import Touch
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-from touchify.src.cfg.triggers.Trigger import Trigger
-from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
+from touchify.src.config.triggers.Trigger import Trigger
+from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from touchify.__env__ import *
 from touchify.src.managers.shared.settings import *
 from typing import TYPE_CHECKING
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 class TouchifyActionPanel(QWidget):
 
 
-    class DisplayType(StrEnum):
+    class DisplayType(EnumStr):
         Toolbar = "toolbar"
         ToolbarFlat = "toolbar_flat"
         Popup = "popup"

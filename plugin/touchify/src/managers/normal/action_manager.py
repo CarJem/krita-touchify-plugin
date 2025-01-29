@@ -3,42 +3,42 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from touchify.__env__ import REGISTERED_ACTIONS_FILE
-from touchify.src.cfg.menu.TriggerMenuItem import TriggerMenuItem
-from touchify.src.cfg.pie_wheel.PieWheelData import PieWheelData
-from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
-from touchify.src.cfg.resource_pack.ResourcePackMetadata import ResourcePackMetadata
-from touchify.src.cfg.canvas_preset.CanvasPreset import CanvasPreset
-from touchify.src.cfg.docker_group.DockerGroup import DockerGroup
-from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
-from touchify.src.cfg.script.CustomScript import CustomScript
+from touchify.src.config.menu.TriggerMenuItem import TriggerMenuItem
+from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
+from touchify.src.config.resource_pack.ResourcePack import ResourcePack
+from touchify.src.config.resource_pack.ResourcePackMetadata import ResourcePackMetadata
+from touchify.src.config.canvas_preset.CanvasPreset import CanvasPreset
+from touchify.src.config.docker_group.DockerGroup import DockerGroup
+from touchify.src.config.menu.TriggerMenu import TriggerMenu
+from touchify.src.config.script.CustomScript import CustomScript
 
-from touchify.src.components.pyqt.extensions import PyQtExtensions as QtExt
+from touchify.src.extensions.pyqt_extensions import PyQtExtensions
 from touchify.src.components.touchify.actions.TouchifyActionMenu import TouchifyActionMenu
 
 from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
 
-from touchify.src.components.touchify.shortcut_composer.ShortcutComposerUtils import ShortcutComposerUtils
+from touchify.src.components.shortcut_composer.ShortcutComposerUtils import ShortcutComposerUtils
 from touchify.src.managers.shared.events import GlobalEvents
 from touchify.__env__ import *
 
 from functools import partial
 
-from touchify.src.cfg.triggers.Trigger import Trigger
-from touchify.src.cfg.popup.PopupData import PopupData
-from touchify.src.components.krita.extensions import *
+from touchify.src.config.triggers.Trigger import Trigger
+from touchify.src.config.popup.PopupData import PopupData
+from touchify.src.extensions.krita_extensions import *
 
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.managers.shared.resources import ResourceManager
 
 from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
 
-from touchify.src.components.touchify.enums.common_actions import CommonActions
+from touchify.src.datatypes.constants.KritaActions import KritaActions
 
 import xml.etree.ElementTree as ET
 from xml.dom import minidom as MiniDOM
 
 if TYPE_CHECKING:
-    from ....PluginWindow import TouchifyWindow
+    from ...PluginWindow import TouchifyWindow
 
 class ActionManager(QObject):
     composerTriggerEnded=pyqtSignal()
@@ -211,7 +211,7 @@ class ActionManager(QObject):
                 actual_menu.setTitle(data.display_custom_text)
                 parent.addMenu(actual_menu)
             case TriggerMenuItem.Variants.Action:
-                if data.action_id in CommonActions.EXPANDING_SPACERS:
+                if data.action_id in KritaActions.EXPANDING_SPACERS:
                     actual_action = QAction(parent)
                     actual_action.setSeparator(True)
                 else:
@@ -244,7 +244,7 @@ class ActionManager(QObject):
                 result = frame.findChild(QWidget, id)
                 if result: 
                     frame.show()
-                    if _parent: position = QtExt.Geometry.clampToTarget(
+                    if _parent: position = PyQtExtensions.Geometry.clampToTarget(
                         _parent.mapToGlobal(QPoint(0,0)), frame.size(), main_window, QPoint(0, _parent.height()))
                     else: position = QCursor.pos()
                     frame.move(position.x(), position.y())
@@ -693,10 +693,10 @@ class ActionManager(QObject):
             checkable = action.isCheckable()
             toolbox_item = False
             
-            if act.action_id in CommonActions.KNOWN_UNCHECKABLES:
+            if act.action_id in KritaActions.KNOWN_UNCHECKABLES:
                 checkable = False
             
-            if act.action_id in CommonActions.TOOLBOX_ITEMS:
+            if act.action_id in KritaActions.TOOLBOX_ITEMS:
                 toolbox_item = True
 
             
