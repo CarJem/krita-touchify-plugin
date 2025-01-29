@@ -32,6 +32,25 @@ class CanvasManager(QObject):
         self.nt_canvas: NtCanvas | None = None
         self.active_canvas: QOpenGLWidget | None = None
 
+    def Get_View(self):
+        current_view = self.nt_canvas.Window().activeView()
+        if not current_view: return None
+
+        window_views = self.nt_canvas.Window().views()
+        if current_view not in window_views: return None
+
+        mdi_area = self.nt_canvas.MdiArea()
+        if not mdi_area: return None
+
+        mdi_subwindow = mdi_area.activeSubWindow()
+        if not mdi_subwindow: return None
+
+        view_container = next((w for w in mdi_subwindow.findChildren(QWidget) if w.metaObject().className() == 'KisView'), None)
+        if not view_container: return None
+
+        return view_container
+
+
     def Window_Load(self):
         self.nt_canvas.Window_Load(self.app_engine)
         self.nt_canvas.Window().activeViewChanged.connect(self.OnEvent_ActiveViewChanged)
@@ -43,6 +62,7 @@ class CanvasManager(QObject):
     def Actions_Init(self, window: Window, path: str):
         self.nt_canvas = NtCanvas(window.qwindow().window(), window)
         self.nt_canvas.Actions_Init(window, path)
+        
 
     def OnEvent_ActiveViewChanged(self):
         if self.active_canvas != None:

@@ -287,8 +287,8 @@ class ToolboxWidget(QResizableWidget):
             category.setWindowOpacity(self.OPACITY_LEVEL)
             for tool in categoryData.items:
                 btn = self.buildCategoryAction(tool, icon_size)
-                btn.setParent(category)
                 if btn:
+                    btn.setParent(category)
                     if self.horizontalMode: category.addTool(btn, x, y, toolbox_item_alignment)
                     else: category.addTool(btn, y, x, toolbox_item_alignment)
 

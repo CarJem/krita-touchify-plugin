@@ -59,49 +59,6 @@
                     "json_version": 1
                 },
                 {
-                    "name": "KisToolSelectOutline",
-                    "items": [
-                        {
-                            "name": "KisToolSelectRectangular",
-                            "icon": "",
-                            "json_version": 1
-                        },
-                        {
-                            "name": "KisToolSelectElliptical",
-                            "icon": "",
-                            "json_version": 1
-                        },
-                        {
-                            "name": "KisToolSelectPolygonal",
-                            "icon": "",
-                            "json_version": 1
-                        },
-                        {
-                            "name": "KisToolSelectContiguous",
-                            "icon": "",
-                            "json_version": 1
-                        },
-                        {
-                            "name": "KisToolSelectSimilar",
-                            "icon": "",
-                            "json_version": 1
-                        },
-                        {
-                            "name": "KisToolSelectPath",
-                            "icon": "",
-                            "json_version": 1
-                        },
-                        {
-                            "name": "KisToolSelectMagnetic",
-                            "icon": "",
-                            "json_version": 1
-                        }
-                    ],
-                    "icon": "",
-                    "open_on_click": false,
-                    "json_version": 1
-                },
-                {
                     "name": "PanTool",
                     "items": [],
                     "icon": "",
@@ -114,29 +71,53 @@
                     "icon": "",
                     "open_on_click": false,
                     "json_version": 1
-                },
+                }
+            ],
+            "column_count": 0,
+            "json_version": 1
+        },
+        {
+            "id": "Measure",
+            "items": [
                 {
-                    "name": "KisAssistantTool",
-                    "items": [
-                        {
-                            "name": "KritaShape/KisToolMeasure",
-                            "icon": "",
-                            "json_version": 1
-                        },
-                        {
-                            "name": "ToolReferenceImages",
-                            "icon": "",
-                            "json_version": 1
-                        }
-                    ],
+                    "name": "KritaShape/KisToolMeasure",
+                    "items": [],
                     "icon": "",
                     "open_on_click": false,
                     "json_version": 1
                 },
                 {
-                    "name": "touchify_registry_VaporJem_Common_MiscTools",
+                    "name": "KisAssistantTool",
                     "items": [],
-                    "icon": "material:dots-horizontal",
+                    "icon": "",
+                    "open_on_click": false,
+                    "json_version": 1
+                },
+                {
+                    "name": "hmirror_action",
+                    "items": [],
+                    "icon": "",
+                    "open_on_click": false,
+                    "json_version": 1
+                },
+                {
+                    "name": "vmirror_action",
+                    "items": [],
+                    "icon": "",
+                    "open_on_click": false,
+                    "json_version": 1
+                },
+                {
+                    "name": "ToolReferenceImages",
+                    "items": [],
+                    "icon": "",
+                    "open_on_click": false,
+                    "json_version": 1
+                },
+                {
+                    "name": "touchify_registry_VaporJem_CustomContext",
+                    "items": [],
+                    "icon": "configure-thicker",
                     "open_on_click": false,
                     "json_version": 1
                 }
@@ -145,33 +126,61 @@
             "json_version": 1
         },
         {
-            "id": "Options",
+            "id": "Select",
             "items": [
                 {
-                    "name": "touchify_registry_VaporJem_Common_SelectionMenu",
+                    "name": "KisToolSelectRectangular",
                     "items": [],
-                    "icon": "material:select",
+                    "icon": "",
                     "open_on_click": false,
                     "json_version": 1
                 },
                 {
-                    "name": "show_snap_options_popup",
+                    "name": "KisToolSelectElliptical",
                     "items": [],
-                    "icon": "material:vector-link",
+                    "icon": "",
                     "open_on_click": false,
                     "json_version": 1
                 },
                 {
-                    "name": "touchify_registry_VaporJem_GridDockerPopup",
+                    "name": "KisToolSelectPolygonal",
                     "items": [],
-                    "icon": "material:grid",
+                    "icon": "",
                     "open_on_click": false,
                     "json_version": 1
                 },
                 {
-                    "name": "touchify_registry_VaporJem_Common_ObjectMenu",
+                    "name": "KisToolSelectOutline",
                     "items": [],
-                    "icon": "vectorLayer",
+                    "icon": "",
+                    "open_on_click": false,
+                    "json_version": 1
+                },
+                {
+                    "name": "KisToolSelectContiguous",
+                    "items": [],
+                    "icon": "",
+                    "open_on_click": false,
+                    "json_version": 1
+                },
+                {
+                    "name": "KisToolSelectSimilar",
+                    "items": [],
+                    "icon": "",
+                    "open_on_click": false,
+                    "json_version": 1
+                },
+                {
+                    "name": "KisToolSelectPath",
+                    "items": [],
+                    "icon": "",
+                    "open_on_click": false,
+                    "json_version": 1
+                },
+                {
+                    "name": "KisToolSelectMagnetic",
+                    "items": [],
+                    "icon": "",
                     "open_on_click": false,
                     "json_version": 1
                 }

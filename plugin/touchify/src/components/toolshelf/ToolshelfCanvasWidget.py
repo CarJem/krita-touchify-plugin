@@ -71,15 +71,17 @@ class ToolshelfCanvasWidget(QDockWidget):
         self.mainWidget.restorePreviousState(self.previous_state)
 
     def onUnload(self):
-        if self.mainWidget:
-            self.previous_state = self.mainWidget.backupPreviousState()
-            self.mainWidget.toolshelfPageChanged.disconnect(self.onToolshelfPageChanged)
-            self.mainWidget.toolshelfResized.disconnect(self.onToolshelfResize)
-            self.mainWidget.toolshelfChanged.disconnect(self.onToolshelfChanged)
-            self.mainWidget.shutdownWidget()
-            self.scrollArea.takeWidget()
-            self.mainWidget.deleteLater()
-            self.mainWidget = None
+        if not hasattr(self, 'mainWidget'): return
+        if not self.mainWidget: return
+        
+        self.previous_state = self.mainWidget.backupPreviousState()
+        self.mainWidget.toolshelfPageChanged.disconnect(self.onToolshelfPageChanged)
+        self.mainWidget.toolshelfResized.disconnect(self.onToolshelfResize)
+        self.mainWidget.toolshelfChanged.disconnect(self.onToolshelfChanged)
+        self.mainWidget.shutdownWidget()
+        self.scrollArea.takeWidget()
+        self.mainWidget.deleteLater()
+        self.mainWidget = None
 
     def onPresetChanged(self, index: int):
         if self.PanelIndex == index:

@@ -153,19 +153,7 @@ class ShortcutsManager(object):
         source.click()
 
     def showPopupPalette(self):
-        activeWindow = self.appEngine.krita_window
-        if not activeWindow: return
-
-        views = activeWindow.views()
-        if not views: return
-
-        activeView = activeWindow.activeView()
-        if not activeView: return
-        
-        viewIndex = views.index(activeView)
-        if viewIndex == -1: return
-
-        pobj = self.qWin.findChild(QWidget,'view_' + str(viewIndex))
+        pobj = self.appEngine.mgr_canvas.Get_View()
         if not pobj: return
 
         mobj = next((w for w in pobj.findChildren(QWidget) if w.metaObject().className() == 'KisPopupPalette'), None)
