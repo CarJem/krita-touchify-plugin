@@ -1,6 +1,6 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtCore import Qt, pyqtSignal
-from .ColorFramedButton import ColorFramedButton
+from touchify.src.components.common.buttons.ColorFramedButton import ColorFramedButton
 
 class ColorButton(ColorFramedButton):
     '''

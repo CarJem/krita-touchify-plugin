@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QVBoxLayout, QScrollArea
 
 
-from touchify.src.components.pyqt.widgets.QResizableWidget import QResizableWidget
+from touchify.src.components.common.widget.QResizableWidget import QResizableWidget
 from touchify.src.managers.shared.settings import *
 
 

@@ -1,8 +1,8 @@
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtCore import QPointF, QRectF, Qt
+from PyQt5.QtGui import QBrush, QColor, QPainter, QPixmap, QTransform
 
-class CheckerBoardPainter:
+
+class CheckerPainter:
     def __init__(self, checkerSize: int):
         self.__checkerSize = checkerSize
         self.__lightColor = Qt.GlobalColor.lightGray
@@ -17,7 +17,7 @@ class CheckerBoardPainter:
     def setCheckerSize(self, checkerSize: int):
         self.__checkerSize = checkerSize
         self.createChecker()
-        
+
     def paint(self, painter: QPainter, rect: QRectF, patternOrigin: QPointF = None):
         if not patternOrigin: patternOrigin = QPointF()
         brush = QBrush(self.__checker)
@@ -32,7 +32,3 @@ class CheckerBoardPainter:
         p.fillRect(0, self.__checkerSize, self.__checkerSize, self.__checkerSize, self.__darkColor)
         p.fillRect(self.__checkerSize, self.__checkerSize, self.__checkerSize, self.__checkerSize, self.__lightColor)
         p.end()
-
-    
-
-    

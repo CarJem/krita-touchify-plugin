@@ -1,3 +1,7 @@
+# inspired by https://github.com/mauriliogenovese/PySide6_VerticalQTabWidget
+# from https://github.com/yjg30737/pyqt-vertical-tab-widget/issues/1#issuecomment-1826354818                         
+# big thanks to @yjg30737 and @mauriliogenovese 
+
 from PyQt5.QtWidgets import QApplication, QTabBar, QStylePainter, QStyleOptionTab, QStyle
 from PyQt5 import QtCore
 
@@ -24,8 +28,3 @@ class VerticalQTabBar(QTabBar):
             painter.drawControl(QStyle.ControlElement.CE_TabBarTabShape, option)
             option.shape = QTabBar.Shape.RoundedNorth
             painter.drawControl(QStyle.ControlElement.CE_TabBarTabLabel, option)
-            
-                        
-# inspired by https://github.com/mauriliogenovese/PySide6_VerticalQTabWidget
-# from https://github.com/yjg30737/pyqt-vertical-tab-widget/issues/1#issuecomment-1826354818                         
-# big thanks to @yjg30737 and @mauriliogenovese 

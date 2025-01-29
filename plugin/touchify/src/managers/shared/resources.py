@@ -1,11 +1,10 @@
 
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QtSvg
 import os
 
-
 from touchify.__env__ import ASSETS_DIRECTORY, RESOURCE_PACKS_DIRECTORY
-from touchify.src.components.pyqt.icon_engines.QSvgIconEngine import QSvgIconEngine
 
+import xml.etree.ElementTree as ET
 
 from touchify.src.managers.shared.settings import *
 from zipfile import ZipFile
@@ -18,6 +17,49 @@ RESOURCE_PACK_ICONS_INIT = False
 
 class ResourceManager:
 
+    class IconEngine(QIconEngine):
+        def __init__(self, svgData: bytes, autoColorMode: bool = True):
+            super().__init__()
+            self.svgData = ET.fromstring(svgData)
+            self.autoColorMode = autoColorMode
+
+            if self.autoColorMode:
+                for child in self.svgData:
+                    if child.get("style"):
+                        child.set("ignore-krita-style", "true")
+                    else:
+                        child.set("ignore-krita-style", "false")
+
+            self.currentColor = None
+            self.renderer = QtSvg.QSvgRenderer()
+
+        def iconColor(self):
+            background = qApp.palette().window().color()
+            is_dark = background.value() > 100
+            if is_dark: return QColor(55,55,55) # dark icons
+            else: return QColor(202, 202, 202) # light icons
+    
+        def updateData(self):
+            if self.autoColorMode:
+                color = self.iconColor().name().split("#")[1]
+                for child in self.svgData:
+                    if child.get("ignore-krita-style") == "false":
+                        child.set("style", f"fill:#{color};fill-opacity:1")
+            self.renderer.load(ET.tostring(self.svgData))
+
+
+        def pixmap(self, size: QSize, mode: QIcon.Mode, state: QIcon.State):
+            img = QPixmap(size)
+            img.fill(Qt.GlobalColor.transparent)
+            painter = QPainter(img)
+            self.updateData()
+            self.renderer.render(painter, QRectF(img.rect()))
+            painter.end()
+            return img
+
+        def paint(self, painter: QPainter, rect: QRect, mode: QIcon.Mode, state: QIcon.State):
+            self.updateData()
+            self.renderer.render(painter, QRectF(rect))
 
     material_icons: dict[str, QIcon] = {}
     resource_pack_icons: dict[str, dict[str, QIcon]] = {}
@@ -82,7 +124,7 @@ class ResourceManager:
                 if item.filename.startswith('MaterialDesign-master/svg/') and item.filename.endswith('.svg'):
                     actualName = item.filename.removeprefix('MaterialDesign-master/svg/').removesuffix('.svg')
                     iconBytes = zip.read(item)
-                    ResourceManager.material_icons[actualName] = QIcon(QSvgIconEngine(iconBytes))
+                    ResourceManager.material_icons[actualName] = QIcon(ResourceManager.IconEngine(iconBytes))
         ICON_PACKS_LOADED = True
 
     #region Icon Retrival

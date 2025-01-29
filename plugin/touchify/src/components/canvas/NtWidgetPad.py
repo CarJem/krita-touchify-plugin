@@ -26,7 +26,7 @@ from touchify.src.components.canvas.NtScrollAreaContainer import NtScrollAreaCon
 
 
 from touchify.src.managers.shared.settings import *
-from touchify.src.extensions.pyqt_extensions import PyQtExtensions as Ext
+import touchify.src.extensions.pyqt_extensions as Ext
 
 from krita import *
 
@@ -345,12 +345,12 @@ class NtWidgetPad(QWidget):
             if self.option_resizing_enabled == False:
                 widgetNewSize = QSize(widgetSizeHint)
                                            
-            widgetNewSize = fitToView(self.source_canvas, Ext.Geometry.fitToSource(widgetSizeHint, widgetNewSize))                   
+            widgetNewSize = fitToView(self.source_canvas, Ext.GeometryHelpers.fitToSource(widgetSizeHint, widgetNewSize))                   
             if widgetSize != widgetNewSize:
                 self.docker_widget.setFixedSize(widgetNewSize)
                 
             padSizeHint = self.sizeHint()
-            padSizeHint = Ext.Geometry.fitToTarget(padSizeHint, self.source_canvas.size())
+            padSizeHint = Ext.GeometryHelpers.fitToTarget(padSizeHint, self.source_canvas.size())
 
             if self.size() != padSizeHint:
                 self.resize(padSizeHint)

@@ -3,7 +3,7 @@ from krita import *
 from PyQt5.QtCore import *
 from xml.dom.minidom import parse as xmlParse
 
-from touchify.src.components.pyqt.painters.CheckerBoardPainter import CheckerBoardPainter
+from touchify.src.components.common.painters.CheckerPainter import CheckerPainter
 from touchify.__env__ import *
 
 
@@ -325,7 +325,7 @@ class CanvasGradientPicker(QPushButton):
             linear_gradient.setColorAt(section.rightEndpointCoordinate, color)
 
 
-        transparent_background = CheckerBoardPainter(4)
+        transparent_background = CheckerPainter(4)
 
         pixmap = QPixmap(self.width(), self.height())
 

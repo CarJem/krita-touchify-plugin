@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 
 from touchify.__env__ import *
 
-from touchify.src.components.pyqt.widgets.ColorFramedButton import ColorFramedButton
+from touchify.src.components.common.buttons.ColorFramedButton import ColorFramedButton
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

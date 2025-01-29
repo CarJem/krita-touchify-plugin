@@ -2,7 +2,7 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.components.pyqt.widgets.VerticalQTabBar import VerticalQTabBar
+from touchify.src.components.common.containers.VerticalQTabBar import VerticalQTabBar
 from touchify.src.components.property_grid.PropertyGrid import PropertyGrid
 from touchify.src.components.property_grid.utils.PropertyUtils_Extensions import *
 from touchify.src.components.property_grid.utils.PropertyUtils_Praser import *

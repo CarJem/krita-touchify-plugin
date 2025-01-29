@@ -9,10 +9,10 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from touchify.src.PluginWindow import TouchifyWindow
 
-class CanvasBrushPicker(QPushButton):
+class BrushPresetPicker(QPushButton):
 
     def __init__(self, parent: QWidget | None = None):
-        super(CanvasBrushPicker, self).__init__(parent)
+        super(BrushPresetPicker, self).__init__(parent)
         self.clicked.connect(self.openBrushPicker)
 
     def setInstance(self, window: "TouchifyWindow"):

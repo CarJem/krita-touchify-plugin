@@ -15,7 +15,7 @@ from touchify.src.PluginOptions import PluginOptions
 from touchify.src.managers.normal.shortcuts import ShortcutsManager
 from touchify.src.managers.normal.tweaks import TweakManager
 
-from touchify.src.extensions.pyqt_extensions import PyQtExtensions
+import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 
 from touchify.src.components.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget
 from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
@@ -157,7 +157,7 @@ class TouchifyWindow(QObject):
 
     def Trigger_OpenSettings(self):
         if self.settings_dlg != None:
-            if PyQtExtensions.General.isDeleted(self.settings_dlg) == False:
+            if PyQtExtensions.CommonHelpers.isDeleted(self.settings_dlg) == False:
                 return
           
         self.settings_dlg = PluginOptions(self.krita_window)

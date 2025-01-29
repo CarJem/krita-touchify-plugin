@@ -9,7 +9,7 @@ from touchify.src.components.property_grid.utils.PropertyUtils_Extensions import
 from touchify.src.components.property_grid.PropertyGrid import *
 from touchify.src.components.property_grid.fields.PropertyField import *
 from touchify.src.datatypes.dataclass.KisColor import KisColor
-from touchify.src.components.pyqt.widgets.ColorButton import ColorButton
+from touchify.src.components.common.buttons.ColorButton import ColorButton
 
 
 

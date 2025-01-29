@@ -12,7 +12,7 @@ from touchify.src.config.docker_group.DockerGroup import DockerGroup
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
 from touchify.src.config.script.CustomScript import CustomScript
 
-from touchify.src.extensions.pyqt_extensions import PyQtExtensions
+import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.components.touchify.actions.TouchifyActionMenu import TouchifyActionMenu
 
 from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
@@ -244,7 +244,7 @@ class ActionManager(QObject):
                 result = frame.findChild(QWidget, id)
                 if result: 
                     frame.show()
-                    if _parent: position = PyQtExtensions.Geometry.clampToTarget(
+                    if _parent: position = PyQtExtensions.GeometryHelpers.clampToTarget(
                         _parent.mapToGlobal(QPoint(0,0)), frame.size(), main_window, QPoint(0, _parent.height()))
                     else: position = QCursor.pos()
                     frame.move(position.x(), position.y())

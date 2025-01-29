@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.property_grid.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
-from touchify.src.components.pyqt.widgets.PythonEditor import PythonEditor
+from touchify.src.components.common.textedit.PythonEditor import PythonEditor
 from touchify.src.datatypes.sequence.TypedList import *
 from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.managers.shared.resources import *

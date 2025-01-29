@@ -3,22 +3,22 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.actions.TouchifyActionPanel import TouchifyActionPanel
+from touchify.src.components.widgets.CanvasDualColorButton import CanvasDualColorButton
 from touchify.src.config.toolshelf.ToolshelfData import ToolshelfData, ToolshelfDataPage
 from touchify.src.config.toolshelf.ToolshelfDataSection import ToolshelfDataSection
-from touchify.src.components.touchify.special.BrushBlendingSelector import BrushBlendingSelector
-from touchify.src.components.touchify.special.BrushFlowSlider import BrushFlowSlider
-from touchify.src.components.touchify.special.BrushOpacitySlider import BrushOpacitySlider
-from touchify.src.components.touchify.special.BrushRotationSlider import BrushRotationSlider
-from touchify.src.components.touchify.special.BrushSizeSlider import BrushSizeSlider
-from touchify.src.components.touchify.special.CanvasBrushPicker import CanvasBrushPicker
-from touchify.src.components.touchify.special.CanvasColorPicker import CanvasColorPicker
-from touchify.src.components.touchify.special.CanvasDualColorPicker import CanvasDualColorPicker
-from touchify.src.components.touchify.special.CanvasGradientPicker import CanvasGradientPicker
-from touchify.src.components.touchify.special.CanvasPatternPicker import CanvasPatternPicker
+from touchify.src.components.widgets.BrushBlendingSelector import BrushBlendingSelector
+from touchify.src.components.widgets.BrushFlowSlider import BrushFlowSlider
+from touchify.src.components.widgets.BrushOpacitySlider import BrushOpacitySlider
+from touchify.src.components.widgets.BrushRotationSlider import BrushRotationSlider
+from touchify.src.components.widgets.BrushSizeSlider import BrushSizeSlider
+from touchify.src.components.widgets.BrushPresetPicker import BrushPresetPicker
+from touchify.src.components.widgets.CanvasColorPicker import CanvasColorPicker
+from touchify.src.components.widgets.CanvasGradientPicker import CanvasGradientPicker
+from touchify.src.components.widgets.CanvasPatternPicker import CanvasPatternPicker
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 
-from touchify.src.components.touchify.special.LayerBlendingSelector import LayerBlendingSelector
-from touchify.src.components.touchify.special.LayerLabelBox import LayerLabelBox
+from touchify.src.components.widgets.LayerBlendingSelector import LayerBlendingSelector
+from touchify.src.components.widgets.LayerLabelBox import LayerLabelBox
 from touchify.src.managers.shared.settings import TouchifySettings
 
 
@@ -350,11 +350,11 @@ class Panel(QWidget):
                 actionWidget.setInstance(self.actions_manager.appEngine)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.ForegroundBackgroundColorPicker:
-                actionWidget = CanvasDualColorPicker(self)
+                actionWidget = CanvasDualColorButton(self)
                 actionWidget.setInstance(self.actions_manager.appEngine)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushPicker:
-                actionWidget = CanvasBrushPicker(self)
+                actionWidget = BrushPresetPicker(self)
                 actionWidget.setInstance(self.actions_manager.appEngine)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.PatternPicker:

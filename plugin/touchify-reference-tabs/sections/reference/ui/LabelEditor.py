@@ -2,7 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from typing import TYPE_CHECKING
 from ....extensions.color_picker import *
-from touchify.src.components.pyqt.widgets.ColorButton import ColorButton
+from touchify.src.components.common.buttons.ColorButton import ColorButton
 
 if TYPE_CHECKING:
     from ..ReferenceSection import ReferenceSection

@@ -4,9 +4,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from touchify.src.config.popup.PopupData import PopupData
-from touchify.src.extensions.pyqt_extensions import PyQtExtensions
-from touchify.src.components.pyqt.widgets.AnimatedWidget import AnimatedWidget
-from touchify.src.components.pyqt.widgets.ElidedLabel import ElidedLabel
+import touchify.src.extensions.pyqt_extensions as PyQtExtensions
+from touchify.src.components.common.widget.AnimatedWidget import AnimatedWidget
+from touchify.src.components.common.labels.ElidedLabel import ElidedLabel
 from touchify.src.components.toolshelf.ToolshelfWidget import ToolshelfWidget
 from touchify.src.managers.shared.settings import *
 from touchify.src.managers.shared.resources import *
@@ -367,7 +367,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
 
 
         if self.clamp_to_main_window:
-            adjusted_point = PyQtExtensions.Geometry.clampToTarget(QPoint(hint_x, hint_y), QSize(hint_width, hint_height), self.main_window)
+            adjusted_point = PyQtExtensions.GeometryHelpers.clampToTarget(QPoint(hint_x, hint_y), QSize(hint_width, hint_height), self.main_window)
             hint_x = adjusted_point.x()
             hint_y = adjusted_point.y()
 
