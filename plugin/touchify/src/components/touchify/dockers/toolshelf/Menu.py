@@ -6,7 +6,7 @@ from krita import *
 
 
 from touchify.src.managers.shared.settings import *
-from touchify.variables import *
+from touchify.__env__ import *
 from touchify.src.managers.normal.dockers import *
 from touchify.src.components.touchify.dockers.toolshelf.Helpers import Helpers
 

@@ -6,7 +6,7 @@ from krita import *
 from touchify.src.components.krita.extensions import KritaExtensions
 from touchify.src.managers.normal.canvas import CanvasManager
 from touchify.src.managers.normal.developer import DeveloperManager
-from touchify.variables import *
+from touchify.__env__ import *
 from touchify.src.managers.normal.dockers import DockerManager
 from touchify.src.managers.normal.action_manager import ActionManager
 
@@ -22,7 +22,7 @@ from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import Toolb
 
 WINDOW_ID: int = 0
 if TYPE_CHECKING:
-    from .extension import TouchifyExtension
+    from .Plugin import TouchifyPlugin
 
 class TouchifyWindow(QObject):
     
@@ -44,7 +44,7 @@ class TouchifyWindow(QObject):
     def Actions_Init(self, window: Window):
         self.__main_menu_bar = QMenu(None, window.qwindow())
 
-        openSettingsAction = window.createAction(TOUCHIFY_ID_ACTION_CONFIGURE, "Configure Touchify...", "settings")
+        openSettingsAction = window.createAction(TOUCHIFY_ACTIONID_CONFIGURE, "Configure Touchify...", "settings")
         openSettingsAction.triggered.connect(self.Trigger_OpenSettings)
 
         menuAction = window.createAction("touchify", "Touchify", "tools")

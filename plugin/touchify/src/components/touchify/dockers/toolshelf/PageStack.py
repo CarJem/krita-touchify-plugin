@@ -8,7 +8,7 @@ from touchify.src.components.touchify.dockers.toolshelf.Page import Page
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 
 from touchify.src.managers.shared.settings import *
-from touchify.variables import *
+from touchify.__env__ import *
 from touchify.src.managers.normal.dockers import *
 
 from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfDataPage

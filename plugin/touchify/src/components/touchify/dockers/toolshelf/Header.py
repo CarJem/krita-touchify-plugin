@@ -10,7 +10,7 @@ from touchify.src.cfg.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
 from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 
 from touchify.src.managers.shared.settings import TouchifySettings
-from touchify.variables import *
+from touchify.__env__ import *
 from touchify.src.managers.shared.resources import ResourceManager
 
 from typing import TYPE_CHECKING

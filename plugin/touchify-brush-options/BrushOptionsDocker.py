@@ -7,7 +7,7 @@ from touchify.src.components.touchify.special.BrushFlowSlider import BrushFlowSl
 from touchify.src.components.touchify.special.BrushOpacitySlider import BrushOpacitySlider
 from touchify.src.components.touchify.special.BrushRotationSlider import BrushRotationSlider
 from touchify.src.components.touchify.special.BrushSizeSlider import BrushSizeSlider
-from touchify.variables import *
+from touchify.__env__ import *
 
 from touchify.src.components.krita.settings import *
 from touchify.src.components.krita.ui.KisSliderSpinBox import KisSliderSpinBox
@@ -17,7 +17,7 @@ DOCKER_ID = "Touchify/BrushOptionsDocker"
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.window import TouchifyWindow
+    from touchify.PluginWindow import TouchifyWindow
 
 class BrushOptionsDockerCfg:
 

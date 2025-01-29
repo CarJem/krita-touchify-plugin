@@ -11,7 +11,7 @@ from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.managers.normal.dockers import DockerManager
 from touchify.src.managers.normal.action_manager import ActionManager
 if TYPE_CHECKING:
-    from .....window import TouchifyWindow
+    from ......PluginWindow import TouchifyWindow
 
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import ToolshelfWidget
 

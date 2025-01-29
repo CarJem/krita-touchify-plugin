@@ -4,12 +4,12 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.special.CanvasColorPicker import CanvasColorPicker
 from touchify.src.managers.shared.resources import ResourceManager
-from touchify.variables import *
+from touchify.__env__ import *
 
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.window import TouchifyWindow
+    from touchify.PluginWindow import TouchifyWindow
 
 class CanvasDualColorPicker(QWidget):
     

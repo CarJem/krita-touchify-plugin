@@ -16,7 +16,7 @@ from krita import *
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from touchify.src.window import TouchifyWindow
+    from touchify.PluginWindow import TouchifyWindow
     from touchify.src.managers.normal.action_manager import ActionManager
     from touchify.src.managers.normal.dockers import DockerManager
     from touchify.src.managers.normal.canvas import CanvasManager

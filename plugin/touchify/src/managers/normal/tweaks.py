@@ -1,11 +1,11 @@
 from PyQt5.QtWidgets import *
 from touchify.src.components.krita.extensions import KritaExtensions
 from touchify.src.managers.shared.resources import ResourceManager
-from touchify.variables import *
+from touchify.__env__ import *
 from touchify.src.managers.shared.settings import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ...window import TouchifyWindow
+    from ....PluginWindow import TouchifyWindow
 
 
 from krita import *
@@ -53,19 +53,19 @@ class TweakManager(QObject):
         config = TouchifySettings.instance().preferences()
 
         nu_options_menu = QMenu("Tweaks", window.qwindow())
-        options_action = window.createAction(TOUCHIFY_ID_ACTION_STYLES_MENU, "Tweaks", path)
+        options_action = window.createAction(TOUCHIFY_ACTIONID_STYLES_MENU, "Tweaks", path)
         options_action.setMenu(nu_options_menu)
-        sublocation_path = "{0}/{1}".format(path, TOUCHIFY_ID_ACTION_STYLES_MENU)
+        sublocation_path = "{0}/{1}".format(path, TOUCHIFY_ACTIONID_STYLES_MENU)
 
-        nu_options_menu.addAction(createAction(TOUCHIFY_ID_ACTION_STYLES_PRIVACYMODE, "Privacy Mode", sublocation_path, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
-        nu_options_menu.addAction(createAction(TOUCHIFY_ID_ACTION_STYLES_BORDERLESSTOOLBARS, "Borderless Toolbars", sublocation_path, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))
-        nu_options_menu.addAction(createAction(TOUCHIFY_ID_ACTION_STYLES_TABHEIGHT, "Thin Document Tabs", sublocation_path, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
-        nu_options_menu.addAction(createAction(TOUCHIFY_ID_ACTION_STYLES_DOCKEDBRUSHEDITOR, "Docked Brush Editor", sublocation_path, True, config.Styles_DockedBrushEditor, self.dockedBrushEditorToggled))
-        nu_options_menu.addAction(createAction(TOUCHIFY_ID_ACTION_STYLES_DOCKEDBRUSHEDITORZOOMFIX, "Brush Editor Zoom Fix", sublocation_path, True, config.Styles_BrushEditorZoomFix, self.brushEditorZoomFixToggled))
+        nu_options_menu.addAction(createAction(TOUCHIFY_ACTIONID_STYLES_PRIVACYMODE, "Privacy Mode", sublocation_path, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
+        nu_options_menu.addAction(createAction(TOUCHIFY_ACTIONID_STYLES_BORDERLESSTOOLBARS, "Borderless Toolbars", sublocation_path, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))
+        nu_options_menu.addAction(createAction(TOUCHIFY_ACTIONID_STYLES_TABHEIGHT, "Thin Document Tabs", sublocation_path, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
+        nu_options_menu.addAction(createAction(TOUCHIFY_ACTIONID_STYLES_DOCKEDBRUSHEDITOR, "Docked Brush Editor", sublocation_path, True, config.Styles_DockedBrushEditor, self.dockedBrushEditorToggled))
+        nu_options_menu.addAction(createAction(TOUCHIFY_ACTIONID_STYLES_DOCKEDBRUSHEDITORZOOMFIX, "Brush Editor Zoom Fix", sublocation_path, True, config.Styles_BrushEditorZoomFix, self.brushEditorZoomFixToggled))
 
     def Actions_Post(self):
         settings_menu = self.qWin.findChild(QMenu, 'settings')
-        KritaExtensions.moveActionTo(TOUCHIFY_ID_ACTION_STYLES_MENU, settings_menu, settings_menu, 'style_menu')
+        KritaExtensions.moveActionTo(TOUCHIFY_ACTIONID_STYLES_MENU, settings_menu, settings_menu, 'style_menu')
 
     #endregion
 

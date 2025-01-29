@@ -2,18 +2,12 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
 
-from touchify.variables import *
+from touchify.__env__ import *
 from touchify.src.managers.shared.events import GlobalEvents
 
+from touchify.PluginWindow import TouchifyWindow
 
-
-
-from touchify.src.components.touchify.dockers.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget
-from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import ToolboxDocker
-
-from touchify.src.window import TouchifyWindow
-
-class TouchifyExtension(Extension):
+class TouchifyPlugin(Extension):
 
     instances: dict[str, TouchifyWindow] = {}
     setup_instance: bool = False
@@ -68,6 +62,4 @@ class TouchifyExtension(Extension):
         self.new_instance.Actions_Init(window)
 
 
-Krita.instance().addExtension(TouchifyExtension(Krita.instance()))
-Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER, DockWidgetFactoryBase.DockPosition.DockRight, ToolshelfDockWidget))
-Krita.instance().addDockWidgetFactory(DockWidgetFactory(TOUCHIFY_DOCKERID_DOCKER_TOOLBOX, DockWidgetFactoryBase.DockPosition.DockRight, ToolboxDocker))
+

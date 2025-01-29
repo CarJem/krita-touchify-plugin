@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import *
-from touchify.variables import *
+from touchify.__env__ import *
 from touchify.src.managers.normal.dockers import *
 from krita import *
 from touchify.src.components.touchify.enums.BlendingMode import BlendingMode, PRETTY_NAMES

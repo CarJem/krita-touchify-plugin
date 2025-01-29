@@ -17,7 +17,7 @@ from touchify.src.components.python.file_extensions import FileExtensions
 from touchify.src.components.python.json_extensions import JsonExtensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
 
-from touchify.paths import RESOURCE_PACKS_DIRECTORY
+from touchify.__env__ import RESOURCE_PACKS_DIRECTORY
 from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions as RS
 
 HAS_ALREADY_LOADED: bool = False

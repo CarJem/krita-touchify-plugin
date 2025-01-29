@@ -10,7 +10,7 @@ from touchify.src.managers.shared.settings import *
 
 from typing import TYPE_CHECKING, Callable
 if TYPE_CHECKING:
-    from ...window import TouchifyWindow
+    from ....PluginWindow import TouchifyWindow
 
 class DockerManager(QObject):
     class BorrowData:

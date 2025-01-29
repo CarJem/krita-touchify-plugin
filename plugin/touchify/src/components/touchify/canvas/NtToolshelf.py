@@ -4,14 +4,14 @@
 
 from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from krita import *
-from touchify.variables import *
+from touchify.__env__ import *
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfCanvasWidget import ToolshelfCanvasWidget
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .NtCanvas import NtCanvas
-    from touchify.src.window import TouchifyWindow
+    from touchify.PluginWindow import TouchifyWindow
 
 class NtToolshelf(NtWidgetPad):
 

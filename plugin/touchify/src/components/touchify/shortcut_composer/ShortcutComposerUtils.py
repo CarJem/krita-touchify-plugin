@@ -1,7 +1,7 @@
 from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.components.krita.settings import KS_Color
-from touchify.variables import *
+from touchify.__env__ import *
 
 from touchify.src.managers.shared.settings import *
 from touchify.src.cfg.pie_wheel.PieWheelData import PieWheelData
@@ -10,7 +10,7 @@ from touchify.src.managers.shared.resources import *
 from krita import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.window import TouchifyWindow
+    from touchify.PluginWindow import TouchifyWindow
 
 try:
     from input_adapter import ActionManager

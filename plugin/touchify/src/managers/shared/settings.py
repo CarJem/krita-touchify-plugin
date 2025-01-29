@@ -15,7 +15,7 @@ from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
 from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.components.krita.settings import KritaSettings
 from touchify.src.managers.shared.events import GlobalEvents
-from touchify.variables import *
+from touchify.__env__ import *
 
 from touchify.src.components.python.extensions import *
 

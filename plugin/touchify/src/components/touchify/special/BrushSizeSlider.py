@@ -4,11 +4,11 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.krita.settings import *
 from touchify.src.components.krita.ui.KisSliderSpinBox import KisSliderSpinBox
-from touchify.variables import *
+from touchify.__env__ import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.window import TouchifyWindow
+    from touchify.PluginWindow import TouchifyWindow
 
 class BrushSizeSlider(KisSliderSpinBox):
 

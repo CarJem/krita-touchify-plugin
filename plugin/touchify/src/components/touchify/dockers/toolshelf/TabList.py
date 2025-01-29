@@ -12,7 +12,7 @@ from touchify.src.components.touchify.actions.TouchifyActionButton import Touchi
 from touchify.src.cfg.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
 
 from touchify.src.managers.shared.settings import TouchifySettings
-from touchify.variables import *
+from touchify.__env__ import *
 from touchify.src.managers.shared.resources import ResourceManager
 
 from typing import TYPE_CHECKING

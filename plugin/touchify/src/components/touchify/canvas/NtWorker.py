@@ -9,7 +9,7 @@ from touchify.src.components.krita.settings import KritaSettings
 from touchify.src.components.touchify.canvas.NtToolbox import NtToolbox
 from touchify.src.components.touchify.canvas.NtToolshelf import NtToolshelf
 from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
-from touchify.variables import TOUCHIFY_SETTINGPATH_WIDGETPAD
+from touchify.__env__ import TOUCHIFY_SETTINGPATH_WIDGETPAD
 
 if TYPE_CHECKING:
     from touchify.src.components.touchify.canvas.NtCanvas import NtCanvas

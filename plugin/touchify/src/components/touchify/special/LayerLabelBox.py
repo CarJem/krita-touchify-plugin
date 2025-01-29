@@ -1,11 +1,11 @@
 from krita import *
 from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtGui import QIcon,QPixmap
-from touchify.variables import *
+from touchify.__env__ import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.window import TouchifyWindow
+    from touchify.PluginWindow import TouchifyWindow
     
 def getCurrentLayer():
     app = Krita.instance()

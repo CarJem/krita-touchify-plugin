@@ -2,7 +2,7 @@ from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from touchify.paths import REGISTERED_ACTIONS_FILE
+from touchify.__env__ import REGISTERED_ACTIONS_FILE
 from touchify.src.cfg.menu.TriggerMenuItem import TriggerMenuItem
 from touchify.src.cfg.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.cfg.resource_pack.ResourcePack import ResourcePack
@@ -19,7 +19,7 @@ from touchify.src.components.touchify.actions.TouchifyActionButton import Touchi
 
 from touchify.src.components.touchify.shortcut_composer.ShortcutComposerUtils import ShortcutComposerUtils
 from touchify.src.managers.shared.events import GlobalEvents
-from touchify.variables import *
+from touchify.__env__ import *
 
 from functools import partial
 
@@ -38,7 +38,7 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom as MiniDOM
 
 if TYPE_CHECKING:
-    from ...window import TouchifyWindow
+    from ....PluginWindow import TouchifyWindow
 
 class ActionManager(QObject):
     composerTriggerEnded=pyqtSignal()
@@ -287,9 +287,9 @@ class ActionManager(QObject):
         cfg = TouchifySettings.instance().getConfig()
 
         self.__registry_menu = QtWidgets.QMenu("Registered Actions", window.qwindow())
-        root_action = window.createAction(TOUCHIFY_ID_ACTION_REGISTERED_ACTIONS_MENU, "Registered Actions", subItemPath)
+        root_action = window.createAction(TOUCHIFY_ACTIONID_REGISTERED_ACTIONS_MENU, "Registered Actions", subItemPath)
         root_action.setMenu(self.__registry_menu)
-        registryItemsPath = "{0}/{1}".format(subItemPath, TOUCHIFY_ID_ACTION_REGISTERED_ACTIONS_MENU)
+        registryItemsPath = "{0}/{1}".format(subItemPath, TOUCHIFY_ACTIONID_REGISTERED_ACTIONS_MENU)
 
         registered_elements: dict[str, tuple[ResourcePackMetadata, list[ET.Element]]] = {}
 
@@ -307,7 +307,7 @@ class ActionManager(QObject):
             registered_elements[packMeta.registry_id] = packMeta, []
             for data in pack.triggers:
                 data: Trigger
-                id = '{0}{1}_{2}'.format(TOUCHIFY_ID_ACTION_REGISTERED_ACTION_PREFIX, packMeta.registry_id, data.registry_id)
+                id = '{0}{1}_{2}'.format(TOUCHIFY_ACTIONID_REGISTERED_ACTION_PREFIX, packMeta.registry_id, data.registry_id)
                 action = self.appEngine.mgr_actions.Create_RegistryAction(id, data, window, packItemsPath)
                 registered_elements[packMeta.registry_id][1].append(self.Actions_Add(id))
                 pack_menu.addAction(action)
@@ -445,7 +445,7 @@ class ActionManager(QObject):
             meta: ResourcePackMetadata = pack.metadata
             for data in pack.triggers:
                 data: Trigger
-                subActionIdentifier = '{0}{1}_{2}'.format(TOUCHIFY_ID_ACTION_REGISTERED_ACTION_PREFIX, meta.registry_id, data.registry_id)
+                subActionIdentifier = '{0}{1}_{2}'.format(TOUCHIFY_ACTIONID_REGISTERED_ACTION_PREFIX, meta.registry_id, data.registry_id)
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
         

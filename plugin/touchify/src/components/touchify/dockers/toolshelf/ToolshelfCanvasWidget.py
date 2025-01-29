@@ -5,12 +5,12 @@ from krita import *
 
 from touchify.src.managers.shared.events import GlobalEvents
 from touchify.src.managers.shared.settings import *
-from touchify.variables import *
+from touchify.__env__ import *
 from touchify.src.managers.normal.dockers import *
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.window import TouchifyWindow
+    from touchify.PluginWindow import TouchifyWindow
 
  
 class ToolshelfCanvasWidget(QDockWidget):

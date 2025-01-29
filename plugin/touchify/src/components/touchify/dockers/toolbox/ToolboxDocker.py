@@ -6,12 +6,12 @@ from krita import *
 
 
 from touchify.src.managers.shared.events import GlobalEvents
-from touchify.variables import *
+from touchify.__env__ import *
 from touchify.src.components.touchify.dockers.toolbox.ToolboxWidget import ToolboxWidget
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .....window import TouchifyWindow
+    from ......PluginWindow import TouchifyWindow
 
 DOCKER_TITLE="Touchify Core: Toolbox"
 

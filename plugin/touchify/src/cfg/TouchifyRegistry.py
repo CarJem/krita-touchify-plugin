@@ -2,11 +2,11 @@ import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.paths import BASE_DIR
+from touchify.__env__ import BASE_DIR
 from touchify.src.cfg.resource_pack.ResourcePackRegistry import ResourcePackRegistry
 from touchify.src.cfg.TouchifyRegistryPreferences import TouchifyRegistryPreferences
 from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
-from touchify.variables import *
+from touchify.__env__ import *
 
 from touchify.src.components.python.extensions import *
 

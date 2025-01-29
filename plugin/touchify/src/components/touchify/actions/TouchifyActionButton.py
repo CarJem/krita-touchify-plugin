@@ -1,6 +1,6 @@
 import typing
 from touchify.src.managers.shared.resources import ResourceManager
-from touchify.variables import *
+from touchify.__env__ import *
 from touchify.src.components.krita.extensions import *
 from krita import *
 from touchify.src.managers.shared.settings import *

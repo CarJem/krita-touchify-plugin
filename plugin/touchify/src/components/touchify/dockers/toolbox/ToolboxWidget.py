@@ -8,7 +8,7 @@ from krita import *
 from touchify.src.managers.normal.action_manager import ActionManager
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
-from touchify.variables import *
+from touchify.__env__ import *
 
 from touchify.src.components.krita.settings import KritaSettings
 
@@ -27,7 +27,7 @@ from touchify.src.managers.shared.resources import ResourceManager
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .....window import TouchifyWindow
+    from ......PluginWindow import TouchifyWindow
 
 class ToolboxWidget(QResizableWidget):
     def __init__(self, parent: QWidget | None = None):
