@@ -3,11 +3,11 @@ from krita import *
 from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.special.CanvasColorPicker import CanvasColorPicker
-from touchify.src.global_events import GlobalEvents
-from touchify.src.settings import TouchifySettings
-from touchify.src.variables import *
+from touchify.src.managers.shared.events import GlobalEvents
+from touchify.src.managers.shared.settings import TouchifySettings
+from touchify.variables import *
 
-from touchify.src.features.resource_manager import ResourceManager
+from touchify.src.managers.shared.resources import ResourceManager
 
 DOCKER_TITLE = 'Touchify Addon: Color Options'
 DOCKER_ID="Touchify/ColorOptionsDocker"

@@ -19,7 +19,7 @@ from touchify.src.components.touchify.special.DockerContainer import DockerConta
 
 from touchify.src.components.touchify.special.LayerBlendingSelector import LayerBlendingSelector
 from touchify.src.components.touchify.special.LayerLabelBox import LayerLabelBox
-from touchify.src.settings import TouchifySettings
+from touchify.src.managers.shared.settings import TouchifySettings
 
 
 from krita import *

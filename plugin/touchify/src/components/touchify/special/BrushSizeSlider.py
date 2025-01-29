@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.krita.settings import *
 from touchify.src.components.krita.ui.KisSliderSpinBox import KisSliderSpinBox
-from touchify.src.variables import *
+from touchify.variables import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

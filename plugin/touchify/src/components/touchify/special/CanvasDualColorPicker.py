@@ -3,8 +3,8 @@ from krita import *
 from PyQt5.QtCore import *
 
 from touchify.src.components.touchify.special.CanvasColorPicker import CanvasColorPicker
-from touchify.src.features.resource_manager import ResourceManager
-from touchify.src.variables import *
+from touchify.src.managers.shared.resources import ResourceManager
+from touchify.variables import *
 
 
 from typing import TYPE_CHECKING

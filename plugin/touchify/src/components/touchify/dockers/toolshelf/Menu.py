@@ -5,9 +5,9 @@ from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from krita import *
 
 
-from touchify.src.settings import *
-from touchify.src.variables import *
-from touchify.src.features.docker_manager import *
+from touchify.src.managers.shared.settings import *
+from touchify.variables import *
+from touchify.src.managers.normal.dockers import *
 from touchify.src.components.touchify.dockers.toolshelf.Helpers import Helpers
 
 from typing import TYPE_CHECKING

@@ -4,12 +4,12 @@ from PyQt5.QtCore import *
 
 from typing import TYPE_CHECKING
 
-from touchify.src.features.canvas_manager import CanvasManager
-from touchify.src.global_events import GlobalEvents
-from touchify.src.settings import TouchifySettings
+from touchify.src.managers.normal.canvas import CanvasManager
+from touchify.src.managers.shared.events import GlobalEvents
+from touchify.src.managers.shared.settings import TouchifySettings
 
-from touchify.src.features.docker_manager import DockerManager
-from touchify.src.features.action_manager import ActionManager
+from touchify.src.managers.normal.dockers import DockerManager
+from touchify.src.managers.normal.action_manager import ActionManager
 if TYPE_CHECKING:
     from .....window import TouchifyWindow
 

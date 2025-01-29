@@ -1,16 +1,16 @@
 import typing
-from touchify.src.features.resource_manager import ResourceManager
-from touchify.src.variables import *
+from touchify.src.managers.shared.resources import ResourceManager
+from touchify.variables import *
 from touchify.src.components.krita.extensions import *
 from krita import *
-from touchify.src.settings import *
+from touchify.src.managers.shared.settings import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
 from PyQt5.QtCore import pyqtProperty
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.features.action_manager import ActionManager
+    from touchify.src.managers.normal.action_manager import ActionManager
 
 
 class TouchifyActionButton(QToolButton):

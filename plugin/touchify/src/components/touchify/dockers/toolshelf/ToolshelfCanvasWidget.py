@@ -3,10 +3,10 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
-from touchify.src.global_events import GlobalEvents
-from touchify.src.settings import *
-from touchify.src.variables import *
-from touchify.src.features.docker_manager import *
+from touchify.src.managers.shared.events import GlobalEvents
+from touchify.src.managers.shared.settings import *
+from touchify.variables import *
+from touchify.src.managers.normal.dockers import *
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

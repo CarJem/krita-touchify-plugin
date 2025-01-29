@@ -5,10 +5,10 @@ from PyQt5.QtCore import *
 from krita import *
 
 
-from touchify.src.features.action_manager import ActionManager
+from touchify.src.managers.normal.action_manager import ActionManager
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
-from touchify.src.variables import *
+from touchify.variables import *
 
 from touchify.src.components.krita.settings import KritaSettings
 
@@ -17,13 +17,13 @@ from touchify.src.components.touchify.dockers.toolbox.ToolboxCategory import Too
 from touchify.src.components.touchify.dockers.toolbox.ToolboxScrollArea import ToolboxScrollArea
 from touchify.src.components.touchify.dockers.toolbox.ToolboxStyle import ToolboxStyle
 from touchify.src.components.touchify.dockers.toolbox.ToolboxMenu import ToolboxMenu
-from touchify.src.settings import TouchifySettings
+from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.cfg.toolbox.ToolboxData import ToolboxData
 from touchify.src.cfg.toolbox.ToolboxDataItem import ToolboxDataItem
 from touchify.src.cfg.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
 from touchify.src.cfg.toolbox.ToolboxDataCategory import ToolboxDataCategory
 from touchify.src.components.pyqt.widgets.QResizableWidget import QResizableWidget
-from touchify.src.features.resource_manager import ResourceManager
+from touchify.src.managers.shared.resources import ResourceManager
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

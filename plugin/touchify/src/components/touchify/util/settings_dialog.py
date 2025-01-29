@@ -2,7 +2,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
-from touchify.src.settings import TouchifySettings
+from touchify.src.managers.shared.settings import TouchifySettings
 import copy
 
 from krita import *

@@ -2,7 +2,7 @@ from PyQt5 import QtSvg
 
 
 
-from touchify.src.settings import *
+from touchify.src.managers.shared.settings import *
 
 from krita import *
 

@@ -10,11 +10,11 @@ from PyQt5.QtGui import *
 
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
-from touchify.src.variables import *
-from touchify.src.settings import *
+from touchify.variables import *
+from touchify.src.managers.shared.settings import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ....features.action_manager import ActionManager
+    from ....managers.normal.action_manager import ActionManager
 
 class TouchifyActionPanel(QWidget):
 

@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QWidget
 
-from touchify.src.features.resource_manager import ResourceManager
+from touchify.src.managers.shared.resources import ResourceManager
 
 class PropertyLabel(QWidget):
 

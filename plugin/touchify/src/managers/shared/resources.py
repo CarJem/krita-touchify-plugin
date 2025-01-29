@@ -7,7 +7,7 @@ from touchify.paths import ASSETS_DIRECTORY, RESOURCE_PACKS_DIRECTORY
 from touchify.src.components.pyqt.icon_engines.QSvgIconEngine import QSvgIconEngine
 
 
-from touchify.src.settings import *
+from touchify.src.managers.shared.settings import *
 from zipfile import ZipFile
 
 from krita import *
@@ -21,6 +21,9 @@ class ResourceManager:
 
     material_icons: dict[str, QIcon] = {}
     resource_pack_icons: dict[str, dict[str, QIcon]] = {}
+
+    settings_clipboard_type: type = None
+    settings_clipboard_data: any = None
 
     def __is_vaild_custom_icon__(fileName: str):
         return fileName.lower().endswith(".svg")
@@ -204,6 +207,15 @@ class ResourceManager:
             return ResourceManager.resourcePackIcon(resource_pack_name)
         else:
             return ResourceManager.kritaIcon(iconName)
+
+    def getSettingsClipboard(requested_type: type):
+        if ResourceManager.settings_clipboard_type == requested_type:
+            return ResourceManager.settings_clipboard_data
+        else: return None
+
+    def setSettingsClipboard(item_type: type, item_data: any):
+        ResourceManager.settings_clipboard_type = item_type
+        ResourceManager.settings_clipboard_data = item_data
 
     
 

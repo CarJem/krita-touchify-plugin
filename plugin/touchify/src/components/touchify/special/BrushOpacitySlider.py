@@ -1,6 +1,6 @@
 from krita import *
 from PyQt5.QtCore import *
-from touchify.src.variables import *
+from touchify.variables import *
 
 from touchify.src.components.krita.settings import *
 from touchify.src.components.krita.ui.KisSliderSpinBox import KisSliderSpinBox

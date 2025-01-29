@@ -10,8 +10,7 @@ from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensio
 from touchify.src.components.touchify.property_grid.PropertyGrid import *
 
 from touchify.src.components.python.datatypes.TypedList import *
-from touchify.src.helpers import TouchifyHelpers
-from touchify.src.features.resource_manager import *
+from touchify.src.managers.shared.resources import *
 
 
 class PropertyField(QWidget):
@@ -87,7 +86,7 @@ class PropertyField(QWidget):
     def nested_paste(self):
         item_type: type | None = type(self.variable_data)
         
-        clipboard_data = TouchifyHelpers.getExtension().getSettingsClipboard(item_type)
+        clipboard_data = ResourceManager.getSettingsClipboard(item_type)
         if clipboard_data != None:
             pastable_data = copy.deepcopy(clipboard_data)
             self.variable_data = pastable_data
@@ -98,7 +97,7 @@ class PropertyField(QWidget):
         item_data: any | None = copy.deepcopy(self.variable_data)
 
         if item_data != None and item_type != None:
-            TouchifyHelpers.getExtension().setSettingsClipboard(item_type, item_data)
+            ResourceManager.setSettingsClipboard(item_type, item_data)
 
     def nested_edit(self):
         self.nested_page_dialog = PropertyGrid_Dialog(self)

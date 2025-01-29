@@ -8,12 +8,12 @@ from touchify.src.components.touchify.canvas.NtToolbox import NtToolbox
 from touchify.src.components.touchify.canvas.NtToolshelf import NtToolshelf
 from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from touchify.src.components.touchify.canvas.NtWorker import NtWorker
-from touchify.src.global_events import GlobalEvents
-from touchify.src.helpers import TouchifyHelpers
-from touchify.src.settings import TouchifySettings
+from touchify.src.managers.shared.events import GlobalEvents
+from touchify.src.components.krita.extensions import KritaExtensions
+from touchify.src.managers.shared.settings import TouchifySettings
 from krita import *
 from PyQt5.QtCore import QObject
-from touchify.src.variables import *
+from touchify.variables import *
 from touchify.src.components.krita.settings import KritaSettings
 from touchify.src.cfg.widget_layout.WidgetLayout import WidgetLayout
 from typing import TYPE_CHECKING
@@ -128,8 +128,8 @@ class NtCanvas(QWidget):
     def Actions_Post(self):
         settings_menu = self.QWindow().findChild(QMenu, 'settings')
 
-        layoutsMenuAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_WIDGETPAD_MENU, settings_menu, settings_menu, 'toolbars_submenu_action')
-        optionsMenuAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_WIDGETPAD_PRESETS_MENU, settings_menu, settings_menu, 'toolbars_submenu_action')
+        layoutsMenuAction = KritaExtensions.moveActionTo(TOUCHIFY_ID_ACTION_WIDGETPAD_MENU, settings_menu, settings_menu, 'toolbars_submenu_action')
+        optionsMenuAction = KritaExtensions.moveActionTo(TOUCHIFY_ID_ACTION_WIDGETPAD_PRESETS_MENU, settings_menu, settings_menu, 'toolbars_submenu_action')
         seperator = settings_menu.insertSeparator(optionsMenuAction)
 
     #endregion

@@ -8,7 +8,7 @@ from krita import *
 from composer_utils.label import LabelText, LabelTextColorizer
 from core_components.controller_base import Controller
 from touchify.src.components.touchify.shortcut_composer.PieAction import PieAction
-from touchify.src.features.resource_manager import ResourceManager
+from touchify.src.managers.shared.resources import ResourceManager
 
 class PieActionController(Controller[PieAction]):
     """

@@ -10,8 +10,7 @@ from touchify.src.components.touchify.property_grid.fields.PropertyField import 
 from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import PropertyUtils_Extensions
 from touchify.src.components.python.datatypes.TypedList import TypedList
-from touchify.src.helpers import TouchifyHelpers
-from touchify.src.features.resource_manager import *
+from touchify.src.managers.shared.resources import *
 
 
 
@@ -316,7 +315,7 @@ class PropertyField_TypedList(PropertyField):
 
             if item_data != None and item_type != None:
                 self.prepareCopiedItem(item_data)
-                TouchifyHelpers.getExtension().setSettingsClipboard(item_type, item_data)
+                ResourceManager.setSettingsClipboard(item_type, item_data)
 
 
     def list_paste(self):
@@ -329,7 +328,7 @@ class PropertyField_TypedList(PropertyField):
                 item_type = self.variable_list_type
 
             if item_type != None:
-                clipboard_data = TouchifyHelpers.getExtension().getSettingsClipboard(item_type)
+                clipboard_data = ResourceManager.getSettingsClipboard(item_type)
                 if clipboard_data != None:
                     pastable_data = copy.deepcopy(clipboard_data)
                     variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)

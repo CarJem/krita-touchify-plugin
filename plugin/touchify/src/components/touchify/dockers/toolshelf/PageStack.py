@@ -7,9 +7,9 @@ from krita import *
 from touchify.src.components.touchify.dockers.toolshelf.Page import Page
 from touchify.src.components.touchify.special.DockerContainer import DockerContainer
 
-from touchify.src.settings import *
-from touchify.src.variables import *
-from touchify.src.features.docker_manager import *
+from touchify.src.managers.shared.settings import *
+from touchify.variables import *
+from touchify.src.managers.normal.dockers import *
 
 from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfDataPage
 from touchify.src.components.touchify.dockers.toolshelf.Page import Page

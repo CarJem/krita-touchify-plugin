@@ -3,7 +3,7 @@ from enum import Enum
 from krita import *
 from PyQt5.QtCore import *
 
-from touchify.src.variables import *
+from touchify.variables import *
 
 from touchify.src.components.pyqt.widgets.ColorFramedButton import ColorFramedButton
 

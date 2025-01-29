@@ -1,7 +1,7 @@
 from krita import *
 from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtGui import QIcon,QPixmap
-from touchify.src.variables import *
+from touchify.variables import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

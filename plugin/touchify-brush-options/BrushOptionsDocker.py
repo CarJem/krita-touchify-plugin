@@ -7,7 +7,7 @@ from touchify.src.components.touchify.special.BrushFlowSlider import BrushFlowSl
 from touchify.src.components.touchify.special.BrushOpacitySlider import BrushOpacitySlider
 from touchify.src.components.touchify.special.BrushRotationSlider import BrushRotationSlider
 from touchify.src.components.touchify.special.BrushSizeSlider import BrushSizeSlider
-from touchify.src.variables import *
+from touchify.variables import *
 
 from touchify.src.components.krita.settings import *
 from touchify.src.components.krita.ui.KisSliderSpinBox import KisSliderSpinBox

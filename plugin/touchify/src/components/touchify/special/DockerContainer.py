@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtCore import QSize
-from touchify.src.features.docker_manager import *
+from touchify.src.managers.normal.dockers import *
 from krita import *
 
     

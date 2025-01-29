@@ -1,11 +1,11 @@
 from PyQt5.QtWidgets import *
-from touchify.src.helpers import TouchifyHelpers
-from touchify.src.features.resource_manager import ResourceManager
-from touchify.src.variables import *
-from touchify.src.settings import *
+from touchify.src.components.krita.extensions import KritaExtensions
+from touchify.src.managers.shared.resources import ResourceManager
+from touchify.variables import *
+from touchify.src.managers.shared.settings import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..window import TouchifyWindow
+    from ...window import TouchifyWindow
 
 
 from krita import *
@@ -65,7 +65,7 @@ class TweakManager(QObject):
 
     def Actions_Post(self):
         settings_menu = self.qWin.findChild(QMenu, 'settings')
-        TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_STYLES_MENU, settings_menu, settings_menu, 'style_menu')
+        KritaExtensions.moveActionTo(TOUCHIFY_ID_ACTION_STYLES_MENU, settings_menu, settings_menu, 'style_menu')
 
     #endregion
 

@@ -1,7 +1,7 @@
 from krita import *
 from PyQt5.QtGui import QColor
 from touchify.src.components.python.extensions import Extensions
-from touchify.src.global_events import GlobalEvents
+from touchify.src.managers.shared.events import GlobalEvents
 
 
 

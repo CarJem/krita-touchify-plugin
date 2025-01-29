@@ -6,7 +6,7 @@ from typing import TypeVar
 from functools import cached_property
 from api_krita.pyqt import RoundButton
 from krita import *
-from touchify.src.global_events import GlobalEvents
+from touchify.src.managers.shared.events import GlobalEvents
 T = TypeVar('T')
 
 class PieMenu(templates.PieMenu):

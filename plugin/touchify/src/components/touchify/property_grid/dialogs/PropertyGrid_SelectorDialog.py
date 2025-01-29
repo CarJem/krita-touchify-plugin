@@ -10,10 +10,10 @@ from touchify.src.cfg.menu.TriggerMenu import TriggerMenu
 from touchify.src.cfg.script.CustomScript import CustomScript
 from touchify.src.cfg.toolshelf.ToolshelfData import ToolshelfData
 from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
-from touchify.src.settings import TouchifySettings
+from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 
-from touchify.src.features.resource_manager import ResourceManager
+from touchify.src.managers.shared.resources import ResourceManager
 
 
 DATA_INDEX = 3

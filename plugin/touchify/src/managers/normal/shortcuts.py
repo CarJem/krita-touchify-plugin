@@ -2,19 +2,27 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.components.touchify.enums.transform_selection_action import TransformSelectionAction
-from touchify.src.helpers import TouchifyHelpers
-from touchify.src.variables import *
-from touchify.src.settings import *
+from touchify.src.components.krita.extensions import KritaExtensions
+from touchify.variables import *
+from touchify.src.managers.shared.settings import *
+
+from enum import Enum
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..window import TouchifyWindow
+    from ...window import TouchifyWindow
 
 from krita import *
     
 class ShortcutsManager(object):
 
+    class TransformSelectionAction(Enum):
+        Free_FlipX = 0
+        Free_FlipY = 1
+        Free_RotateCW = 2
+        Free_RotateCCW = 3
+        Apply = 4
+        Reset = 5
 
     def __init__(self, instance: "TouchifyWindow"):
         self.appEngine = instance
@@ -36,22 +44,22 @@ class ShortcutsManager(object):
         if not actions_group: return None
         
         match action:
-            case TransformSelectionAction.Free_FlipX:
+            case ShortcutsManager.TransformSelectionAction.Free_FlipX:
                 buttonName = "flipXButton"
                 item_type = "free"
-            case TransformSelectionAction.Free_FlipY:
+            case ShortcutsManager.TransformSelectionAction.Free_FlipY:
                 buttonName = "flipYButton"
                 item_type = "free"
-            case TransformSelectionAction.Free_RotateCW:
+            case ShortcutsManager.TransformSelectionAction.Free_RotateCW:
                 buttonName = "rotateCWButton"
                 item_type = "free"
-            case TransformSelectionAction.Free_RotateCCW:
+            case ShortcutsManager.TransformSelectionAction.Free_RotateCCW:
                 buttonName = "rotateCCWButton"
                 item_type = "free"
-            case TransformSelectionAction.Apply:
+            case ShortcutsManager.TransformSelectionAction.Apply:
                 buttonName = "apply"
                 item_type = "button_box"
-            case TransformSelectionAction.Reset:
+            case ShortcutsManager.TransformSelectionAction.Reset:
                 buttonName = "reset"
                 item_type = "button_box"
             case _:
@@ -200,14 +208,14 @@ class ShortcutsManager(object):
     def Actions_Post(self):
         settings_menu = self.qWin.findChild(QMenu, 'settings')
 
-        configureAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_CONFIGURE, settings_menu, settings_menu, 'options_configure')
+        configureAction = KritaExtensions.moveActionTo(TOUCHIFY_ID_ACTION_CONFIGURE, settings_menu, settings_menu, 'options_configure')
         configureAction.setIcon(Krita.instance().icon("configure"))
 
-        popupPaletteAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_OTHER_SHOWPOPUPPALETTE, settings_menu, settings_menu, 'toolbars_submenu_action')
-        popupMenuAction = TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_OTHER_SHOWMENUBARPOPUP, settings_menu, settings_menu, 'toolbars_submenu_action')
+        popupPaletteAction = KritaExtensions.moveActionTo(TOUCHIFY_ID_ACTION_OTHER_SHOWPOPUPPALETTE, settings_menu, settings_menu, 'toolbars_submenu_action')
+        popupMenuAction = KritaExtensions.moveActionTo(TOUCHIFY_ID_ACTION_OTHER_SHOWMENUBARPOPUP, settings_menu, settings_menu, 'toolbars_submenu_action')
         settings_menu.insertSeparator(popupMenuAction)
 
-        TouchifyHelpers.moveActionTo(TOUCHIFY_ID_ACTION_DOCKERUTILS_MENU, settings_menu, settings_menu, 'view_toggledockers')
+        KritaExtensions.moveActionTo(TOUCHIFY_ID_ACTION_DOCKERUTILS_MENU, settings_menu, settings_menu, 'view_toggledockers')
 
     def Actions_Init(self, window: Window, subItemPath: str, settingsItemPath: str):
 
@@ -251,29 +259,29 @@ class ShortcutsManager(object):
         self.transform_selection_action.setMenu(self.transform_selection_menu)
 
         transform_selection_flip_x = window.createAction(TOUCHIFY_ID_ACTION_TRANSFORMTOOL_FREE_FLIPX, "Mirror Horizontal", transform_selection_utils_path)
-        transform_selection_flip_x.triggered.connect(lambda: self.triggerTransformToolAction(TransformSelectionAction.Free_FlipX))
+        transform_selection_flip_x.triggered.connect(lambda: self.triggerTransformToolAction(ShortcutsManager.TransformSelectionAction.Free_FlipX))
         self.transform_selection_menu.addAction(transform_selection_flip_x)
 
         transform_selection_flip_y = window.createAction(TOUCHIFY_ID_ACTION_TRANSFORMTOOL_FREE_FLIPY, "Mirror Vertical", transform_selection_utils_path)
-        transform_selection_flip_y.triggered.connect(lambda: self.triggerTransformToolAction(TransformSelectionAction.Free_FlipY))
+        transform_selection_flip_y.triggered.connect(lambda: self.triggerTransformToolAction(ShortcutsManager.TransformSelectionAction.Free_FlipY))
         self.transform_selection_menu.addAction(transform_selection_flip_y)
 
         transform_selection_rotate_cw = window.createAction(TOUCHIFY_ID_ACTION_TRANSFORMTOOL_FREE_ROTATECW, "Rotate 90 degrees Clockwise", transform_selection_utils_path)
-        transform_selection_rotate_cw.triggered.connect(lambda: self.triggerTransformToolAction(TransformSelectionAction.Free_RotateCW))
+        transform_selection_rotate_cw.triggered.connect(lambda: self.triggerTransformToolAction(ShortcutsManager.TransformSelectionAction.Free_RotateCW))
         self.transform_selection_menu.addAction(transform_selection_rotate_cw)
 
         transform_selection_rotate_ccw = window.createAction(TOUCHIFY_ID_ACTION_TRANSFORMTOOL_FREE_ROTATECCW, "Rotate 90 degrees CounterClockwise", transform_selection_utils_path)
-        transform_selection_rotate_ccw.triggered.connect(lambda: self.triggerTransformToolAction(TransformSelectionAction.Free_RotateCCW))
+        transform_selection_rotate_ccw.triggered.connect(lambda: self.triggerTransformToolAction(ShortcutsManager.TransformSelectionAction.Free_RotateCCW))
         self.transform_selection_menu.addAction(transform_selection_rotate_ccw)
 
         self.transform_selection_menu.addSeparator()
 
         transform_selection_apply = window.createAction(TOUCHIFY_ID_ACTION_TRANSFORMTOOL_APPLY, "Apply", transform_selection_utils_path)
-        transform_selection_apply.triggered.connect(lambda: self.triggerTransformToolAction(TransformSelectionAction.Apply))
+        transform_selection_apply.triggered.connect(lambda: self.triggerTransformToolAction(ShortcutsManager.TransformSelectionAction.Apply))
         self.transform_selection_menu.addAction(transform_selection_apply)
 
         transform_selection_reset = window.createAction(TOUCHIFY_ID_ACTION_TRANSFORMTOOL_RESET, "Reset", transform_selection_utils_path)
-        transform_selection_reset.triggered.connect(lambda: self.triggerTransformToolAction(TransformSelectionAction.Reset))
+        transform_selection_reset.triggered.connect(lambda: self.triggerTransformToolAction(ShortcutsManager.TransformSelectionAction.Reset))
         self.transform_selection_menu.addAction(transform_selection_reset)
         #endregion
 

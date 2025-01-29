@@ -3,17 +3,17 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
 
-from touchify.src.features.canvas_manager import CanvasManager
-from touchify.src.features.developer_manager import DeveloperManager
-from touchify.src.helpers import TouchifyHelpers
-from touchify.src.variables import *
-from touchify.src.features.docker_manager import DockerManager
-from touchify.src.features.action_manager import ActionManager
+from touchify.src.components.krita.extensions import KritaExtensions
+from touchify.src.managers.normal.canvas import CanvasManager
+from touchify.src.managers.normal.developer import DeveloperManager
+from touchify.variables import *
+from touchify.src.managers.normal.dockers import DockerManager
+from touchify.src.managers.normal.action_manager import ActionManager
 
 from touchify.src.components.touchify.util.settings_dialog import SettingsDialog
 
-from touchify.src.features.shortcuts_manager import ShortcutsManager
-from touchify.src.features.tweak_manager import TweakManager
+from touchify.src.managers.normal.shortcuts import ShortcutsManager
+from touchify.src.managers.normal.tweaks import TweakManager
 
 from touchify.src.components.pyqt.extensions import PyQtExtensions
 
@@ -84,7 +84,7 @@ class TouchifyWindow(QObject):
         self.mgr_dev.Actions_Post(self.__main_menu_bar)
     
     def Addons_Post(self):
-        dockers_menu_action = TouchifyHelpers.getDockerMenu(self.krita_window)
+        dockers_menu_action = KritaExtensions.getDockerMenu(self.krita_window)
         if dockers_menu_action == None: return
 
         touchify_title_prefix = "Touchify Core: "

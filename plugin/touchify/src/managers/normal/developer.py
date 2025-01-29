@@ -1,9 +1,9 @@
 from touchify.src.components.krita.extensions import *
 
-from touchify.src.variables import *
+from touchify.variables import *
 
-from touchify.src.settings import *
-from touchify.src.features.resource_manager import *
+from touchify.src.managers.shared.settings import *
+from touchify.src.managers.shared.resources import *
 
 from krita import *
 from typing import TYPE_CHECKING

@@ -8,8 +8,8 @@ from touchify.src.components.pyqt.extensions import PyQtExtensions
 from touchify.src.components.pyqt.widgets.AnimatedWidget import AnimatedWidget
 from touchify.src.components.pyqt.widgets.ElidedLabel import ElidedLabel
 from touchify.src.components.touchify.dockers.toolshelf.ToolshelfWidget import ToolshelfWidget
-from touchify.src.settings import *
-from touchify.src.features.resource_manager import *
+from touchify.src.managers.shared.settings import *
+from touchify.src.managers.shared.resources import *
 
 from krita import *
 
@@ -17,9 +17,9 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from touchify.src.window import TouchifyWindow
-    from touchify.src.features.action_manager import ActionManager
-    from touchify.src.features.docker_manager import DockerManager
-    from touchify.src.features.canvas_manager import CanvasManager
+    from touchify.src.managers.normal.action_manager import ActionManager
+    from touchify.src.managers.normal.dockers import DockerManager
+    from touchify.src.managers.normal.canvas import CanvasManager
 
 
 class TouchifyPopup(QDockWidget, AnimatedWidget):

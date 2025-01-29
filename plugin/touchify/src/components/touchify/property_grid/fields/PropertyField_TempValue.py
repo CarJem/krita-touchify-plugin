@@ -9,7 +9,7 @@ from touchify.src.components.touchify.property_grid.PropertyGrid import *
 
 
 from touchify.src.components.python.datatypes.TypedList import *
-from touchify.src.features.resource_manager import *
+from touchify.src.managers.shared.resources import *
 
 
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored

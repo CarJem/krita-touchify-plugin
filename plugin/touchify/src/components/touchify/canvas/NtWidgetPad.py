@@ -25,7 +25,7 @@ from PyQt5.QtCore import Qt, QSize, QPoint
 from touchify.src.components.touchify.canvas.NtScrollAreaContainer import NtScrollAreaContainer
 
 
-from touchify.src.settings import *
+from touchify.src.managers.shared.settings import *
 from touchify.src.components.pyqt.extensions import PyQtExtensions as Ext
 
 from krita import *

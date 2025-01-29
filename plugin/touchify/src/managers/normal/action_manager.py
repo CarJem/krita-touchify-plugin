@@ -17,9 +17,9 @@ from touchify.src.components.touchify.actions.TouchifyActionMenu import Touchify
 
 from touchify.src.components.touchify.actions.TouchifyActionButton import TouchifyActionButton
 
-from touchify.src.components.touchify.util.shortcut_composer_utils import ShortcutComposerUtil
-from touchify.src.global_events import GlobalEvents
-from touchify.src.variables import *
+from touchify.src.components.touchify.shortcut_composer.ShortcutComposerUtils import ShortcutComposerUtils
+from touchify.src.managers.shared.events import GlobalEvents
+from touchify.variables import *
 
 from functools import partial
 
@@ -27,8 +27,8 @@ from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.cfg.popup.PopupData import PopupData
 from touchify.src.components.krita.extensions import *
 
-from touchify.src.settings import TouchifySettings
-from touchify.src.features.resource_manager import ResourceManager
+from touchify.src.managers.shared.settings import TouchifySettings
+from touchify.src.managers.shared.resources import ResourceManager
 
 from touchify.src.components.touchify.special.TouchifyPopup import TouchifyPopup
 
@@ -38,7 +38,7 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom as MiniDOM
 
 if TYPE_CHECKING:
-    from ..window import TouchifyWindow
+    from ...window import TouchifyWindow
 
 class ActionManager(QObject):
     composerTriggerEnded=pyqtSignal()
@@ -841,7 +841,7 @@ class ActionManager(QObject):
         data: PieWheelData = TouchifySettings.instance().getRegistryItem(pie_wheel_registry_id, PieWheelData)
         if not isinstance(data, PieWheelData) or data == None: return
         
-        result = ShortcutComposerUtil.PieWheel_Generate(data)
+        result = ShortcutComposerUtils.PieWheel_Generate(data)
         if result != None: 
             result.Show()
             self.composer_action_down = True

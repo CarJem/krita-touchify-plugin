@@ -5,7 +5,7 @@ from touchify.src.components.touchify.dockers.toolbox.ToolboxDocker import Toolb
 from touchify.src.components.touchify.canvas.NtWidgetPad import NtWidgetPad
 from krita import *
 from PyQt5.QtWidgets import QDockWidget
-from touchify.src.variables import *
+from touchify.variables import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

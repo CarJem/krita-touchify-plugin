@@ -2,8 +2,8 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
 
-from touchify.src.variables import *
-from touchify.src.global_events import GlobalEvents
+from touchify.variables import *
+from touchify.src.managers.shared.events import GlobalEvents
 
 
 
@@ -23,9 +23,6 @@ class TouchifyExtension(Extension):
         super().__init__(parent)
         self.event_handler = GlobalEvents(self)
         self.DEV_HOOK_FIND_PLUGIN = "TOUCHIFY"
-
-        self.settings_clipboard_type: type | None = None
-        self.settings_clipboard_data: any | None = None
 
 
     def setup(self):
@@ -69,15 +66,6 @@ class TouchifyExtension(Extension):
         self.setup_instance = True
         self.new_instance = TouchifyWindow(self)
         self.new_instance.Actions_Init(window)
-
-    def getSettingsClipboard(self, requested_type: type):
-        if self.settings_clipboard_type == requested_type:
-            return self.settings_clipboard_data
-        else: return None
-
-    def setSettingsClipboard(self, item_type: type, item_data: any):
-        self.settings_clipboard_type = item_type
-        self.settings_clipboard_data = item_data
 
 
 Krita.instance().addExtension(TouchifyExtension(Krita.instance()))

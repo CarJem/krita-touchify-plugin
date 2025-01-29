@@ -5,8 +5,8 @@ from PyQt5.QtCore import *
 from krita import *
 
 
-from touchify.src.global_events import GlobalEvents
-from touchify.src.variables import *
+from touchify.src.managers.shared.events import GlobalEvents
+from touchify.variables import *
 from touchify.src.components.touchify.dockers.toolbox.ToolboxWidget import ToolboxWidget
 
 from typing import TYPE_CHECKING

@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from xml.dom.minidom import parse as xmlParse
 
 from touchify.src.components.pyqt.painters.CheckerBoardPainter import CheckerBoardPainter
-from touchify.src.variables import *
+from touchify.variables import *
 
 
 from typing import TYPE_CHECKING

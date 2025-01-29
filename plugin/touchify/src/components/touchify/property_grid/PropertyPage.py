@@ -12,7 +12,7 @@ from touchify.src.components.touchify.property_grid.views.PropertyView import Pr
 from touchify.src.components.touchify.property_grid.views.PropertyView_Form import PropertyView_Form
 from touchify.src.components.touchify.property_grid.views.PropertyView_Tabs import PropertyView_Tabs
 from touchify.src.components.python.datatypes.TypedList import *
-from touchify.src.features.resource_manager import *
+from touchify.src.managers.shared.resources import *
 
 
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored

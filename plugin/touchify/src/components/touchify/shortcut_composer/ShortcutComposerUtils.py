@@ -1,11 +1,11 @@
 from touchify.src.cfg.triggers.TriggerGroup import TriggerGroup
 from touchify.src.cfg.triggers.Trigger import Trigger
 from touchify.src.components.krita.settings import KS_Color
-from touchify.src.variables import *
+from touchify.variables import *
 
-from touchify.src.settings import *
+from touchify.src.managers.shared.settings import *
 from touchify.src.cfg.pie_wheel.PieWheelData import PieWheelData
-from touchify.src.features.resource_manager import *
+from touchify.src.managers.shared.resources import *
 
 from krita import *
 from typing import TYPE_CHECKING
@@ -24,7 +24,7 @@ except:
 
 FEATURE_ENABLED = True
     
-class ShortcutComposerUtil:
+class ShortcutComposerUtils:
 
     @staticmethod
     def PieWheel_TestObject():
