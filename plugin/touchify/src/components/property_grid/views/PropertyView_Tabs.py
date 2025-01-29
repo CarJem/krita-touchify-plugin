@@ -3,13 +3,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from touchify.src.components.pyqt.widgets.VerticalQTabBar import VerticalQTabBar
-from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
-from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
-from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Praser import *
-from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_SelectorDialog import *
+from touchify.src.components.property_grid.PropertyGrid import PropertyGrid
+from touchify.src.components.property_grid.utils.PropertyUtils_Extensions import *
+from touchify.src.components.property_grid.utils.PropertyUtils_Praser import *
+from touchify.src.components.property_grid.dialogs.PropertyGrid_SelectorDialog import *
 
 
-from touchify.src.components.touchify.property_grid.views.PropertyView import PropertyView
+from touchify.src.components.property_grid.views.PropertyView import PropertyView
 from touchify.src.datatypes.sequence.TypedList import *
 from touchify.src.managers.shared.resources import *
 
@@ -19,8 +19,8 @@ ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.components.touchify.property_grid.PropertyPage import PropertyPage
-    from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
+    from touchify.src.components.property_grid.PropertyPage import PropertyPage
+    from touchify.src.components.property_grid.PropertyGrid import PropertyGrid
 
 
 class PropertyView_Tabs(QTabWidget, PropertyView):
@@ -57,7 +57,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
     
 
     def createSisterPage(self, source: any, sister_items: list[str]):
-        from touchify.src.components.touchify.property_grid.PropertyPage import PropertyPage
+        from touchify.src.components.property_grid.PropertyPage import PropertyPage
         page = PropertyPage(self.parent_page.stackHost)
         page.propertyChanged.connect(self.onPropertyChanged)
         page.setParent(self)
@@ -82,7 +82,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
                     has_nested_tabs = True
 
         if is_expandable_area:
-            from touchify.src.components.touchify.property_grid.PropertyPage import PropertyPage
+            from touchify.src.components.property_grid.PropertyPage import PropertyPage
             page = PropertyPage(self.parent_page.stackHost)
             page.propertyChanged.connect(self.onPropertyChanged)
             page.setParent(self)
@@ -91,7 +91,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
             return page
         else:
             if has_nested_tabs:
-                from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
+                from touchify.src.components.property_grid.PropertyGrid import PropertyGrid
                 page = PropertyGrid(self)
                 page.rootPropertyGrid.propertyChanged.connect(self.onPropertyChanged)
                 page.rootPropertyGrid.setLimiters([_varName])
@@ -101,7 +101,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
                 self.pages.append(page)
                 return page
             else:
-                from touchify.src.components.touchify.property_grid.PropertyPage import PropertyPage
+                from touchify.src.components.property_grid.PropertyPage import PropertyPage
                 page = PropertyPage(self.parent_page.stackHost)
                 page.propertyChanged.connect(self.onPropertyChanged)
                 page.setParent(self)

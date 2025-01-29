@@ -1,16 +1,16 @@
 
 # Field Imports
-from touchify.src.components.touchify.property_grid.fields.PropertyField import PropertyField
-from touchify.src.components.touchify.property_grid.fields.PropertyField_Float import PropertyField_Float
-from touchify.src.components.touchify.property_grid.fields.PropertyField_Int import PropertyField_Int
-from touchify.src.components.touchify.property_grid.fields.PropertyField_Bool import PropertyField_Bool
-from touchify.src.components.touchify.property_grid.fields.PropertyField_Str import PropertyField_Str
-from touchify.src.components.touchify.property_grid.fields.PropertyField_TypedList import PropertyField_TypedList
+from touchify.src.components.property_grid.fields.PropertyField import PropertyField
+from touchify.src.components.property_grid.fields.PropertyField_Float import PropertyField_Float
+from touchify.src.components.property_grid.fields.PropertyField_Int import PropertyField_Int
+from touchify.src.components.property_grid.fields.PropertyField_Bool import PropertyField_Bool
+from touchify.src.components.property_grid.fields.PropertyField_Str import PropertyField_Str
+from touchify.src.components.property_grid.fields.PropertyField_TypedList import PropertyField_TypedList
 
 # Special Field Imports
-from touchify.src.components.touchify.property_grid.special_fields.PropertyField_KsColor import PropertyField_KsColor
-from touchify.src.components.touchify.property_grid.special_fields.PropertyField_TriggerGroups import PropertyField_TriggerGroups
-from touchify.src.components.touchify.property_grid.special_fields.PropertyField_TriggerList import PropertyField_TriggerList
+from touchify.src.components.property_grid.special_fields.PropertyField_KsColor import PropertyField_KsColor
+from touchify.src.components.property_grid.special_fields.PropertyField_TriggerGroups import PropertyField_TriggerGroups
+from touchify.src.components.property_grid.special_fields.PropertyField_TriggerList import PropertyField_TriggerList
 
 #Type Imports
 from touchify.src.datatypes.sequence.TypedList import TypedList

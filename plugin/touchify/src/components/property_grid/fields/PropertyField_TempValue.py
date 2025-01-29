@@ -2,10 +2,10 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.components.touchify.property_grid.fields.PropertyField import PropertyField
+from touchify.src.components.property_grid.fields.PropertyField import PropertyField
 
-from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
-from touchify.src.components.touchify.property_grid.PropertyGrid import *
+from touchify.src.components.property_grid.utils.PropertyUtils_Extensions import *
+from touchify.src.components.property_grid.PropertyGrid import *
 
 
 from touchify.src.datatypes.sequence.TypedList import *

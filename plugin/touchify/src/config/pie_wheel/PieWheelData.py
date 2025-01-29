@@ -5,7 +5,7 @@ from touchify.src.datatypes.sequence.TypedList import TypedList
 
 from typing import TYPE_CHECKING
 
-from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 if TYPE_CHECKING:
     from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 

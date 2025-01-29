@@ -1,15 +1,15 @@
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from touchify.src.components.touchify.property_grid.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
+from touchify.src.components.property_grid.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
 from touchify.src.datatypes.sequence.TypedList import *
-from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.managers.shared.resources import *
 
-from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
-from touchify.src.components.touchify.property_grid.PropertyGrid import *
-from touchify.src.components.touchify.property_grid.fields.PropertyField import *
+from touchify.src.components.property_grid.utils.PropertyUtils_Extensions import *
+from touchify.src.components.property_grid.PropertyGrid import *
+from touchify.src.components.property_grid.fields.PropertyField import *
 
 
 

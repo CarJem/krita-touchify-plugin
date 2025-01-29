@@ -5,9 +5,9 @@ from PyQt5.QtCore import *
 from touchify.src.datatypes.sequence.TypedList import *
 from touchify.src.managers.shared.resources import *
 
-from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
-from touchify.src.components.touchify.property_grid.PropertyGrid import *
-from touchify.src.components.touchify.property_grid.fields.PropertyField import *
+from touchify.src.components.property_grid.utils.PropertyUtils_Extensions import *
+from touchify.src.components.property_grid.PropertyGrid import *
+from touchify.src.components.property_grid.fields.PropertyField import *
 
 
 

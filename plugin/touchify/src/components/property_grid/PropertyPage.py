@@ -2,15 +2,15 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
-from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
-from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Praser import *
-from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_SelectorDialog import *
+from touchify.src.components.property_grid.PropertyGrid import PropertyGrid
+from touchify.src.components.property_grid.utils.PropertyUtils_Extensions import *
+from touchify.src.components.property_grid.utils.PropertyUtils_Praser import *
+from touchify.src.components.property_grid.dialogs.PropertyGrid_SelectorDialog import *
 
 
-from touchify.src.components.touchify.property_grid.views.PropertyView import PropertyView
-from touchify.src.components.touchify.property_grid.views.PropertyView_Form import PropertyView_Form
-from touchify.src.components.touchify.property_grid.views.PropertyView_Tabs import PropertyView_Tabs
+from touchify.src.components.property_grid.views.PropertyView import PropertyView
+from touchify.src.components.property_grid.views.PropertyView_Form import PropertyView_Form
+from touchify.src.components.property_grid.views.PropertyView_Tabs import PropertyView_Tabs
 from touchify.src.datatypes.sequence.TypedList import *
 from touchify.src.managers.shared.resources import *
 

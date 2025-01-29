@@ -1,6 +1,6 @@
 from touchify.src.extensions.json_extensions import JsonExtensions
 from touchify.src.config.widget_layout.WidgetLayoutPadOptions import WidgetLayoutPadOptions
-from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class WidgetLayoutToolboxOptions:
 

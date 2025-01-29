@@ -2,7 +2,7 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import PropertyUtils_Extensions
+from touchify.src.components.property_grid.utils.PropertyUtils_Extensions import PropertyUtils_Extensions
 
 
 
@@ -11,7 +11,7 @@ ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.components.touchify.property_grid.PropertyPage import PropertyPage
+    from touchify.src.components.property_grid.PropertyPage import PropertyPage
 
 
 class PropertyView(QObject):

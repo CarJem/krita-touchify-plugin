@@ -5,14 +5,14 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QWidget
 
 
-from touchify.src.components.touchify.property_grid.fields.PropertyLabel import PropertyLabel
-from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Extensions import *
-from touchify.src.components.touchify.property_grid.utils.PropertyUtils_Praser import *
-from touchify.src.components.touchify.property_grid.dialogs.PropertyGrid_SelectorDialog import *
-from touchify.src.components.touchify.property_grid.PropertyGrid import PropertyGrid
+from touchify.src.components.property_grid.fields.PropertyLabel import PropertyLabel
+from touchify.src.components.property_grid.utils.PropertyUtils_Extensions import *
+from touchify.src.components.property_grid.utils.PropertyUtils_Praser import *
+from touchify.src.components.property_grid.dialogs.PropertyGrid_SelectorDialog import *
+from touchify.src.components.property_grid.PropertyGrid import PropertyGrid
 
 
-from touchify.src.components.touchify.property_grid.views.PropertyView import PropertyView
+from touchify.src.components.property_grid.views.PropertyView import PropertyView
 from touchify.src.datatypes.sequence.TypedList import *
 from touchify.src.managers.shared.resources import *
 
@@ -21,7 +21,7 @@ ROW_SIZE_POLICY_X = QSizePolicy.Policy.Expanding
 ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.components.touchify.property_grid.PropertyPage import PropertyPage
+    from touchify.src.components.property_grid.PropertyPage import PropertyPage
 
 
 

@@ -2,7 +2,7 @@ from touchify.src.extensions.file_extensions import FileExtensions
 from touchify.src.datatypes.metaclass.EnumStr import EnumStr
 from touchify.src.extensions.json_extensions import JsonExtensions
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
-from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class Trigger:
      

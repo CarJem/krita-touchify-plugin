@@ -5,7 +5,7 @@ import os
 from touchify.__env__ import RESOURCE_PACKS_DIRECTORY
 import shutil
 
-from touchify.src.components.touchify.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 HAS_ALREADY_LOADED: bool = False
 
