@@ -9,7 +9,7 @@ from touchify.src.managers.shared.resources import *
 
 from krita import *
 
-from touchify_pie_wheels.src.PieActionController import PieActionController
+from touchify_pie_wheels.src.pie_utils.pie_action_controller import PieActionController
 from touchify_pie_wheels.src.PieMenu import PieMenu
 from touchify.src.extensions.krita_extensions import *
 

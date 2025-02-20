@@ -1,16 +1,16 @@
 from touchify.src.api_krita import KritaAPI
 from touchify_pie_wheels.src.core_components import Controller, Instruction
-from touchify_pie_wheels.src.data_components.PieDeadzoneStrategy import PieDeadzoneStrategy
+from touchify_pie_wheels.src.pie_utils.pie_deadzone_strategy import PieDeadzoneStrategy
 from PyQt5.QtGui import QColor
 from typing import TypeVar
 from functools import cached_property
 from touchify.src.components.common.buttons.RoundButton import RoundButton
 from krita import *
-from . import templates
+from touchify_pie_wheels.src.pie_utils.pie_menu import PieMenu as BaseClass
 from touchify.src.managers.shared.events import GlobalEvents
 T = TypeVar('T')
 
-class PieMenu(templates.PieMenu):
+class PieMenu(BaseClass):
     def __init__(
         self, *,
         name: str,

@@ -3,7 +3,7 @@
 
 from touchify_pie_wheels.src.config_system import Field
 from touchify_pie_wheels.src.core_components.controller_base import Controller
-from touchify_pie_wheels.src.data_components.PieDeadzoneStrategy import PieDeadzoneStrategy
+from touchify_pie_wheels.src.pie_utils.pie_deadzone_strategy import PieDeadzoneStrategy
 from touchify_pie_wheels.src.pie_utils.pie_label import PieLabel
 from touchify_pie_wheels.src.pie_utils.pie_widget_utils import WidgetHolder
 

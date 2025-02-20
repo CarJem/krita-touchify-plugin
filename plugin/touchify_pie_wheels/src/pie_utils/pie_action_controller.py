@@ -9,7 +9,7 @@ from touchify.src.api_krita import KritaAPI
 from touchify_pie_wheels.src.core_components.controller_base import Controller
 from touchify_pie_wheels.src.composer_utils.label.label_text import LabelText
 from touchify_pie_wheels.src.composer_utils.label.label_text_colorizer import LabelTextColorizer
-from touchify_pie_wheels.src.PieAction import PieAction
+from touchify_pie_wheels.src.pie_utils.pie_action import PieAction
 from touchify.src.managers.shared.resources import ResourceManager
 
 class PieActionController(Controller[PieAction]):

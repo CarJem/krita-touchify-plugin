@@ -7,7 +7,7 @@ from PyQt5.QtGui import QColor
 from krita import Krita
 from touchify_pie_wheels.src.config_system import FieldGroup
 from touchify_pie_wheels.src.config_system.field_base_impl import DualField, FieldWithEditableDefault
-from touchify_pie_wheels.src.data_components.PieDeadzoneStrategy import PieDeadzoneStrategy
+from touchify_pie_wheels.src.pie_utils.pie_deadzone_strategy import PieDeadzoneStrategy
 
 T = TypeVar("T")
 U = TypeVar("U")

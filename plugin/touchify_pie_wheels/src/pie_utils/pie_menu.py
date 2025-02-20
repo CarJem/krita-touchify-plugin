@@ -10,17 +10,15 @@ from PyQt5.QtGui import QColor
 from touchify.src.components.common.buttons.RoundButton import RoundButton
 from touchify_pie_wheels.src.core_components.controller_base import Controller
 from touchify_pie_wheels.src.core_components.instruction_base import Instruction
-from touchify_pie_wheels.src.data_components.PieDeadzoneStrategy import PieDeadzoneStrategy
+from touchify_pie_wheels.src.pie_utils.pie_deadzone_strategy import PieDeadzoneStrategy
 from touchify_pie_wheels.src.core_components.controller_base import Controller
 from touchify_pie_wheels.src.pie_utils.pie_config_impl import dispatch_pie_config
-from touchify_pie_wheels.src.pie_utils import (
-    PieStyleHolder,
-    PieActuator,
-    PieEditMode,
-    PieManager,
-    PieWidget,
-    PieLabel)
-from touchify_pie_wheels.src.templates import RawInstructions
+from touchify_pie_wheels.src.pie_utils.pie_style_holder import PieStyleHolder
+from touchify_pie_wheels.src.pie_utils.pie_actuator import PieActuator
+from touchify_pie_wheels.src.pie_utils.pie_manager import PieManager
+from touchify_pie_wheels.src.pie_utils.pie_widget import PieWidget
+from touchify_pie_wheels.src.pie_utils.pie_label import PieLabel
+from touchify_pie_wheels.src.pie_utils.pie_instructions import RawInstructions
 from touchify.src.api_krita import KritaAPI
 
 T = TypeVar('T')
@@ -104,7 +102,6 @@ class PieMenu(RawInstructions, Generic[T]):
         self._config.ORDER.register_callback(self._reset_labels)
 
         self._labels: list[PieLabel] = []
-        self._edit_mode = PieEditMode(self)
         self._style_holder = PieStyleHolder(pie_config=self._config)
         self._actuator = PieActuator(
             controller=self._controller,
@@ -117,7 +114,6 @@ class PieMenu(RawInstructions, Generic[T]):
         return PieWidget(
             style_holder=self._style_holder,
             labels=self._labels,
-            edit_mode=self._edit_mode,
             config=self._config)
 
     @cached_property
@@ -137,7 +133,6 @@ class PieMenu(RawInstructions, Generic[T]):
             icon=KritaAPI.get_icon("properties"),
             icon_scale=1.1,
             parent=self.pie_widget)
-        settings_button.clicked.connect(lambda: self._edit_mode.set(True))
         return settings_button
 
     @cached_property
@@ -156,7 +151,6 @@ class PieMenu(RawInstructions, Generic[T]):
         # Workaround for Qt bug, where button resets to (0, 0) on config change
         self._config.register_callback(self._move_accept_button_to_center)
 
-        accept_button.clicked.connect(lambda: self._edit_mode.set(False))
         accept_button.hide()
         return accept_button
 
@@ -218,9 +212,6 @@ class PieMenu(RawInstructions, Generic[T]):
             Ignore input.
         """
         super().on_every_key_release()
-
-        if self._edit_mode:
-            return
 
         self._actuator.activate(self.pie_widget.active_label)
         self.pie_manager.stop()

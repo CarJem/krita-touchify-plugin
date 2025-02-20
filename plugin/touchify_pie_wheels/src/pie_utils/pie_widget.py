@@ -13,7 +13,6 @@ from PyQt5.QtGui import (
 from touchify_pie_wheels.src.custom_components import Painter, AnimatedWidget, BaseWidget
 from touchify_pie_wheels.src.composer_utils import CirclePoints, Config
 from touchify_pie_wheels.src.composer_utils.label import LabelWidget
-from touchify_pie_wheels.src.pie_utils.pie_edit_mode import PieEditMode
 from touchify_pie_wheels.src.pie_utils.pie_label import PieLabel
 from touchify_pie_wheels.src.pie_utils.pie_style_holder import PieStyleHolder
 from touchify_pie_wheels.src.pie_utils.pie_config import PieConfig
@@ -39,7 +38,6 @@ class PieWidget(AnimatedWidget, BaseWidget, Generic[T]):
         self,
         style_holder: PieStyleHolder,
         labels: list[PieLabel[T]],
-        edit_mode: PieEditMode,
         config: PieConfig,
         parent=None
     ) -> None:
@@ -61,7 +59,6 @@ class PieWidget(AnimatedWidget, BaseWidget, Generic[T]):
         self._style_holder = style_holder
         self._labels = labels
         self._config = config
-        self._edit_mode = edit_mode
 
         self._painter = PiePainter(self._style_holder.pie_style)
 
@@ -92,11 +89,6 @@ class PieWidget(AnimatedWidget, BaseWidget, Generic[T]):
         """Return the deadzone distance."""
         return self._style_holder.pie_style.deadzone_radius
 
-    @property
-    def is_in_edit_mode(self) -> bool:
-        """Return whether the pie widget is in edit mode."""
-        return self._edit_mode.get()
-
     def paintEvent(self, event: QPaintEvent) -> None:
         """Paint the entire widget using the Painter wrapper."""
         with Painter(self, event) as qt_painter:
@@ -104,8 +96,6 @@ class PieWidget(AnimatedWidget, BaseWidget, Generic[T]):
 
     def dragEnterEvent(self, e: QDragEnterEvent) -> None:
         """Allow dragging the widgets while in edit mode."""
-        if self._edit_mode:
-            return e.accept()
         e.ignore()
 
     def dragMoveEvent(self, e: QDragMoveEvent) -> None:

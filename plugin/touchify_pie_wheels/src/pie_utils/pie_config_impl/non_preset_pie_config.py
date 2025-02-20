@@ -4,7 +4,7 @@
 from typing import Callable, Generic, TypeVar
 from PyQt5.QtGui import QColor
 
-from touchify_pie_wheels.src.data_components import PieDeadzoneStrategy
+from touchify_pie_wheels.src.pie_utils.pie_deadzone_strategy import PieDeadzoneStrategy
 from touchify_pie_wheels.src.pie_utils.pie_config import PieConfig
 
 T = TypeVar("T")

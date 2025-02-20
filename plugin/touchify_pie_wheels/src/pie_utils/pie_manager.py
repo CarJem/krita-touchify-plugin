@@ -48,9 +48,6 @@ class PieManager:
         if not self._pie_widget.isVisible():
             return self.stop()
 
-        if self._pie_widget.is_in_edit_mode:
-            return self.stop()
-
         if not self._pie_widget.order_handler:
             return
 
