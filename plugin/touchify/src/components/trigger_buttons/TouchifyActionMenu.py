@@ -14,7 +14,6 @@ class TouchifyActionMenu(QMenu):
     
     def __init__(self, cfg: TriggerMenuItem | TriggerMenu, parent: QWidget, action_mgr: "ActionManager"):
         super().__init__(parent)
-        self.krita_instance = Krita.instance()
         self.act = cfg
         
         for entry in self.act.context_menu_actions:

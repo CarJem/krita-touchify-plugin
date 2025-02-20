@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import *
+from touchify.src.api_krita import KritaAPI
 from touchify.src.managers.normal.dockers import *
 from krita import *
 from touchify.__env__ import *
-from touchify.src.datatypes.enum.BlendingMode import BlendingMode, PRETTY_NAMES
+from touchify.src.api_krita.enums.blending_mode import BlendingMode, PRETTY_NAMES
 
 class LayerBlendingOption(QWidgetAction):
 
@@ -124,7 +125,7 @@ class LayerBlendingSelector(QPushButton):
         self.favsUpdating = True
         self.favsMenu.clear()
 
-        self.favoriteModes = Krita.instance().readSetting("", "favoriteCompositeOps", "").split(",")
+        self.favoriteModes = KritaAPI.read_setting("", "favoriteCompositeOps", "").split(",")
         for mode in self.favoriteModes:
             actualName = self.getFancyName(mode)
             action = self.favsMenu.addAction(actualName)
@@ -144,14 +145,14 @@ class LayerBlendingSelector(QPushButton):
         
         mode = str(sender.data())
 
-        favoriteCompositeOps = Krita.instance().readSetting("", "favoriteCompositeOps", "").split(",")
+        favoriteCompositeOps = KritaAPI.read_setting("", "favoriteCompositeOps", "").split(",")
 
         if sender.isCheckboxChecked() == True and mode not in favoriteCompositeOps:
             favoriteCompositeOps.append(mode)
         elif sender.isCheckboxChecked() == False and mode in favoriteCompositeOps:
             favoriteCompositeOps.remove(mode)
 
-        Krita.instance().writeSetting("", "favoriteCompositeOps", ",".join(favoriteCompositeOps))
+        KritaAPI.write_setting("", "favoriteCompositeOps", ",".join(favoriteCompositeOps))
         self.updateFavs()
 
     def getFancyName(self, activeMode: str):
@@ -171,7 +172,10 @@ class LayerBlendingSelector(QPushButton):
         sender: QAction = self.sender()
         mode = str(sender.data())
 
-        activeWindow = Krita.instance().activeDocument()
+        native = KritaAPI.native()
+        if not native: return
+
+        activeWindow = native.activeDocument()
         if not activeWindow: return
 
         activeView = activeWindow.activeNode()

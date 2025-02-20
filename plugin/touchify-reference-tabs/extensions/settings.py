@@ -1,13 +1,14 @@
 from krita import *
+from touchify.src.api_krita import KritaAPI
 from .variables import *
 
 class Settings:
 
     def getFileDialogState():
-        return Krita.instance().readSetting(APPLICATION_NAME, SETTING_LAST_SELECTED_FOLDER, "")
+        return KritaAPI.native().readSetting(APPLICATION_NAME, SETTING_LAST_SELECTED_FOLDER, "")
 
     def setFileDialogState(folder: str):
-        Krita.instance().writeSetting(APPLICATION_NAME, SETTING_LAST_SELECTED_FOLDER, folder)
+        KritaAPI.native().writeSetting(APPLICATION_NAME, SETTING_LAST_SELECTED_FOLDER, folder)
 
     def getGridPreferences():
         return {

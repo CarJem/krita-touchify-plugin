@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+from touchify.src.api_krita import KritaAPI
 from touchify.src.config.popup.PopupData import PopupData
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.components.common.widget.AnimatedWidget import AnimatedWidget
@@ -95,7 +96,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
                 restoreFixedLocationAct.triggered.connect(self.parent_popup.restoreFixedLayoutState)
 
                 self.restoreLocation = QPushButton(self)
-                self.restoreLocation.setIcon(Krita.instance().icon('settings-button'))
+                self.restoreLocation.setIcon(KritaAPI.get_icon('settings-button'))
                 self.restoreLocation.setFixedSize(18,18)
                 self.restoreLocation.setMenu(restoreMenu)
                 self.restoreLocation.setFlat(True)
@@ -104,14 +105,14 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
                 self.restoreLocation = None
 
             self.minimizeBtn = QPushButton(self)
-            self.minimizeBtn.setIcon(Krita.instance().icon('docker_collapse_a'))
+            self.minimizeBtn.setIcon(KritaAPI.get_icon('docker_collapse_a'))
             self.minimizeBtn.setFixedSize(18,18)
             self.minimizeBtn.clicked.connect(self.parent_popup.toggleShade)
             self.minimizeBtn.setFlat(True)
             self.ourLayout.addWidget(self.minimizeBtn)
 
             self.closeButton = QPushButton(self)
-            self.closeButton.setIcon(Krita.instance().icon('docker_close'))
+            self.closeButton.setIcon(KritaAPI.get_icon('docker_close'))
             self.closeButton.setFixedSize(18,18)
             self.closeButton.setFlat(True)
             self.closeButton.clicked.connect(self.parent_popup.closePopup)
@@ -119,10 +120,10 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
 
         def updateCollapseState(self, is_collapsed: bool):
             if is_collapsed:
-                self.minimizeBtn.setIcon(Krita.instance().icon('docker_collapse_a'))
+                self.minimizeBtn.setIcon(KritaAPI.get_icon('docker_collapse_a'))
                 if self.restoreLocation: self.restoreLocation.setEnabled(True)
             else:
-                self.minimizeBtn.setIcon(Krita.instance().icon('docker_collapse_b'))
+                self.minimizeBtn.setIcon(KritaAPI.get_icon('docker_collapse_b'))
                 if self.restoreLocation: self.restoreLocation.setEnabled(False)
                 
 

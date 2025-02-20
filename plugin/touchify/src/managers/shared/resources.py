@@ -6,6 +6,7 @@ from touchify.__env__ import ASSETS_DIRECTORY, RESOURCE_PACKS_DIRECTORY
 
 import xml.etree.ElementTree as ET
 
+from touchify.src.api_krita import KritaAPI
 from touchify.src.managers.shared.settings import *
 from zipfile import ZipFile
 
@@ -151,12 +152,12 @@ class ResourceManager:
             return ResourceManager.fallbackIcon()
 
     def actionIcon(action_id: str):
-        target_action = Krita.instance().action(action_id)
+        target_action = KritaAPI.get_action(action_id)
         if target_action: return target_action.icon()
         else: return QIcon()
         
     def brushIcon(brushName: str):
-        brush_presets = Krita.instance().resources('preset')
+        brush_presets = KritaAPI.get_presets()
         if brushName in brush_presets:
             preset = brush_presets[brushName]
             return QIcon(QPixmap.fromImage(preset.image()))
@@ -164,7 +165,7 @@ class ResourceManager:
             return ResourceManager.fallbackIcon()
    
     def kritaIcon(iconName: str):
-        return Krita.instance().icon(iconName)
+        return KritaAPI.get_icon(iconName)
     
     def fallbackIcon():
         return QtGui.QIcon(os.path.join(ResourceManager.__resourcesDir__(), 'default.svg'))
@@ -174,10 +175,10 @@ class ResourceManager:
     #region Other Retrival
 
     def brushPresets():
-        return Krita.instance().resources('preset')
+        return KritaAPI.get_presets()
     
     def actionText(action_id: str):
-        target_action = Krita.instance().action(action_id)
+        target_action = KritaAPI.get_action(action_id)
         if target_action: return target_action.text()
         else: return ""
 

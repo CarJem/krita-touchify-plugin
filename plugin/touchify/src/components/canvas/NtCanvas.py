@@ -12,6 +12,7 @@ from touchify.src.managers.shared.events import GlobalEvents
 from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.shared.settings import TouchifySettings
 from krita import *
+from touchify.src.api_krita import KritaAPI
 from PyQt5.QtCore import QObject
 from touchify.__env__ import *
 from touchify.src.managers.shared.settings_krita import KritaSettings
@@ -64,7 +65,7 @@ class NtCanvas(QWidget):
     
     def Actions_Init(self, window: Window, subItemPath: str): 
         layouts_action = window.createAction(TOUCHIFY_ACTIONID_WIDGETPAD_PRESETS_MENU, "Configure Layout...", subItemPath)
-        layouts_action.setIcon(Krita.instance().icon("configure"))
+        layouts_action.setIcon(KritaAPI.get_icon("configure"))
         layouts_action.setMenu(self.presetsMenu)
 
         options_menu = QMenu("Widgets Shown", window.qwindow())
@@ -121,7 +122,7 @@ class NtCanvas(QWidget):
 
     def Connections_Post(self):
         self.MdiArea().installEventFilter(self)
-        Krita.instance().action("view_ruler").triggered.connect(self.Update_View)
+        KritaAPI.get_action("view_ruler").triggered.connect(self.Update_View)
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.Preset_Reload)
         GlobalEvents.instance().SIGNAL_CANVAS_LAYOUT_CHANGED.connect(self.Preset_Reload)
 

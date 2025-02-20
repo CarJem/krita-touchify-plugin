@@ -1,5 +1,7 @@
 from krita import *
 from PyQt5 import QtCore
+
+from touchify.src.api_krita import KritaAPI
 from .calculations import *
 
 colorpicker_size = 250
@@ -16,7 +18,7 @@ cps_h = colorpicker_size - ( cps_g * 2 )
 def Import_Pigment_O( ):
     pigment_o_module = None
     try:
-        dockers = Krita.instance().dockers()
+        dockers = KritaAPI.native().dockers()
         for d in dockers:
             if d.objectName() == "pykrita_pigment_o_docker":
                 pigment_o_module = d
@@ -82,7 +84,7 @@ class ColorPicker(QObject):
                 green = cor[ "rgb_d2" ]
                 blue  = cor[ "rgb_d3" ]
             else:
-                active_document = Krita.instance().activeDocument()
+                active_document = KritaAPI.native().activeDocument()
                 if active_document == None:
                     d_cm = "RGBA"
                     d_cd = "U8"
@@ -91,7 +93,7 @@ class ColorPicker(QObject):
                     d_cm = active_document.colorModel()
                     d_cd = active_document.colorDepth()
                     d_cp = active_document.colorProfile()
-                d_ac = Krita.instance().activeWindow().activeView().canvas()
+                d_ac = KritaAPI.native().activeWindow().activeView().canvas()
                 # Managed Colors RGB only
                 managed_color = ManagedColor( d_cm, d_cd, d_cp )
                 comp = managed_color.components()
@@ -111,7 +113,7 @@ class ColorPicker(QObject):
                     blue  = display.blueF()
                 # Apply Color
                 if state_press == False:
-                    Krita.instance().activeWindow().activeView().setForeGroundColor( managed_color )
+                    KritaAPI.native().activeWindow().activeView().setForeGroundColor( managed_color )
 
             # Display Color
             qcolor = QColor( int( red * 255 ), int( green * 255 ), int( blue * 255 ) )

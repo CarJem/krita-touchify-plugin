@@ -63,7 +63,7 @@ class BrushOptionsWidget(QWidget):
 
         self.optionsMenu = self.genMenu()
         self.optionsButton = QPushButton(self)
-        self.optionsButton.setIcon(Krita.instance().icon("configure"))
+        self.optionsButton.setIcon(KritaAPI.get_icon("configure"))
         self.optionsButton.setMenu(self.optionsMenu)
         self.optionsButton.setFixedHeight(15)
         self.optionsButton.setStyleSheet(f"""QPushButton::menu-indicator {{ image: none; }} QToolButton::menu-indicator {{ image: none; }}""")
@@ -171,4 +171,9 @@ class BrushOptionsDocker(DockWidget):
     def canvasChanged(self, canvas):
         self.brushOptions.onCanvasChanged(canvas)
 
-Krita.instance().addDockWidgetFactory(DockWidgetFactory(DOCKER_ID, DockWidgetFactoryBase.DockPosition.DockRight, BrushOptionsDocker))
+instance = KritaAPI.native()
+dock_widget_factory = DockWidgetFactory(DOCKER_ID,
+                                        DockWidgetFactoryBase.DockRight,
+                                        BrushOptionsDocker)
+
+instance.addDockWidgetFactory(dock_widget_factory)

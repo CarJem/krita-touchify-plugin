@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from touchify.src.api_krita import KritaAPI
 from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.__env__ import *
 from touchify.src.managers.shared.settings import *
@@ -197,7 +198,7 @@ class ShortcutsManager(object):
         settings_menu = self.qWin.findChild(QMenu, 'settings')
 
         configureAction = KritaExtensions.moveActionTo(TOUCHIFY_ACTIONID_CONFIGURE, settings_menu, settings_menu, 'options_configure')
-        configureAction.setIcon(Krita.instance().icon("configure"))
+        configureAction.setIcon(KritaAPI.get_icon("configure"))
 
         popupPaletteAction = KritaExtensions.moveActionTo(TOUCHIFY_ACTIONID_OTHER_SHOWPOPUPPALETTE, settings_menu, settings_menu, 'toolbars_submenu_action')
         popupMenuAction = KritaExtensions.moveActionTo(TOUCHIFY_ACTIONID_OTHER_SHOWMENUBARPOPUP, settings_menu, settings_menu, 'toolbars_submenu_action')

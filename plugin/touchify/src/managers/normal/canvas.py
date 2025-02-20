@@ -2,6 +2,7 @@ from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from touchify.src.api_krita import KritaAPI
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.__env__ import *
 from touchify.src.components.canvas.NtCanvas import NtCanvas
@@ -106,8 +107,7 @@ class CanvasManager(QObject):
             
 
         def Trigger_Run(actionName: str):
-            action = Krita.instance().action(actionName)
-            if action: action.trigger()
+            KritaAPI.trigger_action(actionName)
 
         try:
             if not self.active_canvas == obj: return False

@@ -14,6 +14,7 @@ install_plugin() {
 }
 
 install_plugin "touchify"
+install_plugin "touchify_pie_wheels"
 install_plugin "touchify-reference-tabs"
 install_plugin "touchify-compact-brush-toggler"
 install_plugin "touchify-brush-options"

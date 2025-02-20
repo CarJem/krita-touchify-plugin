@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 from krita import *
 
 
+from touchify.src.api_krita import KritaAPI
 from touchify.src.managers.normal.action_manager import ActionManager
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
@@ -63,7 +64,7 @@ class ToolboxWidget(QResizableWidget):
         self.layout().addWidget(self.scrollArea)
 
         self.settingsBtn = QToolButton(self)
-        self.settingsBtn.setIcon(Krita.instance().icon("configure"))
+        self.settingsBtn.setIcon(KritaAPI.get_icon("configure"))
         self.settingsBtn.setIconSize(QSize(16,16))
         self.settingsBtn.setContentsMargins(0,0,0,0)
         self.settingsBtn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -89,7 +90,7 @@ class ToolboxWidget(QResizableWidget):
     
 
     def updatePalette(self):
-        self.settingsBtn.setIcon(Krita.instance().icon("configure"))
+        self.settingsBtn.setIcon(KritaAPI.get_icon("configure"))
         self.reload()
 
 
@@ -345,7 +346,7 @@ class ToolboxWidget(QResizableWidget):
             action.setIconVisibleInMenu(True)
 
     def buildMenuAction(self, subMenu: ToolboxMenu, actionName: str, iconName: str):
-        act = Krita.instance().action(actionName)
+        act = KritaAPI.get_action(actionName)
         if act:
             toolIcon = self.buildActionIcon(actionName, iconName)
             toolText = act.toolTip()
@@ -354,9 +355,9 @@ class ToolboxWidget(QResizableWidget):
 
             # we need to call Krita's shortcut for the toolAction:
             try:
-                Krita.instance().action(toolName).shortcut()
+                KritaAPI.get_action(toolName).shortcut()
 
-                toolShortcut = Krita.instance().action(toolName).shortcut().toString() # find the global shortcut
+                toolShortcut = KritaAPI.get_action(toolName).shortcut().toString() # find the global shortcut
 
                 toolAction.setShortcut(toolShortcut)
 
@@ -370,7 +371,7 @@ class ToolboxWidget(QResizableWidget):
             subMenu.addAction(toolAction) # add the button for this tool in the menu
 
     def buildActionIcon(self, actionName: str, iconName: str):
-        act = Krita.instance().action(actionName)
+        act = KritaAPI.get_action(actionName)
 
         if iconName and iconName != "":
             customIcon = ResourceManager.iconLoader(iconName)

@@ -6,13 +6,14 @@ from PyQt5.QtCore import *
 
 
 from krita import *
+from touchify.src.api_krita import KritaAPI
 
 
 class KritaExtensions:
 
     @staticmethod
     def moveActionTo(action_id: str, source: QMenu, dest: QMenu, after: str):
-        actionToMove = Krita.instance().action(action_id)
+        actionToMove = KritaAPI.get_action(action_id)
 
         afterAct = None
         for index, action in enumerate(dest.actions()):
@@ -36,7 +37,10 @@ class KritaExtensions:
 
     @staticmethod
     def showQuickMessage(message: str):
-        Krita.instance().activeWindow().activeView().showFloatingMessage(message, Krita.instance().icon('move_layer_up'), 1000, 0)
+        view = KritaAPI.get_active_view_native()
+        if not view: return
+        
+        view.showFloatingMessage(message, KritaAPI.get_icon('move_layer_up'), 1000, 0)
 
     @staticmethod
     def formatActionText(text: str):

@@ -1,6 +1,7 @@
 from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
+from touchify.src.api_krita import KritaAPI
 
 from touchify.__env__ import REGISTERED_ACTIONS_FILE
 from touchify.src.config.menu.TriggerMenuItem import TriggerMenuItem
@@ -17,7 +18,6 @@ from touchify.src.components.trigger_buttons.TouchifyActionMenu import TouchifyA
 
 from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
 
-from touchify.src.components.shortcut_composer.ShortcutComposerUtils import ShortcutComposerUtils
 from touchify.src.managers.shared.events import GlobalEvents
 from touchify.__env__ import *
 
@@ -36,6 +36,8 @@ from touchify.src.datatypes.constants.KritaActions import KritaActions
 
 import xml.etree.ElementTree as ET
 from xml.dom import minidom as MiniDOM
+
+
 
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
@@ -78,6 +80,7 @@ class ActionManager(QObject):
         self.registeredActionsData = {}
         self.active_popups: dict[str, TouchifyPopup] = {}
         self.composer_action_down: bool = False
+        self.pie_wheel_api: Extension = None
 
         self.__lastView: View = None
         self.__lastBrushPreset: Resource = None
@@ -111,7 +114,7 @@ class ActionManager(QObject):
     #region Window Functions
 
     def Window_Load(self):
-        qwin = Krita.instance().activeWindow().qwindow()
+        qwin = KritaAPI.get_active_qwindow()
         mobj = next((w for w in qwin.findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
         wobj = mobj.findChild(QButtonGroup)
         wobj.buttonToggled.connect(self.OnEvent_ToolChanged)
@@ -215,7 +218,7 @@ class ActionManager(QObject):
                     actual_action = QAction(parent)
                     actual_action.setSeparator(True)
                 else:
-                    actual_action = parent.krita_instance.action(data.action_id)
+                    actual_action = KritaAPI.get_action(data.action_id)
                 if actual_action: parent.addAction(actual_action)
             case TriggerMenuItem.Variants.Seperator:
                 actual_action = QAction(parent)
@@ -458,7 +461,7 @@ class ActionManager(QObject):
 
     def OnEvent_GlobalMouseRelease(self):
         if self.composer_action_down == True:
-            QApplication.instance().sendEvent(Krita.instance().activeWindow().qwindow(), QKeyEvent(QEvent.Type.KeyRelease, Qt.Key.Key_Escape, Qt.KeyboardModifier.NoModifier))
+            QApplication.instance().sendEvent(KritaAPI.get_active_qwindow(), QKeyEvent(QEvent.Type.KeyRelease, Qt.Key.Key_Escape, Qt.KeyboardModifier.NoModifier))
             self.composerTriggerEnded.emit()
             try:
                 self.composerTriggerEnded.disconnect()
@@ -687,7 +690,7 @@ class ActionManager(QObject):
         return btn
         
     def Button_Trigger(self, act: Trigger):
-        action = Krita.instance().action(act.action_id)
+        action = KritaAPI.get_action(act.action_id)
         btn: TouchifyActionButton | None = None
         if action:
             checkable = action.isCheckable()
@@ -724,7 +727,7 @@ class ActionManager(QObject):
             act: QAction = self.registeredActions[data.action_id]
             act.trigger()
         else:
-            action = Krita.instance().action(data.action_id)
+            action = KritaAPI.get_action(data.action_id)
             if action:
                 action.trigger()
     
@@ -840,10 +843,22 @@ class ActionManager(QObject):
     def Execute_PieWheel(self, pie_wheel_registry_id: str):
         data: PieWheelData = TouchifySettings.instance().getRegistryItem(pie_wheel_registry_id, PieWheelData)
         if not isinstance(data, PieWheelData) or data == None: return
-        
-        result = ShortcutComposerUtils.PieWheel_Generate(data)
-        if result != None: 
-            result.Show()
-            self.composer_action_down = True
+
+        try:
+            from touchify_pie_wheels.src.Plugin import TouchifyPieWheelsPlugin
+            api: TouchifyPieWheelsPlugin | None = None
+            if self.pie_wheel_api == None:
+                api = KritaAPI.get_extension_by_name("touchify-pie-wheels-api")
+                self.pie_wheel_api = api
+            else:
+                api = self.pie_wheel_api
+
+            if api != None:
+                result = api.generate(data)
+                if result != None: 
+                    result.Show()
+                    self.composer_action_down = True
+        except:
+            pass
 
     #endregion

@@ -21,7 +21,8 @@ from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QMenuBar, QTabWidget, \
                             QAction, QMenu, QActionGroup, QInputDialog, QLineEdit
-from krita import DockWidget, Krita
+from krita import DockWidget
+from touchify.src.api_krita import KritaAPI
 from .extensions.variables import *
 from .dataclasses.session import Session
 
@@ -174,7 +175,7 @@ class DockerWidget(QWidget):
 
     def Session_Restore(self):
         try:
-            session_string = Krita.instance().readSetting("Touchify/ReferenceTabsDocker", "LastSession", "")
+            session_string = KritaAPI.native().readSetting("Touchify/ReferenceTabsDocker", "LastSession", "")
             session_state: Session = Session.read(session_string)
             self.Session_Load(session_state)
         except:
@@ -183,7 +184,7 @@ class DockerWidget(QWidget):
     def Session_Backup(self):
         try:
             session_state = self.Session_Save()
-            Krita.instance().writeSetting("Touchify/ReferenceTabsDocker", "LastSession", session_state)
+            KritaAPI.native().writeSetting("Touchify/ReferenceTabsDocker", "LastSession", session_state)
         except:
             pass
 

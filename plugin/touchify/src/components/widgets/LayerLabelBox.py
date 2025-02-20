@@ -4,11 +4,13 @@ from PyQt5.QtGui import QIcon,QPixmap
 from touchify.__env__ import *
 
 from typing import TYPE_CHECKING
+
+from touchify.src.api_krita import KritaAPI
 if TYPE_CHECKING:
     from touchify.src.PluginWindow import TouchifyWindow
     
 def getCurrentLayer():
-    app = Krita.instance()
+    app = KritaAPI
     doc = app.activeDocument()
     if not doc: return None
     currentLayer = doc.activeNode()
@@ -16,16 +18,13 @@ def getCurrentLayer():
 
 
 def getCurrentDoc():
-    app = Krita.instance()
+    app = KritaAPI
     doc = app.activeDocument()
     return doc
 
 
 def getSelectedLayers():
-    w = Krita.instance().activeWindow()
-    if not w: return None
-    
-    v = w.activeView()
+    v = KritaAPI.get_active_view_native()
     if not v: return None
     
     selectedNodes = v.selectedNodes()

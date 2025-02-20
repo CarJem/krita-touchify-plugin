@@ -1,15 +1,16 @@
 from krita import *
+from touchify.src.api_krita import KritaAPI
 from ...extensions.calculations import *
 from ...DockerToolbar import DockerToolbar
 
 # Variables
 EO_ENCODING = "utf-8"
 
-BASE_NORMAL_ICON = Krita.instance().icon("select")
-BASE_SELECT_ICON = Krita.instance().icon("tool_rect_selection")
-BASE_MOVE_ICON = Krita.instance().icon("krita_tool_move")
-BASE_CAMERA_PAN_ICON = Krita.instance().icon("tool_pan")
-BASE_CAMERA_ZOOM_ICON = Krita.instance().icon("tool_zoom")
+BASE_NORMAL_ICON = KritaAPI.get_icon("select")
+BASE_SELECT_ICON = KritaAPI.get_icon("tool_rect_selection")
+BASE_MOVE_ICON = KritaAPI.get_icon("krita_tool_move")
+BASE_CAMERA_PAN_ICON = KritaAPI.get_icon("tool_pan")
+BASE_CAMERA_ZOOM_ICON = KritaAPI.get_icon("tool_zoom")
 BASE_ICON_SIZE = QSize(14,14) 
 
 
@@ -50,30 +51,30 @@ class ReferenceToolbar(DockerToolbar):
         self.label_editor_button = QtWidgets.QToolButton(self)
         self.label_editor_button.setCheckable(True)
         self.label_editor_button.setChecked(False)
-        self.label_editor_button.setIcon(Krita.instance().icon("draw-text"))
+        self.label_editor_button.setIcon(KritaAPI.get_icon("draw-text"))
         self.addWidget(self.label_editor_button)
 
         self.color_picker_button = QtWidgets.QToolButton(self)
         self.color_picker_button.setCheckable(True)
         self.color_picker_button.setChecked(False)
-        self.color_picker_button.setIcon(Krita.instance().icon("krita_tool_color_sampler"))
+        self.color_picker_button.setIcon(KritaAPI.get_icon("krita_tool_color_sampler"))
         self.addWidget(self.color_picker_button)
 
         self.snap_button = QtWidgets.QToolButton(self)
         self.snap_button.setCheckable(True)
         self.snap_button.setChecked(False)
-        self.snap_button.setIcon(Krita.instance().icon("chain-broken-icon"))
+        self.snap_button.setIcon(KritaAPI.get_icon("chain-broken-icon"))
         self.addWidget(self.snap_button)
 
         self.referencepack_stop_button = QtWidgets.QToolButton(self)
-        self.referencepack_stop_button.setIcon(Krita.instance().icon( "snapshot-load" ))
+        self.referencepack_stop_button.setIcon(KritaAPI.get_icon( "snapshot-load" ))
         self.referencepack_stop_button.setVisible(False)
         self.addWidget(self.referencepack_stop_button)
 
         self.lock_button = QtWidgets.QToolButton(self)
         self.lock_button.setCheckable(True)
         self.lock_button.setChecked(False)
-        self.lock_button.setIcon(Krita.instance().icon("unlocked"))
+        self.lock_button.setIcon(KritaAPI.get_icon("unlocked"))
         self.addWidget(self.lock_button)
     
     def Connections( self ):
@@ -134,12 +135,12 @@ class ReferenceToolbar(DockerToolbar):
 
     def OnEvent_ActionsUpdated(self):
         self.snap_button.setChecked(self.Board().state_snap)
-        if self.Board().state_snap: self.snap_button.setIcon(Krita.instance().icon("chain-icon"))
-        else: self.snap_button.setIcon(Krita.instance().icon("chain-broken-icon"))
+        if self.Board().state_snap: self.snap_button.setIcon(KritaAPI.get_icon("chain-icon"))
+        else: self.snap_button.setIcon(KritaAPI.get_icon("chain-broken-icon"))
 
         self.lock_button.setChecked(self.Board().mode_lock)
-        if self.Board().mode_lock: self.lock_button.setIcon(Krita.instance().icon("locked"))
-        else: self.lock_button.setIcon(Krita.instance().icon("unlocked"))
+        if self.Board().mode_lock: self.lock_button.setIcon(KritaAPI.get_icon("locked"))
+        else: self.lock_button.setIcon(KritaAPI.get_icon("unlocked"))
 
         self.color_picker_button.setChecked(self.Board().mode_pickcolor)
         self.label_editor_button.setChecked(self.Board().mode_label)

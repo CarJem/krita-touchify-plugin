@@ -209,7 +209,7 @@ class CompactBrushToggler(DockWidget):
 
     def Window_Connect(self):
         # Window
-        self.window = Krita.instance().activeWindow() 
+        self.window = KritaAPI.native().activeWindow() 
         
         if self.window != None:  
             self.window.themeChanged.connect(self.Theme_Changed)  
@@ -275,7 +275,7 @@ class CompactBrushToggler(DockWidget):
             self.BrushProperty[prop].setIconSize( ico_size )
 
     def reloadPreset(self):
-        #Krita.instance().action('reload_preset_action').trigger() 
+        #KritaAPI.get_action('reload_preset_action').trigger() 
         #self.toggler.loadState()
         pass
         
@@ -295,13 +295,13 @@ class CompactBrushToggler(DockWidget):
         self.changeFadeValue()
     
     def changeFadeValue(self): 
-        self.toggler.cur_size  = Krita.instance().activeWindow().activeView().brushSize()    
+        self.toggler.cur_size  = KritaAPI.native().activeWindow().activeView().brushSize()    
         self.toggler.setBrushFadeValue()
         self.toggler.setBrushSize()
  
      
 
-instance = Krita.instance()
+instance = KritaAPI.native()
 dock_widget_factory = DockWidgetFactory(DOCKER_ID,
                                         DockWidgetFactoryBase.DockRight,
                                         CompactBrushToggler)

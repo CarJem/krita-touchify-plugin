@@ -149,7 +149,7 @@ class TouchifyActionButton(QToolButton):
 
     def onActionChanged(self):
         if self.action_use_icon: 
-            Krita.instance().action(self.action_source.objectName())
+            KritaAPI.get_action(self.action_source.objectName())
             self.setIcon(self.action_source.icon())
 
     def onPaletteChanged(self):
@@ -279,7 +279,7 @@ class TouchifyActionButton(QToolButton):
         if self.is_toolbox_child: self.enterToolboxEvent(event)
 
     def enterToolboxEvent(self, event):
-        if len(Krita.instance().documents()) == 0: # disable buttons before document is visible
+        if len(KritaAPI.get_documents()) == 0: # disable buttons before document is visible
             self.setEnabled(False)
         else:
             self.setEnabled(True)

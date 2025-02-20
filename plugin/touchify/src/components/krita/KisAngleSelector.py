@@ -4,6 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from krita import *
+from touchify.src.api_krita import KritaAPI
 from touchify.src.components.krita.KisAngleGauge import *
 
 class KisAngleSelectorSpinBox(QDoubleSpinBox):
@@ -187,25 +188,25 @@ class KisAngleSelector(QWidget):
         self._tool_button_flip_options = QToolButton(self)
         self._tool_button_flip_options.setPopupMode(QToolButton.InstantPopup)
         self._tool_button_flip_options.setAutoRaise(True)
-        self._tool_button_flip_options.setIcon(Krita.instance().icon("view-choose"))
+        self._tool_button_flip_options.setIcon(KritaAPI.get_icon("view-choose"))
         self._tool_button_flip_options.setStyleSheet("QToolButton::menu-indicator { image: none }")
         self._tool_button_flip_options.setMenu(self.menuFlip)
         self._tool_button_flip_options.setFocusPolicy(Qt.StrongFocus)
         self._tool_button_flip_horizontally = QToolButton(self)
         self._tool_button_flip_horizontally.setAutoRaise(True)
-        self._tool_button_flip_horizontally.setIcon(Krita.instance().icon("flip_angle_h"))
+        self._tool_button_flip_horizontally.setIcon(KritaAPI.get_icon("flip_angle_h"))
         self._tool_button_flip_horizontally.setIconSize(QSize(20, 20))
         self._tool_button_flip_horizontally.setToolTip(self.tr("Flip the angle horizontally"))
         self._tool_button_flip_horizontally.setFocusPolicy(Qt.StrongFocus)
         self._tool_button_flip_vertically = QToolButton(self)
         self._tool_button_flip_vertically.setAutoRaise(True)
-        self._tool_button_flip_vertically.setIcon(Krita.instance().icon("flip_angle_v"))
+        self._tool_button_flip_vertically.setIcon(KritaAPI.get_icon("flip_angle_v"))
         self._tool_button_flip_vertically.setIconSize(QSize(20, 20))
         self._tool_button_flip_vertically.setToolTip(self.tr("Flip the angle vertically"))
         self._tool_button_flip_vertically.setFocusPolicy(Qt.StrongFocus)
         self._tool_button_flip_horizontally_and_vertically = QToolButton(self)
         self._tool_button_flip_horizontally_and_vertically.setAutoRaise(True)
-        self._tool_button_flip_horizontally_and_vertically.setIcon(Krita.instance().icon("flip_angle_hv"))
+        self._tool_button_flip_horizontally_and_vertically.setIcon(KritaAPI.get_icon("flip_angle_hv"))
         self._tool_button_flip_horizontally_and_vertically.setIconSize(QSize(20, 20))
         self._tool_button_flip_horizontally_and_vertically.setToolTip(self.tr("Flip the angle horizontally and vertically"))
         self._tool_button_flip_horizontally_and_vertically.setFocusPolicy(Qt.StrongFocus)

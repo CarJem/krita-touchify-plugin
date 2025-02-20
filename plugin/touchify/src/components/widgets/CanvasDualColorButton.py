@@ -7,6 +7,7 @@ from touchify.__env__ import *
 
 from typing import TYPE_CHECKING
 
+from touchify.src.api_krita import KritaAPI
 from touchify.src.managers.shared.resources import ResourceManager
 if TYPE_CHECKING:
     from touchify.src.PluginWindow import TouchifyWindow
@@ -145,13 +146,13 @@ class CanvasDualColorButton(QWidget):
         if a0.button() != Qt.MouseButton.LeftButton: return
 
         if foreground_rect.contains(a0.pos()):
-            Krita.instance().action("chooseForegroundColor").trigger()
+            KritaAPI.get_action("chooseForegroundColor").trigger()
         elif background_rect.contains(a0.pos()):
-            Krita.instance().action("chooseBackgroundColor").trigger()
+            KritaAPI.get_action("chooseBackgroundColor").trigger()
         elif swap_rect and swap_rect.contains(a0.pos()):
-            Krita.instance().action("toggle_fg_bg").trigger()
+            KritaAPI.get_action("toggle_fg_bg").trigger()
         elif reset_rect and reset_rect.contains(a0.pos()):
-            Krita.instance().action("reset_fg_bg").trigger()
+            KritaAPI.get_action("reset_fg_bg").trigger()
 
     def onFGColorChanged(self, managed_color: ManagedColor):
         self.__foreground_color = self.krita_to_qcolor(managed_color)

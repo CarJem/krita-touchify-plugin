@@ -2,6 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from krita import *
+from touchify.src.api_krita import KritaAPI
 from touchify.src.config.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.config.docker_group.DockerGroup import DockerGroup
 from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
@@ -177,7 +178,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         elif mode == PropertyGrid_Restrictions.StrMod.DockerSelection:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
-            dockers = Krita.instance().dockers()
+            dockers = KritaAPI.get_dockers()
             for dockerData in dockers:
                 displayName = f"{dockerData.windowTitle()}\n---[{dockerData.objectName()}]---"
                 listItem = QListWidgetItem()
@@ -187,7 +188,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         elif mode == PropertyGrid_Restrictions.StrMod.ActionSelection:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
-            actions = Krita.instance().actions()
+            actions = KritaAPI.get_actions()
             for actionData in actions:
                 displayName = f"{actionData.toolTip()}\n---[{actionData.objectName()}]---"
                 icon = actionData.icon()

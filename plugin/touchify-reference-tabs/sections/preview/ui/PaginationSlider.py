@@ -18,6 +18,7 @@ import random
 from PyQt5.QtCore import Qt
 
 from krita import *
+from touchify.src.api_krita import KritaAPI
 
 from ....DockerToolbar import DockerToolbar
 from typing import TYPE_CHECKING
@@ -60,13 +61,13 @@ class PaginationSlider(DockerToolbar):
 
         self.play_pause_button = QToolButton(self)
         self.play_pause_button.setVisible(False)
-        self.play_pause_button.setIcon(Krita.instance().icon("media-playback-stop"))
+        self.play_pause_button.setIcon(KritaAPI.get_icon("media-playback-stop"))
 
         self.left_button = QToolButton(self)
-        self.left_button.setIcon(Krita.instance().icon("prevframe"))
+        self.left_button.setIcon(KritaAPI.get_icon("prevframe"))
 
         self.right_button = QToolButton(self)
-        self.right_button.setIcon(Krita.instance().icon("nextframe"))
+        self.right_button.setIcon(KritaAPI.get_icon("nextframe"))
 
         self.addWidget(self.path_label, stretch=1)
         self.addWidget(self.animation_slider, stretch=1)
@@ -130,9 +131,9 @@ class PaginationSlider(DockerToolbar):
         self.path_label.setText(value)
 
         if self.View().anim_timer.isActive():
-            self.play_pause_button.setIcon(Krita.instance().icon("media-playback-stop"))
+            self.play_pause_button.setIcon(KritaAPI.get_icon("media-playback-stop"))
         else:
-            self.play_pause_button.setIcon(Krita.instance().icon("media-playback-start"))
+            self.play_pause_button.setIcon(KritaAPI.get_icon("media-playback-start"))
 
         if self.View().state_animation: self.page_label.setText("Frame:")
         elif self.View().state_compact: self.page_label.setText("Page:")

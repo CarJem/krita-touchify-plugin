@@ -3,6 +3,7 @@ from krita import *
 from PyQt5.QtCore import *
 from xml.dom.minidom import parse as xmlParse
 
+from touchify.src.api_krita import KritaAPI
 from touchify.src.components.common.painters.CheckerPainter import CheckerPainter
 from touchify.__env__ import *
 
@@ -293,7 +294,7 @@ class CanvasGradientPicker(QPushButton):
             elif file_name == "Foreground to Transparent.svg":
                 data = GradientLoader.ForegroundToBackground(True)
             else:
-                resource_directory = Krita.instance().getAppDataLocation()
+                resource_directory = KritaAPI.get_app_data_location()
                 file_path = os.path.join(resource_directory, "gradients", file_name)
                 data = []
 

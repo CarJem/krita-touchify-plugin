@@ -4,6 +4,7 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 
+from touchify.src.api_krita import KritaAPI
 from touchify.src.components.toolshelf.Menu import Menu
 
 from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
@@ -54,7 +55,7 @@ class Header(QWidget):
         self.mainButton.clicked.connect(self.openSettings)
 
         self.backButton = QPushButton(self)
-        self.backButton.setIcon(Krita.instance().action('move_layer_up').icon())
+        self.backButton.setIcon(KritaAPI.get_action('move_layer_up').icon())
         self.backButton.setIconSize(QSize(self.icon_size, self.icon_size))
         self.backButton.clicked.connect(self.openRootPage)
         self.backButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -65,7 +66,7 @@ class Header(QWidget):
         self.fillerWidget.setObjectName("filler-widget")
 
         self.pinButton = QPushButton(self)
-        self.pinButton.setIcon(Krita.instance().icon('krita_tool_reference_images'))
+        self.pinButton.setIcon(KritaAPI.get_icon('krita_tool_reference_images'))
         self.pinButton.setIconSize(QSize(self.icon_size, self.icon_size))
         self.pinButton.setObjectName("pin-widget")
         self.pinButton.setCheckable(True)

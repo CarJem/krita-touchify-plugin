@@ -2,6 +2,7 @@
 from krita import *
 from PyQt5.QtCore import *
 
+from touchify.src.api_krita import KritaAPI
 from touchify.src.components.widgets.CanvasColorPicker import CanvasColorPicker
 from touchify.src.managers.shared.events import GlobalEvents
 from touchify.src.managers.shared.settings import TouchifySettings
@@ -76,10 +77,10 @@ class ColorSourceToggle(QWidget):
         self.setBgBtn.setInstance(self.appEngine)
 
     def toggleColors(self):
-        Krita.instance().action("toggle_fg_bg").trigger()
+        KritaAPI.get_action("toggle_fg_bg").trigger()
 
     def resetColors(self):
-        Krita.instance().action("reset_fg_bg").trigger()
+        KritaAPI.get_action("reset_fg_bg").trigger()
 
     def showEvent(self, event):
         super().showEvent(event)
@@ -120,4 +121,10 @@ class ColorOptionsDocker(DockWidget):
     def canvasChanged(self, canvas):
         self.colorToggle.onCanvasChanged(canvas)
 
-Krita.instance().addDockWidgetFactory(DockWidgetFactory(DOCKER_ID, DockWidgetFactoryBase.DockPosition.DockRight, ColorOptionsDocker))
+instance = KritaAPI.native()
+dock_widget_factory = DockWidgetFactory(DOCKER_ID,
+                                        DockWidgetFactoryBase.DockRight,
+                                        ColorOptionsDocker)
+
+instance.addDockWidgetFactory(dock_widget_factory)
+

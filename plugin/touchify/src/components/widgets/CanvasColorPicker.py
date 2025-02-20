@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 
 from touchify.__env__ import *
 
+from touchify.src.api_krita import KritaAPI
 from touchify.src.components.common.buttons.ColorFramedButton import ColorFramedButton
 
 from typing import TYPE_CHECKING
@@ -38,10 +39,10 @@ class CanvasColorPicker(ColorFramedButton):
             self.onColorChanged(self.appEngine.mgr_actions.getCanvasColor(True))
 
     def setForegroundColor(self):
-        Krita.instance().action("chooseForegroundColor").trigger()
+        KritaAPI.get_action("chooseForegroundColor").trigger()
 
     def setBackgroundColor(self):
-        Krita.instance().action("chooseBackgroundColor").trigger()
+        KritaAPI.get_action("chooseBackgroundColor").trigger()
     
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)

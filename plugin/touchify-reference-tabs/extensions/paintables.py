@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui
-from krita import Krita
+from touchify.src.api_krita import KritaAPI
 
 class Paintables:
 
@@ -42,7 +42,7 @@ class Paintables:
         # QPixmap
         qpixmap = QtGui.QPixmap( image_size, image_size )
         qpixmap.fill( QtCore.Qt.GlobalColor.transparent )
-        qicon = Krita.instance().icon( name ).pixmap( QtCore.QSize( icon_size, icon_size ) )    
+        qicon = KritaAPI.get_icon( name ).pixmap( QtCore.QSize( icon_size, icon_size ) )    
         painter = QtGui.QPainter( qpixmap )
         painter.drawPixmap( icon_margin, icon_margin, qicon )
         painter.end()

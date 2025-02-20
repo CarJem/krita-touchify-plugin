@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import *
+from touchify.src.api_krita import KritaAPI
 from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.shared.resources import ResourceManager
 from touchify.__env__ import *
@@ -27,7 +28,7 @@ class TweakManager(QObject):
     #region Signals
 
     def Window_Load(self):
-        Krita.instance().action("show_brush_editor").triggered.connect(self.onBrushEditorTrigged)
+        KritaAPI.get_action("show_brush_editor").triggered.connect(self.onBrushEditorTrigged)
         self.qWin = self.appEngine.krita_window.qwindow()
         self.qWin.themeChanged.connect(self.rebuildStyleSheet)
         self.brush_editor_tweak = Tweak_BrushEditor(self.qWin, self.appEngine)
@@ -133,7 +134,7 @@ class TweakManager(QObject):
         recentDocumentsListView = self.qWin.findChild(QListView,'recentDocumentsListView')
         if recentDocumentsListView:
             recentDocumentsListView.setHidden(config.Styles_PrivacyMode)
-            recent_files_action = Krita.instance().action("file_open_recent")
+            recent_files_action = KritaAPI.get_action("file_open_recent")
             recent_files_native_actions = [
                 "no_entries",
                 "separator",

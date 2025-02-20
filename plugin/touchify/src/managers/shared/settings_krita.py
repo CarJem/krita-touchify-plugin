@@ -1,4 +1,5 @@
 from krita import *
+from touchify.src.api_krita import KritaAPI
 from touchify.src.datatypes.dataclass.KisColor import KisColor, KisAlphaColor
 from touchify.src.extensions.parse_extensions import ParseExtensions
 from touchify.src.managers.shared.events import GlobalEvents
@@ -8,19 +9,19 @@ class KritaSettings:
         KritaSettings.notify_hooks = []
 
     def readSetting(group:str, name:str, defaultValue:str):
-        return Krita.instance().readSetting(group, name, defaultValue)
+        return KritaAPI.read_setting(group, name, defaultValue)
     
     def readSettingInt(group:str, name:str, defaultValue:int):
-        strVal = Krita.instance().readSetting(group, name, str(defaultValue))
+        strVal = KritaAPI.read_setting(group, name, str(defaultValue))
         return ParseExtensions.parse_int(strVal, defaultValue)
 
     def readSettingFloat(group:str, name:str, defaultValue:float):
-        strVal = Krita.instance().readSetting(group, name, str(defaultValue))
+        strVal = KritaAPI.read_setting(group, name, str(defaultValue))
         return ParseExtensions.parse_float(strVal, defaultValue)
 
 
     def readSettingAlphaColor(group:str, name:str, defaultValue: KisAlphaColor):
-        strVal = Krita.instance().readSetting(group, name, str(defaultValue))
+        strVal = KritaAPI.read_setting(group, name, str(defaultValue))
         listVal = strVal.split(",")
         if len(listVal) == 4:
             r = ParseExtensions.parse_int(listVal[0], 0)
@@ -32,7 +33,7 @@ class KritaSettings:
         return defaultValue 
 
     def readSettingColor(group:str, name:str, defaultValue: KisColor):
-        strVal = Krita.instance().readSetting(group, name, str(defaultValue))
+        strVal = KritaAPI.read_setting(group, name, str(defaultValue))
         listVal = strVal.split(",")
         if len(listVal) == 3:
             r = ParseExtensions.parse_int(listVal[0], 0)
@@ -43,7 +44,7 @@ class KritaSettings:
         return defaultValue 
 
     def readSettingBool(group:str, name:str, defaultValue:bool):
-        result = Krita.instance().readSetting(group, name, "true" if defaultValue == True else "false")
+        result = KritaAPI.read_setting(group, name, "true" if defaultValue == True else "false")
         if result == "true": return True
         elif result == "false": return False
         else: return None
@@ -63,7 +64,7 @@ class KritaSettings:
         return KritaSettings.writeSetting(group, name, defaultVal, notify)
 
     def writeSetting(group:str, name:str, value:str, notify: bool = True):
-        result = Krita.instance().writeSetting(group, name, value)
+        result = KritaAPI.write_setting(group, name, value)
         if notify: GlobalEvents.instance().EMIT_SIGNAL_KRITA_CONFIG_UPDATED()
         return result
 

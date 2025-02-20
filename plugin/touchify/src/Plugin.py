@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.__env__ import *
+from touchify.src.api_krita import KritaAPI
 from touchify.src.managers.shared.events import GlobalEvents
 
 from touchify.src.PluginWindow import TouchifyWindow
@@ -20,8 +21,8 @@ class TouchifyPlugin(Extension):
 
 
     def setup(self):
-        Krita.instance().notifier().windowCreated.connect(self.onWindowCreated)
-        Krita.instance().notifier().configurationChanged.connect(self.onConfigurationChanged)
+        KritaAPI.native().notifier().windowCreated.connect(self.onWindowCreated)
+        KritaAPI.native().notifier().configurationChanged.connect(self.onConfigurationChanged)
 
 
         self.intervalTimer = QTimer(self)
@@ -40,7 +41,7 @@ class TouchifyPlugin(Extension):
         window: Window | None = None
         window_id = self.new_instance.Window_UUID()
 
-        for __window in Krita.instance().windows():
+        for __window in KritaAPI.get_windows_native():
             if __window.qwindow().property("KRITA_TOUCHIFY_IS_LOADED") != True:
                 __window.qwindow().setProperty("KRITA_TOUCHIFY_IS_LOADED", True)
                 window = __window

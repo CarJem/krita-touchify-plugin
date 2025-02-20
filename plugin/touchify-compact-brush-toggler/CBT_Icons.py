@@ -31,7 +31,9 @@ from PyQt5.QtCore import (
 )
 from PyQt5.QtGui import (
     QIcon 
-) 
+)
+
+from touchify.src.api_krita import KritaAPI 
 
 class CBT_Icons():
     icon_names = [
@@ -81,7 +83,7 @@ class CBT_Icons():
         if icon_name in self.icon_list[self.icon_theme]:
             return self.icon_list[self.icon_theme][icon_name] 
         else:
-            return Krita.instance().icon("transform_icons_penPressure")  
+            return KritaAPI.get_icon("transform_icons_penPressure")  
         
     def addIconFromFile(self, theme, icon_name):
         icon_file =  os.path.dirname(os.path.realpath(__file__)) + '/pics/' + theme + "_" + icon_name + '.svg'

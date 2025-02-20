@@ -18,6 +18,7 @@ from typing import TYPE_CHECKING
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from krita import *
+from touchify.src.api_krita import KritaAPI
 from .dataclasses.images import InsertablePin
 
 
@@ -35,9 +36,9 @@ from .DockerToolbar import DockerToolbar
 from .DockerMenu import DockerMenu
 
 
-PREVIEW_SECTION_ICON = Krita.instance().icon("folder-pictures")
-GRID_SECTION_ICON = Krita.instance().icon("gridbrush")
-REFERENCE_SECTION_ICON = Krita.instance().icon("zoom-fit")
+PREVIEW_SECTION_ICON = KritaAPI.get_icon("folder-pictures")
+GRID_SECTION_ICON = KritaAPI.get_icon("gridbrush")
+REFERENCE_SECTION_ICON = KritaAPI.get_icon("zoom-fit")
 
 if TYPE_CHECKING:
     from .DockerWidget import DockerWidget

@@ -6,8 +6,7 @@
         "**/.venv": true
     },
     "python.analysis.extraPaths": [    
-        "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs",
-        "~/.var/app/org.kde.krita/data/krita/pykrita/shortcut_composer"
+        "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs"
     ],
     "python.analysis.fixAll" : ["source.unusedImports", "source.convertImportFormat"],
     "python.REPL.enableREPLSmartSend": false,

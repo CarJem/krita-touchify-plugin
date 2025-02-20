@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtCore import Qt
+from touchify.src.api_krita import KritaAPI
 from touchify.src.components.krita.KisAngleSelector import KisAngleSelector
 
 from krita import *
@@ -55,23 +56,23 @@ class PreviewToolbar(DockerToolbar):
         self.angle_spinbox.setFlipOptionsMode("ContextMenu")
 
         self.reset_button = QToolButton(self)
-        self.reset_button.setIcon(Krita.instance().icon("zoom-fit"))
+        self.reset_button.setIcon(KritaAPI.get_icon("zoom-fit"))
         self.reset_button.setToolTip("Fit to page")
 
         self.horz_mirror_button = QToolButton(self)
-        self.horz_mirror_button.setIcon(Krita.instance().icon("transform_icons_mirror_x"))
+        self.horz_mirror_button.setIcon(KritaAPI.get_icon("transform_icons_mirror_x"))
         self.horz_mirror_button.setToolTip("Horizontal mirroring")
         self.horz_mirror_button.setCheckable(True)
         self.horz_mirror_button.setChecked(False)
 
         self.vertical_mirror_button = QToolButton(self)
-        self.vertical_mirror_button.setIcon(Krita.instance().icon("transform_icons_mirror_y"))
+        self.vertical_mirror_button.setIcon(KritaAPI.get_icon("transform_icons_mirror_y"))
         self.vertical_mirror_button.setToolTip("Vertical mirroring")
         self.vertical_mirror_button.setCheckable(True)
         self.vertical_mirror_button.setChecked(False)
 
         self.color_picker_button = QToolButton(self)
-        self.color_picker_button.setIcon(Krita.instance().icon("krita_tool_color_sampler"))
+        self.color_picker_button.setIcon(KritaAPI.get_icon("krita_tool_color_sampler"))
         self.color_picker_button.setToolTip("Sample color from image")
         self.color_picker_button.setCheckable(True)
         self.color_picker_button.setChecked(False)
