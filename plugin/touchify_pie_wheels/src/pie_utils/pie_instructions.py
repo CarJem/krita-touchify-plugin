@@ -45,8 +45,7 @@ class RawInstructions(ComplexActionInterface):
 
     ### Arguments:
 
-    - `name`         -- unique name of action. Must match the definition
-                        in shortcut_composer.action file
+    - `name`         -- unique name of action. 
     - `instructions` -- (optional) list of additional instructions to
                         perform on key press and release.
     - `short_vs_long_press_time` -- (optional) time [s] that specifies

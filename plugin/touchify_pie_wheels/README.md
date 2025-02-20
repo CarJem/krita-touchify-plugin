@@ -1,0 +1,1 @@
+This Plugin contains modified code forked from [Shortcut Composer](https://github.com/wojtryb/Shortcut-Composer?tab=readme-ov-file) to offer Touchify customizable pie wheels.

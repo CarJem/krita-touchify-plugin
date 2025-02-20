@@ -36,8 +36,7 @@ class PieMenu(RawInstructions, Generic[T]):
 
     ### Arguments:
 
-    - `name`          -- unique name of action. Must match the
-                         definition in shortcut_composer.action file
+    - `name`          -- unique name of action.
     - `controller`    -- defines which krita property will be modified
     - `values`        -- default list of values to display in pie
     - `instructions`  -- (optional) list of additional instructions to
