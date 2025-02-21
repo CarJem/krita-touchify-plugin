@@ -6,17 +6,17 @@ from typing import Protocol
 
 from PyQt5.QtCore import QByteArray
 
-from ..enums import NodeType
-from .node import Node, KritaNode
+from touchify.src.api_krita.enums import NodeType
+from touchify.src.api_krita.wrappers.node import NodeAPI, NodeObj
 
 
-class KritaDocument(Protocol):
+class DocumentObj(Protocol):
     """Krita `Document` object API."""
 
-    def activeNode(self) -> KritaNode: ...
-    def setActiveNode(self, node: KritaNode): ...
-    def createNode(self, name: str, node_type: str) -> KritaNode: ...
-    def topLevelNodes(self) -> list[KritaNode]: ...
+    def activeNode(self) -> NodeObj: ...
+    def setActiveNode(self, node: NodeObj): ...
+    def createNode(self, name: str, node_type: str) -> NodeObj: ...
+    def topLevelNodes(self) -> list[NodeObj]: ...
     def resolution(self) -> int: ...
     def currentTime(self) -> int: ...
     def setCurrentTime(self, time: int) -> None: ...
@@ -32,22 +32,22 @@ class KritaDocument(Protocol):
 
 
 @dataclass
-class Document:
+class DocumentAPI:
     """Wraps krita `Document` for typing, docs and PEP8 compatibility."""
 
-    document: KritaDocument
+    document: DocumentObj
 
     @property
-    def active_node(self) -> Node:
+    def active_node(self) -> NodeAPI:
         """Settable property with this `Document`'s active `Node`."""
-        return Node(self.document.activeNode())
+        return NodeAPI(self.document.activeNode())
 
     @active_node.setter
-    def active_node(self, node: Node) -> None:
+    def active_node(self, node: NodeAPI) -> None:
         """Set active `Node`."""
         self.document.setActiveNode(node.node)
 
-    def create_node(self, name: str, node_type: NodeType) -> Node:
+    def create_node(self, name: str, node_type: NodeType) -> NodeAPI:
         """
         Create a Node.
 
@@ -61,7 +61,7 @@ class Document:
         The settings and selections for relevant layer and mask types
         can also be set after the Node has been created.
         """
-        return Node(self.document.createNode(name, node_type.value))
+        return NodeAPI(self.document.createNode(name, node_type.value))
 
     @property
     def current_time(self) -> int:
@@ -73,13 +73,13 @@ class Document:
         """Set current time using frame number"""
         self.document.setCurrentTime(round(time))
 
-    def get_top_nodes(self) -> list[Node]:
+    def get_top_nodes(self) -> list[NodeAPI]:
         """Return a list of `Nodes` without a parent."""
-        return [Node(node) for node in self.document.topLevelNodes()]
+        return [NodeAPI(node) for node in self.document.topLevelNodes()]
 
-    def get_all_nodes(self, include_collapsed: bool = False) -> list[Node]:
+    def get_all_nodes(self, include_collapsed: bool = False) -> list[NodeAPI]:
         """Return a list of all `Nodes` in this document bottom to top."""
-        def recursive_search(nodes: list[Node], found_so_far: list[Node]):
+        def recursive_search(nodes: list[NodeAPI], found_so_far: list[NodeAPI]):
             for node in nodes:
                 if include_collapsed or not node.collapsed:
                     recursive_search(node.get_child_nodes(), found_so_far)

@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import re
-from typing import Callable, Protocol, Any
+from typing import Callable, Any
 
-from krita import Krita as Api, Extension, DockWidgetFactory, Window as KritaWindowNative, qApp
+from krita import Krita as Api, Extension, DockWidgetFactory, Window as KritaWindow, qApp
 from PyQt5.QtWidgets import (
     QMainWindow,
     QDesktopWidget,
@@ -20,11 +20,13 @@ from touchify.src.api_krita.enums.docker_position import DockerPosition
 from touchify.src.api_krita.wrappers import (
     UnknownVersion,
     ToolDescriptor,
-    Document,
+    DocumentAPI,
     Version,
-    Canvas,
-    Cursor,
-    View)
+    CanvasAPI,
+    CursorAPI,
+    WindowAPI,
+    NotifierAPI,
+    ViewAPI)
 
 
 class KritaInstance:
@@ -38,9 +40,9 @@ class KritaInstance:
         self.screen_size = QDesktopWidget().screenGeometry(-1).width()
         self.main_window: Any = None
 
-    def get_active_view(self) -> View:
+    def get_active_view(self) -> ViewAPI:
         """Return wrapper of krita `View`."""
-        return View(self.instance.activeWindow().activeView())
+        return ViewAPI(self.instance.activeWindow().activeView())
     
     def get_active_view_native(self):
         win = self.instance.activeWindow()
@@ -51,12 +53,12 @@ class KritaInstance:
 
         return view
 
-    def get_active_document(self) -> Document | None:
+    def get_active_document(self) -> DocumentAPI | None:
         """Return wrapper of krita `Document`."""
         document = self.instance.activeDocument()
         if document is None:
             return None
-        return Document(document)
+        return DocumentAPI(document)
 
     def get_active_document_native(self):
         document = self.instance.activeDocument()
@@ -64,9 +66,9 @@ class KritaInstance:
             return None
         return document
 
-    def get_active_canvas(self) -> Canvas:
+    def get_active_canvas(self) -> CanvasAPI:
         """Return wrapper of krita `Canvas`."""
-        return Canvas(self.instance.activeWindow().activeView().canvas())
+        return CanvasAPI(self.instance.activeWindow().activeView().canvas())
     
     def get_active_canvas_native(self):
         win = self.instance.activeWindow()
@@ -80,13 +82,13 @@ class KritaInstance:
 
         return canvas
 
-    def get_cursor(self) -> Cursor:
+    def get_cursor(self) -> CursorAPI:
         """Return wrapper of krita `Cursor`. Don't use on plugin init phase."""
         q_win = self.get_active_qwindow()
-        return Cursor(q_win)
+        return CursorAPI(q_win)
 
     def get_documents(self):
-        return list(map(Document, self.instance.documents()))
+        return list(map(DocumentAPI, self.instance.documents()))
 
     def get_documents_native(self):
         return self.instance.documents()
@@ -124,13 +126,16 @@ class KritaInstance:
     def get_dockers(self) -> list[QDockWidget]:
         return self.instance.dockers()
     
-    def get_windows_native(self) -> list[KritaWindowNative]:
+    def get_windows_native(self) -> list[KritaWindow]:
         return self.instance.windows()
 
     def get_app_data_location(self) -> str:
         return self.instance.getAppDataLocation()
 
-    def native(self):
+    def notifier(self) -> NotifierAPI:
+        return NotifierAPI(self.instance.notifier())
+
+    def native(self) -> Api:
         return self.instance
     
     def read_setting(
@@ -155,7 +160,7 @@ class KritaInstance:
 
     def create_action(
         self,
-        window: 'KritaWindow',
+        window: 'WindowAPI',
         name: str,
         group: str = "",
         callback: Callable[[], None] = lambda: None
@@ -234,12 +239,4 @@ class KritaInstance:
         return Version(int(major), int(minor), int(fix), additional_info)
 
 
-class KritaWindow(Protocol):
-    """Krita window received in createActions() of main extension file."""
 
-    def createAction(
-        self,
-        name: str,
-        description: str,
-        menu: str, /
-    ) -> QWidgetAction: ...

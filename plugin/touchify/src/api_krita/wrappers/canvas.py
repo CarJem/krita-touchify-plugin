@@ -4,10 +4,10 @@
 from dataclasses import dataclass
 from typing import Protocol, Any
 
-from .document import Document
+from touchify.src.api_krita.wrappers.document import DocumentAPI
 
 
-class KritaCanvas(Protocol):
+class CanvasObj(Protocol):
     """Krita `Canvas` object API."""
 
     def rotation(self) -> float: ...
@@ -18,13 +18,13 @@ class KritaCanvas(Protocol):
 
 
 @dataclass
-class Canvas:
+class CanvasAPI:
     """Wraps krita `Canvas` for typing, docs and PEP8 compatibility."""
 
-    canvas: KritaCanvas
+    canvas: CanvasObj
 
     def __post_init__(self) -> None:
-        self._zoom_scale = Document(self.canvas.view().document()).dpi/7200
+        self._zoom_scale = DocumentAPI(self.canvas.view().document()).dpi/7200
 
     @property
     def rotation(self) -> float:

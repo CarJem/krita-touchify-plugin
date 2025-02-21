@@ -3,13 +3,13 @@
 
 from dataclasses import dataclass
 from typing import Protocol
-from ..enums import BlendingMode
+from touchify.src.api_krita.enums import BlendingMode
 
 
-class KritaNode(Protocol):
+class NodeObj(Protocol):
     """Krita `Node` object API."""
 
-    def addChildNode(self, child: 'KritaNode', above: 'KritaNode') -> bool: ...
+    def addChildNode(self, child: 'NodeObj', above: 'NodeObj') -> bool: ...
     def name(self) -> str: ...
     def setName(self, name: str) -> None: ...
     def visible(self) -> bool: ...
@@ -25,17 +25,17 @@ class KritaNode(Protocol):
     def setCollapsed(self, value: bool) -> None: ...
     def animated(self) -> bool: ...
     def uniqueId(self) -> str: ...
-    def childNodes(self) -> list['KritaNode']: ...
-    def parentNode(self) -> 'KritaNode': ...
+    def childNodes(self) -> list['NodeObj']: ...
+    def parentNode(self) -> 'NodeObj': ...
 
 
 @dataclass
-class Node():
+class NodeAPI():
     """Wraps krita `Node` for typing, documentation and PEP8 compatibility."""
 
-    node: KritaNode
+    node: NodeObj
 
-    def add_child_node(self, child: 'Node', above: 'Node') -> bool:
+    def add_child_node(self, child: 'NodeAPI', above: 'NodeAPI') -> bool:
         """
         Add the given node in the list of children.
 
@@ -121,21 +121,21 @@ class Node():
         """Read-only property telling if this node has animation frames."""
         return self.node.animated()
 
-    def get_child_nodes(self) -> list['Node']:
+    def get_child_nodes(self) -> list['NodeAPI']:
         """Return a list of wrapped Nodes that are children of this one."""
-        return [Node(node) for node in self.node.childNodes()]
+        return [NodeAPI(node) for node in self.node.childNodes()]
 
-    def get_parent_node(self) -> 'Node':
+    def get_parent_node(self) -> 'NodeAPI':
         """Return wrapped Node being a parent of this node."""
-        return Node(self.node.parentNode())
+        return NodeAPI(self.node.parentNode())
 
     @property
     def unique_id(self) -> str:
         """Read-only property holding unique ID of a node."""
         return self.node.uniqueId()
 
-    def __eq__(self, node: 'Node') -> bool:
+    def __eq__(self, node: 'NodeAPI') -> bool:
         """Two objects are the same node, when their unique IDs matches."""
-        if not isinstance(node, Node):
+        if not isinstance(node, NodeAPI):
             return False
         return self.unique_id == node.unique_id

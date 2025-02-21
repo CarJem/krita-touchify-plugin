@@ -10,22 +10,22 @@ from krita import Krita as Api
 from touchify.src.api_krita.enums import BlendingMode
 
 
-class _KritaPreset(Protocol):
+class PresetObj(Protocol):
     """Krita `Resource` object API."""
 
     def name(self) -> str: ...
 
 
-class KritaView(Protocol):
+class ViewObj(Protocol):
     """Krita `View` object API."""
 
-    def currentBrushPreset(self) -> _KritaPreset: ...
+    def currentBrushPreset(self) -> PresetObj: ...
     def currentBlendingMode(self) -> str: ...
     def paintingOpacity(self) -> float: ...
     def paintingFlow(self) -> float: ...
     def brushSize(self) -> float: ...
     def brushRotation(self) -> float: ...
-    def setCurrentBrushPreset(self, preset: _KritaPreset) -> None: ...
+    def setCurrentBrushPreset(self, preset: PresetObj) -> None: ...
     def setCurrentBlendingMode(self, blending_mode: str) -> None: ...
     def setPaintingOpacity(self, opacity: float) -> None: ...
     def setPaintingFlow(self, flow: float) -> None: ...
@@ -34,13 +34,13 @@ class KritaView(Protocol):
 
 
 @dataclass
-class View:
+class ViewAPI:
     """Wraps krita `View` for typing, documentation and PEP8 compatibility."""
 
-    view: KritaView
+    view: ViewObj
 
     @cached_property
-    def preset_map(self) -> dict[str, _KritaPreset]:
+    def preset_map(self) -> dict[str, PresetObj]:
         """Return dictionary mapping preset names to krita preset objects."""
         return Api.instance().resources('preset')
 
