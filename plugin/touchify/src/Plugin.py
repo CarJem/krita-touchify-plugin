@@ -4,6 +4,7 @@ from krita import *
 
 from touchify.__env__ import *
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.managers.shared.events import GlobalEvents
 
 from touchify.src.PluginWindow import TouchifyWindow
@@ -21,8 +22,8 @@ class TouchifyPlugin(Extension):
 
 
     def setup(self):
-        KritaAPI.native().notifier().windowCreated.connect(self.onWindowCreated)
-        KritaAPI.native().notifier().configurationChanged.connect(self.onConfigurationChanged)
+        KritaAPI.notifier().add_window_created_callback(self.onWindowCreated)
+        KritaAPI.notifier().add_configuration_changed_callback(self.onConfigurationChanged)
 
 
         self.intervalTimer = QTimer(self)
@@ -38,10 +39,10 @@ class TouchifyPlugin(Extension):
     def onWindowCreated(self):
         if not self.setup_instance: return
 
-        window: Window | None = None
+        window: WindowAPI | None = None
         window_id = self.new_instance.Window_UUID()
 
-        for __window in KritaAPI.get_windows_native():
+        for __window in KritaAPI.get_windows():
             if __window.qwindow().property("KRITA_TOUCHIFY_IS_LOADED") != True:
                 __window.qwindow().setProperty("KRITA_TOUCHIFY_IS_LOADED", True)
                 window = __window
@@ -60,7 +61,7 @@ class TouchifyPlugin(Extension):
     def createActions(self, window: Window):
         self.setup_instance = True
         self.new_instance = TouchifyWindow(self)
-        self.new_instance.Actions_Init(window)
+        self.new_instance.Actions_Init(WindowAPI(window))
 
 
 

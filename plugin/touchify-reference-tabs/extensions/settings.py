@@ -5,10 +5,10 @@ from .variables import *
 class Settings:
 
     def getFileDialogState():
-        return KritaAPI.native().readSetting(APPLICATION_NAME, SETTING_LAST_SELECTED_FOLDER, "")
+        return KritaAPI.read_setting(APPLICATION_NAME, SETTING_LAST_SELECTED_FOLDER, "")
 
     def setFileDialogState(folder: str):
-        KritaAPI.native().writeSetting(APPLICATION_NAME, SETTING_LAST_SELECTED_FOLDER, folder)
+        KritaAPI.write_setting(APPLICATION_NAME, SETTING_LAST_SELECTED_FOLDER, folder)
 
     def getGridPreferences():
         return {

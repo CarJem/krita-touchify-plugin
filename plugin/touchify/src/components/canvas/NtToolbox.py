@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QDockWidget
 
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
 
 from touchify.src.components.canvas.NtWidgetPad import NtWidgetPad
@@ -13,7 +14,7 @@ if TYPE_CHECKING:
 
 class NtToolbox(NtWidgetPad):
 
-    def __init__(self, canvas: "NtCanvas", window: Window):
+    def __init__(self, canvas: "NtCanvas", window: WindowAPI):
         super().__init__(window, canvas)
         self.reopenDockerOnReturn = False
         self.toolbox: ToolboxDocker = self.source_window.findChild(ToolboxDocker, TOUCHIFY_DOCKERID_DOCKER_TOOLBOX)

@@ -60,7 +60,7 @@ class CanvasManager(QObject):
     def Actions_Post(self):
         self.nt_canvas.Actions_Post()
 
-    def Actions_Init(self, window: Window, path: str):
+    def Actions_Init(self, window: WindowAPI, path: str):
         self.nt_canvas = NtCanvas(window.qwindow().window(), window)
         self.nt_canvas.Actions_Init(window, path)
         

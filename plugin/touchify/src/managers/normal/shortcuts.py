@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.__env__ import *
 from touchify.src.managers.shared.settings import *
@@ -206,7 +207,7 @@ class ShortcutsManager(object):
 
         KritaExtensions.moveActionTo(TOUCHIFY_ACTIONID_DOCKERUTILS_MENU, settings_menu, settings_menu, 'view_toggledockers')
 
-    def Actions_Init(self, window: Window, subItemPath: str, settingsItemPath: str):
+    def Actions_Init(self, window: WindowAPI, subItemPath: str, settingsItemPath: str):
 
         # Show Popup Palette
         popupPaletteToggle = window.createAction(TOUCHIFY_ACTIONID_OTHER_SHOWPOPUPPALETTE, "Show Popup Palette", settingsItemPath)

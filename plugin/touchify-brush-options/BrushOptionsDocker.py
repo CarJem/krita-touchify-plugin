@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QWidget
 from krita import *
 from PyQt5.QtCore import *
 
+from touchify.src.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
 from touchify.src.components.widgets.BrushFlowSlider import BrushFlowSlider
 from touchify.src.components.widgets.BrushOpacitySlider import BrushOpacitySlider
 from touchify.src.components.widgets.BrushRotationSlider import BrushRotationSlider
@@ -45,7 +46,7 @@ class BrushOptionsWidget(QWidget):
     def __init__(self, parent: QWidget | None = None):
         super(BrushOptionsWidget, self).__init__(parent)
 
-        self.appEngine: Window = None
+        self.appEngine: "TouchifyWindow" = None
 
         self.config = BrushOptionsDockerCfg()
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
@@ -171,9 +172,4 @@ class BrushOptionsDocker(DockWidget):
     def canvasChanged(self, canvas):
         self.brushOptions.onCanvasChanged(canvas)
 
-instance = KritaAPI.native()
-dock_widget_factory = DockWidgetFactory(DOCKER_ID,
-                                        DockWidgetFactoryBase.DockRight,
-                                        BrushOptionsDocker)
-
-instance.addDockWidgetFactory(dock_widget_factory)
+KritaAPI.add_dock_widget_factory(DOCKER_ID, DockWidgetFactoryAPI.DockPosition.DockRight, BrushOptionsDocker)

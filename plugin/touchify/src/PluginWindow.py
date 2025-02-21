@@ -3,6 +3,7 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
 
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.normal.canvas import CanvasManager
 from touchify.src.managers.normal.developer import DeveloperManager
@@ -41,7 +42,7 @@ class TouchifyWindow(QObject):
         self.mgr_actions = ActionManager(self)
         self.settings_dlg: PluginOptions | None = None
 
-    def Actions_Init(self, window: Window):
+    def Actions_Init(self, window: WindowAPI):
         self.__main_menu_bar = QMenu(None, window.qwindow())
 
         openSettingsAction = window.createAction(TOUCHIFY_ACTIONID_CONFIGURE, "Configure Touchify...", "settings")
@@ -50,17 +51,17 @@ class TouchifyWindow(QObject):
         menuAction = window.createAction("touchify", "Touchify", "tools")
         menuAction.setMenu(self.__main_menu_bar)
 
-        self.mgr_shortcuts.Actions_Init(window, "tools/touchify", "settings")
-        self.mgr_actions.Actions_Init(window, "tools/touchify")  
-        self.mgr_dev.Actions_Init(window, "settings")
-        self.mgr_tweaker.Actions_Init(window, "settings")
-        self.mgr_canvas.Actions_Init(window, "settings")
+        self.mgr_shortcuts.Actions_Init(window.native(), "tools/touchify", "settings")
+        self.mgr_actions.Actions_Init(window.native(), "tools/touchify")  
+        self.mgr_dev.Actions_Init(window.native(), "settings")
+        self.mgr_tweaker.Actions_Init(window.native(), "settings")
+        self.mgr_canvas.Actions_Init(window.native(), "settings")
     #endregion
 
     #region Post-Init Functions
 
-    def Variables_Post(self, window: Window):
-        self.krita_window = window    
+    def Variables_Post(self, window: WindowAPI):
+        self.krita_window = window.native()    
         self.setParent(window.qwindow())
 
         self.mgr_dockers = DockerManager(self)
@@ -146,7 +147,7 @@ class TouchifyWindow(QObject):
     def Window_Unload(self):
         pass
 
-    def Window_Load(self, window: Window):
+    def Window_Load(self, window: WindowAPI):
         self.Variables_Post(window)
         self.Actions_Post()
         self.Addons_Post()

@@ -6,6 +6,7 @@ from krita import *
 
 
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.managers.normal.action_manager import ActionManager
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
@@ -34,7 +35,7 @@ class ToolboxWidget(QResizableWidget):
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
 
-        self.sourceWindow: Window = None
+        self.sourceWindow: WindowAPI = None
         self.actionEngine: ActionManager = None
 
         self.OPACITY_LEVEL = 0.65

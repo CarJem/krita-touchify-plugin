@@ -2,6 +2,7 @@
 
 
 
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.canvas.NtWidgetPad import NtWidgetPad
 from krita import *
 from touchify.__env__ import *
@@ -15,7 +16,7 @@ if TYPE_CHECKING:
 
 class NtToolshelf(NtWidgetPad):
 
-    def __init__(self, canvas: "NtCanvas", window: Window, panel_index: int, app_engine: "TouchifyWindow"):
+    def __init__(self, canvas: "NtCanvas", window: WindowAPI, panel_index: int, app_engine: "TouchifyWindow"):
         super().__init__(window, canvas, True)   
 
         self.toolshelf = ToolshelfCanvasWidget(self, panel_index, app_engine)

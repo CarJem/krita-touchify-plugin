@@ -9,13 +9,11 @@ from touchify.src.api_krita.enums.node_types import NodeType
 from touchify.src.api_krita.enums.action import Action
 from touchify.src.api_krita.enums.toggle import Toggle
 from touchify.src.api_krita.enums.tool import Tool
-from .docker_position import DockerPosition
 
 __all__ = [
     "TransformMode",
     "BlendingMode",
     "NodeType",
-    "DockerPosition",
     "Action",
     "Toggle",
     "Tool"]

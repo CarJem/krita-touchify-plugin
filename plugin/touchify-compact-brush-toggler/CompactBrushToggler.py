@@ -23,7 +23,7 @@
 # brush hfade without opening the Brush Editor.                               #
 # -----------------------------------------------------------------------------
   
-from krita import DockWidget, DockWidgetFactory, DockWidgetFactoryBase
+from krita import DockWidget
 
  
 from PyQt5.QtCore import (
@@ -40,6 +40,8 @@ from PyQt5.QtWidgets import (
     QSizePolicy
         
 )
+
+from touchify.src.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
 
 
 from .CBT_Icons import * 
@@ -76,7 +78,7 @@ class CompactBrushToggler(DockWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(DOCKER_NAME) 
-        instance.notifier().windowCreated.connect(self.createActions)
+        KritaAPI.notifier().add_window_created_callback(self.createActions)
 
         self.baseWidget = QWidget()
          
@@ -183,7 +185,7 @@ class CompactBrushToggler(DockWidget):
                 self.timer.start(300)  
                 
                 if self.theme_signal == False:
-                    self.Window_Connect()
+                    self.Theme_Connect()
                 
         else:
             self.timer.stop() 
@@ -204,16 +206,12 @@ class CompactBrushToggler(DockWidget):
         # Window 
         self.setNames()
         self.Theme_Changed()  
-        self.Window_Connect()
+        self.Theme_Connect()
 
 
-    def Window_Connect(self):
-        # Window
-        self.window = KritaAPI.native().activeWindow() 
-        
-        if self.window != None:  
-            self.window.themeChanged.connect(self.Theme_Changed)  
-            self.theme_signal = True
+    def Theme_Connect(self):
+        self.theme_connection = KritaAPI.add_theme_change_callback(self.Theme_Changed)
+        if self.theme_connection != None: self.theme_signal = True
             
 
     def Theme_Changed(self):
@@ -234,7 +232,7 @@ class CompactBrushToggler(DockWidget):
     def createActions(self):
         if not self.createdActions:
             self.createdActions = True
-            window = instance.activeWindow()
+            window = KritaAPI.get_active_window()
             window.createAction('toggle_pressure_size').triggered.connect(lambda: self.toggler.toggleOptions("Size"))
             window.createAction('toggle_pressure_opacity').triggered.connect(lambda: self.toggler.toggleOptions("Opacity"))
             window.createAction('toggle_pressure_flow').triggered.connect(lambda: self.toggler.toggleOptions("Flow"))
@@ -295,15 +293,13 @@ class CompactBrushToggler(DockWidget):
         self.changeFadeValue()
     
     def changeFadeValue(self): 
-        self.toggler.cur_size  = KritaAPI.native().activeWindow().activeView().brushSize()    
+        self.toggler.cur_size  = KritaAPI.get_active_view().brush_size    
         self.toggler.setBrushFadeValue()
         self.toggler.setBrushSize()
  
      
+KritaAPI.add_dock_widget_factory(DOCKER_ID, DockWidgetFactoryAPI.DockPosition.DockRight, CompactBrushToggler)
 
-instance = KritaAPI.native()
-dock_widget_factory = DockWidgetFactory(DOCKER_ID,
-                                        DockWidgetFactoryBase.DockRight,
-                                        CompactBrushToggler)
-
-instance.addDockWidgetFactory(dock_widget_factory)
+#instance = KritaAPI.native()
+#dock_widget_factory = DockWidgetFactory(DOCKER_ID,DockWidgetFactoryBase.DockRight,CompactBrushToggler)
+#instance.addDockWidgetFactory(dock_widget_factory)

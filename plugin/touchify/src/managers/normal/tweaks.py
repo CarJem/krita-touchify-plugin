@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.shared.resources import ResourceManager
 from touchify.__env__ import *
@@ -42,7 +43,7 @@ class TweakManager(QObject):
 
     #region Actions
 
-    def Actions_Init(self, window: Window, path: str):
+    def Actions_Init(self, window: WindowAPI, path: str):
 
         def createAction(id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
             result = window.createAction(id, text, menuLocation)

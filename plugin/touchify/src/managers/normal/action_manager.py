@@ -167,7 +167,7 @@ class ActionManager(QObject):
 
     #region Create Functions
 
-    def Create_RegistryAction(self, actionIdentifier: str, data: Trigger, window: Window, actionPath: str):
+    def Create_RegistryAction(self, actionIdentifier: str, data: Trigger, window: WindowAPI, actionPath: str):
         displayName = data.display_custom_text
         action = window.createAction(actionIdentifier, displayName, actionPath)
 
@@ -286,7 +286,7 @@ class ActionManager(QObject):
     def Actions_Post(self, menu: QMenu):
         menu.addMenu(self.__registry_menu)
 
-    def Actions_Init(self, window: Window, subItemPath: str):
+    def Actions_Init(self, window: WindowAPI, subItemPath: str):
         cfg = TouchifySettings.instance().getConfig()
 
         self.__registry_menu = QtWidgets.QMenu("Registered Actions", window.qwindow())

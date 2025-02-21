@@ -3,6 +3,7 @@ from krita import *
 from PyQt5.QtCore import *
 
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
 from touchify.src.components.widgets.CanvasColorPicker import CanvasColorPicker
 from touchify.src.managers.shared.events import GlobalEvents
 from touchify.src.managers.shared.settings import TouchifySettings
@@ -23,8 +24,7 @@ class ColorSourceToggle(QWidget):
         self.canvas: Canvas = None
         self.setContentsMargins(0,0,0,0)
 
-        self.instance: TouchifyWindow = None
-        self.appEngine: Window = None
+        self.appEngine: "TouchifyWindow" = None
 
         self.cubeSize = cubeSize
 
@@ -121,10 +121,5 @@ class ColorOptionsDocker(DockWidget):
     def canvasChanged(self, canvas):
         self.colorToggle.onCanvasChanged(canvas)
 
-instance = KritaAPI.native()
-dock_widget_factory = DockWidgetFactory(DOCKER_ID,
-                                        DockWidgetFactoryBase.DockRight,
-                                        ColorOptionsDocker)
-
-instance.addDockWidgetFactory(dock_widget_factory)
+KritaAPI.add_dock_widget_factory(DOCKER_ID, DockWidgetFactoryAPI.DockPosition.DockRight, ColorOptionsDocker)
 

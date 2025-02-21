@@ -2,6 +2,7 @@ from krita import *
 from PyQt5 import QtCore
 
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.color import ManagedColorAPI
 from .calculations import *
 
 colorpicker_size = 250
@@ -16,15 +17,7 @@ cps_h = colorpicker_size - ( cps_g * 2 )
 
 
 def Import_Pigment_O( ):
-    pigment_o_module = None
-    try:
-        dockers = KritaAPI.native().dockers()
-        for d in dockers:
-            if d.objectName() == "pykrita_pigment_o_docker":
-                pigment_o_module = d
-                break
-    except:
-        pigment_o_module = None
+    pigment_o_module = KritaAPI.get_docker("pykrita_pigment_o_docker")
     return pigment_o_module
 
 class ColorPicker(QObject):
@@ -84,7 +77,7 @@ class ColorPicker(QObject):
                 green = cor[ "rgb_d2" ]
                 blue  = cor[ "rgb_d3" ]
             else:
-                active_document = KritaAPI.native().activeDocument()
+                active_document = KritaAPI.get_active_document()
                 if active_document == None:
                     d_cm = "RGBA"
                     d_cd = "U8"
@@ -93,10 +86,10 @@ class ColorPicker(QObject):
                     d_cm = active_document.colorModel()
                     d_cd = active_document.colorDepth()
                     d_cp = active_document.colorProfile()
-                d_ac = KritaAPI.native().activeWindow().activeView().canvas()
+                d_ac = KritaAPI.get_active_canvas()
                 # Managed Colors RGB only
-                managed_color = ManagedColor( d_cm, d_cd, d_cp )
-                comp = managed_color.components()
+                managed_color = ManagedColorAPI.of(d_cm, d_cd, d_cp)
+                comp = managed_color.components
                 if ( d_cm == "A" or d_cm == "GRAYA" ):
                     comp = [ red, 1 ]
                 if d_cm == "RGBA":
@@ -104,16 +97,16 @@ class ColorPicker(QObject):
                         comp = [ blue, green, red, 1 ]
                     if ( d_cd == "F16" or d_cd == "F32" ):
                         comp = [ red, green, blue, 1 ]
-                managed_color.setComponents( comp )
+                managed_color.components = comp
                 # Color for Canvas
-                if d_ac != None:
-                    display = managed_color.colorForCanvas( d_ac )
+                if d_ac.isValid():
+                    display = managed_color.to_qt( d_ac )
                     red   = display.redF()
                     green = display.greenF()
                     blue  = display.blueF()
                 # Apply Color
                 if state_press == False:
-                    KritaAPI.native().activeWindow().activeView().setForeGroundColor( managed_color )
+                    KritaAPI.get_active_view().foregroundColor = managed_color
 
             # Display Color
             qcolor = QColor( int( red * 255 ), int( green * 255 ), int( blue * 255 ) )

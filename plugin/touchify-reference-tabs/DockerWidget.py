@@ -175,7 +175,7 @@ class DockerWidget(QWidget):
 
     def Session_Restore(self):
         try:
-            session_string = KritaAPI.native().readSetting("Touchify/ReferenceTabsDocker", "LastSession", "")
+            session_string = KritaAPI.read_setting("Touchify/ReferenceTabsDocker", "LastSession", "")
             session_state: Session = Session.read(session_string)
             self.Session_Load(session_state)
         except:
@@ -184,7 +184,7 @@ class DockerWidget(QWidget):
     def Session_Backup(self):
         try:
             session_state = self.Session_Save()
-            KritaAPI.native().writeSetting("Touchify/ReferenceTabsDocker", "LastSession", session_state)
+            KritaAPI.write_setting("Touchify/ReferenceTabsDocker", "LastSession", session_state)
         except:
             pass
 

@@ -1,9 +1,10 @@
-from krita import DockWidget, DockWidgetFactory, DockWidgetFactoryBase, Canvas
+from krita import DockWidget, Canvas
 
 
 from PyQt5.QtGui import *
 
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
 from .DockerWidget import DockerWidget
 from .extensions.native_actions import NativeActions
 
@@ -22,5 +23,5 @@ class ReferenceTabsDocker(DockWidget):
     def canvasChanged(self, canvas: Canvas):
         NativeActions.OnEvent_CanvasChanged(canvas)
 
-KritaAPI.native().addDockWidgetFactory(DockWidgetFactory("Touchify/ReferenceTabsDocker", DockWidgetFactoryBase.DockPosition.DockRight, ReferenceTabsDocker))
+KritaAPI.add_dock_widget_factory("Touchify/ReferenceTabsDocker", DockWidgetFactoryAPI.DockPosition.DockRight, ReferenceTabsDocker)
 

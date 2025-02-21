@@ -1,6 +1,8 @@
-from typing import Protocol
+from typing import Protocol, Union, Callable
 from dataclasses import dataclass
 from PyQt5.QtCore import pyqtBoundSignal
+
+PYQT_SLOT = Union[Callable[..., None], pyqtBoundSignal]
 
 
 class NotifierObj(Protocol):
@@ -24,8 +26,8 @@ class NotifierObj(Protocol):
 class NotifierAPI:
     notifier: NotifierObj
 
-    def configurationChanged(self):
-        return self.notifier.configurationChanged
+    def add_configuration_changed_callback(self, slot: PYQT_SLOT):
+        return self.notifier.configurationChanged.connect(slot)
     
-    def windowCreated(self):
-        return self.notifier.windowCreated
+    def add_window_created_callback(self, slot: PYQT_SLOT):
+        return self.notifier.windowCreated.connect(slot)

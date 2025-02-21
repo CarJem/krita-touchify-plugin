@@ -2,50 +2,34 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from dataclasses import dataclass
-from typing import Protocol
 
-from PyQt5.QtCore import QByteArray
 
 from touchify.src.api_krita.enums import NodeType
-from touchify.src.api_krita.wrappers.node import NodeAPI, NodeObj
+from touchify.src.api_krita.wrappers.node import NodeAPI
 
 
-class DocumentObj(Protocol):
-    """Krita `Document` object API."""
-
-    def activeNode(self) -> NodeObj: ...
-    def setActiveNode(self, node: NodeObj): ...
-    def createNode(self, name: str, node_type: str) -> NodeObj: ...
-    def topLevelNodes(self) -> list[NodeObj]: ...
-    def resolution(self) -> int: ...
-    def currentTime(self) -> int: ...
-    def setCurrentTime(self, time: int) -> None: ...
-    def refreshProjection(self) -> None: ...
-    def annotation(self, type: str) -> QByteArray: ...
-    def annotationTypes(self) -> list[str]: ...
-
-    def setAnnotation(
-        self,
-        type: str,
-        description: str,
-        annotation: bytes) -> None: ...
+from krita import Document as KritaDocument
 
 
 @dataclass
 class DocumentAPI:
     """Wraps krita `Document` for typing, docs and PEP8 compatibility."""
 
-    document: DocumentObj
+    document: KritaDocument
+
+    def isValid(self):
+        return self.document != None
 
     @property
-    def active_node(self) -> NodeAPI:
+    def active_node(self) -> NodeAPI | None:
         """Settable property with this `Document`'s active `Node`."""
-        return NodeAPI(self.document.activeNode())
+        if self.isValid(): return NodeAPI(self.document.activeNode())
+        else: return None
 
     @active_node.setter
     def active_node(self, node: NodeAPI) -> None:
         """Set active `Node`."""
-        self.document.setActiveNode(node.node)
+        if self.isValid(): self.document.setActiveNode(node.node)
 
     def create_node(self, name: str, node_type: NodeType) -> NodeAPI:
         """
@@ -61,24 +45,29 @@ class DocumentAPI:
         The settings and selections for relevant layer and mask types
         can also be set after the Node has been created.
         """
-        return NodeAPI(self.document.createNode(name, node_type.value))
+        if self.isValid(): return NodeAPI(self.document.createNode(name, node_type.value))
+        else: 
+            raise Exception("Document is Not Loaded!")
 
     @property
     def current_time(self) -> int:
         """Settable property with this `Document`'s current frame number."""
-        return self.document.currentTime()
+        if self.isValid(): return self.document.currentTime()
+        else: return 0
 
     @current_time.setter
     def current_time(self, time: int) -> None:
         """Set current time using frame number"""
-        self.document.setCurrentTime(round(time))
+        if self.isValid(): self.document.setCurrentTime(round(time))
 
     def get_top_nodes(self) -> list[NodeAPI]:
         """Return a list of `Nodes` without a parent."""
+        if not self.isValid(): return []
         return [NodeAPI(node) for node in self.document.topLevelNodes()]
 
     def get_all_nodes(self, include_collapsed: bool = False) -> list[NodeAPI]:
         """Return a list of all `Nodes` in this document bottom to top."""
+        if not self.isValid(): return []
         def recursive_search(nodes: list[NodeAPI], found_so_far: list[NodeAPI]):
             for node in nodes:
                 if include_collapsed or not node.collapsed:
@@ -90,23 +79,33 @@ class DocumentAPI:
     @property
     def dpi(self) -> int:
         """Return dpi (dot per inch) of the document."""
-        return self.document.resolution()
+        if self.isValid(): return self.document.resolution()
+        else: return 72
 
     def refresh(self) -> None:
         """Refresh OpenGL projection of this document."""
-        self.document.refreshProjection()
+        if self.isValid(): self.document.refreshProjection()
 
     def read_annotation(self, name: str) -> str:
         """Read annotation from .kra document parsed as string."""
+        if not self.isValid(): return ""
         return self.document.annotation(name).data().decode(encoding="utf-8")
 
     def write_annotation(self, name: str, description: str, value: str):
         """Write annotation to .kra document."""
-        self.document.setAnnotation(
-            name,
-            description,
-            value.encode(encoding="utf-8"))
+        if self.isValid():
+            self.document.setAnnotation(name,description,value.encode(encoding="utf-8"))
 
     def contains_annotation(self, name: str) -> bool:
         """Return if annotation of given name is stored in .kra."""
-        return name in self.document.annotationTypes()
+        if self.isValid(): return name in self.document.annotationTypes()
+        else: return False
+
+    def colorModel(self) -> str:
+        return self.document.colorModel()
+    
+    def colorProfile(self) -> str:
+        return self.document.colorProfile()
+    
+    def colorDepth(self) -> str:
+        return self.document.colorDepth() 

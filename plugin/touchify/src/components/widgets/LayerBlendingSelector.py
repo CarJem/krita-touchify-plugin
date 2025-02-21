@@ -172,16 +172,10 @@ class LayerBlendingSelector(QPushButton):
         sender: QAction = self.sender()
         mode = str(sender.data())
 
-        native = KritaAPI.native()
-        if not native: return
-
-        activeWindow = native.activeDocument()
-        if not activeWindow: return
-
-        activeView = activeWindow.activeNode()
+        activeView = KritaAPI.get_active_document().active_node
         if not activeView: return
 
-        activeView.setBlendingMode(mode)
+        activeView.blending_mode = mode
         self.setText(sender.text())
         self.updateFavs()
 

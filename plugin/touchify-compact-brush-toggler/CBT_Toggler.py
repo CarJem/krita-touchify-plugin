@@ -149,13 +149,13 @@ class CBT_Toggler():
 
     def loadBrushInfo(self ): 
         try:
-            cur_brush = KritaAPI.native().activeWindow().activeView().currentBrushPreset() 
-            self.cur_size  = KritaAPI.native().activeWindow().activeView().brushSize()
+            cur_brush = KritaAPI.get_active_view().brush_preset
+            self.cur_size  = KritaAPI.get_active_view().brush_size
  
             #self.get_palette_values() 
-            if cur_brush.name() != self.last_brush :  
+            if cur_brush.name() != self.last_brush:  
                 self.resetBrushSetting()   
-                self.last_brush = cur_brush.name()  
+                self.last_brush = cur_brush
                 self.loadState() 
         except:
             pass

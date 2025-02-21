@@ -21,7 +21,7 @@ class DeveloperManager(object):
     def Actions_Post(self, menu: QMenu):
         menu.addMenu(self.root_menu)
 
-    def Actions_Init(self, window: Window, actionPath: str):
+    def Actions_Init(self, window: WindowAPI, actionPath: str):
         subItemPath = actionPath + "/" + "developer"
         self.root_menu = QtWidgets.QMenu("Developer...")
     

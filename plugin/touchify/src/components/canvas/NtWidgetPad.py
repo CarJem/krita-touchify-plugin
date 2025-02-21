@@ -22,6 +22,7 @@ from enum import Enum
 from PyQt5.QtWidgets import QWidget, QDockWidget, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import Qt, QSize, QPoint
 
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.canvas.NtScrollAreaContainer import NtScrollAreaContainer
 
 
@@ -63,7 +64,7 @@ class NtWidgetPad(QWidget):
 
     SIGNAL_RESIZED = pyqtSignal(QWidget)
 
-    def __init__(self, window: Window, canvas: "NtCanvas", allow_resizing: bool = False):
+    def __init__(self, window: WindowAPI, canvas: "NtCanvas", allow_resizing: bool = False):
         super(NtWidgetPad, self).__init__(canvas.MdiArea())
         self.setMouseTracking(True)
         self.setAttribute(Qt.WA_DeleteOnClose)

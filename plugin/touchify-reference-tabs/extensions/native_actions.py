@@ -86,7 +86,7 @@ class NativeActions:
                 h = qimage.height()
                 qimage = qimage.copy( int( w * clip.cl ), int( h * clip.ct ), int( w * clip.cw ), int( h * clip.ch ) )
             if ( insert_size == False ) and ( canvas is not None ) and ( canvas.view() is not None ):
-                ad = KritaAPI.native().activeDocument()
+                ad = KritaAPI.get_active_document_native()
                 iw = ad.width()
                 ih = ad.height()
             else:
@@ -97,7 +97,7 @@ class NativeActions:
         return qimage
 
     def Insert_Check():
-        doc = KritaAPI.native().documents()
+        doc = KritaAPI.get_documents()
         insert = len( doc ) > 0
         return insert
 
@@ -144,13 +144,13 @@ class NativeActions:
     def Insert_Document( image_path: str, clip: ImageClip ):
         if image_path not in ( "", None ):
             # Create Document
-            document = KritaAPI.native().openDocument( image_path )
-            KritaAPI.native().activeWindow().addView( document )
+            document = KritaAPI.get_native_instance().openDocument( image_path )
+            KritaAPI.get_active_window_native().addView( document )
             w = document.width()
             h = document.height()
             # Crop
             if clip.state == True:
-                ad = KritaAPI.native().activeDocument()
+                ad = KritaAPI.get_active_document_native()
                 ad.crop( int( w * clip.cl ), int( h * clip.ct ), int( w * clip.cw ), int( h * clip.ch ) )
                 ad.waitForDone()
                 ad.refreshProjection()
@@ -189,7 +189,7 @@ class NativeActions:
                 clipboard = QApplication.clipboard().setMimeData( mimedata )
                 # Place Image
                 KritaAPI.get_action( 'paste_as_reference' ).trigger()
-                KritaAPI.native().activeDocument().refreshProjection()
+                KritaAPI.get_active_document_native().refreshProjection()
                 # Message
                 pass
                 Commons.Message_Float( "INSERT", "Reference", "krita_tool_reference_images" )
@@ -211,7 +211,7 @@ class NativeActions:
             for line in file_item:
                 svg_shape += line
             # Create Layer
-            ad = KritaAPI.native().activeDocument()
+            ad = KritaAPI.get_active_document_native()
             rn = ad.rootNode()
             vl = ad.createVectorLayer( basename )
             rn.addChildNode( vl, None )
@@ -227,7 +227,7 @@ class NativeActions:
             # Variables
             basename = os.path.basename( image_path )
             # Create Layer
-            ad = KritaAPI.native().activeDocument()
+            ad = KritaAPI.get_active_document_native()
             rn = ad.rootNode()
             pl = ad.createNode( basename, "paintLayer" )
             rn.addChildNode( pl, None )

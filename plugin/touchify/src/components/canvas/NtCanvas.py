@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QMdiArea
 
 
 
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.canvas.NtToolbox import NtToolbox
 from touchify.src.components.canvas.NtToolshelf import NtToolshelf
 from touchify.src.components.canvas.NtWidgetPad import NtWidgetPad
@@ -23,7 +24,7 @@ if TYPE_CHECKING:
 
 
 class NtCanvas(QWidget):
-    def __init__(self, parent: QObject, window: Window):
+    def __init__(self, parent: QObject, window: WindowAPI):
         super().__init__(parent)
         self.Variables_Init(window)
         self.Components_Init()
@@ -32,7 +33,7 @@ class NtCanvas(QWidget):
 
     #region Init Functions
 
-    def Variables_Init(self, window: Window):
+    def Variables_Init(self, window: WindowAPI):
         self.__window_loaded = False
         self.__krita_window = window
         self.__mdi_area = None
@@ -63,7 +64,7 @@ class NtCanvas(QWidget):
     def Connections_Init(self):
         self.presetsMenu.aboutToShow.connect(self.Preset_Menu)
     
-    def Actions_Init(self, window: Window, subItemPath: str): 
+    def Actions_Init(self, window: WindowAPI, subItemPath: str): 
         layouts_action = window.createAction(TOUCHIFY_ACTIONID_WIDGETPAD_PRESETS_MENU, "Configure Layout...", subItemPath)
         layouts_action.setIcon(KritaAPI.get_icon("configure"))
         layouts_action.setMenu(self.presetsMenu)

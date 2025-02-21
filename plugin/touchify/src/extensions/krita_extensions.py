@@ -7,6 +7,7 @@ from PyQt5.QtCore import *
 
 from krita import *
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.window import WindowAPI
 
 
 class KritaExtensions:
@@ -29,7 +30,7 @@ class KritaExtensions:
         return actionToMove
     
     @staticmethod
-    def getDockerMenu(window: Window):
+    def getDockerMenu(window: WindowAPI):
         for m in window.qwindow().actions():
             if m.objectName() == "settings_dockers_menu":
                 return m

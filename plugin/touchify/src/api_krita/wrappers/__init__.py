@@ -16,16 +16,19 @@ from touchify.src.api_krita.wrappers.cursor import CursorAPI
 from touchify.src.api_krita.wrappers.node import NodeAPI
 from touchify.src.api_krita.wrappers.view import ViewAPI
 from touchify.src.api_krita.wrappers.window import WindowAPI
+from touchify.src.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
 
 
 __all__ = [
-    "UnknownVersion",
-    "ToolDescriptor",
     "DocumentAPI",
-    "Version",
+    "DockWidgetFactoryAPI",
     "CanvasAPI",
     "CursorAPI",
     "NodeAPI",
     "ViewAPI",
     "NotifierAPI",
-    "WindowAPI"]
+    "WindowAPI",
+    "UnknownVersion",
+    "ToolDescriptor",
+    "Version",
+]
