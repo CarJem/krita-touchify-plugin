@@ -4,6 +4,7 @@
 import re
 from typing import Callable, Any, List
 
+
 from krita import (
     Extension, 
     DockWidgetFactory, DockWidgetFactoryBase, 
@@ -26,14 +27,22 @@ from PyQt5.QtGui import QKeySequence, QColor, QIcon, QPalette
 
 from touchify.src.api_krita.wrappers import (
     UnknownVersion,
-    ToolDescriptor,
     DocumentAPI,
     Version,
     CanvasAPI,
     CursorAPI,
     WindowAPI,
     NotifierAPI,
-    ViewAPI)
+    ViewAPI
+)
+
+from touchify.src.api_krita.extensions import (
+    ToolDescriptor,
+    WindowManager
+)
+
+
+
 
 
 class KritaInstance:
@@ -41,6 +50,8 @@ class KritaInstance:
 
     active_tool = ToolDescriptor()
     """Settable property which lets to set and get active tool from toolbox."""
+
+    window_manager = WindowManager()
 
     def __init__(self) -> None:
         self.instance = KritaAPI.instance()
@@ -120,9 +131,6 @@ class KritaInstance:
 
     def get_active_window_native(self) -> KritaWindow | None:
         return self.instance.activeWindow()
-    
-    def get_windows_native(self) -> List[KritaWindow]:
-        return self.instance.windows()
 
     def get_documents_native(self) -> List[KritaDocument]:
         return self.instance.documents()
@@ -186,14 +194,11 @@ class KritaInstance:
         if act: act.trigger()
         return None
 
-
     def get_app_data_location(self) -> str:
         return self.instance.getAppDataLocation()
 
     def notifier(self) -> NotifierAPI:
         return NotifierAPI(self.instance.notifier())
-
-
     
     def read_setting(
         self,
@@ -291,6 +296,7 @@ class KritaInstance:
         major, minor, fix, additional_info = result.groups()
 
         return Version(int(major), int(minor), int(fix), additional_info)
+
 
 
 

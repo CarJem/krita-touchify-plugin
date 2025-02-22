@@ -1,13 +1,14 @@
 from typing import Protocol, List
-from dataclasses import dataclass
+from dataclasses import InitVar, dataclass
 
-from PyQt5.QtCore import (pyqtBoundSignal)
+from PyQt5.QtCore import (pyqtBoundSignal, Qt)
 from PyQt5.QtWidgets import (QWidgetAction, QMainWindow, QDockWidget,)
 
 from krita import (
     Document as KritaDocument,
     View as KritaView
 )
+from touchify.src.api_krita.extensions.window_manager import WindowNotifier
 
 class WindowObj(Protocol):
     activeViewChanged: pyqtBoundSignal
@@ -26,22 +27,33 @@ class WindowObj(Protocol):
 
 @dataclass
 class WindowAPI:
-    window: WindowObj
+    __internal__: WindowObj
+    __notifier__: InitVar[WindowNotifier] = None
 
     @property
-    def windowClosed(self): return self.window.windowClosed
+    def windowClosed(self): return self.__internal__.windowClosed
     @property
-    def themeChanged(self): return self.window.themeChanged
+    def themeChanged(self): return self.__internal__.themeChanged
     @property
-    def activeViewChanged(self): return self.window.activeViewChanged
+    def activeViewChanged(self): return self.__internal__.activeViewChanged
+    
+    def notifier(self) -> (WindowNotifier | None):
+        if self.__notifier__ == None:
+            source_window = self.__internal__.qwindow()
+            results = source_window.findChildren(WindowNotifier, options=Qt.FindChildOption.FindChildrenRecursively)
+            if len(results) > 0: self.__notifier__ = results[0]
+        return self.__notifier__
+
+    def hwnd(self):
+        return int(self.__internal__.qwindow().winId())
 
     def native(self):
-        return self.window
+        return self.__internal__
 
     def qwindow(self):
-        return self.window.qwindow()
+        return self.__internal__.qwindow()
 
     def createAction(self, name: str, description: str = None, menu: str = None) -> QWidgetAction:
         if description == None: description = name
         if menu == None: menu = ""
-        return self.window.createAction(name, description, menu)
+        return self.__internal__.createAction(name, description, menu)

@@ -21,10 +21,11 @@ class BrushFlowSlider(KisSliderSpinBox):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.appEngine.mgr_actions.viewChanged.connect(self.onViewChanged)
-        self.onViewChanged(self.appEngine.mgr_actions.getCurrentView())
-        self.appEngine.mgr_actions.brushFlowChanged.connect(self.onFlowChanged)
-        self.onFlowChanged(window.mgr_actions.getBrushFlow())
+        self.notifier = window.api_window.notifier()
+        self.notifier.viewChanged.connect(self.onViewChanged)
+        self.onViewChanged(self.notifier.getCurrentView())
+        self.notifier.brushFlowChanged.connect(self.onFlowChanged)
+        self.onFlowChanged(self.notifier.getBrushFlow())
 
     def onViewChanged(self, view: View):
         self.view = view

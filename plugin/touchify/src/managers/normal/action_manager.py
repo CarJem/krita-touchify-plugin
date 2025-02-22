@@ -44,37 +44,19 @@ if TYPE_CHECKING:
 
 class ActionManager(QObject):
     composerTriggerEnded=pyqtSignal()
-
-    brushChanged=pyqtSignal(Resource)
-    gradientChanged=pyqtSignal(Resource)
-    patternChanged=pyqtSignal(Resource)
-    toolChanged=pyqtSignal(str)
-    viewChanged=pyqtSignal(View)
-    canvasChanged=pyqtSignal(Canvas)
-    
-    selectedNodesChanged=pyqtSignal()
-    selectedNodeColorsChanged=pyqtSignal()
-    
-    brushSizeChanged=pyqtSignal(float)
-    brushOpacityChanged=pyqtSignal(float)
-    brushRotationChanged=pyqtSignal(float)
-    brushFlowChanged=pyqtSignal(float)
-
-    brushBlendingModeChanged=pyqtSignal(str)
-    layerBlendingModeChanged=pyqtSignal(str)
-
-    backgroundColorChanged=pyqtSignal(ManagedColor)
-    foregroundColorChanged=pyqtSignal(ManagedColor)
     
     def __init__(self, instance: "TouchifyWindow"):
         super().__init__()
         self.appEngine = instance
+
         self.Variables()
         self.Connections()
 
     #region Init Functions
 
     def Variables(self):
+        self.__lastToolboxTool = ""
+        self.__lastBrushPreset = None
         self.custom_docker_states = {}
         self.registeredActions = {}
         self.registeredActionsData = {}
@@ -82,31 +64,9 @@ class ActionManager(QObject):
         self.composer_action_down: bool = False
         self.pie_wheel_api: Extension = None
 
-        self.__lastView: View = None
-        self.__lastBrushPreset: Resource = None
-        self.__lastCanvas: Canvas = None
-        self.__lastGradient: Resource = None
-        self.__lastPattern: Resource = None
-
-        self.__lastToolboxTool: str = ""
-
-        self.__lastBrushSize: float = 0
-        self.__lastBrushOpacity: float = 0
-        self.__lastBrushFlow: float = 0
-        self.__lastBrushRotation: float = 0
-
-        self.__lastBrushBlendingMode: str = ""
-        self.__lastLayerBlendingMode: str = ""
-
-        self.__lastForegroundColor: ManagedColor = None
-        self.__lastBackgroundColor: ManagedColor = None
-
-        self.__lastSelectedNodes: list[Node] = []
-        self.__lastNodeColors: list[int] = []
 
     def Connections(self):
         GlobalEvents.instance().SIGNAL_MOUSE_RELEASED.connect(self.OnEvent_GlobalMouseRelease)
-        GlobalEvents.instance().SIGNAL_TIMER_TICKED.connect(self.OnEvent_TimerTicked)
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.OnEvent_ConfigUpdated)
 
     #endregion
@@ -114,54 +74,17 @@ class ActionManager(QObject):
     #region Window Functions
 
     def Window_Load(self):
-        qwin = KritaAPI.get_active_qwindow()
-        mobj = next((w for w in qwin.findChildren(QWidget) if w.metaObject().className() == 'KoToolBox'), None)
-        wobj = mobj.findChild(QButtonGroup)
-        wobj.buttonToggled.connect(self.OnEvent_ToolChanged)
+        self.notifier = self.appEngine.api_window.notifier()
+        self.__lastToolboxTool = self.notifier.getCurrentTool()
+        self.__lastBrushPreset = self.notifier.getCurrentBrush()
+        self.notifier.toolChanged.connect(self.Notifier_ToolChanged)
+        self.notifier.brushChanged.connect(self.Notifier_BrushChanged)
 
-    #endregion
+    def Notifier_ToolChanged(self, tool: str):
+        self.__lastToolboxTool = tool
 
-    #region Get Functions
-
-    def getCurrentGradient(self):
-        return self.__lastGradient
-    
-    def getCurrentPattern(self):
-        return self.__lastPattern
-
-    def getCurrentView(self):
-        return self.__lastView
-
-    def getCurrentTool(self):
-        return self.__lastToolboxTool
-
-    def getBrushBlendingMode(self):
-        return self.__lastBrushBlendingMode
-    
-    def getLayerBlendingMode(self):
-        return self.__lastLayerBlendingMode
-
-    def getCurrentCanvas(self):
-        return self.__lastCanvas
-    
-    def getCurrentBrush(self):
-        return self.__lastBrushPreset
-    
-    def getBrushSize(self):
-        return self.__lastBrushSize
-    
-    def getBrushOpacity(self):
-        return self.__lastBrushOpacity
-    
-    def getBrushFlow(self):
-        return self.__lastBrushFlow
-    
-    def getBrushRotation(self):
-        return self.__lastBrushRotation
-
-    def getCanvasColor(self, is_background: bool = False):
-        if is_background: return self.__lastBackgroundColor
-        else: return self.__lastForegroundColor
+    def Notifier_BrushChanged(self, resource: Resource):
+        self.__lastBrushPreset = resource
 
     #endregion
 
@@ -452,12 +375,7 @@ class ActionManager(QObject):
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
         
-    def OnEvent_ToolChanged(self, obj: QAbstractButton):
-        if obj:
-            toolboxTool = obj.objectName()
-            if toolboxTool != self.__lastToolboxTool:
-                self.__lastToolboxTool = toolboxTool
-                self.toolChanged.emit(toolboxTool)
+
 
     def OnEvent_GlobalMouseRelease(self):
         if self.composer_action_down == True:
@@ -468,122 +386,6 @@ class ActionManager(QObject):
             except:
                 pass
             self.composer_action_down = False
-
-    def OnEvent_TimerTicked(self):
-        currentBrush: Resource = None
-        currentGradient: Resource = None
-        currentPattern: Resource = None
-        currentView: View = None
-        currentCanvas: Canvas = None
-
-        currentBrushBlendingMode: str = ""
-        currentLayerBlendingMode: str = ""
-
-        currentSize: float = 0
-        currentOpacity: float = 0
-        currentFlow: float = 0
-        currentRotation: float = 0
-
-        currentForegroundColor: ManagedColor = None
-        currentBackgroundColor: ManagedColor = None
-
-        selectedNodes: list[Node] = []
-        selectedNodeColors: list[int] = []
-
-        try:
-            win = self.appEngine.krita_window
-            if win: 
-                currentView = win.activeView()
-                if currentView: 
-                    currentDocument = currentView.document()
-                    if currentDocument:
-                        currentNode = currentDocument.activeNode()
-                        if currentNode:
-                            currentLayerBlendingMode = currentNode.blendingMode()
-
-                    selectedNodes = currentView.selectedNodes()
-                    selectedNodeColors = [node.colorLabel() for node in currentView.selectedNodes() ]
-
-                    currentGradient = currentView.currentGradient()
-                    currentPattern = currentView.currentPattern()
-                    currentBrush = currentView.currentBrushPreset()
-                    currentSize = currentView.brushSize()
-                    currentOpacity = currentView.paintingOpacity()
-                    currentFlow = currentView.paintingFlow()
-                    currentRotation = currentView.brushRotation()
-                    currentBrushBlendingMode = currentView.currentBlendingMode()
-                    
-                    currentCanvas = currentView.canvas()
-
-                    currentForegroundColor = currentView.foregroundColor()
-                    currentBackgroundColor = currentView.backgroundColor()
-
-
-        except:
-            pass
-
-        if currentGradient != self.__lastGradient:
-            self.gradientChanged.emit(currentGradient)
-            self.__lastGradient = currentGradient
-
-        if currentPattern != self.__lastPattern:
-            self.patternChanged.emit(currentPattern)
-            self.__lastPattern = currentPattern
-
-        if currentCanvas != self.__lastCanvas:
-            self.canvasChanged.emit(currentCanvas)
-            self.__lastCanvas = currentCanvas
-
-        if currentView != self.__lastView:
-            self.viewChanged.emit(currentView)
-            self.__lastView = currentView
-
-        if selectedNodes != self.__lastSelectedNodes:
-            self.selectedNodesChanged.emit()
-            self.__lastSelectedNodes = selectedNodes
-
-        if selectedNodeColors != self.__lastNodeColors:
-            self.selectedNodeColorsChanged.emit()
-            self.__lastNodeColors = selectedNodeColors
-
-        if currentLayerBlendingMode != self.__lastLayerBlendingMode:
-            self.layerBlendingModeChanged.emit(currentLayerBlendingMode)
-            self.__lastLayerBlendingMode = currentLayerBlendingMode
-
-        if currentBrushBlendingMode != self.__lastBrushBlendingMode:
-            self.brushBlendingModeChanged.emit(currentBrushBlendingMode)
-            self.__lastBrushBlendingMode = currentBrushBlendingMode
-
-        if currentForegroundColor != self.__lastForegroundColor:
-            #print("foreground changed")
-            self.foregroundColorChanged.emit(currentForegroundColor)
-            self.__lastForegroundColor = currentForegroundColor
-
-        if currentBackgroundColor != self.__lastBackgroundColor:
-            #print("foreground changed")
-            self.backgroundColorChanged.emit(currentBackgroundColor)
-            self.__lastBackgroundColor = currentBackgroundColor
-
-        
-        if currentSize != self.__lastBrushSize:
-            self.brushSizeChanged.emit(currentSize)
-            self.__lastBrushSize = currentSize
-
-        if currentFlow != self.__lastBrushFlow:
-            self.brushFlowChanged.emit(currentFlow)
-            self.__lastBrushFlow = currentFlow
-
-        if currentOpacity != self.__lastBrushOpacity:
-            self.brushOpacityChanged.emit(currentOpacity)
-            self.__lastBrushOpacity = currentOpacity
-
-        if currentRotation != self.__lastBrushRotation:
-            self.brushRotationChanged.emit(currentRotation)
-            self.__lastBrushRotation = currentRotation
-
-        if currentBrush != self.__lastBrushPreset:
-            self.brushChanged.emit(currentBrush)
-            self.__lastBrushPreset = currentBrush
 
     #endregion
         
@@ -645,7 +447,8 @@ class ActionManager(QObject):
         if id in brush_presets:
             preset = brush_presets[id]
             btn = self.Button_Core(lambda: self.Execute_Brush(id), preset.name())
-            btn.setupBrushChange(self, id, preset == self.__lastBrushPreset)
+            match_tool = self.__lastBrushPreset == preset
+            btn.setupBrushChange(self, id, match_tool)
             self.Helper_SetButtonDisplay(act, btn)
         return btn
                    
@@ -705,7 +508,9 @@ class ActionManager(QObject):
             
             btn = self.Button_Core(action.trigger, action.toolTip(), act.extra_composer_mode)
 
-            if toolbox_item: btn.setupToolChange(self, act.action_id, self.__lastToolboxTool == act.action_id)
+            if toolbox_item: 
+                match_tool = self.__lastToolboxTool == act.action_id
+                btn.setupToolChange(self, act.action_id, match_tool)
             elif checkable: btn.setupActionCheckChange(action, act.action_id, action.isChecked())
             else: btn.setupAction(action, act.action_id)
 

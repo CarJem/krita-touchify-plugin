@@ -15,6 +15,5 @@
 	],
 	"settings": {
 		"python.languageServer": "Default",
-		"figura.librariesFolderPath": "/home/carjem/.local/share/.minecraft/figura/avatars/libraries/"
 	}
 }

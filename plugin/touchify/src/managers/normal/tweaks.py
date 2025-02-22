@@ -196,6 +196,7 @@ class Tweak_BrushEditor(QObject):
     def __init__(self, qWin: QMainWindow, instance: "TouchifyWindow"):
         self.appEngine = instance
         self.qWin = qWin
+        self.notifier = instance.api_window.notifier()
 
         self.stack_docker: Tweak_BrushEditor_Container | None = None
         self.stack_index: int | None = None
@@ -245,7 +246,7 @@ class Tweak_BrushEditor(QObject):
         else: self.Subwindow_Kill()
 
         if fix_zoom:
-            canvas = self.appEngine.mgr_actions.getCurrentCanvas()
+            canvas = self.notifier.getCurrentCanvas()
             if canvas: canvas.resetZoom()
     
 

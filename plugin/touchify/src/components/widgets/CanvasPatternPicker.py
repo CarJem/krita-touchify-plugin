@@ -6,6 +6,8 @@ from touchify.__env__ import *
 
 
 from typing import TYPE_CHECKING
+
+from touchify.src.api_krita import KritaAPI
 if TYPE_CHECKING:
     from touchify.src.PluginWindow import TouchifyWindow
 
@@ -18,8 +20,9 @@ class CanvasPatternPicker(QPushButton):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.appEngine.mgr_actions.patternChanged.connect(self.onPatternChanged)
-        self.onPatternChanged(self.appEngine.mgr_actions.getCurrentPattern())
+        self.notifier = window.api_window.notifier()
+        self.notifier.patternChanged.connect(self.onPatternChanged)
+        self.onPatternChanged(self.notifier.getCurrentPattern())
 
     def openBrushPicker(self):
         self.appEngine.mgr_actions.Create_Popup("pattern_chooser_popup", self)

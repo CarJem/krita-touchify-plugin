@@ -9,7 +9,6 @@ Adds typing, docstrings and changes the interface to be PEP8 compatible.
 
 from touchify.src.api_krita.wrappers.notifier import NotifierAPI
 from touchify.src.api_krita.wrappers.version import Version, UnknownVersion
-from touchify.src.api_krita.wrappers.tool_descriptor import ToolDescriptor
 from touchify.src.api_krita.wrappers.document import DocumentAPI
 from touchify.src.api_krita.wrappers.canvas import CanvasAPI
 from touchify.src.api_krita.wrappers.cursor import CursorAPI
@@ -26,9 +25,8 @@ __all__ = [
     "CursorAPI",
     "NodeAPI",
     "ViewAPI",
-    "NotifierAPI",
     "WindowAPI",
+    "NotifierAPI",
     "UnknownVersion",
-    "ToolDescriptor",
     "Version",
 ]

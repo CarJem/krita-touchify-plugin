@@ -24,14 +24,13 @@ from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
 from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
 from touchify.src.config.toolbox.ToolboxDataCategory import ToolboxDataCategory
-from touchify.src.components.common.widget.QResizableWidget import QResizableWidget
 from touchify.src.managers.shared.resources import ResourceManager
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
 
-class ToolboxWidget(QResizableWidget):
+class ToolboxWidget(QWidget):
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
 

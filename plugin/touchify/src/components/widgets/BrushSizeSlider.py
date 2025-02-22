@@ -22,10 +22,11 @@ class BrushSizeSlider(KisSliderSpinBox):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.appEngine.mgr_actions.viewChanged.connect(self.onViewChanged)
-        self.onViewChanged(self.appEngine.mgr_actions.getCurrentView())
-        self.appEngine.mgr_actions.brushSizeChanged.connect(self.onSizeChanged)
-        self.onSizeChanged(self.appEngine.mgr_actions.getBrushSize())
+        self.notifier = window.api_window.notifier()
+        self.notifier.viewChanged.connect(self.onViewChanged)
+        self.onViewChanged(self.notifier.getCurrentView())
+        self.notifier.brushSizeChanged.connect(self.onSizeChanged)
+        self.onSizeChanged(self.notifier.getBrushSize())
 
     def onViewChanged(self, view: View):
         self.view = view

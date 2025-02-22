@@ -29,14 +29,15 @@ class CanvasColorPicker(ColorFramedButton):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.appEngine.mgr_actions.canvasChanged.connect(self.onCanvasChanged)
-        self.onCanvasChanged(self.appEngine.mgr_actions.getCurrentCanvas())
+        self.notifier = window.api_window.notifier()
+        self.notifier.canvasChanged.connect(self.onCanvasChanged)
+        self.onCanvasChanged(self.notifier.getCurrentCanvas())
         if self.mode == CanvasColorPicker.Mode.Foreground:
-            self.appEngine.mgr_actions.foregroundColorChanged.connect(self.onColorChanged)
-            self.onColorChanged(self.appEngine.mgr_actions.getCanvasColor())
+            self.notifier.foregroundColorChanged.connect(self.onColorChanged)
+            self.onColorChanged(self.notifier.getCanvasColor())
         if self.mode == CanvasColorPicker.Mode.Background:
-            self.appEngine.mgr_actions.backgroundColorChanged.connect(self.onColorChanged)
-            self.onColorChanged(self.appEngine.mgr_actions.getCanvasColor(True))
+            self.notifier.backgroundColorChanged.connect(self.onColorChanged)
+            self.onColorChanged(self.notifier.getCanvasColor(True))
 
     def setForegroundColor(self):
         KritaAPI.get_action("chooseForegroundColor").trigger()

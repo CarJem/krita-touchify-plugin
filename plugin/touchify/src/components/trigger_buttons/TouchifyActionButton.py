@@ -91,7 +91,7 @@ class TouchifyActionButton(QToolButton):
 
     def setupBrushChange(self, manager: "ActionManager", brush_id: str, is_active: bool):
         self.brush_id = brush_id
-        manager.brushChanged.connect(self.onBrushChanged)
+        manager.appEngine.api_window.notifier().brushChanged.connect(self.onBrushChanged)
         if is_active: 
             self.is_brush_selected = True
             self.repaint()
@@ -99,7 +99,7 @@ class TouchifyActionButton(QToolButton):
     def setupToolChange(self, manager: "ActionManager", tool_id: str, is_active: bool):
         self.is_tool_action = True
         self.tool_action_id = tool_id
-        manager.toolChanged.connect(self.onToolChanged)
+        manager.appEngine.api_window.notifier().toolChanged.connect(self.onToolChanged)
 
         if is_active: self.toggled = (True)
 

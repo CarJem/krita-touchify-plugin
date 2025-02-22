@@ -1,11 +1,10 @@
 from PyQt5.QtWidgets import QVBoxLayout, QScrollArea
 
 
-from touchify.src.components.common.widget.QResizableWidget import QResizableWidget
 from touchify.src.managers.shared.settings import *
 
 
-class NtScrollAreaContainer(QResizableWidget):
+class NtScrollAreaContainer(QWidget):
 
     def __init__(self, scrollArea = None, parent=None):
         super(NtScrollAreaContainer, self).__init__(parent)

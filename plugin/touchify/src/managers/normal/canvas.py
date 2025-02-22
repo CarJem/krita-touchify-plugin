@@ -12,7 +12,30 @@ from touchify.src.extensions.krita_extensions import *
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
 
+
+
+
 class CanvasManager(QObject):
+
+    class WorkerTasks(QObject):
+        @staticmethod
+        def Actions_Post(self: "CanvasManager"):
+            # Thread
+            self.worker_thread = QThread()
+            # Worker
+            self.worker_instance = CanvasManager.WorkerTasks()
+            self.worker_instance.moveToThread( self.worker_thread )
+            # Thread
+            self.worker_thread.started.connect( lambda : self.worker_instance.Actions_Post_Async( self ) )
+            self.worker_thread.start()
+
+        def Actions_Post_Async(a, self: "CanvasManager"):
+            self.nt_canvas.Window_Load(self.app_engine)
+            self.nt_canvas.Window().activeViewChanged.connect(self.OnEvent_ActiveViewChanged)
+            self.OnEvent_ActiveViewChanged()
+
+            self.nt_canvas.Actions_Post()
+
 
     mouseLeftPress=pyqtSignal()
     mouseRightPress=pyqtSignal()
@@ -51,19 +74,16 @@ class CanvasManager(QObject):
 
         return view_container
 
-
     def Window_Load(self):
-        self.nt_canvas.Window_Load(self.app_engine)
-        self.nt_canvas.Window().activeViewChanged.connect(self.OnEvent_ActiveViewChanged)
-        self.OnEvent_ActiveViewChanged()
+        pass
 
     def Actions_Post(self):
-        self.nt_canvas.Actions_Post()
+        CanvasManager.WorkerTasks.Actions_Post(self)
+
 
     def Actions_Init(self, window: WindowAPI, path: str):
         self.nt_canvas = NtCanvas(window.qwindow().window(), window)
         self.nt_canvas.Actions_Init(window, path)
-        
 
     def OnEvent_ActiveViewChanged(self):
         if self.active_canvas != None:
