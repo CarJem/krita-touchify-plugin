@@ -31,16 +31,14 @@ class KritaExtensions:
     
     @staticmethod
     def getDockerMenu(window: WindowAPI):
-        for m in window.qwindow().actions():
+        for m in window.qwindow.actions():
             if m.objectName() == "settings_dockers_menu":
                 return m
         return None
 
     @staticmethod
     def showQuickMessage(message: str):
-        view = KritaAPI.get_active_view_native()
-        if not view: return
-        
+        view = KritaAPI.get_active_view()
         view.showFloatingMessage(message, KritaAPI.get_icon('move_layer_up'), 1000, 0)
 
     @staticmethod

@@ -16,27 +16,6 @@ if TYPE_CHECKING:
 
 
 class CanvasManager(QObject):
-
-    class WorkerTasks(QObject):
-        @staticmethod
-        def Actions_Post(self: "CanvasManager"):
-            # Thread
-            self.worker_thread = QThread()
-            # Worker
-            self.worker_instance = CanvasManager.WorkerTasks()
-            self.worker_instance.moveToThread( self.worker_thread )
-            # Thread
-            self.worker_thread.started.connect( lambda : self.worker_instance.Actions_Post_Async( self ) )
-            self.worker_thread.start()
-
-        def Actions_Post_Async(a, self: "CanvasManager"):
-            self.nt_canvas.Window_Load(self.app_engine)
-            self.nt_canvas.Window().activeViewChanged.connect(self.OnEvent_ActiveViewChanged)
-            self.OnEvent_ActiveViewChanged()
-
-            self.nt_canvas.Actions_Post()
-
-
     mouseLeftPress=pyqtSignal()
     mouseRightPress=pyqtSignal()
     mouseMiddlePress=pyqtSignal()
@@ -52,37 +31,22 @@ class CanvasManager(QObject):
     def __init__(self, instance: "TouchifyWindow"):
         super().__init__(instance)
         self.app_engine = instance
+        self.api_window: WindowAPI | None = None
         self.last_canvas_focus = None
         self.nt_canvas: NtCanvas | None = None
         self.active_canvas: QOpenGLWidget | None = None
 
-    def Get_View(self):
-        current_view = self.nt_canvas.Window().activeView()
-        if not current_view: return None
-
-        window_views = self.nt_canvas.Window().views()
-        if current_view not in window_views: return None
-
-        mdi_area = self.nt_canvas.MdiArea()
-        if not mdi_area: return None
-
-        mdi_subwindow = mdi_area.activeSubWindow()
-        if not mdi_subwindow: return None
-
-        view_container = next((w for w in mdi_subwindow.findChildren(QWidget) if w.metaObject().className() == 'KisView'), None)
-        if not view_container: return None
-
-        return view_container
-
-    def Window_Load(self):
-        pass
+    def Window_Load(self, api_window: WindowAPI):
+        self.api_window = api_window
 
     def Actions_Post(self):
-        CanvasManager.WorkerTasks.Actions_Post(self)
-
+        self.nt_canvas.Window_Load(self.app_engine)
+        self.api_window.activeViewChanged.connect(self.OnEvent_ActiveViewChanged)
+        self.OnEvent_ActiveViewChanged()
+        self.nt_canvas.Actions_Post()
 
     def Actions_Init(self, window: WindowAPI, path: str):
-        self.nt_canvas = NtCanvas(window.qwindow().window(), window)
+        self.nt_canvas = NtCanvas(window.qwindow.window(), window)
         self.nt_canvas.Actions_Init(window, path)
 
     def OnEvent_ActiveViewChanged(self):
@@ -92,13 +56,13 @@ class CanvasManager(QObject):
             
             self.active_canvas = None
         
-        current_view = self.nt_canvas.Window().activeView()
+        current_view = self.app_engine.api_window.active_view
         if not current_view: return
 
-        window_views = self.nt_canvas.Window().views()
+        window_views = self.app_engine.api_window.views
         if current_view not in window_views: return
 
-        mdi_area = self.nt_canvas.MdiArea()
+        mdi_area = self.app_engine.api_window.mdi_area
         if not mdi_area: return
 
         mdi_subwindow = mdi_area.activeSubWindow()

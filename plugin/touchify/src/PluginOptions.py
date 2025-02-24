@@ -11,9 +11,9 @@ from krita import *
 class PluginOptions(QDialog):
 
     def __init__(self, qwin: WindowAPI):
-        super().__init__(qwin.qwindow().window())
+        super().__init__(qwin.qwindow.window())
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
-        self.qwin = qwin.qwindow()
+        self.qwin = qwin.qwindow
         
         self.editableConfig = copy.deepcopy(TouchifySettings.instance().getConfig())
         self.propertyGrid = PropertyGrid(self)

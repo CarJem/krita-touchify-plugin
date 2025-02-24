@@ -26,21 +26,24 @@ if TYPE_CHECKING:
     from .Plugin import TouchifyPlugin
 
 class TouchifyWindow(QObject):
+    
+    class Managers:
+        def __init__(self, manager: "TouchifyWindow"):
+            self.mgr_tweaker = TweakManager(manager)
+            self.mgr_shortcuts = ShortcutsManager(manager)
+            self.mgr_canvas = CanvasManager(manager)
+            self.mgr_dev = DeveloperManager(manager)
+            self.mgr_actions = ActionManager(manager)
 
-    class WorkerTasks(QObject):
-        @staticmethod
-        def Addons_Post(self: "TouchifyWindow"):
-            # Thread
-            self.worker_thread = QThread()
-            # Worker
-            self.worker_instance = TouchifyWindow.WorkerTasks()
-            self.worker_instance.moveToThread( self.worker_thread )
-            # Thread
-            self.worker_thread.started.connect( lambda : self.worker_instance.Addons_Post_Async( self ) )
-            self.worker_thread.start()
+        def Load(self, manager: "TouchifyWindow"):
+            self.mgr_dockers = DockerManager(manager)
+            self.mgr_actions.Window_Load(manager.api_window)
+            self.mgr_shortcuts.Window_Load()
+            self.mgr_tweaker.Window_Load()
+            self.mgr_canvas.Window_Load(manager.api_window)
 
-        def Addons_Post_Async(a, self: "TouchifyWindow"):
-            dockers_menu_action = KritaExtensions.getDockerMenu(self.krita_window)
+        def Addons(self, manager: "TouchifyWindow"):
+            dockers_menu_action = KritaExtensions.getDockerMenu(manager.api_window)
             if dockers_menu_action == None: return
 
             touchify_title_prefix = "Touchify Core: "
@@ -69,7 +72,7 @@ class TouchifyWindow(QObject):
             dockers_menu_action.menu().addSection("Touchify Addons")
             for act in addons_list: dockers_menu_action.menu().addAction(act)
 
-            for docker in self.krita_window.dockers():
+            for docker in manager.api_window.dockers:
                 window_title = docker.windowTitle()
                 docker_id = docker.objectName()
 
@@ -81,100 +84,67 @@ class TouchifyWindow(QObject):
 
                 if docker_id == TOUCHIFY_DOCKERID_TOOLSHELFDOCKER:
                     toolshelfDocker: ToolshelfDockWidget = docker
-                    toolshelfDocker.setup(self)
+                    toolshelfDocker.setup(manager)
                 elif docker_id == TOUCHIFY_DOCKERID_DOCKER_TOOLBOX:
                     toolboxDocker: ToolboxDocker = docker
-                    toolboxDocker.setup(self)
+                    toolboxDocker.setup(manager)
                 else:
                     if not docker_id.startswith(addon_id_prefix): pass
                     elif not hasattr(docker, addon_setup_method): pass
                     elif not callable(getattr(docker, addon_setup_method, False)): pass
-                    else: getattr(docker, addon_setup_method)(self)
-    
+                    else: getattr(docker, addon_setup_method)(manager)
+
+        def Actions(self, window: WindowAPI):
+            self.mgr_shortcuts.Actions_Init(window, "tools/touchify", "settings")
+            self.mgr_actions.Actions_Init(window, "tools/touchify")  
+            self.mgr_dev.Actions_Init(window, "settings")
+            self.mgr_tweaker.Actions_Init(window, "settings")
+            self.mgr_canvas.Actions_Init(window, "settings")
+
+        def ActionWidgets(self, manager: "TouchifyWindow"):
+            self.mgr_shortcuts.Actions_Post()
+            self.mgr_tweaker.Actions_Post()
+            self.mgr_canvas.Actions_Post()
+            self.mgr_actions.Actions_Post(manager.action_plugin_tools_menu)
+            self.mgr_dev.Actions_Post(manager.action_plugin_tools_menu)
+
     def __init__(self, parent: QObject):
         super().__init__(parent)
-        self.Variables_Init()
 
-    #region Init Functions
-    def Variables_Init(self):
-        global WINDOW_ID; self.__UUID = WINDOW_ID; WINDOW_ID += 1
-        
-        self.mgr_tweaker = TweakManager(self)
-        self.mgr_shortcuts = ShortcutsManager(self)
-        self.mgr_canvas = CanvasManager(self)
-        self.mgr_dev = DeveloperManager(self)
-        self.mgr_actions = ActionManager(self)
-        self.settings_dlg: PluginOptions | None = None
+        global WINDOW_ID; self.INSTANCE_ID = WINDOW_ID; WINDOW_ID += 1
+        self.managers = self.Managers(self)
+        self.dlg_settings: PluginOptions | None = None
 
-    def Actions_Init(self, window: WindowAPI):
-        self.__main_menu_bar = QMenu(None, window.qwindow())
-
-        openSettingsAction = window.createAction(TOUCHIFY_ACTIONID_CONFIGURE, "Configure Touchify...", "settings")
-        openSettingsAction.triggered.connect(self.Trigger_OpenSettings)
-
-        menuAction = window.createAction("touchify", "Touchify", "tools")
-        menuAction.setMenu(self.__main_menu_bar)
-
-        self.mgr_shortcuts.Actions_Init(window, "tools/touchify", "settings")
-        self.mgr_actions.Actions_Init(window, "tools/touchify")  
-        self.mgr_dev.Actions_Init(window, "settings")
-        self.mgr_tweaker.Actions_Init(window, "settings")
-        self.mgr_canvas.Actions_Init(window, "settings")
-    #endregion
-
-    #region Post-Init Functions
-
-    def Variables_Post(self, window: WindowAPI):
+    def Load(self, window: WindowAPI):
         self.api_window = window
-        self.krita_window = window.native()    
-        self.setParent(window.qwindow())
+        self.setParent(self.api_window.qwindow)
+        self.managers.Load(self)
 
-        self.mgr_dockers = DockerManager(self)
+        self.action_plugin_instance = QAction(f"Instance: #{self.INSTANCE_ID}", self.action_plugin_tools_menu)
+        self.action_plugin_instance.setEnabled(False)
+        self.action_plugin_instance.setSeparator(True)
+        self.action_plugin_tools_menu.addAction(self.action_plugin_instance)
+        self.managers.ActionWidgets(self)
 
-        self.mgr_actions.Window_Load()
-        self.mgr_shortcuts.Window_Load()
-        self.mgr_tweaker.Window_Load()
-        self.mgr_canvas.Window_Load()
+        self.managers.Addons(self)
 
-    def Actions_Post(self):
-        instance_seperator = QAction("", self.__main_menu_bar)
-        instance_seperator.setText(f"Instance: #{self.__UUID}")
-        instance_seperator.setEnabled(False)
-        instance_seperator.setSeparator(True)
-        self.__main_menu_bar.addAction(instance_seperator)
-        self.mgr_shortcuts.Actions_Post()
-        self.mgr_tweaker.Actions_Post()
-        self.mgr_canvas.Actions_Post()
-        self.mgr_actions.Actions_Post(self.__main_menu_bar)
-        self.mgr_dev.Actions_Post(self.__main_menu_bar)
+    def LoadActions(self, window: WindowAPI):
+        self.action_plugin_settings = window.create_action(TOUCHIFY_ACTIONID_CONFIGURE, "Configure Touchify...", "settings")
+        self.action_plugin_settings.triggered.connect(self.OpenSettings)
 
+        self.action_plugin_tools_menu = QMenu(None, window.qwindow)
+        self.action_plugin_tools = window.create_action("touchify", "Touchify", "tools")
+        self.action_plugin_tools.setMenu(self.action_plugin_tools_menu)
 
-        
-    #endregion
-
-    #region Window Functions
-
-    def Window_UUID(self):
-        return self.__UUID
-
-    def Window_Unload(self):
+        self.managers.Actions(window)
+ 
+    def Unload(self):
         pass
 
-    def Window_Load(self, window: WindowAPI):
-        self.Variables_Post(window)
-        self.Actions_Post()
-        TouchifyWindow.WorkerTasks.Addons_Post(self)
-
-    #endregion
-
-    #region Trigger Functions
-
-    def Trigger_OpenSettings(self):
-        if self.settings_dlg != None:
-            if PyQtExtensions.CommonHelpers.isDeleted(self.settings_dlg) == False:
+    def OpenSettings(self):
+        if self.dlg_settings != None:
+            if PyQtExtensions.CommonHelpers.isDeleted(self.dlg_settings) == False:
                 return
           
-        self.settings_dlg = PluginOptions(self.krita_window)
-        self.settings_dlg.show()
-
-    #endregion
+        self.dlg_settings = PluginOptions(self.api_window)
+        self.dlg_settings.show()

@@ -23,7 +23,7 @@ class NtToolbox(NtWidgetPad):
         self.borrowDocker(self.toolbox)
 
         # Disable the related QDockWidget
-        self.dockerAction = window.qwindow().findChild(QDockWidget, TOUCHIFY_DOCKERID_DOCKER_TOOLBOX).toggleViewAction()
+        self.dockerAction = window.qwindow.findChild(QDockWidget, TOUCHIFY_DOCKERID_DOCKER_TOOLBOX).toggleViewAction()
         self.dockerAction.setEnabled(False)
 
         #self.toolbox.toolboxWidget.horizontalModeAction.setEnabled(False)

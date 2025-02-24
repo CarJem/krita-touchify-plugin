@@ -10,6 +10,7 @@
         "source.unusedImports",
         "source.convertImportFormat"
     ],
+    "python.envFile": "${workspaceFolder}/.env",
     "python.REPL.enableREPLSmartSend": false,
     "python.analysis.importFormat": "absolute",
     "python.analysis.diagnosticMode": "workspace",

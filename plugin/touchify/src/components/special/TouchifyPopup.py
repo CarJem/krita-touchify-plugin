@@ -148,11 +148,11 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
         self.config = args
         self.registry_id = id
         self.app_engine: "TouchifyWindow" = app_engine
-        self.docker_manager: "DockerManager" = app_engine.mgr_dockers
-        self.actions_manager: "ActionManager" = app_engine.mgr_actions
-        self.canvas_manager: "CanvasManager" = app_engine.mgr_canvas
+        self.docker_manager: "DockerManager" = app_engine.managers.mgr_dockers
+        self.actions_manager: "ActionManager" = app_engine.managers.mgr_actions
+        self.canvas_manager: "CanvasManager" = app_engine.managers.mgr_canvas
         self.toolshelf_data = toolshelf_data
-        self.main_window = self.app_engine.krita_window.qwindow()
+        self.main_window = self.app_engine.api_window.qwindow
         self.toggle_view_action = self.toggleViewAction()
 
 
@@ -218,7 +218,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
     def Connections(self):
         self.dockLocationChanged.connect(self.OnEvent_DockLocationChanged)
 
-    def Construct(id: str, parent: QWidget, data: PopupData, app_engine: "TouchifyWindow"):      
+    def Construct(id: str, parent: QWidget, data: PopupData, app_window: "TouchifyWindow"):      
         from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
         from touchify.src.config.toolshelf.ToolshelfDataPage import ToolshelfDataPage
         from touchify.src.config.toolshelf.ToolshelfDataSection import ToolshelfDataSection
@@ -296,7 +296,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
                 toolshelf_data = None
         
         if not isinstance(toolshelf_data, ToolshelfData) or toolshelf_data == None: return None                
-        return TouchifyPopup(parent, id, data, toolshelf_data, app_engine)
+        return TouchifyPopup(parent, id, data, toolshelf_data, app_window)
 
     #region Geometry Methods
 

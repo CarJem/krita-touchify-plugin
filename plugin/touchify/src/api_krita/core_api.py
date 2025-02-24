@@ -9,10 +9,6 @@ from krita import (
     Extension, 
     DockWidgetFactory, DockWidgetFactoryBase, 
     Krita as KritaAPI,
-    Document as KritaDocument,
-    Window as KritaWindow, 
-    View as KritaView,
-    Canvas as KritaCanvas,
     qApp
 )
 from PyQt5.QtWidgets import (
@@ -71,10 +67,7 @@ class KritaInstance:
     
     def get_active_document(self) -> DocumentAPI:
         """Return wrapper of krita `Document`."""
-        document = self.instance.activeDocument()
-        if document is None:
-            return DocumentAPI(None)
-        return DocumentAPI(document)
+        return DocumentAPI(self.instance.activeDocument())
 
     def get_active_canvas(self) -> CanvasAPI:
         """Return wrapper of krita `Canvas`."""
@@ -91,7 +84,14 @@ class KritaInstance:
 
     def get_active_window(self) -> WindowAPI:
         return WindowAPI(self.instance.activeWindow())
+    
+    def get_active_qwindow(self) -> QMainWindow:
+        """Return qt window of krita. Don't use on plugin init phase."""
+        return self.instance.activeWindow().qwindow()
 
+    def get_active_mdi_area(self) -> QMdiArea:
+        return self.get_active_qwindow().findChild(QMdiArea)  # type: ignore
+   
     def get_windows(self) -> list[WindowAPI]:
         return list(map(WindowAPI, self.instance.windows()))
     
@@ -99,59 +99,9 @@ class KritaInstance:
         return list(map(DocumentAPI, self.instance.documents()))
     
     #endregion
-
-    #region Native Wrappers
-
-    def get_active_view_native(self) -> KritaView | None:
-        win = self.instance.activeWindow()
-        if win == None: return None
-
-        view = win.activeView()
-        if view == None: return None
-
-        return view
     
-    def get_active_document_native(self) -> KritaDocument | None:
-        document = self.instance.activeDocument()
-        if document is None:
-            return None
-        return document
-    
-    def get_active_canvas_native(self) -> KritaCanvas | None:
-        win = self.instance.activeWindow()
-        if win == None: return None
-
-        view = win.activeView()
-        if view == None: return None
-
-        canvas = view.canvas()
-        if canvas == None: return None
-
-        return canvas
-
-    def get_active_window_native(self) -> KritaWindow | None:
-        return self.instance.activeWindow()
-
-    def get_documents_native(self) -> List[KritaDocument]:
-        return self.instance.documents()
-    
-    def get_native_instance(self) -> KritaAPI:
-        return self.instance
-
-    #endregion
-
-    def get_active_qwindow(self) -> QMainWindow:
-        """Return qt window of krita. Don't use on plugin init phase."""
-        return self.instance.activeWindow().qwindow()
-
-    def get_active_mdi_area(self) -> QMdiArea:
-        return self.get_active_qwindow().findChild(QMdiArea)  # type: ignore
-
-
-
-
-
-
+    def open_document(self, filename: str):
+        return DocumentAPI(self.instance.openDocument(filename))
 
 
     def get_cursor(self) -> CursorAPI:
@@ -233,7 +183,7 @@ class KritaInstance:
         Requires providing a krita window received in createActions()
         method of the main extension file.
         """
-        krita_action = window.createAction(name, name, group)
+        krita_action = window.create_action(name, name, group)
         krita_action.setAutoRepeat(False)
         krita_action.triggered.connect(callback)
         return krita_action

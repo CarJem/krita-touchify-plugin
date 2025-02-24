@@ -32,7 +32,7 @@ class ShortcutsManager(object):
     #region Signals
 
     def Window_Load(self):
-        self.qWin = self.appEngine.krita_window.qwindow()
+        self.qWin = self.appEngine.api_window.qwindow
 
     #endregion
 
@@ -155,7 +155,7 @@ class ShortcutsManager(object):
         source.click()
 
     def showPopupPalette(self):
-        pobj = self.appEngine.mgr_canvas.Get_View()
+        pobj = self.appEngine.api_window.active_qview
         if not pobj: return
 
         mobj = next((w for w in pobj.findChildren(QWidget) if w.metaObject().className() == 'KisPopupPalette'), None)
@@ -182,7 +182,7 @@ class ShortcutsManager(object):
                 else:
                     destination.addAction(action)
 
-        activeWindow = self.appEngine.krita_window.qwindow()
+        activeWindow = self.qWin
         popupMenu = QMenu(activeWindow)
         menuBar = activeWindow.menuBar()
         iterateActions(popupMenu, menuBar)
@@ -210,96 +210,96 @@ class ShortcutsManager(object):
     def Actions_Init(self, window: WindowAPI, subItemPath: str, settingsItemPath: str):
 
         # Show Popup Palette
-        popupPaletteToggle = window.createAction(TOUCHIFY_ACTIONID_OTHER_SHOWPOPUPPALETTE, "Show Popup Palette", settingsItemPath)
+        popupPaletteToggle = window.create_action(TOUCHIFY_ACTIONID_OTHER_SHOWPOPUPPALETTE, "Show Popup Palette", settingsItemPath)
         popupPaletteToggle.setCheckable(False)
         popupPaletteToggle.triggered.connect(self.showPopupPalette)
 
         # Show Popup Menu
-        popupMenuToggle = window.createAction(TOUCHIFY_ACTIONID_OTHER_SHOWMENUBARPOPUP, "Show Popup Menu", settingsItemPath)
+        popupMenuToggle = window.create_action(TOUCHIFY_ACTIONID_OTHER_SHOWMENUBARPOPUP, "Show Popup Menu", settingsItemPath)
         popupMenuToggle.setCheckable(False)
         popupMenuToggle.triggered.connect(self.showMenubarPopup)
 
         # region Toggle Dockers
         docker_utils_path = "{0}/{1}".format(settingsItemPath, TOUCHIFY_ACTIONID_DOCKERUTILS_MENU)
-        self.docker_utils_menu = QtWidgets.QMenu("Docker Utils", window.qwindow())
-        self.docker_utils_action = window.createAction(TOUCHIFY_ACTIONID_DOCKERUTILS_MENU, "Toggle Dockers...", settingsItemPath)
+        self.docker_utils_menu = QtWidgets.QMenu("Docker Utils", window.qwindow)
+        self.docker_utils_action = window.create_action(TOUCHIFY_ACTIONID_DOCKERUTILS_MENU, "Toggle Dockers...", settingsItemPath)
         self.docker_utils_action.setMenu(self.docker_utils_menu)
 
-        toggleDockersLeft = window.createAction(TOUCHIFY_ACTIONID_DOCKERUTILS_TOGGLELEFT, "Toggle Left Dockers", docker_utils_path)
+        toggleDockersLeft = window.create_action(TOUCHIFY_ACTIONID_DOCKERUTILS_TOGGLELEFT, "Toggle Left Dockers", docker_utils_path)
         toggleDockersLeft.triggered.connect(lambda: self.toggleDirectionalDockers(1))
         self.docker_utils_menu.addAction(toggleDockersLeft)
 
-        toggleDockersRight = window.createAction(TOUCHIFY_ACTIONID_DOCKERUTILS_TOGGLERIGHT, "Toggle Right Dockers", docker_utils_path)
+        toggleDockersRight = window.create_action(TOUCHIFY_ACTIONID_DOCKERUTILS_TOGGLERIGHT, "Toggle Right Dockers", docker_utils_path)
         toggleDockersRight.triggered.connect(lambda: self.toggleDirectionalDockers(2))
         self.docker_utils_menu.addAction(toggleDockersRight)
 
-        toggleDockersTop = window.createAction(TOUCHIFY_ACTIONID_DOCKERUTILS_TOGGLEUP, "Toggle Top Dockers", docker_utils_path)
+        toggleDockersTop = window.create_action(TOUCHIFY_ACTIONID_DOCKERUTILS_TOGGLEUP, "Toggle Top Dockers", docker_utils_path)
         toggleDockersTop.triggered.connect(lambda: self.toggleDirectionalDockers(4))
         self.docker_utils_menu.addAction(toggleDockersTop)
 
-        toggleDockersBottom = window.createAction(TOUCHIFY_ACTIONID_DOCKERUTILS_TOGGLEDOWN, "Toggle Bottom Dockers", docker_utils_path)
+        toggleDockersBottom = window.create_action(TOUCHIFY_ACTIONID_DOCKERUTILS_TOGGLEDOWN, "Toggle Bottom Dockers", docker_utils_path)
         toggleDockersBottom.triggered.connect(lambda: self.toggleDirectionalDockers(8))
         self.docker_utils_menu.addAction(toggleDockersBottom)
         #endregion
 
         # region Transform Tool Selection Actions
         transform_selection_utils_path = "{0}/{1}".format(subItemPath, TOUCHIFY_ACTIONID_TRANSFORMTOOL_MENU)
-        self.transform_selection_menu = QtWidgets.QMenu("Transform Tool Actions", window.qwindow())
-        self.transform_selection_action = window.createAction(TOUCHIFY_ACTIONID_TRANSFORMTOOL_MENU, "Transform Tool Actions", subItemPath)
+        self.transform_selection_menu = QtWidgets.QMenu("Transform Tool Actions", window.qwindow)
+        self.transform_selection_action = window.create_action(TOUCHIFY_ACTIONID_TRANSFORMTOOL_MENU, "Transform Tool Actions", subItemPath)
         self.transform_selection_action.setMenu(self.transform_selection_menu)
 
-        transform_selection_flip_x = window.createAction(TOUCHIFY_ACTIONID_TRANSFORMTOOL_FREE_FLIPX, "Mirror Horizontal", transform_selection_utils_path)
+        transform_selection_flip_x = window.create_action(TOUCHIFY_ACTIONID_TRANSFORMTOOL_FREE_FLIPX, "Mirror Horizontal", transform_selection_utils_path)
         transform_selection_flip_x.triggered.connect(lambda: self.triggerTransformToolAction(ShortcutsManager.TransformSelectionAction.Free_FlipX))
         self.transform_selection_menu.addAction(transform_selection_flip_x)
 
-        transform_selection_flip_y = window.createAction(TOUCHIFY_ACTIONID_TRANSFORMTOOL_FREE_FLIPY, "Mirror Vertical", transform_selection_utils_path)
+        transform_selection_flip_y = window.create_action(TOUCHIFY_ACTIONID_TRANSFORMTOOL_FREE_FLIPY, "Mirror Vertical", transform_selection_utils_path)
         transform_selection_flip_y.triggered.connect(lambda: self.triggerTransformToolAction(ShortcutsManager.TransformSelectionAction.Free_FlipY))
         self.transform_selection_menu.addAction(transform_selection_flip_y)
 
-        transform_selection_rotate_cw = window.createAction(TOUCHIFY_ACTIONID_TRANSFORMTOOL_FREE_ROTATECW, "Rotate 90 degrees Clockwise", transform_selection_utils_path)
+        transform_selection_rotate_cw = window.create_action(TOUCHIFY_ACTIONID_TRANSFORMTOOL_FREE_ROTATECW, "Rotate 90 degrees Clockwise", transform_selection_utils_path)
         transform_selection_rotate_cw.triggered.connect(lambda: self.triggerTransformToolAction(ShortcutsManager.TransformSelectionAction.Free_RotateCW))
         self.transform_selection_menu.addAction(transform_selection_rotate_cw)
 
-        transform_selection_rotate_ccw = window.createAction(TOUCHIFY_ACTIONID_TRANSFORMTOOL_FREE_ROTATECCW, "Rotate 90 degrees CounterClockwise", transform_selection_utils_path)
+        transform_selection_rotate_ccw = window.create_action(TOUCHIFY_ACTIONID_TRANSFORMTOOL_FREE_ROTATECCW, "Rotate 90 degrees CounterClockwise", transform_selection_utils_path)
         transform_selection_rotate_ccw.triggered.connect(lambda: self.triggerTransformToolAction(ShortcutsManager.TransformSelectionAction.Free_RotateCCW))
         self.transform_selection_menu.addAction(transform_selection_rotate_ccw)
 
         self.transform_selection_menu.addSeparator()
 
-        transform_selection_apply = window.createAction(TOUCHIFY_ACTIONID_TRANSFORMTOOL_APPLY, "Apply", transform_selection_utils_path)
+        transform_selection_apply = window.create_action(TOUCHIFY_ACTIONID_TRANSFORMTOOL_APPLY, "Apply", transform_selection_utils_path)
         transform_selection_apply.triggered.connect(lambda: self.triggerTransformToolAction(ShortcutsManager.TransformSelectionAction.Apply))
         self.transform_selection_menu.addAction(transform_selection_apply)
 
-        transform_selection_reset = window.createAction(TOUCHIFY_ACTIONID_TRANSFORMTOOL_RESET, "Reset", transform_selection_utils_path)
+        transform_selection_reset = window.create_action(TOUCHIFY_ACTIONID_TRANSFORMTOOL_RESET, "Reset", transform_selection_utils_path)
         transform_selection_reset.triggered.connect(lambda: self.triggerTransformToolAction(ShortcutsManager.TransformSelectionAction.Reset))
         self.transform_selection_menu.addAction(transform_selection_reset)
         #endregion
 
         # region Crop Tool Actions
         crop_tool_actions_path = "{0}/{1}".format(subItemPath, TOUCHIFY_ACTIONID_CROPTOOLS_MENU)
-        self.crop_tool_actions_menu = QtWidgets.QMenu("Crop Tool Actions", window.qwindow())
-        self.crop_tool_actions_menu_action = window.createAction(TOUCHIFY_ACTIONID_CROPTOOLS_MENU, "Crop Tool Actions", subItemPath)
+        self.crop_tool_actions_menu = QtWidgets.QMenu("Crop Tool Actions", window.qwindow)
+        self.crop_tool_actions_menu_action = window.create_action(TOUCHIFY_ACTIONID_CROPTOOLS_MENU, "Crop Tool Actions", subItemPath)
         self.crop_tool_actions_menu_action.setMenu(self.crop_tool_actions_menu)
 
-        self.crop_tools_actions_center = window.createAction(TOUCHIFY_ACTIONID_CROPTOOLS_CENTER, "Center", crop_tool_actions_path)
+        self.crop_tools_actions_center = window.create_action(TOUCHIFY_ACTIONID_CROPTOOLS_CENTER, "Center", crop_tool_actions_path)
         self.crop_tools_actions_center.triggered.connect(lambda: self.triggerCropToolAction("center"))
         self.crop_tool_actions_menu.addAction(self.crop_tools_actions_center)
 
-        self.crop_tools_actions_grow = window.createAction(TOUCHIFY_ACTIONID_CROPTOOLS_GROW, "Grow", crop_tool_actions_path)
+        self.crop_tools_actions_grow = window.create_action(TOUCHIFY_ACTIONID_CROPTOOLS_GROW, "Grow", crop_tool_actions_path)
         self.crop_tools_actions_grow.triggered.connect(lambda: self.triggerCropToolAction("grow"))
         self.crop_tool_actions_menu.addAction(self.crop_tools_actions_grow)
 
         self.crop_tool_actions_menu.addSeparator()
 
-        self.crop_tools_actions_lock_width = window.createAction(TOUCHIFY_ACTIONID_CROPTOOLS_LOCKWIDTH, "Lock Width", crop_tool_actions_path)
+        self.crop_tools_actions_lock_width = window.create_action(TOUCHIFY_ACTIONID_CROPTOOLS_LOCKWIDTH, "Lock Width", crop_tool_actions_path)
         self.crop_tools_actions_lock_width.triggered.connect(lambda: self.triggerCropToolAction("lock_width"))
         self.crop_tool_actions_menu.addAction(self.crop_tools_actions_lock_width)
 
-        self.crop_tools_actions_lock_height = window.createAction(TOUCHIFY_ACTIONID_CROPTOOLS_LOCKHEIGHT, "Lock Height", crop_tool_actions_path)
+        self.crop_tools_actions_lock_height = window.create_action(TOUCHIFY_ACTIONID_CROPTOOLS_LOCKHEIGHT, "Lock Height", crop_tool_actions_path)
         self.crop_tools_actions_lock_height.triggered.connect(lambda: self.triggerCropToolAction("lock_height"))
         self.crop_tool_actions_menu.addAction(self.crop_tools_actions_lock_height)
 
-        self.crop_tools_actions_lock_ratio = window.createAction(TOUCHIFY_ACTIONID_CROPTOOLS_LOCKRATIO, "Lock Ratio", crop_tool_actions_path)
+        self.crop_tools_actions_lock_ratio = window.create_action(TOUCHIFY_ACTIONID_CROPTOOLS_LOCKRATIO, "Lock Ratio", crop_tool_actions_path)
         self.crop_tools_actions_lock_ratio.triggered.connect(lambda: self.triggerCropToolAction("lock_ratio"))
         self.crop_tool_actions_menu.addAction(self.crop_tools_actions_lock_ratio)
         #endregion

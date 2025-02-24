@@ -36,9 +36,9 @@ class ToolshelfDockWidget(DockWidget):
 
       
     def setup(self, instance: "TouchifyWindow"):
-        self.docker_manager = instance.mgr_dockers
-        self.actions_manager = instance.mgr_actions
-        self.canvas_manager = instance.mgr_canvas
+        self.docker_manager = instance.managers.mgr_dockers
+        self.actions_manager = instance.managers.mgr_actions
+        self.canvas_manager = instance.managers.mgr_canvas
         self.onLoaded()
 
     def onResizeByDefaultRequested(self):

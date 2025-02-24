@@ -334,48 +334,48 @@ class Panel(QWidget):
         def Section_Special(actionInfo: ToolshelfDataSection):
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushBlendingMode:
                 actionWidget = BrushBlendingSelector(self)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.LayerBlendingMode:
                 actionWidget = LayerBlendingSelector(self)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.LayerLabelBox:
                 actionWidget = LayerLabelBox(self)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushSizeSlider:
                 actionWidget = BrushSizeSlider(self)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushOpacitySlider:
                 actionWidget = BrushOpacitySlider(self)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushFlowSlider:
                 actionWidget = BrushFlowSlider(self)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushRotationSlider:
                 actionWidget = BrushRotationSlider(self)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BackgroundColorBox:
                 actionWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Background)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.ForegroundColorBox:
                 actionWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Foreground)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.ForegroundBackgroundColorPicker:
                 actionWidget = CanvasDualColorButton(self)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushPicker:
                 actionWidget = BrushPresetPicker(self)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.PatternPicker:
                 actionWidget = CanvasPatternPicker(self)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.GradientPicker:
                 actionWidget = CanvasGradientPicker(self)
-                actionWidget.setInstance(self.actions_manager.appEngine)
+                actionWidget.setInstance(self.actions_manager.app_window)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
             if actionInfo.min_size_x != 0: actionWidget.setMinimumWidth(actionInfo.min_size_x)

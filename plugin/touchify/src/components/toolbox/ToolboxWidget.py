@@ -84,8 +84,8 @@ class ToolboxWidget(QWidget):
 
 
     def setup(self, instance: "TouchifyWindow"):
-        self.sourceWindow = instance.krita_window
-        self.actionEngine = instance.mgr_actions
+        self.sourceWindow = instance.api_window
+        self.actionEngine = instance.managers.mgr_actions
         self.reload()
     
 
@@ -194,7 +194,7 @@ class ToolboxWidget(QWidget):
             active_window = self.sourceWindow
             if active_window != None:   
                 if self.__preload__themeChanged == False:
-                    active_window.qwindow().themeChanged.connect(self.updatePalette)
+                    active_window.qwindow.themeChanged.connect(self.updatePalette)
                     self.__preload__themeChanged = True
         except:
             pass

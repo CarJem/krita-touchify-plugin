@@ -95,17 +95,17 @@ class TouchifyActionButton(QToolButton):
 
     #region Setup
 
-    def setupBrushChange(self, manager: "ActionManager", brush_id: str, is_active: bool):
+    def setupBrushChange(self, source_window: "WindowAPI", brush_id: str, is_active: bool):
         self.brush_id = brush_id
-        manager.appEngine.api_window.notifier().brushChanged.connect(self.onBrushChanged)
+        source_window.notifier.brushChanged.connect(self.onBrushChanged)
         if is_active: 
             self.is_brush_selected = True
             self.repaint()
 
-    def setupToolChange(self, manager: "ActionManager", tool_id: str, is_active: bool):
+    def setupToolChange(self, source_window: "WindowAPI", tool_id: str, is_active: bool):
         self.is_tool_action = True
         self.tool_action_id = tool_id
-        manager.appEngine.api_window.notifier().toolChanged.connect(self.onToolChanged)
+        source_window.notifier.toolChanged.connect(self.onToolChanged)
 
         if is_active: self.toggled = (True)
 

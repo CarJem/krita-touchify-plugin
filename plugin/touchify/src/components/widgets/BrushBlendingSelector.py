@@ -96,7 +96,7 @@ class BrushBlendingSelector(QPushButton):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.notifier = window.api_window.notifier()
+        self.notifier = window.api_window.notifier
         self.notifier.brushBlendingModeChanged.connect(self.onBlendingModeChanged)
         self.onBlendingModeChanged(self.notifier.getBrushBlendingMode())
 

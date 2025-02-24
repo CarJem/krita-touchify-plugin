@@ -27,7 +27,7 @@ class CanvasAPI:
             view = ViewAPI(self.canvas.view())
             if not view.isValid(): return default_value
 
-            document = view.document()
+            document = view.document
             if not document.isValid(): return default_value
 
             return document.dpi / 7200

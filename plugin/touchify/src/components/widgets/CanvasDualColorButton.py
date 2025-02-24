@@ -171,7 +171,7 @@ class CanvasDualColorButton(QWidget):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.notifier = self.appEngine.api_window.notifier()
+        self.notifier = self.appEngine.api_window.notifier
 
         self.notifier.canvasChanged.connect(self.onCanvasChanged)
         self.onCanvasChanged(self.notifier.getCurrentCanvas())

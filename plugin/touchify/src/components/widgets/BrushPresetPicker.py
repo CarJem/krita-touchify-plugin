@@ -7,7 +7,6 @@ from touchify.__env__ import *
 
 from typing import TYPE_CHECKING
 
-from touchify.src.api_krita import KritaAPI
 if TYPE_CHECKING:
     from touchify.src.PluginWindow import TouchifyWindow
 
@@ -19,12 +18,12 @@ class BrushPresetPicker(QPushButton):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.notifier = window.api_window.notifier()
+        self.notifier = window.api_window.notifier
         self.notifier.brushChanged.connect(self.onBrushChanged)
         self.onBrushChanged(self.notifier.getCurrentBrush())
 
     def openBrushPicker(self):
-        self.appEngine.mgr_actions.Create_Popup("touchify_internal_brush_picker", self)
+        self.appEngine.managers.mgr_actions.Create_Popup("touchify_internal_brush_picker", self)
     
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)

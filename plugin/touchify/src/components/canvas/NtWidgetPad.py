@@ -65,7 +65,7 @@ class NtWidgetPad(QWidget):
     SIGNAL_RESIZED = pyqtSignal(QWidget)
 
     def __init__(self, window: WindowAPI, canvas: "NtCanvas", allow_resizing: bool = False):
-        super(NtWidgetPad, self).__init__(canvas.MdiArea())
+        super(NtWidgetPad, self).__init__(window.mdi_area)
         self.setMouseTracking(True)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.FramelessWindowHint)
@@ -74,7 +74,7 @@ class NtWidgetPad(QWidget):
         self.padLayout.setContentsMargins(6,6,6,6)
         self.setLayout(self.padLayout)
 
-        self.source_window = window.qwindow()
+        self.source_window = window.qwindow
         self.source_canvas = canvas
 
         self.docker_widget = None
@@ -456,7 +456,7 @@ class NtTogglePadButton(QToolButton):
     def __init__(self, parent: "NtWidgetPad"):
         super(NtTogglePadButton, self).__init__(parent)
         self.widget_pad = parent
-        self.krita_window = self.widget_pad.source_canvas.app_engine.krita_window.qwindow()
+        self.krita_window = self.widget_pad.source_canvas.api_window.qwindow
         self.krita_window.themeChanged.connect(self.themeChangedEvent)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         qApp.paletteChanged.connect(self.themeChangedEvent)

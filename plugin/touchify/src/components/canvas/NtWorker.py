@@ -31,7 +31,7 @@ class NtWorker(QObject):
     def PROCESS_ELEMENTS (self: "NtWorker", canvas: "NtCanvas", full_unload: bool = False ):
         def onToolshelfCheck(toolshelf: NtToolshelf | None, allow_toolshelf: bool, config_index: int, action: QAction):
             if toolshelf == None and allow_toolshelf:
-                actual_toolshelf = NtToolshelf(canvas, canvas.Window(), config_index, canvas.app_engine)
+                actual_toolshelf = NtToolshelf(canvas, canvas.api_window, config_index, canvas.app_engine)
                 actual_toolshelf.SIGNAL_RESIZED.connect(canvas.widgetResizeEvent)
                 actual_toolshelf.collapseBtn.setDefaultAction(action)
                 canvas.canvasLayout.addWidget(actual_toolshelf)
@@ -47,7 +47,7 @@ class NtWorker(QObject):
         
         def onToolboxCheck(allow_toolbox: bool):
             if canvas.toolbox == None and allow_toolbox:
-                canvas.toolbox = NtToolbox(canvas, canvas.Window())
+                canvas.toolbox = NtToolbox(canvas, canvas.api_window)
                 canvas.toolbox.SIGNAL_RESIZED.connect(canvas.widgetResizeEvent)
                 canvas.toolbox.collapseBtn.setDefaultAction(canvas.tlb_action)
                 canvas.canvasLayout.addWidget(canvas.toolbox)
@@ -184,9 +184,9 @@ class NtWorker(QObject):
             if KritaSettings.hideScrollbars(): return 0
             return 10 + padding
 
-        if canvas.MdiArea():
-            position = canvas.MdiArea().viewport().pos()
-            size = canvas.MdiArea().viewport().size()
+        if canvas.api_window.mdi_area:
+            position = canvas.api_window.mdi_area.viewport().pos()
+            size = canvas.api_window.mdi_area.viewport().size()
 
             position.setX(position.x() + rulerMargin())
             position.setY(position.y() + rulerMargin())

@@ -21,9 +21,9 @@ class ToolshelfCanvasWidget(QDockWidget):
         super().__init__(parent)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.PanelIndex = panel_index
-        self.docker_manager = app_engine.mgr_dockers
-        self.actions_manager = app_engine.mgr_actions
-        self.canvas_manager = app_engine.mgr_canvas
+        self.docker_manager = app_engine.managers.mgr_dockers
+        self.actions_manager = app_engine.managers.mgr_actions
+        self.canvas_manager = app_engine.managers.mgr_canvas
 
         stylesheet = f"""QScrollArea {{ background: transparent; }}
         QScrollArea > QWidget > ToolshelfContainer {{ background: transparent; }}

@@ -50,9 +50,10 @@ def printDebug(value: str):
 class ActionManager(QObject):
     composerTriggerEnded=pyqtSignal()
     
-    def __init__(self, instance: "TouchifyWindow"):
+    def __init__(self, app_window: "TouchifyWindow"):
         super().__init__()
-        self.appEngine = instance
+        self.app_window = app_window
+        self.api_window: WindowAPI | None = None
 
         self.Variables()
         self.Connections()
@@ -78,14 +79,14 @@ class ActionManager(QObject):
 
     #region Window Functions
 
-    def Window_Load(self):
-        printDebug("window_load")
-        self.notifier = self.appEngine.api_window.notifier()
+    def Window_Load(self, app_window: WindowAPI):
+        self.api_window = app_window
+        self.notifier = self.api_window.notifier
+
         self.__lastToolboxTool = self.notifier.getCurrentTool()
         self.__lastBrushPreset = self.notifier.getCurrentBrush()
         self.notifier.toolChanged.connect(self.Notifier_ToolChanged)
         self.notifier.brushChanged.connect(self.Notifier_BrushChanged)
-        printDebug("window_load_done")
 
     def Notifier_ToolChanged(self, tool: str):
         printDebug("tool changed")
@@ -101,7 +102,7 @@ class ActionManager(QObject):
 
     def Create_RegistryAction(self, actionIdentifier: str, data: Trigger, window: WindowAPI, actionPath: str):
         displayName = data.display_custom_text
-        action = window.createAction(actionIdentifier, displayName, actionPath)
+        action = window.create_action(actionIdentifier, displayName, actionPath)
 
         self.registeredActions[actionIdentifier] = action
         self.registeredActionsData[actionIdentifier] = data  
@@ -173,7 +174,7 @@ class ActionManager(QObject):
             data.popup_width = 300
             data.popup_height = 500
         elif id == "gradient_chooser_popup" or id == "pattern_chooser_popup":    
-            main_window = self.appEngine.krita_window.qwindow()
+            main_window = self.api_window.qwindow
             frames = main_window.findChildren(QFrame,'KisPopupButtonFrame')
             for frame in frames:
                 result = frame.findChild(QWidget, id)
@@ -204,7 +205,7 @@ class ActionManager(QObject):
             if popup_id in self.active_popups: 
                 del self.active_popups[popup_id]
 
-            popup = TouchifyPopup.Construct(id, self.appEngine.krita_window.qwindow().window(), data, self.appEngine)
+            popup = TouchifyPopup.Construct(id, self.api_window.qwindow.window(), data, self.app_window)
             if popup == None: return
             
             self.active_popups[popup_id] = popup
@@ -221,8 +222,8 @@ class ActionManager(QObject):
     def Actions_Init(self, window: WindowAPI, subItemPath: str):
         cfg = TouchifySettings.instance().getConfig()
 
-        self.__registry_menu = QtWidgets.QMenu("Registered Actions", window.qwindow())
-        root_action = window.createAction(TOUCHIFY_ACTIONID_REGISTERED_ACTIONS_MENU, "Registered Actions", subItemPath)
+        self.__registry_menu = QtWidgets.QMenu("Registered Actions", window.qwindow)
+        root_action = window.create_action(TOUCHIFY_ACTIONID_REGISTERED_ACTIONS_MENU, "Registered Actions", subItemPath)
         root_action.setMenu(self.__registry_menu)
         registryItemsPath = "{0}/{1}".format(subItemPath, TOUCHIFY_ACTIONID_REGISTERED_ACTIONS_MENU)
 
@@ -234,8 +235,8 @@ class ActionManager(QObject):
             pack_name = packMeta.registry_name
             pack_id = packMeta.registry_id
 
-            pack_menu = QtWidgets.QMenu(pack_name, window.qwindow())
-            pack_action = window.createAction(pack_id, pack_name, registryItemsPath)
+            pack_menu = QtWidgets.QMenu(pack_name, window.qwindow)
+            pack_action = window.create_action(pack_id, pack_name, registryItemsPath)
             pack_action.setMenu(pack_menu)
             packItemsPath = "{0}/{1}".format(registryItemsPath, pack_id)
 
@@ -243,7 +244,7 @@ class ActionManager(QObject):
             for data in pack.triggers:
                 data: Trigger
                 id = '{0}{1}_{2}'.format(TOUCHIFY_ACTIONID_REGISTERED_ACTION_PREFIX, packMeta.registry_id, data.registry_id)
-                action = self.appEngine.mgr_actions.Create_RegistryAction(id, data, window, packItemsPath)
+                action = self.Create_RegistryAction(id, data, window, packItemsPath)
                 registered_elements[packMeta.registry_id][1].append(self.Actions_Add(id))
                 pack_menu.addAction(action)
             
@@ -458,7 +459,7 @@ class ActionManager(QObject):
             preset = brush_presets[id]
             btn = self.Button_Core(lambda: self.Execute_Brush(id), preset.name())
             match_tool = self.__lastBrushPreset == preset
-            btn.setupBrushChange(self, id, match_tool)
+            btn.setupBrushChange(self.api_window, id, match_tool)
             self.Helper_SetButtonDisplay(act, btn)
         return btn
                    
@@ -520,7 +521,7 @@ class ActionManager(QObject):
 
             if toolbox_item: 
                 match_tool = self.__lastToolboxTool == act.action_id
-                btn.setupToolChange(self, act.action_id, match_tool)
+                btn.setupToolChange(self.api_window, act.action_id, match_tool)
             elif checkable: btn.setupActionCheckChange(action, act.action_id, action.isChecked())
             else: btn.setupAction(action, act.action_id)
 
@@ -558,16 +559,16 @@ class ActionManager(QObject):
         brush_presets = ResourceManager.brushPresets()
         if id in brush_presets:
             preset = brush_presets[id]
-            self.appEngine.krita_window.activeView().setCurrentBrushPreset(preset)
+            self.api_window.active_view.setCurrentBrushPreset(preset)
     
     def Execute_Docker(self, path):
-        dockersList = self.appEngine.krita_window.dockers()
+        dockersList = self.api_window.dockers
         for docker in dockersList:
             if (docker.objectName() == path):
                 docker.setVisible(not docker.isVisible())
                     
     def Execute_Workspace(self, path):
-        main_menu = self.appEngine.krita_window.qwindow().menuBar()
+        main_menu = self.api_window.qwindow.menuBar()
         for root_items in main_menu.actions():
             if root_items.objectName() == 'window':
                 for sub_item in root_items.menu().actions():
@@ -582,7 +583,7 @@ class ActionManager(QObject):
         if not isinstance(data, DockerGroup) or data == None: return
 
 
-        dockersList = self.appEngine.krita_window.dockers()
+        dockersList = self.api_window.dockers
         
         if data.id not in self.custom_docker_states:
             paths = []
@@ -632,8 +633,8 @@ class ActionManager(QObject):
                 
         data.activate()
 
-        qwin = self.appEngine.krita_window.qwindow()
-        for i, view in enumerate(self.appEngine.krita_window.views()):
+        qwin = self.api_window.qwindow
+        for i, view in enumerate(self.api_window.views):
             view_obj = qwin.findChild(QWidget,'view_' + str(i))     
             for child in view_obj.children():
                 slotConfigChanged(child)
@@ -641,7 +642,7 @@ class ActionManager(QObject):
             canvas_obj = view_obj.findChild(QOpenGLWidget)
             slotConfigChanged(canvas_obj)
             
-        for docker in self.appEngine.krita_window.dockers():
+        for docker in self.api_window.dockers:
             if (docker.objectName() == "KisLayerBox"):
                 slotConfigChanged(docker)
     

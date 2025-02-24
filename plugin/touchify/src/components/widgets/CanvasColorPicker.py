@@ -29,7 +29,7 @@ class CanvasColorPicker(ColorFramedButton):
 
     def setInstance(self, window: "TouchifyWindow"):
         self.appEngine = window
-        self.notifier = window.api_window.notifier()
+        self.notifier = window.api_window.notifier
         self.notifier.canvasChanged.connect(self.onCanvasChanged)
         self.onCanvasChanged(self.notifier.getCurrentCanvas())
         if self.mode == CanvasColorPicker.Mode.Foreground:

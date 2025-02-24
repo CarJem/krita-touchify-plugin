@@ -233,18 +233,18 @@ class CompactBrushToggler(DockWidget):
         if not self.createdActions:
             self.createdActions = True
             window = KritaAPI.get_active_window()
-            window.createAction('toggle_pressure_size').triggered.connect(lambda: self.toggler.toggleOptions("Size"))
-            window.createAction('toggle_pressure_opacity').triggered.connect(lambda: self.toggler.toggleOptions("Opacity"))
-            window.createAction('toggle_pressure_flow').triggered.connect(lambda: self.toggler.toggleOptions("Flow"))
-            window.createAction('toggle_pressure_softness').triggered.connect(lambda: self.toggler.toggleOptions("Softness"))
-            window.createAction('toggle_pressure_rotation').triggered.connect(lambda: self.toggler.toggleOptions("Rotation")) 
-            window.createAction('toggle_pressure_scatter').triggered.connect(lambda: self.toggler.toggleOptions("Scatter"))
+            window.create_action('toggle_pressure_size').triggered.connect(lambda: self.toggler.toggleOptions("Size"))
+            window.create_action('toggle_pressure_opacity').triggered.connect(lambda: self.toggler.toggleOptions("Opacity"))
+            window.create_action('toggle_pressure_flow').triggered.connect(lambda: self.toggler.toggleOptions("Flow"))
+            window.create_action('toggle_pressure_softness').triggered.connect(lambda: self.toggler.toggleOptions("Softness"))
+            window.create_action('toggle_pressure_rotation').triggered.connect(lambda: self.toggler.toggleOptions("Rotation")) 
+            window.create_action('toggle_pressure_scatter').triggered.connect(lambda: self.toggler.toggleOptions("Scatter"))
  
-            window.createAction('toggle_pressure_colrate').triggered.connect(lambda: self.toggler.toggleOptions("Color Rate"))
-            window.createAction('toggle_overlay').triggered.connect(lambda: self.toggler.toggleOptions("Overlay Mode"))
+            window.create_action('toggle_pressure_colrate').triggered.connect(lambda: self.toggler.toggleOptions("Color Rate"))
+            window.create_action('toggle_overlay').triggered.connect(lambda: self.toggler.toggleOptions("Overlay Mode"))
 
-            window.createAction('toggle_soak').triggered.connect(lambda: self.toggler.toggleOptions("Ink depletion"))
-            window.createAction('toggle_painting_mode').triggered.connect(lambda: self.toggler.toggleOptions("Painting Mode"))
+            window.create_action('toggle_soak').triggered.connect(lambda: self.toggler.toggleOptions("Ink depletion"))
+            window.create_action('toggle_painting_mode').triggered.connect(lambda: self.toggler.toggleOptions("Painting Mode"))
         
     #----------------------------------------------------#
     # Connect Functions                                  #

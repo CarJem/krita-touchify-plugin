@@ -86,9 +86,9 @@ class NativeActions:
                 h = qimage.height()
                 qimage = qimage.copy( int( w * clip.cl ), int( h * clip.ct ), int( w * clip.cw ), int( h * clip.ch ) )
             if ( insert_size == False ) and ( canvas is not None ) and ( canvas.view() is not None ):
-                ad = KritaAPI.get_active_document_native()
-                iw = ad.width()
-                ih = ad.height()
+                ad = KritaAPI.get_active_document()
+                iw = ad.width
+                ih = ad.height
             else:
                 size = max( qimage.size().width(), qimage.size().height() )
                 iw = size
@@ -144,16 +144,16 @@ class NativeActions:
     def Insert_Document( image_path: str, clip: ImageClip ):
         if image_path not in ( "", None ):
             # Create Document
-            document = KritaAPI.get_native_instance().openDocument( image_path )
-            KritaAPI.get_active_window_native().addView( document )
-            w = document.width()
-            h = document.height()
+            document = KritaAPI.open_document( image_path )
+            KritaAPI.get_active_window().add_view( document )
+            w = document.width
+            h = document.height
             # Crop
             if clip.state == True:
-                ad = KritaAPI.get_active_document_native()
+                ad = KritaAPI.get_active_document()
                 ad.crop( int( w * clip.cl ), int( h * clip.ct ), int( w * clip.cw ), int( h * clip.ch ) )
                 ad.waitForDone()
-                ad.refreshProjection()
+                ad.refresh_projection()
                 KritaAPI.get_action('reset_display').trigger()
             # Show Message
             Commons.Message_Float( "INSERT", "New Document", "document-new" )
@@ -189,7 +189,7 @@ class NativeActions:
                 clipboard = QApplication.clipboard().setMimeData( mimedata )
                 # Place Image
                 KritaAPI.get_action( 'paste_as_reference' ).trigger()
-                KritaAPI.get_active_document_native().refreshProjection()
+                KritaAPI.get_active_document().refresh_projection()
                 # Message
                 pass
                 Commons.Message_Float( "INSERT", "Reference", "krita_tool_reference_images" )
@@ -211,9 +211,9 @@ class NativeActions:
             for line in file_item:
                 svg_shape += line
             # Create Layer
-            ad = KritaAPI.get_active_document_native()
-            rn = ad.rootNode()
-            vl = ad.createVectorLayer( basename )
+            ad = KritaAPI.get_active_document()
+            rn = ad.internal.rootNode()
+            vl = ad.internal.createVectorLayer(basename)
             rn.addChildNode( vl, None )
             # Input Shape to Layer
             vl.addShapesFromSvg( svg_shape )
@@ -227,16 +227,16 @@ class NativeActions:
             # Variables
             basename = os.path.basename( image_path )
             # Create Layer
-            ad = KritaAPI.get_active_document_native()
-            rn = ad.rootNode()
-            pl = ad.createNode( basename, "paintLayer" )
+            ad = KritaAPI.get_active_document()
+            rn = ad.internal.rootNode()
+            pl = ad.internal.createNode( basename, "paintLayer" )
             rn.addChildNode( pl, None )
             # Qimage Data
             qimage = NativeActions.Image_Clip( image_path, clip )
             ptr = qimage.constBits()
             ptr.setsize( qimage.byteCount() )
             pl.setPixelData( bytes( ptr.asarray() ), 0, 0, qimage.width(), qimage.height() )
-            ad.refreshProjection()
+            ad.refresh_projection()
         except Exception as e:
             report = e
         Commons.Message_Float( "INSERT", report, "paintLayer" )

@@ -108,7 +108,7 @@ class LayerBlendingSelector(QPushButton):
         self.setMenu(self.menu)
 
     def setInstance(self, window: "TouchifyWindow"):
-        self.notifer = window.api_window.notifier()
+        self.notifer = window.api_window.notifier
         self.notifer.layerBlendingModeChanged.connect(self.onBlendingModeChanged)
         self.onBlendingModeChanged(self.notifer.getLayerBlendingMode())
 

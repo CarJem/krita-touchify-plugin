@@ -10,25 +10,15 @@ if TYPE_CHECKING:
     from touchify.src.PluginWindow import TouchifyWindow
     
 def getCurrentLayer():
-    app = KritaAPI
-    doc = app.activeDocument()
-    if not doc: return None
-    currentLayer = doc.activeNode()
-    return currentLayer
-
+    doc = KritaAPI.get_active_document()
+    return doc.active_node
 
 def getCurrentDoc():
-    app = KritaAPI
-    doc = app.activeDocument()
-    return doc
-
+    return KritaAPI.get_active_document()
 
 def getSelectedLayers():
-    v = KritaAPI.get_active_view_native()
-    if not v: return None
-    
-    selectedNodes = v.selectedNodes()
-    return selectedNodes
+    v = KritaAPI.get_active_view()
+    return v.selectedNodes
 
 
 # Colors for the color labels, copied from krita code in KisNodeViewColorScheme.cpp
@@ -77,7 +67,7 @@ class LayerLabelBox(QComboBox):
         self.activated.connect(lambda index: self.updateLayerColorLabel(index))
 
     def setInstance(self, window: "TouchifyWindow"):
-        self.notifier = window.api_window.notifier()
+        self.notifier = window.api_window.notifier
         self.notifier.selectedNodeColorsChanged.connect(self.updateInterface)
         self.updateInterface()
         
@@ -95,17 +85,16 @@ class LayerLabelBox(QComboBox):
             return
         
         selectedLayers = getSelectedLayers()
-        if selectedLayers == None: return
-        
+
         if len(selectedLayers) == 0:
             currentLayer = getCurrentLayer()
             if currentLayer == None: return
-            self.setCurrentIndex(currentLayer.colorLabel())
+            self.setCurrentIndex(currentLayer.color_label)
         else:
             selected_index = -1
             are_same = True
             for layer in selectedLayers:
-                current_label_index = layer.colorLabel()
+                current_label_index = layer.color_label
                 if selected_index == -1:
                     selected_index = current_label_index
                 elif selected_index != current_label_index:
@@ -123,8 +112,8 @@ class LayerLabelBox(QComboBox):
         selectedLayers = getSelectedLayers()
         if len(selectedLayers) == 0:
             currentLayer = getCurrentLayer()
-            currentLayer.setColorLabel(index)
+            if currentLayer != None: currentLayer.color_label = index
         else:
             for layer in selectedLayers:
-                layer.setColorLabel(index)
+                layer.color_label = index
 

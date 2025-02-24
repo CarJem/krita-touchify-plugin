@@ -17,7 +17,7 @@ class Commons:
 
     @staticmethod
     def Message_Float( operation, message, icon ):
-        pass
+        print(operation, message)
 
     @staticmethod
     def Dialog_Load( self, title: str, filter: str ):
