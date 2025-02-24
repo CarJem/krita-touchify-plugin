@@ -42,6 +42,11 @@ from xml.dom import minidom as MiniDOM
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
 
+ENABLE_DEBUG=False
+
+def printDebug(value: str):
+    if ENABLE_DEBUG: print("[ActionManager] :: ", value)
+
 class ActionManager(QObject):
     composerTriggerEnded=pyqtSignal()
     
@@ -74,16 +79,20 @@ class ActionManager(QObject):
     #region Window Functions
 
     def Window_Load(self):
+        printDebug("window_load")
         self.notifier = self.appEngine.api_window.notifier()
         self.__lastToolboxTool = self.notifier.getCurrentTool()
         self.__lastBrushPreset = self.notifier.getCurrentBrush()
         self.notifier.toolChanged.connect(self.Notifier_ToolChanged)
         self.notifier.brushChanged.connect(self.Notifier_BrushChanged)
+        printDebug("window_load_done")
 
     def Notifier_ToolChanged(self, tool: str):
+        printDebug("tool changed")
         self.__lastToolboxTool = tool
 
     def Notifier_BrushChanged(self, resource: Resource):
+        printDebug("brush changed")
         self.__lastBrushPreset = resource
 
     #endregion
@@ -195,12 +204,12 @@ class ActionManager(QObject):
             if popup_id in self.active_popups: 
                 del self.active_popups[popup_id]
 
-            popup = TouchifyPopup.construct(id, self.appEngine.krita_window.qwindow().window(), data, self.appEngine)
+            popup = TouchifyPopup.Construct(id, self.appEngine.krita_window.qwindow().window(), data, self.appEngine)
             if popup == None: return
             
             self.active_popups[popup_id] = popup
 
-        popup.triggerPopup(_parent)
+        popup.Popup_Open(_parent)
 
     #endregion
 
@@ -351,6 +360,7 @@ class ActionManager(QObject):
     #region OnEvent Functions
 
     def OnEvent_ConfigUpdated(self):
+        printDebug("config_updating")
         registered_ids: list[str] = []
         for data in self.registeredActions:
             registered_ids.append(data)
@@ -358,7 +368,7 @@ class ActionManager(QObject):
         for popup_id in self.active_popups:
             try:
                 popup: TouchifyPopup = self.active_popups[popup_id]
-                popup.shutdownWidget()
+                popup.Popup_Shutdown()
             except:
                 pass
         self.active_popups.clear()
@@ -374,7 +384,7 @@ class ActionManager(QObject):
                 subActionIdentifier = '{0}{1}_{2}'.format(TOUCHIFY_ACTIONID_REGISTERED_ACTION_PREFIX, meta.registry_id, data.registry_id)
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
-        
+        printDebug("config_updating_done")
 
 
     def OnEvent_GlobalMouseRelease(self):
@@ -407,8 +417,8 @@ class ActionManager(QObject):
             
         parentPopup = tryFindParentPopup(btn)
         if parentPopup: 
-            parentPopup.composer_work_around = True
-            self.composerTriggerEnded.connect(parentPopup.composerEndEvent)
+            parentPopup.State_composerWorkAround = True
+            self.composerTriggerEnded.connect(parentPopup.OnEvent_ComposerEnd)
 
         onClick()
         self.composer_action_down = True
@@ -428,12 +438,12 @@ class ActionManager(QObject):
 
     #region Button Constructors
 
-    def Button_Core(self, onClick: any, toolTip: str, composerMode: bool = False):
+    def Button_Core(self, onClick: any, toolTip: str, composerMode: bool = False, trigger_mode: TouchifyActionButton.TriggerMode = TouchifyActionButton.TriggerMode.OnClick):
         btn = TouchifyActionButton()
         
         if onClick:
-            if composerMode: btn.setTrigger(lambda: self.ButtonEvent_ShortcutComposer(btn, onClick), True)
-            else: btn.setTrigger(onClick) # collect and disconnect all when closing
+            if composerMode: btn.setTrigger(lambda: self.ButtonEvent_ShortcutComposer(btn, onClick), TouchifyActionButton.TriggerMode.OnRelease)
+            else: btn.setTrigger(onClick, trigger_mode) # collect and disconnect all when closing
                 
         btn.setToolTip(toolTip)
         btn.setContentsMargins(0,0,0,0)
@@ -466,7 +476,7 @@ class ActionManager(QObject):
     
     def Button_Popup(self, data: Trigger):
         btn: TouchifyActionButton | None = None
-        btn = self.Button_Core(None, data.display_custom_text)
+        btn = self.Button_Core(None, data.display_custom_text, False, TouchifyActionButton.TriggerMode.OnRelease)
         btn.triggerActivated.connect((lambda: self.Create_Popup(data.popup_data, btn)))
         self.Helper_SetButtonDisplay(data, btn)
         return btn

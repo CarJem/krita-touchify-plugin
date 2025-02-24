@@ -6,11 +6,8 @@
         {
             "label": "Install Plugin",
             "type": "shell",
-            "windows": {
-                "command": "cmd.exe /D /C dev-windows-install.bat",
-            },
             "linux": {
-                "command": "./dev-flatpak-install.sh"
+                "command": "./build_scripts/dev-flatpak-install.sh"
             },
             "presentation": {
                 "reveal": "silent",
@@ -21,11 +18,8 @@
         {
             "label": "Update Configs",
             "type": "shell",
-            "windows": {
-                "command": "cmd.exe /D /C dev-windows-update-config.bat",
-            },
             "linux": {
-                "command": "./dev-flatpak-update-config.sh"
+                "command": "./build_scripts/dev-flatpak-update-config.sh"
             },
             "presentation": {
                 "reveal": "silent",
@@ -37,9 +31,6 @@
             "label": "Launch Krita.COM",
             "hide": true,
             "type": "shell",
-            "windows": {
-                "command": "cmd.exe /D /C 'C:\\Program Files\\Krita (x64)\\bin\\krita.com'",
-            },
             "linux": {
                 "command": "/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=krita --file-forwarding org.kde.krita"
             }
@@ -48,9 +39,6 @@
             "label": "Close Krita.COM",
             "hide": true,
             "type": "shell",
-            "windows": {
-                "command": "cmd.exe /D /C 'taskkill /IM krita.com /F'",
-            },
             "linux": {
                 "command": "/usr/bin/flatpak kill org.kde.krita || echo 'Krita was not running'"
             },

@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 
 class Page(QWidget):
 
+    dataLoaded=pyqtSignal()
+
     panelItemUpdated=pyqtSignal()
     panelItemResized=pyqtSignal()
     
@@ -30,11 +32,18 @@ class Page(QWidget):
         self.actions_manager = self.toolshelf.rootWidget.parent_docker.actions_manager
 
         self.panel: Panel = Panel(self, parent, data)     
+        self.panel.dataLoaded.connect(self.Data_Recieved)
         self.panel.panelItemUpdated.connect(self.onPanelItemUpdated) 
         self.panel.panelItemResized.connect(self.onPanelItemResized)
         self.layout().addWidget(self.panel)
 
         self.updateStyleSheet()
+
+    def Data_Load(self):
+        self.panel.Data_Load()
+
+    def Data_Recieved(self):
+        self.dataLoaded.emit()
 
     def onPanelItemUpdated(self):
         self.panelItemUpdated.emit()
@@ -58,4 +67,4 @@ class Page(QWidget):
         self.panel.pageLoadedSignal.emit()
     
     def updateStyleSheet(self):
-        self.panel.updateStyleSheet()
+        pass

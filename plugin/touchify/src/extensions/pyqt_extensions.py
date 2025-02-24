@@ -50,6 +50,14 @@ class GeometryHelpers:
             __y = screen_y + screen_height - __hint_height
 
         return QPoint(__x, __y)
+    
+    def normalizeSize(targetSize: QSize):
+        result: QSize = QSize(targetSize)
+
+        if result.width() < 0: result.setWidth(0)
+        if result.height() < 0: result.setHeight(0)
+            
+        return result
 
     def fitToTarget(sourceSize: QSize, targetSize: QSize):
         """
@@ -62,6 +70,9 @@ class GeometryHelpers:
                 
         if sourceSize.height() < result.height():
             result.setHeight(sourceSize.height())
+
+        if result.width() < 0: result.setWidth(0)
+        if result.height() < 0: result.setHeight(0)
             
         return result
 
@@ -76,6 +87,9 @@ class GeometryHelpers:
                 
         if sourceSize.height() > result.height():
             result.setHeight(sourceSize.height())
+
+        if result.width() < 0: result.setWidth(0)
+        if result.height() < 0: result.setHeight(0)
             
         return result
 

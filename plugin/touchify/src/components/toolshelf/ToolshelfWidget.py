@@ -24,6 +24,7 @@ if TYPE_CHECKING:
 class ToolshelfWidget(QWidget):
     toolshelfResized=pyqtSignal()
     toolshelfChanged=pyqtSignal()
+    dataLoaded=pyqtSignal()
 
     toolshelfPageChanged=pyqtSignal()
     
@@ -38,12 +39,13 @@ class ToolshelfWidget(QWidget):
 
     def __init__(self, parent: "ToolshelfCanvasWidget", cfg: ToolshelfData, registry_index: int = -2):
         super(ToolshelfWidget, self).__init__(parent)
+        self.parent_docker: "ToolshelfCanvasWidget" | "ToolshelfDockWidget" | "TouchifyPopup" = parent
+
 
         self.INTERNAL_SHOW_EVENT_INIT = True
 
         self.pinned = False
         self.resizable = cfg.header_options.default_to_resize_mode
-        self.parent_docker: "ToolshelfCanvasWidget" | "ToolshelfDockWidget" | "TouchifyPopup"  = parent
         self.registry_index = registry_index
         self.cfg = cfg
         self.toolshelf_id = cfg.preset_name
@@ -52,7 +54,7 @@ class ToolshelfWidget(QWidget):
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.setContentsMargins(0,0,0,0)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-     
+    
         headerOrientation = Qt.Orientation.Horizontal
         headerBeforePages = True
 
@@ -74,6 +76,7 @@ class ToolshelfWidget(QWidget):
         self.tabs = TabList(self.header, headerOrientation)
         self.pages = PageStack(self, self.cfg)
 
+        self.pages.dataLoaded.connect(self.onPagesLoaded)
         self.pages.contentsChanged.connect(self.onContentsChanged)
         self.pages.contentsResized.connect(self.onContentsResized)
 
@@ -103,6 +106,8 @@ class ToolshelfWidget(QWidget):
 
         if self.cfg.header_options.default_to_pinned:
             self.setPinned(True)
+
+
 
     #region Events
 
@@ -189,6 +194,9 @@ class ToolshelfWidget(QWidget):
     #endregion
 
     #region Signals
+
+    def onPagesLoaded(self):
+        self.dataLoaded.emit()
 
     def onResizableChanged(self, state: bool):
         self.resizable = state

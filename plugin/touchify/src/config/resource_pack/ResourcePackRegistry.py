@@ -28,7 +28,7 @@ class ResourcePackRegistry:
 
         directories = [f for f in os.listdir(self.INTERNAL_ROOT_DIRECTORY) if os.path.isdir(os.path.join(self.INTERNAL_ROOT_DIRECTORY, f))]
         for folderName in directories:
-            print(folderName)
+            #print(folderName)
             fullFolderPath = os.path.join(self.INTERNAL_ROOT_DIRECTORY, folderName)
             self.INTERNAL_active_files.append(fullFolderPath)
             item = ResourcePack(fullFolderPath)

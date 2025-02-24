@@ -7,6 +7,9 @@ from krita import ManagedColor, Resource, View, Canvas, Node, Window, Krita as K
 PYQT_SLOT = Union[Callable[..., None], pyqtBoundSignal]
 ENABLE_DEBUG = False
 
+def printDebug(input: str):
+    if ENABLE_DEBUG: print("[WindowManager] :: ", input)
+
 class WindowNotifier(QObject):
     brushChanged=pyqtSignal(Resource)
     gradientChanged=pyqtSignal(Resource)
@@ -65,11 +68,8 @@ class WindowNotifier(QObject):
             toolboxTool = obj.objectName()
             if toolboxTool != self.__lastToolboxTool:
                 self.__lastToolboxTool = toolboxTool
-                self.debugLog("Tool Changed")
+                printDebug("Tool Changed")
                 self.toolChanged.emit(toolboxTool)
-
-    def debugLog(self, *input: object):
-        if ENABLE_DEBUG: print(input)
 
     def __onTimerTicked__(self):
         currentBrush: Resource = None
@@ -120,80 +120,80 @@ class WindowNotifier(QObject):
                     currentForegroundColor = currentView.foregroundColor()
                     currentBackgroundColor = currentView.backgroundColor()
         except Exception as e:
-            self.debugLog("Failed to Run Checks", e)
+            printDebug("Failed to Run Checks: " + str(e))
 
         if currentGradient != self.__lastGradient:
-            self.debugLog("Selected Gradient Changed")
+            printDebug("Selected Gradient Changed")
             self.gradientChanged.emit(currentGradient)
             self.__lastGradient = currentGradient
 
         if currentPattern != self.__lastPattern:
-            self.debugLog("Selected Pattern Changed")
+            printDebug("Selected Pattern Changed")
             self.patternChanged.emit(currentPattern)
             self.__lastPattern = currentPattern
 
         if currentCanvas != self.__lastCanvas:
-            self.debugLog("Canvas Changed")
+            printDebug("Canvas Changed")
             self.canvasChanged.emit(currentCanvas)
             self.__lastCanvas = currentCanvas
 
         if currentView != self.__lastView:
-            self.debugLog("View Changed")
+            printDebug("View Changed")
             self.viewChanged.emit(currentView)
             self.__lastView = currentView
 
         if selectedNodes != self.__lastSelectedNodes:
-            self.debugLog("Selected Nodes Changed")
+            printDebug("Selected Nodes Changed")
             self.selectedNodesChanged.emit()
             self.__lastSelectedNodes = selectedNodes
 
         if selectedNodeColors != self.__lastNodeColors:
-            self.debugLog("Selected Node Colors Changed")
+            printDebug("Selected Node Colors Changed")
             self.selectedNodeColorsChanged.emit()
             self.__lastNodeColors = selectedNodeColors
 
         if currentLayerBlendingMode != self.__lastLayerBlendingMode:
-            self.debugLog("Layer Blending Mode Changed")
+            printDebug("Layer Blending Mode Changed")
             self.layerBlendingModeChanged.emit(currentLayerBlendingMode)
             self.__lastLayerBlendingMode = currentLayerBlendingMode
 
         if currentBrushBlendingMode != self.__lastBrushBlendingMode:
-            self.debugLog("Brush Blending Mode Changed")
+            printDebug("Brush Blending Mode Changed")
             self.brushBlendingModeChanged.emit(currentBrushBlendingMode)
             self.__lastBrushBlendingMode = currentBrushBlendingMode
 
         if currentForegroundColor != self.__lastForegroundColor:
-            self.debugLog("Foreground Color Changed")
+            printDebug("Foreground Color Changed")
             self.foregroundColorChanged.emit(currentForegroundColor)
             self.__lastForegroundColor = currentForegroundColor
 
         if currentBackgroundColor != self.__lastBackgroundColor:
-            self.debugLog("Background Color Changed")
+            printDebug("Background Color Changed")
             self.backgroundColorChanged.emit(currentBackgroundColor)
             self.__lastBackgroundColor = currentBackgroundColor
         
         if currentSize != self.__lastBrushSize:
-            self.debugLog("Brush Size Changed")
+            printDebug("Brush Size Changed")
             self.brushSizeChanged.emit(currentSize)
             self.__lastBrushSize = currentSize
 
         if currentFlow != self.__lastBrushFlow:
-            self.debugLog("Brush Flow Changed")
+            printDebug("Brush Flow Changed")
             self.brushFlowChanged.emit(currentFlow)
             self.__lastBrushFlow = currentFlow
 
         if currentOpacity != self.__lastBrushOpacity:
-            self.debugLog("Brush Opacity Changed")
+            printDebug("Brush Opacity Changed")
             self.brushOpacityChanged.emit(currentOpacity)
             self.__lastBrushOpacity = currentOpacity
 
         if currentRotation != self.__lastBrushRotation:
-            self.debugLog("Brush Rotation Changed")
+            printDebug("Brush Rotation Changed")
             self.brushRotationChanged.emit(currentRotation)
             self.__lastBrushRotation = currentRotation
 
         if currentBrush != self.__lastBrushPreset:
-            self.debugLog("Brush Changed")
+            printDebug("Brush Changed")
             self.brushChanged.emit(currentBrush)
             self.__lastBrushPreset = currentBrush
 
@@ -272,4 +272,3 @@ class WindowManager(QObject):
                 self.window_notifiers.append(new_notifier)
                 self.notify_timer.timeout.connect(new_notifier.__onTimerTicked__)
                 qt_window.setProperty("KRITA_NOTIFIER_EXT_LOADED", True)
-        print(self.window_notifiers)

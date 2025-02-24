@@ -136,7 +136,7 @@ class ResourcePack:
 
             self.INTERNAL_has_loaded = True
         except Exception as err:
-            print(err)
+            print("Loading Resource Pack: ", err)
             self.INTERNAL_has_loaded = False
 
 

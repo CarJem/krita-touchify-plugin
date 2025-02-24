@@ -26,9 +26,9 @@ class NtToolbox(NtWidgetPad):
         self.dockerAction = window.qwindow().findChild(QDockWidget, TOUCHIFY_DOCKERID_DOCKER_TOOLBOX).toggleViewAction()
         self.dockerAction.setEnabled(False)
 
-        self.toolbox.toolboxWidget.horizontalModeAction.setEnabled(False)
+        #self.toolbox.toolboxWidget.horizontalModeAction.setEnabled(False)
 
     def close(self):
-        self.toolbox.toolboxWidget.horizontalModeAction.setEnabled(True)
+        #self.toolbox.toolboxWidget.horizontalModeAction.setEnabled(True)
         self.dockerAction.setEnabled(True)
         return super().close()

@@ -20,6 +20,7 @@ if TYPE_CHECKING:
 
 class PageStack(QStackedWidget):
 
+    dataLoaded = pyqtSignal()
     contentsChanged = pyqtSignal()
     contentsResized = pyqtSignal()
 
@@ -32,6 +33,9 @@ class PageStack(QStackedWidget):
         self._current_panel_id = 'ROOT'
         self.cfg = cfg
 
+        self.total_jobs = 0
+        self.completed_jobs = 0
+
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         super().currentChanged.connect(self.onCurrentChanged)
         
@@ -43,6 +47,16 @@ class PageStack(QStackedWidget):
 
         self.changePanel('ROOT')
         self.evaluateSize()
+
+
+    def Data_OnWorkerComplete(self):
+        self.completed_jobs += 1
+        #print("Page: ", self.completed_jobs, " / ", self.total_jobs)
+        if self.total_jobs == self.completed_jobs: self.dataLoaded.emit()
+
+    def Data_AppendWorker(self, signal_handler: pyqtBoundSignal):
+        self.total_jobs += 1
+        signal_handler.connect(self.Data_OnWorkerComplete)
 
     def setEditMode(self, value: bool):
         for panel_id in self._panels:
@@ -66,23 +80,26 @@ class PageStack(QStackedWidget):
         #currentPage.adjustSize()
         #self.adjustSize()
 
-
     def addMainPanel(self):
         data = deepcopy(self.cfg.homepage)
         data.id = 'ROOT'
         self._mainWidget = Page(self, data)
+        self.Data_AppendWorker(self._mainWidget.dataLoaded)
+        self._mainWidget.Data_Load()
         self._mainWidget.panelItemUpdated.connect(self.onPanelItemUpdated)
         self._mainWidget.panelItemResized.connect(self.onPanelItemResized)
-        self._mainWidget.panel.sections_stack.setAutoFillBackground(False)
+        #self._mainWidget.panel.sections_stack.setAutoFillBackground(False)
         self._panels['ROOT'] = self._mainWidget
         super().addWidget(self._mainWidget)
 
     def addPanel(self, data: ToolshelfDataPage):
         panel = Page(self, data)
+        self.Data_AppendWorker(self._mainWidget.dataLoaded)
         panel.panelItemUpdated.connect(self.onPanelItemUpdated)
         panel.panelItemResized.connect(self.onPanelItemResized)
         self._panels[data.id] = panel
         super().addWidget(panel)
+        panel.Data_Load()
 
     def goHome(self):
         self.changePanel('ROOT')

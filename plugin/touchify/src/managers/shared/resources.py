@@ -16,6 +16,10 @@ from krita import *
 ICON_PACKS_LOADED = False
 RESOURCE_PACK_ICONS_INIT = False
 
+ENABLE_DEBUG=False
+def printDebug(input: str):
+    if ENABLE_DEBUG: print("[ResourceManager] :: ", input)
+
 class ResourceManager:
 
     class IconEngine(QIconEngine):
@@ -87,6 +91,8 @@ class ResourceManager:
         if RESOURCE_PACK_ICONS_INIT and isStartup == True:
             return
         
+        printDebug("load_resourcepack_icons")
+        
         ResourceManager.resource_pack_icons.clear()
 
         resource_pack_dir = ResourceManager.__resourcePacksDir__()
@@ -113,11 +119,14 @@ class ResourceManager:
 
 
         RESOURCE_PACK_ICONS_INIT = True
+        printDebug("load_resourcepack_icons_done")
 
     def loadIconPacks():
         global ICON_PACKS_LOADED
         if ICON_PACKS_LOADED:
             return
+        
+        printDebug("load_icon_packs")
         
         material_icon_zip = os.path.join(ResourceManager.__resourcesDir__(), 'material-icons.zip')
         with ZipFile(material_icon_zip, 'r') as zip:
@@ -127,6 +136,7 @@ class ResourceManager:
                     iconBytes = zip.read(item)
                     ResourceManager.material_icons[actualName] = QIcon(ResourceManager.IconEngine(iconBytes))
         ICON_PACKS_LOADED = True
+        printDebug("load_icon_packs_done")
 
     #region Icon Retrival
 

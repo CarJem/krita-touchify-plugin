@@ -1,3 +1,4 @@
+from enum import Enum
 import typing
 from touchify.src.managers.shared.resources import ResourceManager
 from touchify.__env__ import *
@@ -14,6 +15,12 @@ if TYPE_CHECKING:
 
 
 class TouchifyActionButton(QToolButton):
+
+    class TriggerMode(Enum):
+        OnClick=0
+        OnPress=1
+        OnRelease=2
+
     triggerActivated = pyqtSignal()
     triggerToggled = pyqtSignal(bool)
 
@@ -29,14 +36,13 @@ class TouchifyActionButton(QToolButton):
         self._resizing = False
 
         self.trigger_source = None
+        self.trigger_mode = TouchifyActionButton.TriggerMode.OnClick
 
         self._toggled = False
         self._menu_toggled = False
         
         self.meta_icon: QIcon = None
         self.meta_text: str = ""
-
-        self.trigger_sc_compat = False
 
         self.is_action = False
         self.is_action_checkable = False
@@ -106,6 +112,7 @@ class TouchifyActionButton(QToolButton):
     def setupToolboxButton(self, is_toolbox_menu: bool, item_list: list[str]):
         self.is_toolbox_child = True
         self.is_toolbox_menu = is_toolbox_menu
+        self.trigger_mode = TouchifyActionButton.TriggerMode.OnRelease if is_toolbox_menu else TouchifyActionButton.TriggerMode.OnPress
         self.toolbox_item_list = item_list
         self.onPaletteChanged()
 
@@ -136,7 +143,7 @@ class TouchifyActionButton(QToolButton):
 
     def onToolboxButtonSwap(self, ac: QAction):
         self.tool_action_id = ac.objectName()
-        self.setTrigger(ac.trigger, False)
+        self.setTrigger(ac.trigger, TouchifyActionButton.TriggerMode.OnClick)
         self.setText(ac.text())
         self.setIcon(ac.icon())
 
@@ -197,21 +204,13 @@ class TouchifyActionButton(QToolButton):
         
 
     def onReleased(self):
-        if self.is_toolbox_child:
-            if self.is_toolbox_menu:
-                self.trigger()
+        if self.trigger_mode == TouchifyActionButton.TriggerMode.OnRelease: self.trigger()
 
     def onPressed(self):
-        if self.is_toolbox_child:
-            if not self.is_toolbox_menu:
-                self.trigger()
-
-        elif self.trigger_sc_compat:
-            self.trigger()
+        if self.trigger_mode == TouchifyActionButton.TriggerMode.OnPress: self.trigger()
 
     def onClicked(self):
-        if self.is_toolbox_child == False and self.trigger_sc_compat == False:
-            self.trigger()
+        if self.trigger_mode == TouchifyActionButton.TriggerMode.OnClick: self.trigger()
 
     def onToggled(self, toggled):
         p = self.window().palette()
@@ -232,8 +231,8 @@ class TouchifyActionButton(QToolButton):
 
     #region Setters
 
-    def setTrigger(self, onClick, is_composer: bool = False):
-        self.trigger_sc_compat = is_composer
+    def setTrigger(self, onClick, mode: TriggerMode):
+        self.trigger_mode = mode
         self.trigger_source = onClick
 
     def setMetadata(self, text, icon):

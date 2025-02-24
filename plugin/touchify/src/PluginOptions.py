@@ -22,17 +22,15 @@ class PluginOptions(QDialog):
         self.container = QVBoxLayout(self)
         self.setMinimumSize(600,400)
         self.setBaseSize(800,800)
-        self.btns = self.createButtons()
+
+        self.btns = QDialogButtonBox(self)
+        self.btns.addButton(QDialogButtonBox.StandardButton.Save).clicked.connect(self.onSave)
+        self.btns.addButton(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.onApply)
+        self.btns.addButton(QDialogButtonBox.StandardButton.Close).clicked.connect(self.onClose)
+
         self.container.addWidget(self.propertyGrid)
         self.container.addWidget(self.btns)
         self.setLayout(self.container)     
-
-    def createButtons(self):
-        buttonBox = QDialogButtonBox(self)
-        buttonBox.addButton(QDialogButtonBox.StandardButton.Save).clicked.connect(self.onSave)
-        buttonBox.addButton(QDialogButtonBox.StandardButton.Apply).clicked.connect(self.onApply)
-        buttonBox.addButton(QDialogButtonBox.StandardButton.Close).clicked.connect(self.onClose)
-        return buttonBox
     
     def _saveFile(self):
         self.editableConfig.save()
@@ -43,6 +41,9 @@ class PluginOptions(QDialog):
         self.accept()
 
     def onApply(self):
+        self.btns.setEnabled(False)
+        QTimer.singleShot(5000, lambda: self.btns.setDisabled(False))
+
         self._saveFile()
 
     def onClose(self):

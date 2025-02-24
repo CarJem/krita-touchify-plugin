@@ -11,6 +11,8 @@ from touchify.src.components.canvas.NtToolshelf import NtToolshelf
 from touchify.src.components.canvas.NtWidgetPad import NtWidgetPad
 from touchify.__env__ import TOUCHIFY_SETTINGPATH_WIDGETPAD
 
+import touchify.src.extensions.pyqt_extensions as Ext
+
 if TYPE_CHECKING:
     from touchify.src.components.canvas.NtCanvas import NtCanvas
 
@@ -192,11 +194,13 @@ class NtWorker(QObject):
             size.setWidth(size.width() - rulerMargin() - scrollBarMargin())
             size.setHeight(size.height() - rulerMargin() - scrollBarMargin())
 
+            size = Ext.GeometryHelpers.normalizeSize(size)
+
             if canvas.State_IsEmpty():
                 canvas.move(position)
                 canvas.setFixedSize(0, 0)
             else:
-                canvas.move(position)
+                canvas.move(position)    
                 canvas.setFixedSize(size)
     
             if canvas.toolbox: canvas.toolbox.adjustToView()

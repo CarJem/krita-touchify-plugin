@@ -9,6 +9,11 @@ from typing import TYPE_CHECKING, Callable
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
 
+ENABLE_DEBUG=False
+
+def printDebug(value: str):
+    if ENABLE_DEBUG: print("[DockerManager] :: ", value)
+
 class DockerManager(QObject):
     class BorrowData:
         def __init__(self, dockMode: bool, previousVisibility: bool, mainWindow: QMainWindow, dockWidgetArea: Qt.DockWidgetArea) -> None:
@@ -123,6 +128,7 @@ class DockerManager(QObject):
         return self.qWin.findChild(QDockWidget, docker_id)
 
     def loadDocker(self, docker_id: str, args: LoadArguments):
+        printDebug("loading_docker")
         # Already in Use, don't borrow twice; unload previous docker
         if docker_id in self._shareData:
             if self._shareData[docker_id].isDead == False:
@@ -135,7 +141,9 @@ class DockerManager(QObject):
             self._shareData[docker_id] = DockerManager.BorrowData(args.dockMode, docker.isVisible(), self.qWin, self.qWin.dockWidgetArea(docker))
             self._shareData[docker_id].setWidgetData(docker)
             self.invokeListeners(docker_id, DockerManager.SignalType.OnLoadDocker)
+            printDebug("loading_docker_success")
             return self._shareData[docker_id].dockerWidget
+        printDebug("loading_docker_fail")
         return None
          
     def unloadDocker(self, docker_id: str):

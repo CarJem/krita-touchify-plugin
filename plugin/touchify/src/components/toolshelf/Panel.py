@@ -28,12 +28,44 @@ from typing import TYPE_CHECKING, Mapping
 if TYPE_CHECKING:
     from .PageStack import PageStack
 
+WIDGET_GROUP = Mapping[int, Mapping[int, list[ToolshelfDataSection]]]
 
 class Panel(QWidget):
 
+    class DataLoader(QObject):
+
+        dataRecieved = pyqtSignal(dict)
+
+        def __init__(self, panel: "ToolshelfDataPage" ):
+            super().__init__()
+            self.seperate_thread = QThread()
+            self.moveToThread(self.seperate_thread)
+            self.seperate_thread.setTerminationEnabled(True)
+            self.panel_config = panel
+
+            # Thread
+            self.seperate_thread.started.connect(self.LoadData_Async)
+
+        def start(self, priority: QThread.Priority = QThread.Priority.NormalPriority):
+            self.seperate_thread.start(priority)
+
+        def LoadData_Async(self):
+            widget_groups: dict = {}
+
+            for sectionInfo in self.panel_config.sections:     
+                sectionInfo: ToolshelfDataSection
+
+                if sectionInfo.panel_y not in widget_groups:
+                    widget_groups[sectionInfo.panel_y] = {}
+                if sectionInfo.panel_x not in widget_groups[sectionInfo.panel_y]:
+                    widget_groups[sectionInfo.panel_y][sectionInfo.panel_x] = []
+
+                widget_groups[sectionInfo.panel_y][sectionInfo.panel_x].append(sectionInfo)
+            self.dataRecieved.emit(widget_groups)
+            self.seperate_thread.quit()
+                
     class SectionSplit(QWidget):
 
-        
         def __init__(self, orientation: Qt.Orientation, name: str = "", parent: QWidget | None = None) -> None:
             super().__init__(parent)
             self.edit_mode = False
@@ -162,7 +194,10 @@ class Panel(QWidget):
             self.groupItemChanged.emit()
         
     dockerWidgets: dict = {}
-    
+
+    workersAssigned = pyqtSignal()
+    dataLoaded = pyqtSignal()
+
     pageLoadedSignal = pyqtSignal()
     pageUnloadSignal = pyqtSignal()
 
@@ -171,6 +206,7 @@ class Panel(QWidget):
 
     def __init__(self, parent: QWidget | None, toolshelf: "PageStack", data: ToolshelfDataPage):
         super(Panel, self).__init__(parent)
+
         self.page_stack: "PageStack" = toolshelf
         self.panel_config = data
 
@@ -178,6 +214,9 @@ class Panel(QWidget):
         self.actions_manager = self.page_stack.rootWidget.parent_docker.actions_manager
         self.dockerWidgets: dict[any, DockerContainer] = {}
         self.size = None
+
+        self.total_jobs = 0
+        self.completed_jobs = 0
 
         self.setAutoFillBackground(True)
 
@@ -187,16 +226,13 @@ class Panel(QWidget):
         self.root_layout.setSpacing(0)
         self.setLayout(self.root_layout)
 
-        self.actions_panel = TouchifyActionPanel(self.panel_config.actions, self, self.actions_manager)
+        self.actions_panel = TouchifyActionPanel.Titlebar(self.panel_config.actions, self, self.actions_manager)
+        self.actions_panel.dataLoaded.connect(self.Data_TitlebarLoaded)
+        self.actions_panel.Data_Load()
         self.actions_panel.setAutoFillBackground(True)
         self.actions_panel.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.root_layout.addWidget(self.actions_panel)
         
-        for btnKey in self.actions_panel._buttons:
-            self.actions_panel._buttons[btnKey].setFixedHeight(int(self.panel_config.action_height * TouchifySettings.instance().preferences().Interface_ToolshelfActionBarScale))
-            self.actions_panel._buttons[btnKey].setMinimumWidth(int(self.panel_config.action_height * TouchifySettings.instance().preferences().Interface_ToolshelfActionBarScale))
-            self.actions_panel._buttons[btnKey].setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
-
         self.sections_container = QWidget(self)
         self.sections_container.setLayout(QVBoxLayout(self.sections_container))
         self.sections_container.layout().setSpacing(0)
@@ -204,92 +240,71 @@ class Panel(QWidget):
         self.sections_container.setAutoFillBackground(True)
         self.root_layout.addWidget(self.sections_container)
 
-        self.__initSections__()
+        self.data_loader = Panel.DataLoader(data)
+        self.data_loader.dataRecieved.connect(self.Data_Recieved)
 
-        qApp.paletteChanged.connect(self.updateStyleSheet)
-        self.updateStyleSheet()
+        self.Data_AppendWorker(self.data_loader.dataRecieved)
+        self.Data_AppendWorker(self.actions_panel.dataLoaded)
 
-    def __initSections__(self):
-        def initCell(x: int, y: int, splitter: Panel.SectionSplit, widgets: list[QWidget]):
-            if len(widgets) == 1:
-                splitter.addWidget(widgets[0], x, y)
+    def Data_Load(self):
+        self.data_loader.start()
+
+    def Data_OnWorkerComplete(self):
+        self.completed_jobs += 1
+        #print("Panel Section: ", self.completed_jobs, " / ", self.total_jobs)
+        if self.total_jobs == self.completed_jobs: 
+            self.dataLoaded.emit()
+
+    def Data_AppendWorker(self, signal_handler: pyqtBoundSignal):
+        self.total_jobs += 1
+        signal_handler.connect(self.Data_OnWorkerComplete)
+
+    def Data_TitlebarLoaded(self):
+        for btnKey in self.actions_panel._buttons:
+            self.actions_panel._buttons[btnKey].setFixedHeight(int(self.panel_config.action_height * TouchifySettings.instance().preferences().Interface_ToolshelfActionBarScale))
+            self.actions_panel._buttons[btnKey].setMinimumWidth(int(self.panel_config.action_height * TouchifySettings.instance().preferences().Interface_ToolshelfActionBarScale))
+            self.actions_panel._buttons[btnKey].setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
+
+
+
+
+    def Data_Recieved(self, widget_groups: WIDGET_GROUP):
+        def Init_Section(sectionInfo: ToolshelfDataSection):
+            sectionWidget = None
+            match sectionInfo.section_type:
+                case ToolshelfDataSection.SectionType.Docker:
+                    sectionWidget = Section_Docker(sectionInfo)
+                case ToolshelfDataSection.SectionType.Actions:
+                    sectionWidget = Section_Actions(sectionInfo)
+                case ToolshelfDataSection.SectionType.Subpanel:
+                    sectionWidget = Section_Subpanel(sectionInfo)
+                case ToolshelfDataSection.SectionType.Special:
+                    sectionWidget = Section_Special(sectionInfo)
+                case _:
+                    sectionWidget = None
+
+            return sectionWidget
+
+        def Init_Cell(x: int, y: int, splitter: Panel.SectionSplit, sections: list[ToolshelfDataSection]):
+            if len(sections) == 1:
+                widget = Init_Section(sections[0])
+                if widget: splitter.addWidget(widget, x, y)
             else:
                 tabBar = Panel.SectionGroup(self, self.panel_config.tab_type)
-                tabBar.groupItemChanged.connect(self.onGroupItemChanged)
-                for item in widgets:
+                for section in sections:
+                    item = Init_Section(section)
                     if isinstance(item, DockerContainer): tabBar.addTab(item, self.docker_manager.dockerWindowTitle(item.docker_id))
                     elif isinstance(item, TouchifyActionPanel): tabBar.addTab(item, item.title)
                     elif isinstance(item, Panel): tabBar.addTab(item, item.title())
                     else: tabBar.addTab(item, "Unknown")
                 tabBar.setCurrentIndex(0)
+                tabBar.groupItemChanged.connect(self.onGroupItemChanged)
                 splitter.addWidget(tabBar, x, y)
 
         def Section_Actions(actionInfo: ToolshelfDataSection):
-            
-            display_type = TouchifyActionPanel.DisplayType.Toolbar
-            if actionInfo.action_section_display_mode == ToolshelfDataSection.ActionSectionDisplayMode.Flat:
-                display_type = TouchifyActionPanel.DisplayType.ToolbarFlat
-            elif actionInfo.action_section_display_mode == ToolshelfDataSection.ActionSectionDisplayMode.Detailed:
-                display_type = TouchifyActionPanel.DisplayType.Popup
-
-            if actionInfo.ignore_scaling:
-                scale = 1
-            else:
-                scale = TouchifySettings.instance().preferences().Interface_ToolshelfActionSectionScale
-
-            
-            icon_size = int(actionInfo.action_section_icon_size * scale)
-            fixed_width = int(actionInfo.action_section_btn_width * scale)
-            fixed_height = int(actionInfo.action_section_btn_height * scale)
-
-            min_size_x = int(actionInfo.min_size_x * scale)
-            min_size_y = int(actionInfo.min_size_y * scale)
-            max_size_x = int(actionInfo.max_size_x * scale)
-            max_size_y = int(actionInfo.max_size_y * scale)
-            size_x = int(actionInfo.size_x * scale)
-            size_y = int(actionInfo.size_y * scale)
-
-            
-
-                
-            actionWidget = TouchifyActionPanel(cfg=actionInfo.action_section_contents, parent=self, actions_manager=self.actions_manager, type=display_type, icon_width=icon_size, icon_height=icon_size, item_height=fixed_height, item_width=fixed_width)
-            actionWidget.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
-
-            if actionInfo.hasDisplayName(): actionWidget.setTitle(actionInfo.display_name)
-            else: actionWidget.setTitle(actionInfo.action_section_id)
-
-            if actionInfo.action_section_alignment_x != ToolshelfDataSection.SectionAlignmentX.Nothing or actionInfo.action_section_alignment_y != ToolshelfDataSection.SectionAlignmentY.Nothing:
-                align_x = actionInfo.action_section_alignment_x
-                align_y = actionInfo.action_section_alignment_y
-
-                alignment_x = Qt.AlignmentFlag.AlignLeft
-                alignment_y = Qt.AlignmentFlag.AlignTop
-
-                expand_x = QSizePolicy.Policy.Preferred
-                expand_y = QSizePolicy.Policy.Preferred
-
-                if align_y == ToolshelfDataSection.SectionAlignmentY.Top: alignment_y = Qt.AlignmentFlag.AlignTop
-                elif align_y == ToolshelfDataSection.SectionAlignmentY.Center: alignment_y = Qt.AlignmentFlag.AlignVCenter
-                elif align_y == ToolshelfDataSection.SectionAlignmentY.Bottom: alignment_y = Qt.AlignmentFlag.AlignBottom
-                elif align_y == ToolshelfDataSection.SectionAlignmentY.Expanding: expand_y = QSizePolicy.Policy.Expanding
-
-                if align_x == ToolshelfDataSection.SectionAlignmentX.Left: alignment_x = Qt.AlignmentFlag.AlignLeft
-                elif align_x == ToolshelfDataSection.SectionAlignmentX.Center: alignment_x = Qt.AlignmentFlag.AlignHCenter
-                elif align_x == ToolshelfDataSection.SectionAlignmentX.Right: alignment_x = Qt.AlignmentFlag.AlignRight
-                elif align_x == ToolshelfDataSection.SectionAlignmentX.Expanding: expand_x = QSizePolicy.Policy.Expanding
-
-                actionWidget.layout().setAlignment(alignment_x | alignment_y)
-                if expand_x: actionWidget.setSizePolicy(expand_x, expand_y)
-
-            if size_x != 0 or size_y != 0:
-                if size_x != 0: actionWidget.setFixedWidth(size_x)
-                if size_y != 0: actionWidget.setFixedHeight(size_y)
-            else:
-                if min_size_x != 0: actionWidget.setMinimumWidth(min_size_x)
-                if min_size_y != 0: actionWidget.setMinimumHeight(min_size_y)
-                if max_size_x != 0: actionWidget.setMaximumWidth(max_size_x)
-                if max_size_y != 0: actionWidget.setMaximumHeight(max_size_y)
-
+            actionWidget = TouchifyActionPanel(cfg=actionInfo, parent=self, actions_manager=self.actions_manager)
+            self.Data_AppendWorker(actionWidget.dataLoaded)
+            actionWidget.Data_Load()
             return actionWidget
         
         def Section_Docker(actionInfo: ToolshelfDataSection):
@@ -314,9 +329,6 @@ class Panel(QWidget):
             self.dockerWidgets[actionInfo.docker_id] = actionWidget
             actionWidget.dockerChanged.connect(self.onDockerUpdate)
             actionWidget.dockerSizeChanged.connect(self.onDockerSizeChanged)
-            #self.pageLoadedSignal.connect(actionWidget.loadWidget)
-            #self.pageUnloadSignal.connect(actionWidget.unloadWidget)
-
             return actionWidget
         
         def Section_Special(actionInfo: ToolshelfDataSection):
@@ -375,12 +387,16 @@ class Panel(QWidget):
         def Section_Subpanel(actionInfo: ToolshelfDataSection):
             if actionInfo.subpanel_mode == ToolshelfDataSection.SubpanelMode.Data:
                 actionWidget = Panel(self, self.page_stack, actionInfo.subpanel_data)
+                self.Data_AppendWorker(actionWidget.dataLoaded)
+                actionWidget.Data_Load()
             elif actionInfo.subpanel_mode == ToolshelfDataSection.SubpanelMode.Reference:
                 toolshelf_data: ToolshelfData = TouchifySettings.instance().getRegistryItem(actionInfo.subpanel_id, ToolshelfData)
                 if not toolshelf_data: return None
                 toolshelf_page = deepcopy(toolshelf_data.homepage)
                 toolshelf_page.display_name = actionInfo.display_name
                 actionWidget = Panel(self, self.page_stack, toolshelf_page)
+                self.Data_AppendWorker(actionWidget.dataLoaded)
+                actionWidget.Data_Load()
             else:
                 return None
 
@@ -400,30 +416,6 @@ class Panel(QWidget):
             self.pageUnloadSignal.connect(actionWidget.onUnloadPage)
             return actionWidget
         
-        widget_groups: Mapping[int, Mapping[int, list[QWidget]]] = {}
-
-        for sectionInfo in self.panel_config.sections:     
-            sectionInfo: ToolshelfDataSection
-            match sectionInfo.section_type:
-                case ToolshelfDataSection.SectionType.Docker:
-                    sectionWidget = Section_Docker(sectionInfo)
-                case ToolshelfDataSection.SectionType.Actions:
-                    sectionWidget = Section_Actions(sectionInfo)
-                case ToolshelfDataSection.SectionType.Subpanel:
-                    sectionWidget = Section_Subpanel(sectionInfo)
-                case ToolshelfDataSection.SectionType.Special:
-                    sectionWidget = Section_Special(sectionInfo)
-                case _:
-                    sectionWidget = None
-
-            if sectionWidget == None: continue
-
-            if sectionInfo.panel_y not in widget_groups:
-                widget_groups[sectionInfo.panel_y] = {}
-            if sectionInfo.panel_x not in widget_groups[sectionInfo.panel_y]:
-                widget_groups[sectionInfo.panel_y][sectionInfo.panel_x] = []
-
-            widget_groups[sectionInfo.panel_y][sectionInfo.panel_x].append(sectionWidget)
 
         self.sections_stack = Panel.SectionSplit(Qt.Orientation.Vertical, "root", self)
         self.sections_container.layout().addWidget(self.sections_stack)
@@ -435,13 +427,18 @@ class Panel(QWidget):
             iy = sorted(widget_groups.keys()).index(row_key)
 
             if row_length == 1:
-                initCell(0, iy, self.sections_stack, row_items[0])
+                Init_Cell(0, iy, self.sections_stack, row_items[0])
             else:
                 row_splitter = Panel.SectionSplit(Qt.Orientation.Horizontal, f"sub_root_{iy}")
                 row_splitter.setAutoFillBackground(True)
                 for ix in range(0, row_length):
-                    initCell(ix, 0, row_splitter, row_items[ix])
+                    Init_Cell(ix, 0, row_splitter, row_items[ix])
                 self.sections_stack.addWidget(row_splitter, 0, iy)
+
+        qApp.paletteChanged.connect(self.updateStyleSheet)
+        self.updateStyleSheet()
+
+        self.workersAssigned.emit()
 
     def setEditMode(self, value: bool):
         self.sections_stack.setEditMode(value)
@@ -547,3 +544,4 @@ class Panel(QWidget):
         resultingSize.setHeight(resultingSize.height())
 
         return resultingSize
+        

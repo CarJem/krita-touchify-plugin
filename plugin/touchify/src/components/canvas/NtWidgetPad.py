@@ -347,11 +347,13 @@ class NtWidgetPad(QWidget):
                 widgetNewSize = QSize(widgetSizeHint)
                                            
             widgetNewSize = fitToView(self.source_canvas, Ext.GeometryHelpers.fitToSource(widgetSizeHint, widgetNewSize))                   
+            widgetNewSize = Ext.GeometryHelpers.normalizeSize(widgetNewSize)
             if widgetSize != widgetNewSize:
                 self.docker_widget.setFixedSize(widgetNewSize)
                 
             padSizeHint = self.sizeHint()
             padSizeHint = Ext.GeometryHelpers.fitToTarget(padSizeHint, self.source_canvas.size())
+            padSizeHint = Ext.GeometryHelpers.normalizeSize(padSizeHint)
 
             if self.size() != padSizeHint:
                 self.resize(padSizeHint)

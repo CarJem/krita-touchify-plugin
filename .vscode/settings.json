@@ -1,10 +1,36 @@
 {
     "files.exclude": {
         ".vscode\\PythonImportHelper-v2-Completion.json": true,
-        "**/__pycache__": true,
-        "**/.conda": true,
-        "**/.venv": true,
-        "plugin": true,
-        "testscripts": true
-    }
+        "**/__pycache__": true
+    },
+    "python.analysis.extraPaths": [
+        "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs"
+    ],
+    "python.analysis.fixAll": [
+        "source.unusedImports",
+        "source.convertImportFormat"
+    ],
+    "python.REPL.enableREPLSmartSend": false,
+    "python.analysis.importFormat": "absolute",
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.typeEvaluation.analyzeUnannotatedFunctions": true,
+    "python.REPL.provideVariables": false,
+    "python.analysis.completeFunctionParens": false,
+    "python.analysis.useLibraryCodeForTypes": true,
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.persistAllIndices": true,
+    "python.analysis.supportDocstringTemplate": false,
+    "python.analysis.typeEvaluation.deprecateTypingAliases": false,
+    "python.analysis.stubPath": "typings",
+    "python.analysis.indexing": true,
+    "python.analysis.inlayHints.functionReturnTypes": false,
+    "editor.codeActionsOnSave": {
+        "source.unusedImports": "explicit",
+        "source.organizeImports": "explicit",
+        "source.convertImportFormat": "explicit",
+    },
+    "python.analysis.inlayHints.variableTypes": false,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.diagnosticSeverityOverrides": {},
+
 }

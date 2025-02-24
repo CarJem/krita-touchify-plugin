@@ -164,6 +164,10 @@ class ToolboxWidget(QWidget):
             actualSizeMod.setWidth(actualSizeMod.width() + padding)
         else:
             actualSizeMod.setHeight(actualSizeMod.height() + padding)
+
+        if actualSizeMod.width() < 0: actualSizeMod.setWidth(0)
+        if actualSizeMod.height() < 0: actualSizeMod.setHeight(0)
+        
         return actualSizeMod
 
     def updateCheckedStates(self):

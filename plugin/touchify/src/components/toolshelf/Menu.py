@@ -54,8 +54,8 @@ class Menu(QMenu):
         if self.setupPopup:
             self.parentPopup = Helpers.findPopup(self)
             if self.parentPopup != None:
-                if self.parentPopup.resizing_allowed:
-                    self.parentPopup.updateResizingState(self.toggleResizeAct.isChecked())
+                if self.parentPopup.State_resizingAllowed:
+                    self.parentPopup.Action_SetResizable(self.toggleResizeAct.isChecked())
                     self.addActions([self.toggleResizeAct])
                     self.addSeparator()
             self.setupPopup = False
@@ -68,7 +68,7 @@ class Menu(QMenu):
         if self.parentNtWidget != None:
             self.parentNtWidget.setResizable(state)
         elif self.parentPopup != None:
-            self.parentPopup.updateResizingState(state)
+            self.parentPopup.Action_SetResizable(state)
 
         self.SIGNAL_RESIZE_STATE_CHANGED.emit(state)
         
