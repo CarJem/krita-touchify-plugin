@@ -4,6 +4,7 @@ from PyQt5.QtCore import *
 
 from typing import TYPE_CHECKING
 
+
 from touchify.src.managers.normal.canvas import CanvasManager
 from touchify.src.managers.shared.events import GlobalEvents
 from touchify.src.managers.shared.settings import TouchifySettings
@@ -12,6 +13,7 @@ from touchify.src.managers.normal.dockers import DockerManager
 from touchify.src.managers.normal.action_manager import ActionManager
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
+    from touchify.src.PluginManagers import TouchifyManagers
 
 from touchify.src.components.toolshelf.ToolshelfWidget import ToolshelfWidget
 
@@ -23,6 +25,8 @@ class ToolshelfDockWidget(DockWidget):
 
     def __init__(self): 
         super().__init__()
+        self.app_window: "TouchifyWindow" = None
+        self.managers: "TouchifyManagers" = None
         self.toolshelfHost: ToolshelfWidget = None
         self.docker_manager: DockerManager = None
         self.actions_manager: ActionManager = None
@@ -35,17 +39,16 @@ class ToolshelfDockWidget(DockWidget):
 
 
       
-    def setup(self, instance: "TouchifyWindow"):
-        self.docker_manager = instance.managers.mgr_dockers
-        self.actions_manager = instance.managers.mgr_actions
-        self.canvas_manager = instance.managers.mgr_canvas
+    def setup(self, app_window: "TouchifyWindow"):
+        self.app_window = app_window
+        self.managers = app_window.managers
         self.onLoaded()
 
     def onResizeByDefaultRequested(self):
         self.resizeByDefaultRequested.emit()
     
     def onLoaded(self):              
-        self.mainWidget = ToolshelfWidget(self, TouchifySettings.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
+        self.mainWidget = ToolshelfWidget(self, self.managers, TouchifySettings.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
         self.mainWidget.resizeByDefaultRequested.connect(self.onResizeByDefaultRequested)
         self.mainWidget.toolshelfPageChanged.connect(self.onToolshelfPageChanged)
         self.mainWidget.toolshelfResized.connect(self.onToolshelfResize)
@@ -121,3 +124,9 @@ class ToolshelfDockWidget(DockWidget):
     # 'pass' means do not do anything
     def canvasChanged(self, canvas):
         pass
+
+class ToolshelfDockWidgetAlt(ToolshelfDockWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle(DOCKER_TITLE + " (Alt)")
+        self.PanelIndex = -2

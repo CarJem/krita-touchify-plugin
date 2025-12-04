@@ -24,7 +24,7 @@ class ColorSourceToggle(QWidget):
         self.canvas: Canvas = None
         self.setContentsMargins(0,0,0,0)
 
-        self.appEngine: "TouchifyWindow" = None
+        self.app_window: "TouchifyWindow" = None
 
         self.cubeSize = cubeSize
 
@@ -71,10 +71,10 @@ class ColorSourceToggle(QWidget):
         self.setFgBtn.setFixedHeight(cubeSize)
         self.setBgBtn.setFixedHeight(cubeSize)
 
-    def setup(self, instance: "TouchifyWindow"):
-        self.appEngine: TouchifyWindow = instance
-        self.setFgBtn.setInstance(self.appEngine)
-        self.setBgBtn.setInstance(self.appEngine)
+    def setup(self, app_window: "TouchifyWindow"):
+        self.app_window: TouchifyWindow = app_window
+        self.setFgBtn.setInstance(self.app_window.api_window)
+        self.setBgBtn.setInstance(self.app_window.api_window)
 
     def toggleColors(self):
         KritaAPI.get_action("toggle_fg_bg").trigger()

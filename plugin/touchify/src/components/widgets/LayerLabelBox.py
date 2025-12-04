@@ -2,12 +2,9 @@ from krita import *
 from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtGui import QIcon,QPixmap
 from touchify.__env__ import *
-
-from typing import TYPE_CHECKING
-
 from touchify.src.api_krita import KritaAPI
-if TYPE_CHECKING:
-    from touchify.src.PluginWindow import TouchifyWindow
+from touchify.src.api_krita.wrappers.window import WindowAPI
+
     
 def getCurrentLayer():
     doc = KritaAPI.get_active_document()
@@ -66,8 +63,8 @@ class LayerLabelBox(QComboBox):
             
         self.activated.connect(lambda index: self.updateLayerColorLabel(index))
 
-    def setInstance(self, window: "TouchifyWindow"):
-        self.notifier = window.api_window.notifier
+    def setInstance(self, window: WindowAPI):
+        self.notifier = window.notifier
         self.notifier.selectedNodeColorsChanged.connect(self.updateInterface)
         self.updateInterface()
         

@@ -192,7 +192,9 @@ class TouchifySettings:
     def getActiveToolshelfId(self, registry_index: int) -> str:
         fallback_val = "none"
 
-        if registry_index == -1:
+        if registry_index == -2:
+            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Docker_Alt", fallback_val)
+        elif registry_index == -1:
             return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Docker", fallback_val)
         elif registry_index == 0:
             return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Main", fallback_val)
@@ -215,7 +217,9 @@ class TouchifySettings:
             return ToolshelfData()
 
     def setActiveToolshelf(self, registry_index: int, id: str):
-        if registry_index == -1:
+        if registry_index == -2:
+            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Docker_Alt", id, False)
+        elif registry_index == -1:
             KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Docker", id, False)
         elif registry_index == 0:
             KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Main", id, False)

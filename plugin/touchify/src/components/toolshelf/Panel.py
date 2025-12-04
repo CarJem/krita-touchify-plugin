@@ -25,6 +25,10 @@ from touchify.src.managers.shared.settings import TouchifySettings
 from krita import *
 
 from typing import TYPE_CHECKING, Mapping
+
+from touchify_prototype.third_deps.pyqtgraph_docking.dockarea.Dock import Dock
+from touchify_prototype.third_deps.pyqtgraph_docking.dockarea.DockArea import DockArea
+
 if TYPE_CHECKING:
     from .PageStack import PageStack
 
@@ -64,135 +68,6 @@ class Panel(QWidget):
             self.dataRecieved.emit(widget_groups)
             self.seperate_thread.quit()
                 
-    class SectionSplit(QWidget):
-
-        def __init__(self, orientation: Qt.Orientation, name: str = "", parent: QWidget | None = None) -> None:
-            super().__init__(parent)
-            self.edit_mode = False
-            self.orientation = orientation
-            if name != "": self.setObjectName(name)
-            
-            self.ourLayout = QGridLayout(self)
-            self.ourLayout.setContentsMargins(0,0,0,0)
-            self.ourLayout.setSpacing(0)
-            self.setLayout(self.ourLayout)
-
-            self.section_widgets: list[tuple[QWidget, QPushButton]] = []
-
-
-        def setEditMode(self, value):
-            self.edit_mode = value
-            
-            for widget, edit_area in self.section_widgets:
-                if isinstance(widget, Panel.SectionSplit):
-                    widget: Panel.SectionSplit
-                    widget.setEditMode(value)
-                elif isinstance(widget, Panel):
-                    widget: Panel
-                    widget.setEditMode(value)
-                else:
-                    edit_area.setVisible(self.edit_mode)
-                    widget.stackUnder(edit_area)
-
-        def createEditSelector(self):
-            result = QPushButton(self)
-            result.setFlat(True)
-            result.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
-            result.setContentsMargins(0,0,0,0)
-            result.setStyleSheet(self.getEditSelectorStylesheet())
-            result.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-            result.setVisible(False)
-            return result
-        
-        def getEditSelectorStylesheet(self):
-            base_color = qApp.palette().highlight().color()
-            base_factor = 25
-
-            normal_color = f"rgba({base_color.red()},{base_color.green()},{base_color.blue()},{0})"
-            hover_color = f"rgba({base_color.red() + base_factor},{base_color.green() + base_factor},{base_color.blue() + base_factor},{150})"
-            press_color = f"rgba({base_color.red() - base_factor},{base_color.green() - base_factor},{base_color.blue() - base_factor},{150})"
-
-            normal_style = f"QPushButton {{ background-color: {normal_color}; border: none; }}"
-            hover_style = f"QPushButton:hover {{ background-color: {hover_color}; border: none; }}"
-            pressed_style = f"QPushButton:pressed {{ background-color: {press_color}; border: none; }}"
-            
-            stylesheet = f"{normal_style} {hover_style} {pressed_style}"
-            return stylesheet
-
-        def addWidget(self, widget: QWidget, x: int, y: int):
-            edit_container = self.createEditSelector()
-            self.section_widgets.append((widget, edit_container))
-
-            self.ourLayout.addWidget(edit_container, y, x)
-            self.ourLayout.addWidget(widget, y, x)
-            
-    class SectionGroup(QWidget):
-        groupItemChanged = pyqtSignal()
-
-        def __init__(self, parent: "Panel", tab_type: str) -> None:
-            super().__init__(parent)
-            
-            self.panel: "Panel" = parent
-            self.tabTitles: dict[int, str] = {}
-
-            self.setAutoFillBackground(True)
-
-            self.__layout = QVBoxLayout(self)
-            self.__layout.setSpacing(1)
-            self.__layout.setContentsMargins(0,0,0,0)
-            self.setLayout(self.__layout)
-            
-            self.mode = tab_type
-
-            if self.mode == ToolshelfDataPage.TabType.Buttons:
-                self.tabButton = QPushButton(self)
-                self.tabButtonMenu = QMenu(self)
-                self.tabButton.setMenu(self.tabButtonMenu)
-                self.__layout.addWidget(self.tabButton)   
-            else:
-                self.tabBar = QTabBar(self)
-                self.tabBar.setExpanding(False)
-                self.tabBar.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-                self.tabBar.currentChanged.connect(self.onTabBarIndexChanged)
-                self.__layout.addWidget(self.tabBar) 
-
-            self.stackPanel = QStackedWidget(self)
-            self.stackPanel.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-            self.stackPanel.currentChanged.connect(self.onCurrentChanged)
-            self.__layout.addWidget(self.stackPanel)    
-        
-        def setCurrentIndex(self, index):
-            self.stackPanel.setCurrentIndex(index)
-            self.onCurrentChanged(index)
-
-        def addTab(self, item: QWidget, title: str):
-            index = self.stackPanel.addWidget(item)
-            if self.mode == "buttons":
-                self.tabButtonMenu.addAction(title, lambda: self.setCurrentIndex(index))
-                self.tabTitles[index] = title
-                self.onCurrentChanged(0)
-            else:
-                self.tabBar.addTab(title)
-                self.tabTitles[index] = title
-
-        def onTabBarIndexChanged(self):
-            self.setCurrentIndex(self.tabBar.currentIndex())
-
-        def onCurrentChanged(self, index):
-            for i in range(0, self.stackPanel.count()):
-
-                widget = self.stackPanel.widget(i)
-                if i == index: widget.setEnabled(True)
-                else: widget.setDisabled(True)
-
-            if self.mode == ToolshelfDataPage.TabType.Buttons:
-                if index in self.tabTitles:
-                    self.tabButton.setText(self.tabTitles[index])
-            else:
-                pass
-
-            self.groupItemChanged.emit()
-        
     dockerWidgets: dict = {}
 
     workersAssigned = pyqtSignal()
@@ -210,8 +85,9 @@ class Panel(QWidget):
         self.page_stack: "PageStack" = toolshelf
         self.panel_config = data
 
-        self.docker_manager = self.page_stack.rootWidget.parent_docker.docker_manager
-        self.actions_manager = self.page_stack.rootWidget.parent_docker.actions_manager
+        self.managers = self.page_stack.container.display.managers
+        self.api_window = self.page_stack.container.display.managers.mgr_actions.api_window
+        
         self.dockerWidgets: dict[any, DockerContainer] = {}
         self.size = None
 
@@ -226,7 +102,7 @@ class Panel(QWidget):
         self.root_layout.setSpacing(0)
         self.setLayout(self.root_layout)
 
-        self.actions_panel = TouchifyActionPanel.Titlebar(self.panel_config.actions, self, self.actions_manager)
+        self.actions_panel = TouchifyActionPanel.Titlebar(self.panel_config.actions, self, self.managers.mgr_actions)
         self.actions_panel.dataLoaded.connect(self.Data_TitlebarLoaded)
         self.actions_panel.Data_Load()
         self.actions_panel.setAutoFillBackground(True)
@@ -265,12 +141,19 @@ class Panel(QWidget):
             self.actions_panel._buttons[btnKey].setMinimumWidth(int(self.panel_config.action_height * TouchifySettings.instance().preferences().Interface_ToolshelfActionBarScale))
             self.actions_panel._buttons[btnKey].setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
 
-
-
-
     def Data_Recieved(self, widget_groups: WIDGET_GROUP):
+
+        def CreateDock():
+            dock = Dock("", size=(1,1), autoOrientation=False)
+            dock.setContentsMargins(0,0,0,0)
+            dock.layout.setContentsMargins(0,0,0,0)
+            dock.layout.setSpacing(0)
+            dock.hideTitleBar()
+            return dock
+
         def Init_Section(sectionInfo: ToolshelfDataSection):
-            sectionWidget = None
+            sectionWidget: Dock | None = None
+
             match sectionInfo.section_type:
                 case ToolshelfDataSection.SectionType.Docker:
                     sectionWidget = Section_Docker(sectionInfo)
@@ -283,32 +166,28 @@ class Panel(QWidget):
                 case _:
                     sectionWidget = None
 
+            if sectionWidget != None:
+                if sectionInfo.min_size_x != 0: sectionWidget.setMinimumWidth(sectionInfo.min_size_x)
+                if sectionInfo.min_size_y != 0: sectionWidget.setMinimumHeight(sectionInfo.min_size_y)
+                if sectionInfo.max_size_x != 0: sectionWidget.setMaximumWidth(sectionInfo.max_size_x)
+                if sectionInfo.max_size_y != 0: sectionWidget.setMaximumHeight(sectionInfo.max_size_y)
+
             return sectionWidget
 
-        def Init_Cell(x: int, y: int, splitter: Panel.SectionSplit, sections: list[ToolshelfDataSection]):
-            if len(sections) == 1:
-                widget = Init_Section(sections[0])
-                if widget: splitter.addWidget(widget, x, y)
-            else:
-                tabBar = Panel.SectionGroup(self, self.panel_config.tab_type)
-                for section in sections:
-                    item = Init_Section(section)
-                    if isinstance(item, DockerContainer): tabBar.addTab(item, self.docker_manager.dockerWindowTitle(item.docker_id))
-                    elif isinstance(item, TouchifyActionPanel): tabBar.addTab(item, item.title)
-                    elif isinstance(item, Panel): tabBar.addTab(item, item.title())
-                    else: tabBar.addTab(item, "Unknown")
-                tabBar.setCurrentIndex(0)
-                tabBar.groupItemChanged.connect(self.onGroupItemChanged)
-                splitter.addWidget(tabBar, x, y)
+
 
         def Section_Actions(actionInfo: ToolshelfDataSection):
-            actionWidget = TouchifyActionPanel(cfg=actionInfo, parent=self, actions_manager=self.actions_manager)
+            dock = CreateDock()
+            actionWidget = TouchifyActionPanel(cfg=actionInfo, parent=dock, actions_manager=self.managers.mgr_actions)
             self.Data_AppendWorker(actionWidget.dataLoaded)
             actionWidget.Data_Load()
-            return actionWidget
+            dock.setTitle(actionWidget.title)
+            dock.addWidget(actionWidget)
+            return dock
         
         def Section_Docker(actionInfo: ToolshelfDataSection):
-            actionWidget = DockerContainer(self, actionInfo.docker_id, self.docker_manager)
+            dock = CreateDock()
+            actionWidget = DockerContainer(dock, actionInfo.docker_id, self.managers.mgr_dockers)
             if actionInfo.docker_nesting_mode == ToolshelfDataSection.DockerNestingMode.Docking:
                 actionWidget.setDockMode(True)
 
@@ -321,70 +200,64 @@ class Panel(QWidget):
             if actionInfo.size_x != 0 and actionInfo.size_y != 0:
                 actionWidget.setSizeHint([actionInfo.size_x, actionInfo.size_y])
 
-            if actionInfo.min_size_x != 0: actionWidget.setMinimumWidth(actionInfo.min_size_x)
-            if actionInfo.min_size_y != 0: actionWidget.setMinimumHeight(actionInfo.min_size_y)
-            if actionInfo.max_size_x != 0: actionWidget.setMaximumWidth(actionInfo.max_size_x)
-            if actionInfo.max_size_y != 0: actionWidget.setMaximumHeight(actionInfo.max_size_y)
-
             self.dockerWidgets[actionInfo.docker_id] = actionWidget
             actionWidget.dockerChanged.connect(self.onDockerUpdate)
             actionWidget.dockerSizeChanged.connect(self.onDockerSizeChanged)
-            return actionWidget
+            dock.addWidget(actionWidget)
+            dock.setTitle(self.managers.mgr_dockers.dockerWindowTitle(actionInfo.docker_id))
+            return dock
         
         def Section_Special(actionInfo: ToolshelfDataSection):
+            dock = CreateDock()
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushBlendingMode:
                 actionWidget = BrushBlendingSelector(self)
-                actionWidget.setInstance(self.actions_manager.app_window)
+                actionWidget.setInstance(self.api_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.LayerBlendingMode:
                 actionWidget = LayerBlendingSelector(self)
-                actionWidget.setInstance(self.actions_manager.app_window)
+                actionWidget.setInstance(self.api_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.LayerLabelBox:
                 actionWidget = LayerLabelBox(self)
-                actionWidget.setInstance(self.actions_manager.app_window)
+                actionWidget.setInstance(self.api_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushSizeSlider:
                 actionWidget = BrushSizeSlider(self)
-                actionWidget.setInstance(self.actions_manager.app_window)
+                actionWidget.setInstance(self.api_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushOpacitySlider:
                 actionWidget = BrushOpacitySlider(self)
-                actionWidget.setInstance(self.actions_manager.app_window)
+                actionWidget.setInstance(self.api_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushFlowSlider:
                 actionWidget = BrushFlowSlider(self)
-                actionWidget.setInstance(self.actions_manager.app_window)
+                actionWidget.setInstance(self.api_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushRotationSlider:
                 actionWidget = BrushRotationSlider(self)
-                actionWidget.setInstance(self.actions_manager.app_window)
+                actionWidget.setInstance(self.api_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BackgroundColorBox:
                 actionWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Background)
-                actionWidget.setInstance(self.actions_manager.app_window)
-                actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                actionWidget.setInstance(self.api_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.ForegroundColorBox:
                 actionWidget = CanvasColorPicker(self, CanvasColorPicker.Mode.Foreground)
-                actionWidget.setInstance(self.actions_manager.app_window)
-                actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                actionWidget.setInstance(self.api_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.ForegroundBackgroundColorPicker:
                 actionWidget = CanvasDualColorButton(self)
-                actionWidget.setInstance(self.actions_manager.app_window)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                actionWidget.setInstance(self.api_window)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.BrushPicker:
                 actionWidget = BrushPresetPicker(self)
-                actionWidget.setInstance(self.actions_manager.app_window)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                actionWidget.setInstance(self.api_window, self.managers)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.PatternPicker:
                 actionWidget = CanvasPatternPicker(self)
-                actionWidget.setInstance(self.actions_manager.app_window)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                actionWidget.setInstance(self.api_window, self.managers)
             if actionInfo.special_item_type == ToolshelfDataSection.SpecialItemType.GradientPicker:
                 actionWidget = CanvasGradientPicker(self)
-                actionWidget.setInstance(self.actions_manager.app_window)
                 actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                actionWidget.setInstance(self.api_window, self.managers)
 
-            if actionInfo.min_size_x != 0: actionWidget.setMinimumWidth(actionInfo.min_size_x)
-            if actionInfo.min_size_y != 0: actionWidget.setMinimumHeight(actionInfo.min_size_y)
-            if actionInfo.max_size_x != 0: actionWidget.setMaximumWidth(actionInfo.max_size_x)
-            if actionInfo.max_size_y != 0: actionWidget.setMaximumHeight(actionInfo.max_size_y)
-            return actionWidget
+            dock.addWidget(actionWidget)
+            return dock
 
         def Section_Subpanel(actionInfo: ToolshelfDataSection):
+            dock = CreateDock()
             if actionInfo.subpanel_mode == ToolshelfDataSection.SubpanelMode.Data:
                 actionWidget = Panel(self, self.page_stack, actionInfo.subpanel_data)
                 self.Data_AppendWorker(actionWidget.dataLoaded)
@@ -404,36 +277,34 @@ class Panel(QWidget):
             if actionInfo.size_x != 0 and actionInfo.size_y != 0: 
                 actionWidget.setSizeHint([actionInfo.size_x, actionInfo.size_y])
 
-            if actionInfo.min_size_x != 0: actionWidget.setMinimumWidth(actionInfo.min_size_x)
-            if actionInfo.min_size_y != 0: actionWidget.setMinimumHeight(actionInfo.min_size_y)
-            if actionInfo.max_size_x != 0: actionWidget.setMaximumWidth(actionInfo.max_size_x)
-            if actionInfo.max_size_y != 0: actionWidget.setMaximumHeight(actionInfo.max_size_y)
-
             actionWidget.panelItemResized.connect(self.onSubpanelItemResized)
             actionWidget.panelItemUpdated.connect(self.onSubpanelItemUpdated)
             
             self.pageLoadedSignal.connect(actionWidget.onLoadPage)
             self.pageUnloadSignal.connect(actionWidget.onUnloadPage)
-            return actionWidget
-        
 
-        self.sections_stack = Panel.SectionSplit(Qt.Orientation.Vertical, "root", self)
+            dock.addWidget(actionWidget)
+            dock.setTitle(actionWidget.title())
+            return dock
+        
+        self.sections_stack = DockArea(self)
         self.sections_container.layout().addWidget(self.sections_stack)
 
-        for row_key in sorted(widget_groups.keys()):
-            row_length = len(widget_groups[row_key].keys())
-            row_items = [widget_groups[row_key][ix] for ix in sorted(widget_groups[row_key].keys())]
+        for iy, cell_rows in sorted(widget_groups.items()):
+            last_row_item = None
+            for ix, cell_item in sorted(cell_rows.items()):    
+                last_cell_item = None
 
-            iy = sorted(widget_groups.keys()).index(row_key)
+                for section in cell_item:
+                    dock = Init_Section(section)
 
-            if row_length == 1:
-                Init_Cell(0, iy, self.sections_stack, row_items[0])
-            else:
-                row_splitter = Panel.SectionSplit(Qt.Orientation.Horizontal, f"sub_root_{iy}")
-                row_splitter.setAutoFillBackground(True)
-                for ix in range(0, row_length):
-                    Init_Cell(ix, 0, row_splitter, row_items[ix])
-                self.sections_stack.addWidget(row_splitter, 0, iy)
+                    dockRelativeTo = last_cell_item if last_cell_item != None else last_row_item if last_row_item != None  else None
+                    dockPosition = 'above' if last_cell_item != None else 'right' if last_row_item != None  else 'bottom'
+                        
+                    self.sections_stack.addDock(dock, dockPosition, dockRelativeTo)
+
+                    last_cell_item = dock
+                last_row_item = last_cell_item
 
         qApp.paletteChanged.connect(self.updateStyleSheet)
         self.updateStyleSheet()

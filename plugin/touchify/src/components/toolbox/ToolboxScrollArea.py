@@ -1,10 +1,15 @@
-import sys
-from PyQt5.QtWidgets import QScrollArea, QToolButton, QApplication, QWidget, QScrollBar, QStyleOption, QStyle, QFrame, QScroller, QScrollerProperties
-from PyQt5.QtCore import Qt, QEvent, QObject
-from PyQt5.QtGui import QWheelEvent, QResizeEvent
+from PyQt5.QtWidgets import QScrollArea, QToolButton, QApplication, QScrollBar, QStyleOption, QStyle, QFrame, QScroller, QScrollerProperties
+from PyQt5.QtCore import Qt, QEvent
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .ToolboxWidget import ToolboxWidget
 
 class ToolboxScrollArea(QScrollArea):
     def __init__(self, parent=None):
+
+        self.parentToolbox: ToolboxWidget  = parent
+
         super().__init__(parent)
         self.m_orientation = Qt.Vertical
         self.m_scrollPrev = QToolButton(self)

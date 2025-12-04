@@ -3,19 +3,18 @@ from krita import *
 from PyQt5.QtCore import *
 from touchify.__env__ import *
 
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.managers.shared.settings_krita import *
 from touchify.src.components.krita.KisAngleSelector import KisAngleSelector
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from touchify.src.PluginWindow import TouchifyWindow
+
 
 
 class BrushRotationSlider(KisAngleSelector):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
-        self.appEngine: "TouchifyWindow" = None
+        self.api_window: WindowAPI = None
         self.setContentsMargins(0,0,0,0)
         self.setMinimumWidth(100)
         self.setFixedHeight(30)
@@ -25,9 +24,9 @@ class BrushRotationSlider(KisAngleSelector):
         self.spinBox.setPrefix('Rotation: ')
         self.spinBox.valueChanged.connect(self.onValueChanged)
 
-    def setInstance(self, window: "TouchifyWindow"):
-        self.appEngine = window        
-        self.notifier = window.api_window.notifier
+    def setInstance(self, window: WindowAPI):
+        self.api_window = window        
+        self.notifier = window.notifier
         self.notifier.viewChanged.connect(self.onViewChanged)
         self.onViewChanged(self.notifier.getCurrentView())
         self.notifier.brushRotationChanged.connect(self.onRotationChanged)

@@ -10,7 +10,7 @@ from touchify.src.components.canvas.NtCanvas import NtCanvas
 from touchify.src.extensions.krita_extensions import *
 
 if TYPE_CHECKING:
-    from ...PluginWindow import TouchifyWindow
+    from ...PluginManagers import TouchifyManagers
 
 
 
@@ -28,9 +28,9 @@ class CanvasManager(QObject):
     delayedFocus=pyqtSignal()
 
 
-    def __init__(self, instance: "TouchifyWindow"):
-        super().__init__(instance)
-        self.app_engine = instance
+    def __init__(self, parent: QObject, managers: "TouchifyManagers"):
+        super().__init__(parent)
+        self.managers = managers
         self.api_window: WindowAPI | None = None
         self.last_canvas_focus = None
         self.nt_canvas: NtCanvas | None = None
@@ -38,16 +38,18 @@ class CanvasManager(QObject):
 
     def Window_Load(self, api_window: WindowAPI):
         self.api_window = api_window
-
-    def Actions_Post(self):
-        self.nt_canvas.Window_Load(self.app_engine)
+        #self.nt_canvas.Window_Load(self.api_window, self.managers)
         self.api_window.activeViewChanged.connect(self.OnEvent_ActiveViewChanged)
         self.OnEvent_ActiveViewChanged()
-        self.nt_canvas.Actions_Post()
 
+    def Actions_Post(self):
+        #self.nt_canvas.Actions_Post()
+        pass
+        
     def Actions_Init(self, window: WindowAPI, path: str):
-        self.nt_canvas = NtCanvas(window.qwindow.window(), window)
-        self.nt_canvas.Actions_Init(window, path)
+        #self.nt_canvas = NtCanvas(window.qwindow.window())
+        #self.nt_canvas.Actions_Init(window, path)
+        pass
 
     def OnEvent_ActiveViewChanged(self):
         if self.active_canvas != None:
@@ -56,13 +58,13 @@ class CanvasManager(QObject):
             
             self.active_canvas = None
         
-        current_view = self.app_engine.api_window.active_view
+        current_view = self.api_window.active_view
         if not current_view: return
 
-        window_views = self.app_engine.api_window.views
+        window_views = self.api_window.views
         if current_view not in window_views: return
 
-        mdi_area = self.app_engine.api_window.mdi_area
+        mdi_area = self.api_window.mdi_area
         if not mdi_area: return
 
         mdi_subwindow = mdi_area.activeSubWindow()
@@ -76,7 +78,6 @@ class CanvasManager(QObject):
 
         self.active_canvas = active_canvas
         self.active_canvas.installEventFilter(self)
-
 
     def eventFilter(self, obj: QObject, event: QEvent):
 

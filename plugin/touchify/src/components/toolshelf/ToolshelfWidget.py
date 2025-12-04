@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
+
 from touchify.src.components.toolshelf.Header import Header
 
 from touchify.src.components.toolshelf.TabList import TabList
@@ -17,8 +18,9 @@ from touchify.src.components.toolshelf.PageStack import PageStack
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ToolshelfCanvasWidget import ToolshelfCanvasWidget
-    from .ToolshelfDockWidget import ToolshelfDockWidget
+    from .ToolshelfDockWidget import ToolshelfDockWidget, ToolshelfDockWidgetAlt
     from ..special.TouchifyPopup import TouchifyPopup
+    from touchify.src.PluginManagers import TouchifyManagers
     from touchify.src.components.canvas.NtWidgetPad import NtWidgetPad
 
 class ToolshelfWidget(QWidget):
@@ -37,10 +39,10 @@ class ToolshelfWidget(QWidget):
             self._last_resizable: bool = False
             self._last_panel_id: str | None = None
 
-    def __init__(self, parent: "ToolshelfCanvasWidget", cfg: ToolshelfData, registry_index: int = -2):
+    def __init__(self, parent, managers: "TouchifyManagers", cfg: ToolshelfData, registry_index: int = -3):
         super(ToolshelfWidget, self).__init__(parent)
-        self.parent_docker: "ToolshelfCanvasWidget" | "ToolshelfDockWidget" | "TouchifyPopup" = parent
-
+        self.display: "ToolshelfCanvasWidget" | "ToolshelfDockWidget" | "ToolshelfDockWidgetAlt" | "TouchifyPopup" = parent
+        self.managers = managers
 
         self.INTERNAL_SHOW_EVENT_INIT = True
 
@@ -172,17 +174,17 @@ class ToolshelfWidget(QWidget):
     
     def deactivateWidget(self):
         if self.is_active == True:
-            self.parent_docker.canvas_manager.delayedFocus.disconnect(self.onCanvasFocused)
+            self.managers.mgr_canvas.delayedFocus.disconnect(self.onCanvasFocused)
             self.pages.deactivateWidget()
             self.is_active = False
 
     def activateWidget(self):
         if not hasattr(self, "is_active"):
-            self.parent_docker.canvas_manager.delayedFocus.connect(self.onCanvasFocused)
+            self.managers.mgr_canvas.delayedFocus.connect(self.onCanvasFocused)
             self.is_active = True
         else:
             if self.is_active == False:
-                self.parent_docker.canvas_manager.delayedFocus.connect(self.onCanvasFocused)
+                self.managers.mgr_canvas.delayedFocus.connect(self.onCanvasFocused)
                 self.pages.activateWidget()
                 self.is_active = True
     

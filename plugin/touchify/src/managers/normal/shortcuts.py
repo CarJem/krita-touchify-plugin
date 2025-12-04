@@ -189,7 +189,7 @@ class ShortcutsManager(object):
         popupMenu.exec(QCursor.pos())
 
     def toggleDirectionalDockers(self, area: int):
-        self.appEngine.mgr_dockers.toggleDockersPerArea(area)
+        self.appEngine.managers.mgr_dockers.toggleDockersPerArea(area)
 
     #endregion
 

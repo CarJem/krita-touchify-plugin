@@ -19,27 +19,23 @@ from touchify.src.managers.shared.settings_krita import KritaSettings
 from touchify.src.config.widget_layout.WidgetLayout import WidgetLayout
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.PluginWindow import TouchifyWindow
+    from touchify.src.PluginManagers import TouchifyManagers
 
 
 class NtCanvas(QWidget):
-    def __init__(self, parent: QObject, window: WindowAPI):
+    def __init__(self, parent: QObject):
         super().__init__(parent)
-        self.Variables_Init(window)
+        self.Variables_Init()
         self.Components_Init()
         self.Connections_Init()
         self.Preset_Reload()
 
     #region Init Functions
 
-    def Variables_Init(self, window: WindowAPI):
+    def Variables_Init(self):
         self.__window_loaded = False
-        self.__krita_window = window
-        self.__mdi_area = None
 
         self.adjust_filter = None
-        
-        self.app_engine = None
 
         self.toolbox: NtToolbox = None
         self.toolshelf_beta: NtToolshelf = None
@@ -111,20 +107,6 @@ class NtCanvas(QWidget):
 
     #region Post-Init Functions
 
-    def Variables_Post(self, app_engine: "TouchifyWindow"):
-        self.app_engine = app_engine
-        self.api_window = self.app_engine.api_window
-        self.__window_loaded = True
-
-    def Components_Post(self):
-        self.setParent(self.api_window.mdi_area)
-
-    def Connections_Post(self):
-        self.api_window.mdi_area.installEventFilter(self)
-        KritaAPI.get_action("view_ruler").triggered.connect(self.Update_View)
-        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.Preset_Reload)
-        GlobalEvents.instance().SIGNAL_CANVAS_LAYOUT_CHANGED.connect(self.Preset_Reload)
-
     def Actions_Post(self):
         settings_menu = self.api_window.qwindow.findChild(QMenu, 'settings')
 
@@ -136,10 +118,18 @@ class NtCanvas(QWidget):
 
     #region Window Functions
 
-    def Window_Load(self, app_engine: "TouchifyWindow"):
-        self.Variables_Post(app_engine)
-        self.Components_Post()
-        self.Connections_Post()
+    def Window_Load(self, window: "WindowAPI", managers: "TouchifyManagers"):
+        self.managers = managers
+        self.api_window = window
+        self.__window_loaded = True
+
+        self.setParent(self.api_window.mdi_area)
+
+        self.api_window.mdi_area.installEventFilter(self)
+        KritaAPI.get_action("view_ruler").triggered.connect(self.Update_View)
+        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.Preset_Reload)
+        GlobalEvents.instance().SIGNAL_CANVAS_LAYOUT_CHANGED.connect(self.Preset_Reload)
+
         self.Update_Widgets()
 
     #endregion

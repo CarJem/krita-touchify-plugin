@@ -22,17 +22,19 @@ class TweakManager(QObject):
 
     def __init__(self, instance: "TouchifyWindow"):
         super().__init__(instance)
-        self.appEngine = instance
-        self.qwindow: QMainWindow | None = None
+        self.app_window = instance
+        self.api_window: WindowAPI = None
+        self.qt_window: QMainWindow = None
         self.brush_editor_tweak: Tweak_BrushEditor | None = None
 
     #region Signals
 
     def Window_Load(self):
         KritaAPI.get_action("show_brush_editor").triggered.connect(self.onBrushEditorTrigged)
-        self.qwindow = self.appEngine.api_window.qwindow
-        self.qwindow.themeChanged.connect(self.rebuildStyleSheet)
-        self.brush_editor_tweak = Tweak_BrushEditor(self.qwindow, self.appEngine)
+        self.api_window = self.app_window.api_window
+        self.qt_window = self.api_window.qwindow
+        self.qt_window.themeChanged.connect(self.rebuildStyleSheet)
+        self.brush_editor_tweak = Tweak_BrushEditor(self.app_window.api_window)
 
         self.rebuildStyleSheet()
 
@@ -66,7 +68,7 @@ class TweakManager(QObject):
         nu_options_menu.addAction(createAction(TOUCHIFY_ACTIONID_STYLES_DOCKEDBRUSHEDITORZOOMFIX, "Brush Editor Zoom Fix", sublocation_path, True, config.Styles_BrushEditorZoomFix, self.brushEditorZoomFixToggled))
 
     def Actions_Post(self):
-        settings_menu = self.qwindow.findChild(QMenu, 'settings')
+        settings_menu = self.qt_window.findChild(QMenu, 'settings')
         KritaExtensions.moveActionTo(TOUCHIFY_ACTIONID_STYLES_MENU, settings_menu, settings_menu, 'style_menu')
 
     #endregion
@@ -86,24 +88,24 @@ class TweakManager(QObject):
     def toolbarBorderToggled(self, toggled):
         TouchifySettings.instance().preferences().Styles_BorderlessToolbar = toggled
         TouchifySettings.instance().preferences().save()
-        self.qwindow.themeChanged.emit()
+        self.qt_window.themeChanged.emit()
 
     def tabHeightToggled(self, toggled):
         TouchifySettings.instance().preferences().Styles_ThinDocumentTabs = toggled
         TouchifySettings.instance().preferences().save()
-        self.qwindow.themeChanged.emit()
+        self.qt_window.themeChanged.emit()
         
     def privacyModeToggled(self, toggled):
         TouchifySettings.instance().preferences().Styles_PrivacyMode = toggled
         TouchifySettings.instance().preferences().save()
-        self.qwindow.themeChanged.emit()
+        self.qt_window.themeChanged.emit()
 
     #endregion
 
     #region Methods
 
     def rebuildStyleSheet(self):
-        if self.qwindow == None:
+        if self.qt_window == None:
             return
 
         config = TouchifySettings.instance().preferences()
@@ -112,7 +114,7 @@ class TweakManager(QObject):
         full_style_sheet = ""
         if config.Styles_BorderlessToolbar:
             full_style_sheet += f"\n QToolBar {{ border: none; }} \n"    
-        self.qwindow.setStyleSheet(full_style_sheet)
+        self.qt_window.setStyleSheet(full_style_sheet)
         #endregion
 
         # region Small Tabs
@@ -125,14 +127,14 @@ class TweakManager(QObject):
             QTabBar::close-button {{ margin: {SMALL_TAB_CLOSE_BUTTON_MARGIN}px; }} 
             \n"""
 
-        canvas = self.qwindow.centralWidget()
+        canvas = self.qt_window.centralWidget()
         if canvas:
             canvas.setStyleSheet(canvas_style_sheet)
             canvas.adjustSize()
         # endregion
         
         # region Privacy Mode
-        recentDocumentsListView = self.qwindow.findChild(QListView,'recentDocumentsListView')
+        recentDocumentsListView = self.qt_window.findChild(QListView,'recentDocumentsListView')
         if recentDocumentsListView:
             recentDocumentsListView.setHidden(config.Styles_PrivacyMode)
             recent_files_action = KritaAPI.get_action("file_open_recent")
@@ -193,10 +195,9 @@ class Tweak_BrushEditor_Container(QWidget):
 
 class Tweak_BrushEditor(QObject):
 
-    def __init__(self, qWin: QMainWindow, instance: "TouchifyWindow"):
-        self.appEngine = instance
-        self.qWin = qWin
-        self.notifier = instance.api_window.notifier
+    def __init__(self, window: WindowAPI):
+        self.qWin = window.qwindow
+        self.notifier = window.notifier
 
         self.stack_docker: Tweak_BrushEditor_Container | None = None
         self.stack_index: int | None = None

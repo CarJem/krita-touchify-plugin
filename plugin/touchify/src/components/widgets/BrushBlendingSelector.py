@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
 from touchify.__env__ import *
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.managers.normal.dockers import *
 from krita import *
 from touchify.src.api_krita.enums.blending_mode import BlendingMode, PRETTY_NAMES
@@ -94,9 +95,8 @@ class BrushBlendingSelector(QPushButton):
         self.updateFavs()
         self.setMenu(self.menu)
 
-    def setInstance(self, window: "TouchifyWindow"):
-        self.appEngine = window
-        self.notifier = window.api_window.notifier
+    def setInstance(self, window: WindowAPI):
+        self.notifier = window.notifier
         self.notifier.brushBlendingModeChanged.connect(self.onBlendingModeChanged)
         self.onBlendingModeChanged(self.notifier.getBrushBlendingMode())
 

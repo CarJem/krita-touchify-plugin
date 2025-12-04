@@ -6,11 +6,8 @@ from PyQt5.QtCore import *
 from touchify.__env__ import *
 
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.common.buttons.ColorFramedButton import ColorFramedButton
-
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from touchify.src.PluginWindow import TouchifyWindow
 
 class CanvasColorPicker(ColorFramedButton):
 
@@ -27,9 +24,8 @@ class CanvasColorPicker(ColorFramedButton):
         if self.mode == CanvasColorPicker.Mode.Background:
             self.clicked.connect(self.setBackgroundColor)
 
-    def setInstance(self, window: "TouchifyWindow"):
-        self.appEngine = window
-        self.notifier = window.api_window.notifier
+    def setInstance(self, window: WindowAPI):
+        self.notifier = window.notifier
         self.notifier.canvasChanged.connect(self.onCanvasChanged)
         self.onCanvasChanged(self.notifier.getCurrentCanvas())
         if self.mode == CanvasColorPicker.Mode.Foreground:

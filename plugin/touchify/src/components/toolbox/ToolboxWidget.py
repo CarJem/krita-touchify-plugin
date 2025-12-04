@@ -5,9 +5,9 @@ from PyQt5.QtCore import *
 from krita import *
 
 
+
 from touchify.src.api_krita import KritaAPI
 from touchify.src.api_krita.wrappers.window import WindowAPI
-from touchify.src.managers.normal.action_manager import ActionManager
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
 from touchify.__env__ import *
@@ -28,14 +28,14 @@ from touchify.src.managers.shared.resources import ResourceManager
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ...PluginWindow import TouchifyWindow
+    from touchify.src.PluginManagers import TouchifyManagers
 
 class ToolboxWidget(QWidget):
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
 
-        self.sourceWindow: WindowAPI = None
-        self.actionEngine: ActionManager = None
+        self.api_window: WindowAPI = None
+        self.managers: "TouchifyManagers" = None
 
         self.OPACITY_LEVEL = 0.65
 
@@ -83,9 +83,9 @@ class ToolboxWidget(QWidget):
         self.scrollArea.setWidget(self.viewportWidget)
 
 
-    def setup(self, instance: "TouchifyWindow"):
-        self.sourceWindow = instance.api_window
-        self.actionEngine = instance.managers.mgr_actions
+    def setup(self, window: "WindowAPI", managers: "TouchifyManagers"):
+        self.api_window = window
+        self.managers = managers
         self.reload()
     
 
@@ -96,13 +96,10 @@ class ToolboxWidget(QWidget):
 
     def updateStyleSheet(self):
         highlight_hex = qApp.palette().color(QPalette.ColorRole.Highlight).name().split("#")[1]
-        background_hex = qApp.palette().color(QPalette.ColorRole.Window).name().split("#")[1]
+        background_hex = qApp.palette().color(QPalette.ColorRole.Base).name().split("#")[1]
         alternate_hex = qApp.palette().color(QPalette.ColorRole.AlternateBase).name().split("#")[1]
         inactive_text_color_hex = qApp.palette().color(QPalette.ColorRole.ToolTipText).name().split("#")[1]
         active_text_color_hex = qApp.palette().color(QPalette.ColorRole.WindowText).name().split("#")[1]
-
-
-        
 
         background_opacity = self.layout_config.background_opacity
         alternative_opacity = self.layout_config.button_opacity
@@ -116,22 +113,42 @@ class ToolboxWidget(QWidget):
 
         bg_opacity_hex = hex(background_opacity)[2:]
         alt_opacity_hex = hex(alternative_opacity)[2:]
+
+
+        if self.horizontalMode:
+            frame_style = f"""
+                QFrame#toolbox_frame {{ 
+                    background-color: #{bg_opacity_hex}{background_hex};
+                    border-radius: 4px;
+                    padding: 4px;
+                }}
+            """
+            #TODO: Add a Variant of this that Uses Seperators?
+            #   border-right: 1px solid #{inactive_text_color_hex};
+            #   border-radius: 0px;
+        else:
+            frame_style = f"""
+                QFrame#toolbox_frame {{ 
+                    background-color: #{bg_opacity_hex}{background_hex};
+                    border-radius: 4px;
+                    padding: 4px;
+                }}
+            """
+            #TODO: Add a Variant of this that Uses Seperators?
+            #   border-bottom: 1px solid #{inactive_text_color_hex};
+            #   border-radius: 0px;
+        
     
         self.setStyleSheet(f"""
-            QFrame#toolbox_frame {{ 
-                background-color: #{bg_opacity_hex}{background_hex};
-                border: none;
-                border-radius: 4px;
-                padding: 4px;
-            }}
-            
+            {frame_style}
+
             QScrollArea {{ background: transparent; }}
             QScrollArea > QWidget > QWidget {{ background: transparent; }}
             QScrollArea > QWidget > QScrollBar {{ background: palette(base); }}
             
             TouchifyActionButton {{
                 background-color: #{alt_opacity_hex}{background_hex};
-                border: 1px soild transparent;
+                border: 1px solid transparent;
                 border-radius: 4px;
             }}
             
@@ -191,7 +208,7 @@ class ToolboxWidget(QWidget):
             return
 
         try:
-            active_window = self.sourceWindow
+            active_window = self.api_window
             if active_window != None:   
                 if self.__preload__themeChanged == False:
                     active_window.qwindow.themeChanged.connect(self.updatePalette)
@@ -315,7 +332,7 @@ class ToolboxWidget(QWidget):
 
         is_toolbox_menu = len(tool.items) >= 1
 
-        btn: TouchifyActionButton = self.actionEngine.Create_Button(self, trigger)
+        btn: TouchifyActionButton = self.managers.mgr_actions.Create_Button(self, trigger)
         if btn:
             tool_names: list[str] = [item.name for item in tool.items]
             tool_names.append(tool.name)

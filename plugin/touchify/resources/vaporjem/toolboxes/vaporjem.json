@@ -1,7 +1,7 @@
 {
     "preset_name": "Default Toolbox",
     "column_count": 2,
-    "icon_size": 16,
+    "icon_size": 18,
     "submenu_delay": 200,
     "background_opacity": 255,
     "button_opacity": 255,

@@ -5,10 +5,11 @@ from PyQt5.QtCore import *
 from touchify.__env__ import *
 
 
-from typing import TYPE_CHECKING
 
+from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.PluginWindow import TouchifyWindow
+    from touchify.src.PluginManagers import TouchifyManagers
+from touchify.src.api_krita.wrappers.window import WindowAPI
 
 class CanvasPatternPicker(QPushButton):
 
@@ -17,14 +18,14 @@ class CanvasPatternPicker(QPushButton):
         self.clicked.connect(self.openBrushPicker)
         self.cached_pixmap: QPixmap = None
 
-    def setInstance(self, window: "TouchifyWindow"):
-        self.appEngine = window
-        self.notifier = window.api_window.notifier
+    def setInstance(self, window: WindowAPI, managers: "TouchifyManagers"):
+        self.managers = managers
+        self.notifier = window.notifier
         self.notifier.patternChanged.connect(self.onPatternChanged)
         self.onPatternChanged(self.notifier.getCurrentPattern())
 
     def openBrushPicker(self):
-        self.appEngine.managers.mgr_actions.Create_Popup("pattern_chooser_popup", self)
+        self.managers.mgr_actions.Create_Popup("pattern_chooser_popup", self)
     
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)

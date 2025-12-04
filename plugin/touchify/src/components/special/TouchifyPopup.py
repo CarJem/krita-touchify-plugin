@@ -4,6 +4,7 @@ from PyQt5.QtCore import *
 
 from touchify.__env__ import *
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.toolshelf.ToolshelfData import ToolshelfData
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
@@ -16,7 +17,7 @@ from touchify.src.managers.shared.settings_krita import KritaSettings
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from touchify.src.PluginWindow import TouchifyWindow
+    from touchify.src.PluginManagers import TouchifyManagers
     from touchify.src.managers.normal.action_manager import ActionManager
     from touchify.src.managers.normal.dockers import DockerManager
     from touchify.src.managers.normal.canvas import CanvasManager
@@ -136,23 +137,21 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
             self.position: QPoint = position
             self.size: QSize = size
 
-    def __init__(self, parent: QWidget, id: str, args: PopupData, toolshelf_data: ToolshelfData, app_engine: "TouchifyWindow"):     
+    def __init__(self, parent: QWidget, id: str, args: PopupData, toolshelf_data: ToolshelfData, managers: "TouchifyManagers"):     
         QDockWidget.__init__(self, parent)  
         #TODO: Improve Performance
         AnimatedWidget.__init__(self, parent, 0) #0.1        
-        self.Variables(id, args, toolshelf_data, app_engine)
+        self.Variables(id, args, toolshelf_data, managers)
         self.Components()
         self.Connections()
 
-    def Variables(self, id: str, args: PopupData, toolshelf_data: ToolshelfData, app_engine: "TouchifyWindow"):
+    def Variables(self, id: str, args: PopupData, toolshelf_data: ToolshelfData, managers: "TouchifyManagers"):
         self.config = args
         self.registry_id = id
-        self.app_engine: "TouchifyWindow" = app_engine
-        self.docker_manager: "DockerManager" = app_engine.managers.mgr_dockers
-        self.actions_manager: "ActionManager" = app_engine.managers.mgr_actions
-        self.canvas_manager: "CanvasManager" = app_engine.managers.mgr_canvas
+        self.managers: "TouchifyManagers" = managers
+        self.api_window: WindowAPI = self.managers.api_window()
         self.toolshelf_data = toolshelf_data
-        self.main_window = self.app_engine.api_window.qwindow
+        self.main_window = self.api_window.qwindow
         self.toggle_view_action = self.toggleViewAction()
 
 
@@ -198,7 +197,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
         self.container_grid.setSpacing(0)
         self.container_widget.setLayout(self.container_grid)
 
-        self.toolshelf_widget = ToolshelfWidget(self, self.toolshelf_data)
+        self.toolshelf_widget = ToolshelfWidget(self, self.managers, self.toolshelf_data)
         self.toolshelf_widget.dataLoaded.connect(self.OnEvent_ToolshelfUpdated)
         self.toolshelf_widget.toolshelfResized.connect(self.OnEvent_ToolshelfUpdated)
         self.toolshelf_widget.toolshelfPageChanged.connect(self.OnEvent_ToolshelfUpdated)
@@ -218,7 +217,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
     def Connections(self):
         self.dockLocationChanged.connect(self.OnEvent_DockLocationChanged)
 
-    def Construct(id: str, parent: QWidget, data: PopupData, app_window: "TouchifyWindow"):      
+    def Construct(id: str, parent: QWidget, data: PopupData, managers: "TouchifyManagers"):      
         from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
         from touchify.src.config.toolshelf.ToolshelfDataPage import ToolshelfDataPage
         from touchify.src.config.toolshelf.ToolshelfDataSection import ToolshelfDataSection
@@ -296,7 +295,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
                 toolshelf_data = None
         
         if not isinstance(toolshelf_data, ToolshelfData) or toolshelf_data == None: return None                
-        return TouchifyPopup(parent, id, data, toolshelf_data, app_window)
+        return TouchifyPopup(parent, id, data, toolshelf_data, managers)
 
     #region Geometry Methods
 

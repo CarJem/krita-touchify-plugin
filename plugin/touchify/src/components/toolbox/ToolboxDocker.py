@@ -28,6 +28,7 @@ class ToolboxDocker(QDockWidget):
         label.setFrameShadow(QFrame.Raised)
         label.setFrameStyle(QFrame.Panel | QFrame.Raised)
         label.setMinimumWidth(16)
+        
 
         self.toolboxWidget = ToolboxWidget(self)
         self.setWidget(self.toolboxWidget)
@@ -35,8 +36,11 @@ class ToolboxDocker(QDockWidget):
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
         GlobalEvents.instance().SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED.connect(self.onConfigUpdated)
 
+    def maximumSize(self):
+        return self.toolboxWidget.minimumSize()
+
     def onConfigUpdated(self):
         self.toolboxWidget.reload()
 
     def setup(self, instance: "TouchifyWindow"):
-        self.toolboxWidget.setup(instance)
+        self.toolboxWidget.setup(instance.api_window, instance.managers)

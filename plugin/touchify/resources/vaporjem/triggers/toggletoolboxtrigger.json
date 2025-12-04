@@ -1,0 +1,23 @@
+{
+    "registry_id": "ToggleToolboxTrigger",
+    "variant": "docker",
+    "display_icon_hide": false,
+    "display_text_hide": false,
+    "display_custom_icon_enabled": true,
+    "display_custom_icon": "material:tools",
+    "display_custom_text_enabled": true,
+    "display_custom_text": "Toggle Toolbox",
+    "extra_closes_popup": false,
+    "extra_composer_mode": false,
+    "action_id": "",
+    "context_menu_id": "",
+    "brush_name": "",
+    "docker_id": "Touchify/TouchifyToolbox",
+    "workspace_id": "",
+    "docker_group_data": "none",
+    "popup_data": "none",
+    "canvas_preset_data": "none",
+    "script_id": "",
+    "piewheel_id": "",
+    "json_version": 2
+}

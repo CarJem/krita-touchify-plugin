@@ -4,13 +4,13 @@ from PyQt5.QtCore import *
 from xml.dom.minidom import parse as xmlParse
 
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.common.painters.CheckerPainter import CheckerPainter
 from touchify.__env__ import *
 
-
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from touchify.src.PluginWindow import TouchifyWindow
+    from touchify.src.PluginManagers import TouchifyManagers
 
 class GradientLoader:
 
@@ -275,14 +275,14 @@ class CanvasGradientPicker(QPushButton):
         super(CanvasGradientPicker, self).__init__(parent)
         self.clicked.connect(self.openBrushPicker)
 
-    def setInstance(self, window: "TouchifyWindow"):
-        self.appEngine = window
-        self.notifier = window.api_window.notifier
+    def setInstance(self, window: WindowAPI, managers: "TouchifyManagers"):
+        self.notifier = window.notifier
+        self.managers = managers
         self.notifier.gradientChanged.connect(self.onGradientChanged)
         self.onGradientChanged(self.notifier.getCurrentGradient())
 
     def openBrushPicker(self):
-        self.appEngine.managers.mgr_actions.Create_Popup("gradient_chooser_popup", self)
+        self.managers.mgr_actions.Create_Popup("gradient_chooser_popup", self)
     
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)

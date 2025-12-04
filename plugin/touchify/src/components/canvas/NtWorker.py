@@ -31,7 +31,7 @@ class NtWorker(QObject):
     def PROCESS_ELEMENTS (self: "NtWorker", canvas: "NtCanvas", full_unload: bool = False ):
         def onToolshelfCheck(toolshelf: NtToolshelf | None, allow_toolshelf: bool, config_index: int, action: QAction):
             if toolshelf == None and allow_toolshelf:
-                actual_toolshelf = NtToolshelf(canvas, canvas.api_window, config_index, canvas.app_engine)
+                actual_toolshelf = NtToolshelf(canvas, canvas.api_window, config_index, canvas.managers)
                 actual_toolshelf.SIGNAL_RESIZED.connect(canvas.widgetResizeEvent)
                 actual_toolshelf.collapseBtn.setDefaultAction(action)
                 canvas.canvasLayout.addWidget(actual_toolshelf)

@@ -40,7 +40,7 @@ from xml.dom import minidom as MiniDOM
 
 
 if TYPE_CHECKING:
-    from ...PluginWindow import TouchifyWindow
+    from ...PluginManagers import TouchifyManagers
 
 ENABLE_DEBUG=False
 
@@ -50,9 +50,9 @@ def printDebug(value: str):
 class ActionManager(QObject):
     composerTriggerEnded=pyqtSignal()
     
-    def __init__(self, app_window: "TouchifyWindow"):
-        super().__init__()
-        self.app_window = app_window
+    def __init__(self, parent: QObject, managers: "TouchifyManagers"):
+        super().__init__(parent)
+        self.managers = managers
         self.api_window: WindowAPI | None = None
 
         self.Variables()
@@ -205,7 +205,7 @@ class ActionManager(QObject):
             if popup_id in self.active_popups: 
                 del self.active_popups[popup_id]
 
-            popup = TouchifyPopup.Construct(id, self.api_window.qwindow.window(), data, self.app_window)
+            popup = TouchifyPopup.Construct(id, self.api_window.qwindow.window(), data, self.managers)
             if popup == None: return
             
             self.active_popups[popup_id] = popup

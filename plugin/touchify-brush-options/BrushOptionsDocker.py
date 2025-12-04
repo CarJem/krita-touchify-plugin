@@ -46,7 +46,7 @@ class BrushOptionsWidget(QWidget):
     def __init__(self, parent: QWidget | None = None):
         super(BrushOptionsWidget, self).__init__(parent)
 
-        self.appEngine: "TouchifyWindow" = None
+        self.app_window: "TouchifyWindow" = None
 
         self.config = BrushOptionsDockerCfg()
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
@@ -79,13 +79,13 @@ class BrushOptionsWidget(QWidget):
 
         self.updateSliders()
 
-    def setup(self, instance: "TouchifyWindow"):
-        self.appEngine = instance
+    def setup(self, app_window: "TouchifyWindow"):
+        self.app_window = app_window
         
-        self.sizeSlider.setInstance(self.appEngine)
-        self.opacitySlider.setInstance(self.appEngine)
-        self.flowSlider.setInstance(self.appEngine)
-        self.rotationSlider.setInstance(self.appEngine)
+        self.sizeSlider.setInstance(self.app_window.api_window)
+        self.opacitySlider.setInstance(self.app_window.api_window)
+        self.flowSlider.setInstance(self.app_window.api_window)
+        self.rotationSlider.setInstance(self.app_window.api_window)
 
         self.updateSliders()
 

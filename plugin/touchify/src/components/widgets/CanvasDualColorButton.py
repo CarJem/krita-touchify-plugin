@@ -5,12 +5,10 @@ from PyQt5.QtCore import *
 from touchify.__env__ import *
 
 
-from typing import TYPE_CHECKING
 
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.managers.shared.resources import ResourceManager
-if TYPE_CHECKING:
-    from touchify.src.PluginWindow import TouchifyWindow
 
 
 class CanvasDualColorButton(QWidget):
@@ -169,9 +167,8 @@ class CanvasDualColorButton(QWidget):
     def onCanvasChanged(self, canvas: Canvas):
         self.canvas = canvas
 
-    def setInstance(self, window: "TouchifyWindow"):
-        self.appEngine = window
-        self.notifier = self.appEngine.api_window.notifier
+    def setInstance(self, window: WindowAPI):
+        self.notifier = window.notifier
 
         self.notifier.canvasChanged.connect(self.onCanvasChanged)
         self.onCanvasChanged(self.notifier.getCurrentCanvas())

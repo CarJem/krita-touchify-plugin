@@ -95,8 +95,8 @@ class DockerManager(QObject):
         self._hiddenDockers[2] = TouchifySettings.instance().preferences().DockerUtils_HiddenDockersRight.split(",")
         self._hiddenDockers[4] = TouchifySettings.instance().preferences().DockerUtils_HiddenDockersUp.split(",")
         self._hiddenDockers[8] = TouchifySettings.instance().preferences().DockerUtils_HiddenDockersDown.split(",")
-        self.mainWindow = self.app_window.api_window
-        self.qWin = self.app_window.api_window.qwindow
+        self.api_window = self.app_window.api_window
+        self.qWin = self.api_window.qwindow
 
     def registerListener(self, type: SignalType, source: Callable):
         if type not in self._listeners:
@@ -154,12 +154,12 @@ class DockerManager(QObject):
             self.invokeListeners(docker_id, DockerManager.SignalType.OnReleaseDocker)
 
     def toggleDockersPerArea(self, area: int):
-        dockers = self.mainWindow.dockers
+        dockers = self.api_window.dockers
         mainWindow = self.qWin
 
         if len(self._hiddenDockers[area]) > 0: # show
             for dockerId in self._hiddenDockers[area]:
-                docker = next((w for w in self.mainWindow.dockers if w.objectName() == dockerId), None)
+                docker = next((w for w in dockers if w.objectName() == dockerId), None)
                 if docker:
                     docker.setVisible(True)
             self._hiddenDockers[area] = []
