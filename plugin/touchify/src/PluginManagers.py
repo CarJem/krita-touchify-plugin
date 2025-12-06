@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.src.api_krita.wrappers.window import WindowAPI
+from touchify.src.components.toolshelf_old.ToolshelfDockWidget import ToolshelfDockWidget, ToolshelfDockWidgetAlt
 from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.normal.canvas import CanvasManager
 from touchify.src.managers.normal.developer import DeveloperManager
@@ -87,6 +88,12 @@ class TouchifyManagers:
                 toolshelfAltDocker.setup(window)
             elif docker_id == TOUCHIFY_DOCKERID_TOOLSHELFDOCKER:
                 toolshelfDocker: ShelfDockWidgetAlt = docker
+                toolshelfDocker.setup(window)
+            elif docker_id == TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_ALT_LEGACY:
+                toolshelfAltDocker: ToolshelfDockWidget = docker
+                toolshelfAltDocker.setup(window)
+            elif docker_id == TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_LEGACY:
+                toolshelfDocker: ToolshelfDockWidgetAlt = docker
                 toolshelfDocker.setup(window)
             elif docker_id == TOUCHIFY_DOCKERID_DOCKER_TOOLBOX:
                 toolboxDocker: ToolboxDocker = docker

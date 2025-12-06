@@ -5,8 +5,12 @@ from touchify.src.api_krita import KritaAPI
 from touchify.src.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
 from touchify.src.components.toolshelf.ShelfDockWidget import ShelfDockWidget, ShelfDockWidgetAlt
 from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
+from touchify.src.components.toolshelf_old.ToolshelfDockWidget import ToolshelfDockWidget, ToolshelfDockWidgetAlt
 
 KritaAPI.add_extension(TouchifyPlugin)
 KritaAPI.add_dock_widget_factory(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER, DockWidgetFactoryAPI.DockPosition.DockLeft, ShelfDockWidget)
 KritaAPI.add_dock_widget_factory(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_ALT, DockWidgetFactoryAPI.DockPosition.DockRight, ShelfDockWidgetAlt)
 KritaAPI.add_dock_widget_factory(TOUCHIFY_DOCKERID_DOCKER_TOOLBOX, DockWidgetFactoryAPI.DockPosition.DockRight, ToolboxDocker)
+
+KritaAPI.add_dock_widget_factory(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_LEGACY, DockWidgetFactoryAPI.DockPosition.DockLeft, ToolshelfDockWidget)
+KritaAPI.add_dock_widget_factory(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_ALT_LEGACY, DockWidgetFactoryAPI.DockPosition.DockRight, ToolshelfDockWidgetAlt)

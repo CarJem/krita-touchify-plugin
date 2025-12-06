@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 from touchify.src.components.toolshelf_old.ToolshelfWidget import ToolshelfWidget
 
-DOCKER_TITLE="Touchify Core: Toolshelf"
+DOCKER_TITLE="Touchify Core: Toolshelf Legacy"
 
 class ToolshelfDockWidget(DockWidget):
 
