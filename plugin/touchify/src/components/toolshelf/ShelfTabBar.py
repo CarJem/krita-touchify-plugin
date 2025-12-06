@@ -4,11 +4,11 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 
+from touchify.src.config.toolshelf.ToolshelfState import ToolshelfState, ToolshelfSubState
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
-from touchify.src.config.toolshelf.ToolshelfDataPage import ToolshelfDataPage
 from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
-
+import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
 
 from touchify.src.managers.shared.settings import TouchifySettings
@@ -17,11 +17,11 @@ from touchify.src.managers.shared.resources import ResourceManager
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .ToolshelfWidget import ToolshelfWidget
-    from .Header import Header
+    from .ShelfWidget import ShelfWidget
+    from .ShelfToolbar import ShelfToolbar
 
 
-class TabList(QWidget):
+class ShelfTabBar(QWidget):
 
     class TabItem(QPushButton):
         def __init__(self, parent = None):
@@ -64,54 +64,95 @@ class TabList(QWidget):
                 p.setColor(QPalette.Button, p.color(QPalette.Highlight))
             self.setPalette(p)
 
-    def __init__(self, parent: "Header", orientation: Qt.Orientation):
-        super().__init__(parent)
+    class LayoutHost(QWidget):
+        def __init__(self, parent = None, orientation=Qt.Orientation.Horizontal):
+            super().__init__(parent)
+            self.setContentsMargins(0, 0, 0, 0)
+            self.ourLayout = QHBoxLayout(self) if orientation == Qt.Orientation.Vertical else QVBoxLayout(self)
+            self.ourLayout.setSpacing(1)
+            self.ourLayout.setContentsMargins(0, 0, 0, 0)
+            self.setLayout(self.ourLayout)
 
-        self.parent_header: Header = parent
-        self.cfg = self.parent_header.cfg
-        self.header_options = self.cfg.header_options
-        self.managers = self.parent_header.parent_toolshelf.managers
+        def dispose(self):
+            PyQtExtensions.CommonHelpers.clearLayout(self.ourLayout)
+
+    def __init__(self, parent_toolshelf: "ShelfWidget"):
+        super(ShelfTabBar, self).__init__(parent_toolshelf)
+
+        self.shelf: "ShelfWidget" = parent_toolshelf
+        self.managers = self.shelf.managers
+
+        self.orientation = Qt.Orientation.Horizontal
+        self.tab_size = 32
+        self.button_size = 32
+        self.button_size_policy = QSizePolicy()
+        self.stack_alignment = ToolshelfDataOptions.StackAlignment.Default
+        self.stack_preview = ToolshelfDataOptions.StackPreview.Tabbed
+
+        self.setLayout(QGridLayout(self))
+
+        self.ourLayout = ShelfTabBar.LayoutHost(self, self.orientation)
+        self.layout().setContentsMargins(0,0,0,0)
+        self.layout().setSpacing(0)
+        self.layout().addWidget(self.ourLayout)
         
-        self.orientation = orientation
-        self.tab_size = int(self.header_options.button_size * TouchifySettings.instance().preferences().Interface_ToolshelfTabBarScale)
-        
-        self.ourLayout = QHBoxLayout(self) if self.orientation == Qt.Orientation.Vertical else QVBoxLayout(self)
-        self.ourLayout.setSpacing(1)
-        self.ourLayout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(self.ourLayout)
+        self._rows: dict[int, QWidget] = {}
+        self._buttons: dict[str, ShelfTabBar.TabItem] = {}
+        self._actions: list[TouchifyActionButton] = []
+        self._homeButton: ShelfTabBar.TabItem | None = None
+
+
+        qApp.paletteChanged.connect(self.updateStyleSheet)
+        self.updateStyleSheet()
+
+    def reload(self, state: ToolshelfState):
+
+
+
+        self.button_size = int(state.options.button_size * TouchifySettings.instance().preferences().Interface_ToolshelfTabBarScale)
+        self.tab_size = state.options.button_size
+        self.stack_alignment = state.options.stack_alignment
+        self.stack_preview = state.options.stack_preview
+        match state.options.position:
+            case "top":
+                self.orientation = Qt.Orientation.Horizontal
+            case "left":
+                self.orientation = Qt.Orientation.Vertical
+            case "right":
+                self.orientation = Qt.Orientation.Vertical
+            case _:
+                self.orientation = Qt.Orientation.Horizontal
+
+        self.ourLayout.dispose()
+        self.ourLayout.close()
+        self.ourLayout.deleteLater()
+
+        self.ourLayout = ShelfTabBar.LayoutHost(self, self.orientation)
+        self.layout().addWidget(self.ourLayout)
 
         self._rows: dict[int, QWidget] = {}
-        self._buttons: dict[str, TabList.TabItem] = {}
+        self._buttons: dict[str, ShelfTabBar.TabItem] = {}
         self._actions: list[TouchifyActionButton] = []
-
+        self._homeButton: ShelfTabBar.TabItem | None = None
+        
+        
         self.button_size_policy = QSizePolicy()
+        not_default_alignment = self.stack_alignment != ToolshelfDataOptions.StackAlignment.Default
         if self.orientation == Qt.Orientation.Vertical:
-            self.button_size_policy.setHorizontalPolicy(QSizePolicy.Policy.Fixed)
-            if self.header_options.stack_alignment != ToolshelfDataOptions.StackAlignment.Default:
-                self.button_size_policy.setVerticalPolicy(QSizePolicy.Policy.Minimum)
-            else:
-                self.button_size_policy.setVerticalPolicy(QSizePolicy.Policy.MinimumExpanding)
+            self.button_size_policy.setHorizontalPolicy(QSizePolicy.Policy.MinimumExpanding)
+            self.button_size_policy.setVerticalPolicy(QSizePolicy.Policy.Minimum)
         else:
-            if self.header_options.stack_alignment != ToolshelfDataOptions.StackAlignment.Default:
-                self.button_size_policy.setHorizontalPolicy(QSizePolicy.Policy.Minimum)
-            else:
-                self.button_size_policy.setHorizontalPolicy(QSizePolicy.Policy.MinimumExpanding)
+            self.button_size_policy.setHorizontalPolicy(QSizePolicy.Policy.Minimum if not_default_alignment else QSizePolicy.Policy.MinimumExpanding)
             self.button_size_policy.setVerticalPolicy(QSizePolicy.Policy.Fixed)
 
+        self._homeButton = self.createTab("material:home", "ROOT", 0, self.shelf.goToHomePage, "Home")
 
-        homeProps = ToolshelfDataPage()
-        homeProps.toolshelf_tab_row = 0
-        homeProps.id = "ROOT"
-        homeProps.icon = "material:home"
-        self.homeButton = self.createTab(homeProps, self.parent_header.openRootPage, "Home")
-
-        panels = self.cfg.pages
-        for properties in panels:
-            properties: ToolshelfDataPage
-            self.createTab(properties, partial(self.parent_header.openPage, properties.id), properties.id)
+        for idx, properties in enumerate(state.pages):
+            properties: ToolshelfSubState
+            self.createTab("material:home", "Tab_" + str(idx), 0, partial(self.shelf.goToPage, idx),  properties.name)
 
         action_row = 0
-        for action_list in self.header_options.stack_actions:
+        for action_list in state.options.stack_actions:
             action_list: TriggerGroup
             for action in action_list.actions:
                 action: Trigger
@@ -119,39 +160,42 @@ class TabList(QWidget):
             action_row += 1
 
         self.onPageChanged("ROOT")
-        qApp.paletteChanged.connect(self.updateStyleSheet)
-        self.updateStyleSheet()
+        self.adjustSize()
 
-
-    def createRow(self, row: int):
-        isVertical = self.orientation == Qt.Orientation.Vertical
-
-        rowWid = QWidget(self)
-        rowWid.setObjectName("toolshelf-tablist-row")
-        rowWid.setLayout(QVBoxLayout(rowWid) if isVertical else QHBoxLayout(rowWid))
-        rowWid.layout().setSpacing(0)
-        rowWid.layout().setContentsMargins(0, 0, 0, 0)
-        rowWid.setSizePolicy(self.button_size_policy)
-
-
-
-        match self.header_options.stack_alignment:
-            case ToolshelfDataOptions.StackAlignment.Left:
-                if isVertical: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
-                else: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignLeft)
-            case ToolshelfDataOptions.StackAlignment.Center:
-                if isVertical: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignVCenter)
-                else: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignHCenter)
-            case ToolshelfDataOptions.StackAlignment.Right:
-                if isVertical: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignBottom)
-                else: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignRight)
-
-        self._rows[row] = rowWid
-        self.ourLayout.addWidget(rowWid)
     
-    def createTab(self, properties: ToolshelfDataPage, onClick: any, toolTip: str):
-        btn = TabList.TabItem()
-        btn.setIcon(ResourceManager.iconLoader(properties.icon))
+    def addToRow(self, widget: QWidget, row: int):
+        print("Adding item \"", str(widget), "\" to row: ", row)
+        if row not in self._rows:
+            print("Creating new row: ", row)
+            isVertical = self.orientation == Qt.Orientation.Vertical
+            rowWid = QWidget(self)
+            rowWid.setObjectName("toolshelf-tablist-row")
+            rowWid.setLayout(QVBoxLayout(rowWid) if isVertical else QHBoxLayout(rowWid))
+            rowWid.layout().setSpacing(0)
+            rowWid.layout().setContentsMargins(0, 0, 0, 0)
+            rowWid.setSizePolicy(self.button_size_policy)
+
+            match self.stack_alignment:
+                case ToolshelfDataOptions.StackAlignment.Left:
+                    if isVertical: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
+                    else: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignLeft)
+                case ToolshelfDataOptions.StackAlignment.Center:
+                    if isVertical: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignVCenter)
+                    else: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignHCenter)
+                case ToolshelfDataOptions.StackAlignment.Right:
+                    if isVertical: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignBottom)
+                    else: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignRight)
+            self._rows[row] = rowWid
+            self.ourLayout.layout().addWidget(rowWid)
+            rowWid.adjustSize()
+            print("Created new row: ", row)
+        self._rows[row].layout().addWidget(widget)
+        print("Added item \"", str(widget), "\" to row: ", row)
+
+    def createTab(self, icon: str, id: str, tabRow: int, onClick: any, toolTip: str):
+        print("Creating tab:", id)
+        btn = ShelfTabBar.TabItem(self)
+        btn.setIcon(ResourceManager.iconLoader(icon))
         if onClick: 
             btn.clicked.connect(onClick)
 
@@ -159,18 +203,15 @@ class TabList(QWidget):
         btn.setContentsMargins(0,0,0,0)
         btn.setCheckable(True)
 
-        actual_id = properties.id
+        actual_id = id
         actual_id_num = 0
         while actual_id in self._buttons:
-            actual_id = f"{properties.id}{actual_id_num}"
+            actual_id = f"{id}{actual_id_num}"
             actual_id_num += 1
 
         self._buttons[actual_id] = btn
 
-        if properties.toolshelf_tab_row not in self._rows:
-            self.createRow(properties.toolshelf_tab_row)
-
-        self._rows[properties.toolshelf_tab_row].layout().addWidget(btn)
+        self.addToRow(btn, tabRow)
 
         if self.orientation == Qt.Orientation.Vertical:
             btn.setMinimumHeight(self.tab_size)
@@ -180,7 +221,8 @@ class TabList(QWidget):
             btn.setMinimumWidth(self.tab_size)
 
         btn.setSizePolicy(self.button_size_policy)  
-            
+        
+        print("Created tab:", id)
         return btn
     
     def createAction(self, properties: Trigger, action_row: int):
@@ -189,10 +231,7 @@ class TabList(QWidget):
             btn.setContentsMargins(0,0,0,0)
             self._actions.append(btn)
 
-            if action_row not in self._rows:
-                self.createRow(action_row)
-
-            self._rows[action_row].layout().addWidget(btn)
+            self.addToRow(btn, action_row)
 
             if self.orientation == Qt.Orientation.Vertical:
                 btn.setMinimumHeight(self.tab_size)
@@ -203,9 +242,8 @@ class TabList(QWidget):
 
             btn.setSizePolicy(self.button_size_policy)  
     
-
-    def applyButtonRules(self, btn: TabItem, btn_id: str, page_id: str):
-        preview_type = self.header_options.stack_preview
+    def applyButtonRules(self, btn: "ShelfTabBar.TabItem", btn_id: str, page_id: str):
+        preview_type = self.stack_preview
         should_hide = False
         should_check = False
 
@@ -292,7 +330,7 @@ class TabList(QWidget):
         self.setStyleSheet(stylesheet)  
 
     def applyActionRules(self, btn: TouchifyActionButton, page_id: str):
-        preview_type = self.header_options.stack_preview
+        preview_type = self.stack_preview
         should_hide = False
 
         match preview_type:
@@ -312,7 +350,8 @@ class TabList(QWidget):
             btn = self._buttons[btn_id]
             self.applyButtonRules(btn, btn_id, page_id)
 
-        self.applyButtonRules(self.homeButton, "ROOT", page_id)
+        if self._homeButton:
+            self.applyButtonRules(self._homeButton, "ROOT", page_id)
 
         for act in self._actions:
             self.applyActionRules(act, page_id)

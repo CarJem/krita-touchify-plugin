@@ -10,7 +10,7 @@ from touchify.src.config.toolshelf.ToolshelfData import ToolshelfData
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.components.common.widget.AnimatedWidget import AnimatedWidget
 from touchify.src.components.common.labels.ElidedLabel import ElidedLabel
-from touchify.src.components.toolshelf.ToolshelfWidget import ToolshelfWidget
+from touchify.src.components.toolshelf_old.ToolshelfWidget import ToolshelfWidget
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.managers.shared.settings_krita import KritaSettings
 

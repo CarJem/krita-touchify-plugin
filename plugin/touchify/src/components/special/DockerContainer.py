@@ -112,7 +112,9 @@ class DockerContainer(QWidget):
         self.updateVisibility()
 
     def _unloadDocker(self):
-        self.borrowedDocker.removeEventFilter(self)
+        if self.borrowedDocker != None:
+            self.borrowedDocker.removeEventFilter(self)
+            
         self.docker_manager.unloadDocker(self.docker_id)
         self.dockerChanged.emit()
         self.updateVisibility()

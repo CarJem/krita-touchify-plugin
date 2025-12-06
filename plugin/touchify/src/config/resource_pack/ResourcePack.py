@@ -84,7 +84,7 @@ class ResourcePack:
             for fileName in files:
                 filePath = os.path.join(subpath, fileName)
                 if fileName.lower().endswith(".json"):
-                    _item = JsonExtensions.loadClass(filePath, type)
+                    _item = JsonExtensions.loadClassFromFile(filePath, type)
                     self.INTERNAL_active_files.append(filePath)
                     _item.propertygrid_on_duplicate = types.MethodType(ResourcePack.onDuplicateListItem, _item)
                     _item.INTERNAL_FILEPATH_ID = filePath
@@ -102,7 +102,7 @@ class ResourcePack:
             for contentName in contents:
                 contentPath = os.path.join(self.INTERNAL_ROOT_DIRECTORY, contentName)
                 if os.path.isfile(contentPath) and contentName == "metadata.json":
-                    self.metadata = JsonExtensions.loadClass(contentPath, ResourcePackMetadata)
+                    self.metadata = JsonExtensions.loadClassFromFile(contentPath, ResourcePackMetadata)
 
                 elif os.path.isdir(contentPath) and contentName == "triggers":
                     self.triggers = loadItems(contentPath, Trigger)
@@ -193,11 +193,11 @@ class ResourcePack:
                 if hasattr(item, "propertygrid_on_duplicate"):
                     del outputData.propertygrid_on_duplicate
 
-                JsonExtensions.saveClass(outputData, filePath)
+                JsonExtensions.saveClassToFile(outputData, filePath)
             
 
 
-        JsonExtensions.saveClass(self.metadata, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "metadata.json"))
+        JsonExtensions.saveClassToFile(self.metadata, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "metadata.json"))
         saveItems(self.triggers, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "triggers"))
         saveItems(self.menus, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "menus"))
         saveItems(self.toolboxes, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "toolboxes"))

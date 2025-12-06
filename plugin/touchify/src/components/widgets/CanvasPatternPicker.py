@@ -7,11 +7,13 @@ from touchify.__env__ import *
 
 
 from typing import TYPE_CHECKING
+
+from touchify.src.components.common.buttons.IconButton import IconButton
 if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
 from touchify.src.api_krita.wrappers.window import WindowAPI
 
-class CanvasPatternPicker(QPushButton):
+class CanvasPatternPicker(IconButton):
 
     def __init__(self, parent: QWidget | None = None):
         super(CanvasPatternPicker, self).__init__(parent)
@@ -73,12 +75,6 @@ class CanvasPatternPicker(QPushButton):
 
         self.cached_pixmap = pixmap
         self.setIcon(QIcon(self.cached_pixmap))
-  
-
-    def resizeEvent(self, a0: QResizeEvent):
-        self.setIconSize(self.size().shrunkBy(QMargins(4,4,4,4)))
-        self.updateIcon()
-        return super().resizeEvent(a0)
 
     def onPatternChanged(self, current_pattern: Resource):
         self.pattern = current_pattern

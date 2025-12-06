@@ -1,3 +1,4 @@
+from typing import Any
 import weakref
 
 from ..Qt import QtWidgets
@@ -16,7 +17,7 @@ class DockArea(Container, QtWidgets.QWidget):
         self.layout.setContentsMargins(0,0,0,0)
         self.layout.setSpacing(0)
         self.setLayout(self.layout)
-        self.docks = weakref.WeakValueDictionary()
+        self.docks: weakref.WeakValueDictionary[str, Dock | Any] = weakref.WeakValueDictionary()
         self.topContainer = None
         self.dockdrop.raiseOverlay()
         self.temporary = temporary

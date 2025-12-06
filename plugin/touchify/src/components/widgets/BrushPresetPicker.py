@@ -5,14 +5,17 @@ from touchify.__env__ import *
 
 from touchify.src.api_krita.wrappers.window import WindowAPI
 from typing import TYPE_CHECKING
+
+from touchify.src.components.common.buttons.IconButton import IconButton
 if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
 
-class BrushPresetPicker(QPushButton):
+class BrushPresetPicker(IconButton):
 
     def __init__(self, parent: QWidget | None = None):
         super(BrushPresetPicker, self).__init__(parent)
         self.clicked.connect(self.openBrushPicker)
+        self.setContentsMargins(0,0,0,0)
 
     def setInstance(self, window: WindowAPI, managers: "TouchifyManagers"):
         self.managers = managers
@@ -21,14 +24,7 @@ class BrushPresetPicker(QPushButton):
         self.onBrushChanged(self.notifier.getCurrentBrush())
 
     def openBrushPicker(self):
-        self.managers.mgr_actions.Create_Popup("touchify_internal_brush_picker", self)
-    
-    def paintEvent(self, event: QPaintEvent):
-        super().paintEvent(event)
-
-    def resizeEvent(self, a0: QResizeEvent):
-        self.setIconSize(a0.size().shrunkBy(QMargins(4,4,4,4)))
-        return super().resizeEvent(a0)
+        self.managers.mgr_actions.Create_Popup("touchify_internal_brush_picker", self) 
 
     def onBrushChanged(self, current_brush: Resource):
         self.brush = current_brush

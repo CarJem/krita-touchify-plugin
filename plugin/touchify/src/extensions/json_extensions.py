@@ -12,14 +12,26 @@ from krita import *
 
 class JsonExtensions:
 
-    def loadClass(filePath: str, type: type):
+
+
+    def loadClass(jsonStr: str, type: type):
+        try:
+            return type(**json.loads(jsonStr))
+        except:
+            print("failed to load json class of type: " + str(type))
+            return type()
+
+    def saveClass(data: any) -> str:
+        return json.dumps(data, default=lambda o: o.__dict__, indent=4)
+
+    def loadClassFromFile(filePath: str, type: type):
         try:
             with open(filePath) as f:
                 return type(**json.load(f))
         except:
             return type()
             
-    def saveClass(data: any, filePath: str):
+    def saveClassToFile(data: any, filePath: str):
         with open(filePath, "w") as f:
             json.dump(data, f, default=lambda o: o.__dict__, indent=4)
 

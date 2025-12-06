@@ -24,7 +24,6 @@ class PrototypeDockWidgetContainer(DockArea):
         w1 = LayoutWidget()
         w1.addWidget(widget, row=0, col=0)
         d1.addWidget(w1)
-        self.addDock(d1)
         return d1
         
 
@@ -32,17 +31,28 @@ class PrototypeDockWidgetContainer(DockArea):
         w1 = QWidget()
         w1.setStyleSheet("background-color: red")
         d1 = self.addDockWidget("Dock1", w1)
+        self.addDock(d1, "bottom", None)
 
         w2 = QWidget()
         w2.setStyleSheet("background-color: blue")
         d2 = self.addDockWidget("Dock2", w2)
+        self.addDock(d2, "right", self)
 
         w3 = QWidget()
         w3.setStyleSheet("background-color: green")
         d3 = self.addDockWidget("Dock3", w3)
+        self.addDock(d3, "right", self)
 
         w4 = QWidget()
         w4.setStyleSheet("background-color: yellow")
         d4 = self.addDockWidget("Dock4", w4)
+        self.addDock(d4, "right", self)
+
+
+        w5 = QWidget()
+        w5.setStyleSheet("background-color: orange")
+        d5 = self.addDockWidget("Dock5", w5)
+        self.addDock(d5, "bottom", self)
+        self.moveDock(d1, "left", self)
 
 

@@ -6,7 +6,7 @@ from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.canvas.NtWidgetPad import NtWidgetPad
 from krita import *
 from touchify.__env__ import *
-from touchify.src.components.toolshelf.ToolshelfCanvasWidget import ToolshelfCanvasWidget
+from touchify.src.components.toolshelf_old.ToolshelfCanvasWidget import ToolshelfCanvasWidget
 
 from typing import TYPE_CHECKING
 

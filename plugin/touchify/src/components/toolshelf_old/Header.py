@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 
 
 from touchify.src.api_krita import KritaAPI
-from touchify.src.components.toolshelf.Menu import Menu
+from touchify.src.components.toolshelf_old.Menu import Menu
 
 from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
 from touchify.src.config.toolshelf.ToolshelfData import ToolshelfData

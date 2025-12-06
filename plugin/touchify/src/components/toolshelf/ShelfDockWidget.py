@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 
 from touchify.src.managers.normal.canvas import CanvasManager
 from touchify.src.managers.shared.events import GlobalEvents
-from touchify.src.managers.shared.settings import TouchifySettings
 
 from touchify.src.managers.normal.dockers import DockerManager
 from touchify.src.managers.normal.action_manager import ActionManager
@@ -15,11 +14,11 @@ if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
     from touchify.src.PluginManagers import TouchifyManagers
 
-from touchify.src.components.toolshelf.ToolshelfWidget import ToolshelfWidget
+from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
 
 DOCKER_TITLE="Touchify Core: Toolshelf"
 
-class ToolshelfDockWidget(DockWidget):
+class ShelfDockWidget(DockWidget):
 
     resizeByDefaultRequested=pyqtSignal()
 
@@ -27,12 +26,11 @@ class ToolshelfDockWidget(DockWidget):
         super().__init__()
         self.app_window: "TouchifyWindow" = None
         self.managers: "TouchifyManagers" = None
-        self.toolshelfHost: ToolshelfWidget = None
+        self.toolshelfHost: ShelfWidget = None
         self.docker_manager: DockerManager = None
         self.actions_manager: ActionManager = None
         self.canvas_manager: CanvasManager = None
-        self.PanelIndex = -1
-        self.previous_state: ToolshelfWidget.PreviousState = ToolshelfWidget.PreviousState()
+        self.PanelIndex = 1
         self.setWindowTitle(DOCKER_TITLE)
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
         GlobalEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.connect(self.onPresetChanged)
@@ -43,28 +41,15 @@ class ToolshelfDockWidget(DockWidget):
         self.app_window = app_window
         self.managers = app_window.managers
         self.onLoaded()
-
-    def onResizeByDefaultRequested(self):
-        self.resizeByDefaultRequested.emit()
     
     def onLoaded(self):              
-        self.mainWidget = ToolshelfWidget(self, self.managers, TouchifySettings.instance().getActiveToolshelf(self.PanelIndex), self.PanelIndex)
-        self.mainWidget.resizeByDefaultRequested.connect(self.onResizeByDefaultRequested)
-        self.mainWidget.toolshelfPageChanged.connect(self.onToolshelfPageChanged)
-        self.mainWidget.toolshelfResized.connect(self.onToolshelfResize)
-        self.mainWidget.toolshelfChanged.connect(self.onToolshelfChanged)
+        self.mainWidget = ShelfWidget(self, self.managers, self.PanelIndex)
         self.setWidget(self.mainWidget)
-        self.mainWidget.restorePreviousState(self.previous_state)
 
     def onUnload(self):
         if not hasattr(self, 'mainWidget'): return
         if not self.mainWidget: return
-        
-        self.previous_state = self.mainWidget.backupPreviousState()
-        self.mainWidget.toolshelfPageChanged.disconnect(self.onToolshelfPageChanged)
-        self.mainWidget.toolshelfResized.disconnect(self.onToolshelfResize)
-        self.mainWidget.toolshelfChanged.disconnect(self.onToolshelfChanged)
-        self.mainWidget.shutdownWidget()
+    
         self.mainWidget.deleteLater()
         self.mainWidget = None
 
@@ -125,8 +110,8 @@ class ToolshelfDockWidget(DockWidget):
     def canvasChanged(self, canvas):
         pass
 
-class ToolshelfDockWidgetAlt(ToolshelfDockWidget):
+class ShelfDockWidgetAlt(ShelfDockWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(DOCKER_TITLE + " (Alt)")
-        self.PanelIndex = -2
+        self.PanelIndex = 2

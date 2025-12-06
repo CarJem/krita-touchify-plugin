@@ -5,6 +5,7 @@ from xml.dom.minidom import parse as xmlParse
 
 from touchify.src.api_krita import KritaAPI
 from touchify.src.api_krita.wrappers.window import WindowAPI
+from touchify.src.components.common.buttons.IconButton import IconButton
 from touchify.src.components.common.painters.CheckerPainter import CheckerPainter
 from touchify.__env__ import *
 
@@ -269,7 +270,7 @@ class GradientLoader:
             return gradientData
         
 
-class CanvasGradientPicker(QPushButton):
+class CanvasGradientPicker(IconButton):
 
     def __init__(self, parent: QWidget | None = None):
         super(CanvasGradientPicker, self).__init__(parent)
@@ -283,9 +284,6 @@ class CanvasGradientPicker(QPushButton):
 
     def openBrushPicker(self):
         self.managers.mgr_actions.Create_Popup("gradient_chooser_popup", self)
-    
-    def paintEvent(self, event: QPaintEvent):
-        super().paintEvent(event)
 
     def updateIcon(self):
         if self.gradient:
@@ -339,8 +337,6 @@ class CanvasGradientPicker(QPushButton):
         if pixmap: self.setIcon(QIcon(pixmap))
 
     def resizeEvent(self, a0: QResizeEvent):
-        self.setIconSize(a0.size().shrunkBy(QMargins(4,4,4,4)))
-        self.updateIcon()
         return super().resizeEvent(a0)
 
     def onGradientChanged(self, current_gradient: Resource):

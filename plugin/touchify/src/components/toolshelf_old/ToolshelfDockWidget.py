@@ -12,10 +12,10 @@ from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.managers.normal.dockers import DockerManager
 from touchify.src.managers.normal.action_manager import ActionManager
 if TYPE_CHECKING:
-    from ....PluginWindow import TouchifyWindow
+    from ...PluginWindow import TouchifyWindow
     from touchify.src.PluginManagers import TouchifyManagers
 
-from touchify.src.components.toolshelf.ToolshelfWidget import ToolshelfWidget
+from touchify.src.components.toolshelf_old.ToolshelfWidget import ToolshelfWidget
 
 DOCKER_TITLE="Touchify Core: Toolshelf"
 

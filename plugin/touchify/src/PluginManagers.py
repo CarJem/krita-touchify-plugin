@@ -16,7 +16,7 @@ from touchify.src.managers.normal.shortcuts import ShortcutsManager
 from touchify.src.managers.normal.tweaks import TweakManager
 
 
-from touchify.src.components.toolshelf.ToolshelfDockWidget import ToolshelfDockWidget, ToolshelfDockWidgetAlt
+from touchify.src.components.toolshelf.ShelfDockWidget import ShelfDockWidget, ShelfDockWidgetAlt
 from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
 
 if TYPE_CHECKING:
@@ -83,10 +83,10 @@ class TouchifyManagers:
                 docker.setWindowTitle(window_title.removeprefix(touchify_title_prefix))
 
             if docker_id == TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_ALT:
-                toolshelfAltDocker: ToolshelfDockWidget = docker
+                toolshelfAltDocker: ShelfDockWidget = docker
                 toolshelfAltDocker.setup(window)
             elif docker_id == TOUCHIFY_DOCKERID_TOOLSHELFDOCKER:
-                toolshelfDocker: ToolshelfDockWidgetAlt = docker
+                toolshelfDocker: ShelfDockWidgetAlt = docker
                 toolshelfDocker.setup(window)
             elif docker_id == TOUCHIFY_DOCKERID_DOCKER_TOOLBOX:
                 toolboxDocker: ToolboxDocker = docker
