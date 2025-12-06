@@ -5,12 +5,15 @@ from PyQt5.QtCore import *
 from touchify.__env__ import *
 from touchify.src.api_krita import KritaAPI
 from touchify.src.api_krita.wrappers.window import WindowAPI
+from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
 from touchify.src.config.popup.PopupData import PopupData
-from touchify.src.config.toolshelf_legacy.ToolshelfData import ToolshelfData
+from touchify.src.config.toolshelf.Toolshelf import Toolshelf
+from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
+from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
+from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.components.common.widget.AnimatedWidget import AnimatedWidget
 from touchify.src.components.common.labels.ElidedLabel import ElidedLabel
-from touchify.src.components.toolshelf_legacy.ToolshelfWidget import ToolshelfWidget
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.managers.shared.settings_krita import KritaSettings
 
@@ -137,7 +140,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
             self.position: QPoint = position
             self.size: QSize = size
 
-    def __init__(self, parent: QWidget, id: str, args: PopupData, toolshelf_data: ToolshelfData, managers: "TouchifyManagers"):     
+    def __init__(self, parent: QWidget, id: str, args: PopupData, toolshelf_data: ToolshelfContainer, managers: "TouchifyManagers"):     
         QDockWidget.__init__(self, parent)  
         #TODO: Improve Performance
         AnimatedWidget.__init__(self, parent, 0) #0.1        
@@ -145,7 +148,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
         self.Components()
         self.Connections()
 
-    def Variables(self, id: str, args: PopupData, toolshelf_data: ToolshelfData, managers: "TouchifyManagers"):
+    def Variables(self, id: str, args: PopupData, toolshelf_data: ToolshelfContainer, managers: "TouchifyManagers"):
         self.config = args
         self.registry_id = id
         self.managers: "TouchifyManagers" = managers
@@ -166,7 +169,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
         self.State_hasOpenedOnce = False
         self.State_dockWidgetType = self.config.window_type
         self.State_resizingAllowed = self.State_dockWidgetType == PopupData.WindowType.Window
-        self.State_resizingEnabled = self.toolshelf_data.header_options.default_to_resize_mode if self.State_resizingAllowed else False
+        self.State_resizingEnabled = True if self.toolshelf_data.options.resize_style == ToolshelfSettings.ResizeStyle.Default else False
         self.State_currentDockLocation = Qt.DockWidgetArea.NoDockWidgetArea
 
         if self.State_dockWidgetType == PopupData.WindowType.Window:
@@ -197,10 +200,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
         self.container_grid.setSpacing(0)
         self.container_widget.setLayout(self.container_grid)
 
-        self.toolshelf_widget = ToolshelfWidget(self, self.managers, self.toolshelf_data)
-        self.toolshelf_widget.dataLoaded.connect(self.OnEvent_ToolshelfUpdated)
-        self.toolshelf_widget.toolshelfResized.connect(self.OnEvent_ToolshelfUpdated)
-        self.toolshelf_widget.toolshelfPageChanged.connect(self.OnEvent_ToolshelfUpdated)
+        self.toolshelf_widget = ShelfWidget(self, self.managers, 0, self.toolshelf_data)
         self.container_grid.addWidget(self.toolshelf_widget)
 
         if self.State_dockWidgetType == PopupData.WindowType.Window:
@@ -217,21 +217,13 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
     def Connections(self):
         self.dockLocationChanged.connect(self.OnEvent_DockLocationChanged)
 
-    def Construct(id: str, parent: QWidget, data: PopupData, managers: "TouchifyManagers"):      
-        from touchify.src.config.toolshelf_legacy.ToolshelfDataOptions import ToolshelfDataOptions
-        from touchify.src.config.toolshelf_legacy.ToolshelfDataPage import ToolshelfDataPage
-        from touchify.src.config.toolshelf_legacy.ToolshelfDataSection import ToolshelfDataSection
-        
+    def Construct(id: str, parent: QWidget, data: PopupData, managers: "TouchifyManagers"):              
         def constructDockerType(metadata: PopupData):  
-            toolshelf_data: ToolshelfData = ToolshelfData()
-            toolshelf_data.header_options = ToolshelfDataOptions()
-            toolshelf_data.homepage = ToolshelfDataPage()
-            toolshelf_data.header_options.show_menu_button = False
-            toolshelf_data.header_options.show_pin_button = False
-            toolshelf_data.header_options.show_tabs = False
-            toolshelf_data.header_options.show_titlebar = False
-            toolshelf_data.header_options.default_to_resize_mode = True
-
+            toolshelf_data: ToolshelfContainer = ToolshelfContainer()
+            toolshelf_data.options.show_menu_button = False
+            toolshelf_data.options.show_pin_button = False
+            toolshelf_data.options.show_tabs = False
+            toolshelf_data.options.show_titlebar = False
 
             dockers = [ ]
 
@@ -242,37 +234,36 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
                     dockers.append(item.id)
             else:
                 dockers.append(metadata.docker_id)
-            
-            toolshelf_data.homepage.tab_type = metadata.dockers_tab_type
+        
+            #TODO: Fix
+            #toolshelf_data.homepage.tab_type = metadata.dockers_tab_type
 
             for docker_id in dockers:
-                docker_section: ToolshelfDataSection = ToolshelfDataSection()
-                docker_section.section_type = ToolshelfDataSection.SectionType.Docker
-                docker_section.docker_nesting_mode = ToolshelfDataSection.DockerNestingMode.Docking
-                docker_section.docker_unloaded_visibility = ToolshelfDataSection.DockerUnloadedVisibility.Hidden
+                docker_section: ToolshelfDock = ToolshelfDock()
+                docker_section.section_type = ToolshelfDock.SectionType.Docker
+                docker_section.docker_nesting_mode = ToolshelfDock.DockerNestingMode.Docking
+                docker_section.docker_unloaded_visibility = ToolshelfDock.DockerUnloadedVisibility.Hidden
                 docker_section.docker_id = docker_id
                 docker_section.size_x = metadata.popup_width
                 docker_section.size_y = metadata.popup_height
                 docker_section.min_size_x = metadata.popup_min_width
                 docker_section.min_size_y = metadata.popup_min_height
-                toolshelf_data.homepage.sections.append(docker_section)
+                toolshelf_data.items[docker_id] = docker_section
 
             return toolshelf_data
         
         def constructActionType(metadata: PopupData):
-            toolshelf_data: ToolshelfData = ToolshelfData()
-            toolshelf_data.header_options = ToolshelfDataOptions()
-            toolshelf_data.homepage = ToolshelfDataPage()
-            toolshelf_data.header_options.show_menu_button = False
-            toolshelf_data.header_options.show_pin_button = False
-            toolshelf_data.header_options.show_tabs = False
-            toolshelf_data.header_options.show_titlebar = False
+            toolshelf_data: ToolshelfContainer = ToolshelfContainer()
+            toolshelf_data.options.show_menu_button = False
+            toolshelf_data.options.show_pin_button = False
+            toolshelf_data.options.show_tabs = False
+            toolshelf_data.options.show_titlebar = False
 
 
-            action_section: ToolshelfDataSection = ToolshelfDataSection()
-            action_section.section_type = ToolshelfDataSection.SectionType.Actions
+            action_section: ToolshelfDock = ToolshelfDock()
+            action_section.section_type = ToolshelfDock.SectionType.Actions
             action_section.action_section_icon_size =  metadata.actions_icon_size
-            action_section.action_section_display_mode = ToolshelfDataSection.ActionSectionDisplayMode.Detailed
+            action_section.action_section_display_mode = ToolshelfDock.ActionSectionDisplayMode.Detailed
             action_section.action_section_contents = metadata.actions_items
             action_section.action_section_btn_height = metadata.actions_item_height
             action_section.action_section_btn_width = metadata.actions_item_width
@@ -281,20 +272,21 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
             action_section.size_x = metadata.popup_width
             action_section.size_y = metadata.popup_height
 
-            toolshelf_data.homepage.sections.append(action_section)
+            toolshelf_data.items["action_list"] = action_section
             return toolshelf_data
 
         match data.type:
             case PopupData.Variants.Actions:
-                toolshelf_data: ToolshelfData = constructActionType(data)
-            case PopupData.Variants.Docker |PopupData.Variants.MultipleDockers:
-                toolshelf_data: ToolshelfData = constructDockerType(data)
-            case PopupData.Variants.Toolshelf:
-                toolshelf_data: ToolshelfData = TouchifySettings.instance().getRegistryItem(data.toolshelf_id, ToolshelfData)
+                toolshelf_data: ToolshelfContainer = constructActionType(data)
+            case PopupData.Variants.Docker | PopupData.Variants.MultipleDockers:
+                toolshelf_data: ToolshelfContainer = constructDockerType(data)
+            case PopupData.Variants.Shelf:
+                toolshelf: Toolshelf = TouchifySettings.instance().getRegistryItem(data.shelf_id, Toolshelf)
+                toolshelf_data = toolshelf.preset_data
             case _:
                 toolshelf_data = None
         
-        if not isinstance(toolshelf_data, ToolshelfData) or toolshelf_data == None: return None                
+        if not isinstance(toolshelf_data, ToolshelfContainer) or toolshelf_data == None: return None                
         return TouchifyPopup(parent, id, data, toolshelf_data, managers)
 
     #region Geometry Methods
@@ -455,6 +447,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
     #region Popup Methods
 
     def Popup_Open(self, parent: QWidget = None):
+        print("attempting to open")
         if self.isVisible():
             self.Popup_Close()
             if not self.State_dockWidgetType == PopupData.WindowType.Popup: 
@@ -602,5 +595,9 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
 
     def enterEvent(self, e: QEnterEvent):
         return super().enterEvent(e)
+    
+
+    def shelfReloadEvent(self, state: ToolshelfContainer):
+        pass
     
     #endregion

@@ -125,8 +125,7 @@ class TriggerPanel:
     def propertygrid_sorted(self):
         return [
             "general_groups",
-            "variant_data_group",
-            "subpanel_data"
+            "variant_data_group"
         ]
     
     def propertygrid_hidden(self):
@@ -176,12 +175,6 @@ class TriggerPanel:
         labels["action_section_btn_size"] = "Button Width / Height"
         labels["action_section_alignment"] = "Horizontal / Vertical Alignment"
         labels["action_section_icon_size"] = "Icon Size"
-
-        labels["special_item_type"] = "Component Type"
-
-        labels["subpanel_mode"] = "Subpanel Mode"
-        labels["subpanel_data"] = "Subpanel Options"
-        labels["subpanel_id"] = "Subshelf ID"
         return labels
     
     def propertygrid_sisters(self):
@@ -207,10 +200,7 @@ class TriggerPanel:
             "action_section_btn_size",
             "action_section_alignment", 
             "action_section_icon_size",
-            "action_section_contents",
-            "special_item_type",
-            "subpanel_mode",
-            "subpanel_id"
+            "action_section_contents"
         ]
 
         row["general_group"] = {"items": global_groups, "is_group": True}
@@ -247,10 +237,4 @@ class TriggerPanel:
         restrictions["action_section_alignment_x"] = PropertyGrid_Restrictions.strValues(self.SectionAlignmentX.values())
         restrictions["action_section_alignment_y"] = PropertyGrid_Restrictions.strValues(self.SectionAlignmentY.values())
         restrictions["action_section_icon_size"] = PropertyGrid_Restrictions.range(min=0)
-
-        restrictions["special_item_type"] = PropertyGrid_Restrictions.strValues(self.SpecialItemType.values())
-
-        restrictions["subpanel_data"] = PropertyGrid_Restrictions.expandable()
-        restrictions["subpanel_mode"] = PropertyGrid_Restrictions.strValues(self.SubpanelMode.values())
-        restrictions["subpanel_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ToolshelfRegistry)
         return restrictions

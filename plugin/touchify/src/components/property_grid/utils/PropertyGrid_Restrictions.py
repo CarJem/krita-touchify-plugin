@@ -24,6 +24,7 @@ class PropertyGrid_Restrictions:
         ScriptRegistry="registry_script_selection"
         PieWheelRegistry="registry_piewheel_selection"
         ToolshelfRegistry="registry_toolshelf_selection"
+        ShelfRegistry="registry_shelf_selection"
 
     class NumberMod(EnumStr):
         Range="range"
@@ -66,7 +67,8 @@ class PropertyGrid_Restrictions:
             PropertyGrid_Restrictions.StrMod.MenuRegistry,
             PropertyGrid_Restrictions.StrMod.ScriptRegistry,
             PropertyGrid_Restrictions.StrMod.PieWheelRegistry,
-            PropertyGrid_Restrictions.StrMod.ToolshelfRegistry
+            PropertyGrid_Restrictions.StrMod.ToolshelfRegistry,
+            PropertyGrid_Restrictions.StrMod.ShelfRegistry
         ]
 
     def range(min: any = None, max: any = None):

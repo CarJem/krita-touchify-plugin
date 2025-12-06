@@ -6,7 +6,7 @@
     "window_docking_allowed": false,
     "window_remember_layout": false,
     "window_fixed_layout": "off",
-    "type": "toolshelf",
+    "type": "shelf",
     "closing_method": "default",
     "clamp_to_main_window": true,
     "popup_position_x": "default",
@@ -22,6 +22,6 @@
     "docker_id": "",
     "dockers_list": [],
     "dockers_tab_type": "tabs",
-    "toolshelf_id": "vaporjem/toolshelves/vaporjem_brushes",
+    "shelf_id": "vaporjem/shelves/better_brush_presets",
     "json_version": 5
 }

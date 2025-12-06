@@ -46,7 +46,7 @@ class ShelfDockWidget(DockWidget):
         if self.shrinkToFit:
             self.adjustSize()
 
-    def shelfReload(self, state: ToolshelfContainer):
+    def shelfReloadEvent(self, state: ToolshelfContainer):
         if state.options.resize_style == ToolshelfSettings.ResizeStyle.Minimum:
             self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
             self.shrinkToFit = True

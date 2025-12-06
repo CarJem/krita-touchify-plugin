@@ -34,11 +34,19 @@ if TYPE_CHECKING:
 class ShelfWidget(QWidget):
     sigShelfIndexChanged = QtCore.pyqtSignal()
 
-    def __init__(self, parent, managers: "TouchifyManagers", registry_index: int = 0):
+    def __init__(self, parent, managers: "TouchifyManagers", registry_index: int = 0, enforced_data: ToolshelfContainer = None):
         super(ShelfWidget, self).__init__(parent)
         self.display: "ShelfDockWidget" | "ShelfDockWidgetAlt" | "TouchifyPopup" = parent
         self.managers = managers
         self.registry_index = registry_index
+
+
+        if enforced_data != None:
+            self.constant_data = enforced_data
+            self.is_restricted = True
+        else:
+            self.constant_data = None
+            self.is_restricted = False
 
         self.hasPreloaded = False
 
@@ -189,6 +197,9 @@ class ShelfWidget(QWidget):
             self.loadLayout()
 
     def saveLayout(self):
+        if self.is_restricted: 
+            return
+
         state = JsonExtensions.saveClass(self.currentState())
         if self.currentPresetId().lower() != "none":
             if self.isAutoSaveEnabled(): self.savePreset(True)
@@ -210,11 +221,18 @@ class ShelfWidget(QWidget):
         self.resetLayout()
         state: ToolshelfContainer
 
-        if self.currentPresetId().lower() != "none":
+
+
+        if self.is_restricted:
+            state: ToolshelfContainer = deepcopy(self.constant_data)
+        elif self.currentPresetId().lower() != "none":
             state: ToolshelfContainer = TouchifySettings.instance().getActiveShelf(self.registry_index).preset_data
         else:
             jsonStr = KritaSettings.readSetting("TOUCHIFY_TEMP", "TOUCHIFY_TOOLSHELF_DOCKER_CONFIGURATION_" + str(self.registry_index), "")
             state: ToolshelfContainer = JsonExtensions.loadClass(jsonStr, ToolshelfContainer)
+
+        if state == None:
+            return
 
         self.containerOptions: ToolshelfSettings = state.options
         self.homepageOptions: ToolshelfPageSettings = state.pageOptions
@@ -250,7 +268,7 @@ class ShelfWidget(QWidget):
         self.tabBar.reload(state)
         self.header.reload(state, self.currentPresetId())
 
-        self.display.shelfReload(state)
+        self.display.shelfReloadEvent(state)
 
     def editLayout(self):
         dlg = self.__setupDialog(self.containerOptions)

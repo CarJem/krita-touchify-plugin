@@ -27,6 +27,7 @@ class PopupData:
         Docker = "docker"
         MultipleDockers = "multiple_dockers"
         Toolshelf = "toolshelf"
+        Shelf = "shelf"
 
     class WindowType(EnumStr):
         Popup = "popup"
@@ -79,9 +80,7 @@ class PopupData:
         self.dockers_list: TypedList[DockerItem] = []
         self.dockers_tab_type: str = "tabs"
         
-        
-        
-        self.toolshelf_id: str = ""
+        self.shelf_id: str = ""
 
         self.json_version: int = 5
 
@@ -166,7 +165,7 @@ class PopupData:
         ]
 
         toolshelf_mode_settings = [
-            "toolshelf_id"
+            "shelf_id"
         ]
 
 
@@ -228,7 +227,7 @@ class PopupData:
         ]
 
         toolshelf_mode_settings = [
-            "toolshelf_id"
+            "shelf_id"
         ]
 
         if self.window_type != PopupData.WindowType.Window:
@@ -253,7 +252,7 @@ class PopupData:
         if self.type != PopupData.Variants.Actions:
             for item in action_mode_settings:
                 result.append(item)
-        if self.type != PopupData.Variants.Toolshelf:
+        if self.type != PopupData.Variants.Shelf:
             for item in toolshelf_mode_settings:
                 result.append(item)
 
@@ -275,7 +274,7 @@ class PopupData:
         labels["actions_item_size"] = "Item Size"
         labels["actions_icon_size"] = "Icon Size"
         labels["actions_items"] = "Actions"
-        labels["toolshelf_id"] = "Toolshelf ID"
+        labels["shelf_id"] = "Toolshelf ID"
         labels["window_title"] = "Window Title"
         labels["closing_method"] = "Closing Method"
         labels["popup_position"] = "Popup Position"
@@ -292,7 +291,7 @@ class PopupData:
         restrictions["closing_method"] = PropertyGrid_Restrictions.strValues(self.ClosingMethod.values())
         restrictions["dockers_tab_type"] = PropertyGrid_Restrictions.strValues(self.DockersTabType.values())
         restrictions["window_fixed_layout"] = PropertyGrid_Restrictions.strValues(self.WindowFixedLayoutMode.values())
-        restrictions["toolshelf_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ToolshelfRegistry)
+        restrictions["shelf_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ShelfRegistry)
 
         restrictions["actions_item_height"] = PropertyGrid_Restrictions.range(min=0)
         restrictions["actions_item_width"] = PropertyGrid_Restrictions.range(min=0)

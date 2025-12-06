@@ -131,6 +131,9 @@ class ShelfToolbar(QWidget):
     #region Actions
 
     def showToolbarMenu(self):
+        if self.shelf.is_restricted:
+            return
+        
         self.mainButton.setMenu(self.optionsMenu)
         self.mainButton.showMenu()
     

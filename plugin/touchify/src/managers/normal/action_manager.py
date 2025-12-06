@@ -205,8 +205,11 @@ class ActionManager(QObject):
             if popup_id in self.active_popups: 
                 del self.active_popups[popup_id]
 
+            print("attempting to build")
             popup = TouchifyPopup.Construct(id, self.api_window.qwindow.window(), data, self.managers)
-            if popup == None: return
+            if popup == None: 
+                print("failed to build")
+                return
             
             self.active_popups[popup_id] = popup
 
