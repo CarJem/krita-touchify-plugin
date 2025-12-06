@@ -1,3 +1,4 @@
+from functools import partial
 from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QPushButton, QSizePolicy
 from krita import *
@@ -7,6 +8,7 @@ from PyQt5.QtWidgets import *
 from touchify.src.api_krita import KritaAPI
 
 
+from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
 from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
 from touchify.src.managers.shared.settings import TouchifySettings
@@ -34,14 +36,20 @@ class ShelfToolbar(QWidget):
         self.ourLayout.setContentsMargins(0,0,0,0)
         self.setLayout(self.ourLayout)
 
-        self.optionsMenu = ShelfToolbarMenu(self)
+        self.optionsMenu = ShelfToolbarMenu(self, self.shelf.currentPresetId())
         self.optionsMenu.aboutToHide.connect(self.onHideSettings)
         self.optionsMenu.sigEditModeToggled.connect(self.shelf.onEditModeChanged)
-        self.optionsMenu.sigAddShelfItemRequested.connect(self.shelf.insertShelf)
-        self.optionsMenu.sigSettingsRequested.connect(self.shelf.openShelfSettings)
+        self.optionsMenu.sigAddShelfItemRequested.connect(self.shelf.insertShelfItem)
+        self.optionsMenu.sigSettingsRequested.connect(self.shelf.editLayout)
         self.optionsMenu.sigAddPageRequested.connect(self.shelf.insertPage)
         self.optionsMenu.sigEditPageRequested.connect(self.shelf.editPage)
         self.optionsMenu.sigDeletePageRequested.connect(self.shelf.deletePage)
+        self.optionsMenu.sigPresetsChangedRequested.connect(self.shelf.changePreset)
+        self.optionsMenu.sigEditPresetRequested.connect(self.shelf.editPreset)
+        self.optionsMenu.sigSavePresetAsRequested.connect(self.shelf.savePresetAs)
+        self.optionsMenu.sigSavePresetRequested.connect(self.shelf.savePreset)
+        self.optionsMenu.sigDeletePresetRequested.connect(self.shelf.deletePreset)
+        self.optionsMenu.sigResetRequested.connect(partial(self.shelf.resetLayout, False))
 
         self.mainButton = QPushButton(self)
         self.mainButton.setIcon(ResourceManager.iconLoader("material:circle"))
@@ -67,7 +75,7 @@ class ShelfToolbar(QWidget):
         qApp.paletteChanged.connect(self.updateStyleSheet)
         self.updateStyleSheet()
 
-    def reload(self, state: ToolshelfContainer):
+    def reload(self, state: ToolshelfContainer, currentPresetId: str):
         button_size = int(state.options.header_size * TouchifySettings.instance().preferences().Interface_ToolshelfHeaderScale)
         icon_size = button_size - 4
         match state.options.position:
@@ -116,6 +124,8 @@ class ShelfToolbar(QWidget):
 
         #self.mainButton.setVisible(not state.options.show_menu_button)
         self.pinButton.setVisible(not state.options.show_pin_button)
+
+        self.optionsMenu.reload(currentPresetId)
 
 
     #region Actions
@@ -230,10 +240,17 @@ class ShelfToolbarMenu(QMenu):
     sigEditPageRequested = pyqtSignal(int)
     sigDeletePageRequested = pyqtSignal(int)
     sigSettingsRequested = pyqtSignal()
+    sigPresetsChangedRequested = pyqtSignal(str)
+    sigSavePresetRequested = pyqtSignal()
+    sigSavePresetAsRequested = pyqtSignal()
+    sigEditPresetRequested = pyqtSignal()
+    sigDeletePresetRequested = pyqtSignal()
+    sigResetRequested = pyqtSignal()
 
-    def __init__(self, parent: QWidget):
+    def __init__(self, parent: ShelfToolbar, currentPresetId: str):
         super(ShelfToolbarMenu, self).__init__(parent)
 
+        self.toolbar = parent
         self.current_page_index: int = -1
 
         self.editModeAction = self.addAction("Edit Mode")
@@ -264,9 +281,92 @@ class ShelfToolbarMenu(QMenu):
 
         self.addSeparator()
 
+        self.shelfPresetsSubmenuAction = self.addAction("Presets")
+        self.shelfPresetsSubmenuAction.setEnabled(True)
+        self.shelfPresetsSubmenuAction.setMenu(QMenu(self))
+        self.loadPresets(currentPresetId)
+
+        self.addSeparator()
+
         self.shelfSettingsAction = self.addAction("Shelf Settings...")
         self.shelfSettingsAction.setEnabled(False)
         self.shelfSettingsAction.triggered.connect(self.onSettingsRequested)
+
+    def reload(self, currentPresetId: str):
+        self.loadPresets(currentPresetId)
+
+    def loadPresets(self, currentPresetId: str):
+        self.shelfPresetsSubmenuAction.menu().clear()
+
+        isNoPresetActive = currentPresetId == "none"
+
+        menus: dict[str, QMenu] = {}
+        sub_menus: dict[str, dict[str, QMenu]] = {}
+        
+        registry = TouchifySettings.instance().getRegistry(Toolshelf)
+        if registry != None:
+            for key, preset in registry.items():
+                if not key.id in menus:
+                    menus[key.id] = self.shelfPresetsSubmenuAction.menu().addMenu(key.name)
+                    sub_menus[key.id] = {}
+
+                preset: Toolshelf
+                action = QAction(preset.preset_name, self)
+                action.setCheckable(True)
+                if currentPresetId == key.actual_key:
+                    action.setChecked(True)
+                action.setData(key.actual_key)
+                action.triggered.connect(self.onPresetChangeRequested)
+
+                if preset.preset_group == "":
+                    menus[key.id].addAction(action)
+                else:
+                    if not preset.preset_group in sub_menus[key.id]:
+                        sub_menus[key.id][preset.preset_group] = menus[key.id].addMenu(preset.preset_group)
+                    sub_menus[key.id][preset.preset_group].addAction(action)
+
+        if len(self.shelfPresetsSubmenuAction.menu().actions()) == 0:
+            noActions = self.shelfPresetsSubmenuAction.menu().addAction("No Presets Avaliable")
+            noActions.setEnabled(False)
+        self.shelfPresetsSubmenuAction.menu().addSeparator()
+
+        noPresetAction = self.shelfPresetsSubmenuAction.menu().addAction("No Preset")
+        noPresetAction.setCheckable(True)
+        noPresetAction.setChecked(isNoPresetActive)
+        noPresetAction.setData("none")
+        noPresetAction.triggered.connect(self.onPresetChangeRequested)
+
+        self.shelfPresetsSubmenuAction.menu().addSeparator()
+
+
+        if not isNoPresetActive:
+            presetEditAction = self.shelfPresetsSubmenuAction.menu().addAction("Edit...")    
+            presetEditAction.setEnabled(True)
+            presetEditAction.triggered.connect(self.onEditPresetRequested)
+
+            presetSaveAction = self.shelfPresetsSubmenuAction.menu().addAction("Save")
+            presetSaveAction.setEnabled(True)
+            presetSaveAction.triggered.connect(self.onSavePresetRequested)
+
+            presetSaveAsAction = self.shelfPresetsSubmenuAction.menu().addAction("Save as...")
+            presetSaveAsAction.setEnabled(True)
+            presetSaveAsAction.triggered.connect(self.onSavePresetAsRequested)
+        
+            presetDeleteAction = self.shelfPresetsSubmenuAction.menu().addAction("Delete")
+            presetDeleteAction.setEnabled(True)
+            presetDeleteAction.triggered.connect(self.onDeletePresetRequested)
+        else:
+            presetSaveAsAction = self.shelfPresetsSubmenuAction.menu().addAction("Save to Preset...")
+            presetSaveAsAction.setEnabled(True)
+            presetSaveAsAction.triggered.connect(self.onSavePresetAsRequested)
+        
+            resetAction = self.shelfPresetsSubmenuAction.menu().addAction("Reset")
+            resetAction.setEnabled(True)
+            resetAction.triggered.connect(self.onResetRequested)
+        
+
+
+        
 
 
     def refreshActions(self):
@@ -274,10 +374,32 @@ class ShelfToolbarMenu(QMenu):
 
         self.addDockAction.setEnabled(is_editing)
         self.addPageAction.setEnabled(is_editing)
-        self.editPageAction.setEnabled(is_editing and self.current_page_index >= 0)
+        self.editPageAction.setEnabled(is_editing)
         self.deletePageAction.setEnabled(is_editing and self.current_page_index >= 0)
         self.shelfSettingsAction.setEnabled(is_editing)
 
+    def onResetRequested(self):
+        self.sigResetRequested.emit()
+
+    def onDeletePresetRequested(self):
+        self.sigDeletePresetRequested.emit()
+
+    def onSavePresetRequested(self):
+        self.sigSavePresetRequested.emit()
+
+    def onSavePresetAsRequested(self):
+        self.sigSavePresetAsRequested.emit()
+
+    def onEditPresetRequested(self):
+        self.sigEditPresetRequested.emit()
+
+    def onPresetChangeRequested(self):
+        ac: QAction = self.sender()
+        if isinstance(ac, QAction):
+            id: str = ac.data()
+            if isinstance(id, str):
+                self.sigPresetsChangedRequested.emit(id)
+                
     def onAddItemRequested(self):
         self.sigAddShelfItemRequested.emit()
 

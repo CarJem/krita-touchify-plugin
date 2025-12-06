@@ -7,6 +7,7 @@ class PropertyGrid_Restrictions:
 
     class StrMod(EnumStr):
         Values="values"
+        ValuesWithIndex="indexed_values"
         Multiline="multiline_string"
         PythonEdtior="python_editor"
         
@@ -45,6 +46,9 @@ class PropertyGrid_Restrictions:
 
     def strMod(type: StrMod):
         return {"type": type}
+    
+    def strValuesWithIndex(items: list):
+        return {"type": PropertyGrid_Restrictions.StrMod.ValuesWithIndex, "entries": items}
 
     def strValues(items: list):
         return {"type": PropertyGrid_Restrictions.StrMod.Values, "entries": items}

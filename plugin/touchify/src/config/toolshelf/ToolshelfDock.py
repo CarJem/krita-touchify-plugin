@@ -7,15 +7,10 @@ from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions impor
 
 class ToolshelfDock:
 
-    class SubpanelMode(EnumStr):
-        Data = "data"
-        Reference = "reference"
-
     class SectionType(EnumStr):
         Actions = "actions"
         Docker = "docker"
         Special = "special"
-        Subpanel = "subpanel"
 
     class SpecialItemType(EnumStr):
         Nothing = "none"
@@ -79,9 +74,6 @@ class ToolshelfDock:
         self.max_size_x: int = 0
         self.max_size_y: int = 0
 
-        self.panel_y: int = 0
-        self.panel_x: int = 0
-
         self.ignore_scaling: bool = False
         self.section_type: str = "docker"
 
@@ -100,16 +92,12 @@ class ToolshelfDock:
 
         self.special_item_type: str = "none"
 
-        self.subpanel_id: str = ""
-        self.subpanel_mode: str = "data"
-
         self.json_version: int = 4
 
     def __init__(self, **args) -> None:
         self.__defaults__()
         args = BackwardsCompatibility.ToolshelfDataSection(args)
         from ..toolshelf_legacy.ToolshelfDataPage import ToolshelfDataPage
-        self.subpanel_data: ToolshelfDataPage = ToolshelfDataPage()
         JsonExtensions.dictToObject(self, args, [ToolshelfDataPage])
         self.action_section_contents = JsonExtensions.init_list(args, "action_section_contents", TriggerGroup)
 
@@ -123,9 +111,6 @@ class ToolshelfDock:
         if self.section_type == ToolshelfDock.SectionType.Actions:
             name = self.action_section_id.replace("\n", "\\n")
             suffix = "(Actions)"
-        elif self.section_type == ToolshelfDock.SectionType.Subpanel:
-            name = self.subpanel_data.id.replace("\n", "\\n")
-            suffix = "(Subpanel)"
         elif self.section_type == ToolshelfDock.SectionType.Special:
             name = self.special_item_type.replace("\n", "\\n")
             suffix = "(Special)"
@@ -139,7 +124,7 @@ class ToolshelfDock:
         if self.hasDisplayName():
             name = self.display_name
             
-        return f"{name} {suffix} [{self.panel_x}, {self.panel_y}]"
+        return f"{name} {suffix}"
     
     def propertygrid_hints(self):
         hints = {}
@@ -154,8 +139,7 @@ class ToolshelfDock:
     def propertygrid_sorted(self):
         return [
             "general_groups",
-            "variant_data_group",
-            "subpanel_data"
+            "variant_data_group"
         ]
     
     def propertygrid_hidden(self):
@@ -183,18 +167,6 @@ class ToolshelfDock:
             "special_item_type"
         ]
 
-        subgroup_groups = [
-            "subpanel_mode"
-        ]
-
-        subgroup_data_groups = [
-            "subpanel_data"
-        ]
-
-        subgroup_refrence_groups = [
-            "subpanel_id"
-        ]
-
         result = []
         if self.section_type != ToolshelfDock.SectionType.Docker:
             for item in docker_groups:
@@ -202,17 +174,6 @@ class ToolshelfDock:
         if self.section_type != ToolshelfDock.SectionType.Actions:
             for item in action_groups:
                 result.append(item)
-
-        if self.section_type != ToolshelfDock.SectionType.Subpanel:
-            all_groups = subgroup_groups + subgroup_data_groups + subgroup_refrence_groups
-            for item in all_groups: result.append(item)
-        else:
-            if self.subpanel_mode != self.SubpanelMode.Data:
-                for item in subgroup_data_groups:
-                    result.append(item)
-            if self.subpanel_mode != self.SubpanelMode.Reference:
-                for item in subgroup_refrence_groups:
-                    result.append(item)
         if self.section_type != ToolshelfDock.SectionType.Special:
             for item in special_groups:
                 result.append(item)
@@ -247,10 +208,6 @@ class ToolshelfDock:
         labels["action_section_icon_size"] = "Icon Size"
 
         labels["special_item_type"] = "Component Type"
-
-        labels["subpanel_mode"] = "Subpanel Mode"
-        labels["subpanel_data"] = "Subpanel Options"
-        labels["subpanel_id"] = "Subshelf ID"
         return labels
     
     def propertygrid_sisters(self):
@@ -277,9 +234,7 @@ class ToolshelfDock:
             "action_section_alignment", 
             "action_section_icon_size",
             "action_section_contents",
-            "special_item_type",
-            "subpanel_mode",
-            "subpanel_id"
+            "special_item_type"
         ]
 
         row["general_group"] = {"items": global_groups, "is_group": True}
@@ -290,13 +245,10 @@ class ToolshelfDock:
         row["size"] = {"items": ["size_x","size_y"]}
         row["min_size"] = {"items": ["min_size_x","min_size_y"]}
         row["max_size"] = {"items": ["max_size_x","max_size_y"]}
-        row["panel_location"] = {"items": ["panel_x", "panel_y"]}
         return row
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["panel_x"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["panel_y"] = PropertyGrid_Restrictions.range(min=0)
         restrictions["size_x"] = PropertyGrid_Restrictions.range(min=0)
         restrictions["size_y"] = PropertyGrid_Restrictions.range(min=0)
         restrictions["min_size_x"] = PropertyGrid_Restrictions.range(min=0)
@@ -318,8 +270,4 @@ class ToolshelfDock:
         restrictions["action_section_icon_size"] = PropertyGrid_Restrictions.range(min=0)
 
         restrictions["special_item_type"] = PropertyGrid_Restrictions.strValues(self.SpecialItemType.values())
-
-        restrictions["subpanel_data"] = PropertyGrid_Restrictions.expandable()
-        restrictions["subpanel_mode"] = PropertyGrid_Restrictions.strValues(self.SubpanelMode.values())
-        restrictions["subpanel_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ToolshelfRegistry)
         return restrictions

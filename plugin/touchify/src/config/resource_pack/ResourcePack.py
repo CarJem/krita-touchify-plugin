@@ -2,6 +2,7 @@ import copy
 import types
 from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.config.script.CustomScript import CustomScript
+from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.resource_pack.ResourcePackMetadata import ResourcePackMetadata
 import os
@@ -33,6 +34,7 @@ class ResourcePack:
         self.canvas_presets: TypedList[CanvasPreset] = []
         self.toolboxes: TypedList[ToolboxData] = []
         self.toolshelves: TypedList[ToolshelfData] = []
+        self.shelves: TypedList[Toolshelf] = []
         self.widget_layouts: TypedList[WidgetLayout] = []
         self.scripts: TypedList[CustomScript] = []
         self.pie_wheels: TypedList[PieWheelData] = []
@@ -60,6 +62,7 @@ class ResourcePack:
         self.canvas_presets = TypedList(self.canvas_presets, CanvasPreset)
         self.toolboxes = TypedList(self.toolboxes, ToolboxData)
         self.toolshelves = TypedList(self.toolshelves, ToolshelfData)
+        self.shelves = TypedList(self.shelves, Toolshelf)
         self.widget_layouts = TypedList(self.widget_layouts, WidgetLayout)
         self.scripts = TypedList(self.scripts, CustomScript)
         self.pie_wheels = TypedList(self.pie_wheels, PieWheelData)
@@ -115,6 +118,9 @@ class ResourcePack:
 
                 elif os.path.isdir(contentPath) and contentName == "toolshelves":
                     self.toolshelves = loadItems(contentPath, ToolshelfData)
+
+                elif os.path.isdir(contentPath) and contentName == "shelves":
+                    self.shelves = loadItems(contentPath, Toolshelf)
 
                 elif os.path.isdir(contentPath) and contentName == "widget_layouts":
                     self.widget_layouts = loadItems(contentPath, WidgetLayout)
@@ -202,6 +208,7 @@ class ResourcePack:
         saveItems(self.menus, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "menus"))
         saveItems(self.toolboxes, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "toolboxes"))
         saveItems(self.toolshelves, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "toolshelves"))
+        saveItems(self.shelves, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "shelves"))
         saveItems(self.widget_layouts, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "widget_layouts"))
         saveItems(self.popups, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "popups"))
         saveItems(self.docker_groups, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "docker_groups"))
@@ -237,6 +244,7 @@ class ResourcePack:
             "triggers",
             "menus",
             "toolboxes",
+            "shelves",
             "toolshelves",
             "widget_layouts",
             "popups",
@@ -251,7 +259,8 @@ class ResourcePack:
         labels["triggers"] = "Triggers"
         labels["menus"] = "Menus"
         labels["toolboxes"] = "Toolboxes"
-        labels["toolshelves"] = "Toolshelves"
+        labels["shelves"] = "Toolshelves"
+        labels["toolshelves"] = "Toolshelves (Legacy)"
         labels["widget_layouts"] = "Widget Layouts"
         labels["popups"] = "Popups"
         labels["docker_groups"] = "Docker Groups"
@@ -267,6 +276,7 @@ class ResourcePack:
         restrictions["triggers"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         restrictions["menus"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         restrictions["toolboxes"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
+        restrictions["shelves"] =[RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         restrictions["toolshelves"] =[RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         restrictions["widget_layouts"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         restrictions["popups"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]

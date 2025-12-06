@@ -5,11 +5,10 @@ from PyQt5.QtCore import *
 from typing import TYPE_CHECKING
 
 
-from touchify.src.managers.normal.canvas import CanvasManager
+from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
+from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
 from touchify.src.managers.shared.events import GlobalEvents
 
-from touchify.src.managers.normal.dockers import DockerManager
-from touchify.src.managers.normal.action_manager import ActionManager
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
     from touchify.src.PluginManagers import TouchifyManagers
@@ -26,83 +25,46 @@ class ShelfDockWidget(DockWidget):
         super().__init__()
         self.app_window: "TouchifyWindow" = None
         self.managers: "TouchifyManagers" = None
-        self.toolshelfHost: ShelfWidget = None
-        self.docker_manager: DockerManager = None
-        self.actions_manager: ActionManager = None
-        self.canvas_manager: CanvasManager = None
+        self.mainWidget: ShelfWidget = None
+        
+        self._originalSizePolicy = self.sizePolicy()
+        self.shrinkToFit = False
+
         self.PanelIndex = 1
         self.setWindowTitle(DOCKER_TITLE)
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
-        GlobalEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.connect(self.onPresetChanged)
 
-
-      
     def setup(self, app_window: "TouchifyWindow"):
         self.app_window = app_window
         self.managers = app_window.managers
-        self.onLoaded()
-    
-    def onLoaded(self):              
         self.mainWidget = ShelfWidget(self, self.managers, self.PanelIndex)
-        self.setWidget(self.mainWidget)
+        self.setWidget(self.mainWidget)    
 
-    def onUnload(self):
-        if not hasattr(self, 'mainWidget'): return
-        if not self.mainWidget: return
-    
-        self.mainWidget.deleteLater()
-        self.mainWidget = None
+    def shelfReload(self, state: ToolshelfContainer):
+        if state.options.resize_style == ToolshelfSettings.ResizeStyle.Minimum:
+            self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+            self.shrinkToFit = True
+        else:
+            self.setSizePolicy(self._originalSizePolicy)
+            self.shrinkToFit = False
 
-    def onPresetChanged(self, index: int):
-        if self.PanelIndex == index:
-            self.onConfigUpdated()
+        if self.shrinkToFit:
+            self.adjustSize()
+
 
     def onConfigUpdated(self):
-        self.onUnload()
-        self.onLoaded()
+        if self.mainWidget: self.mainWidget.onConfigUpdated()
 
-    def onToolshelfResize(self):
-        pass
-
-    def onToolshelfChanged(self):
-        pass
-
-    def onToolshelfPageChanged(self):
-        if self.isFloating(): self.adjustSize()
-
-    def sizeHint(self):
-        if hasattr(self, "mainWidget"):
-            if self.mainWidget:
-                return self.mainWidget.sizeHint()
-        
-        return super().sizeHint()
-
-    def minimumSizeHint(self):
-        if hasattr(self, "mainWidget"):
-            if self.mainWidget:
-                return self.mainWidget.minimumSizeHint()
-
-        return super().minimumSizeHint()
-
-    def minimumSize(self):
-        if hasattr(self, "mainWidget"):
-            if self.mainWidget:
-                return self.mainWidget.minimumSize()
-
-        return super().minimumSize()
-        
-    def maximumSize(self):
-        if hasattr(self, "mainWidget"):
-            if self.mainWidget:
-                return self.mainWidget.maximumSize()
-        return super().maximumSize()
+    def resizeEvent(self, a0):
+        if self.shrinkToFit and a0.oldSize != a0.size:
+            return self.adjustSize()
+        return super().resizeEvent(a0)
         
     def showEvent(self, event):
         super().showEvent(event)
 
     def closeEvent(self, event):
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.disconnect(self.onConfigUpdated)
-        GlobalEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.disconnect(self.onPresetChanged)
         return super().closeEvent(event)
 
     # notifies when views are added or removed

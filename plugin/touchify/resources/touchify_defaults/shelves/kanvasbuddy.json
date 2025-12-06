@@ -1,0 +1,588 @@
+{
+    "preset_name": "KanvasBuddy",
+    "preset_group": "",
+    "preset_data": {
+        "layout": {
+            "main": [
+                "vertical",
+                [
+                    [
+                        "dock",
+                        "de5e301e-7e11-40e9-b0c2-3720305f05aa",
+                        {}
+                    ],
+                    [
+                        "dock",
+                        "8b5f08a1-f9ab-4933-866e-148f1c93f130",
+                        {}
+                    ],
+                    [
+                        "dock",
+                        "65d3c3f3-5163-45a7-8857-32b26b8e959a",
+                        {}
+                    ]
+                ],
+                {
+                    "sizes": [
+                        30,
+                        30,
+                        99
+                    ]
+                }
+            ],
+            "float": []
+        },
+        "items": {
+            "de5e301e-7e11-40e9-b0c2-3720305f05aa": {
+                "display_name": "",
+                "docker_id": "",
+                "size_x": 0,
+                "size_y": 0,
+                "min_size_x": 0,
+                "min_size_y": 0,
+                "max_size_x": 0,
+                "max_size_y": 0,
+                "panel_y": 0,
+                "panel_x": 0,
+                "ignore_scaling": false,
+                "section_type": "special",
+                "docker_nesting_mode": "normal",
+                "docker_unloaded_visibility": "normal",
+                "docker_loading_priority": "normal",
+                "action_section_id": "Panel",
+                "action_section_display_mode": "normal",
+                "action_section_contents": [],
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none",
+                "action_section_btn_width": 0,
+                "action_section_btn_height": 0,
+                "action_section_icon_size": 0,
+                "special_item_type": "brush_size_slider",
+                "subpanel_id": "",
+                "subpanel_mode": "data",
+                "json_version": 4,
+                "subpanel_data": {
+                    "id": "",
+                    "display_name": "",
+                    "actions": [],
+                    "sections": [],
+                    "tab_type": "buttons",
+                    "action_height": 10,
+                    "icon": "",
+                    "toolshelf_tab_row": 0,
+                    "json_version": 2
+                }
+            },
+            "8b5f08a1-f9ab-4933-866e-148f1c93f130": {
+                "display_name": "",
+                "docker_id": "",
+                "size_x": 0,
+                "size_y": 0,
+                "min_size_x": 0,
+                "min_size_y": 0,
+                "max_size_x": 0,
+                "max_size_y": 0,
+                "panel_y": 0,
+                "panel_x": 0,
+                "ignore_scaling": false,
+                "section_type": "special",
+                "docker_nesting_mode": "normal",
+                "docker_unloaded_visibility": "normal",
+                "docker_loading_priority": "normal",
+                "action_section_id": "Panel",
+                "action_section_display_mode": "normal",
+                "action_section_contents": [],
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none",
+                "action_section_btn_width": 0,
+                "action_section_btn_height": 0,
+                "action_section_icon_size": 0,
+                "special_item_type": "brush_opacity_slider",
+                "subpanel_id": "",
+                "subpanel_mode": "data",
+                "json_version": 4,
+                "subpanel_data": {
+                    "id": "",
+                    "display_name": "",
+                    "actions": [],
+                    "sections": [],
+                    "tab_type": "buttons",
+                    "action_height": 10,
+                    "icon": "",
+                    "toolshelf_tab_row": 0,
+                    "json_version": 2
+                }
+            },
+            "65d3c3f3-5163-45a7-8857-32b26b8e959a": {
+                "display_name": "",
+                "docker_id": "",
+                "size_x": 0,
+                "size_y": 0,
+                "min_size_x": 0,
+                "min_size_y": 0,
+                "max_size_x": 0,
+                "max_size_y": 0,
+                "panel_y": 0,
+                "panel_x": 0,
+                "ignore_scaling": false,
+                "section_type": "actions",
+                "docker_nesting_mode": "normal",
+                "docker_unloaded_visibility": "normal",
+                "docker_loading_priority": "normal",
+                "action_section_id": "Panel",
+                "action_section_display_mode": "normal",
+                "action_section_contents": [
+                    {
+                        "row_name": "Actions Row",
+                        "actions": [
+                            {
+                                "registry_id": "",
+                                "variant": "action",
+                                "display_icon_hide": false,
+                                "display_text_hide": true,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "view_show_canvas_only",
+                                "context_menu_id": "",
+                                "brush_name": "",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "docker_group_data": "none",
+                                "popup_data": "none",
+                                "canvas_preset_data": "none",
+                                "script_id": "",
+                                "piewheel_id": "",
+                                "json_version": 2
+                            },
+                            {
+                                "registry_id": "",
+                                "variant": "action",
+                                "display_icon_hide": false,
+                                "display_text_hide": true,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "mirror_canvas",
+                                "context_menu_id": "",
+                                "brush_name": "",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "docker_group_data": "none",
+                                "popup_data": "none",
+                                "canvas_preset_data": "none",
+                                "script_id": "",
+                                "piewheel_id": "",
+                                "json_version": 2
+                            },
+                            {
+                                "registry_id": "",
+                                "variant": "action",
+                                "display_icon_hide": false,
+                                "display_text_hide": true,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "fullscreen",
+                                "context_menu_id": "",
+                                "brush_name": "",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "docker_group_data": "none",
+                                "popup_data": "none",
+                                "canvas_preset_data": "none",
+                                "script_id": "",
+                                "piewheel_id": "",
+                                "json_version": 2
+                            }
+                        ]
+                    }
+                ],
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none",
+                "action_section_btn_width": 0,
+                "action_section_btn_height": 0,
+                "action_section_icon_size": 0,
+                "special_item_type": "none",
+                "subpanel_id": "",
+                "subpanel_mode": "data",
+                "json_version": 4,
+                "subpanel_data": {
+                    "id": "",
+                    "display_name": "",
+                    "actions": [],
+                    "sections": [],
+                    "tab_type": "buttons",
+                    "action_height": 10,
+                    "icon": "",
+                    "toolshelf_tab_row": 0,
+                    "json_version": 2
+                }
+            }
+        },
+        "pages": [
+            {
+                "layout": {
+                    "main": [
+                        "vertical",
+                        [
+                            [
+                                "dock",
+                                "fddd9363-4f13-4e5f-836e-752544768bc3",
+                                {}
+                            ]
+                        ],
+                        {
+                            "sizes": [
+                                167
+                            ]
+                        }
+                    ],
+                    "float": []
+                },
+                "items": {
+                    "fddd9363-4f13-4e5f-836e-752544768bc3": {
+                        "display_name": "",
+                        "docker_id": "PresetDocker",
+                        "size_x": 0,
+                        "size_y": 0,
+                        "min_size_x": 0,
+                        "min_size_y": 0,
+                        "max_size_x": 0,
+                        "max_size_y": 0,
+                        "panel_y": 0,
+                        "panel_x": 0,
+                        "ignore_scaling": false,
+                        "section_type": "docker",
+                        "docker_nesting_mode": "normal",
+                        "docker_unloaded_visibility": "normal",
+                        "docker_loading_priority": "normal",
+                        "action_section_id": "Panel",
+                        "action_section_display_mode": "normal",
+                        "action_section_contents": [],
+                        "action_section_alignment_x": "none",
+                        "action_section_alignment_y": "none",
+                        "action_section_btn_width": 0,
+                        "action_section_btn_height": 0,
+                        "action_section_icon_size": 0,
+                        "special_item_type": "none",
+                        "subpanel_id": "",
+                        "subpanel_mode": "data",
+                        "json_version": 4,
+                        "subpanel_data": {
+                            "id": "",
+                            "display_name": "",
+                            "actions": [],
+                            "sections": [],
+                            "tab_type": "buttons",
+                            "action_height": 10,
+                            "icon": "",
+                            "toolshelf_tab_row": 0,
+                            "json_version": 2
+                        }
+                    }
+                },
+                "options": {
+                    "page_icon": "paintop_settings_01",
+                    "json_version": 1
+                },
+                "name": ""
+            },
+            {
+                "layout": {
+                    "main": [
+                        "vertical",
+                        [
+                            [
+                                "dock",
+                                "0f838670-2619-42d5-bbd1-795700b8e56d",
+                                {}
+                            ]
+                        ],
+                        {
+                            "sizes": [
+                                167
+                            ]
+                        }
+                    ],
+                    "float": []
+                },
+                "items": {
+                    "0f838670-2619-42d5-bbd1-795700b8e56d": {
+                        "display_name": "",
+                        "docker_id": "PaletteDocker",
+                        "size_x": 0,
+                        "size_y": 0,
+                        "min_size_x": 0,
+                        "min_size_y": 0,
+                        "max_size_x": 0,
+                        "max_size_y": 0,
+                        "panel_y": 0,
+                        "panel_x": 0,
+                        "ignore_scaling": false,
+                        "section_type": "docker",
+                        "docker_nesting_mode": "normal",
+                        "docker_unloaded_visibility": "normal",
+                        "docker_loading_priority": "normal",
+                        "action_section_id": "Panel",
+                        "action_section_display_mode": "normal",
+                        "action_section_contents": [],
+                        "action_section_alignment_x": "none",
+                        "action_section_alignment_y": "none",
+                        "action_section_btn_width": 0,
+                        "action_section_btn_height": 0,
+                        "action_section_icon_size": 0,
+                        "special_item_type": "none",
+                        "subpanel_id": "",
+                        "subpanel_mode": "data",
+                        "json_version": 4,
+                        "subpanel_data": {
+                            "id": "",
+                            "display_name": "",
+                            "actions": [],
+                            "sections": [],
+                            "tab_type": "buttons",
+                            "action_height": 10,
+                            "icon": "",
+                            "toolshelf_tab_row": 0,
+                            "json_version": 2
+                        }
+                    }
+                },
+                "options": {
+                    "page_icon": "palette-library",
+                    "json_version": 1
+                },
+                "name": ""
+            },
+            {
+                "layout": {
+                    "main": [
+                        "vertical",
+                        [
+                            [
+                                "dock",
+                                "7c8bd12a-bce2-4511-a53b-b91b1f4edea5",
+                                {}
+                            ]
+                        ],
+                        {
+                            "sizes": [
+                                167
+                            ]
+                        }
+                    ],
+                    "float": []
+                },
+                "items": {
+                    "7c8bd12a-bce2-4511-a53b-b91b1f4edea5": {
+                        "display_name": "",
+                        "docker_id": "KisLayerBox",
+                        "size_x": 0,
+                        "size_y": 0,
+                        "min_size_x": 0,
+                        "min_size_y": 0,
+                        "max_size_x": 0,
+                        "max_size_y": 0,
+                        "panel_y": 0,
+                        "panel_x": 0,
+                        "ignore_scaling": false,
+                        "section_type": "docker",
+                        "docker_nesting_mode": "normal",
+                        "docker_unloaded_visibility": "normal",
+                        "docker_loading_priority": "normal",
+                        "action_section_id": "Panel",
+                        "action_section_display_mode": "normal",
+                        "action_section_contents": [],
+                        "action_section_alignment_x": "none",
+                        "action_section_alignment_y": "none",
+                        "action_section_btn_width": 0,
+                        "action_section_btn_height": 0,
+                        "action_section_icon_size": 0,
+                        "special_item_type": "none",
+                        "subpanel_id": "",
+                        "subpanel_mode": "data",
+                        "json_version": 4,
+                        "subpanel_data": {
+                            "id": "",
+                            "display_name": "",
+                            "actions": [],
+                            "sections": [],
+                            "tab_type": "buttons",
+                            "action_height": 10,
+                            "icon": "",
+                            "toolshelf_tab_row": 0,
+                            "json_version": 2
+                        }
+                    }
+                },
+                "options": {
+                    "page_icon": "all-layers",
+                    "json_version": 1
+                },
+                "name": ""
+            },
+            {
+                "layout": {
+                    "main": [
+                        "vertical",
+                        [
+                            [
+                                "dock",
+                                "5859ff3f-e172-4d0a-b986-5752fd304156",
+                                {}
+                            ]
+                        ],
+                        {
+                            "sizes": [
+                                167
+                            ]
+                        }
+                    ],
+                    "float": []
+                },
+                "items": {
+                    "5859ff3f-e172-4d0a-b986-5752fd304156": {
+                        "display_name": "",
+                        "docker_id": "ColorSelectorNg",
+                        "size_x": 0,
+                        "size_y": 0,
+                        "min_size_x": 0,
+                        "min_size_y": 0,
+                        "max_size_x": 0,
+                        "max_size_y": 0,
+                        "panel_y": 0,
+                        "panel_x": 0,
+                        "ignore_scaling": false,
+                        "section_type": "docker",
+                        "docker_nesting_mode": "normal",
+                        "docker_unloaded_visibility": "normal",
+                        "docker_loading_priority": "normal",
+                        "action_section_id": "Panel",
+                        "action_section_display_mode": "normal",
+                        "action_section_contents": [],
+                        "action_section_alignment_x": "none",
+                        "action_section_alignment_y": "none",
+                        "action_section_btn_width": 0,
+                        "action_section_btn_height": 0,
+                        "action_section_icon_size": 0,
+                        "special_item_type": "none",
+                        "subpanel_id": "",
+                        "subpanel_mode": "data",
+                        "json_version": 4,
+                        "subpanel_data": {
+                            "id": "",
+                            "display_name": "",
+                            "actions": [],
+                            "sections": [],
+                            "tab_type": "buttons",
+                            "action_height": 10,
+                            "icon": "",
+                            "toolshelf_tab_row": 0,
+                            "json_version": 2
+                        }
+                    }
+                },
+                "options": {
+                    "page_icon": "krita_tool_color_sampler",
+                    "json_version": 1
+                },
+                "name": ""
+            },
+            {
+                "layout": {
+                    "main": [
+                        "vertical",
+                        [
+                            [
+                                "dock",
+                                "575c341e-6bb0-48dc-a579-5ffc3eb0cba4",
+                                {}
+                            ]
+                        ],
+                        {
+                            "sizes": [
+                                167
+                            ]
+                        }
+                    ],
+                    "float": []
+                },
+                "items": {
+                    "575c341e-6bb0-48dc-a579-5ffc3eb0cba4": {
+                        "display_name": "",
+                        "docker_id": "OverviewDocker",
+                        "size_x": 0,
+                        "size_y": 0,
+                        "min_size_x": 0,
+                        "min_size_y": 0,
+                        "max_size_x": 0,
+                        "max_size_y": 0,
+                        "panel_y": 0,
+                        "panel_x": 0,
+                        "ignore_scaling": false,
+                        "section_type": "docker",
+                        "docker_nesting_mode": "docking",
+                        "docker_unloaded_visibility": "normal",
+                        "docker_loading_priority": "normal",
+                        "action_section_id": "Panel",
+                        "action_section_display_mode": "normal",
+                        "action_section_contents": [],
+                        "action_section_alignment_x": "none",
+                        "action_section_alignment_y": "none",
+                        "action_section_btn_width": 0,
+                        "action_section_btn_height": 0,
+                        "action_section_icon_size": 0,
+                        "special_item_type": "none",
+                        "subpanel_id": "",
+                        "subpanel_mode": "data",
+                        "json_version": 4,
+                        "subpanel_data": {
+                            "id": "",
+                            "display_name": "",
+                            "actions": [],
+                            "sections": [],
+                            "tab_type": "buttons",
+                            "action_height": 10,
+                            "icon": "",
+                            "toolshelf_tab_row": 0,
+                            "json_version": 2
+                        }
+                    }
+                },
+                "options": {
+                    "page_icon": "duplicatelayer",
+                    "json_version": 1
+                },
+                "name": ""
+            }
+        ],
+        "options": {
+            "button_size": 32,
+            "header_size": 16,
+            "default_to_resize_mode": false,
+            "default_to_pinned": false,
+            "show_pin_button": true,
+            "show_menu_button": true,
+            "show_tabs": true,
+            "show_titlebar": true,
+            "home_icon": "material:home",
+            "position": "top",
+            "stack_preview": "tabbed",
+            "stack_alignment": "default",
+            "stack_actions": [],
+            "json_version": 1
+        },
+        "json_version": 1
+    },
+    "json_version": 1
+}

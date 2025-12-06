@@ -10,6 +10,10 @@ class ToolshelfSettings:
         Tabbed = "tabbed"
         TabbedExclusive = "tabbed_exclusive"
 
+    class ResizeStyle(EnumStr):
+        Default = "default"
+        Minimum = "minimum"
+
     class Position(EnumStr):
         Top = "top"
         Bottom = "bottom"
@@ -26,17 +30,15 @@ class ToolshelfSettings:
         self.button_size: int = 32
         self.header_size: int = 16
 
-        self.default_to_resize_mode: bool = False
-        self.default_to_pinned: bool = False
-
         self.show_pin_button: bool = True
         self.show_menu_button: bool = True
 
         self.show_tabs: bool = True
         self.show_titlebar: bool = True
 
-
         self.position: str = "top"
+        self.resize_style: str = "default"
+
         self.stack_preview: str = "default"
         self.stack_alignment: str = "default"
         self.stack_actions: TypedList[TriggerGroup] = []
@@ -54,29 +56,25 @@ class ToolshelfSettings:
 
     def propertygrid_sorted(self):
         return [
-            "default_to_resize_mode",
-            "default_to_pinned",
-            "show_menu_button",
-            "show_pin_button",
-            "button_size",
-            "header_size",
             "position",
+            "resize_style",
             "stack_preview",
             "stack_alignment",
+            "button_size",
+            "header_size",
+            "visibility_options",
+            "show_menu_button",
+            "show_pin_button",
             "stack_actions",
         ]
     
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
-        row["default_options"] = {"items": ["default_to_resize_mode","default_to_pinned"], "use_labels": True}
         row["visibility_options"] = {"items": ["show_tabs","show_titlebar","show_menu_button","show_pin_button"], "use_labels": True}
         return row
 
     def propertygrid_labels(self):
         labels = {}
-        labels["default_options"] = "Defaults"
-        labels["default_to_resize_mode"] = "Resizable"
-        labels["default_to_pinned"] = "Pinned"
         labels["visibility_options"] = "Show"
         labels["show_tabs"] = "Tabs"
         labels["show_titlebar"] = "Titlebar"
@@ -88,11 +86,13 @@ class ToolshelfSettings:
         labels["stack_preview"] = "Stack Preview"
         labels["stack_alignment"] = "Stack Alignment"
         labels["stack_actions"] = "Stack Actions"
+        labels["resize_style"] = "Resize Style"
         return labels
 
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["stack_preview"] = PropertyGrid_Restrictions.strValues(self.StackPreview.values())
         restrictions["stack_alignment"] = PropertyGrid_Restrictions.strValues(self.StackAlignment.values())
+        restrictions["resize_style"] = PropertyGrid_Restrictions.strValues(self.ResizeStyle.values())
         restrictions["position"] = PropertyGrid_Restrictions.strValues(self.Position.values())
         return restrictions

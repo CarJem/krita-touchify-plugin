@@ -69,6 +69,7 @@ class PropertyField_Str(PropertyField):
             index = self.editor.findData(self.variable_data, 1, Qt.MatchFlag.MatchFixedString)
             if index >= 0:
                 self.editor.setCurrentIndex(index)
+                
             self.editor.currentIndexChanged.connect(self.currentIndexChanged)
 
             editorLayout = QHBoxLayout(self)
@@ -113,6 +114,15 @@ class PropertyField_Str(PropertyField):
                     avaliableItems = list[str](restriction["entries"])
                     for item in avaliableItems:
                         input = (item, item)
+                        combobox_items.append(input)                         
+                    self.combobox_items = combobox_items
+                    self.is_combobox = True
+                    list_setup = True
+                elif restriction["type"] == PropertyGrid_Restrictions.StrMod.ValuesWithIndex:
+                    combobox_items =  list[tuple[str, str]]()
+                    avaliableItems = list[str](restriction["entries"])
+                    for idx, item in enumerate(avaliableItems):
+                        input = (item, str(idx))
                         combobox_items.append(input)                         
                     self.combobox_items = combobox_items
                     self.is_combobox = True

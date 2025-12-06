@@ -4,7 +4,9 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 
-from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer, ToolshelfSubState
+from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
+from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
+from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
@@ -107,8 +109,6 @@ class ShelfTabBar(QWidget):
 
     def reload(self, state: ToolshelfContainer):
 
-
-
         self.button_size = int(state.options.button_size * TouchifySettings.instance().preferences().Interface_ToolshelfTabBarScale)
         self.tab_size = state.options.button_size
         self.stack_alignment = state.options.stack_alignment
@@ -149,11 +149,12 @@ class ShelfTabBar(QWidget):
             self.button_size_policy.setHorizontalPolicy(QSizePolicy.Policy.Minimum if not_default_alignment else QSizePolicy.Policy.MinimumExpanding)
             self.button_size_policy.setVerticalPolicy(QSizePolicy.Policy.Fixed)
 
-        self._homeButton = self.createTab("material:home", "ROOT", 0, self.shelf.goToHomePage, "Home")
+        self._homeButton = self.createTab(state.pageOptions.page_icon, "ROOT", 0, self.shelf.goToHomePage, "Home")
 
         for idx, properties in enumerate(state.pages):
-            properties: ToolshelfSubState
-            self.createTab("material:home", "Tab_" + str(idx), 0, partial(self.shelf.goToPage, idx),  properties.name)
+            properties: ToolshelfPage
+            settings: ToolshelfPageSettings = properties.options
+            self.createTab(settings.page_icon, "Tab_" + str(idx), 0, partial(self.shelf.goToPage, idx),  properties.name)
 
         action_row = 0
         for action_list in state.options.stack_actions:
