@@ -32,6 +32,8 @@ if TYPE_CHECKING:
     from touchify.src.components.canvas.NtWidgetPad import NtWidgetPad
 
 class ShelfWidget(QWidget):
+    sigShelfIndexChanged = QtCore.pyqtSignal()
+
     def __init__(self, parent, managers: "TouchifyManagers", registry_index: int = 0):
         super(ShelfWidget, self).__init__(parent)
         self.display: "ShelfDockWidget" | "ShelfDockWidgetAlt" | "TouchifyPopup" = parent
@@ -176,11 +178,15 @@ class ShelfWidget(QWidget):
             page.close()
             page.deleteLater()
 
+
+        self.containerOptions = ToolshelfSettings()
+
         self.dockPages.clear()
         self.dockPageOptions.clear()
 
         if not noSave:
             self.saveLayout()
+            self.loadLayout()
 
     def saveLayout(self):
         state = JsonExtensions.saveClass(self.currentState())
@@ -210,7 +216,6 @@ class ShelfWidget(QWidget):
             jsonStr = KritaSettings.readSetting("TOUCHIFY_TEMP", "TOUCHIFY_TOOLSHELF_DOCKER_CONFIGURATION_" + str(self.registry_index), "")
             state: ToolshelfContainer = JsonExtensions.loadClass(jsonStr, ToolshelfContainer)
 
-        print(state)
         self.containerOptions: ToolshelfSettings = state.options
         self.homepageOptions: ToolshelfPageSettings = state.pageOptions
 
@@ -448,6 +453,9 @@ class ShelfWidget(QWidget):
     def onConfigUpdated(self):
         self.loadLayout()
 
+    def onShelfIndexChanged(self):
+        self.sigShelfIndexChanged.emit()
+
     def onEditModeChanged(self, enabled: bool):
         def _recursive(da: DockArea):
             for uuid in da.docks:
@@ -466,12 +474,13 @@ class ShelfWidget(QWidget):
     #endregion
 
 class ShelfWidgetStack(QStackedWidget):
-    def __init__(self, parent: QWidget = None):
+    def __init__(self, parent: ShelfWidget = None):
         super().__init__(parent)
+        self.shelf = parent
 
     def setCurrentIndex(self, index):
         super().setCurrentIndex(index)
-        self.adjustSize()
+        self.shelf.onShelfIndexChanged()
 
     def sizeHint(self):
         widget = self.currentWidget()

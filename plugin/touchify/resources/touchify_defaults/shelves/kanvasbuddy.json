@@ -26,7 +26,7 @@
                     "sizes": [
                         30,
                         30,
-                        99
+                        23
                     ]
                 }
             ],
@@ -42,8 +42,6 @@
                 "min_size_y": 0,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "panel_y": 0,
-                "panel_x": 0,
                 "ignore_scaling": false,
                 "section_type": "special",
                 "docker_nesting_mode": "normal",
@@ -58,20 +56,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_size_slider",
-                "subpanel_id": "",
-                "subpanel_mode": "data",
-                "json_version": 4,
-                "subpanel_data": {
-                    "id": "",
-                    "display_name": "",
-                    "actions": [],
-                    "sections": [],
-                    "tab_type": "buttons",
-                    "action_height": 10,
-                    "icon": "",
-                    "toolshelf_tab_row": 0,
-                    "json_version": 2
-                }
+                "json_version": 4
             },
             "8b5f08a1-f9ab-4933-866e-148f1c93f130": {
                 "display_name": "",
@@ -82,8 +67,6 @@
                 "min_size_y": 0,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "panel_y": 0,
-                "panel_x": 0,
                 "ignore_scaling": false,
                 "section_type": "special",
                 "docker_nesting_mode": "normal",
@@ -98,20 +81,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_opacity_slider",
-                "subpanel_id": "",
-                "subpanel_mode": "data",
-                "json_version": 4,
-                "subpanel_data": {
-                    "id": "",
-                    "display_name": "",
-                    "actions": [],
-                    "sections": [],
-                    "tab_type": "buttons",
-                    "action_height": 10,
-                    "icon": "",
-                    "toolshelf_tab_row": 0,
-                    "json_version": 2
-                }
+                "json_version": 4
             },
             "65d3c3f3-5163-45a7-8857-32b26b8e959a": {
                 "display_name": "",
@@ -122,8 +92,6 @@
                 "min_size_y": 0,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "panel_y": 0,
-                "panel_x": 0,
                 "ignore_scaling": false,
                 "section_type": "actions",
                 "docker_nesting_mode": "normal",
@@ -213,20 +181,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
-                "subpanel_id": "",
-                "subpanel_mode": "data",
-                "json_version": 4,
-                "subpanel_data": {
-                    "id": "",
-                    "display_name": "",
-                    "actions": [],
-                    "sections": [],
-                    "tab_type": "buttons",
-                    "action_height": 10,
-                    "icon": "",
-                    "toolshelf_tab_row": 0,
-                    "json_version": 2
-                }
+                "json_version": 4
             }
         },
         "pages": [
@@ -243,7 +198,7 @@
                         ],
                         {
                             "sizes": [
-                                167
+                                480
                             ]
                         }
                     ],
@@ -259,8 +214,6 @@
                         "min_size_y": 0,
                         "max_size_x": 0,
                         "max_size_y": 0,
-                        "panel_y": 0,
-                        "panel_x": 0,
                         "ignore_scaling": false,
                         "section_type": "docker",
                         "docker_nesting_mode": "normal",
@@ -275,20 +228,7 @@
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
-                        "subpanel_id": "",
-                        "subpanel_mode": "data",
-                        "json_version": 4,
-                        "subpanel_data": {
-                            "id": "",
-                            "display_name": "",
-                            "actions": [],
-                            "sections": [],
-                            "tab_type": "buttons",
-                            "action_height": 10,
-                            "icon": "",
-                            "toolshelf_tab_row": 0,
-                            "json_version": 2
-                        }
+                        "json_version": 4
                     }
                 },
                 "options": {
@@ -310,7 +250,7 @@
                         ],
                         {
                             "sizes": [
-                                167
+                                480
                             ]
                         }
                     ],
@@ -326,8 +266,6 @@
                         "min_size_y": 0,
                         "max_size_x": 0,
                         "max_size_y": 0,
-                        "panel_y": 0,
-                        "panel_x": 0,
                         "ignore_scaling": false,
                         "section_type": "docker",
                         "docker_nesting_mode": "normal",
@@ -342,20 +280,7 @@
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
-                        "subpanel_id": "",
-                        "subpanel_mode": "data",
-                        "json_version": 4,
-                        "subpanel_data": {
-                            "id": "",
-                            "display_name": "",
-                            "actions": [],
-                            "sections": [],
-                            "tab_type": "buttons",
-                            "action_height": 10,
-                            "icon": "",
-                            "toolshelf_tab_row": 0,
-                            "json_version": 2
-                        }
+                        "json_version": 4
                     }
                 },
                 "options": {
@@ -377,7 +302,7 @@
                         ],
                         {
                             "sizes": [
-                                167
+                                480
                             ]
                         }
                     ],
@@ -393,8 +318,6 @@
                         "min_size_y": 0,
                         "max_size_x": 0,
                         "max_size_y": 0,
-                        "panel_y": 0,
-                        "panel_x": 0,
                         "ignore_scaling": false,
                         "section_type": "docker",
                         "docker_nesting_mode": "normal",
@@ -409,20 +332,7 @@
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
-                        "subpanel_id": "",
-                        "subpanel_mode": "data",
-                        "json_version": 4,
-                        "subpanel_data": {
-                            "id": "",
-                            "display_name": "",
-                            "actions": [],
-                            "sections": [],
-                            "tab_type": "buttons",
-                            "action_height": 10,
-                            "icon": "",
-                            "toolshelf_tab_row": 0,
-                            "json_version": 2
-                        }
+                        "json_version": 4
                     }
                 },
                 "options": {
@@ -444,7 +354,7 @@
                         ],
                         {
                             "sizes": [
-                                167
+                                480
                             ]
                         }
                     ],
@@ -460,8 +370,6 @@
                         "min_size_y": 0,
                         "max_size_x": 0,
                         "max_size_y": 0,
-                        "panel_y": 0,
-                        "panel_x": 0,
                         "ignore_scaling": false,
                         "section_type": "docker",
                         "docker_nesting_mode": "normal",
@@ -476,20 +384,7 @@
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
-                        "subpanel_id": "",
-                        "subpanel_mode": "data",
-                        "json_version": 4,
-                        "subpanel_data": {
-                            "id": "",
-                            "display_name": "",
-                            "actions": [],
-                            "sections": [],
-                            "tab_type": "buttons",
-                            "action_height": 10,
-                            "icon": "",
-                            "toolshelf_tab_row": 0,
-                            "json_version": 2
-                        }
+                        "json_version": 4
                     }
                 },
                 "options": {
@@ -511,7 +406,7 @@
                         ],
                         {
                             "sizes": [
-                                167
+                                480
                             ]
                         }
                     ],
@@ -527,8 +422,6 @@
                         "min_size_y": 0,
                         "max_size_x": 0,
                         "max_size_y": 0,
-                        "panel_y": 0,
-                        "panel_x": 0,
                         "ignore_scaling": false,
                         "section_type": "docker",
                         "docker_nesting_mode": "docking",
@@ -543,20 +436,7 @@
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
-                        "subpanel_id": "",
-                        "subpanel_mode": "data",
-                        "json_version": 4,
-                        "subpanel_data": {
-                            "id": "",
-                            "display_name": "",
-                            "actions": [],
-                            "sections": [],
-                            "tab_type": "buttons",
-                            "action_height": 10,
-                            "icon": "",
-                            "toolshelf_tab_row": 0,
-                            "json_version": 2
-                        }
+                        "json_version": 4
                     }
                 },
                 "options": {
@@ -569,17 +449,19 @@
         "options": {
             "button_size": 32,
             "header_size": 16,
-            "default_to_resize_mode": false,
-            "default_to_pinned": false,
             "show_pin_button": true,
             "show_menu_button": true,
             "show_tabs": true,
             "show_titlebar": true,
-            "home_icon": "material:home",
             "position": "top",
+            "resize_style": "minimum",
             "stack_preview": "tabbed",
             "stack_alignment": "default",
             "stack_actions": [],
+            "json_version": 1
+        },
+        "pageOptions": {
+            "page_icon": "material:home",
             "json_version": 1
         },
         "json_version": 1

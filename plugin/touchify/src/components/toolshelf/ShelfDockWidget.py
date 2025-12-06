@@ -38,7 +38,13 @@ class ShelfDockWidget(DockWidget):
         self.app_window = app_window
         self.managers = app_window.managers
         self.mainWidget = ShelfWidget(self, self.managers, self.PanelIndex)
+        self.mainWidget.sigShelfIndexChanged.connect(self.onShelfIndexChanged)
         self.setWidget(self.mainWidget)    
+
+
+    def onShelfIndexChanged(self):
+        if self.shrinkToFit:
+            self.adjustSize()
 
     def shelfReload(self, state: ToolshelfContainer):
         if state.options.resize_style == ToolshelfSettings.ResizeStyle.Minimum:
@@ -56,8 +62,9 @@ class ShelfDockWidget(DockWidget):
         if self.mainWidget: self.mainWidget.onConfigUpdated()
 
     def resizeEvent(self, a0):
-        if self.shrinkToFit and a0.oldSize != a0.size:
-            return self.adjustSize()
+        #TODO: Determine if we really need this
+        #if self.shrinkToFit and a0.oldSize != a0.size:
+            #return self.adjustSize()
         return super().resizeEvent(a0)
         
     def showEvent(self, event):

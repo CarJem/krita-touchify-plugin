@@ -93,8 +93,6 @@
                 "min_size_y": 0,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "panel_y": 0,
-                "panel_x": 0,
                 "ignore_scaling": false,
                 "section_type": "docker",
                 "docker_nesting_mode": "normal",
@@ -109,20 +107,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
-                "subpanel_id": "",
-                "subpanel_mode": "data",
-                "json_version": 4,
-                "subpanel_data": {
-                    "id": "",
-                    "display_name": "",
-                    "actions": [],
-                    "sections": [],
-                    "tab_type": "buttons",
-                    "action_height": 10,
-                    "icon": "",
-                    "toolshelf_tab_row": 0,
-                    "json_version": 2
-                }
+                "json_version": 4
             },
             "2529aa29-3a78-432a-b308-cafe2ee04e2c": {
                 "display_name": "",
@@ -133,8 +118,6 @@
                 "min_size_y": 0,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "panel_y": 0,
-                "panel_x": 0,
                 "ignore_scaling": false,
                 "section_type": "docker",
                 "docker_nesting_mode": "docking",
@@ -149,20 +132,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
-                "subpanel_id": "",
-                "subpanel_mode": "data",
-                "json_version": 4,
-                "subpanel_data": {
-                    "id": "",
-                    "display_name": "",
-                    "actions": [],
-                    "sections": [],
-                    "tab_type": "buttons",
-                    "action_height": 10,
-                    "icon": "",
-                    "toolshelf_tab_row": 0,
-                    "json_version": 2
-                }
+                "json_version": 4
             },
             "5e5ca049-14c2-4ef3-b103-869e554d4b8b": {
                 "display_name": "",
@@ -173,8 +143,6 @@
                 "min_size_y": 0,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "panel_y": 0,
-                "panel_x": 0,
                 "ignore_scaling": false,
                 "section_type": "docker",
                 "docker_nesting_mode": "normal",
@@ -189,20 +157,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
-                "subpanel_id": "",
-                "subpanel_mode": "data",
-                "json_version": 4,
-                "subpanel_data": {
-                    "id": "",
-                    "display_name": "",
-                    "actions": [],
-                    "sections": [],
-                    "tab_type": "buttons",
-                    "action_height": 10,
-                    "icon": "",
-                    "toolshelf_tab_row": 0,
-                    "json_version": 2
-                }
+                "json_version": 4
             },
             "33af9154-9698-4383-bde2-44f54940fef9": {
                 "display_name": "",
@@ -213,8 +168,6 @@
                 "min_size_y": 30,
                 "max_size_x": 48,
                 "max_size_y": 30,
-                "panel_y": 0,
-                "panel_x": 0,
                 "ignore_scaling": false,
                 "section_type": "special",
                 "docker_nesting_mode": "normal",
@@ -229,20 +182,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "layer_label_box",
-                "subpanel_id": "",
-                "subpanel_mode": "data",
-                "json_version": 4,
-                "subpanel_data": {
-                    "id": "",
-                    "display_name": "",
-                    "actions": [],
-                    "sections": [],
-                    "tab_type": "buttons",
-                    "action_height": 10,
-                    "icon": "",
-                    "toolshelf_tab_row": 0,
-                    "json_version": 2
-                }
+                "json_version": 4
             },
             "c95e8bfa-41ac-4c01-bc32-75da6076c750": {
                 "display_name": "",
@@ -253,8 +193,6 @@
                 "min_size_y": 30,
                 "max_size_x": 0,
                 "max_size_y": 30,
-                "panel_y": 0,
-                "panel_x": 0,
                 "ignore_scaling": false,
                 "section_type": "actions",
                 "docker_nesting_mode": "normal",
@@ -390,20 +328,7 @@
                 "action_section_btn_height": 30,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
-                "subpanel_id": "",
-                "subpanel_mode": "data",
-                "json_version": 4,
-                "subpanel_data": {
-                    "id": "",
-                    "display_name": "",
-                    "actions": [],
-                    "sections": [],
-                    "tab_type": "buttons",
-                    "action_height": 10,
-                    "icon": "",
-                    "toolshelf_tab_row": 0,
-                    "json_version": 2
-                }
+                "json_version": 4
             },
             "1ec8c90b-5c25-4a80-9ba4-39d96ed0559f": {
                 "display_name": "",
@@ -414,8 +339,6 @@
                 "min_size_y": 0,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "panel_y": 0,
-                "panel_x": 0,
                 "ignore_scaling": false,
                 "section_type": "actions",
                 "docker_nesting_mode": "normal",
@@ -505,20 +428,7 @@
                 "action_section_btn_height": 20,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
-                "subpanel_id": "",
-                "subpanel_mode": "data",
-                "json_version": 4,
-                "subpanel_data": {
-                    "id": "",
-                    "display_name": "",
-                    "actions": [],
-                    "sections": [],
-                    "tab_type": "buttons",
-                    "action_height": 10,
-                    "icon": "",
-                    "toolshelf_tab_row": 0,
-                    "json_version": 2
-                }
+                "json_version": 4
             },
             "a41cd564-aac6-4af7-ac74-8c13bd606e87": {
                 "display_name": "",
@@ -529,8 +439,6 @@
                 "min_size_y": 0,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "panel_y": 0,
-                "panel_x": 0,
                 "ignore_scaling": false,
                 "section_type": "actions",
                 "docker_nesting_mode": "normal",
@@ -620,37 +528,26 @@
                 "action_section_btn_height": 20,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
-                "subpanel_id": "",
-                "subpanel_mode": "data",
-                "json_version": 4,
-                "subpanel_data": {
-                    "id": "",
-                    "display_name": "",
-                    "actions": [],
-                    "sections": [],
-                    "tab_type": "buttons",
-                    "action_height": 10,
-                    "icon": "",
-                    "toolshelf_tab_row": 0,
-                    "json_version": 2
-                }
+                "json_version": 4
             }
         },
         "pages": [],
         "options": {
             "button_size": 32,
             "header_size": 16,
-            "default_to_resize_mode": false,
-            "default_to_pinned": false,
             "show_pin_button": true,
             "show_menu_button": true,
             "show_tabs": true,
             "show_titlebar": true,
-            "home_icon": "material:home",
             "position": "top",
+            "resize_style": "default",
             "stack_preview": "default",
             "stack_alignment": "default",
             "stack_actions": [],
+            "json_version": 1
+        },
+        "pageOptions": {
+            "page_icon": "material:home",
             "json_version": 1
         },
         "json_version": 1

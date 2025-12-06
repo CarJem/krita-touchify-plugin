@@ -71,7 +71,7 @@ class ShelfTabBar(QWidget):
             super().__init__(parent)
             self.setContentsMargins(0, 0, 0, 0)
             self.ourLayout = QHBoxLayout(self) if orientation == Qt.Orientation.Vertical else QVBoxLayout(self)
-            self.ourLayout.setSpacing(1)
+            self.ourLayout.setSpacing(0)
             self.ourLayout.setContentsMargins(0, 0, 0, 0)
             self.setLayout(self.ourLayout)
 
@@ -169,9 +169,9 @@ class ShelfTabBar(QWidget):
 
     
     def addToRow(self, widget: QWidget, row: int):
-        print("Adding item \"", str(widget), "\" to row: ", row)
+        #print("Adding item \"", str(widget), "\" to row: ", row)
         if row not in self._rows:
-            print("Creating new row: ", row)
+            #print("Creating new row: ", row)
             isVertical = self.orientation == Qt.Orientation.Vertical
             rowWid = QWidget(self)
             rowWid.setObjectName("toolshelf-tablist-row")
@@ -193,12 +193,12 @@ class ShelfTabBar(QWidget):
             self._rows[row] = rowWid
             self.ourLayout.layout().addWidget(rowWid)
             rowWid.adjustSize()
-            print("Created new row: ", row)
+            #print("Created new row: ", row)
         self._rows[row].layout().addWidget(widget)
-        print("Added item \"", str(widget), "\" to row: ", row)
+        #print("Added item \"", str(widget), "\" to row: ", row)
 
     def createTab(self, icon: str, id: str, tabRow: int, onClick: any, toolTip: str):
-        print("Creating tab:", id)
+        #print("Creating tab:", id)
         btn = ShelfTabBar.TabItem(self)
         btn.setIcon(ResourceManager.iconLoader(icon))
         if onClick: 
@@ -227,7 +227,7 @@ class ShelfTabBar(QWidget):
 
         btn.setSizePolicy(self.button_size_policy)  
         
-        print("Created tab:", id)
+        #print("Created tab:", id)
         return btn
     
     def createAction(self, properties: Trigger, action_row: int):
