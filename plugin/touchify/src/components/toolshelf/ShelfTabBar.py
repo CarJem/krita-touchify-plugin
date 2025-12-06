@@ -116,12 +116,16 @@ class ShelfTabBar(QWidget):
         match state.options.position:
             case "top":
                 self.orientation = Qt.Orientation.Horizontal
+                self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
             case "left":
                 self.orientation = Qt.Orientation.Vertical
+                self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
             case "right":
                 self.orientation = Qt.Orientation.Vertical
+                self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
             case _:
                 self.orientation = Qt.Orientation.Horizontal
+                self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
         self.ourLayout.dispose()
         self.ourLayout.close()
