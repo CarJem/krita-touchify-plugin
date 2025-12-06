@@ -9,7 +9,7 @@ from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
 from touchify.src.config.script.CustomScript import CustomScript
-from touchify.src.config.toolshelf.ToolshelfData import ToolshelfData
+from touchify.src.config.toolshelf_legacy.ToolshelfData import ToolshelfData
 from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.components.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog

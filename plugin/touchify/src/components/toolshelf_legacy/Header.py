@@ -5,10 +5,10 @@ from PyQt5.QtWidgets import *
 
 
 from touchify.src.api_krita import KritaAPI
-from touchify.src.components.toolshelf_old.Menu import Menu
+from touchify.src.components.toolshelf_legacy.Menu import Menu
 
-from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
-from touchify.src.config.toolshelf.ToolshelfData import ToolshelfData
+from touchify.src.config.toolshelf_legacy.ToolshelfDataOptions import ToolshelfDataOptions
+from touchify.src.config.toolshelf_legacy.ToolshelfData import ToolshelfData
 
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.__env__ import *

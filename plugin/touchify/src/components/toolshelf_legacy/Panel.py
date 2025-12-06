@@ -4,8 +4,8 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.trigger_buttons.TouchifyActionPanel import TouchifyActionPanel
 from touchify.src.components.widgets.CanvasDualColorButton import CanvasDualColorButton
-from touchify.src.config.toolshelf.ToolshelfData import ToolshelfData, ToolshelfDataPage
-from touchify.src.config.toolshelf.ToolshelfDataSection import ToolshelfDataSection
+from touchify.src.config.toolshelf_legacy.ToolshelfData import ToolshelfData, ToolshelfDataPage
+from touchify.src.config.toolshelf_legacy.ToolshelfDataSection import ToolshelfDataSection
 from touchify.src.components.widgets.BrushBlendingSelector import BrushBlendingSelector
 from touchify.src.components.widgets.BrushFlowSlider import BrushFlowSlider
 from touchify.src.components.widgets.BrushOpacitySlider import BrushOpacitySlider
@@ -19,6 +19,7 @@ from touchify.src.components.special.DockerContainer import DockerContainer
 
 from touchify.src.components.widgets.LayerBlendingSelector import LayerBlendingSelector
 from touchify.src.components.widgets.LayerLabelBox import LayerLabelBox
+from touchify.src.config.triggers.TriggerPanel import TriggerPanel
 from touchify.src.managers.shared.settings import TouchifySettings
 
 
@@ -303,7 +304,10 @@ class Panel(QWidget):
                 splitter.addWidget(tabBar, x, y)
 
         def Section_Actions(actionInfo: ToolshelfDataSection):
-            actionWidget = TouchifyActionPanel(cfg=actionInfo, parent=self, actions_manager=self.managers.mgr_actions)
+            cfg = TriggerPanel()
+            cfg.convertFrom(type(ToolshelfDataSection), actionInfo)
+
+            actionWidget = TouchifyActionPanel(cfg=cfg, parent=self, actions_manager=self.managers.mgr_actions)
             self.Data_AppendWorker(actionWidget.dataLoaded)
             actionWidget.Data_Load()
             return actionWidget

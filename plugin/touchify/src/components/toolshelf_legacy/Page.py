@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.config.toolshelf.ToolshelfData import ToolshelfDataPage
-from touchify.src.components.toolshelf_old.Panel import Panel
+from touchify.src.config.toolshelf_legacy.ToolshelfData import ToolshelfDataPage
+from touchify.src.components.toolshelf_legacy.Panel import Panel
 
 from krita import *
 

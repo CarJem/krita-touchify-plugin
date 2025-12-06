@@ -1,4 +1,4 @@
-from touchify.src.config.toolshelf.ToolshelfDataSection import ToolshelfDataSection
+from touchify.src.config.toolshelf_legacy.ToolshelfDataSection import ToolshelfDataSection
 from touchify.src.datatypes.metaclass.EnumStr import EnumStr
 from touchify.src.datatypes.sequence.TypedList import TypedList
 from touchify.src.extensions.json_extensions import JsonExtensions

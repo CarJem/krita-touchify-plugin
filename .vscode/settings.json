@@ -1,10 +1,15 @@
 {
     "files.exclude": {
         ".vscode\\PythonImportHelper-v2-Completion.json": true,
-        "**/__pycache__": true
+        "**/__pycache__": true,
+        ".venv": true,
+        ".env": true
     },
     "python.analysis.extraPaths": [
         "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs"
+    ],
+    "python.analysis.ignore": [
+        "plugin/touchify/src/alib_pyqtgraph/Qt/**"
     ],
     "python.analysis.fixAll": [
         "source.unusedImports",

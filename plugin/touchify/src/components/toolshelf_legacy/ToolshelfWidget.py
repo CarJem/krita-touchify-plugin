@@ -5,15 +5,15 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 
-from touchify.src.components.toolshelf_old.Header import Header
+from touchify.src.components.toolshelf_legacy.Header import Header
 
-from touchify.src.components.toolshelf_old.TabList import TabList
+from touchify.src.components.toolshelf_legacy.TabList import TabList
 from touchify.src.managers.shared.settings import *
 from touchify.__env__ import *
 from touchify.src.managers.normal.dockers import *
 
-from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
-from touchify.src.components.toolshelf_old.PageStack import PageStack
+from touchify.src.config.toolshelf_legacy.ToolshelfDataOptions import ToolshelfDataOptions
+from touchify.src.components.toolshelf_legacy.PageStack import PageStack
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

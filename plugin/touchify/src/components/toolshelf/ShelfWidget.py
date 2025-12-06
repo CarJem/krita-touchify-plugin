@@ -11,9 +11,9 @@ from touchify.src.components.toolshelf.ShelfLoader import ShelfLoader
 
 from touchify.src.components.toolshelf.ShelfTabBar import ShelfTabBar
 from touchify.src.components.toolshelf.ShelfToolbar import ShelfToolbar
-from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
-from touchify.src.config.toolshelf.ToolshelfDataSection import ToolshelfDataSection
-from touchify.src.config.toolshelf.ToolshelfState import ToolshelfState, ToolshelfSubState
+from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
+from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
+from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer, ToolshelfSubState
 from touchify.src.extensions.json_extensions import JsonExtensions
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.managers.shared.settings import *
@@ -22,7 +22,7 @@ from touchify.src.managers.normal.dockers import *
 
 from typing import TYPE_CHECKING
 
-from touchify_prototype.third_deps.pyqtgraph_docking.dockarea.DockArea import DockArea
+from touchify.src.alib_pyqtgraph.dockarea.DockArea import DockArea
 if TYPE_CHECKING:
     from .ShelfDockWidget import ShelfDockWidget, ShelfDockWidgetAlt
     from ..special.TouchifyPopup import TouchifyPopup
@@ -43,7 +43,7 @@ class ShelfWidget(QWidget):
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
         self.dlg_settings: ShelfItemOptions | None = None
-        self.containerOptions: ToolshelfDataOptions = ToolshelfDataOptions()
+        self.containerOptions: ToolshelfSettings = ToolshelfSettings()
 
         self.api_window = self.managers.api_window()
 
@@ -88,7 +88,7 @@ class ShelfWidget(QWidget):
     def isEditMode(self) -> bool:
         return self.header.optionsMenu.editModeAction.isChecked()
 
-    def currentState(self) -> ToolshelfState:
+    def currentState(self) -> ToolshelfContainer:
         def getState(dock_area: DockArea):
             subState = ToolshelfSubState()
             subState.layout = dock_area.saveState()
@@ -100,7 +100,7 @@ class ShelfWidget(QWidget):
                     subState.items[uuid] = dock.dock_settings
             return subState
 
-        result = ToolshelfState()
+        result = ToolshelfContainer()
 
         rootState = getState(self.dockArea)
         result.layout = rootState.layout
@@ -171,7 +171,7 @@ class ShelfWidget(QWidget):
             if PyQtExtensions.CommonHelpers.isDeleted(self.dlg_settings) == False:
                 return
 
-        self.dlg_settings = ShelfItemOptions(self.api_window, ToolshelfDataSection())
+        self.dlg_settings = ShelfItemOptions(self.api_window, ToolshelfDock())
         if self.dlg_settings.exec_():
             dock_item = self.dockLoader.Init_Section(self.dlg_settings.editableConfig)
             self.__shelfSetup(dock_item)
@@ -260,7 +260,7 @@ class ShelfWidget(QWidget):
 
     def loadShelves(self):
 
-        def loadShelf(sub_state: ToolshelfSubState | ToolshelfState, dock_area: DockArea):
+        def loadShelf(sub_state: ToolshelfSubState | ToolshelfContainer, dock_area: DockArea):
             for uuid in sub_state.items:
                 item = sub_state.items[uuid]
                 dock_item = self.dockLoader.Init_Section(item)
@@ -277,7 +277,7 @@ class ShelfWidget(QWidget):
         with open( "/home/carjem/debug_toolshelf_load_"  + str(self.registry_index) + ".json", "w") as f:
             f.write(jsonStr)
 
-        state: ToolshelfState = JsonExtensions.loadClass(jsonStr, ToolshelfState)
+        state: ToolshelfContainer = JsonExtensions.loadClass(jsonStr, ToolshelfContainer)
         self.containerOptions = state.options
 
         match self.containerOptions.position:

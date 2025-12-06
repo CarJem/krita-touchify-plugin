@@ -7,7 +7,7 @@ from touchify.src.managers.shared.events import GlobalEvents
 from touchify.src.managers.shared.settings import *
 from touchify.__env__ import *
 from touchify.src.managers.normal.dockers import *
-from touchify.src.components.toolshelf_old.ToolshelfWidget import *
+from touchify.src.components.toolshelf_legacy.ToolshelfWidget import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers

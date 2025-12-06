@@ -6,11 +6,11 @@ from touchify.__env__ import *
 from touchify.src.api_krita import KritaAPI
 from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.config.popup.PopupData import PopupData
-from touchify.src.config.toolshelf.ToolshelfData import ToolshelfData
+from touchify.src.config.toolshelf_legacy.ToolshelfData import ToolshelfData
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.components.common.widget.AnimatedWidget import AnimatedWidget
 from touchify.src.components.common.labels.ElidedLabel import ElidedLabel
-from touchify.src.components.toolshelf_old.ToolshelfWidget import ToolshelfWidget
+from touchify.src.components.toolshelf_legacy.ToolshelfWidget import ToolshelfWidget
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.managers.shared.settings_krita import KritaSettings
 
@@ -218,9 +218,9 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
         self.dockLocationChanged.connect(self.OnEvent_DockLocationChanged)
 
     def Construct(id: str, parent: QWidget, data: PopupData, managers: "TouchifyManagers"):      
-        from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
-        from touchify.src.config.toolshelf.ToolshelfDataPage import ToolshelfDataPage
-        from touchify.src.config.toolshelf.ToolshelfDataSection import ToolshelfDataSection
+        from touchify.src.config.toolshelf_legacy.ToolshelfDataOptions import ToolshelfDataOptions
+        from touchify.src.config.toolshelf_legacy.ToolshelfDataPage import ToolshelfDataPage
+        from touchify.src.config.toolshelf_legacy.ToolshelfDataSection import ToolshelfDataSection
         
         def constructDockerType(metadata: PopupData):  
             toolshelf_data: ToolshelfData = ToolshelfData()

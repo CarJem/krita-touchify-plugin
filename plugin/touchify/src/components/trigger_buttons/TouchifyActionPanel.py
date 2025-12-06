@@ -1,5 +1,6 @@
 import uuid
 from krita import *
+from touchify.src.config.triggers.TriggerPanel import TriggerPanel
 from touchify.src.datatypes.metaclass.EnumStr import EnumStr
 
 from touchify.src.components.trigger_buttons.TouchifyActionButton import *
@@ -8,7 +9,6 @@ from touchify.src.components.trigger_buttons.TouchifyActionToolbar import Touchi
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-from touchify.src.config.toolshelf.ToolshelfDataSection import ToolshelfDataSection
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from touchify.__env__ import *
@@ -54,12 +54,19 @@ class TouchifyActionPanel(QWidget):
         ToolbarFlat = "toolbar_flat"
         Popup = "popup"
 
+        @staticmethod
+        def convertFromOther(input: TriggerPanel.ActionSectionDisplayMode):
+            if input == TriggerPanel.ActionSectionDisplayMode.Normal: return TouchifyActionPanel.DisplayType.Toolbar
+            elif input == TriggerPanel.ActionSectionDisplayMode.Flat: return TouchifyActionPanel.DisplayType.ToolbarFlat
+            elif input == TriggerPanel.ActionSectionDisplayMode.Detailed: return TouchifyActionPanel.DisplayType.Popup
+            else: return TouchifyActionPanel.DisplayType.Toolbar
+
     actionTriggered = pyqtSignal()
     dataLoaded = pyqtSignal()
 
     @staticmethod
     def Titlebar(cfg: List[TriggerGroup], parent: QWidget=None, actions_manager: "ActionManager" = None):
-        data = ToolshelfDataSection()
+        data = TriggerPanel()
         data.action_section_contents = cfg
         return TouchifyActionPanel(data, parent, actions_manager)
     
@@ -67,23 +74,16 @@ class TouchifyActionPanel(QWidget):
 
         #opacity: float = 1.0
 
-    def __init__(self, cfg: ToolshelfDataSection, parent: QWidget=None, actions_manager: "ActionManager" = None):
+    def __init__(self, cfg: "TriggerPanel", parent: QWidget=None, actions_manager: "ActionManager" = None):
         super(TouchifyActionPanel, self).__init__(parent)
 
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
 
         self.title = "Unknown"
 
-        self.cfg = cfg
+        self.cfg: TriggerPanel = cfg
         self.actions_manager = actions_manager
-
-        match cfg.action_section_display_mode:
-            case ToolshelfDataSection.ActionSectionDisplayMode.Flat:
-                self.display_type = TouchifyActionPanel.DisplayType.ToolbarFlat
-            case ToolshelfDataSection.ActionSectionDisplayMode.Detailed:
-                self.display_type = TouchifyActionPanel.DisplayType.Popup
-            case _:
-                self.display_type = TouchifyActionPanel.DisplayType.Toolbar
+        self.display_type = TouchifyActionPanel.DisplayType.convertFromOther(cfg.display_mode)
 
         if cfg.ignore_scaling: scale = 1
         else: scale = TouchifySettings.instance().preferences().Interface_ToolshelfActionSectionScale
@@ -127,25 +127,24 @@ class TouchifyActionPanel(QWidget):
                 self.stylizeButton(btn)
                 self.appendButton(act[1], btn, act[0])
         
-        actionInfo = self.cfg
-        if actionInfo.ignore_scaling: scale = 1
+        if self.cfg.ignore_scaling: scale = 1
         else: scale = TouchifySettings.instance().preferences().Interface_ToolshelfActionSectionScale
     
-        size_x = int(actionInfo.size_x * scale)
-        size_y = int(actionInfo.size_y * scale)
-        min_size_x = int(actionInfo.min_size_x * scale)
-        min_size_y = int(actionInfo.min_size_y * scale)
-        max_size_x = int(actionInfo.max_size_x * scale)
-        max_size_y = int(actionInfo.max_size_y * scale)
+        size_x = int(self.cfg.size_x * scale)
+        size_y = int(self.cfg.size_y * scale)
+        min_size_x = int(self.cfg.min_size_x * scale)
+        min_size_y = int(self.cfg.min_size_y * scale)
+        max_size_x = int(self.cfg.max_size_x * scale)
+        max_size_y = int(self.cfg.max_size_y * scale)
     
         self.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
 
-        if actionInfo.hasDisplayName(): self.setTitle(actionInfo.display_name)
-        else: self.setTitle(actionInfo.action_section_id)
+        if self.cfg.hasDisplayName(): self.setTitle(self.cfg.display_name)
+        else: self.setTitle(self.cfg.action_section_id)
 
-        if actionInfo.action_section_alignment_x != ToolshelfDataSection.SectionAlignmentX.Nothing or actionInfo.action_section_alignment_y != ToolshelfDataSection.SectionAlignmentY.Nothing:
-            align_x = actionInfo.action_section_alignment_x
-            align_y = actionInfo.action_section_alignment_y
+        if self.cfg.action_section_alignment_x != TriggerPanel.SectionAlignmentX.Nothing or self.cfg.action_section_alignment_y != TriggerPanel.SectionAlignmentY.Nothing:
+            align_x = self.cfg.action_section_alignment_x
+            align_y = self.cfg.action_section_alignment_y
 
             alignment_x = Qt.AlignmentFlag.AlignLeft
             alignment_y = Qt.AlignmentFlag.AlignTop
@@ -153,15 +152,15 @@ class TouchifyActionPanel(QWidget):
             expand_x = QSizePolicy.Policy.Preferred
             expand_y = QSizePolicy.Policy.Preferred
 
-            if align_y == ToolshelfDataSection.SectionAlignmentY.Top: alignment_y = Qt.AlignmentFlag.AlignTop
-            elif align_y == ToolshelfDataSection.SectionAlignmentY.Center: alignment_y = Qt.AlignmentFlag.AlignVCenter
-            elif align_y == ToolshelfDataSection.SectionAlignmentY.Bottom: alignment_y = Qt.AlignmentFlag.AlignBottom
-            elif align_y == ToolshelfDataSection.SectionAlignmentY.Expanding: expand_y = QSizePolicy.Policy.Expanding
+            if align_y == TriggerPanel.SectionAlignmentY.Top: alignment_y = Qt.AlignmentFlag.AlignTop
+            elif align_y == TriggerPanel.SectionAlignmentY.Center: alignment_y = Qt.AlignmentFlag.AlignVCenter
+            elif align_y == TriggerPanel.SectionAlignmentY.Bottom: alignment_y = Qt.AlignmentFlag.AlignBottom
+            elif align_y == TriggerPanel.SectionAlignmentY.Expanding: expand_y = QSizePolicy.Policy.Expanding
 
-            if align_x == ToolshelfDataSection.SectionAlignmentX.Left: alignment_x = Qt.AlignmentFlag.AlignLeft
-            elif align_x == ToolshelfDataSection.SectionAlignmentX.Center: alignment_x = Qt.AlignmentFlag.AlignHCenter
-            elif align_x == ToolshelfDataSection.SectionAlignmentX.Right: alignment_x = Qt.AlignmentFlag.AlignRight
-            elif align_x == ToolshelfDataSection.SectionAlignmentX.Expanding: expand_x = QSizePolicy.Policy.Expanding
+            if align_x == TriggerPanel.SectionAlignmentX.Left: alignment_x = Qt.AlignmentFlag.AlignLeft
+            elif align_x == TriggerPanel.SectionAlignmentX.Center: alignment_x = Qt.AlignmentFlag.AlignHCenter
+            elif align_x == TriggerPanel.SectionAlignmentX.Right: alignment_x = Qt.AlignmentFlag.AlignRight
+            elif align_x == TriggerPanel.SectionAlignmentX.Expanding: expand_x = QSizePolicy.Policy.Expanding
 
             self.layout().setAlignment(alignment_x | alignment_y)
             if expand_x: self.setSizePolicy(expand_x, expand_y)

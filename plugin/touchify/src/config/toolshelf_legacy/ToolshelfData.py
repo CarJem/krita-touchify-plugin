@@ -1,7 +1,7 @@
 
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
-from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
-from touchify.src.config.toolshelf.ToolshelfDataPage import ToolshelfDataPage
+from touchify.src.config.toolshelf_legacy.ToolshelfDataOptions import ToolshelfDataOptions
+from touchify.src.config.toolshelf_legacy.ToolshelfDataPage import ToolshelfDataPage
 from touchify.src.extensions.file_extensions import FileExtensions
 from touchify.src.datatypes.sequence.TypedList import TypedList
 from touchify.src.extensions.json_extensions import JsonExtensions

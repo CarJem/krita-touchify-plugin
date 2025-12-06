@@ -6,10 +6,10 @@ from PyQt5.QtWidgets import *
 
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
-from touchify.src.config.toolshelf.ToolshelfDataPage import ToolshelfDataPage
+from touchify.src.config.toolshelf_legacy.ToolshelfDataPage import ToolshelfDataPage
 from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
 
-from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
+from touchify.src.config.toolshelf_legacy.ToolshelfDataOptions import ToolshelfDataOptions
 
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.__env__ import *

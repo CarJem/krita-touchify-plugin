@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.src.api_krita.wrappers.window import WindowAPI
-from touchify.src.components.toolshelf_old.ToolshelfDockWidget import ToolshelfDockWidget, ToolshelfDockWidgetAlt
+from touchify.src.components.toolshelf_legacy.ToolshelfDockWidget import ToolshelfDockWidget, ToolshelfDockWidgetAlt
 from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.normal.canvas import CanvasManager
 from touchify.src.managers.normal.developer import DeveloperManager

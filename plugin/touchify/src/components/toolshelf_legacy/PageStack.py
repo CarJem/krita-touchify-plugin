@@ -4,15 +4,15 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 from krita import *
-from touchify.src.components.toolshelf_old.Page import Page
+from touchify.src.components.toolshelf_legacy.Page import Page
 from touchify.src.components.special.DockerContainer import DockerContainer
 
 from touchify.src.managers.shared.settings import *
 from touchify.__env__ import *
 from touchify.src.managers.normal.dockers import *
 
-from touchify.src.config.toolshelf.ToolshelfData import ToolshelfDataPage
-from touchify.src.components.toolshelf_old.Page import Page
+from touchify.src.config.toolshelf_legacy.ToolshelfData import ToolshelfDataPage
+from touchify.src.components.toolshelf_legacy.Page import Page
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

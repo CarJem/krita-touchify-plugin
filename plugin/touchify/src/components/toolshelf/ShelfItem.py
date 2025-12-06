@@ -1,8 +1,8 @@
 from uuid import uuid4
 from touchify.src.components.special.DockerContainer import DockerContainer
 from touchify.src.components.toolshelf.ShelfItemOverlay import ShelfItemOverlay
-from touchify.src.config.toolshelf.ToolshelfDataSection import ToolshelfDataSection
-from touchify_prototype.third_deps.pyqtgraph_docking.dockarea.Dock import Dock
+from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
+from touchify.src.alib_pyqtgraph.dockarea.Dock import Dock
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -15,7 +15,7 @@ class ShelfItem(Dock):
     sigEditRequested = QtCore.pyqtSignal(str)
     sigDeleteRequested = QtCore.pyqtSignal(str)
 
-    def __init__(self, _config: ToolshelfDataSection, uuid:str | None = None, area=None, size=(10, 10), widget=None, hideTitle=False, autoOrientation=True, label=None, **kargs):
+    def __init__(self, _config: ToolshelfDock, uuid:str | None = None, area=None, size=(10, 10), widget=None, hideTitle=False, autoOrientation=True, label=None, **kargs):
         _uuid = str(uuid4()) if uuid == None else uuid
         super().__init__(_uuid, area, size, widget, hideTitle, autoOrientation, label, **kargs)
         self.label.hide()

@@ -10,7 +10,7 @@ from touchify.src.config.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.config.docker_group.DockerGroup import DockerGroup
 from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
-from touchify.src.config.toolshelf.ToolshelfData import ToolshelfData
+from touchify.src.config.toolshelf_legacy.ToolshelfData import ToolshelfData
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
 from touchify.src.config.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.extensions.file_extensions import FileExtensions

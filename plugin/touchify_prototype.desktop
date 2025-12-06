@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Service
-ServiceTypes=Krita/PythonPlugin
-X-KDE-Library=touchify_prototype
-X-Python-2-Compatible=false
-X-Krita-Manual=manual.html
-Name=Touchify-Prototype
-Comment=WIP

@@ -3,15 +3,15 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.property_grid.PropertyGrid import PropertyGrid
-from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
-from touchify.src.config.toolshelf.ToolshelfDataSection import ToolshelfDataSection
+from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
+from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 import copy
 
 from krita import *
 
 class ShelfItemOptions(QDialog):
 
-    def __init__(self, qwin: WindowAPI, options: ToolshelfDataSection | ToolshelfDataOptions):
+    def __init__(self, qwin: WindowAPI, options: ToolshelfDock | ToolshelfSettings):
         super().__init__(qwin.qwindow.window())
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.qwin = qwin.qwindow

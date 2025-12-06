@@ -7,8 +7,8 @@ from PyQt5.QtWidgets import *
 from touchify.src.api_krita import KritaAPI
 
 
-from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
-from touchify.src.config.toolshelf.ToolshelfState import ToolshelfState
+from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
+from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.__env__ import *
 from touchify.src.managers.shared.resources import ResourceManager
@@ -67,7 +67,7 @@ class ShelfToolbar(QWidget):
         qApp.paletteChanged.connect(self.updateStyleSheet)
         self.updateStyleSheet()
 
-    def reload(self, state: ToolshelfState):
+    def reload(self, state: ToolshelfContainer):
         button_size = int(state.options.header_size * TouchifySettings.instance().preferences().Interface_ToolshelfHeaderScale)
         icon_size = button_size - 4
         match state.options.position:
@@ -210,7 +210,7 @@ class ShelfToolbar(QWidget):
 
     def onPageChanged(self, index: int):
         self.optionsMenu.onPageChanged(index)
-        if self.shelf.containerOptions.stack_preview == ToolshelfDataOptions.StackPreview.Default:
+        if self.shelf.containerOptions.stack_preview == ToolshelfSettings.StackPreview.Default:
             if index != -1:
                 self.backButton.show()
                 self.fillerWidget.hide()

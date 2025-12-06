@@ -4,12 +4,12 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 
-from touchify.src.config.toolshelf.ToolshelfState import ToolshelfState, ToolshelfSubState
+from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer, ToolshelfSubState
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
-from touchify.src.config.toolshelf.ToolshelfDataOptions import ToolshelfDataOptions
+from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
 
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.__env__ import *
@@ -86,8 +86,8 @@ class ShelfTabBar(QWidget):
         self.tab_size = 32
         self.button_size = 32
         self.button_size_policy = QSizePolicy()
-        self.stack_alignment = ToolshelfDataOptions.StackAlignment.Default
-        self.stack_preview = ToolshelfDataOptions.StackPreview.Tabbed
+        self.stack_alignment = ToolshelfSettings.StackAlignment.Default
+        self.stack_preview = ToolshelfSettings.StackPreview.Tabbed
 
         self.setLayout(QGridLayout(self))
 
@@ -105,7 +105,7 @@ class ShelfTabBar(QWidget):
         qApp.paletteChanged.connect(self.updateStyleSheet)
         self.updateStyleSheet()
 
-    def reload(self, state: ToolshelfState):
+    def reload(self, state: ToolshelfContainer):
 
 
 
@@ -141,7 +141,7 @@ class ShelfTabBar(QWidget):
         
         
         self.button_size_policy = QSizePolicy()
-        not_default_alignment = self.stack_alignment != ToolshelfDataOptions.StackAlignment.Default
+        not_default_alignment = self.stack_alignment != ToolshelfSettings.StackAlignment.Default
         if self.orientation == Qt.Orientation.Vertical:
             self.button_size_policy.setHorizontalPolicy(QSizePolicy.Policy.MinimumExpanding)
             self.button_size_policy.setVerticalPolicy(QSizePolicy.Policy.Minimum)
@@ -180,13 +180,13 @@ class ShelfTabBar(QWidget):
             rowWid.setSizePolicy(self.button_size_policy)
 
             match self.stack_alignment:
-                case ToolshelfDataOptions.StackAlignment.Left:
+                case ToolshelfSettings.StackAlignment.Left:
                     if isVertical: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
                     else: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignLeft)
-                case ToolshelfDataOptions.StackAlignment.Center:
+                case ToolshelfSettings.StackAlignment.Center:
                     if isVertical: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignVCenter)
                     else: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignHCenter)
-                case ToolshelfDataOptions.StackAlignment.Right:
+                case ToolshelfSettings.StackAlignment.Right:
                     if isVertical: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignBottom)
                     else: rowWid.layout().setAlignment(Qt.AlignmentFlag.AlignRight)
             self._rows[row] = rowWid
@@ -253,15 +253,15 @@ class ShelfTabBar(QWidget):
 
 
         match preview_type:
-            case ToolshelfDataOptions.StackPreview.Default:
+            case ToolshelfSettings.StackPreview.Default:
                 if btn_id == "ROOT": should_hide = True
                 else:
                     if page_id == "ROOT": should_hide = False
                     else: should_hide = True
-            case ToolshelfDataOptions.StackPreview.Tabbed:
+            case ToolshelfSettings.StackPreview.Tabbed:
                 if page_id == btn_id: should_check = True
                 else: should_check = False
-            case ToolshelfDataOptions.StackPreview.TabbedExclusive:
+            case ToolshelfSettings.StackPreview.TabbedExclusive:
                 if page_id == btn_id: should_hide = True
                 else: should_hide = False
 
@@ -338,12 +338,12 @@ class ShelfTabBar(QWidget):
         should_hide = False
 
         match preview_type:
-            case ToolshelfDataOptions.StackPreview.Default:
+            case ToolshelfSettings.StackPreview.Default:
                 if page_id == "ROOT": should_hide = False
                 else: should_hide = True
-            case ToolshelfDataOptions.StackPreview.Tabbed:
+            case ToolshelfSettings.StackPreview.Tabbed:
                 pass
-            case ToolshelfDataOptions.StackPreview.TabbedExclusive:
+            case ToolshelfSettings.StackPreview.TabbedExclusive:
                 pass
 
         if should_hide: btn.hide()
