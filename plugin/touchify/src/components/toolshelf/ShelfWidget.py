@@ -29,7 +29,6 @@ if TYPE_CHECKING:
     from .ShelfDockWidget import ShelfDockWidget, ShelfDockWidgetAlt
     from ..special.TouchifyPopup import TouchifyPopup
     from touchify.src.PluginManagers import TouchifyManagers
-    from touchify.src.components.canvas.NtWidgetPad import NtWidgetPad
 
 class ShelfWidget(QWidget):
     sigShelfIndexChanged = QtCore.pyqtSignal()

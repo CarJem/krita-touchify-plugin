@@ -5,7 +5,6 @@ from PyQt5.QtWidgets import *
 from touchify.src.api_krita import KritaAPI
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.__env__ import *
-from touchify.src.components.canvas.NtCanvas import NtCanvas
 
 from touchify.src.extensions.krita_extensions import *
 
@@ -33,22 +32,17 @@ class CanvasManager(QObject):
         self.managers = managers
         self.api_window: WindowAPI | None = None
         self.last_canvas_focus = None
-        self.nt_canvas: NtCanvas | None = None
         self.active_canvas: QOpenGLWidget | None = None
 
     def Window_Load(self, api_window: WindowAPI):
         self.api_window = api_window
-        #self.nt_canvas.Window_Load(self.api_window, self.managers)
         self.api_window.activeViewChanged.connect(self.OnEvent_ActiveViewChanged)
         self.OnEvent_ActiveViewChanged()
 
     def Actions_Post(self):
-        #self.nt_canvas.Actions_Post()
         pass
         
     def Actions_Init(self, window: WindowAPI, path: str):
-        #self.nt_canvas = NtCanvas(window.qwindow.window())
-        #self.nt_canvas.Actions_Init(window, path)
         pass
 
     def OnEvent_ActiveViewChanged(self):

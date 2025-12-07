@@ -144,16 +144,19 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
         QDockWidget.__init__(self, parent)  
         #TODO: Improve Performance
         AnimatedWidget.__init__(self, parent, 0) #0.1        
+        self.Variables(id, args, toolshelf_data, managers)
+        self.Components()
+        self.Connections()
 
-        self.config: PopupData = args
-        self.registry_id: str = id
+    def Variables(self, id: str, args: PopupData, toolshelf_data: ToolshelfContainer, managers: "TouchifyManagers"):
+        self.config = args
+        self.registry_id = id
         self.managers: "TouchifyManagers" = managers
-
         self.api_window: WindowAPI = self.managers.api_window()
-        self.main_window: QMainWindow = self.api_window.qwindow
-
-        self.toolshelf_data: ToolshelfContainer = toolshelf_data
+        self.toolshelf_data = toolshelf_data
+        self.main_window = self.api_window.qwindow
         self.toggle_view_action = self.toggleViewAction()
+
 
         self.State_timeSinceOpening = QTime()
         self.State_isCollapsed = False
@@ -170,16 +173,17 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
         self.State_currentDockLocation = Qt.DockWidgetArea.NoDockWidgetArea
 
         if self.State_dockWidgetType == PopupData.WindowType.Window:
-            self._drawThinFrame = False
+            self.State_Window_drawFrame = False
             self.State_Window_rememberLayout = self.config.window_remember_layout
             self.State_Window_isDockingAllowed = self.config.window_docking_allowed
             self.State_Window_isFixed = self.config.window_fixed_layout
         else:
-            self._drawThinFrame = True
+            self.State_Window_drawFrame = True
             self.State_Window_rememberLayout = False
             self.State_Window_isDockingAllowed = False
             self.State_Window_isFixed = PopupData.WindowFixedLayoutMode.Off
 
+    def Components(self):
         self.setAutoFillBackground(True)
         self.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -210,8 +214,8 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
             if self.State_Window_isDockingAllowed \
             else Qt.DockWidgetArea.NoDockWidgetArea)
         
+    def Connections(self):
         self.dockLocationChanged.connect(self.OnEvent_DockLocationChanged)
-
 
     def Construct(id: str, parent: QWidget, data: PopupData, managers: "TouchifyManagers"):              
         def constructDockerType(metadata: PopupData):  
@@ -553,7 +557,7 @@ class TouchifyPopup(QDockWidget, AnimatedWidget):
 
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)
-        if self._drawThinFrame:
+        if self.State_Window_drawFrame:
             painter = QPainter(self)
             painter.setPen(QPen(qApp.palette().color(QPalette.ColorRole.WindowText), 1))
             painter.drawRect(self.rect().adjusted(0, 0, -1, -1))
