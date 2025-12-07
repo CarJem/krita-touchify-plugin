@@ -1,6 +1,5 @@
 from typing import Any
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
-from touchify.src.config.toolshelf_legacy.ToolshelfDataSection import ToolshelfDataSection
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from touchify.src.datatypes.sequence.TypedList import TypedList
 from touchify.src.extensions.json_extensions import JsonExtensions
@@ -77,24 +76,6 @@ class TriggerPanel:
     def convertFrom(self, type: type, cls: Any):
         if type == type(ToolshelfDock):
             actionInfo: ToolshelfDock = cls
-            self.action_section_alignment_x = actionInfo.action_section_alignment_x
-            self.action_section_alignment_y = actionInfo.action_section_alignment_y
-            self.action_section_btn_height = actionInfo.action_section_btn_height
-            self.action_section_btn_width = actionInfo.action_section_btn_width
-            self.action_section_contents = actionInfo.action_section_contents
-            self.display_mode = actionInfo.action_section_display_mode
-            self.action_section_icon_size = actionInfo.action_section_icon_size
-            self.action_section_id = actionInfo.action_section_id
-            self.display_name = actionInfo.display_name
-            self.min_size_x = actionInfo.min_size_x
-            self.min_size_y = actionInfo.min_size_y
-            self.max_size_x = actionInfo.max_size_x
-            self.max_size_y = actionInfo.max_size_y
-            self.size_x = actionInfo.size_x
-            self.size_y = actionInfo.size_y
-            self.ignore_scaling = actionInfo.ignore_scaling
-        elif type == type(ToolshelfDataSection):
-            actionInfo: ToolshelfDataSection = cls
             self.action_section_alignment_x = actionInfo.action_section_alignment_x
             self.action_section_alignment_y = actionInfo.action_section_alignment_y
             self.action_section_btn_height = actionInfo.action_section_btn_height

@@ -1,4 +1,3 @@
-from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from touchify.src.datatypes.sequence.TypedList import TypedList
 from touchify.src.extensions.json_extensions import JsonExtensions
@@ -96,9 +95,7 @@ class ToolshelfDock:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = BackwardsCompatibility.ToolshelfDataSection(args)
-        from ..toolshelf_legacy.ToolshelfDataPage import ToolshelfDataPage
-        JsonExtensions.dictToObject(self, args, [ToolshelfDataPage])
+        JsonExtensions.dictToObject(self, args, [])
         self.action_section_contents = JsonExtensions.init_list(args, "action_section_contents", TriggerGroup)
 
     def forceLoad(self):

@@ -10,7 +10,6 @@ from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
 from touchify.src.config.script.CustomScript import CustomScript
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
-from touchify.src.config.toolshelf_legacy.ToolshelfData import ToolshelfData
 from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.components.property_grid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
@@ -145,8 +144,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             mode == PropertyGrid_Restrictions.StrMod.MenuRegistry or \
             mode == PropertyGrid_Restrictions.StrMod.ScriptRegistry or \
             mode == PropertyGrid_Restrictions.StrMod.PieWheelRegistry or \
-            mode == PropertyGrid_Restrictions.StrMod.ShelfRegistry or \
-            mode == PropertyGrid_Restrictions.StrMod.ToolshelfRegistry:
+            mode == PropertyGrid_Restrictions.StrMod.ShelfRegistry:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
 
@@ -154,7 +152,6 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             elif mode == PropertyGrid_Restrictions.StrMod.DockerGroupRegistry: self.selector_registry_type = DockerGroup
             elif mode == PropertyGrid_Restrictions.StrMod.CanvasPresetRegistry: self.selector_registry_type = CanvasPreset
             elif mode == PropertyGrid_Restrictions.StrMod.MenuRegistry: self.selector_registry_type = TriggerMenu
-            elif mode == PropertyGrid_Restrictions.StrMod.ToolshelfRegistry: self.selector_registry_type = ToolshelfData
             elif mode == PropertyGrid_Restrictions.StrMod.ShelfRegistry: self.selector_registry_type = Toolshelf
             elif mode == PropertyGrid_Restrictions.StrMod.ScriptRegistry: self.selector_registry_type = CustomScript
             elif mode == PropertyGrid_Restrictions.StrMod.PieWheelRegistry: self.selector_registry_type = PieWheelData

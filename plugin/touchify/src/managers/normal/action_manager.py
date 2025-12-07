@@ -30,7 +30,7 @@ from touchify.src.extensions.krita_extensions import *
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.src.managers.shared.resources import ResourceManager
 
-from touchify.src.components.special.TouchifyPopup import TouchifyPopup
+from touchify.src.components.popup.PopupWidget import PopupWidget
 
 from touchify.src.datatypes.constants.KritaActions import KritaActions
 
@@ -66,7 +66,7 @@ class ActionManager(QObject):
         self.custom_docker_states = {}
         self.registeredActions = {}
         self.registeredActionsData = {}
-        self.active_popups: dict[str, TouchifyPopup] = {}
+        self.active_popups: dict[str, PopupWidget] = {}
         self.composer_action_down: bool = False
         self.pie_wheel_api: Extension = None
 
@@ -206,14 +206,14 @@ class ActionManager(QObject):
                 del self.active_popups[popup_id]
 
             print("attempting to build")
-            popup = TouchifyPopup.Construct(id, self.api_window.qwindow.window(), data, self.managers)
+            popup = PopupWidget(self.api_window.qwindow.window(), id, data, self.managers)
             if popup == None: 
                 print("failed to build")
                 return
             
             self.active_popups[popup_id] = popup
 
-        popup.Popup_Open(_parent)
+        popup.openPopup(_parent)
 
     #endregion
 
@@ -371,8 +371,8 @@ class ActionManager(QObject):
 
         for popup_id in self.active_popups:
             try:
-                popup: TouchifyPopup = self.active_popups[popup_id]
-                popup.Popup_Shutdown()
+                popup: PopupWidget = self.active_popups[popup_id]
+                popup.dispose()
             except:
                 pass
         self.active_popups.clear()
@@ -407,12 +407,12 @@ class ActionManager(QObject):
 
     def ButtonEvent_ShortcutComposer(self, btn: TouchifyActionButton, onClick: any):
         def tryFindParentPopup(source: QWidget):
-            from touchify.src.components.special.TouchifyPopup import TouchifyPopup
+            from touchify.src.components.popup.PopupWidget import PopupWidget
             try:
                 widget = source.parent()
                 while (widget):
                     foo = widget
-                    if isinstance(foo, TouchifyPopup):
+                    if isinstance(foo, PopupWidget):
                         return foo
                     widget = widget.parent()
                 return None
@@ -421,8 +421,8 @@ class ActionManager(QObject):
             
         parentPopup = tryFindParentPopup(btn)
         if parentPopup: 
-            parentPopup.State_composerWorkAround = True
-            self.composerTriggerEnded.connect(parentPopup.OnEvent_ComposerEnd)
+            parentPopup._hasComposerWorkAround = True
+            self.composerTriggerEnded.connect(parentPopup.onComposerTriggerEnded)
 
         onClick()
         self.composer_action_down = True
@@ -431,7 +431,7 @@ class ActionManager(QObject):
         if btn:
             parent: QWidget | None = btn.parentWidget()
             while parent:
-                if isinstance(parent, TouchifyPopup):
+                if isinstance(parent, PopupWidget):
                     parent.closePopup()
                     return
                 else:

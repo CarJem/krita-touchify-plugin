@@ -18,7 +18,7 @@ from touchify.src.managers.shared.resources import ResourceManager
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ShelfWidget import ShelfWidget
-    from touchify.src.components.special.TouchifyPopup import TouchifyPopup
+    from touchify.src.components.popup.PopupTitlebar import PopupWidget
 
 
 

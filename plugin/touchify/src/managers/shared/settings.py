@@ -10,7 +10,6 @@ from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.script.CustomScript import CustomScript
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
-from touchify.src.config.toolshelf_legacy.ToolshelfData import ToolshelfData
 from touchify.src.config.TouchifyRegistryPreferences import TouchifyRegistryPreferences
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
 from touchify.src.config.widget_layout.WidgetLayout import WidgetLayout
@@ -78,7 +77,6 @@ class TouchifySettings:
                                                         PopupData |\
                                                         DockerGroup |\
                                                         CanvasPreset |\
-                                                        ToolshelfData |\
                                                         Toolshelf |\
                                                         ToolboxData |\
                                                         CustomScript |\
@@ -97,11 +95,6 @@ class TouchifySettings:
                 for item in pack.menus:
                     item: TriggerMenu
                     id = f"{pack.INTERNAL_UUID_ID}/menu/{item.INTERNAL_UUID_ID}"
-                    if item_id == id: return item
-            elif type == ToolshelfData:
-                for item in pack.toolshelves:
-                    item: ToolshelfData
-                    id = f"{pack.INTERNAL_UUID_ID}/toolshelves/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
             elif type == Toolshelf:
                 for item in pack.shelves:
@@ -146,7 +139,6 @@ class TouchifySettings:
                                         dict[RegistryKey,PopupData] |\
                                         dict[RegistryKey,DockerGroup] |\
                                         dict[RegistryKey,CanvasPreset] |\
-                                        dict[RegistryKey,ToolshelfData] |\
                                         dict[RegistryKey,Toolshelf] |\
                                         dict[RegistryKey,ToolboxData] |\
                                         dict[RegistryKey,CustomScript] |\
@@ -176,11 +168,6 @@ class TouchifySettings:
                 for item in pack.canvas_presets:
                     item: CanvasPreset
                     id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "canvas_preset", item.INTERNAL_UUID_ID)
-                    results[id] = item
-            elif type == ToolshelfData:
-                for item in pack.toolshelves:
-                    item: ToolshelfData
-                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "toolshelves", item.INTERNAL_UUID_ID)
                     results[id] = item
             elif type == Toolshelf:
                 for item in pack.shelves:
@@ -246,53 +233,6 @@ class TouchifySettings:
             KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Alpha", id, False)
         elif registry_index == 2:
             KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Beta", id, False)
-
-    #region Toolshelf (Legacy)
-
-    def getActiveToolshelfId(self, registry_index: int) -> str:
-        fallback_val = "none"
-
-        if registry_index == -2:
-            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_LEGACY, "SelectedPreset_Docker_Alt", fallback_val)
-        elif registry_index == -1:
-            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_LEGACY, "SelectedPreset_Docker", fallback_val)
-        elif registry_index == 0:
-            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_LEGACY, "SelectedPreset_Main", fallback_val)
-        elif registry_index == 1:
-            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_LEGACY, "SelectedPreset_Alt", fallback_val)
-        elif registry_index == 2:
-            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_LEGACY, "SelectedPreset_Gamma", fallback_val)
-        elif registry_index == 3:
-            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_LEGACY, "SelectedPreset_Delta", fallback_val)
-        else:
-            return fallback_val
-
-    def getActiveToolshelf(self, registry_index: int) -> ToolshelfData:
-        registry = self.getRegistry(ToolshelfData)
-        registry_selection = self.getActiveToolshelfId(registry_index)
-
-        if registry_selection in registry:
-            return registry[registry_selection]    
-        else: 
-            return ToolshelfData()
-
-    def setActiveToolshelf(self, registry_index: int, id: str):
-        if registry_index == -2:
-            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_LEGACY, "SelectedPreset_Docker_Alt", id, False)
-        elif registry_index == -1:
-            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_LEGACY, "SelectedPreset_Docker", id, False)
-        elif registry_index == 0:
-            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_LEGACY, "SelectedPreset_Main", id, False)
-        elif registry_index == 1:
-            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_LEGACY, "SelectedPreset_Alt", id, False)
-        elif registry_index == 2:
-            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_LEGACY, "SelectedPreset_Gamma", id, False)
-        elif registry_index == 3:
-            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_LEGACY, "SelectedPreset_Delta", id, False)
-
-        GlobalEvents.EMIT_SIGNAL_TOOLSHELF_PRESET_CHANGED(registry_index)
-    
-    #endregion
 
     #region Toolbox 
 

@@ -11,7 +11,6 @@ from touchify.src.config.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.config.docker_group.DockerGroup import DockerGroup
 from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
-from touchify.src.config.toolshelf_legacy.ToolshelfData import ToolshelfData
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
 from touchify.src.config.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.extensions.file_extensions import FileExtensions
@@ -33,7 +32,6 @@ class ResourcePack:
         self.docker_groups: TypedList[DockerGroup] = []
         self.canvas_presets: TypedList[CanvasPreset] = []
         self.toolboxes: TypedList[ToolboxData] = []
-        self.toolshelves: TypedList[ToolshelfData] = []
         self.shelves: TypedList[Toolshelf] = []
         self.widget_layouts: TypedList[WidgetLayout] = []
         self.scripts: TypedList[CustomScript] = []
@@ -61,7 +59,6 @@ class ResourcePack:
         self.docker_groups = TypedList(self.docker_groups, DockerGroup)
         self.canvas_presets = TypedList(self.canvas_presets, CanvasPreset)
         self.toolboxes = TypedList(self.toolboxes, ToolboxData)
-        self.toolshelves = TypedList(self.toolshelves, ToolshelfData)
         self.shelves = TypedList(self.shelves, Toolshelf)
         self.widget_layouts = TypedList(self.widget_layouts, WidgetLayout)
         self.scripts = TypedList(self.scripts, CustomScript)
@@ -115,9 +112,6 @@ class ResourcePack:
 
                 elif os.path.isdir(contentPath) and contentName == "toolboxes":
                     self.toolboxes = loadItems(contentPath, ToolboxData)
-
-                elif os.path.isdir(contentPath) and contentName == "toolshelves":
-                    self.toolshelves = loadItems(contentPath, ToolshelfData)
 
                 elif os.path.isdir(contentPath) and contentName == "shelves":
                     self.shelves = loadItems(contentPath, Toolshelf)
