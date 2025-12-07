@@ -64,6 +64,9 @@ class PopupLoader(QObject):
         #TODO: Fix
         #toolshelf_data.homepage.tab_type = data.dockers_tab_type
 
+        
+        layout_array = []
+
         for docker_id in dockers:
             docker_section: ToolshelfDock = ToolshelfDock()
             docker_section.section_type = ToolshelfDock.SectionType.Docker
@@ -75,6 +78,14 @@ class PopupLoader(QObject):
             docker_section.min_size_x = data.popup_min_width
             docker_section.min_size_y = data.popup_min_height
             toolshelf_data.items[docker_id] = docker_section
+            layout_array.append(["dock",docker_id,{}])
+
+        if len(dockers) >= 2:
+            toolshelf_data.layout = {
+                "main": ["vertical",[["tab",layout_array,{"index": 0}],],{"sizes": [0]}],
+                "float": []
+            }
+
         return toolshelf_data
         
     def Section_Shelf(self, data: PopupData):
