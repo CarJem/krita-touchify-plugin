@@ -189,10 +189,8 @@ class TouchifySettings:
     def getActiveShelfId(self, registry_index: int) -> str:
         fallback_val = "none"
 
-        if registry_index == 1:
-            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Alpha", fallback_val)
-        elif registry_index == 2:
-            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Beta", fallback_val)
+        if registry_index >= 0:
+            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_" + str(registry_index), fallback_val)
         else:
             return fallback_val
 
@@ -216,10 +214,8 @@ class TouchifySettings:
             return "none"
 
     def setActiveShelf(self, registry_index: int, id: str) -> str:
-        if registry_index == 1:
-            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Alpha", id, False)
-        elif registry_index == 2:
-            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_Beta", id, False)
+        if registry_index >= 0:
+            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_" + str(registry_index), id, False)
 
     #region Toolbox 
 

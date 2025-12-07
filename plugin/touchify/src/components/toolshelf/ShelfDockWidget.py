@@ -18,7 +18,6 @@ from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
 DOCKER_TITLE="Touchify Core: Toolshelf"
 
 class ShelfDockWidget(DockWidget):
-
     resizeByDefaultRequested=pyqtSignal()
 
     def __init__(self): 
@@ -30,7 +29,7 @@ class ShelfDockWidget(DockWidget):
         self._originalSizePolicy = self.sizePolicy()
         self.shrinkToFit = False
 
-        self.PanelIndex = 1
+        self.PanelIndex = 0
         self.setWindowTitle(DOCKER_TITLE)
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
 
@@ -78,9 +77,3 @@ class ShelfDockWidget(DockWidget):
     # 'pass' means do not do anything
     def canvasChanged(self, canvas):
         pass
-
-class ShelfDockWidgetAlt(ShelfDockWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle(DOCKER_TITLE + " (Alt)")
-        self.PanelIndex = 2

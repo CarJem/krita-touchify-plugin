@@ -1,8 +1,10 @@
+from enum import Enum
 from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from touchify.src.api_krita import KritaAPI
+from touchify.src.managers.shared.events import GlobalEvents
 from touchify.src.managers.shared.settings import TouchifySettings
 from touchify.__env__ import *
 
@@ -27,6 +29,18 @@ class CanvasManager(QObject):
     delayedFocus=pyqtSignal()
 
 
+    class WidgetAlignment(Enum):
+        TopLeft = 1
+        TopCenter = 2
+        TopRight = 3
+        MidLeft = 4
+        MidRight = 5
+        BottomLeft = 6
+        BottomCenter = 7
+        BottomRight = 8
+
+
+
     def __init__(self, parent: QObject, managers: "TouchifyManagers"):
         super().__init__(parent)
         self.managers = managers
@@ -37,6 +51,7 @@ class CanvasManager(QObject):
     def Window_Load(self, api_window: WindowAPI):
         self.api_window = api_window
         self.api_window.activeViewChanged.connect(self.OnEvent_ActiveViewChanged)
+        GlobalEvents.instance().SIGNAL_TIMER_TICKED.connect(self.onTick)
         self.OnEvent_ActiveViewChanged()
 
     def Actions_Post(self):
@@ -72,6 +87,77 @@ class CanvasManager(QObject):
 
         self.active_canvas = active_canvas
         self.active_canvas.installEventFilter(self)
+
+
+    def updateFloatingDocker(self, docker_id: str, position: WidgetAlignment):
+        if not self.active_canvas: 
+            return
+        
+        floatableDocker = self.managers.mgr_dockers.findDocker(docker_id)
+        if not floatableDocker.isVisible():
+            return
+        
+        if floatableDocker.isFloating() == False:
+            floatableDocker.setFloating(True)
+        
+        edge_padding: int = 5
+        space_rect = self.active_canvas.rect()
+        docker_width = floatableDocker.width()
+        docker_height = floatableDocker.height()
+
+        if docker_width != 0 and docker_height != 0:
+            docker_halfwidth = int(docker_width / 2)
+            docker_halfheight = int(docker_height / 2)
+        else:
+            docker_halfwidth = 0
+            docker_halfheight = 0
+
+        top_left = QPoint(space_rect.topLeft()) + QPoint(edge_padding, edge_padding)
+        top_center = QPoint(space_rect.center().x(),space_rect.top()) - QPoint(docker_halfwidth, 0) + QPoint(0, edge_padding)
+        top_right = QPoint(space_rect.topRight()) - QPoint(docker_width, 0) + QPoint(-edge_padding, edge_padding)
+
+        mid_left = QPoint(space_rect.left(), space_rect.center().y()) - QPoint(0, docker_halfheight) + QPoint(edge_padding, 0)
+        mid_right = QPoint(space_rect.right(), space_rect.center().y()) - QPoint(docker_width, docker_halfheight) + QPoint(-edge_padding, 0)
+
+        bottom_left = QPoint(space_rect.bottomLeft()) - QPoint(0, docker_height) + QPoint(edge_padding, -edge_padding)
+        bottom_center = QPoint(space_rect.center().x(), space_rect.bottom()) - QPoint(docker_halfwidth, docker_height) + QPoint(0, -edge_padding)
+        bottom_right = QPoint(space_rect.bottomRight()) - QPoint(docker_width, docker_height) + QPoint(-edge_padding, -edge_padding)
+
+        edgePoint: QPoint = QPoint(0,0)
+        match position:
+            case CanvasManager.WidgetAlignment.TopLeft:
+                edgePoint = self.active_canvas.mapToGlobal(top_left)
+            case CanvasManager.WidgetAlignment.TopRight:
+                edgePoint = self.active_canvas.mapToGlobal(top_right)
+            case CanvasManager.WidgetAlignment.BottomRight:
+                edgePoint = self.active_canvas.mapToGlobal(bottom_right)
+            case CanvasManager.WidgetAlignment.BottomLeft:
+                edgePoint = self.active_canvas.mapToGlobal(bottom_left)
+            case CanvasManager.WidgetAlignment.TopCenter:
+                edgePoint = self.active_canvas.mapToGlobal(top_center)
+            case CanvasManager.WidgetAlignment.BottomCenter:
+                edgePoint = self.active_canvas.mapToGlobal(bottom_center)
+            case CanvasManager.WidgetAlignment.MidLeft:
+                edgePoint = self.active_canvas.mapToGlobal(mid_left)
+            case CanvasManager.WidgetAlignment.MidRight:
+                edgePoint = self.active_canvas.mapToGlobal(mid_right)
+            
+            case _:
+                edgePoint = self.active_canvas.mapToGlobal(QPoint(0,0))
+
+        floatableDocker.move(edgePoint)
+
+
+
+    def onTick(self):
+        self.updateFloatingDocker(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT_FLT + "_1", CanvasManager.WidgetAlignment.TopLeft)
+        self.updateFloatingDocker(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT_FLT + "_2", CanvasManager.WidgetAlignment.TopCenter)
+        self.updateFloatingDocker(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT_FLT + "_3", CanvasManager.WidgetAlignment.TopRight)
+        self.updateFloatingDocker(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT_FLT + "_4", CanvasManager.WidgetAlignment.MidLeft)
+        self.updateFloatingDocker(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT_FLT + "_5", CanvasManager.WidgetAlignment.MidRight)
+        self.updateFloatingDocker(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT_FLT + "_6", CanvasManager.WidgetAlignment.BottomLeft)
+        self.updateFloatingDocker(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT_FLT + "_7", CanvasManager.WidgetAlignment.BottomCenter)
+        self.updateFloatingDocker(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT_FLT + "_8", CanvasManager.WidgetAlignment.BottomRight)
 
     def eventFilter(self, obj: QObject, event: QEvent):
 

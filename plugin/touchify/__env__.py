@@ -54,9 +54,8 @@ TOUCHIFY_ACTIONID_REGISTERED_ACTION_PREFIX="touchify_registry_"
 #-----------------#
 # Docker IDs
 TOUCHIFY_DOCKERID_TOOLSHELFDOCKER="Touchify/ToolshelfDocker"
-TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_ALT="Touchify/ToolshelfDockerAlt"
-TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_LEGACY="Touchify/ToolshelfDocker_Legacy"
-TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_ALT_LEGACY="Touchify/ToolshelfDockerAlt_Legacy"
+TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT="Touchify/ToolshelfDocker_Ext"
+TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT_FLT="Touchify/ToolshelfDocker_ExtFlt"
 TOUCHIFY_DOCKERID_DOCKER_TOOLBOX="Touchify/TouchifyToolbox"
 #-----------------#
 # Setting Paths

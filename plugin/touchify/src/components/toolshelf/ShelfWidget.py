@@ -35,7 +35,7 @@ class ShelfWidget(QWidget):
 
     def __init__(self, parent, managers: "TouchifyManagers", registry_index: int = 0, enforced_data: ToolshelfContainer = None):
         super(ShelfWidget, self).__init__(parent)
-        self.display: "ShelfDockWidget" | "ShelfDockWidgetAlt" | "PopupWidget" = parent
+        self.display: "ShelfDockWidget" | "PopupWidget" = parent
         self.managers = managers
         self.registry_index = registry_index
 

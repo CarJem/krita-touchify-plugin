@@ -2,7 +2,7 @@
     "files.exclude": {
         ".vscode\\PythonImportHelper-v2-Completion.json": true,
         "**/__pycache__": true,
-        ".venv": true,
+        ".venv": false,
         ".env": true
     },
     "python.analysis.extraPaths": [

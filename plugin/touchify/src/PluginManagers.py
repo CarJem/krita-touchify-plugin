@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.src.api_krita.wrappers.window import WindowAPI
+from touchify.src.components.toolshelf.ShelfDockWidgets import ShelfDockWidgets
 from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.normal.canvas import CanvasManager
 from touchify.src.managers.normal.developer import DeveloperManager
@@ -16,7 +17,7 @@ from touchify.src.managers.normal.shortcuts import ShortcutsManager
 from touchify.src.managers.normal.tweaks import TweakManager
 
 
-from touchify.src.components.toolshelf.ShelfDockWidget import ShelfDockWidget, ShelfDockWidgetAlt
+from touchify.src.components.toolshelf.ShelfDockWidget import ShelfDockWidget
 from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
 
 if TYPE_CHECKING:
@@ -54,6 +55,8 @@ class TouchifyManagers:
         
         addons_list: list[QAction] = []
         core_list: list[QAction] = []
+        toolshelves_list: list[QAction] = []
+        floating_toolshelves_list: list[QAction] = []
 
         for docker_action in dockers_menu_action.menu().actions():
             docker_text = docker_action.text()
@@ -63,14 +66,26 @@ class TouchifyManagers:
                 addons_list.append(docker_action)
                 
             if docker_text.startswith(touchify_title_prefix):
+                
                 docker_action.setText(docker_text.removeprefix(touchify_title_prefix))
-                core_list.append(docker_action)
+                if docker_text.startswith(ShelfDockWidgets.DOCKER_TITLE):
+                    toolshelves_list.append(docker_action)
+                elif docker_text.startswith(ShelfDockWidgets.FLT_DOCKER_TITLE):
+                    floating_toolshelves_list.append(docker_action)
+                else:
+                    core_list.append(docker_action)
                 
         dockers_menu_action.menu().addSection("Touchify Core")
         for act in core_list: dockers_menu_action.menu().addAction(act)
 
         dockers_menu_action.menu().addSection("Touchify Addons")
         for act in addons_list: dockers_menu_action.menu().addAction(act)
+
+        dockers_menu_action.menu().addSection("Additional Toolshelves")
+        for act in toolshelves_list: dockers_menu_action.menu().addAction(act)
+
+        dockers_menu_action.menu().addSection("Floating Toolshelves")
+        for act in floating_toolshelves_list: dockers_menu_action.menu().addAction(act)
 
         for docker in window.api_window.dockers:
             window_title = docker.windowTitle()
@@ -82,11 +97,11 @@ class TouchifyManagers:
             if window_title.startswith(touchify_title_prefix):
                 docker.setWindowTitle(window_title.removeprefix(touchify_title_prefix))
 
-            if docker_id == TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_ALT:
+            if ShelfDockWidgets.isExt(docker_id):
                 toolshelfAltDocker: ShelfDockWidget = docker
                 toolshelfAltDocker.setup(window)
             elif docker_id == TOUCHIFY_DOCKERID_TOOLSHELFDOCKER:
-                toolshelfDocker: ShelfDockWidgetAlt = docker
+                toolshelfDocker: ShelfDockWidget = docker
                 toolshelfDocker.setup(window)
             elif docker_id == TOUCHIFY_DOCKERID_DOCKER_TOOLBOX:
                 toolboxDocker: ToolboxDocker = docker
