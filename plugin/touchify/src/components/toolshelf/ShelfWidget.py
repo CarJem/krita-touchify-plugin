@@ -84,6 +84,8 @@ class ShelfWidget(QWidget):
         self.dockArea = DockArea(self)
         self.dockStack.addWidget(self.dockArea)
 
+        self.updateStyle()
+
     def __setupDialog(self, options: Any):
         if self.dlgConfigEditor != None:
             if PyQtExtensions.CommonHelpers.isDeleted(self.dlgConfigEditor) == False:
@@ -91,6 +93,14 @@ class ShelfWidget(QWidget):
         
         self.dlgConfigEditor = ShelfOptionsDialog(self.api_window, options)
         return self.dlgConfigEditor
+
+    def updateStyle(self):
+        self.dockStack.setStyleSheet(f"""
+            ShelfWidgetStack {{
+                border: 1px solid palette(base)  
+            }}
+        """)
+
 
     #region Events
 

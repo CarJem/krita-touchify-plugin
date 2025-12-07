@@ -12,7 +12,6 @@ from touchify.src.config.docker_group.DockerGroup import DockerGroup
 from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
-from touchify.src.config.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.extensions.file_extensions import FileExtensions
 from touchify.src.extensions.json_extensions import JsonExtensions
 from touchify.src.datatypes.sequence.TypedList import TypedList
@@ -33,7 +32,6 @@ class ResourcePack:
         self.canvas_presets: TypedList[CanvasPreset] = []
         self.toolboxes: TypedList[ToolboxData] = []
         self.shelves: TypedList[Toolshelf] = []
-        self.widget_layouts: TypedList[WidgetLayout] = []
         self.scripts: TypedList[CustomScript] = []
         self.pie_wheels: TypedList[PieWheelData] = []
 
@@ -60,7 +58,6 @@ class ResourcePack:
         self.canvas_presets = TypedList(self.canvas_presets, CanvasPreset)
         self.toolboxes = TypedList(self.toolboxes, ToolboxData)
         self.shelves = TypedList(self.shelves, Toolshelf)
-        self.widget_layouts = TypedList(self.widget_layouts, WidgetLayout)
         self.scripts = TypedList(self.scripts, CustomScript)
         self.pie_wheels = TypedList(self.pie_wheels, PieWheelData)
 
@@ -115,9 +112,6 @@ class ResourcePack:
 
                 elif os.path.isdir(contentPath) and contentName == "shelves":
                     self.shelves = loadItems(contentPath, Toolshelf)
-
-                elif os.path.isdir(contentPath) and contentName == "widget_layouts":
-                    self.widget_layouts = loadItems(contentPath, WidgetLayout)
 
                 elif os.path.isdir(contentPath) and contentName == "docker_groups":
                     self.docker_groups = loadItems(contentPath, DockerGroup)
@@ -201,9 +195,7 @@ class ResourcePack:
         saveItems(self.triggers, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "triggers"))
         saveItems(self.menus, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "menus"))
         saveItems(self.toolboxes, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "toolboxes"))
-        saveItems(self.toolshelves, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "toolshelves"))
         saveItems(self.shelves, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "shelves"))
-        saveItems(self.widget_layouts, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "widget_layouts"))
         saveItems(self.popups, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "popups"))
         saveItems(self.docker_groups, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "docker_groups"))
         saveItems(self.canvas_presets, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "canvas_presets"))
@@ -239,8 +231,6 @@ class ResourcePack:
             "menus",
             "toolboxes",
             "shelves",
-            "toolshelves",
-            "widget_layouts",
             "popups",
             "docker_groups",
             "canvas_presets",
@@ -254,8 +244,6 @@ class ResourcePack:
         labels["menus"] = "Menus"
         labels["toolboxes"] = "Toolboxes"
         labels["shelves"] = "Toolshelves"
-        labels["toolshelves"] = "Toolshelves (Legacy)"
-        labels["widget_layouts"] = "Widget Layouts"
         labels["popups"] = "Popups"
         labels["docker_groups"] = "Docker Groups"
         labels["canvas_presets"] = "Canvas Presets"
@@ -271,8 +259,6 @@ class ResourcePack:
         restrictions["menus"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         restrictions["toolboxes"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         restrictions["shelves"] =[RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
-        restrictions["toolshelves"] =[RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
-        restrictions["widget_layouts"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         restrictions["popups"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         restrictions["docker_groups"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
         restrictions["canvas_presets"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]

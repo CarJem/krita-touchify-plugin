@@ -2,7 +2,7 @@ from uuid import uuid4
 from touchify.src.components.special.DockerContainer import DockerContainer
 from touchify.src.components.toolshelf.ShelfItemOverlay import ShelfItemOverlay
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
-from touchify.src.alib_pyqtgraph.dockarea.Dock import Dock
+from touchify.src.alib_pyqtgraph.dockarea.Dock import Dock, DockLabel
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -17,7 +17,7 @@ class ShelfItem(Dock):
 
     def __init__(self, _config: ToolshelfDock, uuid:str | None = None, area=None, size=(10, 10), widget=None, hideTitle=False, autoOrientation=True, label=None, **kargs):
         _uuid = str(uuid4()) if uuid == None else uuid
-        super().__init__(_uuid, area, size, widget, hideTitle, autoOrientation, label, **kargs)
+        super().__init__(_uuid, area, size, widget, hideTitle, autoOrientation, ShelfLabel(_uuid, **kargs), **kargs)
         self.label.hide()
 
         self._name = _uuid
@@ -131,3 +131,50 @@ class ShelfItem(Dock):
 
     def setUUID(self, uuid: str):
         self._name = uuid
+
+class ShelfLabel(DockLabel):
+
+    def __init__(self, text, closable=False, fontSize="12px"):
+        super().__init__(text, closable, fontSize)
+
+    def updateStyle(self):
+        r = '0px'
+        if self.dim:
+            fg = 'palette(text)'
+            bg = 'palette(alternate-base)'
+            border = 'palette(alternate-base)'
+        else:
+            fg = 'palette(text)'
+            bg = 'palette(highlight)'
+            border = 'palette(highlight)'
+
+        if self.orientation == 'vertical':
+            self.vStyle = """DockLabel {
+                background-color : %s;
+                color : %s;
+                border-top-right-radius: 0px;
+                border-top-left-radius: %s;
+                border-bottom-right-radius: 0px;
+                border-bottom-left-radius: %s;
+                border-width: 0px;
+                border-right: 0px solid %s;
+                padding-top: 3px;
+                padding-bottom: 3px;
+                font-size: %s;
+            }""" % (bg, fg, r, r, border, self.fontSize)
+            self.setStyleSheet(self.vStyle)
+        else:
+            self.hStyle = """DockLabel {
+                background-color : %s;
+                color : %s;
+                border-top-right-radius: %s;
+                border-top-left-radius: %s;
+                border-bottom-right-radius: 0px;
+                border-bottom-left-radius: 0px;
+                border-width: 0px;
+                border-bottom: 0px solid %s;
+                padding-left: 3px;
+                padding-right: 3px;
+                font-size: %s;
+            }""" % (bg, fg, r, r, border, self.fontSize)
+            self.setStyleSheet(self.hStyle)

@@ -12,7 +12,6 @@ from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 from touchify.src.config.TouchifyRegistryPreferences import TouchifyRegistryPreferences
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
-from touchify.src.config.widget_layout.WidgetLayout import WidgetLayout
 from touchify.src.managers.shared.settings_krita import KritaSettings
 from touchify.src.managers.shared.events import GlobalEvents
 from touchify.__env__ import *
@@ -80,8 +79,7 @@ class TouchifySettings:
                                                         Toolshelf |\
                                                         ToolboxData |\
                                                         CustomScript |\
-                                                        PieWheelData |\
-                                                        WidgetLayout:
+                                                        PieWheelData:
         cfg = self.getConfig()
         for pack in cfg.resources.presets:
             pack: ResourcePack
@@ -105,12 +103,7 @@ class TouchifySettings:
                 for item in pack.toolboxes:
                     item: ToolboxData
                     id = f"{pack.INTERNAL_UUID_ID}/toolboxes/{item.INTERNAL_UUID_ID}"
-                    if item_id == id: return item
-            elif type == WidgetLayout:
-                for item in pack.widget_layouts:
-                    item: WidgetLayout
-                    id = f"{pack.INTERNAL_UUID_ID}/widget_layout/{item.INTERNAL_UUID_ID}"
-                    if item_id == id: return item                
+                    if item_id == id: return item         
             elif type == DockerGroup:
                 for item in pack.docker_groups:
                     item: DockerGroup
@@ -142,8 +135,7 @@ class TouchifySettings:
                                         dict[RegistryKey,Toolshelf] |\
                                         dict[RegistryKey,ToolboxData] |\
                                         dict[RegistryKey,CustomScript] |\
-                                        dict[RegistryKey,PieWheelData] |\
-                                        dict[RegistryKey,WidgetLayout]:
+                                        dict[RegistryKey,PieWheelData]:
         cfg = self.getConfig()
         results: dict = {}
         for pack in cfg.resources.presets:
@@ -178,11 +170,6 @@ class TouchifySettings:
                 for item in pack.toolboxes:
                     item: ToolboxData
                     id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "toolboxes", item.INTERNAL_UUID_ID)
-                    results[id] = item
-            elif type == WidgetLayout:
-                for item in pack.widget_layouts:
-                    item: WidgetLayout
-                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "widget_layout", item.INTERNAL_UUID_ID)
                     results[id] = item
             elif type == CustomScript:
                 for item in pack.scripts:
@@ -252,27 +239,6 @@ class TouchifySettings:
     def setActiveToolbox(self, id: str):
         KritaSettings.writeSetting(TOUCHIFY_DOCKERID_DOCKER_TOOLBOX, "SelectedPreset", id, False)
         GlobalEvents.EMIT_SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED()
-    
-    #endregion
-
-    #region Widget Layouts 
-
-    def getActiveWidgetLayoutId(self) -> str:
-        fallback_val = "none"
-        return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_WIDGETPAD, "SelectedPreset", fallback_val)
-
-    def getActiveWidgetLayout(self) -> WidgetLayout:
-        registry = self.getRegistry(WidgetLayout)
-        registry_selection = self.getActiveWidgetLayoutId()
-
-        if registry_selection in registry:
-            return registry[registry_selection]    
-        else: 
-            return WidgetLayout()
-
-    def setActiveWidgetLayout(self, id: str):
-        KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_WIDGETPAD, "SelectedPreset", id, False)
-        GlobalEvents.EMIT_SIGNAL_CANVAS_LAYOUT_CHANGED()
     
     #endregion
 
