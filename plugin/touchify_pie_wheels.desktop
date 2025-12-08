@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Service
-ServiceTypes=Krita/PythonPlugin
-X-KDE-Library=touchify_pie_wheels
-X-Python-2-Compatible=false
-X-Krita-Manual=manual.html
-Name=Touchify Addon - Pie Wheels
-Comment=[Requires Touchify] Adds Pie Wheels to Touchify

@@ -74,6 +74,7 @@ class ActionManager(QObject):
     def Connections(self):
         GlobalEvents.instance().SIGNAL_MOUSE_RELEASED.connect(self.OnEvent_GlobalMouseRelease)
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.OnEvent_ConfigUpdated)
+        GlobalEvents.instance().SIGNAL_PIE_TRIGGER_SENT.connect(self.OnEvent_PieTrigger)
 
     #endregion
 
@@ -401,6 +402,10 @@ class ActionManager(QObject):
                 pass
             self.composer_action_down = False
 
+    def OnEvent_PieTrigger(self, data: Trigger):
+        self.Actions_Run(data, None)
+
+
     #endregion
         
     #region ButtonEvent Functions
@@ -660,24 +665,19 @@ class ActionManager(QObject):
             pass
 
     def Execute_PieWheel(self, pie_wheel_registry_id: str):
-        data: PieWheelData = TouchifySettings.instance().getRegistryItem(pie_wheel_registry_id, PieWheelData)
-        if not isinstance(data, PieWheelData) or data == None: return
-
         try:
-            from touchify_pie_wheels.src.Plugin import TouchifyPieWheelsPlugin
-            api: TouchifyPieWheelsPlugin | None = None
-            if self.pie_wheel_api == None:
-                api = KritaAPI.get_extension_by_name("touchify-pie-wheels-api")
-                self.pie_wheel_api = api
-            else:
-                api = self.pie_wheel_api
 
-            if api != None:
-                result = api.generate(data)
-                if result != None: 
-                    result.Show()
-                    self.composer_action_down = True
-        except:
-            pass
+            from touchify.src.api_composer.TouchifyPieMenu import TouchifyPieMenu
+            from shortcut_composer.templates.pie_menu_utils import PieWidget
+
+            data: PieWheelData = TouchifySettings.instance().getRegistryItem(pie_wheel_registry_id, PieWheelData)
+            if not isinstance(data, PieWheelData) or data == None: return
+
+            result = TouchifyPieMenu.generate(data)
+            result.Show()
+            self.composer_action_down = True
+
+        except Exception as ex:
+            raise ex
 
     #endregion

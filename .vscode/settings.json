@@ -2,11 +2,14 @@
     "files.exclude": {
         ".vscode\\PythonImportHelper-v2-Completion.json": true,
         "**/__pycache__": true,
-        ".venv": false,
+        ".venv": true,
+        ".pykrita": true,
         ".env": true
     },
     "python.analysis.extraPaths": [
-        "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs"
+        "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs",
+        "/var/lib/flatpak/app/org.kde.krita/current/active/files/lib/krita-python-libs",
+        "${workspaceFolder}/.pykrita"
     ],
     "python.analysis.ignore": [
         "plugin/touchify/src/alib_pyqtgraph/Qt/**"

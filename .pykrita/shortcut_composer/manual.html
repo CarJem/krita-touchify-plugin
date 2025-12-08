@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Shortcut Composer</title>
+</head>
+
+<body>
+
+    <h1 id="shortcut-composer-v1-6-0-">Shortcut composer <strong>v1.6.0</strong></h1>
+    <hr>
+    <p><strong><code>Extension</code></strong> for painting application <strong><code>Krita</code></strong>, which allows to create custom, complex <strong><code>keyboard shortcuts</code></strong>.</p>
+    <p>The plugin adds new shortcuts of the following types:</p>
+    <ul>
+    <li><strong><code>Pie menu</code></strong> - while key is pressed, displays a pie menu, which allows to pick values by hovering a mouse.</li>
+    <li><strong><code>Cursor tracker</code></strong> - while key is pressed, tracks a cursor, switching values according to cursor offset.</li>
+    <li><strong><code>Canvas preview</code></strong> - Temporarily changes canvas elements while the key is pressed.</li>
+    <li><strong><code>Multiple assignment</code></strong> - repeatedly pressing a key, cycles between multiple values of krita property.</li>
+    <li><strong><code>Temporary key</code></strong> - temporarily activates a krita property with long press or toggles it on/off with short press.</li>
+    <li><strong><code>Rotation selector</code></strong> - while key is pressed, displays a widget, which allows to set an angle-based property.</li>
+    </ul>
+    <h2 id="requirements">Requirements</h2>
+    <ul>
+    <li>Version of krita on plugin release: <strong>5.2.9</strong></li>
+    <li>Required version of krita: <strong>5.2.2</strong> or later</li>
+    </ul>
+    <p>OS support state:</p>
+    <ul>
+    <li>[x] Windows (10, 11)</li>
+    <li>[x] Linux (Ubuntu 20.04, 22.04)</li>
+    <li>[ ] MacOS (Known bug of canvas losing focus after using PieMenu)</li>
+    <li>[ ] Android (Does not support python plugins yet)</li>
+    </ul>
+    <blockquote>
+    <p><strong>Note</strong>
+    On <strong>Linux</strong> the only officially supported version of Krita is <strong>.appimage</strong>, which ships with all required dependencies. Running the plugin on Krita installed from Snap or distribution repositories is not recommended as it may not work out of the box and may require extra dependency-related work.</p>
+    </blockquote>
+    <h2 id="how-to-install-or-update-the-plugin-">How to install or update the plugin:</h2>
+    <p>Installation steps are THE SAME for installing the plugin for the first time and for updating it to the new version:</p>
+    <ol>
+    <li>Download the plugin:<ul>
+    <li>Use the direct link for stable or development release.</li>
+    <li>Alternatively, on github page switch from <code>main</code> to any of the unstable versions, click the green button <code>code</code> and pick the <code>download zip</code> option.</li>
+    </ul>
+    </li>
+    <li>In krita&#39;s topbar, open <strong>Tools &gt; Scripts &gt; Import Python Plugin From File</strong> and pick the downloaded .zip file</li>
+    <li>Restart krita.</li>
+    <li>Set custom shortcuts in <strong>Settings &gt; Configure Krita &gt; Keyboard Shortcuts</strong> under <strong>Scripts &gt; Shortcut Composer: ...</strong> sections. By intention, there are no default bindings.</li>
+    </ol>
+    <blockquote>
+    <p><strong>Warning</strong>
+    Some keyboard buttons like <strong>Space, R, Y, V, 1, 2, 3, 4, 5, 6</strong> are reserved for Krita&#39;s Canvas Inputs. Assigning those keys to actions (including those from the plugin) may result in conflicts and abnormal behavior different for each OS. Either avoid those keys, or remove their bindings in <strong>Settings &gt; Configure Krita &gt; Canvas Input Settings</strong>.</p>
+    </blockquote>
+    <h2 id="for-krita-plugin-programmers">For krita plugin programmers</h2>
+    <p>Some parts of plugin code solve general problems, which can apply outside of Shortcut Composer. Those solutions were placed in separate packages that can be copy-pasted into any other plugin and reused there.</p>
+    <p>They depend only on original Krita API and PyQt5 with which krita is shipped.</p>
+    <ul>
+    <li>Custom keyboard shortcut interface</li>
+    <li>Config system</li>
+    <li>Alternative Krita API</li>
+    </ul>
+
+</body>
+</html>
