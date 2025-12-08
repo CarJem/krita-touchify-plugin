@@ -33,3 +33,5 @@ class BrushPresetPicker(IconButton):
         
         image = self.brush.image()
         if image: self.setIcon(QIcon(QPixmap.fromImage(image)))
+
+        self.repaint()

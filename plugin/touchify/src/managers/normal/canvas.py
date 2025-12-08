@@ -38,6 +38,7 @@ class CanvasManager(QObject):
         BottomLeft = 6
         BottomCenter = 7
         BottomRight = 8
+        Fullscreen = 9
 
 
 
@@ -94,11 +95,17 @@ class CanvasManager(QObject):
             return
         
         floatableDocker = self.managers.mgr_dockers.findDocker(docker_id)
+        if not floatableDocker:
+            return 
+        
         if not floatableDocker.isVisible():
             return
         
         if floatableDocker.isFloating() == False:
             floatableDocker.setFloating(True)
+
+
+        
         
         edge_padding: int = 5
         space_rect = self.active_canvas.rect()
@@ -112,6 +119,13 @@ class CanvasManager(QObject):
             docker_halfwidth = 0
             docker_halfheight = 0
 
+
+        if position == CanvasManager.WidgetAlignment.Fullscreen:
+            pos = self.active_canvas.mapToGlobal(space_rect.topLeft())
+            floatableDocker.move(pos)
+            floatableDocker.resize(self.active_canvas.size())
+            return
+
         top_left = QPoint(space_rect.topLeft()) + QPoint(edge_padding, edge_padding)
         top_center = QPoint(space_rect.center().x(),space_rect.top()) - QPoint(docker_halfwidth, 0) + QPoint(0, edge_padding)
         top_right = QPoint(space_rect.topRight()) - QPoint(docker_width, 0) + QPoint(-edge_padding, edge_padding)
@@ -122,6 +136,7 @@ class CanvasManager(QObject):
         bottom_left = QPoint(space_rect.bottomLeft()) - QPoint(0, docker_height) + QPoint(edge_padding, -edge_padding)
         bottom_center = QPoint(space_rect.center().x(), space_rect.bottom()) - QPoint(docker_halfwidth, docker_height) + QPoint(0, -edge_padding)
         bottom_right = QPoint(space_rect.bottomRight()) - QPoint(docker_width, docker_height) + QPoint(-edge_padding, -edge_padding)
+        
 
         edgePoint: QPoint = QPoint(0,0)
         match position:
@@ -141,7 +156,6 @@ class CanvasManager(QObject):
                 edgePoint = self.active_canvas.mapToGlobal(mid_left)
             case CanvasManager.WidgetAlignment.MidRight:
                 edgePoint = self.active_canvas.mapToGlobal(mid_right)
-            
             case _:
                 edgePoint = self.active_canvas.mapToGlobal(QPoint(0,0))
 

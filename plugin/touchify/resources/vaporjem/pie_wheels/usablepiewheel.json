@@ -1,19 +1,19 @@
 {
     "registry_name": "UsablePieWheel",
     "id": "UsablePieWheel",
-    "icon_radius_scale": 1.5,
-    "pie_radius_scale": 1.5,
+    "icon_radius_scale": 1.0,
+    "pie_radius_scale": 1.0,
     "background_color": {
-        "r": 192,
-        "g": 28,
-        "b": 40
+        "r": 61,
+        "g": 56,
+        "b": 70
     },
     "active_color": {
-        "r": 46,
-        "g": 194,
-        "b": 126
+        "r": 229,
+        "g": 165,
+        "b": 10
     },
-    "pie_opacity": 75,
+    "pie_opacity": 50,
     "actions_items": [
         {
             "row_name": "Actions Row",
@@ -24,7 +24,7 @@
                     "display_icon_hide": false,
                     "display_text_hide": false,
                     "display_custom_icon_enabled": true,
-                    "display_custom_icon": "material:eslint",
+                    "display_custom_icon": "material:list-box-outline",
                     "display_custom_text_enabled": true,
                     "display_custom_text": "Show Context Menu",
                     "extra_closes_popup": false,
@@ -47,7 +47,7 @@
                     "display_icon_hide": false,
                     "display_text_hide": false,
                     "display_custom_icon_enabled": true,
-                    "display_custom_icon": "document-properties",
+                    "display_custom_icon": "config-popup-palette",
                     "display_custom_text_enabled": true,
                     "display_custom_text": "Show Popup Palette",
                     "extra_closes_popup": false,
@@ -74,8 +74,8 @@
                     "display_custom_text_enabled": true,
                     "display_custom_text": "Show Brush Presets",
                     "extra_closes_popup": false,
-                    "extra_composer_mode": false,
-                    "action_id": "Pick local brush presets",
+                    "extra_composer_mode": true,
+                    "action_id": "Pick brush presets (blue)",
                     "context_menu_id": "",
                     "brush_name": "",
                     "docker_id": "",

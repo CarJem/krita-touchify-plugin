@@ -335,6 +335,7 @@ class CanvasGradientPicker(IconButton):
         canvas.end()
 
         if pixmap: self.setIcon(QIcon(pixmap))
+        self.repaint()
 
     def resizeEvent(self, a0: QResizeEvent):
         return super().resizeEvent(a0)

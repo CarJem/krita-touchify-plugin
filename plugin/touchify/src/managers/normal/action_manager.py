@@ -68,6 +68,7 @@ class ActionManager(QObject):
         self.registeredActionsData = {}
         self.active_popups: dict[str, PopupWidget] = {}
         self.composer_action_down: bool = False
+        self.composer_action_down_start: QDateTime = QDateTime.currentDateTime()
         self.pie_wheel_api: Extension = None
 
 
@@ -393,7 +394,7 @@ class ActionManager(QObject):
 
 
     def OnEvent_GlobalMouseRelease(self):
-        if self.composer_action_down == True:
+        if self.composer_action_down and self.composer_action_down_start.addMSecs(250) < QDateTime.currentDateTime():
             QApplication.instance().sendEvent(KritaAPI.get_active_qwindow(), QKeyEvent(QEvent.Type.KeyRelease, Qt.Key.Key_Escape, Qt.KeyboardModifier.NoModifier))
             self.composerTriggerEnded.emit()
             try:
@@ -404,6 +405,10 @@ class ActionManager(QObject):
 
     def OnEvent_PieTrigger(self, data: Trigger):
         self.Actions_Run(data, None)
+
+    def OnEvent_ComposerStart(self):
+        self.composer_action_down_start = QDateTime.currentDateTime()
+        self.composer_action_down = True
 
 
     #endregion
@@ -430,7 +435,7 @@ class ActionManager(QObject):
             self.composerTriggerEnded.connect(parentPopup.onComposerTriggerEnded)
 
         onClick()
-        self.composer_action_down = True
+        self.OnEvent_ComposerStart()
 
     def ButtonEvent_ClosePopup(self, btn: TouchifyActionButton):
         if btn:
@@ -549,10 +554,13 @@ class ActionManager(QObject):
     def Execute_Trigger(self, data: Trigger):
         if data.action_id in self.registeredActions:
             act: QAction = self.registeredActions[data.action_id]
+            if data.extra_composer_mode: self.OnEvent_ComposerStart()
             act.trigger()
+            
         else:
             action = KritaAPI.get_action(data.action_id)
             if action:
+                if data.extra_composer_mode: self.OnEvent_ComposerStart()
                 action.trigger()
     
     def Execute_Menu(self, action: QAction, id: str):
@@ -675,7 +683,7 @@ class ActionManager(QObject):
 
             result = TouchifyPieMenu.generate(data)
             result.Show()
-            self.composer_action_down = True
+            self.OnEvent_ComposerStart()
 
         except Exception as ex:
             raise ex

@@ -1,2 +1,0 @@
-from .PoserDocker import PoserDocker
-

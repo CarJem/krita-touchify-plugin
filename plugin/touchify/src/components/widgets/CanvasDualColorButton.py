@@ -28,7 +28,7 @@ class CanvasDualColorButton(QWidget):
         self.__resetIcon: QIcon = ResourceManager.kritaIcon("color-to-alpha")
 
     def metrics(self):
-        PADDING = 4
+        PADDING = 2
 
         width = self.width() - PADDING
         half_width = int(width / 3)

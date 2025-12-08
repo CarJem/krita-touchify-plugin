@@ -79,3 +79,4 @@ class CanvasPatternPicker(IconButton):
     def onPatternChanged(self, current_pattern: Resource):
         self.pattern = current_pattern
         self.updateIcon()
+        self.repaint()
