@@ -8,7 +8,7 @@ from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 from touchify.src.components.widgets.BrushBlendingSelector import BrushBlendingSelector
 from touchify.src.components.widgets.sliders.BrushFlowSlider import BrushFlowSlider
 from touchify.src.components.widgets.sliders.BrushOpacitySlider import BrushOpacitySlider
-from touchify.src.components.widgets.sliders.BrushRotationSlider import BrushRotationSlider
+from touchify.src.components.widgets.BrushAngleSelector import BrushAngleSelector
 from touchify.src.components.widgets.sliders.BrushSizeSlider import BrushSizeSlider
 from touchify.src.components.widgets.BrushPresetPicker import BrushPresetPicker
 from touchify.src.components.widgets.CanvasColorPicker import CanvasColorPicker
@@ -89,9 +89,8 @@ class ShelfLoader(QObject):
             actionWidget = BrushFlowSlider(self.rootPanel)
             actionWidget.setOrientation(actionInfo.special_slider_orientation)
             actionWidget.setInstance(self.rootPanel.api_window)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushRotationSlider:
-            actionWidget = BrushRotationSlider(self.rootPanel)
-            actionWidget.setOrientation(actionInfo.special_slider_orientation)
+        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushAngleSelector:
+            actionWidget = BrushAngleSelector(self.rootPanel)
             actionWidget.setInstance(self.rootPanel.api_window)
         if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BackgroundColorBox:
             actionWidget = CanvasColorPicker(self.rootPanel, CanvasColorPicker.Mode.Background)

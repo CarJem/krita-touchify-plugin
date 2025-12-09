@@ -4,27 +4,26 @@ from PyQt5.QtCore import *
 from touchify.__env__ import *
 
 from touchify.src.api_krita.wrappers.window import WindowAPI
-from touchify.src.components.widgets.sliders.Slider import Slider
 from touchify.src.managers.shared.settings_krita import *
-from touchify.src.components.krita.KisAngleSelector import KisAngleSelector, KisAngleSelectorSpinBox
+from touchify.src.components.krita.KisAngleSelector import KisAngleSelector
 
 
 
 
-class BrushRotationSlider(Slider):
+class BrushAngleSelector(KisAngleSelector):
     def __init__(self, parent: QWidget | None = None) -> None:
-        super().__init__(KisAngleSelector(), parent)
+        super().__init__(parent)
 
         self.api_window: WindowAPI = None
 
-        self.slider().setContentsMargins(0,0,0,0)
-        self.slider().setMinimumWidth(100)
-        self.slider().setFixedHeight(30)
-        self.slider().setWidgetsHeight(30)
+        self.setContentsMargins(0,0,0,0)
+        self.setMinimumWidth(100)
+        self.setFixedHeight(30)
+        self.setWidgetsHeight(30)
 
-        self.slider().setFlipOptionsMode(KisAngleSelector.FlipOptionsMode.MenuButton)
-        self.slider().spinBox.setPrefix('Rotation: ')
-        self.slider().spinBox.valueChanged.connect(self.onValueChanged)
+        self.setFlipOptionsMode(KisAngleSelector.FlipOptionsMode.MenuButton)
+        self.spinBox.setPrefix('Rotation: ')
+        self.spinBox.valueChanged.connect(self.onValueChanged)
 
     def setInstance(self, window: WindowAPI):
         self.api_window = window        
@@ -38,8 +37,8 @@ class BrushRotationSlider(Slider):
         self.view = view
 
     def onRotationChanged(self, value: float):
-        self.slider().spinBox.setValue(value)
+        self.spinBox.setValue(value)
 
     def onValueChanged(self, value):
         if self.view == None: return
-        self.view.setBrushRotation(self.slider().spinBox.value())
+        self.view.setBrushRotation(self.spinBox.value())

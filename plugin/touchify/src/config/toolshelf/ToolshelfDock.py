@@ -24,7 +24,7 @@ class ToolshelfDock:
         BrushSizeSlider = "brush_size_slider"
         BrushOpacitySlider = "brush_opacity_slider"
         BrushFlowSlider = "brush_flow_slider"
-        BrushRotationSlider = "brush_rotation_slider"
+        BrushAngleSelector = "brush_rotation_slider"
         ForegroundColorBox = "foreground_color_box"
         BackgroundColorBox = "background_color_box"
         ForegroundBackgroundColorPicker = "foreground_background_color_picker"
@@ -173,8 +173,7 @@ class ToolshelfDock:
         known_sliders = [
             str(self.SpecialItemType.BrushFlowSlider), 
             str(self.SpecialItemType.BrushOpacitySlider), 
-            str(self.SpecialItemType.BrushSizeSlider),
-            str(self.SpecialItemType.BrushFlowSlider)
+            str(self.SpecialItemType.BrushSizeSlider)
         ]
 
         slider_groups = [

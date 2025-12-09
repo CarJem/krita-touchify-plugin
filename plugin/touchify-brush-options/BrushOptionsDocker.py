@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 from touchify.src.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
 from touchify.src.components.widgets.sliders.BrushFlowSlider import BrushFlowSlider
 from touchify.src.components.widgets.sliders.BrushOpacitySlider import BrushOpacitySlider
-from touchify.src.components.widgets.sliders.BrushRotationSlider import BrushRotationSlider
+from touchify.src.components.widgets.BrushAngleSelector import BrushAngleSelector
 from touchify.src.components.widgets.sliders.BrushSizeSlider import BrushSizeSlider
 from touchify.__env__ import *
 
@@ -60,7 +60,7 @@ class BrushOptionsWidget(QWidget):
         self.sizeSlider = BrushSizeSlider(self)
         self.opacitySlider = BrushOpacitySlider(self)
         self.flowSlider = BrushFlowSlider(self)
-        self.rotationSlider = BrushRotationSlider(self)
+        self.rotationSlider = BrushAngleSelector(self)
 
         self.optionsMenu = self.genMenu()
         self.optionsButton = QPushButton(self)
