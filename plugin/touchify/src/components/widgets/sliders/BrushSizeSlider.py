@@ -3,19 +3,20 @@ from PyQt5.QtCore import *
 
 
 from touchify.src.api_krita.wrappers.window import WindowAPI
-from touchify.src.managers.shared.settings_krita import *
 from touchify.src.components.krita.KisSliderSpinBox import KisSliderSpinBox
+from touchify.src.components.widgets.sliders.Slider import Slider
+from touchify.src.managers.shared.settings_krita import *
 from touchify.__env__ import *
 
-class BrushSizeSlider(KisSliderSpinBox):
+class BrushSizeSlider(Slider):
 
     def __init__(self, parent=None):
-        super(BrushSizeSlider, self).__init__(0.01, 1000, False, parent)
+        super(BrushSizeSlider, self).__init__(KisSliderSpinBox(0.01, 1000, False, None), parent)
         self.view: View = None
         self.api_window: WindowAPI = None
-        self.setScaling(3)
-        self.setAffixes('Size: ', ' px')
-        self.connectValueChanged(self.onValueChanged)
+        self.slider().setScaling(3)
+        self.slider().setAffixes('Size: ', ' px')
+        self.slider().connectValueChanged(self.onValueChanged)
 
     def setInstance(self, window: WindowAPI):
         self.api_window = window
@@ -29,8 +30,8 @@ class BrushSizeSlider(KisSliderSpinBox):
         self.view = view
 
     def onSizeChanged(self, value: float):
-        self.setValue(value)
+        self.slider().setValue(value)
 
     def onValueChanged(self, value):
         if self.view == None: return
-        self.view.setBrushSize(self.value())
+        self.view.setBrushSize(self.slider().value())

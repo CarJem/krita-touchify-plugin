@@ -6,10 +6,10 @@ from touchify.src.components.trigger_buttons.TouchifyActionPanel import Touchify
 from touchify.src.components.widgets.CanvasDualColorButton import CanvasDualColorButton
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 from touchify.src.components.widgets.BrushBlendingSelector import BrushBlendingSelector
-from touchify.src.components.widgets.BrushFlowSlider import BrushFlowSlider
-from touchify.src.components.widgets.BrushOpacitySlider import BrushOpacitySlider
-from touchify.src.components.widgets.BrushRotationSlider import BrushRotationSlider
-from touchify.src.components.widgets.BrushSizeSlider import BrushSizeSlider
+from touchify.src.components.widgets.sliders.BrushFlowSlider import BrushFlowSlider
+from touchify.src.components.widgets.sliders.BrushOpacitySlider import BrushOpacitySlider
+from touchify.src.components.widgets.sliders.BrushRotationSlider import BrushRotationSlider
+from touchify.src.components.widgets.sliders.BrushSizeSlider import BrushSizeSlider
 from touchify.src.components.widgets.BrushPresetPicker import BrushPresetPicker
 from touchify.src.components.widgets.CanvasColorPicker import CanvasColorPicker
 from touchify.src.components.widgets.CanvasGradientPicker import CanvasGradientPicker
@@ -79,15 +79,19 @@ class ShelfLoader(QObject):
             actionWidget.setInstance(self.rootPanel.api_window)
         if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushSizeSlider:
             actionWidget = BrushSizeSlider(self.rootPanel)
+            actionWidget.setOrientation(actionInfo.special_slider_orientation)
             actionWidget.setInstance(self.rootPanel.api_window)
         if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushOpacitySlider:
             actionWidget = BrushOpacitySlider(self.rootPanel)
+            actionWidget.setOrientation(actionInfo.special_slider_orientation)
             actionWidget.setInstance(self.rootPanel.api_window)
         if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushFlowSlider:
             actionWidget = BrushFlowSlider(self.rootPanel)
+            actionWidget.setOrientation(actionInfo.special_slider_orientation)
             actionWidget.setInstance(self.rootPanel.api_window)
         if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushRotationSlider:
             actionWidget = BrushRotationSlider(self.rootPanel)
+            actionWidget.setOrientation(actionInfo.special_slider_orientation)
             actionWidget.setInstance(self.rootPanel.api_window)
         if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BackgroundColorBox:
             actionWidget = CanvasColorPicker(self.rootPanel, CanvasColorPicker.Mode.Background)

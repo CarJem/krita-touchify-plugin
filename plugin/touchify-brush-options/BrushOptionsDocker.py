@@ -4,10 +4,10 @@ from krita import *
 from PyQt5.QtCore import *
 
 from touchify.src.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
-from touchify.src.components.widgets.BrushFlowSlider import BrushFlowSlider
-from touchify.src.components.widgets.BrushOpacitySlider import BrushOpacitySlider
-from touchify.src.components.widgets.BrushRotationSlider import BrushRotationSlider
-from touchify.src.components.widgets.BrushSizeSlider import BrushSizeSlider
+from touchify.src.components.widgets.sliders.BrushFlowSlider import BrushFlowSlider
+from touchify.src.components.widgets.sliders.BrushOpacitySlider import BrushOpacitySlider
+from touchify.src.components.widgets.sliders.BrushRotationSlider import BrushRotationSlider
+from touchify.src.components.widgets.sliders.BrushSizeSlider import BrushSizeSlider
 from touchify.__env__ import *
 
 from touchify.src.managers.shared.settings_krita import *

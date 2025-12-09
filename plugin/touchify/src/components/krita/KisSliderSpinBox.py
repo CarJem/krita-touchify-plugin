@@ -1,5 +1,4 @@
 from PyQt5.QtGui import QPaintEvent
-from PyQt5.QtWidgets import QWidget
 from krita import *
 from PyQt5.QtCore import *
 
@@ -69,14 +68,16 @@ class KisSliderSpinBox(QDoubleSpinBox):
             return super().textFromValue(value)
          
     def contextMenuEvent(self, e: QContextMenuEvent):
+        e.ignore()
         if self.editMode == False:
             e.ignore()
         elif self.editModeInit == False:
             self.editModeInit = True
             e.ignore()
         else:
-            self.contextMenuOpened = True
-            super().contextMenuEvent(e)
+            e.ignore()
+            #self.contextMenuOpened = True
+            #super().contextMenuEvent(e)
 
     def focusInEvent(self, e: QFocusEvent):
         if self.contextMenuOpened:

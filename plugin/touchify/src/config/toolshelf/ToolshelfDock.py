@@ -11,6 +11,11 @@ class ToolshelfDock:
         Docker = "docker"
         Special = "special"
 
+
+    class SliderOrientation(EnumStr):
+        Horizontal="horizontal"
+        Vertical="vertical"
+
     class SpecialItemType(EnumStr):
         Nothing = "none"
         BrushBlendingMode = "brush_blending_options"
@@ -90,6 +95,7 @@ class ToolshelfDock:
         self.action_section_icon_size: int = 0
 
         self.special_item_type: str = "none"
+        self.special_slider_orientation: str = "horizontal"
 
         self.json_version: int = 4
 
@@ -164,6 +170,17 @@ class ToolshelfDock:
             "special_item_type"
         ]
 
+        known_sliders = [
+            str(self.SpecialItemType.BrushFlowSlider), 
+            str(self.SpecialItemType.BrushOpacitySlider), 
+            str(self.SpecialItemType.BrushSizeSlider),
+            str(self.SpecialItemType.BrushFlowSlider)
+        ]
+
+        slider_groups = [
+            "special_slider_orientation"
+        ]
+
         result = []
         if self.section_type != ToolshelfDock.SectionType.Docker:
             for item in docker_groups:
@@ -173,6 +190,10 @@ class ToolshelfDock:
                 result.append(item)
         if self.section_type != ToolshelfDock.SectionType.Special:
             for item in special_groups:
+                result.append(item)
+
+        if self.section_type != ToolshelfDock.SectionType.Special or self.special_item_type not in known_sliders:
+            for item in slider_groups:
                 result.append(item)
 
         return result
@@ -205,6 +226,7 @@ class ToolshelfDock:
         labels["action_section_icon_size"] = "Icon Size"
 
         labels["special_item_type"] = "Component Type"
+        labels["special_slider_orientation"] = "Orientation"
         return labels
     
     def propertygrid_sisters(self):
@@ -231,7 +253,8 @@ class ToolshelfDock:
             "action_section_alignment", 
             "action_section_icon_size",
             "action_section_contents",
-            "special_item_type"
+            "special_item_type",
+            "special_slider_orientation"
         ]
 
         row["general_group"] = {"items": global_groups, "is_group": True}
@@ -267,4 +290,5 @@ class ToolshelfDock:
         restrictions["action_section_icon_size"] = PropertyGrid_Restrictions.range(min=0)
 
         restrictions["special_item_type"] = PropertyGrid_Restrictions.strValues(self.SpecialItemType.values())
+        restrictions["special_slider_orientation"] = PropertyGrid_Restrictions.strValues(self.SliderOrientation.values())
         return restrictions
