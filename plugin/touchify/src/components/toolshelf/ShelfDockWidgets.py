@@ -3,6 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from touchify.__env__ import TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT, TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT_FLT
 from touchify.src.components.toolshelf.ShelfDockWidget import ShelfDockWidget
+from touchify.src.components.toolshelf.ShelfFloatingDockWidget import ShelfFloatingDockWidget
 
 
 
@@ -73,66 +74,63 @@ ShelfDockWidgetsExt = [
     ShelfDockWidget9
 ]
 
-
-class ShelfDockWidgetFlt(ShelfDockWidget):
-    def __init__(self):
-        super().__init__()
-        self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
-
-    def move(self, point: QPoint):
-        if self.shrinkToFit:
-            self.adjustSize()
-        super().move(point)
-
-class ShelfDockWidgetFlt1(ShelfDockWidgetFlt):
+class ShelfDockWidgetFlt1(ShelfFloatingDockWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(ShelfDockWidgets.FLT_DOCKER_TITLE + " #1")
         self.PanelIndex = len(ShelfDockWidgetsExt) + 1
+        self.setAlignment(ShelfFloatingDockWidget.WidgetAlignment.TopLeft)
 
-class ShelfDockWidgetFlt2(ShelfDockWidgetFlt):
+class ShelfDockWidgetFlt2(ShelfFloatingDockWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(ShelfDockWidgets.FLT_DOCKER_TITLE + " #2")
         self.PanelIndex = len(ShelfDockWidgetsExt) + 2
+        self.setAlignment(ShelfFloatingDockWidget.WidgetAlignment.TopCenter)
 
-class ShelfDockWidgetFlt3(ShelfDockWidgetFlt):
+class ShelfDockWidgetFlt3(ShelfFloatingDockWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(ShelfDockWidgets.FLT_DOCKER_TITLE + " #3")
         self.PanelIndex = len(ShelfDockWidgetsExt) + 3
+        self.setAlignment(ShelfFloatingDockWidget.WidgetAlignment.TopRight)
 
-class ShelfDockWidgetFlt4(ShelfDockWidgetFlt):
+class ShelfDockWidgetFlt4(ShelfFloatingDockWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(ShelfDockWidgets.FLT_DOCKER_TITLE + " #4")
         self.PanelIndex = len(ShelfDockWidgetsExt) + 4
+        self.setAlignment(ShelfFloatingDockWidget.WidgetAlignment.MidLeft)
 
-class ShelfDockWidgetFlt5(ShelfDockWidgetFlt):
+class ShelfDockWidgetFlt5(ShelfFloatingDockWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(ShelfDockWidgets.FLT_DOCKER_TITLE + " #5")
         self.PanelIndex = len(ShelfDockWidgetsExt) + 5
+        self.setAlignment(ShelfFloatingDockWidget.WidgetAlignment.MidRight)
 
-class ShelfDockWidgetFlt6(ShelfDockWidgetFlt):
+class ShelfDockWidgetFlt6(ShelfFloatingDockWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(ShelfDockWidgets.FLT_DOCKER_TITLE + " #6")
         self.PanelIndex = len(ShelfDockWidgetsExt) + 6
+        self.setAlignment(ShelfFloatingDockWidget.WidgetAlignment.BottomLeft)
 
-class ShelfDockWidgetFlt7(ShelfDockWidgetFlt):
+class ShelfDockWidgetFlt7(ShelfFloatingDockWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(ShelfDockWidgets.FLT_DOCKER_TITLE + " #7")
         self.PanelIndex = len(ShelfDockWidgetsExt) + 7
+        self.setAlignment(ShelfFloatingDockWidget.WidgetAlignment.BottomCenter)
 
-class ShelfDockWidgetFlt8(ShelfDockWidgetFlt):
+class ShelfDockWidgetFlt8(ShelfFloatingDockWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(ShelfDockWidgets.FLT_DOCKER_TITLE + " #8")
         self.PanelIndex = len(ShelfDockWidgetsExt) + 8
+        self.setAlignment(ShelfFloatingDockWidget.WidgetAlignment.BottomRight)
 
-ShelfDockWidgetsFlt = [
+ShelfFloatingDockWidgets = [
     ShelfDockWidgetFlt1,
     ShelfDockWidgetFlt2,
     ShelfDockWidgetFlt3,
@@ -155,7 +153,7 @@ class ShelfDockWidgets:
             if docker_id.startswith(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT) and docker_id.endswith("_" + str(idx + 1)):
                 return True
     
-        for idx in range(0, len(ShelfDockWidgetsFlt)):
+        for idx in range(0, len(ShelfFloatingDockWidgets)):
             if docker_id.startswith(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER_EXT_FLT) and docker_id.endswith("_" + str(idx + 1)):
                 return True
         return False

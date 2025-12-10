@@ -30,11 +30,7 @@ class ToolshelfSettings:
         self.button_size: int = 32
         self.header_size: int = 16
 
-        self.show_pin_button: bool = True
-        self.show_menu_button: bool = True
-
-        self.show_tabs: bool = True
-        self.show_titlebar: bool = True
+        self.enable_pinning: bool = False
 
         self.position: str = "top"
         self.resize_style: str = "default"
@@ -58,32 +54,25 @@ class ToolshelfSettings:
         return [
             "position",
             "resize_style",
+            "enable_pinning",
             "stack_preview",
             "stack_alignment",
             "button_size",
             "header_size",
-            "visibility_options",
-            "show_menu_button",
-            "show_pin_button",
             "stack_actions",
         ]
     
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
-        row["visibility_options"] = {"items": ["show_tabs","show_titlebar","show_menu_button","show_pin_button"], "use_labels": True}
         return row
 
     def propertygrid_labels(self):
         labels = {}
-        labels["visibility_options"] = "Show"
-        labels["show_tabs"] = "Tabs"
-        labels["show_titlebar"] = "Titlebar"
-        labels["show_menu_button"] = "Options Button"
-        labels["show_pin_button"] = "Pin Button"
         labels["button_size"] = "Button Size"
         labels["header_size"] = "Header Size"
         labels["position"] = "Header Position"
         labels["stack_preview"] = "Stack Preview"
+        labels["enable_pinning"] = "Enable Pinning"
         labels["stack_alignment"] = "Stack Alignment"
         labels["stack_actions"] = "Stack Actions"
         labels["resize_style"] = "Resize Style"

@@ -51,6 +51,8 @@ class ToolboxWidget(QWidget):
 
 
         self.setLayout(QVBoxLayout(self))
+        self.layout().setContentsMargins(0,0,0,0)
+        self.layout().setSpacing(0)
         self.setContentsMargins(0,0,0,0)
         self.updateStyleSheet()
 

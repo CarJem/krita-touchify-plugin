@@ -36,8 +36,12 @@ class ToolboxDocker(QDockWidget):
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
         GlobalEvents.instance().SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED.connect(self.onConfigUpdated)
 
-    def maximumSize(self):
-        return self.toolboxWidget.minimumSize()
+    #def maximumSize(self):
+        #return self.toolboxWidget.minimumSize()
+
+    def resizeEvent(self, a0):
+        self.setMaximumSize(self.toolboxWidget.minimumSizeHint())
+        return super().resizeEvent(a0)
 
     def onConfigUpdated(self):
         self.toolboxWidget.reload()

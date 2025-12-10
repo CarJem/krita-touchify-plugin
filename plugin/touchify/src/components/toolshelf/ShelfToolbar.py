@@ -123,7 +123,7 @@ class ShelfToolbar(QWidget):
             self.ourLayout.addWidget(self.backButton, 2, 0)
 
         #self.mainButton.setVisible(not state.options.show_menu_button)
-        self.pinButton.setVisible(state.options.show_pin_button)
+        self.pinButton.setVisible(state.options.enable_pinning)
 
         self.optionsMenu.reload(currentPresetId)
 

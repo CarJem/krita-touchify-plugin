@@ -168,6 +168,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_size_slider",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "40331f3d-eede-4e74-b683-f2fcf8df12c3": {
@@ -193,6 +194,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "foreground_background_color_picker",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "56385d01-e2c0-42fe-bbb5-4985f62f8bb2": {
@@ -218,6 +220,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_preset_picker",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "54534456-e014-4460-a646-acc3d4a28944": {
@@ -243,6 +246,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "gradient_chooser_popup",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "76a27c34-7831-4ee0-af49-e497bd6fb556": {
@@ -268,6 +272,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "pattern_chooser_popup",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "f574da04-6ea5-476f-b794-75a5292a4b01": {
@@ -293,6 +298,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_blending_options",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "81ce9edc-90ae-41f5-85f0-c5a56b6d2d9c": {
@@ -318,6 +324,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "e3cf28d5-3051-4427-aac8-5b2ac5b14172": {
@@ -343,6 +350,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_opacity_slider",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "77e9a4e0-3be3-4f4c-8ed0-7ef5d096574c": {
@@ -368,6 +376,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_flow_slider",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "e389e29e-f0a3-479d-962a-b639392332c5": {
@@ -491,6 +500,7 @@
                 "action_section_btn_height": 32,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "424ba8fc-b2ea-4385-9907-a3de37f44c24": {
@@ -545,6 +555,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "f957df35-1c11-4452-a095-70698ba56fc1": {
@@ -570,6 +581,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "9e45bd9a-688a-4b41-a057-9aa326414f65": {
@@ -624,6 +636,7 @@
                 "action_section_btn_height": 32,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "aa2877c8-a349-4459-8f31-c15b398423b1": {
@@ -678,6 +691,7 @@
                 "action_section_btn_height": 32,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "57b1677d-922f-4af4-9f05-f7341e21b6d2": {
@@ -732,6 +746,7 @@
                 "action_section_btn_height": 32,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             }
         },
@@ -739,10 +754,7 @@
         "options": {
             "button_size": 32,
             "header_size": 16,
-            "show_pin_button": true,
-            "show_menu_button": true,
-            "show_tabs": true,
-            "show_titlebar": true,
+            "enable_pinning": false,
             "position": "top",
             "resize_style": "minimum",
             "stack_preview": "default",

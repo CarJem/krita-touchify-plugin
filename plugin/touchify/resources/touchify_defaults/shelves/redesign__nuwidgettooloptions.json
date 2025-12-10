@@ -1,0 +1,70 @@
+{
+    "preset_name": "Redesign / NuWidgetToolOptions",
+    "preset_group": "",
+    "preset_data": {
+        "layout": {
+            "main": [
+                "vertical",
+                [
+                    [
+                        "dock",
+                        "23bd1b19-4aa2-4d1e-8699-f08cef1d400a",
+                        {}
+                    ]
+                ],
+                {
+                    "sizes": [
+                        75
+                    ]
+                }
+            ],
+            "float": []
+        },
+        "items": {
+            "23bd1b19-4aa2-4d1e-8699-f08cef1d400a": {
+                "display_name": "",
+                "docker_id": "sharedtooldocker",
+                "size_x": 0,
+                "size_y": 0,
+                "min_size_x": 0,
+                "min_size_y": 0,
+                "max_size_x": 0,
+                "max_size_y": 0,
+                "ignore_scaling": false,
+                "section_type": "docker",
+                "docker_nesting_mode": "normal",
+                "docker_unloaded_visibility": "normal",
+                "docker_loading_priority": "normal",
+                "action_section_id": "Panel",
+                "action_section_display_mode": "normal",
+                "action_section_contents": [],
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none",
+                "action_section_btn_width": 0,
+                "action_section_btn_height": 0,
+                "action_section_icon_size": 0,
+                "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
+                "json_version": 4
+            }
+        },
+        "pages": [],
+        "options": {
+            "button_size": 32,
+            "header_size": 16,
+            "enable_pinning": false,
+            "position": "top",
+            "resize_style": "minimum",
+            "stack_preview": "default",
+            "stack_alignment": "default",
+            "stack_actions": [],
+            "json_version": 1
+        },
+        "pageOptions": {
+            "page_icon": "material:home",
+            "json_version": 1
+        },
+        "json_version": 1
+    },
+    "json_version": 1
+}

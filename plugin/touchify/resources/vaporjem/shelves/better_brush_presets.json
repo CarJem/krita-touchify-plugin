@@ -50,6 +50,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "01360fc1-82fe-40f0-8b06-880f7ecda270": {
@@ -150,6 +151,7 @@
                 "action_section_btn_height": 30,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             }
         },
@@ -157,10 +159,7 @@
         "options": {
             "button_size": 32,
             "header_size": 16,
-            "show_pin_button": true,
-            "show_menu_button": true,
-            "show_tabs": true,
-            "show_titlebar": true,
+            "enable_pinning": false,
             "position": "top",
             "resize_style": "default",
             "stack_preview": "default",

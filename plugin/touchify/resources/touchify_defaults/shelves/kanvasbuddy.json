@@ -24,9 +24,9 @@
                 ],
                 {
                     "sizes": [
-                        250,
-                        30,
-                        192
+                        29,
+                        29,
+                        23
                     ]
                 }
             ],
@@ -56,6 +56,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_size_slider",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "8b5f08a1-f9ab-4933-866e-148f1c93f130": {
@@ -81,6 +82,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_opacity_slider",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "65d3c3f3-5163-45a7-8857-32b26b8e959a": {
@@ -181,6 +183,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             }
         },
@@ -198,7 +201,7 @@
                         ],
                         {
                             "sizes": [
-                                250
+                                480
                             ]
                         }
                     ],
@@ -228,6 +231,7 @@
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
+                        "special_slider_orientation": "horizontal",
                         "json_version": 4
                     }
                 },
@@ -250,7 +254,7 @@
                         ],
                         {
                             "sizes": [
-                                264
+                                262
                             ]
                         }
                     ],
@@ -280,6 +284,7 @@
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
+                        "special_slider_orientation": "horizontal",
                         "json_version": 4
                     }
                 },
@@ -302,7 +307,7 @@
                         ],
                         {
                             "sizes": [
-                                290
+                                480
                             ]
                         }
                     ],
@@ -332,6 +337,7 @@
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
+                        "special_slider_orientation": "horizontal",
                         "json_version": 4
                     }
                 },
@@ -354,7 +360,7 @@
                         ],
                         {
                             "sizes": [
-                                250
+                                480
                             ]
                         }
                     ],
@@ -384,6 +390,7 @@
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
+                        "special_slider_orientation": "horizontal",
                         "json_version": 4
                     }
                 },
@@ -406,7 +413,7 @@
                         ],
                         {
                             "sizes": [
-                                250
+                                480
                             ]
                         }
                     ],
@@ -436,6 +443,7 @@
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
+                        "special_slider_orientation": "horizontal",
                         "json_version": 4
                     }
                 },
@@ -449,13 +457,10 @@
         "options": {
             "button_size": 32,
             "header_size": 16,
-            "show_pin_button": true,
-            "show_menu_button": true,
-            "show_tabs": true,
-            "show_titlebar": true,
+            "enable_pinning": true,
             "position": "top",
             "resize_style": "minimum",
-            "stack_preview": "tabbed",
+            "stack_preview": "default",
             "stack_alignment": "default",
             "stack_actions": [],
             "json_version": 1

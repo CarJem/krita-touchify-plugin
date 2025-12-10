@@ -86,6 +86,8 @@ class ShelfWidget(QWidget):
 
         self.updateStyle()
 
+        managers.mgr_canvas.normalFocus.connect(self.onCanvasFocusGained)
+
     def __setupDialog(self, options: Any):
         if self.dlgConfigEditor != None:
             if PyQtExtensions.CommonHelpers.isDeleted(self.dlgConfigEditor) == False:
@@ -476,6 +478,12 @@ class ShelfWidget(QWidget):
     #endregion
 
     #region Signals
+
+    def onCanvasFocusGained(self):
+        if self.containerOptions.enable_pinning:
+            if self.dockStack.currentIndex() != 1 and not self.header.pinButton.isChecked():
+                self.goToHomePage()
+            
 
     def onConfigUpdated(self):
         self.loadLayout()

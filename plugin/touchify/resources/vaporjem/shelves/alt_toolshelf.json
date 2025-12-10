@@ -107,6 +107,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "2529aa29-3a78-432a-b308-cafe2ee04e2c": {
@@ -132,6 +133,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "5e5ca049-14c2-4ef3-b103-869e554d4b8b": {
@@ -157,6 +159,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "33af9154-9698-4383-bde2-44f54940fef9": {
@@ -182,6 +185,7 @@
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "layer_label_box",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "c95e8bfa-41ac-4c01-bc32-75da6076c750": {
@@ -328,6 +332,7 @@
                 "action_section_btn_height": 30,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "1ec8c90b-5c25-4a80-9ba4-39d96ed0559f": {
@@ -428,6 +433,7 @@
                 "action_section_btn_height": 20,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             },
             "a41cd564-aac6-4af7-ac74-8c13bd606e87": {
@@ -528,6 +534,7 @@
                 "action_section_btn_height": 20,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
                 "json_version": 4
             }
         },
@@ -535,10 +542,7 @@
         "options": {
             "button_size": 32,
             "header_size": 16,
-            "show_pin_button": true,
-            "show_menu_button": true,
-            "show_tabs": true,
-            "show_titlebar": true,
+            "enable_pinning": false,
             "position": "top",
             "resize_style": "default",
             "stack_preview": "default",

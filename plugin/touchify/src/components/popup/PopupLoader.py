@@ -23,10 +23,6 @@ class PopupLoader(QObject):
 
     def Section_Actions(self, data: PopupData):
         toolshelf_data: ToolshelfContainer = ToolshelfContainer()
-        toolshelf_data.options.show_menu_button = False
-        toolshelf_data.options.show_pin_button = False
-        toolshelf_data.options.show_tabs = False
-        toolshelf_data.options.show_titlebar = False
 
 
         action_section: ToolshelfDock = ToolshelfDock()
@@ -46,10 +42,6 @@ class PopupLoader(QObject):
     
     def Section_Dockers(self, data: PopupData):
         toolshelf_data: ToolshelfContainer = ToolshelfContainer()
-        toolshelf_data.options.show_menu_button = False
-        toolshelf_data.options.show_pin_button = False
-        toolshelf_data.options.show_tabs = False
-        toolshelf_data.options.show_titlebar = False
 
         dockers = [ ]
 

@@ -1,173 +1,157 @@
 {
-    "preset_name": "Main Toolshelf",
+    "preset_name": "Main Toolshelf (2)",
     "preset_group": "",
     "preset_data": {
         "layout": {
             "main": [
-                "horizontal",
+                "vertical",
                 [
                     [
-                        "dock",
-                        "39930b95-3bdb-4226-9184-8d74b928d871",
-                        {}
-                    ],
-                    [
-                        "vertical",
+                        "tab",
                         [
                             [
-                                "tab",
-                                [
-                                    [
-                                        "dock",
-                                        "6c637210-23f4-4cfc-b82b-5b248e904ee6",
-                                        {}
-                                    ],
-                                    [
-                                        "dock",
-                                        "6defe8fe-57b3-4a76-8362-64e6846488a9",
-                                        {}
-                                    ]
-                                ],
-                                {
-                                    "index": 0
-                                }
-                            ],
-                            [
-                                "horizontal",
-                                [
-                                    [
-                                        "dock",
-                                        "d6c9091b-28b5-43f8-9523-c051460717bb",
-                                        {}
-                                    ],
-                                    [
-                                        "dock",
-                                        "7cd9b10b-4aef-4be4-baca-d7ba53b02c54",
-                                        {}
-                                    ],
-                                    [
-                                        "dock",
-                                        "53325748-610b-4990-8df7-5f87ac120e3f",
-                                        {}
-                                    ],
-                                    [
-                                        "dock",
-                                        "26d8798f-b127-4aca-a2ce-668467df6720",
-                                        {}
-                                    ],
-                                    [
-                                        "dock",
-                                        "9ff57d6c-f6fd-4487-9224-45ebec2fe9ee",
-                                        {}
-                                    ]
-                                ],
-                                {
-                                    "sizes": [
-                                        35,
-                                        35,
-                                        35,
-                                        35,
-                                        127
-                                    ]
-                                }
-                            ],
-                            [
                                 "dock",
-                                "f94e7f2f-bae3-47e6-b725-c9c55c52dde1",
+                                "6c637210-23f4-4cfc-b82b-5b248e904ee6",
                                 {}
                             ],
                             [
                                 "dock",
-                                "034834f4-5f5f-4eb0-a341-1baa6ea86fde",
+                                "6defe8fe-57b3-4a76-8362-64e6846488a9",
+                                {}
+                            ]
+                        ],
+                        {
+                            "index": 0
+                        }
+                    ],
+                    [
+                        "horizontal",
+                        [
+                            [
+                                "dock",
+                                "d6c9091b-28b5-43f8-9523-c051460717bb",
                                 {}
                             ],
                             [
-                                "horizontal",
-                                [
-                                    [
-                                        "vertical",
-                                        [
-                                            [
-                                                "dock",
-                                                "8563d666-9fe0-449e-bdea-4a0585e4888b",
-                                                {}
-                                            ],
-                                            [
-                                                "dock",
-                                                "c631d2f0-7e8b-4d67-91b8-29d412b52f23",
-                                                {}
-                                            ],
-                                            [
-                                                "dock",
-                                                "ba9cad0c-7f49-4051-ad03-ed3b70033912",
-                                                {}
-                                            ]
-                                        ],
-                                        {
-                                            "sizes": [
-                                                32,
-                                                32,
-                                                32
-                                            ]
-                                        }
-                                    ],
-                                    [
-                                        "vertical",
-                                        [
-                                            [
-                                                "dock",
-                                                "3a68760b-012f-45b7-8b5e-d866a87c2d4b",
-                                                {}
-                                            ],
-                                            [
-                                                "dock",
-                                                "eb31896f-7e29-4e3d-b051-4cf0c3ae8b6c",
-                                                {}
-                                            ],
-                                            [
-                                                "dock",
-                                                "bde63932-0a5e-49ce-a1e3-b038980d18b3",
-                                                {}
-                                            ]
-                                        ],
-                                        {
-                                            "sizes": [
-                                                32,
-                                                32,
-                                                32
-                                            ]
-                                        }
-                                    ]
-                                ],
-                                {
-                                    "sizes": [
-                                        239,
-                                        40
-                                    ]
-                                }
+                                "dock",
+                                "7cd9b10b-4aef-4be4-baca-d7ba53b02c54",
+                                {}
                             ],
                             [
                                 "dock",
-                                "58bbc7b4-a4ab-499c-8464-a11990f62765",
+                                "53325748-610b-4990-8df7-5f87ac120e3f",
+                                {}
+                            ],
+                            [
+                                "dock",
+                                "26d8798f-b127-4aca-a2ce-668467df6720",
+                                {}
+                            ],
+                            [
+                                "dock",
+                                "9ff57d6c-f6fd-4487-9224-45ebec2fe9ee",
                                 {}
                             ]
                         ],
                         {
                             "sizes": [
-                                256,
                                 35,
-                                32,
                                 35,
-                                104,
-                                363
+                                35,
+                                35,
+                                236
                             ]
                         }
+                    ],
+                    [
+                        "dock",
+                        "f94e7f2f-bae3-47e6-b725-c9c55c52dde1",
+                        {}
+                    ],
+                    [
+                        "dock",
+                        "034834f4-5f5f-4eb0-a341-1baa6ea86fde",
+                        {}
+                    ],
+                    [
+                        "horizontal",
+                        [
+                            [
+                                "vertical",
+                                [
+                                    [
+                                        "dock",
+                                        "8563d666-9fe0-449e-bdea-4a0585e4888b",
+                                        {}
+                                    ],
+                                    [
+                                        "dock",
+                                        "c631d2f0-7e8b-4d67-91b8-29d412b52f23",
+                                        {}
+                                    ],
+                                    [
+                                        "dock",
+                                        "ba9cad0c-7f49-4051-ad03-ed3b70033912",
+                                        {}
+                                    ]
+                                ],
+                                {
+                                    "sizes": [
+                                        32,
+                                        32,
+                                        32
+                                    ]
+                                }
+                            ],
+                            [
+                                "vertical",
+                                [
+                                    [
+                                        "dock",
+                                        "3a68760b-012f-45b7-8b5e-d866a87c2d4b",
+                                        {}
+                                    ],
+                                    [
+                                        "dock",
+                                        "eb31896f-7e29-4e3d-b051-4cf0c3ae8b6c",
+                                        {}
+                                    ],
+                                    [
+                                        "dock",
+                                        "bde63932-0a5e-49ce-a1e3-b038980d18b3",
+                                        {}
+                                    ]
+                                ],
+                                {
+                                    "sizes": [
+                                        32,
+                                        32,
+                                        32
+                                    ]
+                                }
+                            ]
+                        ],
+                        {
+                            "sizes": [
+                                332,
+                                56
+                            ]
+                        }
+                    ],
+                    [
+                        "dock",
+                        "58bbc7b4-a4ab-499c-8464-a11990f62765",
+                        {}
                     ]
                 ],
                 {
                     "sizes": [
-                        80,
-                        283
+                        256,
+                        35,
+                        32,
+                        35,
+                        104,
+                        363
                     ]
                 }
             ],
@@ -371,32 +355,6 @@
                 "action_section_alignment_y": "none",
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 32,
-                "action_section_icon_size": 0,
-                "special_item_type": "none",
-                "special_slider_orientation": "horizontal",
-                "json_version": 4
-            },
-            "39930b95-3bdb-4226-9184-8d74b928d871": {
-                "display_name": "",
-                "docker_id": "Touchify/TouchifyToolbox",
-                "size_x": 0,
-                "size_y": 0,
-                "min_size_x": 80,
-                "min_size_y": 0,
-                "max_size_x": 80,
-                "max_size_y": 0,
-                "ignore_scaling": false,
-                "section_type": "docker",
-                "docker_nesting_mode": "normal",
-                "docker_unloaded_visibility": "normal",
-                "docker_loading_priority": "normal",
-                "action_section_id": "Panel",
-                "action_section_display_mode": "normal",
-                "action_section_contents": [],
-                "action_section_alignment_x": "none",
-                "action_section_alignment_y": "none",
-                "action_section_btn_width": 0,
-                "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
