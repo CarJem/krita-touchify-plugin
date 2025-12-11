@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from touchify.__env__ import TOUCHIFY_SETTINGPATH_TOOLSHELF
+from touchify.__env__ import *
 from touchify.src.components.toolshelf.ShelfDockWidget import ShelfDockWidget
 from touchify.src.managers.shared.resources import ResourceManager
 from touchify.src.managers.shared.settings_krita import KritaSettings
@@ -14,8 +14,8 @@ if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
 
 class ShelfWidgetPad(ShelfDockWidget):
-    DOCKER_TITLE="Touchify Core: Widget Pad"
-    CLONE_DOCKER_TITLE="Touchify Clone: Widget Pad"
+    DOCKER_TITLE=f"{TOUCHIFY_TITLES_CORE_DOCKERS_PREFIX} Widget Pad"
+    CLONE_DOCKER_TITLE=f"{TOUCHIFY_TITLES_CLONE_DOCKERS_PREFIX} Widget Pad"
 
     class TitlebarWidget(QWidget):
 
@@ -100,7 +100,7 @@ class ShelfWidgetPad(ShelfDockWidget):
             self._parent = parent
 
         def getSettingsPath(self):
-            return TOUCHIFY_SETTINGPATH_TOOLSHELF + "_FloatingWidget_" + str(self._parent.PanelIndex)
+            return f"{TOUCHIFY_SETTINGPATH_WIDGETPAD}_{str(self._parent.PanelIndex)}"
 
         def getShowHeader(self):
             return KritaSettings.readSettingBool(self.getSettingsPath(), "ShowHeader", True)
@@ -127,8 +127,8 @@ class ShelfWidgetPad(ShelfDockWidget):
     def __init__(self, index: int = 0):
         super().__init__(-1)
         
-        self.PanelIndex = index
         self.setWindowTitle(f"{ShelfWidgetPad.CLONE_DOCKER_TITLE} (Ext. {index})")
+        self.PanelIndex = 10 + index
 
         self._alignment = self.WidgetAlignment.TopLeft
         self._edgePosition = QPoint(0,0)

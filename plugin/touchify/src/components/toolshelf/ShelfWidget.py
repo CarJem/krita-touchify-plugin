@@ -220,7 +220,7 @@ class ShelfWidget(QWidget):
         if self.currentPresetId().lower() != "none":
             if self.isAutoSaveEnabled(): self.savePreset(True)
         else:
-            KritaSettings.writeSetting("TOUCHIFY_TEMP", "TOUCHIFY_TOOLSHELF_DOCKER_CONFIGURATION_" + str(self.registry_index), state, False)
+            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_NOPRESETDATA, str(self.registry_index), state, False)
 
     def loadLayout(self):
         def loadShelf(sub_state: ToolshelfPage | ToolshelfContainer, dock_area: DockArea):
@@ -244,7 +244,7 @@ class ShelfWidget(QWidget):
         elif self.currentPresetId().lower() != "none":
             state: ToolshelfContainer = TouchifySettings.instance().getActiveShelf(self.registry_index).preset_data
         else:
-            jsonStr = KritaSettings.readSetting("TOUCHIFY_TEMP", "TOUCHIFY_TOOLSHELF_DOCKER_CONFIGURATION_" + str(self.registry_index), "")
+            jsonStr = KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF_NOPRESETDATA, str(self.registry_index), "")
             state: ToolshelfContainer = JsonExtensions.loadClass(jsonStr, ToolshelfContainer)
 
         if state == None:

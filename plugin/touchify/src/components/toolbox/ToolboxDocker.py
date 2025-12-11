@@ -31,7 +31,7 @@ if TYPE_CHECKING:
 
     
 
-DOCKER_TITLE="Touchify Core: Toolbox"
+DOCKER_TITLE=f"{TOUCHIFY_TITLES_CORE_DOCKERS_PREFIX} Toolbox"
 
 class ToolboxDocker(QDockWidget):
     def __init__(self, parent: QWidget | None = None):

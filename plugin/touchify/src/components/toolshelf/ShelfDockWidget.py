@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 from typing import TYPE_CHECKING
 
 
+from touchify.__env__ import *
 from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
 from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
 from touchify.src.managers.shared.events import GlobalEvents
@@ -21,8 +22,8 @@ TIMER_INTERVAL = 10
 
 class ShelfDockWidget(DockWidget):
 
-    DOCKER_TITLE="Touchify Core: Toolshelf"
-    CLONE_DOCKER_TITLE="Touchify Clone: Toolshelf"
+    DOCKER_TITLE=f"{TOUCHIFY_TITLES_CORE_DOCKERS_PREFIX} Toolshelf"
+    CLONE_DOCKER_TITLE=f"{TOUCHIFY_TITLES_CLONE_DOCKERS_PREFIX}  Toolshelf"
 
     resizeByDefaultRequested=pyqtSignal()
 

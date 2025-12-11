@@ -15,22 +15,9 @@
                         "vertical",
                         [
                             [
-                                "tab",
-                                [
-                                    [
-                                        "dock",
-                                        "6c637210-23f4-4cfc-b82b-5b248e904ee6",
-                                        {}
-                                    ],
-                                    [
-                                        "dock",
-                                        "6defe8fe-57b3-4a76-8362-64e6846488a9",
-                                        {}
-                                    ]
-                                ],
-                                {
-                                    "index": 0
-                                }
+                                "dock",
+                                "f94e7f2f-bae3-47e6-b725-c9c55c52dde1",
+                                {}
                             ],
                             [
                                 "horizontal",
@@ -67,14 +54,9 @@
                                         35,
                                         35,
                                         35,
-                                        127
+                                        142
                                     ]
                                 }
-                            ],
-                            [
-                                "dock",
-                                "f94e7f2f-bae3-47e6-b725-c9c55c52dde1",
-                                {}
                             ],
                             [
                                 "dock",
@@ -141,8 +123,8 @@
                                 ],
                                 {
                                     "sizes": [
-                                        239,
-                                        40
+                                        251,
+                                        43
                                     ]
                                 }
                             ],
@@ -154,20 +136,19 @@
                         ],
                         {
                             "sizes": [
-                                256,
-                                35,
                                 32,
                                 35,
+                                35,
                                 104,
-                                363
+                                623
                             ]
                         }
                     ]
                 ],
                 {
                     "sizes": [
-                        80,
-                        283
+                        60,
+                        298
                     ]
                 }
             ],
@@ -381,13 +362,13 @@
                 "docker_id": "Touchify/TouchifyToolbox",
                 "size_x": 0,
                 "size_y": 0,
-                "min_size_x": 80,
+                "min_size_x": 60,
                 "min_size_y": 0,
-                "max_size_x": 80,
+                "max_size_x": 60,
                 "max_size_y": 0,
                 "ignore_scaling": false,
                 "section_type": "docker",
-                "docker_nesting_mode": "normal",
+                "docker_nesting_mode": "docking",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
                 "action_section_id": "Panel",
@@ -407,65 +388,13 @@
                 "docker_id": "sharedtooldocker",
                 "size_x": 0,
                 "size_y": 0,
-                "min_size_x": 0,
+                "min_size_x": 300,
                 "min_size_y": 0,
-                "max_size_x": 0,
+                "max_size_x": 300,
                 "max_size_y": 0,
                 "ignore_scaling": false,
                 "section_type": "docker",
                 "docker_nesting_mode": "docking",
-                "docker_unloaded_visibility": "normal",
-                "docker_loading_priority": "normal",
-                "action_section_id": "Panel",
-                "action_section_display_mode": "normal",
-                "action_section_contents": [],
-                "action_section_alignment_x": "none",
-                "action_section_alignment_y": "none",
-                "action_section_btn_width": 0,
-                "action_section_btn_height": 0,
-                "action_section_icon_size": 0,
-                "special_item_type": "none",
-                "special_slider_orientation": "horizontal",
-                "json_version": 4
-            },
-            "6defe8fe-57b3-4a76-8362-64e6846488a9": {
-                "display_name": "",
-                "docker_id": "ColorSelectorNg",
-                "size_x": 0,
-                "size_y": 0,
-                "min_size_x": 0,
-                "min_size_y": 200,
-                "max_size_x": 0,
-                "max_size_y": 0,
-                "ignore_scaling": false,
-                "section_type": "docker",
-                "docker_nesting_mode": "normal",
-                "docker_unloaded_visibility": "normal",
-                "docker_loading_priority": "normal",
-                "action_section_id": "Panel",
-                "action_section_display_mode": "normal",
-                "action_section_contents": [],
-                "action_section_alignment_x": "none",
-                "action_section_alignment_y": "none",
-                "action_section_btn_width": 0,
-                "action_section_btn_height": 0,
-                "action_section_icon_size": 0,
-                "special_item_type": "none",
-                "special_slider_orientation": "horizontal",
-                "json_version": 4
-            },
-            "6c637210-23f4-4cfc-b82b-5b248e904ee6": {
-                "display_name": "",
-                "docker_id": "PaletteDocker",
-                "size_x": 0,
-                "size_y": 0,
-                "min_size_x": 0,
-                "min_size_y": 200,
-                "max_size_x": 0,
-                "max_size_y": 0,
-                "ignore_scaling": false,
-                "section_type": "docker",
-                "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
                 "action_section_id": "Panel",

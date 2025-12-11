@@ -47,9 +47,9 @@ class TouchifyManagers:
         dockers_menu_action = KritaExtensions.getDockerMenu(window.api_window)
         if dockers_menu_action == None: return
 
-        touchify_title_prefix = "Touchify Core: "
-        addon_title_prefix = "Touchify Addon: "
-        touchify_clone_prefix = "Touchify Clone: "
+        touchify_title_prefix = TOUCHIFY_TITLES_CORE_DOCKERS_PREFIX
+        addon_title_prefix = TOUCHIFY_TITLES_ADDON_DOCKERS_PREFIX
+        touchify_clone_prefix = TOUCHIFY_TITLES_CLONE_DOCKERS_PREFIX
 
         addon_id_prefix = "Touchify/"
         addon_setup_method = "TOUCHIFY_ADDON_SETUP"
