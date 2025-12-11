@@ -157,7 +157,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             elif mode == PropertyGrid_Restrictions.StrMod.PieWheelRegistry: self.selector_registry_type = PieWheelData
             else: return
 
-            presets = TouchifySettings.instance().getRegistry(self.selector_registry_type)
+            presets = TouchifySettings.registry(self.selector_registry_type)
             for preset_key, value in presets.items():
                 displayName = f"{str(value)}\n{preset_key.actual_key}"
                 listItem = QListWidgetItem()

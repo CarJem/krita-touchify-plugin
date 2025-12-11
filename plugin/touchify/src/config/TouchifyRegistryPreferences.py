@@ -1,3 +1,4 @@
+from touchify.__env__ import Env
 from touchify.src.managers.shared.settings_krita import KritaSettings
 from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
@@ -5,25 +6,25 @@ class TouchifyRegistryPreferences:
 
     class IO:
         def readStr(name: str, defaultValue: str) -> str:
-            return KritaSettings.readSetting("Touchify", name, defaultValue)
+            return KritaSettings.readSetting(Env.SettingsPath.TOUCHIFY, name, defaultValue)
 
         def writeStr(name: str, value: str, defaultValue: str) -> None:
             if TouchifyRegistryPreferences.IO.readStr(name, defaultValue) != value:
-                KritaSettings.writeSetting("Touchify", name, value)
+                KritaSettings.writeSetting(Env.SettingsPath.TOUCHIFY, name, value)
 
         def readBool(name: str, defaultValue: bool) -> bool:
-            return KritaSettings.readSettingBool("Touchify", name, defaultValue)
+            return KritaSettings.readSettingBool(Env.SettingsPath.TOUCHIFY, name, defaultValue)
 
         def writeBool(name: str, value: bool, defaultValue: bool) -> None:
             if TouchifyRegistryPreferences.IO.readBool(name, defaultValue) != value:
-                KritaSettings.writeSettingBool("Touchify", name, value)
+                KritaSettings.writeSettingBool(Env.SettingsPath.TOUCHIFY, name, value)
 
         def readFloat(name: str, defaultValue: float) -> float:
-            return KritaSettings.readSettingFloat("Touchify", name, defaultValue)
+            return KritaSettings.readSettingFloat(Env.SettingsPath.TOUCHIFY, name, defaultValue)
 
         def writeFloat(name: str, value: float, defaultValue: float) -> None:
             if TouchifyRegistryPreferences.IO.readFloat(name, defaultValue) != value:
-                KritaSettings.writeSettingFloat("Touchify", name, value)
+                KritaSettings.writeSettingFloat(Env.SettingsPath.TOUCHIFY, name, value)
 
     def __init__(self) -> None:
         self.Styles_BorderlessToolbar = False

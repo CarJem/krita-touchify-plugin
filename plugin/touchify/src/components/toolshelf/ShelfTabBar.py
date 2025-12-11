@@ -109,7 +109,7 @@ class ShelfTabBar(QWidget):
 
     def reload(self, state: ToolshelfContainer):
 
-        self.button_size = int(state.options.button_size * TouchifySettings.instance().preferences().Interface_ToolshelfTabBarScale)
+        self.button_size = int(state.options.button_size * TouchifySettings.preferences().Interface_ToolshelfTabBarScale)
         self.tab_size = state.options.button_size
         self.stack_alignment = state.options.stack_alignment
         self.stack_preview = state.options.stack_preview

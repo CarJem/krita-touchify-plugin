@@ -12,17 +12,20 @@ class GlobalEvents(QObject):
             return None
         
 
-    SIGNAL_TIMER_TICKED = pyqtSignal()
+    
+
     SIGNAL_KRITA_CONFIG_UPDATED = pyqtSignal()
     SIGNAL_TOUCHIFY_CONFIG_UPDATED = pyqtSignal()
-    SIGNAL_CANVAS_LAYOUT_CHANGED = pyqtSignal()
-    SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED = pyqtSignal()
-    SIGNAL_TOOLSHELF_PRESET_CHANGED = pyqtSignal(int)
+    SIGNAL_TOOLBOX_UPDATED = pyqtSignal()
+    SIGNAL_TOOLSHELF_UPDATED = pyqtSignal(int)
+    SIGNAL_PIE_TRIGGER_SENT = pyqtSignal(Trigger)
+
+    SIGNAL_TIMER_TICKED = pyqtSignal()
     SIGNAL_MOUSE_RELEASED = pyqtSignal()
     SIGNAL_KEY_RELEASED = pyqtSignal()
     SIGNAL_WINDOW_RESIZED = pyqtSignal()
     SIGNAL_WINDOW_MOVED = pyqtSignal()
-    SIGNAL_PIE_TRIGGER_SENT = pyqtSignal(Trigger)
+    
         
     @staticmethod
     def EMIT_SIGNAL_TIMER_TICKED():
@@ -34,14 +37,11 @@ class GlobalEvents(QObject):
     def EMIT_SIGNAL_TOUCHIFY_CONFIG_UPDATED():
         if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.emit()
     @staticmethod
-    def EMIT_SIGNAL_TOOLSHELF_PRESET_CHANGED(index: int):
-        if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_TOOLSHELF_PRESET_CHANGED.emit(index)
+    def EMIT_SIGNAL_TOOLSHELF_UPDATED(index: int):
+        if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_TOOLSHELF_UPDATED.emit(index)
     @staticmethod
-    def EMIT_SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED():
-        if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED.emit()
-    @staticmethod
-    def EMIT_SIGNAL_CANVAS_LAYOUT_CHANGED():
-        if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_CANVAS_LAYOUT_CHANGED.emit()
+    def EMIT_SIGNAL_TOOLBOX_UPDATED():
+        if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_TOOLBOX_UPDATED.emit()
     @staticmethod
     def EMIT_SIGNAL_PIE_TRIGGER_SENT(trigger: Trigger):
         if GlobalEvents.instance(): GlobalEvents.instance().SIGNAL_PIE_TRIGGER_SENT.emit(trigger)

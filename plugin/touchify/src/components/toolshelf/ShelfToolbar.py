@@ -76,7 +76,7 @@ class ShelfToolbar(QWidget):
         self.updateStyleSheet()
 
     def reload(self, state: ToolshelfContainer, currentPresetId: str):
-        button_size = int(state.options.header_size * TouchifySettings.instance().preferences().Interface_ToolshelfHeaderScale)
+        button_size = int(state.options.header_size * TouchifySettings.preferences().Interface_ToolshelfHeaderScale)
         icon_size = button_size - 4
         match state.options.position:
             case "top":
@@ -306,7 +306,7 @@ class ShelfToolbarMenu(QMenu):
         menus: dict[str, QMenu] = {}
         sub_menus: dict[str, dict[str, QMenu]] = {}
         
-        registry = TouchifySettings.instance().getRegistry(Toolshelf)
+        registry = TouchifySettings.registry(Toolshelf)
         if registry != None:
             for key, preset in registry.items():
                 if not key.id in menus:

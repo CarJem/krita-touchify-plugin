@@ -54,50 +54,50 @@ class TweakManager(QObject):
             result.toggled.connect(onToggled)
             return result
     
-        config = TouchifySettings.instance().preferences()
+        config = TouchifySettings.preferences()
 
         nu_options_menu = QMenu("Tweaks", window.qwindow)
-        options_action = window.create_action(TOUCHIFY_ACTIONID_STYLES_MENU, "Tweaks", path)
+        options_action = window.create_action(Env.ActionID.Styles.MENU, "Tweaks", path)
         options_action.setMenu(nu_options_menu)
-        sublocation_path = "{0}/{1}".format(path, TOUCHIFY_ACTIONID_STYLES_MENU)
+        sublocation_path = "{0}/{1}".format(path, Env.ActionID.Styles.MENU)
 
-        nu_options_menu.addAction(createAction(TOUCHIFY_ACTIONID_STYLES_PRIVACYMODE, "Privacy Mode", sublocation_path, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
-        nu_options_menu.addAction(createAction(TOUCHIFY_ACTIONID_STYLES_BORDERLESSTOOLBARS, "Borderless Toolbars", sublocation_path, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))
-        nu_options_menu.addAction(createAction(TOUCHIFY_ACTIONID_STYLES_TABHEIGHT, "Thin Document Tabs", sublocation_path, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
-        nu_options_menu.addAction(createAction(TOUCHIFY_ACTIONID_STYLES_DOCKEDBRUSHEDITOR, "Docked Brush Editor", sublocation_path, True, config.Styles_DockedBrushEditor, self.dockedBrushEditorToggled))
-        nu_options_menu.addAction(createAction(TOUCHIFY_ACTIONID_STYLES_DOCKEDBRUSHEDITORZOOMFIX, "Brush Editor Zoom Fix", sublocation_path, True, config.Styles_BrushEditorZoomFix, self.brushEditorZoomFixToggled))
+        nu_options_menu.addAction(createAction(Env.ActionID.Styles.PRIVACYMODE, "Privacy Mode", sublocation_path, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
+        nu_options_menu.addAction(createAction(Env.ActionID.Styles.BORDERLESSTOOLBARS, "Borderless Toolbars", sublocation_path, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))
+        nu_options_menu.addAction(createAction(Env.ActionID.Styles.TABHEIGHT, "Thin Document Tabs", sublocation_path, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
+        nu_options_menu.addAction(createAction(Env.ActionID.Styles.DOCKEDBRUSHEDITOR, "Docked Brush Editor", sublocation_path, True, config.Styles_DockedBrushEditor, self.dockedBrushEditorToggled))
+        nu_options_menu.addAction(createAction(Env.ActionID.Styles.DOCKEDBRUSHEDITORZOOMFIX, "Brush Editor Zoom Fix", sublocation_path, True, config.Styles_BrushEditorZoomFix, self.brushEditorZoomFixToggled))
 
     def Actions_Post(self):
         settings_menu = self.qt_window.findChild(QMenu, 'settings')
-        KritaExtensions.moveActionTo(TOUCHIFY_ACTIONID_STYLES_MENU, settings_menu, settings_menu, 'style_menu')
+        KritaExtensions.moveActionTo(Env.ActionID.Styles.MENU, settings_menu, settings_menu, 'style_menu')
 
     #endregion
 
     #region Toggles
 
     def brushEditorZoomFixToggled(self, toggled):
-        TouchifySettings.instance().preferences().Styles_BrushEditorZoomFix = toggled
-        TouchifySettings.instance().preferences().save()
+        TouchifySettings.preferences().Styles_BrushEditorZoomFix = toggled
+        TouchifySettings.preferences().save()
         self.brush_editor_tweak.Update_State()
 
     def dockedBrushEditorToggled(self, toggled):
-        TouchifySettings.instance().preferences().Styles_DockedBrushEditor = toggled
-        TouchifySettings.instance().preferences().save()
+        TouchifySettings.preferences().Styles_DockedBrushEditor = toggled
+        TouchifySettings.preferences().save()
         self.brush_editor_tweak.Update_State()
 
     def toolbarBorderToggled(self, toggled):
-        TouchifySettings.instance().preferences().Styles_BorderlessToolbar = toggled
-        TouchifySettings.instance().preferences().save()
+        TouchifySettings.preferences().Styles_BorderlessToolbar = toggled
+        TouchifySettings.preferences().save()
         self.qt_window.themeChanged.emit()
 
     def tabHeightToggled(self, toggled):
-        TouchifySettings.instance().preferences().Styles_ThinDocumentTabs = toggled
-        TouchifySettings.instance().preferences().save()
+        TouchifySettings.preferences().Styles_ThinDocumentTabs = toggled
+        TouchifySettings.preferences().save()
         self.qt_window.themeChanged.emit()
         
     def privacyModeToggled(self, toggled):
-        TouchifySettings.instance().preferences().Styles_PrivacyMode = toggled
-        TouchifySettings.instance().preferences().save()
+        TouchifySettings.preferences().Styles_PrivacyMode = toggled
+        TouchifySettings.preferences().save()
         self.qt_window.themeChanged.emit()
 
     #endregion
@@ -108,7 +108,7 @@ class TweakManager(QObject):
         if self.qt_window == None:
             return
 
-        config = TouchifySettings.instance().preferences()
+        config = TouchifySettings.preferences()
 
         # region No Toolbar Borders
         full_style_sheet = ""
@@ -240,8 +240,8 @@ class Tweak_BrushEditor(QObject):
         self.stack_docker.OnEvent_Close()
 
     def Update_State(self):
-        is_docked = TouchifySettings.instance().preferences().Styles_DockedBrushEditor
-        fix_zoom = TouchifySettings.instance().preferences().Styles_BrushEditorZoomFix
+        is_docked = TouchifySettings.preferences().Styles_DockedBrushEditor
+        fix_zoom = TouchifySettings.preferences().Styles_BrushEditorZoomFix
 
         if is_docked: self.Subwindow_Spawn()
         else: self.Subwindow_Kill()

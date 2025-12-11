@@ -86,7 +86,7 @@ class TouchifyActionPanel(QWidget):
         self.display_type = TouchifyActionPanel.DisplayType.convertFromOther(cfg.display_mode)
 
         if cfg.ignore_scaling: scale = 1
-        else: scale = TouchifySettings.instance().preferences().Interface_ToolshelfActionSectionScale
+        else: scale = TouchifySettings.preferences().Interface_ToolshelfActionSectionScale
 
         icon_size = int(cfg.action_section_icon_size * scale)
 
@@ -128,7 +128,7 @@ class TouchifyActionPanel(QWidget):
                 self.appendButton(act[1], btn, act[0])
         
         if self.cfg.ignore_scaling: scale = 1
-        else: scale = TouchifySettings.instance().preferences().Interface_ToolshelfActionSectionScale
+        else: scale = TouchifySettings.preferences().Interface_ToolshelfActionSectionScale
     
         size_x = int(self.cfg.size_x * scale)
         size_y = int(self.cfg.size_y * scale)

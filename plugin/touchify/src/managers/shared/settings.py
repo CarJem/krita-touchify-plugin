@@ -1,3 +1,4 @@
+from copy import deepcopy
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
@@ -12,11 +13,10 @@ from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 from touchify.src.config.TouchifyRegistryPreferences import TouchifyRegistryPreferences
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
-from touchify.src.managers.shared.settings_krita import KritaSettings
-from touchify.src.managers.shared.events import GlobalEvents
 from touchify.__env__ import *
 
 
+RegistryItemType = None | TriggerMenu | PopupData | DockerGroup | CanvasPreset | Toolshelf | ToolboxData | CustomScript | PieWheelData
 
 class TouchifySettings:
 
@@ -39,10 +39,16 @@ class TouchifySettings:
             return hash(self.actual_key)
         
         def getResourcePack(self):
-            resourcePacks = TouchifySettings.instance().getResourcePacks()
+            resourcePacks = TouchifySettings.resourcePacks()
             for pack in resourcePacks:
                 if pack.INTERNAL_UUID_ID == self.id: return pack
             return None
+
+
+
+    def __init__(self) -> None:
+        self.notify_hooks = []
+        self.cfg = TouchifyRegistry()
 
     @staticmethod
     def instance():
@@ -51,41 +57,33 @@ class TouchifySettings:
         except AttributeError:
             TouchifySettings.__instance = TouchifySettings()
             return TouchifySettings.__instance
-        
-    @staticmethod  
-    def reload():
-        TouchifySettings.instance().cfg.load()
-        GlobalEvents.EMIT_SIGNAL_TOUCHIFY_CONFIG_UPDATED()
 
-    @staticmethod  
-    def reloadToolbox():
-        TouchifySettings.instance().cfg.load()
-        GlobalEvents.EMIT_SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED()
-
-    def __init__(self) -> None:
-        self.notify_hooks = []
-        self.cfg = TouchifyRegistry()
-        
-    def preferences(self) -> TouchifyRegistryPreferences:
-        return self.cfg.preferences
-
-    def getConfig(self) -> TouchifyRegistry:
-        return self.cfg
+    @staticmethod
+    def config() -> TouchifyRegistry:
+        return TouchifySettings.instance().cfg
     
-    def getResourcePacks(self) -> list[ResourcePack]:
-        cfg = self.getConfig()
-        return cfg.resources.presets
-    
-    def getRegistryItem(self, item_id: str, type: type) -> None |\
-                                                        TriggerMenu |\
-                                                        PopupData |\
-                                                        DockerGroup |\
-                                                        CanvasPreset |\
-                                                        Toolshelf |\
-                                                        ToolboxData |\
-                                                        CustomScript |\
-                                                        PieWheelData:
-        cfg = self.getConfig()
+    def configCopy() -> TouchifyRegistry:
+        return deepcopy(TouchifySettings.instance().cfg)
+
+    @staticmethod
+    def save():
+        TouchifySettings.config().save()
+
+    @staticmethod
+    def load():
+        TouchifySettings.config().load()
+
+    @staticmethod
+    def preferences() -> TouchifyRegistryPreferences:
+        return TouchifySettings.config().preferences
+
+    @staticmethod
+    def resourcePacks() -> list[ResourcePack]:
+        return TouchifySettings.config().resources.presets
+
+    @staticmethod
+    def registryItem(item_id: str, type: type) -> RegistryItemType:
+        cfg = TouchifySettings.config()
         for pack in cfg.resources.presets:
             pack: ResourcePack
 
@@ -131,17 +129,10 @@ class TouchifySettings:
                     if item_id == id: return item
 
         return None
-    
-    def getRegistry(self, type: type) -> dict[RegistryKey, any] |\
-                                        dict[RegistryKey, TriggerMenu] |\
-                                        dict[RegistryKey,PopupData] |\
-                                        dict[RegistryKey,DockerGroup] |\
-                                        dict[RegistryKey,CanvasPreset] |\
-                                        dict[RegistryKey,Toolshelf] |\
-                                        dict[RegistryKey,ToolboxData] |\
-                                        dict[RegistryKey,CustomScript] |\
-                                        dict[RegistryKey,PieWheelData]:
-        cfg = self.getConfig()
+
+    @staticmethod
+    def registry(type: type) -> dict[RegistryKey, RegistryItemType]:
+        cfg = TouchifySettings.config()
         results: dict = {}
         for pack in cfg.resources.presets:
             pack: ResourcePack
@@ -188,60 +179,6 @@ class TouchifySettings:
                     results[id] = item
 
         return results
-
-    #region Toolshelf
-
-    def getActiveShelfId(self, registry_index: int) -> str:
-        fallback_val = "none"
-
-        if registry_index >= 0:
-            return KritaSettings.readSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_" + str(registry_index), fallback_val)
-        else:
-            return fallback_val
-
-    def getActiveShelf(self, registry_index: int) -> Toolshelf:
-        registry = self.getRegistry(Toolshelf)
-        registry_selection = self.getActiveShelfId(registry_index)
-
-        if registry_selection in registry:
-            return registry[registry_selection]    
-        else: 
-            return Toolshelf()
-        
-    def getActiveShelfKey(self, registry_index: int) -> RegistryKey:
-        registry = self.getRegistry(Toolshelf)
-        registry_selection: str = self.getActiveShelfId(registry_index)
-
-        if registry_selection in registry:
-            keys = [key for key, val in registry.items() if key.actual_key == registry_selection]
-            return keys[0]
-        else: 
-            return "none"
-
-    def setActiveShelf(self, registry_index: int, id: str) -> str:
-        if registry_index >= 0:
-            KritaSettings.writeSetting(TOUCHIFY_SETTINGPATH_TOOLSHELF, "SelectedPreset_" + str(registry_index), id, False)
-
-    #region Toolbox 
-
-    def getActiveToolboxId(self) -> str:
-        fallback_val = "none"
-        return KritaSettings.readSetting(TOUCHIFY_DOCKERID_DOCKER_TOOLBOX, "SelectedPreset", fallback_val)
-
-    def getActiveToolbox(self) -> ToolboxData:
-        registry = self.getRegistry(ToolboxData)
-        registry_selection = self.getActiveToolboxId()
-
-        if registry_selection in registry:
-            return registry[registry_selection]    
-        else: 
-            return ToolboxData()
-
-    def setActiveToolbox(self, id: str):
-        KritaSettings.writeSetting(TOUCHIFY_DOCKERID_DOCKER_TOOLBOX, "SelectedPreset", id, False)
-        GlobalEvents.EMIT_SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED()
-    
-    #endregion
 
 
 

@@ -21,7 +21,7 @@ class ShelfOptionsDialog(QDialog):
         def getKnownResourcePacks(self):
             results = []
             results.append("<unset>")
-            for entry in TouchifySettings.instance().getResourcePacks():
+            for entry in TouchifySettings.resourcePacks():
                 entry: ResourcePack
                 results.append(entry.metadata.registry_name)
 

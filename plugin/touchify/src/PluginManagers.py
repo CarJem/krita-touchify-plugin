@@ -47,9 +47,9 @@ class TouchifyManagers:
         dockers_menu_action = KritaExtensions.getDockerMenu(window.api_window)
         if dockers_menu_action == None: return
 
-        touchify_title_prefix = TOUCHIFY_TITLES_CORE_DOCKERS_PREFIX
-        addon_title_prefix = TOUCHIFY_TITLES_ADDON_DOCKERS_PREFIX
-        touchify_clone_prefix = TOUCHIFY_TITLES_CLONE_DOCKERS_PREFIX
+        touchify_title_prefix = Env.Title.CORE_DOCKERS_PREFIX
+        addon_title_prefix = Env.Title.ADDON_DOCKERS_PREFIX
+        touchify_clone_prefix = Env.Title.CLONE_DOCKERS_PREFIX
 
         addon_id_prefix = "Touchify/"
         addon_setup_method = "TOUCHIFY_ADDON_SETUP"
@@ -102,13 +102,13 @@ class TouchifyManagers:
                 window_title = window_title.removeprefix(touchify_clone_prefix)
                 docker.setWindowTitle(window_title)
 
-            if docker_id.startswith(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER):
+            if docker_id.startswith(Env.DockerID.TOOLSHELFDOCKER):
                 toolshelfDocker: ShelfDockWidget = docker
                 toolshelfDocker.setup(window)
-            elif docker_id.startswith(TOUCHIFY_DOCKERID_WIDGETPAD):
+            elif docker_id.startswith(Env.DockerID.WIDGETPAD):
                 widgetPadDocker: ShelfWidgetPad = docker
                 widgetPadDocker.setup(window)
-            elif docker_id == TOUCHIFY_DOCKERID_DOCKER_TOOLBOX:
+            elif docker_id == Env.DockerID.TOOLBOX:
                 toolboxDocker: ToolboxDocker = docker
                 toolboxDocker.setup(window)
             else:

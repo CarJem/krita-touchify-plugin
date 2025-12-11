@@ -25,19 +25,50 @@ from touchify.src.managers.shared.settings import TouchifySettings
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 
 from typing import TYPE_CHECKING, Any
+
+from touchify.src.managers.shared.settings_krita import KritaSettings
 if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
     from ...PluginWindow import TouchifyWindow
 
     
 
-DOCKER_TITLE=f"{TOUCHIFY_TITLES_CORE_DOCKERS_PREFIX} Toolbox"
+DOCKER_TITLE=f"{Env.Title.CORE_DOCKERS_PREFIX} Toolbox"
 
 class ToolboxDocker(QDockWidget):
+
+    class SettingsManager(QObject):
+        def __init__(self, parent: "ToolboxDocker"):
+            super().__init__(parent)
+            self._toolbox = parent
+
+        def getCurrentToolboxId(self) -> str:
+            fallback_val = "none"
+            return KritaSettings.readSetting(Env.DockerID.TOOLBOX, "SelectedPreset", fallback_val)
+
+        def getCurrentToolbox(self) -> ToolboxData:
+            registry = TouchifySettings.registry(ToolboxData)
+            registry_selection = self.getCurrentToolboxId()
+
+            if registry_selection in registry:
+                return registry[registry_selection]    
+            else: 
+                return ToolboxData()
+
+        def setCurrentToolbox(self, id: str):
+            KritaSettings.writeSetting(Env.DockerID.TOOLBOX, "SelectedPreset", id, False)
+            GlobalEvents.EMIT_SIGNAL_TOOLBOX_UPDATED()
+
+        def sync():
+            TouchifySettings.save()
+            TouchifySettings.load()
+            GlobalEvents.EMIT_SIGNAL_TOOLBOX_UPDATED()
+
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
 
-        #self.floating = False
+        self.settingsManager = self.SettingsManager(self)
+
         self.setWindowTitle(DOCKER_TITLE) # window title also acts as the Docker title in Settings > Dockers
         self.setContentsMargins(0,0,0,0)
 
@@ -46,8 +77,6 @@ class ToolboxDocker(QDockWidget):
         #label.setFrameShadow(QFrame.Raised)
         #label.setFrameStyle(QFrame.Panel | QFrame.Raised)
         #label.setMinimumWidth(16)
-
-        self.settingsMenu = QMenu(self)
 
         self.api_window: WindowAPI = None
         self.managers: "TouchifyManagers" = None
@@ -65,10 +94,12 @@ class ToolboxDocker(QDockWidget):
         self.scrollArea.setWidgetResizable(True)
         self.setWidget(self.scrollArea)
 
+        self.settingsMenu = QMenu(self)
+
         self.updateStyleSheet()
 
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
-        GlobalEvents.instance().SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED.connect(self.onConfigUpdated)
+        GlobalEvents.instance().SIGNAL_TOOLBOX_UPDATED.connect(self.onConfigUpdated)
         
     def __setupDialog(self, options: Any):
         if self.dlgConfigEditor != None:
@@ -93,7 +124,7 @@ class ToolboxDocker(QDockWidget):
         self._toolboxItems.clear()
         self._toolboxItems = []
 
-        layout_config = TouchifySettings.instance().getActiveToolbox()
+        layout_config = self.settingsManager.getCurrentToolbox()
         self.containerLoader.Sync(layout_config)
         current_priority = 0
         
@@ -159,21 +190,20 @@ class ToolboxDocker(QDockWidget):
             self.buildMenu(subMenu)
 
     def onSettings(self):
-        layout_config = TouchifySettings.instance().getActiveToolbox()
+        layout_config = self.settingsManager.getCurrentToolbox()
         dlg = self.__setupDialog(layout_config)
         if dlg.exec_():
             result: ToolboxData = dlg.editableConfig
-            cached_state = TouchifySettings.instance().getActiveToolbox()
+            cached_state = self.settingsManager.getCurrentToolbox()
             cached_state.update(result)
-            TouchifySettings.instance().getConfig().save()
-            TouchifySettings.instance().reloadToolbox()
+            self.settingsManager.sync()
         
 
     def updatePalette(self):
         pass
 
     def updateStyleSheet(self):
-        layout_config = TouchifySettings.instance().getActiveToolbox()
+        layout_config = self.settingsManager.getCurrentToolbox()
 
         highlight_hex = qApp.palette().color(QPalette.ColorRole.Highlight).name().split("#")[1]
         background_hex = qApp.palette().color(QPalette.ColorRole.Base).name().split("#")[1]

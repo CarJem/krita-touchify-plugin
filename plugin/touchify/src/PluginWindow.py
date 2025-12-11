@@ -41,7 +41,7 @@ class TouchifyWindow(QObject):
         self.managers.Addons(self)
 
     def LoadActions(self, window: WindowAPI):
-        self.action_plugin_settings = window.create_action(TOUCHIFY_ACTIONID_CONFIGURE, "Configure Touchify...", "settings")
+        self.action_plugin_settings = window.create_action(Env.ActionID.CONFIGURE, "Configure Touchify...", "settings")
         self.action_plugin_settings.triggered.connect(self.OpenSettings)
 
         self.action_plugin_tools_menu = QMenu(None, window.qwindow)

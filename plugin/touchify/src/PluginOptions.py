@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.property_grid.PropertyGrid import PropertyGrid
+from touchify.src.managers.shared.events import GlobalEvents
 from touchify.src.managers.shared.settings import TouchifySettings
 import copy
 
@@ -15,7 +16,7 @@ class PluginOptions(QDialog):
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.qwin = qwin.qwindow
         
-        self.editableConfig = copy.deepcopy(TouchifySettings.instance().getConfig())
+        self.editableConfig = TouchifySettings.configCopy()
         self.propertyGrid = PropertyGrid(self)
         self.propertyGrid.updateDataObject(self.editableConfig)
 
@@ -34,7 +35,8 @@ class PluginOptions(QDialog):
     
     def _saveFile(self):
         self.editableConfig.save()
-        TouchifySettings.reload()
+        TouchifySettings.load()
+        GlobalEvents.EMIT_SIGNAL_TOUCHIFY_CONFIG_UPDATED()
 
     def onSave(self):
         self._saveFile()

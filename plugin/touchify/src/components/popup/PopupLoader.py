@@ -81,7 +81,7 @@ class PopupLoader(QObject):
         return toolshelf_data
         
     def Section_Shelf(self, data: PopupData):
-        toolshelf: Toolshelf = TouchifySettings.instance().getRegistryItem(data.shelf_id, Toolshelf)
+        toolshelf: Toolshelf = TouchifySettings.registryItem(data.shelf_id, Toolshelf)
         return toolshelf.preset_data
 
     def Init_Section(self, data: PopupData):

@@ -24,7 +24,7 @@ class BrushPresetPicker(IconButton):
         self.onBrushChanged(self.notifier.getCurrentBrush())
 
     def openBrushPicker(self):
-        self.managers.mgr_actions.Create_Popup("touchify_internal_brush_picker", self) 
+        self.managers.mgr_actions.Create_Popup(Env.InternalPopups.BRUSH_PICKER, self) 
 
     def onBrushChanged(self, current_brush: Resource):
         self.brush = current_brush

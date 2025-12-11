@@ -22,8 +22,8 @@ TIMER_INTERVAL = 10
 
 class ShelfDockWidget(DockWidget):
 
-    DOCKER_TITLE=f"{TOUCHIFY_TITLES_CORE_DOCKERS_PREFIX} Toolshelf"
-    CLONE_DOCKER_TITLE=f"{TOUCHIFY_TITLES_CLONE_DOCKERS_PREFIX}  Toolshelf"
+    DOCKER_TITLE=f"{Env.Title.CORE_DOCKERS_PREFIX} Toolshelf"
+    CLONE_DOCKER_TITLE=f"{Env.Title.CLONE_DOCKERS_PREFIX}  Toolshelf"
 
     resizeByDefaultRequested=pyqtSignal()
 
@@ -48,6 +48,7 @@ class ShelfDockWidget(DockWidget):
 
         
         GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
+        GlobalEvents.instance().SIGNAL_TOOLSHELF_UPDATED.connect(self.onConfigUpdated)
         self.startTimer(TIMER_INTERVAL)
 
 
@@ -105,8 +106,10 @@ class ShelfDockWidget(DockWidget):
             self.sizeManagementType = ToolshelfSettings.ResizeStyle.Default
             self.isSizeManaged = False
 
-    def onConfigUpdated(self):
-        if self.mainWidget: self.mainWidget.onConfigUpdated()
+    def onConfigUpdated(self, registry_index: int = -1):
+        if registry_index == -1 or registry_index == self.PanelIndex:
+            if self.mainWidget: 
+                self.mainWidget.onConfigUpdated()
 
     def resizeEvent(self, a0):
         return super().resizeEvent(a0)

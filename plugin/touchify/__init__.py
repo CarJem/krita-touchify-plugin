@@ -20,13 +20,13 @@ def makeDynamicShelfWidget(value: int, widgetPad: bool):
 
 
 KritaAPI.add_extension(TouchifyPlugin)
-KritaAPI.add_dock_widget_factory(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER, DockWidgetFactoryAPI.DockPosition.DockLeft, ShelfDockWidget)
-KritaAPI.add_dock_widget_factory(TOUCHIFY_DOCKERID_DOCKER_TOOLBOX, DockWidgetFactoryAPI.DockPosition.DockRight, ToolboxDocker)
+KritaAPI.add_dock_widget_factory(Env.DockerID.TOOLSHELFDOCKER, DockWidgetFactoryAPI.DockPosition.DockLeft, ShelfDockWidget)
+KritaAPI.add_dock_widget_factory(Env.DockerID.TOOLBOX, DockWidgetFactoryAPI.DockPosition.DockRight, ToolboxDocker)
 
 for idx in range(0, 9):
     actual_id = idx + 1
-    KritaAPI.add_dock_widget_factory(TOUCHIFY_DOCKERID_TOOLSHELFDOCKER + "_" + str(actual_id), DockWidgetFactoryAPI.DockPosition.DockTornOff, makeDynamicShelfWidget(actual_id, False))
-    KritaAPI.add_dock_widget_factory(TOUCHIFY_DOCKERID_WIDGETPAD + "_" + str(actual_id), DockWidgetFactoryAPI.DockPosition.DockTornOff, makeDynamicShelfWidget(actual_id, True))
+    KritaAPI.add_dock_widget_factory(Env.DockerID.TOOLSHELFDOCKER + "_" + str(actual_id), DockWidgetFactoryAPI.DockPosition.DockTornOff, makeDynamicShelfWidget(actual_id, False))
+    KritaAPI.add_dock_widget_factory(Env.DockerID.WIDGETPAD + "_" + str(actual_id), DockWidgetFactoryAPI.DockPosition.DockTornOff, makeDynamicShelfWidget(actual_id, True))
 
     
     

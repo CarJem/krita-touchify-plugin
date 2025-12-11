@@ -14,8 +14,8 @@ if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
 
 class ShelfWidgetPad(ShelfDockWidget):
-    DOCKER_TITLE=f"{TOUCHIFY_TITLES_CORE_DOCKERS_PREFIX} Widget Pad"
-    CLONE_DOCKER_TITLE=f"{TOUCHIFY_TITLES_CLONE_DOCKERS_PREFIX} Widget Pad"
+    DOCKER_TITLE=f"{Env.Title.CORE_DOCKERS_PREFIX} Widget Pad"
+    CLONE_DOCKER_TITLE=f"{Env.Title.CLONE_DOCKERS_PREFIX} Widget Pad"
 
     class TitlebarWidget(QWidget):
 
@@ -100,7 +100,7 @@ class ShelfWidgetPad(ShelfDockWidget):
             self._parent = parent
 
         def getSettingsPath(self):
-            return f"{TOUCHIFY_SETTINGPATH_WIDGETPAD}_{str(self._parent.PanelIndex)}"
+            return f"{Env.SettingsPath.WIDGETPAD}_{str(self._parent.PanelIndex)}"
 
         def getShowHeader(self):
             return KritaSettings.readSettingBool(self.getSettingsPath(), "ShowHeader", True)

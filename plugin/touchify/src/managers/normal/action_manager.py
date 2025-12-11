@@ -168,14 +168,14 @@ class ActionManager(QObject):
 
     def Create_Popup(self, id: str, _parent: QWidget = None):
 
-        if id == "touchify_internal_brush_picker":
+        if id == Env.InternalPopups.BRUSH_PICKER:
             data: PopupData = PopupData()
             data.type = "docker"
             data.window_type = "popup"
             data.docker_id = "PresetDocker"
             data.popup_width = 300
             data.popup_height = 500
-        elif id == "gradient_chooser_popup" or id == "pattern_chooser_popup":    
+        elif id == Env.InternalPopups.PATTERN_CHOOSER or id == Env.InternalPopups.GRADIENT_CHOOSER:    
             main_window = self.api_window.qwindow
             frames = main_window.findChildren(QFrame,'KisPopupButtonFrame')
             for frame in frames:
@@ -189,7 +189,7 @@ class ActionManager(QObject):
                     break
             return
         else:
-            data: PopupData = TouchifySettings.instance().getRegistryItem(id, PopupData)
+            data: PopupData = TouchifySettings.registryItem(id, PopupData)
             if not isinstance(data, PopupData) or data == None: return
 
 
@@ -225,16 +225,14 @@ class ActionManager(QObject):
         menu.addMenu(self.__registry_menu)
 
     def Actions_Init(self, window: WindowAPI, subItemPath: str):
-        cfg = TouchifySettings.instance().getConfig()
-
-        self.__registry_menu = QtWidgets.QMenu("Registered Actions", window.qwindow)
-        root_action = window.create_action(TOUCHIFY_ACTIONID_REGISTERED_ACTIONS_MENU, "Registered Actions", subItemPath)
+        self.__registry_menu = QtWidgets.QMenu(Env.Title.REGISTERED_ACTIONS, window.qwindow)
+        root_action = window.create_action(Env.ActionID.RegisteredActions.MENU, Env.Title.REGISTERED_ACTIONS, subItemPath)
         root_action.setMenu(self.__registry_menu)
-        registryItemsPath = "{0}/{1}".format(subItemPath, TOUCHIFY_ACTIONID_REGISTERED_ACTIONS_MENU)
+        registryItemsPath = "{0}/{1}".format(subItemPath, Env.ActionID.RegisteredActions.MENU)
 
         registered_elements: dict[str, tuple[ResourcePackMetadata, list[ET.Element]]] = {}
 
-        for pack in cfg.resources.presets:
+        for pack in TouchifySettings.resourcePacks():
             pack: ResourcePack
             packMeta = pack.metadata
             pack_name = packMeta.registry_name
@@ -248,7 +246,7 @@ class ActionManager(QObject):
             registered_elements[packMeta.registry_id] = packMeta, []
             for data in pack.triggers:
                 data: Trigger
-                id = '{0}{1}_{2}'.format(TOUCHIFY_ACTIONID_REGISTERED_ACTION_PREFIX, packMeta.registry_id, data.registry_id)
+                id = '{0}{1}_{2}'.format(Env.ActionID.RegisteredActions.PREFIX, packMeta.registry_id, data.registry_id)
                 action = self.Create_RegistryAction(id, data, window, packItemsPath)
                 registered_elements[packMeta.registry_id][1].append(self.Actions_Add(id))
                 pack_menu.addAction(action)
@@ -378,16 +376,13 @@ class ActionManager(QObject):
             except:
                 pass
         self.active_popups.clear()
-        
 
-        cfg = TouchifySettings.instance().getConfig()
-
-        for pack in cfg.resources.presets:
+        for pack in TouchifySettings.resourcePacks():
             pack: ResourcePack
             meta: ResourcePackMetadata = pack.metadata
             for data in pack.triggers:
                 data: Trigger
-                subActionIdentifier = '{0}{1}_{2}'.format(TOUCHIFY_ACTIONID_REGISTERED_ACTION_PREFIX, meta.registry_id, data.registry_id)
+                subActionIdentifier = '{0}{1}_{2}'.format(Env.ActionID.RegisteredActions.PREFIX, meta.registry_id, data.registry_id)
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
         printDebug("config_updating_done")
@@ -477,7 +472,7 @@ class ActionManager(QObject):
         return btn
                    
     def Button_Menu(self, act: Trigger):
-        data: TriggerMenu = TouchifySettings.instance().getRegistryItem(act.context_menu_id, TriggerMenu)
+        data: TriggerMenu = TouchifySettings.registryItem(act.context_menu_id, TriggerMenu)
         if not isinstance(data, TriggerMenu) or data == None: return None
         
         btn: TouchifyActionButton = self.Button_Core(None, act.display_custom_text)   
@@ -564,7 +559,7 @@ class ActionManager(QObject):
                 action.trigger()
     
     def Execute_Menu(self, action: QAction, id: str):
-        data: TriggerMenu = TouchifySettings.instance().getRegistryItem(id, TriggerMenu)
+        data: TriggerMenu = TouchifySettings.registryItem(id, TriggerMenu)
         if not isinstance(data, TriggerMenu) or data == None: return
 
         _parent = self.Helper_GetActionSource(action)
@@ -595,7 +590,7 @@ class ActionManager(QObject):
                                 break
                             
     def Execute_DockerGroup(self, id: str):
-        data: DockerGroup = TouchifySettings.instance().getRegistryItem(id, DockerGroup)
+        data: DockerGroup = TouchifySettings.registryItem(id, DockerGroup)
         if not isinstance(data, DockerGroup) or data == None: return
 
 
@@ -639,7 +634,7 @@ class ActionManager(QObject):
         self.Create_Popup(id, _parent)
     
     def Execute_CanvasCfg(self, id: str):
-        data: CanvasPreset = TouchifySettings.instance().getRegistryItem(id, CanvasPreset)
+        data: CanvasPreset = TouchifySettings.registryItem(id, CanvasPreset)
         if not isinstance(data, CanvasPreset) or data == None: return
     
         def slotConfigChanged(obj: QObject):
@@ -663,7 +658,7 @@ class ActionManager(QObject):
                 slotConfigChanged(docker)
     
     def Execute_Script(self, script_registry_id: str):
-        data: CustomScript = TouchifySettings.instance().getRegistryItem(script_registry_id, CustomScript)
+        data: CustomScript = TouchifySettings.registryItem(script_registry_id, CustomScript)
         if not isinstance(data, CustomScript) or data == None: return
 
         try:
@@ -678,7 +673,7 @@ class ActionManager(QObject):
             from touchify.src.api_composer.TouchifyPieMenu import TouchifyPieMenu
             from shortcut_composer.templates.pie_menu_utils import PieWidget
 
-            data: PieWheelData = TouchifySettings.instance().getRegistryItem(pie_wheel_registry_id, PieWheelData)
+            data: PieWheelData = TouchifySettings.registryItem(pie_wheel_registry_id, PieWheelData)
             if not isinstance(data, PieWheelData) or data == None: return
 
             result = TouchifyPieMenu.generate(data)

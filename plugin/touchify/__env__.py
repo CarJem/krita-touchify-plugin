@@ -7,63 +7,72 @@ REGISTERED_ACTIONS_FILE = os.path.dirname(os.path.realpath(__file__)) + "/regist
 RESOURCE_PACKS_DIRECTORY=os.path.join(os.path.dirname(os.path.realpath(__file__)), 'resources')
 ASSETS_DIRECTORY=os.path.join(os.path.dirname(os.path.realpath(__file__)), 'assets')
 #-----------------#
-# Action IDs
-TOUCHIFY_ACTIONID_CONFIGURE="touchify_configure"
 
-TOUCHIFY_ACTIONID_STYLES_MENU="touchify_styles_menu"
-TOUCHIFY_ACTIONID_STYLES_BORDERLESSTOOLBARS="touchify_toolbarBorder"
-TOUCHIFY_ACTIONID_STYLES_PRIVACYMODE="Privacy Mode"
-TOUCHIFY_ACTIONID_STYLES_TABHEIGHT="touchify_tabHeight"
-TOUCHIFY_ACTIONID_STYLES_DOCKEDBRUSHEDITOR="touchify_styles_docked_brush_editor"
-TOUCHIFY_ACTIONID_STYLES_DOCKEDBRUSHEDITORZOOMFIX="touchify_styles_brush_editor_zoom_fix"
 
-TOUCHIFY_ACTIONID_WIDGETPAD_PRESETS_MENU = "touchify_canvas_options_menu"
-TOUCHIFY_ACTIONID_WIDGETPAD_MENU = "touchify_canvas_layouts_menu"
-TOUCHIFY_ACTIONID_WIDGETPAD_SHOWTOOLBOX="touchify_showToolbox"
-TOUCHIFY_ACTIONID_WIDGETPAD_SHOWTOOLSHELF_ALPHA="touchify_showToolshelf"
-TOUCHIFY_ACTIONID_WIDGETPAD_SHOWTOOLSHELF_BETA="touchify_showToolshelfAlt"
-TOUCHIFY_ACTIONID_WIDGETPAD_SHOWTOOLSHELF_GAMMA="touchify_canvas_showtoolshelf_gamma"
-TOUCHIFY_ACTIONID_WIDGETPAD_SHOWTOOLSHELF_DELTA="touchify_canvas_showtoolshelf_delta"
+class Env:
+    
+    class ActionID:
+        CONFIGURE="touchify_configure"
 
-TOUCHIFY_ACTIONID_DOCKERUTILS_MENU="touchify_dockerutils_menu"
-TOUCHIFY_ACTIONID_DOCKERUTILS_TOGGLEDOWN="touchify_dockerutils_toggledown"
-TOUCHIFY_ACTIONID_DOCKERUTILS_TOGGLEUP="touchify_dockerutils_toggleup"
-TOUCHIFY_ACTIONID_DOCKERUTILS_TOGGLELEFT="touchify_dockerutils_toggleleft"
-TOUCHIFY_ACTIONID_DOCKERUTILS_TOGGLERIGHT="touchify_dockerutils_toggleright"
+        class Styles:
+            MENU="touchify_styles_menu"
+            BORDERLESSTOOLBARS="touchify_toolbarBorder"
+            PRIVACYMODE="Privacy Mode"
+            TABHEIGHT="touchify_tabHeight"
+            DOCKEDBRUSHEDITOR="touchify_styles_docked_brush_editor"
+            DOCKEDBRUSHEDITORZOOMFIX="touchify_styles_brush_editor_zoom_fix"
 
-TOUCHIFY_ACTIONID_OTHER_SHOWPOPUPPALETTE="touchify_showPopupPalette"
-TOUCHIFY_ACTIONID_OTHER_SHOWMENUBARPOPUP="touchify_showPopupMenu"
+        class DockerUtils:
+            MENU="touchify_dockerutils_menu"
+            TOGGLEDOWN="touchify_dockerutils_toggledown"
+            TOGGLEUP="touchify_dockerutils_toggleup"
+            TOGGLELEFT="touchify_dockerutils_toggleleft"
+            TOGGLERIGHT="touchify_dockerutils_toggleright"
 
-TOUCHIFY_ACTIONID_TRANSFORMTOOL_MENU="Touchify_TransformTool_Menu"
-TOUCHIFY_ACTIONID_TRANSFORMTOOL_FREE_FLIPX="Touchify_TransformTool_Free_FlipX"
-TOUCHIFY_ACTIONID_TRANSFORMTOOL_FREE_FLIPY="Touchify_TransformTool_Free_FlipY"
-TOUCHIFY_ACTIONID_TRANSFORMTOOL_FREE_ROTATECW="Touchify_TransformTool_Free_RotateCW"
-TOUCHIFY_ACTIONID_TRANSFORMTOOL_FREE_ROTATECCW="Touchify_TransformTool_Free_RotateCCW"
-TOUCHIFY_ACTIONID_TRANSFORMTOOL_RESET="Touchify_TransformTool_Reset"
-TOUCHIFY_ACTIONID_TRANSFORMTOOL_APPLY="Touchify_TransformTool_Apply"
+        class Other:
+            SHOWPOPUPPALETTE="touchify_showPopupPalette"
+            SHOWMENUBARPOPUP="touchify_showPopupMenu"
 
-TOUCHIFY_ACTIONID_CROPTOOLS_MENU="Touchify_CropToolActions_Menu"
-TOUCHIFY_ACTIONID_CROPTOOLS_CENTER="Touchify_CropToolActions_Center"
-TOUCHIFY_ACTIONID_CROPTOOLS_GROW="Touchify_CropToolActions_Grow"
-TOUCHIFY_ACTIONID_CROPTOOLS_LOCKWIDTH="Touchify_CropToolActions_LockWidth"
-TOUCHIFY_ACTIONID_CROPTOOLS_LOCKHEIGHT="Touchify_CropToolActions_LockHeight"
-TOUCHIFY_ACTIONID_CROPTOOLS_LOCKRATIO="Touchify_CropToolActions_LockRatio"
+        class TransformTool:
+            MENU="Touchify_TransformTool_Menu"
+            FREE_FLIPX="Touchify_TransformTool_Free_FlipX"
+            FREE_FLIPY="Touchify_TransformTool_Free_FlipY"
+            FREE_ROTATECW="Touchify_TransformTool_Free_RotateCW"
+            FREE_ROTATECCW="Touchify_TransformTool_Free_RotateCCW"
+            RESET="Touchify_TransformTool_Reset"
+            APPLY="Touchify_TransformTool_Apply"
 
-TOUCHIFY_ACTIONID_REGISTERED_ACTIONS_MENU="Touchify_RegisteredActions_Menu"
-TOUCHIFY_ACTIONID_REGISTERED_ACTION_PREFIX="touchify_registry_"
-#-----------------#
-# Docker Titles
-TOUCHIFY_TITLES_CORE_DOCKERS_PREFIX="Touchify Core:"
-TOUCHIFY_TITLES_ADDON_DOCKERS_PREFIX="Touchify Addon:"
-TOUCHIFY_TITLES_CLONE_DOCKERS_PREFIX="Touchify Clone:"
-#-----------------#
-# Docker IDs
-TOUCHIFY_DOCKERID_DOCKER_TOOLBOX="Touchify/TouchifyToolbox"
-TOUCHIFY_DOCKERID_TOOLSHELFDOCKER="Touchify/ToolshelfDocker"
-TOUCHIFY_DOCKERID_WIDGETPAD="Touchify/WidgetPad"
-#-----------------#
-# Setting Paths
-TOUCHIFY_SETTINGPATH_TOOLSHELF="Touchify/Shelves"
-TOUCHIFY_SETTINGPATH_TOOLSHELF_NOPRESETDATA="Touchify/Shelves/NoPresetData"
-TOUCHIFY_SETTINGPATH_WIDGETPAD="Touchify/WidgetPads"
-TOUCHIFY_SETTINGPATH_TOOLBOX_NOPRESETDATA="Touchify/Toolbox/NoPresetData"
+        class CropTools:
+            MENU="Touchify_CropToolActions_Menu"
+            CENTER="Touchify_CropToolActions_Center"
+            GROW="Touchify_CropToolActions_Grow"
+            LOCKWIDTH="Touchify_CropToolActions_LockWidth"
+            LOCKHEIGHT="Touchify_CropToolActions_LockHeight"
+            LOCKRATIO="Touchify_CropToolActions_LockRatio"
+
+        class RegisteredActions:
+            MENU="Touchify_RegisteredActions_Menu"
+            PREFIX="touchify_registry_"
+            
+    class InternalPopups:
+        BRUSH_PICKER="touchify_internal_brush_picker"
+        GRADIENT_CHOOSER="gradient_chooser_popup"
+        PATTERN_CHOOSER="pattern_chooser_popup"
+
+    class Title:
+        CORE_DOCKERS_PREFIX="Touchify Core:"
+        ADDON_DOCKERS_PREFIX="Touchify Addon:"
+        CLONE_DOCKERS_PREFIX="Touchify Clone:"
+        REGISTERED_ACTIONS="Registered Actions"
+    
+    class DockerID:
+        TOOLBOX="Touchify/TouchifyToolbox"
+        TOOLSHELFDOCKER="Touchify/ToolshelfDocker"
+        WIDGETPAD="Touchify/WidgetPad"
+    
+    class SettingsPath:
+        TOOLSHELF="Touchify/Shelves"
+        TOOLSHELF_NOPRESETDATA="Touchify/Shelves/NoPresetData"
+        WIDGETPAD="Touchify/WidgetPads"
+        TOOLBOX_NOPRESETDATA="Touchify/Toolbox/NoPresetData"
+        TOUCHIFY="Touchify"

@@ -283,7 +283,7 @@ class CanvasGradientPicker(IconButton):
         self.onGradientChanged(self.notifier.getCurrentGradient())
 
     def openBrushPicker(self):
-        self.managers.mgr_actions.Create_Popup("gradient_chooser_popup", self)
+        self.managers.mgr_actions.Create_Popup(Env.InternalPopups.GRADIENT_CHOOSER, self)
 
     def updateIcon(self):
         if self.gradient:

@@ -36,6 +36,7 @@ class ToolboxLoader(QObject):
         self._submenu_delay = cfg.submenu_delay
         #self._opacityLevel = cfg.opacity_level
 
+
     def Signal_OnSwap(self):
         ac: QAction = self.sender()
         btn: TouchifyActionButton = ac.parent()
@@ -50,7 +51,7 @@ class ToolboxLoader(QObject):
         if isinstance(ac, QAction):
             id: str = ac.data()
             if isinstance(id, str):
-                TouchifySettings.instance().setActiveToolbox(id)
+                self.rootWidget.settingsManager.setCurrentToolbox(id)
                 self.rootWidget.sync()
 
     def Signal_OnSettings(self):
@@ -63,8 +64,8 @@ class ToolboxLoader(QObject):
 
         presetsMenu = menu.addMenu("Presets")
         presetMenuList: dict[str, QMenu] = {}
-        selected_preset_id = TouchifySettings.instance().getActiveToolboxId()
-        registry = TouchifySettings.instance().getRegistry(ToolboxData)
+        selected_preset_id = self.rootWidget.settingsManager.getCurrentToolboxId()
+        registry = TouchifySettings.registry(ToolboxData)
         if registry != None:
             for key, preset in registry.items():
                 if not key.id in presetMenuList:
