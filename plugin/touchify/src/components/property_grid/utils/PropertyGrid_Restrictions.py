@@ -17,6 +17,8 @@ class PropertyGrid_Restrictions:
         IconSelection="icon_selection"
         BrushSelection="brush_selection"
 
+        MultiToolSelection="multi_tool_selection"
+
         DockerGroupRegistry="registry_docker_group_selection"
         PopupRegistry="registry_popup_selection"
         CanvasPresetRegistry="registry_canvas_preset_selection"
@@ -68,7 +70,8 @@ class PropertyGrid_Restrictions:
             PropertyGrid_Restrictions.StrMod.ScriptRegistry,
             PropertyGrid_Restrictions.StrMod.PieWheelRegistry,
             PropertyGrid_Restrictions.StrMod.ToolshelfRegistry,
-            PropertyGrid_Restrictions.StrMod.ShelfRegistry
+            PropertyGrid_Restrictions.StrMod.ShelfRegistry,
+            PropertyGrid_Restrictions.StrMod.MultiToolSelection
         ]
 
     def range(min: any = None, max: any = None):

@@ -43,7 +43,7 @@ class ShelfOptionsDialog(QDialog):
             restrictions = {}
             restrictions["resource_pack"] = PropertyGrid_Restrictions.strValuesWithIndex(self.getKnownResourcePacks())
             return restrictions    
-
+ 
     def __init__(self, qwin: WindowAPI, options: Any):
         super().__init__(qwin.qwindow.window())
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)

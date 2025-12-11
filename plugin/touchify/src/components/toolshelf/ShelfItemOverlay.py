@@ -7,7 +7,7 @@ from PyQt5.QtGui import *
 class ShelfItemOverlay(QtWidgets.QWidget):
 
     sigClicked = QtCore.pyqtSignal()
-    sigMouseOverChanged = QtCore.pyqtSignal()
+    sigMouseOverChanged = QtCore.pyqtSignal(bool)
     sigRightClicked = QtCore.pyqtSignal()
 
     def __init__(self, parent: QtWidgets.QWidget = None):
@@ -20,27 +20,29 @@ class ShelfItemOverlay(QtWidgets.QWidget):
         self.personallayout.setContentsMargins(0, 0, 0, 0)
         self.personallayout.setSpacing(0)
 
-        self.sigMouseOverChanged.connect(self.repaint)
+        self.sigMouseOverChanged.connect(self.onMouseOverChanged)
         
         self.setLayout(self.personallayout)
+
+    def onMouseOverChanged(self, state: bool):
+        self.isMouseOver = state
+        self.repaint()
 
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)
         painter = QPainter(self)
-        painter.setOpacity(0.5 if self.isMouseOver else 0.2)
+        painter.setOpacity(0.2 if self.isMouseOver else 0.0)
         painter.setBrush(Qt.GlobalColor.white)
         painter.setPen(QPen(Qt.GlobalColor.white))   
         painter.drawRect(event.rect())
         painter.end()
 
     def enterEvent(self, a0):
-        self.isMouseOver = True
-        self.sigMouseOverChanged.emit()
+        self.sigMouseOverChanged.emit(True)
         return super().enterEvent(a0)
     
     def leaveEvent(self, a0):
-        self.isMouseOver = False
-        self.sigMouseOverChanged.emit()
+        self.sigMouseOverChanged.emit(False)
         return super().leaveEvent(a0)
 
     def mousePressEvent(self, ev):

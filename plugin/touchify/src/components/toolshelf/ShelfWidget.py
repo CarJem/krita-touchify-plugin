@@ -9,6 +9,7 @@ from touchify.src.components.toolshelf.ShelfItem import ShelfItem
 from touchify.src.components.toolshelf.ShelfOptionsDialog import ShelfOptionsDialog
 from touchify.src.components.toolshelf.ShelfLoader import ShelfLoader
 
+from touchify.src.components.toolshelf.ShelfPanel import ShelfContainer, ShelfPanel
 from touchify.src.components.toolshelf.ShelfTabBar import ShelfTabBar
 from touchify.src.components.toolshelf.ShelfToolbar import ShelfToolbar
 from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
@@ -25,7 +26,6 @@ from touchify.src.managers.normal.dockers import *
 
 from typing import TYPE_CHECKING, Any
 
-from touchify.src.alib_pyqtgraph.dockarea.DockArea import DockArea
 from touchify.src.managers.shared.settings_krita import KritaSettings
 if TYPE_CHECKING:
     from .ShelfDockWidget import ShelfDockWidget, ShelfDockWidgetAlt
@@ -123,19 +123,20 @@ class ShelfWidget(QWidget):
         self.tabBar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.mainLayout.addWidget(self.tabBar, 1, 0)
 
-        self.dockPages: list[DockArea] = []
+        self.dockPages: list[ShelfPanel] = []
         self.dockPageOptions: list[ToolshelfPageSettings] = []
 
         self.dockLoader = ShelfLoader(self)
         self.dockStack = ShelfWidgetStack(self)
         self.mainLayout.addWidget(self.dockStack, 2, 0)
 
-        self.dockArea = DockArea(self)
+        self.dockArea = ShelfPanel(self)
         self.dockStack.addWidget(self.dockArea)
 
         self.updateStyle()
 
         managers.mgr_canvas.normalFocus.connect(self.onCanvasFocusGained)
+        managers.api_window().notifier.toolChanged.connect(self.onToolChanged)
 
     def __setupDialog(self, options: Any):
         if self.dlgConfigEditor != None:
@@ -185,7 +186,7 @@ class ShelfWidget(QWidget):
         return self.settingsLoader.getCurrentShelfId(self.registry_index)
 
     def currentState(self) -> ToolshelfContainer:
-        def getState(dock_area: DockArea):
+        def getState(dock_area: ShelfPanel):
             subState = ToolshelfPage()
             subState.layout = dock_area.saveState()
         
@@ -219,7 +220,9 @@ class ShelfWidget(QWidget):
     def __shelfDispose(self, dock_item: ShelfItem):
         dock_item.sigEditRequested.disconnect()
         dock_item.sigDeleteRequested.disconnect()
+        dock_item.sigEditContainerRequested.disconnect()
         dock_item.sigDuplicateRequested.disconnect()
+        dock_item.sigContainerHoverUpdated.disconnect()
 
     def __shelfSetup(self, dock_item: ShelfItem, uuid: str = None):
         if uuid != None: dock_item.setUUID(uuid)
@@ -227,6 +230,8 @@ class ShelfWidget(QWidget):
         dock_item.sigDuplicateRequested.connect(self.cloneShelfItem)
         dock_item.sigEditRequested.connect(self.editShelfItem)
         dock_item.sigDeleteRequested.connect(self.deleteShelfItem)
+        dock_item.sigEditContainerRequested.connect(self.editShelfItemContainer)
+        dock_item.sigContainerHoverUpdated.connect(self.highlightShelfItemContainer)
 
     #endregion
 
@@ -271,7 +276,7 @@ class ShelfWidget(QWidget):
             KritaSettings.writeSetting(Env.SettingsPath.TOOLSHELF_NOPRESETDATA, str(self.registry_index), state, False)
 
     def loadLayout(self):
-        def loadShelf(sub_state: ToolshelfPage | ToolshelfContainer, dock_area: DockArea):
+        def loadShelf(sub_state: ToolshelfPage | ToolshelfContainer, dock_area: ShelfPanel):
             for uuid in sub_state.items:
                 item = sub_state.items[uuid]
                 dock_item = self.dockLoader.Init_Section(item)
@@ -323,7 +328,7 @@ class ShelfWidget(QWidget):
 
         for subpage_state in state.pages:
             subpage_state: ToolshelfPage
-            sub_dock_area = DockArea(self)
+            sub_dock_area = ShelfPanel(self)
             self.dockStack.addWidget(sub_dock_area)
             self.dockPages.append(sub_dock_area)
             self.dockPageOptions.append(subpage_state.options)
@@ -348,7 +353,7 @@ class ShelfWidget(QWidget):
     #region Actions (ShelfPages)
 
     def insertPage(self):
-        new_dock_area = DockArea(self)
+        new_dock_area = ShelfPanel(self)
         self.dockPages.append(new_dock_area)
         self.dockStack.addWidget(new_dock_area)
         
@@ -391,8 +396,8 @@ class ShelfWidget(QWidget):
     #region Actions (ShelfItems)
 
     def insertShelfItem(self):
-        current_area: DockArea | None = self.dockStack.currentWidget()
-        if current_area == None or not isinstance(current_area, DockArea):
+        current_area: ShelfPanel | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfPanel):
             return
 
         dlg = self.__setupDialog(ToolshelfDock())
@@ -403,8 +408,8 @@ class ShelfWidget(QWidget):
             self.saveLayout()
 
     def cloneShelfItem(self, uuid: str):
-        current_area: DockArea | None = self.dockStack.currentWidget()
-        if current_area == None or not isinstance(current_area, DockArea):
+        current_area: ShelfPanel | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfPanel):
             return
 
         if uuid not in current_area.docks:
@@ -419,8 +424,8 @@ class ShelfWidget(QWidget):
         self.saveLayout()
 
     def editShelfItem(self, uuid: str):
-        current_area: DockArea | None = self.dockStack.currentWidget()
-        if current_area == None or not isinstance(current_area, DockArea):
+        current_area: ShelfPanel | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfPanel):
             return
 
         if uuid not in current_area.docks:
@@ -441,8 +446,8 @@ class ShelfWidget(QWidget):
             self.saveLayout()
 
     def deleteShelfItem(self, uuid: str):
-        current_area: DockArea | None = self.dockStack.currentWidget()
-        if current_area == None or not isinstance(current_area, DockArea):
+        current_area: ShelfPanel | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfPanel):
             return
 
         if uuid not in current_area.docks:
@@ -458,6 +463,43 @@ class ShelfWidget(QWidget):
             dock_item.close()
             del current_area.docks[uuid]
             self.saveLayout()
+
+    def highlightShelfItemContainer(self, state: bool, item_uuid: str):
+        current_area: ShelfPanel | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfPanel):
+            return
+
+        if item_uuid not in current_area.docks:
+            return
+        
+        dock_item: ShelfItem = current_area.docks[item_uuid]   
+
+        if not isinstance(dock_item.container(), ShelfContainer):
+            return
+        
+        dock_container: ShelfContainer = dock_item.container()
+        dock_container.highlight(state)
+
+    def editShelfItemContainer(self, item_uuid: str):
+        current_area: ShelfPanel | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfPanel):
+            return
+
+        if item_uuid not in current_area.docks:
+            return
+        
+        dock_item: ShelfItem = current_area.docks[item_uuid]   
+
+        if not isinstance(dock_item.container(), ShelfContainer):
+            return
+        
+        dock_container: ShelfContainer = dock_item.container()
+        
+        dlg = self.__setupDialog(dock_container.getOptions())
+        if dlg.exec_():
+            dock_container.setOptions(dlg.editableConfig)
+            self.saveLayout()
+
 
     #endregion
 
@@ -534,6 +576,18 @@ class ShelfWidget(QWidget):
         if self.containerOptions.enable_pinning:
             if self.dockStack.currentIndex() != 1 and not self.header.pinButton.isChecked():
                 self.goToHomePage()
+
+    def onToolChanged(self, current_tool: str):
+        def _recursive(da: ShelfPanel):
+            for uuid in da.docks:
+                dock = da.docks[uuid]
+                if isinstance(dock, ShelfItem):
+                    dock: ShelfItem
+                    dock.onToolChanged(current_tool)
+
+        _recursive(self.dockArea)
+        for dockArea in self.dockPages:
+            _recursive(dockArea)
             
 
     def onConfigUpdated(self):
@@ -543,7 +597,7 @@ class ShelfWidget(QWidget):
         self.sigShelfIndexChanged.emit()
 
     def onEditModeChanged(self, enabled: bool):
-        def _recursive(da: DockArea):
+        def _recursive(da: ShelfPanel):
             for uuid in da.docks:
                 dock = da.docks[uuid]
                 if isinstance(dock, ShelfItem):

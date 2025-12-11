@@ -71,49 +71,51 @@ class ShelfLoader(QObject):
         if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushBlendingMode:
             actionWidget = BrushBlendingSelector(self.rootPanel)
             actionWidget.setInstance(self.rootPanel.api_window)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.LayerBlendingMode:
+        elif actionInfo.special_item_type == ToolshelfDock.SpecialItemType.LayerBlendingMode:
             actionWidget = LayerBlendingSelector(self.rootPanel)
             actionWidget.setInstance(self.rootPanel.api_window)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.LayerLabelBox:
+        elif actionInfo.special_item_type == ToolshelfDock.SpecialItemType.LayerLabelBox:
             actionWidget = LayerLabelBox(self.rootPanel)
             actionWidget.setInstance(self.rootPanel.api_window)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushSizeSlider:
+        elif actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushSizeSlider:
             actionWidget = BrushSizeSlider(self.rootPanel)
             actionWidget.setOrientation(actionInfo.special_slider_orientation)
             actionWidget.setInstance(self.rootPanel.api_window)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushOpacitySlider:
+        elif actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushOpacitySlider:
             actionWidget = BrushOpacitySlider(self.rootPanel)
             actionWidget.setOrientation(actionInfo.special_slider_orientation)
             actionWidget.setInstance(self.rootPanel.api_window)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushFlowSlider:
+        elif actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushFlowSlider:
             actionWidget = BrushFlowSlider(self.rootPanel)
             actionWidget.setOrientation(actionInfo.special_slider_orientation)
             actionWidget.setInstance(self.rootPanel.api_window)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushAngleSelector:
+        elif actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushAngleSelector:
             actionWidget = BrushAngleSelector(self.rootPanel)
             actionWidget.setInstance(self.rootPanel.api_window)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BackgroundColorBox:
+        elif actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BackgroundColorBox:
             actionWidget = CanvasColorPicker(self.rootPanel, CanvasColorPicker.Mode.Background)
             actionWidget.setInstance(self.rootPanel.api_window)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.ForegroundColorBox:
+        elif actionInfo.special_item_type == ToolshelfDock.SpecialItemType.ForegroundColorBox:
             actionWidget = CanvasColorPicker(self.rootPanel, CanvasColorPicker.Mode.Foreground)
             actionWidget.setInstance(self.rootPanel.api_window)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.ForegroundBackgroundColorPicker:
+        elif actionInfo.special_item_type == ToolshelfDock.SpecialItemType.ForegroundBackgroundColorPicker:
             actionWidget = CanvasDualColorButton(self.rootPanel)
             actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             actionWidget.setInstance(self.rootPanel.api_window)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushPicker:
+        elif actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushPicker:
             actionWidget = BrushPresetPicker(self.rootPanel)
             actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             actionWidget.setInstance(self.rootPanel.api_window, self.rootPanel.managers)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.PatternPicker:
+        elif actionInfo.special_item_type == ToolshelfDock.SpecialItemType.PatternPicker:
             actionWidget = CanvasPatternPicker(self.rootPanel)
             actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             actionWidget.setInstance(self.rootPanel.api_window, self.rootPanel.managers)
-        if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.GradientPicker:
+        elif actionInfo.special_item_type == ToolshelfDock.SpecialItemType.GradientPicker:
             actionWidget = CanvasGradientPicker(self.rootPanel)
             actionWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             actionWidget.setInstance(self.rootPanel.api_window, self.rootPanel.managers)
+        else:
+            actionWidget = QWidget(self.rootPanel)
 
         dock.addWidget(actionWidget)
         return dock

@@ -49,6 +49,7 @@ def printDebug(value: str):
 
 class ActionManager(QObject):
     composerTriggerEnded=pyqtSignal()
+    selectedToolChanged=pyqtSignal(str)
     
     def __init__(self, parent: QObject, managers: "TouchifyManagers"):
         super().__init__(parent)

@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.enums.tool import Tool
 from touchify.src.config.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.config.docker_group.DockerGroup import DockerGroup
 from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
@@ -39,6 +40,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         self.selected_item = "null"
 
         self.show_status_bar = False
+        self.is_checkbox_selector = False
 
         self.filter_bar = QLineEdit()
         self.filter_bar.setPlaceholderText("Filter...")
@@ -88,8 +90,6 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         
 
     def updateSelected(self):
-        currentItem = self.list_view.currentItem()
-
         if self.show_status_bar:
             self.header_icon.setVisible(True)
             self.header_text.setVisible(True)
@@ -97,14 +97,28 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             self.header_icon.setVisible(False)
             self.header_text.setVisible(False)
 
-        if currentItem:
-            self.selected_item = str(currentItem.data(DATA_INDEX))
-            self.header_icon.setIcon(currentItem.icon())
-            self.header_text.setText(self.selected_item)
-        else: 
-            self.selected_item = "null"
-            self.header_icon.setIcon(QIcon())
-            self.header_text.setText("")
+        if self.is_checkbox_selector:
+            itemList: list[QListWidgetItem] = [self.list_view.item(i) for i in range(self.list_view.count())]
+            currentItems = [z for z in itemList if z.checkState() == Qt.CheckState.Checked]
+            if len(currentItems) > 0:
+                self.selected_item = ",".join([z.data(DATA_INDEX) for z in currentItems])
+                self.header_icon.setIcon(QIcon())
+                self.header_text.setText(self.selected_item)
+            else: 
+                self.selected_item = "null"
+                self.header_icon.setIcon(QIcon())
+                self.header_text.setText("")
+        else:
+            currentItem = self.list_view.currentItem()
+            if currentItem:
+                self.selected_item = str(currentItem.data(DATA_INDEX))
+                self.header_icon.setIcon(currentItem.icon())
+                self.header_text.setText(self.selected_item)
+            else: 
+                self.selected_item = "null"
+                self.header_icon.setIcon(QIcon())
+                self.header_text.setText("")
+
 
 
 
@@ -196,6 +210,19 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem.setText(displayName)
                 listItem.setIcon(icon)
                 listItem.setData(DATA_INDEX, actionData.objectName())
+                self.list_view.addItem(listItem)
+        elif mode == PropertyGrid_Restrictions.StrMod.MultiToolSelection:
+            self.list_view.setViewMode(QListView.ViewMode.ListMode)
+            self.list_view.setUniformItemSizes(True)
+            self.is_checkbox_selector = True
+            for value, data in Tool._member_map_.items():
+                data: Tool
+                listItem = QListWidgetItem()
+                listItem.setFlags(listItem.flags() | QtCore.Qt.ItemFlag.ItemIsUserCheckable)
+                listItem.setCheckState(Qt.CheckState.Unchecked)
+                listItem.setText(data.pretty_name)
+                listItem.setIcon(data.icon)
+                listItem.setData(DATA_INDEX, data.value)
                 self.list_view.addItem(listItem)
         
         self.list_view.model().sort(0, Qt.SortOrder.DescendingOrder)
