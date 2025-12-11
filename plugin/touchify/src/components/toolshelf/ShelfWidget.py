@@ -51,6 +51,7 @@ class ShelfWidget(QWidget):
 
 
         self._allowAutoSave = True
+        self._hideTitlebar = False
         
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.setContentsMargins(0,0,0,0)
@@ -121,6 +122,10 @@ class ShelfWidget(QWidget):
     #endregion
     
     #region Getters / Setters
+
+    def setTitlebarVisibility(self, state: bool):
+        self._hideTitlebar = state
+        self.header.setVisible(state)
 
     def isEditMode(self) -> bool:
         return self.header.optionsMenu.editModeAction.isChecked()
@@ -278,6 +283,8 @@ class ShelfWidget(QWidget):
 
         self.tabBar.reload(state)
         self.header.reload(state, self.currentPresetId())
+
+        self.header.setVisible(self._hideTitlebar)
 
         self.display.shelfReloadEvent(state)
 

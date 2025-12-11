@@ -5,6 +5,7 @@
     "submenu_delay": 200,
     "background_opacity": 255,
     "button_opacity": 255,
+    "orientation_mode": "dynamic",
     "categories": [
         {
             "id": "Transform",

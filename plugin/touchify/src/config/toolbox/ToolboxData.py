@@ -1,5 +1,6 @@
 from touchify.src.config.toolbox.ToolboxDataItem import *
 from touchify.src.config.toolbox.ToolboxDataCategory import *
+from touchify.src.datatypes.metaclass.EnumStr import EnumStr
 from touchify.src.extensions.file_extensions import FileExtensions
 from touchify.src.datatypes.sequence.TypedList import TypedList
 from touchify.src.extensions.json_extensions import JsonExtensions
@@ -9,6 +10,12 @@ from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions impor
 
    
 class ToolboxData:
+
+    class OrientationMode(EnumStr):
+        Dynamic = "dynamic"
+        Horizontal = "horizontal"
+        Vertical = "vertical"
+
     def __defaults__(self):
         self.preset_name: str = "New Toolbox Preset"
 
@@ -18,6 +25,8 @@ class ToolboxData:
         self.submenu_delay: int = 200
         self.background_opacity: int = 255
         self.button_opacity: int = 255
+
+        self.orientation_mode: str = "dynamic"
 
         self.categories: TypedList[ToolboxDataCategory] = [] 
 
@@ -52,6 +61,7 @@ class ToolboxData:
             "submenu_delay",
             "background_opacity",
             "button_opacity",
+            "orientation_mode",
             # Items
             "categories"
         ]
@@ -64,6 +74,7 @@ class ToolboxData:
         labels["column_count"] = "Column Count"
         labels["icon_size"] = "Icon Size"
         labels["background_opacity"] = "Background Opacity"
+        labels["orientation_mode"] = "Orientation Mode"
         labels["button_opacity"] = "Button Opacity"
         return labels
 
@@ -72,7 +83,18 @@ class ToolboxData:
         restrictions["column_count"] = PropertyGrid_Restrictions.range(min=1)
         restrictions["background_opacity"] = PropertyGrid_Restrictions.range(min=0, max=255)
         restrictions["button_opacity"] = PropertyGrid_Restrictions.range(min=0, max=255)
+        restrictions["orientation_mode"] = PropertyGrid_Restrictions.strValues(self.OrientationMode.values())
         return restrictions
+    
+    def update(self, item: "ToolboxData"):
+        self.background_opacity = item.background_opacity
+        self.button_opacity = item.button_opacity
+        self.categories = item.categories
+        self.column_count = item.column_count
+        self.icon_size = item.icon_size
+        self.orientation_mode = item.orientation_mode
+        self.preset_name = item.preset_name
+        self.submenu_delay = item.submenu_delay
     
     def loadDefaults(self):
         result = TypedList([], ToolboxDataCategory)

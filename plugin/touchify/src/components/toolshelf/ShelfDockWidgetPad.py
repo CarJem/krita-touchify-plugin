@@ -1,15 +1,26 @@
+
 from enum import Enum
+from functools import partial
+from typing import TYPE_CHECKING
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from touchify.__env__ import TOUCHIFY_SETTINGPATH_TOOLSHELF
 from touchify.src.components.toolshelf.ShelfDockWidget import ShelfDockWidget
 from touchify.src.managers.shared.resources import ResourceManager
+from touchify.src.managers.shared.settings_krita import KritaSettings
+if TYPE_CHECKING:
+    from ...PluginWindow import TouchifyWindow
+    from touchify.src.PluginManagers import TouchifyManagers
 
-class ShelfFloatingDockWidget(ShelfDockWidget):
+class ShelfWidgetPad(ShelfDockWidget):
+    DOCKER_TITLE="Touchify Core: Widget Pad"
+    CLONE_DOCKER_TITLE="Touchify Clone: Widget Pad"
 
     class TitlebarWidget(QWidget):
 
         sigButtonToggled = pyqtSignal(bool)
+        sigContextMenuRequested = pyqtSignal(QPoint)
 
         def __init__(self, parent = None):
             super().__init__(parent)
@@ -34,6 +45,10 @@ class ShelfFloatingDockWidget(ShelfDockWidget):
             self.layout().addWidget(self.toggleButton)
 
             self.syncIcons(True)
+
+        def contextMenuEvent(self, a0: QContextMenuEvent):
+            self.sigContextMenuRequested.emit(a0.globalPos())
+            a0.ignore()
 
         def onButtonToggled(self, state: bool):
             self.sigButtonToggled.emit(state)
@@ -68,8 +83,6 @@ class ShelfFloatingDockWidget(ShelfDockWidget):
             self._mode = mode
             self.syncIcons(self.toggleButton.isChecked())
 
-
-
     class WidgetAlignment(Enum):
         TopLeft = 1
         TopCenter = 2
@@ -80,29 +93,128 @@ class ShelfFloatingDockWidget(ShelfDockWidget):
         BottomCenter = 7
         BottomRight = 8
 
-    def __init__(self):
-        super().__init__()
+    class Settings(QObject):
+
+        def __init__(self, parent: "ShelfWidgetPad"):
+            super().__init__(parent)
+            self._parent = parent
+
+        def getSettingsPath(self):
+            return TOUCHIFY_SETTINGPATH_TOOLSHELF + "_FloatingWidget_" + str(self._parent.PanelIndex)
+
+        def getShowHeader(self):
+            return KritaSettings.readSettingBool(self.getSettingsPath(), "ShowHeader", True)
+
+        def setShowHeader(self, value: bool):
+            KritaSettings.writeSettingBool(self.getSettingsPath(), "ShowHeader", value, False)
+
+        def getCollapsed(self):
+            return KritaSettings.readSettingBool(self.getSettingsPath(), "Collapsed", False)
+
+        def setCollapsed(self, value: bool):
+            KritaSettings.writeSettingBool(self.getSettingsPath(), "Collapsed", value, False)
+
+        def getAlignment(self):
+            try:
+                input = KritaSettings.readSettingInt(self.getSettingsPath(), "Alignment", 0)
+                return ShelfWidgetPad.WidgetAlignment(input)
+            except:
+                return ShelfWidgetPad.WidgetAlignment.TopLeft
+
+        def setAlignment(self, value: int):
+            KritaSettings.writeSettingInt(self.getSettingsPath(), "Alignment", value, False)
+
+    def __init__(self, index: int = 0):
+        super().__init__(-1)
+        
+        self.PanelIndex = index
+        self.setWindowTitle(f"{ShelfWidgetPad.CLONE_DOCKER_TITLE} (Ext. {index})")
+
         self._alignment = self.WidgetAlignment.TopLeft
         self._edgePosition = QPoint(0,0)
-        self._isCollapsed = False
         self._collapsed_size = QSize()
         self._collapsed_position = QPoint()
         self._max_width = 1
         self._max_height = 1
         self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
-        self.startTimer(25)
+
+        self._settings = self.Settings(self)
 
         self._titlebar = self.TitlebarWidget(self)
         self._titlebar.sigButtonToggled.connect(self.onToggled)
+        self._titlebar.sigContextMenuRequested.connect(self.onContextMenu)
         self.setTitleBarWidget(self._titlebar)
+
+    def setup(self, app_window: "TouchifyWindow"):
+        super().setup(app_window)
+        self.setAlignment(self._settings.getAlignment())
+        self.mainWidget.setTitlebarVisibility(self._settings.getShowHeader())
+
+        is_collapsed = self._settings.getCollapsed()
+        if is_collapsed:
+            self._titlebar.toggleButton.blockSignals(True)
+            self._titlebar.toggleButton.setChecked(True)
+            self._titlebar.syncIcons(True)
+            self._titlebar.toggleButton.blockSignals(False)
+            self._collapsed_size = self.size()
+            self.mainWidget.hide()
+
+    def onContextMenu(self, pos: QPoint):
+        menu = QMenu(self)
         
+        shelfOptionsAct = menu.addAction("Toolshelf Options...")
+        shelfOptionsAct.triggered.connect(partial(self.onShelfSettings, pos))
+        menu.addSeparator()
+        
+        showHeaderAct = menu.addAction("Show Header")
+        showHeaderAct.setCheckable(True)
+        showHeaderAct.setChecked(self._settings.getShowHeader())
+        showHeaderAct.toggled.connect(self.onHeaderToggled)
+
+        alignmentMenu = menu.addMenu("Align to...")
+
+
+        currentAlignment = self._settings.getAlignment().value
+        alignmentMenuGroup = QActionGroup(menu)
+        alignmentMenuGroup.setExclusive(True)
+        for entry in ShelfWidgetPad.WidgetAlignment:
+            action = alignmentMenuGroup.addAction(entry.name)
+            action.setCheckable(True)
+            if entry.value == currentAlignment:
+                action.setChecked(True)
+            action.triggered.connect(partial(self.onAlignmentUpdated, entry.value))
+            alignmentMenu.addAction(action)
+
+        menu.exec_(pos)
+
+    def onAlignmentUpdated(self, value: int):
+        alignment = ShelfWidgetPad.WidgetAlignment.TopLeft
+        try:
+            alignment = ShelfWidgetPad.WidgetAlignment(value)
+        except:
+            pass
+        self.setAlignment(alignment)
+        self._settings.setAlignment(alignment.value)
+
+    def onHeaderToggled(self, state: bool):
+        self.mainWidget.setTitlebarVisibility(state)
+        self._settings.setShowHeader(state)
+
+    def onShelfSettings(self, pos: QPoint):
+        self.mainWidget.header.optionsMenu.exec_(pos)
 
     def onToggled(self, state: bool):
-        self.widget().setVisible(not state)
-
+        self._settings.setCollapsed(state)
+        if state == True:
+            self._collapsed_size = self.size()
+            self.mainWidget.hide()
+        else:
+            self.mainWidget.show()
+            self.resize(self._collapsed_size)
+            
     def timerEvent(self, a0):
         self.syncPosition()
-        return super().timerEvent(a0)
+        super().timerEvent(a0)
 
     def setAlignment(self, align: WidgetAlignment):
         self._alignment = align
@@ -125,16 +237,6 @@ class ShelfFloatingDockWidget(ShelfDockWidget):
                 self._titlebar.updateButtons("down")
             case _:
                 pass
-            
-    def move(self, point: QPoint):
-        if self.shrinkToFit:
-            self.adjustSize()
-        super().move(point)   
-
-    def resizeEvent(self, a0):
-        if self.shrinkToFit:
-            self.adjustSize()
-        return super().resizeEvent(a0)
 
     def syncPosition(self):
         if not self.isVisible():
@@ -199,8 +301,19 @@ class ShelfFloatingDockWidget(ShelfDockWidget):
         _max_height = space_rect.height() - edge_padding *2
         _max_width = space_rect.width() - edge_padding * 2
 
-        if self.width() > _max_width or self.height() > _max_height:
-            self.setMaximumSize(_max_width, _max_height)
 
-        if self.pos() != _position:
+        _c_width = self.width()
+        _c_height = self.height()
+        _c_pos = self.pos()
+
+        if self.isSizeManaged:
+            self.shrinkToFit()
+
+        if _c_width > _max_width:
+            self.resize(_max_width, _c_height)
+
+        if _c_height > _max_height:
+            self.resize(_c_width, _max_height)
+
+        if _c_pos != _position:
             self.move(_position)

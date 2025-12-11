@@ -57,6 +57,11 @@ class TouchifySettings:
         TouchifySettings.instance().cfg.load()
         GlobalEvents.EMIT_SIGNAL_TOUCHIFY_CONFIG_UPDATED()
 
+    @staticmethod  
+    def reloadToolbox():
+        TouchifySettings.instance().cfg.load()
+        GlobalEvents.EMIT_SIGNAL_TOUCHIFY_TOOLBOX_PRESET_CHANGED()
+
     def __init__(self) -> None:
         self.notify_hooks = []
         self.cfg = TouchifyRegistry()

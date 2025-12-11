@@ -1,17 +1,21 @@
-from PyQt5.QtWidgets import QScrollArea, QToolButton, QApplication, QScrollBar, QStyleOption, QStyle, QFrame, QScroller, QScrollerProperties
-from PyQt5.QtCore import Qt, QEvent
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
 from typing import TYPE_CHECKING
+
+
 if TYPE_CHECKING:
-    from .ToolboxWidget import ToolboxWidget
+    from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
+    from touchify.src.components.toolbox.ToolboxWidget import ToolboxWidget
 
 class ToolboxScrollArea(QScrollArea):
-    def __init__(self, parent=None):
-
-        self.parentToolbox: ToolboxWidget  = parent
-
+    def __init__(self, parent: "ToolboxDocker", toolbox: "ToolboxWidget"):
         super().__init__(parent)
-        self.m_orientation = Qt.Vertical
+        self._docker: "ToolboxDocker"  = parent
+        self._toolbox: "ToolboxWidget" = toolbox
+
+        self.m_orientation = Qt.Orientation.Vertical
         self.m_scrollPrev = QToolButton(self)
         self.m_scrollNext = QToolButton(self)
 
@@ -44,28 +48,31 @@ class ToolboxScrollArea(QScrollArea):
 
         scroller.setScrollerProperties(sp)
         scroller.stateChanged.connect(self.slotScrollerStateChange)
+        self.setWidget(toolbox)
 
     def setOrientation(self, orientation):
         if orientation == self.m_orientation:
             return
         self.m_orientation = orientation
+        self._toolbox.setOrientation(orientation)
         self.layoutItems()
 
     def orientation(self):
         return self.m_orientation
 
     def minimumSizeHint(self):
-        return self.widget().minimumSizeHint()
+        margin = 0
+        return self._toolbox.minimumSizeHint().grownBy(QMargins(margin,margin,margin,margin))
 
     def sizeHint(self):
-        return self.widget().sizeHint()
+        margin = 0
+        return self._toolbox.sizeHint().grownBy(QMargins(margin,margin,margin,margin))
 
     def slotScrollerStateChange(self, state):
         pass
-        # Implement KisKineticScroller.updateCursor(self, state) here
 
     def event(self, event):
-        if event.type() == QEvent.LayoutRequest:
+        if event.type() == QEvent.Type.LayoutRequest:
             self.layoutItems()
             self.updateGeometry()
         return super().event(event)

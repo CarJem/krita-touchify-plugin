@@ -13,6 +13,9 @@ class ToolshelfSettings:
     class ResizeStyle(EnumStr):
         Default = "default"
         Minimum = "minimum"
+        AdjustSize = "adjust_size"
+        SizeHint = "size_hint"
+        SizeHintMinimum = "minimum_size_hint"
 
     class Position(EnumStr):
         Top = "top"

@@ -14,7 +14,7 @@
                 ],
                 {
                     "sizes": [
-                        716
+                        553
                     ]
                 }
             ],
@@ -32,7 +32,7 @@
                 "max_size_y": 0,
                 "ignore_scaling": false,
                 "section_type": "docker",
-                "docker_nesting_mode": "normal",
+                "docker_nesting_mode": "docking",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
                 "action_section_id": "Panel",
@@ -54,7 +54,7 @@
             "header_size": 16,
             "enable_pinning": false,
             "position": "top",
-            "resize_style": "minimum",
+            "resize_style": "size_hint",
             "stack_preview": "default",
             "stack_alignment": "default",
             "stack_actions": [],
