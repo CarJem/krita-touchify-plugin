@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.components.toolshelf.ShelfItem import ShelfItem
+from touchify.src.components.toolshelf.ShelfDock import ShelfDock
 from touchify.src.components.trigger_buttons.TouchifyActionPanel import TouchifyActionPanel
 from touchify.src.components.widgets.CanvasDualColorButton import CanvasDualColorButton
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
@@ -36,7 +36,7 @@ class ShelfLoader(QObject):
 
 
     def Section_Actions(self, actionInfo: ToolshelfDock):
-        dock = ShelfItem(actionInfo)
+        dock = ShelfDock(actionInfo)
         
         cfg = TriggerPanel()
         cfg.convertFrom(type(ToolshelfDock), actionInfo)
@@ -48,7 +48,7 @@ class ShelfLoader(QObject):
         return dock
     
     def Section_Docker(self, actionInfo: ToolshelfDock):
-        dock = ShelfItem(actionInfo)
+        dock = ShelfDock(actionInfo)
         actionWidget = DockerContainer(dock, actionInfo.docker_id, self.rootPanel.managers.mgr_dockers)
         if actionInfo.docker_nesting_mode == ToolshelfDock.DockerNestingMode.Docking:
             actionWidget.setDockMode(True)
@@ -67,7 +67,7 @@ class ShelfLoader(QObject):
         return dock
     
     def Section_Special(self, actionInfo: ToolshelfDock):
-        dock = ShelfItem(actionInfo)
+        dock = ShelfDock(actionInfo)
         if actionInfo.special_item_type == ToolshelfDock.SpecialItemType.BrushBlendingMode:
             actionWidget = BrushBlendingSelector(self.rootPanel)
             actionWidget.setInstance(self.rootPanel.api_window)
@@ -121,7 +121,7 @@ class ShelfLoader(QObject):
         return dock
     
     def Init_Section(self, section_info: ToolshelfDock):
-        sectionWidget: ShelfItem | None = None
+        sectionWidget: ShelfDock | None = None
 
         match section_info.section_type:
             case ToolshelfDock.SectionType.Docker:

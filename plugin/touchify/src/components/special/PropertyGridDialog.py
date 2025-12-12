@@ -8,8 +8,8 @@ import copy
 
 from krita import *
 
-class ToolboxOptionsDialog(QDialog):
-
+class PropertyGridDialog(QDialog):
+    
     def __init__(self, qwin: WindowAPI, options: Any):
         super().__init__(qwin.qwindow.window())
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)

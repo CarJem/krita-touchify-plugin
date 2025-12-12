@@ -5,11 +5,11 @@ from PyQt5.QtWidgets import *
 
 from krita import *
 
-from touchify.src.components.toolshelf.ShelfItem import ShelfItem
-from touchify.src.components.toolshelf.ShelfOptionsDialog import ShelfOptionsDialog
+from touchify.src.components.toolshelf.ShelfDock import ShelfDock
+from touchify.src.components.special.PropertyGridDialog import PropertyGridDialog
 from touchify.src.components.toolshelf.ShelfLoader import ShelfLoader
 
-from touchify.src.components.toolshelf.ShelfPanel import ShelfContainer, ShelfPanel
+from touchify.src.components.toolshelf.ShelfContainer import ShelfContainer, ShelfPanel
 from touchify.src.components.toolshelf.ShelfTabBar import ShelfTabBar
 from touchify.src.components.toolshelf.ShelfToolbar import ShelfToolbar
 from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
@@ -20,6 +20,7 @@ from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
 from touchify.src.extensions.json_extensions import JsonExtensions
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.managers.shared.events import GlobalEvents
+import touchify.src.components.toolshelf.ShelfClasses as ShelfClasses
 from touchify.src.managers.shared.settings import *
 from touchify.__env__ import *
 from touchify.src.managers.normal.dockers import *
@@ -105,7 +106,7 @@ class ShelfWidget(QWidget):
         self.setContentsMargins(0,0,0,0)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
-        self.dlgConfigEditor: ShelfOptionsDialog | None = None
+        self.dlgConfigEditor: PropertyGridDialog | None = None
         self.containerOptions: ToolshelfSettings = ToolshelfSettings()
         self.homepageOptions: ToolshelfPageSettings = ToolshelfPageSettings()
 
@@ -143,7 +144,7 @@ class ShelfWidget(QWidget):
             if PyQtExtensions.CommonHelpers.isDeleted(self.dlgConfigEditor) == False:
                 return None
         
-        self.dlgConfigEditor = ShelfOptionsDialog(self.api_window, options)
+        self.dlgConfigEditor = PropertyGridDialog(self.api_window, options)
         return self.dlgConfigEditor
 
     def updateStyle(self):
@@ -192,8 +193,8 @@ class ShelfWidget(QWidget):
         
             for uuid in dock_area.docks:
                 dock = dock_area.docks[uuid]
-                if isinstance(dock, ShelfItem):
-                    dock: ShelfItem
+                if isinstance(dock, ShelfDock):
+                    dock: ShelfDock
                     subState.items[uuid] = dock.dock_settings
             return subState
 
@@ -217,14 +218,14 @@ class ShelfWidget(QWidget):
 
     #region Shelf Mgmt
 
-    def __shelfDispose(self, dock_item: ShelfItem):
+    def __shelfDispose(self, dock_item: ShelfDock):
         dock_item.sigEditRequested.disconnect()
         dock_item.sigDeleteRequested.disconnect()
         dock_item.sigEditContainerRequested.disconnect()
         dock_item.sigDuplicateRequested.disconnect()
         dock_item.sigContainerHoverUpdated.disconnect()
 
-    def __shelfSetup(self, dock_item: ShelfItem, uuid: str = None):
+    def __shelfSetup(self, dock_item: ShelfDock, uuid: str = None):
         if uuid != None: dock_item.setUUID(uuid)
         dock_item.setEditMode(self.isEditMode())
         dock_item.sigDuplicateRequested.connect(self.cloneShelfItem)
@@ -415,7 +416,7 @@ class ShelfWidget(QWidget):
         if uuid not in current_area.docks:
             return
 
-        dock_item: ShelfItem = current_area.docks[uuid]   
+        dock_item: ShelfDock = current_area.docks[uuid]   
         dock_settings = deepcopy(dock_item.dock_settings)
 
         dock_item = self.dockLoader.Init_Section(dock_settings)
@@ -431,7 +432,7 @@ class ShelfWidget(QWidget):
         if uuid not in current_area.docks:
             return
         
-        dock_item: ShelfItem = current_area.docks[uuid]   
+        dock_item: ShelfDock = current_area.docks[uuid]   
         
         dlg = self.__setupDialog(dock_item.dock_settings)
         if dlg.exec_():
@@ -453,7 +454,7 @@ class ShelfWidget(QWidget):
         if uuid not in current_area.docks:
             return
         
-        dock_item: ShelfItem = current_area.docks[uuid]   
+        dock_item: ShelfDock = current_area.docks[uuid]   
         
         #TODO: Add confirmation dialog
         confirmed = True
@@ -472,7 +473,7 @@ class ShelfWidget(QWidget):
         if item_uuid not in current_area.docks:
             return
         
-        dock_item: ShelfItem = current_area.docks[item_uuid]   
+        dock_item: ShelfDock = current_area.docks[item_uuid]   
 
         if not isinstance(dock_item.container(), ShelfContainer):
             return
@@ -488,7 +489,7 @@ class ShelfWidget(QWidget):
         if item_uuid not in current_area.docks:
             return
         
-        dock_item: ShelfItem = current_area.docks[item_uuid]   
+        dock_item: ShelfDock = current_area.docks[item_uuid]   
 
         if not isinstance(dock_item.container(), ShelfContainer):
             return
@@ -521,10 +522,10 @@ class ShelfWidget(QWidget):
         self.settingsLoader.sync(noReload)
 
     def savePresetAs(self):
-        dlg = self.__setupDialog(ShelfOptionsDialog.PresetSaveAs())
+        dlg = self.__setupDialog(ShelfClasses.PresetSaveAs())
         if dlg.exec_():
             result: Toolshelf = Toolshelf()
-            editorResults: ShelfOptionsDialog.PresetSaveAs = dlg.editableConfig
+            editorResults: PropertyGridDialog.PresetSaveAs = dlg.editableConfig
             selectedResourcePackIndex: int = int(editorResults.resource_pack) - 1
 
             if selectedResourcePackIndex <= -1: return
@@ -581,8 +582,8 @@ class ShelfWidget(QWidget):
         def _recursive(da: ShelfPanel):
             for uuid in da.docks:
                 dock = da.docks[uuid]
-                if isinstance(dock, ShelfItem):
-                    dock: ShelfItem
+                if isinstance(dock, ShelfDock):
+                    dock: ShelfDock
                     dock.onToolChanged(current_tool)
 
         _recursive(self.dockArea)
@@ -600,8 +601,8 @@ class ShelfWidget(QWidget):
         def _recursive(da: ShelfPanel):
             for uuid in da.docks:
                 dock = da.docks[uuid]
-                if isinstance(dock, ShelfItem):
-                    dock: ShelfItem
+                if isinstance(dock, ShelfDock):
+                    dock: ShelfDock
                     dock.setEditMode(enabled)
         
         _recursive(self.dockArea)

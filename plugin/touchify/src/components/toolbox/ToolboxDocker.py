@@ -10,7 +10,7 @@ from krita import *
 from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.__env__ import *
 from touchify.src.components.toolbox.ToolboxLayout import ToolboxEmptySpace
-from touchify.src.components.toolbox.ToolboxOptionsDialog import ToolboxOptionsDialog
+from touchify.src.components.special.PropertyGridDialog import PropertyGridDialog
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.managers.shared.events import GlobalEvents
 from touchify.__env__ import *
@@ -72,11 +72,12 @@ class ToolboxDocker(QDockWidget):
         self.setWindowTitle(DOCKER_TITLE) # window title also acts as the Docker title in Settings > Dockers
         self.setContentsMargins(0,0,0,0)
 
-        #label = QLabel(" ") # label conceals the 'exit' buttons and Docker title
-        #label.setFrameShape(QFrame.StyledPanel)
-        #label.setFrameShadow(QFrame.Raised)
-        #label.setFrameStyle(QFrame.Panel | QFrame.Raised)
-        #label.setMinimumWidth(16)
+        label = QLabel(" ") # label conceals the 'exit' buttons and Docker title
+        label.setFrameShape(QFrame.StyledPanel)
+        label.setFrameShadow(QFrame.Raised)
+        label.setFrameStyle(QFrame.Panel | QFrame.Raised)
+        label.setMinimumWidth(16)
+        self.setTitleBarWidget(label)
 
         self.api_window: WindowAPI = None
         self.managers: "TouchifyManagers" = None
@@ -84,7 +85,7 @@ class ToolboxDocker(QDockWidget):
         self._toolboxItems: list[QWidgetAction] = []
         self.isDynamicOrientation = False
         self.isNotLoading = True
-        self.dlgConfigEditor: ToolboxOptionsDialog = None
+        self.dlgConfigEditor: PropertyGridDialog = None
 
         self._toolbox = ToolboxWidget()
         self._toolbox.sigContextMenuRequested.connect(self.onContext)
@@ -106,7 +107,7 @@ class ToolboxDocker(QDockWidget):
             if PyQtExtensions.CommonHelpers.isDeleted(self.dlgConfigEditor) == False:
                 return None
         
-        self.dlgConfigEditor = ToolboxOptionsDialog(self.api_window, options)
+        self.dlgConfigEditor = PropertyGridDialog(self.api_window, options)
         return self.dlgConfigEditor
     
     def resizeEvent(self, event: QResizeEvent):

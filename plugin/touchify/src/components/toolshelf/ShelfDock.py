@@ -1,7 +1,9 @@
 from uuid import uuid4
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPaintEvent, QPainter, QPen
 from touchify.src.components.special.DockerContainer import DockerContainer
-from touchify.src.components.toolshelf.ShelfItemOverlay import ShelfItemOverlay
-from touchify.src.components.toolshelf.ShelfPanel import ShelfContainer
+from touchify.src.components.toolshelf.ShelfContainer import ShelfContainer
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 from touchify.src.alib_pyqtgraph.dockarea.Dock import Dock, DockLabel
 from PyQt5 import QtWidgets, QtCore
@@ -10,7 +12,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 
-class ShelfItem(Dock):
+class ShelfDock(Dock):
 
     sigDuplicateRequested = QtCore.pyqtSignal(str)
     sigEditRequested = QtCore.pyqtSignal(str)
@@ -33,7 +35,7 @@ class ShelfItem(Dock):
         self.layout.setContentsMargins(0,0,0,0)
         self.layout.setSpacing(0)
         
-        self.editableDragArea = ShelfItemOverlay()
+        self.editableDragArea = ShelfDockOverlay()
         self.editableDragArea.sigMouseOverChanged.connect(self.onMouseOverChanged)
         self.editableDragArea.dock = self
         self.editableDragArea.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
@@ -179,6 +181,7 @@ class ShelfItem(Dock):
 
 class ShelfLabel(DockLabel):
 
+
     def __init__(self, text, closable=False, fontSize="12px"):
         super().__init__(text, closable, fontSize)
 
@@ -223,3 +226,73 @@ class ShelfLabel(DockLabel):
                 font-size: %s;
             }""" % (bg, fg, r, r, border, self.fontSize)
             self.setStyleSheet(self.hStyle)
+
+class ShelfDockOverlay(QtWidgets.QWidget):
+    sigClicked = QtCore.pyqtSignal()
+    sigMouseOverChanged = QtCore.pyqtSignal(bool)
+    sigRightClicked = QtCore.pyqtSignal()
+
+    def __init__(self, parent: QtWidgets.QWidget = None):
+        QtWidgets.QWidget.__init__(self, parent)
+
+        self.dock = None
+        self.isMouseOver = False
+
+        self.personallayout = QtWidgets.QGridLayout()
+        self.personallayout.setContentsMargins(0, 0, 0, 0)
+        self.personallayout.setSpacing(0)
+
+        self.sigMouseOverChanged.connect(self.onMouseOverChanged)
+
+        self.setLayout(self.personallayout)
+
+    def onMouseOverChanged(self, state: bool):
+        self.isMouseOver = state
+        self.repaint()
+
+    def paintEvent(self, event: QPaintEvent):
+        super().paintEvent(event)
+        painter = QPainter(self)
+        painter.setOpacity(0.2 if self.isMouseOver else 0.0)
+        painter.setBrush(Qt.GlobalColor.white)
+        painter.setPen(QPen(Qt.GlobalColor.white))
+        painter.drawRect(event.rect())
+        painter.end()
+
+    def enterEvent(self, a0):
+        self.sigMouseOverChanged.emit(True)
+        return super().enterEvent(a0)
+
+    def leaveEvent(self, a0):
+        self.sigMouseOverChanged.emit(False)
+        return super().leaveEvent(a0)
+
+    def mousePressEvent(self, ev):
+        lpos = ev.position() if hasattr(ev, 'position') else ev.localPos()
+        self.pressPos = lpos
+        self.mouseMoved = False
+        ev.accept()
+
+    def mouseMoveEvent(self, ev):
+        if not self.mouseMoved:
+            lpos = ev.position() if hasattr(ev, 'position') else ev.localPos()
+            self.mouseMoved = (lpos - self.pressPos).manhattanLength() > QtWidgets.QApplication.startDragDistance()
+
+        if self.mouseMoved and ev.buttons() == QtCore.Qt.MouseButton.LeftButton:
+            self.dock.startDrag()
+        ev.accept()
+
+    def mouseReleaseEvent(self, ev):
+        ev.accept()
+        if not self.mouseMoved:
+            if ev.button() == QtCore.Qt.MouseButton.RightButton:
+                self.sigRightClicked.emit()
+            else:
+                self.sigClicked.emit()
+
+    def mouseDoubleClickEvent(self, ev):
+        super(ShelfDockOverlay,self).mouseDoubleClickEvent(ev)
+
+    def resizeEvent (self, ev):
+        super(ShelfDockOverlay,self).resizeEvent(ev)
+
