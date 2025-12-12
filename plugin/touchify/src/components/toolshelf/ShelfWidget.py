@@ -77,7 +77,7 @@ class ShelfWidget(QWidget):
 
             if noReload: return
             TouchifySettings.load()
-            GlobalEvents.EMIT_SIGNAL_TOOLSHELF_UPDATED(self._shelf.registry_index)
+            GlobalEvents().SIGNAL_TOOLSHELF_UPDATED.emit(self._shelf.registry_index)
 
     sigShelfIndexChanged = QtCore.pyqtSignal()
 

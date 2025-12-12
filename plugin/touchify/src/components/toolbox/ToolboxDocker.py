@@ -57,12 +57,12 @@ class ToolboxDocker(QDockWidget):
 
         def setCurrentToolbox(self, id: str):
             KritaSettings.writeSetting(Env.DockerID.TOOLBOX, "SelectedPreset", id, False)
-            GlobalEvents.EMIT_SIGNAL_TOOLBOX_UPDATED()
+            GlobalEvents().SIGNAL_TOOLBOX_UPDATED.emit()
 
         def sync():
             TouchifySettings.save()
             TouchifySettings.load()
-            GlobalEvents.EMIT_SIGNAL_TOOLBOX_UPDATED()
+            GlobalEvents().SIGNAL_TOOLBOX_UPDATED.emit()
 
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
@@ -72,12 +72,12 @@ class ToolboxDocker(QDockWidget):
         self.setWindowTitle(DOCKER_TITLE) # window title also acts as the Docker title in Settings > Dockers
         self.setContentsMargins(0,0,0,0)
 
-        label = QLabel(" ") # label conceals the 'exit' buttons and Docker title
-        label.setFrameShape(QFrame.StyledPanel)
-        label.setFrameShadow(QFrame.Raised)
-        label.setFrameStyle(QFrame.Panel | QFrame.Raised)
-        label.setMinimumWidth(16)
-        self.setTitleBarWidget(label)
+        #label = QLabel(" ") # label conceals the 'exit' buttons and Docker title
+        #label.setFrameShape(QFrame.StyledPanel)
+        #label.setFrameShadow(QFrame.Raised)
+        #label.setFrameStyle(QFrame.Panel | QFrame.Raised)
+        #label.setMinimumWidth(16)
+        #self.setTitleBarWidget(label)
 
         self.api_window: WindowAPI = None
         self.managers: "TouchifyManagers" = None
@@ -99,8 +99,8 @@ class ToolboxDocker(QDockWidget):
 
         self.updateStyleSheet()
 
-        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
-        GlobalEvents.instance().SIGNAL_TOOLBOX_UPDATED.connect(self.onConfigUpdated)
+        GlobalEvents().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
+        GlobalEvents().SIGNAL_TOOLBOX_UPDATED.connect(self.onConfigUpdated)
         
     def __setupDialog(self, options: Any):
         if self.dlgConfigEditor != None:

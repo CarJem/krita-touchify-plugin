@@ -94,14 +94,14 @@ class TouchifyPieMenu(ComposerPieMenu):
 
     def Show(self):
         ComposerPieMenu.on_key_press(self)
-        GlobalEvents.instance().SIGNAL_KEY_RELEASED.connect(self.PieWheel_OnKeyRelease)
-        GlobalEvents.instance().SIGNAL_MOUSE_RELEASED.connect(self.PieWheel_OnMouseRelease)
+        GlobalEvents().SIGNAL_KEY_RELEASED.connect(self.PieWheel_OnKeyRelease)
+        GlobalEvents().SIGNAL_MOUSE_RELEASED.connect(self.PieWheel_OnMouseRelease)
 
     def Close(self):
         ComposerPieMenu.on_every_key_release(self)
-        try: GlobalEvents.instance().SIGNAL_KEY_RELEASED.disconnect(self.PieWheel_OnKeyRelease)
+        try: GlobalEvents().SIGNAL_KEY_RELEASED.disconnect(self.PieWheel_OnKeyRelease)
         except: pass
-        try: GlobalEvents.instance().SIGNAL_MOUSE_RELEASED.disconnect(self.PieWheel_OnMouseRelease)
+        try: GlobalEvents().SIGNAL_MOUSE_RELEASED.disconnect(self.PieWheel_OnMouseRelease)
         except: pass
 
     @staticmethod

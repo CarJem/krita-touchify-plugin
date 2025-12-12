@@ -74,9 +74,9 @@ class ActionManager(QObject):
 
 
     def Connections(self):
-        GlobalEvents.instance().SIGNAL_MOUSE_RELEASED.connect(self.OnEvent_GlobalMouseRelease)
-        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.OnEvent_ConfigUpdated)
-        GlobalEvents.instance().SIGNAL_PIE_TRIGGER_SENT.connect(self.OnEvent_PieTrigger)
+        GlobalEvents().SIGNAL_MOUSE_RELEASED.connect(self.OnEvent_GlobalMouseRelease)
+        GlobalEvents().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.OnEvent_ConfigUpdated)
+        GlobalEvents().SIGNAL_PIE_TRIGGER_SENT.connect(self.OnEvent_PieTrigger)
 
     #endregion
 

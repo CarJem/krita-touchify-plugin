@@ -99,7 +99,7 @@ class ColorOptionsDocker(DockWidget):
         self.colorToggle = ColorSourceToggle(self, 25)
         self.setWidget(self.colorToggle)
         self.colorToggle.onCanvasChanged(self.canvas())
-        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.addonUpdateStyle)
+        GlobalEvents().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.addonUpdateStyle)
         self.addonUpdateStyle()
 
     def TOUCHIFY_ADDON_SETUP(self, instance: "TouchifyWindow"):

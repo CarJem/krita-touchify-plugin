@@ -1,6 +1,7 @@
 
-from krita import *
+from krita import DockWidget
 from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
 from typing import TYPE_CHECKING
 
@@ -47,8 +48,8 @@ class ShelfDockWidget(DockWidget):
             self.setWindowTitle(f"{ShelfDockWidget.CLONE_DOCKER_TITLE} (Ext. {index})")
 
         
-        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
-        GlobalEvents.instance().SIGNAL_TOOLSHELF_UPDATED.connect(self.onConfigUpdated)
+        GlobalEvents().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
+        GlobalEvents().SIGNAL_TOOLSHELF_UPDATED.connect(self.onConfigUpdated)
         self.startTimer(TIMER_INTERVAL)
 
 
@@ -118,7 +119,6 @@ class ShelfDockWidget(DockWidget):
         super().showEvent(event)
 
     def closeEvent(self, event):
-        GlobalEvents.instance().SIGNAL_TOUCHIFY_CONFIG_UPDATED.disconnect(self.onConfigUpdated)
         return super().closeEvent(event)
 
     # notifies when views are added or removed

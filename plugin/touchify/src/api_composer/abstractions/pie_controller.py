@@ -43,7 +43,7 @@ class PieActionController(Controller[PieAction]):
         """Activate the action."""
         try:
             triggerResult = JsonExtensions.loadClass(actual_value, Trigger)
-            GlobalEvents.EMIT_SIGNAL_PIE_TRIGGER_SENT(triggerResult)
+            GlobalEvents().SIGNAL_PIE_TRIGGER_SENT.emit(triggerResult)
         except AttributeError:
             print(actual_value)
 

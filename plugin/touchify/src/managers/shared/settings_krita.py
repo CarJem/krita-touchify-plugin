@@ -65,7 +65,7 @@ class KritaSettings:
 
     def writeSetting(group:str, name:str, value:str, notify: bool = True):
         result = KritaAPI.write_setting(group, name, value)
-        if notify: GlobalEvents.instance().EMIT_SIGNAL_KRITA_CONFIG_UPDATED()
+        if notify: GlobalEvents().SIGNAL_KRITA_CONFIG_UPDATED.emit()
         return result
 
     def showDockerTitlebars():

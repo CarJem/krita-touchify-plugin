@@ -42,7 +42,7 @@ class CanvasManager(QObject):
     def Window_Load(self, api_window: WindowAPI):
         self.api_window = api_window
         self.api_window.activeViewChanged.connect(self.OnEvent_ActiveViewChanged)
-        GlobalEvents.instance().SIGNAL_TIMER_TICKED.connect(self.onTick)
+        GlobalEvents().SIGNAL_TIMER_TICKED.connect(self.onTick)
         self.OnEvent_ActiveViewChanged()
 
     def Actions_Post(self):

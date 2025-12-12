@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import TYPE_CHECKING, TypeVar
 from touchify.src.alib_pyqtgraph.dockarea.Container import HContainer, TContainer, VContainer
 from touchify.src.alib_pyqtgraph.dockarea.DockArea import DockArea
 from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
@@ -6,6 +6,10 @@ from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions impor
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
+if TYPE_CHECKING:
+    from touchify.src.components.toolshelf.ShelfDock import ShelfDock, ShelfLabel
+
 
 class ShelfPanel(DockArea):
     def __init__(self, parent=None, temporary=False, home=None):
@@ -138,6 +142,16 @@ class ShelfTContainer(ShelfContainer, TContainer):
     def restoreState(self, state):
         TContainer.restoreState(self, state)
         ShelfContainer.restoreState(self, state)
+
+    #def _insertItem(self, item: "ShelfDock", index: int):
+    #    from touchify.src.components.toolshelf.ShelfDock import ShelfDock, ShelfLabel
+    #    if not isinstance(item, ShelfDock):
+    #        raise Exception("Tab containers may hold only shelf docks, not other containers.")
+    #    item.showTitleBar(False)
+    #    self.stack.insertWidget(index, item)
+    #    self.hTabLayout.insertWidget(index, item.label)
+    #    item.label.sigClicked.connect(self.tabClicked)
+    #    self.tabClicked(item.label)
 
         
 

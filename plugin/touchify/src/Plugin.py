@@ -23,17 +23,13 @@ class TouchifyPlugin(Extension):
 
     def __init__(self, parent):
         super().__init__(parent)
-        self.event_handler = GlobalEvents(self)
+        GlobalEvents(self)
         self.DEV_HOOK_FIND_PLUGIN = "TOUCHIFY"
 
     def setup(self):
         KritaAPI.notifier().add_window_created_callback(self.onWindowCreated)
         KritaAPI.notifier().add_configuration_changed_callback(self.onConfigurationChanged)
-
-
-        self.intervalTimer = QTimer(self)
-        self.intervalTimer.timeout.connect(GlobalEvents.EMIT_SIGNAL_TIMER_TICKED)
-        self.intervalTimer.start(250)
+        GlobalEvents().setup()
     
     def onWindowDestroyed(self, windowId: str):
         item: TouchifyWindow = self.instances[windowId]
@@ -62,7 +58,7 @@ class TouchifyPlugin(Extension):
         self.setup_instance = False
 
     def onConfigurationChanged(self):
-        GlobalEvents.EMIT_SIGNAL_KRITA_CONFIG_UPDATED()
+        GlobalEvents().SIGNAL_TOUCHIFY_CONFIG_UPDATED.emit()
 
     def createActions(self, window: Window):
         printDebug("create_actions")

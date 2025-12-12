@@ -5,7 +5,6 @@ from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.property_grid.PropertyGrid import PropertyGrid
 from touchify.src.managers.shared.events import GlobalEvents
 from touchify.src.managers.shared.settings import TouchifySettings
-import copy
 
 from krita import *
 
@@ -36,7 +35,7 @@ class PluginOptions(QDialog):
     def _saveFile(self):
         self.editableConfig.save()
         TouchifySettings.load()
-        GlobalEvents.EMIT_SIGNAL_TOUCHIFY_CONFIG_UPDATED()
+        GlobalEvents().SIGNAL_TOUCHIFY_CONFIG_UPDATED.emit()
 
     def onSave(self):
         self._saveFile()

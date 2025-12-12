@@ -11,6 +11,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
+from touchify.src.extensions import pyqt_extensions as PyQtExt
+
 
 class ShelfDock(Dock):
 
@@ -22,8 +24,11 @@ class ShelfDock(Dock):
 
     def __init__(self, _config: ToolshelfDock, uuid:str | None = None, area=None, size=(10, 10), widget=None, hideTitle=False, autoOrientation=True, label=None, **kargs):
         _uuid = str(uuid4()) if uuid == None else uuid
-        super().__init__(_uuid, area, size, widget, hideTitle, autoOrientation, ShelfLabel(_uuid, **kargs), **kargs)
-        self.label.hide()
+        super().__init__(_uuid, area, size, widget, hideTitle, autoOrientation, ShelfLabel(_uuid), **kargs)
+        self._titleText = _uuid
+        self.label: ShelfLabel
+        self.hideTitleBar(False)
+
 
         self._name = _uuid
         self.dock_settings = _config
@@ -85,20 +90,38 @@ class ShelfDock(Dock):
         except:
             return []
 
-    def hideTitleBar(self):
-        self.updateStyle()
+    def title(self):
+        return self._titleText
 
-    def showTitleBar(self):
-        self.updateStyle()
+    def setTitle(self, text):
+        self._titleText = text
+        if not PyQtExt.CommonHelpers.isDeleted(self.label):
+            self.label.setText(self._titleText)
 
+    def revalidateTitlebar(self):
+        if PyQtExt.CommonHelpers.isDeleted(self.label):
+            self.label = ShelfLabel(self._titleText)
+            self.label.dock = self
+
+    def hideTitleBar(self, updateStyle = True):
+        self.revalidateTitlebar()
+        self.label.hide()
+        self.labelHidden = True
+        if updateStyle: self.updateStyle()
+
+    def showTitleBar(self, updateStyle = True):
+        self.revalidateTitlebar()
+        self.label.show()
+        self.labelHidden = False
+        if updateStyle: self.updateStyle()
 
     def updateStyle(self):
         ## updates orientation and appearance of title bar
         if self.container() is None:
-            self.label.hide()
+            self.hideTitleBar(False)
             self.widgetArea.setStyleSheet(self.nStyle)
         elif self.container().type() == 'tab':
-            self.label.show()
+            self.showTitleBar(False)
             if self.orientation == 'vertical':
                 self.label.setOrientation('vertical')
                 if self.moveLabel:
@@ -110,7 +133,7 @@ class ShelfDock(Dock):
                     self.topLayout.addWidget(self.label, 0, 1)
                 self.widgetArea.setStyleSheet(self.hStyle)
         else:
-            self.label.hide()
+            self.hideTitleBar(False)
             self.widgetArea.setStyleSheet(self.nStyle)
 
     def setEditMode(self, enabled: bool):
@@ -147,8 +170,6 @@ class ShelfDock(Dock):
     def onContextMenu(self):
         self.context_menu.exec_(QCursor.pos())
 
-
-
     def startDrag(self):
         if self.editableDragArea.isEnabled():
             return super().startDrag()
@@ -161,6 +182,8 @@ class ShelfDock(Dock):
         pass
 
     def close(self) -> None:
+        self.revalidateTitlebar()
+        
         children = self.findChildren(DockerContainer)
         for child in children:
             child.shutdownWidget()
@@ -180,8 +203,6 @@ class ShelfDock(Dock):
         self._name = uuid
 
 class ShelfLabel(DockLabel):
-
-
     def __init__(self, text, closable=False, fontSize="12px"):
         super().__init__(text, closable, fontSize)
 
