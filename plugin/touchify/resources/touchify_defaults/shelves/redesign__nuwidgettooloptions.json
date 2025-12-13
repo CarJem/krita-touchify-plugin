@@ -32,6 +32,8 @@
                 "max_size_y": 0,
                 "ignore_scaling": false,
                 "section_type": "docker",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -45,6 +47,27 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
                 "json_version": 4
             }
         },

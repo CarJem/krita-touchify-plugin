@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.src.api_krita.wrappers.window import WindowAPI
-from touchify.src.components.toolshelf.ShelfDockWidgetPad import ShelfWidgetPad
+from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
 from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.normal.canvas import CanvasManager
 from touchify.src.managers.normal.developer import DeveloperManager
@@ -17,7 +17,7 @@ from touchify.src.managers.normal.shortcuts import ShortcutsManager
 from touchify.src.managers.normal.tweaks import TweakManager
 
 
-from touchify.src.components.toolshelf.ShelfDockWidget import ShelfDockWidget
+from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
 from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
 
 if TYPE_CHECKING:
@@ -69,10 +69,10 @@ class TouchifyManagers:
                 docker_action.setText(docker_text.removeprefix(touchify_title_prefix))
                 core_list.append(docker_action)
             elif docker_text.startswith(touchify_clone_prefix):
-                if docker_text.startswith(ShelfDockWidget.CLONE_DOCKER_TITLE):
+                if docker_text.startswith(ToolshelfDockerWidget.CLONE_DOCKER_TITLE):
                     docker_action.setText(docker_text.removeprefix(touchify_clone_prefix))
                     toolshelves_list.append(docker_action)
-                elif docker_text.startswith(ShelfWidgetPad.CLONE_DOCKER_TITLE):
+                elif docker_text.startswith(ToolshelfDockerWidgetPad.CLONE_DOCKER_TITLE):
                     docker_action.setText(docker_text.removeprefix(touchify_clone_prefix))
                     widgetpads_list.append(docker_action)
                 
@@ -103,10 +103,10 @@ class TouchifyManagers:
                 docker.setWindowTitle(window_title)
 
             if docker_id.startswith(Env.DockerID.TOOLSHELFDOCKER):
-                toolshelfDocker: ShelfDockWidget = docker
+                toolshelfDocker: ToolshelfDockerWidget = docker
                 toolshelfDocker.setup(window)
             elif docker_id.startswith(Env.DockerID.WIDGETPAD):
-                widgetPadDocker: ShelfWidgetPad = docker
+                widgetPadDocker: ToolshelfDockerWidgetPad = docker
                 widgetPadDocker.setup(window)
             elif docker_id == Env.DockerID.TOOLBOX:
                 toolboxDocker: ToolboxDocker = docker

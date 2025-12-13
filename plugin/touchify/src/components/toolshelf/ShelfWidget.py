@@ -1,4 +1,5 @@
 from copy import deepcopy
+from functools import partial
 from PyQt5.QtWidgets import QSizePolicy
 from krita import *
 from PyQt5.QtWidgets import *
@@ -9,9 +10,10 @@ from touchify.src.components.toolshelf.ShelfDock import ShelfDock
 from touchify.src.components.special.PropertyGridDialog import PropertyGridDialog
 from touchify.src.components.toolshelf.ShelfLoader import ShelfLoader
 
-from touchify.src.components.toolshelf.ShelfContainer import ShelfContainer, ShelfPanel
+from touchify.src.components.toolshelf.ShelfDockArea import ShelfDockArea
 from touchify.src.components.toolshelf.ShelfTabBar import ShelfTabBar
 from touchify.src.components.toolshelf.ShelfToolbar import ShelfToolbar
+from touchify.src.components.toolshelf.ShelfWidgetStack import ShelfWidgetStack
 from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
 from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
@@ -29,9 +31,10 @@ from typing import TYPE_CHECKING, Any
 
 from touchify.src.managers.shared.settings_krita import KritaSettings
 if TYPE_CHECKING:
-    from .ShelfDockWidget import ShelfDockWidget, ShelfDockWidgetAlt
+    from .ToolshelfDockerWidget import ToolshelfDockerWidget
     from ..popup.PopupWidget import PopupWidget
     from touchify.src.PluginManagers import TouchifyManagers
+    from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
 
 class ShelfWidget(QWidget):
 
@@ -58,6 +61,13 @@ class ShelfWidget(QWidget):
             else: 
                 return Toolshelf()
             
+        def getShelf(self, registry_selection: str) -> Toolshelf:
+            registry = TouchifySettings.registry(Toolshelf)
+            if registry_selection in registry:
+                return registry[registry_selection]    
+            else: 
+                return Toolshelf()
+            
         def setCurrentShelf(self, registry_index: int, id: str) -> str:
             if registry_index >= 0:
                 KritaSettings.writeSetting(Env.SettingsPath.TOOLSHELF, "SelectedPreset_" + str(registry_index), id, False)
@@ -72,34 +82,86 @@ class ShelfWidget(QWidget):
             else: 
                 return "none"
 
-        def sync(self, noReload: bool = False):
+        def sync(self, registry_index: int, noReload: bool = False):
             TouchifySettings.save()
 
             if noReload: return
             TouchifySettings.load()
-            GlobalEvents().SIGNAL_TOOLSHELF_UPDATED.emit(self._shelf.registry_index)
+            GlobalEvents().SIGNAL_TOOLSHELF_UPDATED.emit(registry_index)
+
+        def loadLayout(self, registry_index: int):
+            if self.getCurrentShelfId(registry_index).lower() != "none":
+                return self.getCurrentShelf(registry_index).preset_data
+            else:
+                jsonStr = KritaSettings.readSetting(Env.SettingsPath.TOOLSHELF_NOPRESETDATA, str(registry_index), "")
+                return JsonExtensions.loadClass(jsonStr, ToolshelfContainer)
+            
+        def saveLayout(self, state: ToolshelfContainer, registry_index: int):
+            if self.getCurrentShelfId(registry_index).lower() != "none":
+                self.savePreset(state, registry_index, True)
+            else:
+                jsonStr = JsonExtensions.saveClass(state)
+                KritaSettings.writeSetting(Env.SettingsPath.TOOLSHELF_NOPRESETDATA, str(registry_index), jsonStr, False)
+            
+        def savePreset(self, state: ToolshelfContainer, registry_index: int, no_reload: bool = False):
+            cached_state = self.getCurrentShelf(registry_index)
+            cached_state.preset_data = state
+            self.sync(registry_index, no_reload)
+        
+        def savePresetAs(self, editorResults: ShelfClasses.PresetSaveAs, state: ToolshelfContainer, registry_index: int):
+            selectedResourcePackIndex: int = int(editorResults.resource_pack) - 1
+            if selectedResourcePackIndex <= -1: return
+
+            selectedResourcePack = TouchifySettings.resourcePacks()[selectedResourcePackIndex]
+        
+            result: Toolshelf = Toolshelf()
+            result.preset_data = state
+            result.preset_name = editorResults.display_name
+            selectedResourcePack.shelves.append(result)
+            self.sync(registry_index)
+
+        def deletePreset(self, registry_index: int):
+            shelfToDelete = self.getCurrentShelf(registry_index)
+            shelfRegistryKey = self.getCurrentRegistryKey(registry_index)
+
+            if shelfToDelete == None or shelfToDelete == "none":
+                return
+            
+            shelfParentResourcePack = shelfRegistryKey.getResourcePack()
+            if shelfParentResourcePack == None:
+                return
+            
+            shelfParentResourcePack.shelves.remove(shelfToDelete)
+
+            self.setCurrentShelf(registry_index, "none")
+            self.sync(registry_index)
 
     sigShelfIndexChanged = QtCore.pyqtSignal()
+    sigEditModeChanged = QtCore.pyqtSignal(bool)
 
-    def __init__(self, parent, managers: "TouchifyManagers", registry_index: int = 0, enforced_data: ToolshelfContainer = None):
+    def __init__(self, parent, managers: "TouchifyManagers", registry_index: int = 0, fixed_state: ToolshelfContainer = None, parent_dock_widget: "ToolshelfNestedDock" = None):
         super(ShelfWidget, self).__init__(parent)
-        self.display: "ShelfDockWidget" | "PopupWidget" = parent
+        self.display: "ToolshelfDockerWidget" | "PopupWidget" | "ToolshelfNestedDock" = parent
         self.managers = managers
         self.registry_index = registry_index
         self.settingsLoader = self.SettingsLoader(self)
 
 
-        if enforced_data != None:
-            self.constant_data = enforced_data
+        if parent_dock_widget != None:
+            self.nestedDock = parent_dock_widget
+            self.is_nested = True
+        else:
+            self.nestedDock = None
+            self.is_nested = False
+
+        if fixed_state != None:
+            self.constant_data = fixed_state
             self.is_restricted = True
         else:
             self.constant_data = None
             self.is_restricted = False
 
         self.hasPreloaded = False
-
-
-        self._allowAutoSave = True
         self._hideTitlebar = False
         
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
@@ -124,14 +186,14 @@ class ShelfWidget(QWidget):
         self.tabBar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self.mainLayout.addWidget(self.tabBar, 1, 0)
 
-        self.dockPages: list[ShelfPanel] = []
+        self.dockPages: list[ShelfDockArea] = []
         self.dockPageOptions: list[ToolshelfPageSettings] = []
 
         self.dockLoader = ShelfLoader(self)
         self.dockStack = ShelfWidgetStack(self)
         self.mainLayout.addWidget(self.dockStack, 2, 0)
 
-        self.dockArea = ShelfPanel(self)
+        self.dockArea = ShelfDockArea(self)
         self.dockStack.addWidget(self.dockArea)
 
         self.updateStyle()
@@ -142,7 +204,8 @@ class ShelfWidget(QWidget):
     def __setupDialog(self, options: Any):
         if self.dlgConfigEditor != None:
             if PyQtExtensions.CommonHelpers.isDeleted(self.dlgConfigEditor) == False:
-                return None
+                self.dlgConfigEditor.close()
+                self.dlgConfigEditor = None
         
         self.dlgConfigEditor = PropertyGridDialog(self.api_window, options)
         return self.dlgConfigEditor
@@ -177,17 +240,23 @@ class ShelfWidget(QWidget):
         self._hideTitlebar = state
         self.header.setVisible(state)
 
+    def setEditMode(self, state: bool) -> bool:
+        self.header.optionsMenu.editModeAction.setChecked(state)
+
     def isEditMode(self) -> bool:
         return self.header.optionsMenu.editModeAction.isChecked()
-    
-    def isAutoSaveEnabled(self) -> bool:
-        return self._allowAutoSave
+
+    def getDockAreaId(self, dock_index: int):
+        if self.is_nested:
+            return f"{str(self.nestedDock._parentAreaId)}/{str(dock_index)}/{str(self.nestedDock._name)}"
+        else:
+            return f"{Env.SettingsPath.TOOLSHELF}/{str(self.registry_index)}/{str(dock_index)}"
 
     def currentPresetId(self) -> str:
         return self.settingsLoader.getCurrentShelfId(self.registry_index)
 
     def currentState(self) -> ToolshelfContainer:
-        def getState(dock_area: ShelfPanel):
+        def getState(dock_area: ShelfDockArea):
             subState = ToolshelfPage()
             subState.layout = dock_area.saveState()
         
@@ -195,7 +264,7 @@ class ShelfWidget(QWidget):
                 dock = dock_area.docks[uuid]
                 if isinstance(dock, ShelfDock):
                     dock: ShelfDock
-                    subState.items[uuid] = dock.dock_settings
+                    subState.items[uuid] = dock._dockSettings
             return subState
 
         result = ToolshelfContainer()
@@ -219,20 +288,15 @@ class ShelfWidget(QWidget):
     #region Shelf Mgmt
 
     def __shelfDispose(self, dock_item: ShelfDock):
-        dock_item.sigEditRequested.disconnect()
-        dock_item.sigDeleteRequested.disconnect()
-        dock_item.sigEditContainerRequested.disconnect()
-        dock_item.sigDuplicateRequested.disconnect()
+        dock_item.sigContextMenuRequested.disconnect()
         dock_item.sigContainerHoverUpdated.disconnect()
 
-    def __shelfSetup(self, dock_item: ShelfDock, uuid: str = None):
+    def __shelfSetup(self, dock_item: ShelfDock, uuid: str = None, index: int = 0):
         if uuid != None: dock_item.setUUID(uuid)
         dock_item.setEditMode(self.isEditMode())
-        dock_item.sigDuplicateRequested.connect(self.cloneShelfItem)
-        dock_item.sigEditRequested.connect(self.editShelfItem)
-        dock_item.sigDeleteRequested.connect(self.deleteShelfItem)
-        dock_item.sigEditContainerRequested.connect(self.editShelfItemContainer)
-        dock_item.sigContainerHoverUpdated.connect(self.highlightShelfItemContainer)
+        dock_item.setParentAreaId(self.getDockAreaId(index))
+        dock_item.sigContextMenuRequested.connect(self.onContextMenu)
+        dock_item.sigContainerHoverUpdated.connect(self.onMouseHover)
 
     #endregion
 
@@ -269,37 +333,36 @@ class ShelfWidget(QWidget):
     def saveLayout(self):
         if self.is_restricted: 
             return
-
-        state = JsonExtensions.saveClass(self.currentState())
-        if self.currentPresetId().lower() != "none":
-            if self.isAutoSaveEnabled(): self.savePreset(True)
+        elif self.is_nested:
+            self.nestedDock.setMetadata(self.currentState())
         else:
-            KritaSettings.writeSetting(Env.SettingsPath.TOOLSHELF_NOPRESETDATA, str(self.registry_index), state, False)
+            self.settingsLoader.saveLayout(self.currentState(), self.registry_index)
 
     def loadLayout(self):
-        def loadShelf(sub_state: ToolshelfPage | ToolshelfContainer, dock_area: ShelfPanel):
+        def loadShelf(sub_state: ToolshelfPage | ToolshelfContainer, dock_area: ShelfDockArea, dock_index: int):
+            dock_area.setAreaId(self.getDockAreaId(dock_index))
             for uuid in sub_state.items:
                 item = sub_state.items[uuid]
                 dock_item = self.dockLoader.Init_Section(item)
-                self.__shelfSetup(dock_item, uuid)
+                self.__shelfSetup(dock_item, uuid, dock_area._parentAreaId)
                 dock_area.addDock(dock_item)
             
             if "main" in sub_state.layout:
-                dock_area.restoreState(sub_state.layout)
+                try:
+                    dock_area.restoreState(sub_state.layout)
+                except Exception as ex:
+                    print(str(ex))
 
 
         self.resetLayout()
         state: ToolshelfContainer
 
-
-
         if self.is_restricted:
             state: ToolshelfContainer = deepcopy(self.constant_data)
-        elif self.currentPresetId().lower() != "none":
-            state: ToolshelfContainer = self.settingsLoader.getCurrentShelf(self.registry_index).preset_data
+        elif self.is_nested:
+            state: ToolshelfContainer = self.nestedDock.getMetadata()
         else:
-            jsonStr = KritaSettings.readSetting(Env.SettingsPath.TOOLSHELF_NOPRESETDATA, str(self.registry_index), "")
-            state: ToolshelfContainer = JsonExtensions.loadClass(jsonStr, ToolshelfContainer)
+            state: ToolshelfContainer = self.settingsLoader.loadLayout(self.registry_index)
 
         if state == None:
             return
@@ -325,15 +388,17 @@ class ShelfWidget(QWidget):
                 self.mainLayout.addWidget(self.tabBar, 1, 0)
                 self.mainLayout.addWidget(self.header, 2, 0)
 
-        loadShelf(state, self.dockArea)
+        loadShelf(state, self.dockArea, 0)
+        
 
-        for subpage_state in state.pages:
+        for idx, subpage_state in enumerate(state.pages):
             subpage_state: ToolshelfPage
-            sub_dock_area = ShelfPanel(self)
+            sub_dock_area = ShelfDockArea(self)
             self.dockStack.addWidget(sub_dock_area)
             self.dockPages.append(sub_dock_area)
             self.dockPageOptions.append(subpage_state.options)
-            loadShelf(subpage_state, sub_dock_area)
+            loadShelf(subpage_state, sub_dock_area, idx+1)
+            
 
         self.tabBar.reload(state)
         self.header.reload(state, self.currentPresetId())
@@ -354,7 +419,7 @@ class ShelfWidget(QWidget):
     #region Actions (ShelfPages)
 
     def insertPage(self):
-        new_dock_area = ShelfPanel(self)
+        new_dock_area = ShelfDockArea(self)
         self.dockPages.append(new_dock_area)
         self.dockStack.addWidget(new_dock_area)
         
@@ -396,37 +461,37 @@ class ShelfWidget(QWidget):
 
     #region Actions (ShelfItems)
 
-    def insertShelfItem(self):
-        current_area: ShelfPanel | None = self.dockStack.currentWidget()
-        if current_area == None or not isinstance(current_area, ShelfPanel):
+    def addShelfItem(self):
+        current_area: ShelfDockArea | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfDockArea):
             return
 
         dlg = self.__setupDialog(ToolshelfDock())
         if dlg.exec_():
             dock_item = self.dockLoader.Init_Section(dlg.editableConfig)
-            self.__shelfSetup(dock_item)
+            self.__shelfSetup(dock_item, None, current_area._parentAreaId)
             current_area.addDock(dock_item)
             self.saveLayout()
 
     def cloneShelfItem(self, uuid: str):
-        current_area: ShelfPanel | None = self.dockStack.currentWidget()
-        if current_area == None or not isinstance(current_area, ShelfPanel):
+        current_area: ShelfDockArea | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfDockArea):
             return
 
         if uuid not in current_area.docks:
             return
 
         dock_item: ShelfDock = current_area.docks[uuid]   
-        dock_settings = deepcopy(dock_item.dock_settings)
+        dock_settings = deepcopy(dock_item._dockSettings)
 
         dock_item = self.dockLoader.Init_Section(dock_settings)
-        self.__shelfSetup(dock_item)
+        self.__shelfSetup(dock_item, None, current_area._parentAreaId)
         current_area.addDock(dock_item)
         self.saveLayout()
 
     def editShelfItem(self, uuid: str):
-        current_area: ShelfPanel | None = self.dockStack.currentWidget()
-        if current_area == None or not isinstance(current_area, ShelfPanel):
+        current_area: ShelfDockArea | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfDockArea):
             return
 
         if uuid not in current_area.docks:
@@ -434,21 +499,21 @@ class ShelfWidget(QWidget):
         
         dock_item: ShelfDock = current_area.docks[uuid]   
         
-        dlg = self.__setupDialog(dock_item.dock_settings)
+        dlg = self.__setupDialog(dock_item._dockSettings)
         if dlg.exec_():
             lastState = current_area.saveState()
             self.__shelfDispose(dock_item)
             dock_item.close()
 
             dock_item = self.dockLoader.Init_Section(dlg.editableConfig)
-            self.__shelfSetup(dock_item, uuid)
+            self.__shelfSetup(dock_item, uuid, current_area._parentAreaId)
             current_area.addDock(dock_item)
             current_area.restoreState(lastState)
             self.saveLayout()
 
     def deleteShelfItem(self, uuid: str):
-        current_area: ShelfPanel | None = self.dockStack.currentWidget()
-        if current_area == None or not isinstance(current_area, ShelfPanel):
+        current_area: ShelfDockArea | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfDockArea):
             return
 
         if uuid not in current_area.docks:
@@ -465,92 +530,52 @@ class ShelfWidget(QWidget):
             del current_area.docks[uuid]
             self.saveLayout()
 
-    def highlightShelfItemContainer(self, state: bool, item_uuid: str):
-        current_area: ShelfPanel | None = self.dockStack.currentWidget()
-        if current_area == None or not isinstance(current_area, ShelfPanel):
+    #endregion
+
+    #region Actions (Containers)
+
+    def editNestedContainer(self, item_uuid: str):
+        current_area: ShelfDockArea | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfDockArea):
             return
 
         if item_uuid not in current_area.docks:
             return
         
-        dock_item: ShelfDock = current_area.docks[item_uuid]   
-
-        if not isinstance(dock_item.container(), ShelfContainer):
+        from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
+        if not isinstance(current_area.docks[item_uuid], ToolshelfNestedDock):
             return
         
-        dock_container: ShelfContainer = dock_item.container()
-        dock_container.highlight(state)
-
-    def editShelfItemContainer(self, item_uuid: str):
-        current_area: ShelfPanel | None = self.dockStack.currentWidget()
-        if current_area == None or not isinstance(current_area, ShelfPanel):
-            return
-
-        if item_uuid not in current_area.docks:
-            return
-        
-        dock_item: ShelfDock = current_area.docks[item_uuid]   
-
-        if not isinstance(dock_item.container(), ShelfContainer):
-            return
-        
-        dock_container: ShelfContainer = dock_item.container()
-        
-        dlg = self.__setupDialog(dock_container.getOptions())
-        if dlg.exec_():
-            dock_container.setOptions(dlg.editableConfig)
-            self.saveLayout()
-
+        dock_item: ToolshelfNestedDock = current_area.docks[item_uuid]   
+        dock_item.setContainerEditMode(True)
 
     #endregion
 
     #region Actions (Presets)
 
     def changePreset(self, id: str):
-        self.settingsLoader.setCurrentShelf(self.registry_index, id)
-        self.loadLayout()
+        if self.is_nested:
+            shlf = self.settingsLoader.getShelf(id)
+            self.nestedDock.setMetadata(shlf.preset_data)
+            self.loadLayout()
+        else:
+            self.settingsLoader.setCurrentShelf(self.registry_index, id)
+            self.loadLayout()
 
     def editPreset(self):
         pass
 
-    def savePreset(self, noReload: bool = False):
-        state = self.currentState()
-        if self.currentPresetId().lower() == "none": return
-
-        cached_state = self.settingsLoader.getCurrentShelf(self.registry_index)
-        cached_state.preset_data = state
-        self.settingsLoader.sync(noReload)
+    def savePreset(self):
+        self.SettingsLoader.savePreset(self.currentState(), self.registry_index)
 
     def savePresetAs(self):
         dlg = self.__setupDialog(ShelfClasses.PresetSaveAs())
         if dlg.exec_():
-            result: Toolshelf = Toolshelf()
-            editorResults: PropertyGridDialog.PresetSaveAs = dlg.editableConfig
-            selectedResourcePackIndex: int = int(editorResults.resource_pack) - 1
-
-            if selectedResourcePackIndex <= -1: return
-
-            selectedResourcePack = TouchifySettings.resourcePacks()[selectedResourcePackIndex]
-            result.preset_data = self.currentState()
-            result.preset_name = editorResults.display_name
-            selectedResourcePack.shelves.append(result)
-            self.settingsLoader.sync()
+            editorResults: ShelfClasses.PresetSaveAs = dlg.editableConfig
+            self.SettingsLoader.savePresetAs(editorResults, self.currentState(), self.registry_index)
 
     def deletePreset(self):
-        shelfToDelete = self.settingsLoader.getCurrentShelf(self.registry_index)
-        shelfRegistryKey = self.settingsLoader.getCurrentRegistryKey(self.registry_index)
-
-        if shelfToDelete == None or shelfToDelete == "none":
-            return
-        
-        shelfParentResourcePack = shelfRegistryKey.getResourcePack()
-        if shelfParentResourcePack == None:
-            return
-        
-        shelfParentResourcePack.shelves.remove(shelfToDelete)
-
-        self.settingsLoader.setCurrentShelf(self.registry_index, "none")
-        self.settingsLoader.sync()
+        self.SettingsLoader.deletePreset(self.registry_index)
 
     #endregion
 
@@ -573,13 +598,42 @@ class ShelfWidget(QWidget):
 
     #region Signals
 
+    def onMouseHover(self, state: bool, item_uuid: str):
+        pass
+
+    def onContextMenu(self, pos: QPoint, item_id: str):
+        current_area: ShelfDockArea | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfDockArea):
+            return
+
+        if item_id not in current_area.docks:
+            return
+
+        context_menu = QtWidgets.QMenu(self)
+
+        dock_item: ShelfDock = current_area.docks[item_id]
+
+        from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
+        if isinstance(dock_item, ToolshelfNestedDock):
+            context_menu.addAction("Edit Dock...", partial(self.editShelfItem, item_id))
+            context_menu.addAction("Edit Container...", partial(self.editNestedContainer, item_id))
+        else:
+            context_menu.addAction("Edit Dock...", partial(self.editShelfItem, item_id))
+
+        context_menu.addAction("Clone Dock", partial(self.cloneShelfItem, item_id))
+        context_menu.addSeparator()
+        context_menu.addAction("Delete Dock", partial(self.deleteShelfItem, item_id))
+
+
+        context_menu.exec_(pos)
+
     def onCanvasFocusGained(self):
         if self.containerOptions.enable_pinning:
             if self.dockStack.currentIndex() != 1 and not self.header.pinButton.isChecked():
                 self.goToHomePage()
 
     def onToolChanged(self, current_tool: str):
-        def _recursive(da: ShelfPanel):
+        def _recursive(da: ShelfDockArea):
             for uuid in da.docks:
                 dock = da.docks[uuid]
                 if isinstance(dock, ShelfDock):
@@ -590,49 +644,17 @@ class ShelfWidget(QWidget):
         for dockArea in self.dockPages:
             _recursive(dockArea)
             
-
     def onConfigUpdated(self):
         self.loadLayout()
 
     def onShelfIndexChanged(self):
         self.sigShelfIndexChanged.emit()
 
-    def onEditModeChanged(self, enabled: bool):
-        def _recursive(da: ShelfPanel):
-            for uuid in da.docks:
-                dock = da.docks[uuid]
-                if isinstance(dock, ShelfDock):
-                    dock: ShelfDock
-                    dock.setEditMode(enabled)
-        
-        _recursive(self.dockArea)
+    def onEditModeChanged(self, enabled: bool):        
+        self.dockArea.setEditMode(enabled)
         for dockArea in self.dockPages:
-            _recursive(dockArea)
-        
-        
+            dockArea.setEditMode(enabled)
         self.saveLayout()
+        self.sigEditModeChanged.emit(enabled)
 
     #endregion
-
-class ShelfWidgetStack(QStackedWidget):
-    def __init__(self, parent: ShelfWidget = None):
-        super().__init__(parent)
-        self.shelf = parent
-
-    def setCurrentIndex(self, index):
-        super().setCurrentIndex(index)
-        self.shelf.onShelfIndexChanged()
-
-    def sizeHint(self):
-        widget = self.currentWidget()
-        if widget:
-            return self.currentWidget().sizeHint()
-        else:
-            return super().sizeHint()
-    
-    def minimumSizeHint(self):
-        widget = self.currentWidget()
-        if widget:
-            return self.currentWidget().minimumSizeHint()
-        else:
-            return super().minimumSizeHint()

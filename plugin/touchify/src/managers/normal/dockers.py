@@ -98,6 +98,11 @@ class DockerManager(QObject):
         self.api_window = self.app_window.api_window
         self.qWin = self.api_window.qwindow
 
+    def isNotForbidden(self, obj):
+        from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
+        from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
+        return not isinstance(obj, ToolshelfDockerWidget) and not isinstance(obj, ToolshelfDockerWidgetPad)
+
     def registerListener(self, type: SignalType, source: Callable):
         if type not in self._listeners:
             self._listeners[type] = list()
@@ -137,7 +142,7 @@ class DockerManager(QObject):
 
         docker = self.findDocker(docker_id)
         # Does requested widget exist?
-        if isinstance(docker, QDockWidget) and QDockWidget.widget(docker):
+        if isinstance(docker, QDockWidget) and QDockWidget.widget(docker) and self.isNotForbidden(docker):
             self._shareData[docker_id] = DockerManager.BorrowData(args.dockMode, docker.isVisible(), self.qWin, self.qWin.dockWidgetArea(docker))
             self._shareData[docker_id].setWidgetData(docker)
             self.invokeListeners(docker_id, DockerManager.SignalType.OnLoadDocker)

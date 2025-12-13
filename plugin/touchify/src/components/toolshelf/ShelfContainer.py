@@ -1,111 +1,53 @@
-from typing import TYPE_CHECKING, TypeVar
-from touchify.src.alib_pyqtgraph.dockarea.Container import HContainer, TContainer, VContainer
-from touchify.src.alib_pyqtgraph.dockarea.DockArea import DockArea
-from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from re import L
+from typing import TYPE_CHECKING, Any
+
+from touchify.src.alib_pyqtgraph.dockarea.Container import Container, HContainer, TContainer, VContainer
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+
+from touchify.src.components.toolshelf.ShelfDockArea import ShelfDockArea
+
 if TYPE_CHECKING:
-    from touchify.src.components.toolshelf.ShelfDock import ShelfDock, ShelfLabel
+    from touchify.src.components.toolshelf.ShelfDock import ShelfDockLabel, ShelfDock
 
 
-class ShelfPanel(DockArea):
-    def __init__(self, parent=None, temporary=False, home=None):
-        super().__init__(parent, temporary, home)
-
-    def makeContainer(self, typ):
-        if typ == 'vertical':
-            new = ShelfVContainer(self)
-        elif typ == 'horizontal':
-            new = ShelfHContainer(self)
-        elif typ == 'tab':
-            new = ShelfTContainer(self)
-        else:
-            raise ValueError("typ must be one of 'vertical', 'horizontal', or 'tab'")
-        return new
-
-T = TypeVar('T', VContainer, HContainer, TContainer)    
-
-
-class ShelfContainer:
+class ShelfContainer(object):
     def __init__(self):
-        sup: VContainer | HContainer | TContainer = self
-        self.currentTool: str = ""
         self.isEditMode: bool = False
-        self.requiredTools: list[str] = []
-        self.selected = False
-
-    def getOptions(self):
-        result = ShelfContainerOptions()
-        result.requires_specific_tool = ",".join(self.requiredTools)
-        return result
-    
-    def setOptions(self, cfg: "ShelfContainerOptions"):
-        self.requiredTools = cfg.requires_specific_tool.split(",")
-        if "" in self.requiredTools: self.requiredTools.remove("")
+        self.parentAreaId: str = ""
 
     def saveState(self):
-        return {"requires_tools": ",".join(self.requiredTools)}
+        return {}
         
     def restoreState(self, state):
-        try:
-            input: str = state['requires_tools']
-            self.requiredTools = input.split(",")
-            if "" in self.requiredTools: self.requiredTools.remove("")
-        except:
-            pass
+        pass
 
-    def matchesCurrentTool(self):
-        return self.currentTool in self.requiredTools or self.currentTool == "" or len(self.requiredTools) == 0
+    def setParentAreaId(self, val: str):
+        self.parentAreaId = val
 
     def setEditMode(self, state: bool):
         self.isEditMode = state
-        self.selected = False
-        self.sync()
-
-    def onToolChanged(self, current_tool: str):
-        self.currentTool = current_tool
-        self.sync()
-        
-    def sync(self):
-        sup: VContainer | HContainer | TContainer = self
-        if self.matchesCurrentTool() or self.isEditMode: sup.setVisible(True)
-        else: sup.setVisible(False)
-
-    def highlight(self, state: bool):
-        sup: VContainer | HContainer | TContainer = self
-        if state != self.selected:
-            self.selected = state
-            if self.selected:
-                sup.setStyleSheet(f"""
-                    VContainer, HContainer, TContainer {{
-                        background-color: rgba(255,255,255,0.2);
-                    }}
-                """)
-            else:
-                sup.setStyleSheet("")
     
-class ShelfContainerOptions:
-    def __init__(self) -> None:
-        self.requires_specific_tool: str = ""
-
-    def propertygrid_hidden(self):
-        return []
-
-    def forceLoad(self):
+    def enterEvent(self, a0: QEvent):
         pass
 
-    def propertygrid_labels(self):
-        labels = {}
-        labels["requires_specific_tool"] = "Requires Specific Tool"
-        return labels
+    def leaveEvent(self, a0: QEvent):
+        pass
 
-    def propertygrid_restrictions(self):
-        restrictions = {}
-        restrictions["requires_specific_tool"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.MultiToolSelection)
-        return restrictions    
+    def setItemFold(self, item: "ShelfDock", state: bool):
+        pass
+
+    @staticmethod
+    def isContainer(obj: object):
+        return isinstance(obj, ShelfVContainer) or isinstance(obj, ShelfHContainer) or isinstance(obj, ShelfTContainer)
+
+    @staticmethod
+    def asContainer(obj: object):
+        res: ShelfHContainer | ShelfVContainer | ShelfTContainer = obj
+        return res
 
 class ShelfVContainer(ShelfContainer, VContainer):
     def __init__(self, area):
@@ -119,6 +61,14 @@ class ShelfVContainer(ShelfContainer, VContainer):
         VContainer.restoreState(self, state)
         ShelfContainer.restoreState(self, state)
 
+    def setItemFold(self, item: "ShelfDock", state: bool):
+        ShelfContainer.setItemFold(self, item, state)
+        if state: item.show()
+        else: item.hide()
+
+        if all(self.widget(x).isHidden() for x in range(self.count())) == True: self.hide()
+        else: self.show()
+
 class ShelfHContainer(ShelfContainer, HContainer):
     def __init__(self, area):
         HContainer.__init__(self, area)
@@ -131,6 +81,14 @@ class ShelfHContainer(ShelfContainer, HContainer):
         HContainer.restoreState(self, state)
         ShelfContainer.restoreState(self, state)
 
+    def setItemFold(self, item: "ShelfDock", state: bool):
+        ShelfContainer.setItemFold(self, item, state)
+        if state: item.show()
+        else: item.hide()
+
+        if all(self.widget(x).isHidden() for x in range(self.count())) == True: self.hide()
+        else: self.show()
+
 class ShelfTContainer(ShelfContainer, TContainer):
     def __init__(self, area):
         TContainer.__init__(self, area)
@@ -138,20 +96,16 @@ class ShelfTContainer(ShelfContainer, TContainer):
 
     def saveState(self):
         return TContainer.saveState(self) | ShelfContainer.saveState(self)
-
+    
     def restoreState(self, state):
         TContainer.restoreState(self, state)
         ShelfContainer.restoreState(self, state)
 
-    #def _insertItem(self, item: "ShelfDock", index: int):
-    #    from touchify.src.components.toolshelf.ShelfDock import ShelfDock, ShelfLabel
-    #    if not isinstance(item, ShelfDock):
-    #        raise Exception("Tab containers may hold only shelf docks, not other containers.")
-    #    item.showTitleBar(False)
-    #    self.stack.insertWidget(index, item)
-    #    self.hTabLayout.insertWidget(index, item.label)
-    #    item.label.sigClicked.connect(self.tabClicked)
-    #    self.tabClicked(item.label)
+    def setItemFold(self, item: "ShelfDock", state: bool):
+        ShelfContainer.setItemFold(self, item, state)
+        if state: item.show()
+        else: item.hide()
 
-        
+        if all(self.widget(x).isHidden() for x in range(self.count())) == True: self.hide()
+        else: self.show()
 

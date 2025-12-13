@@ -15,9 +15,12 @@
         "plugin/touchify/src/alib_pyqtgraph/Qt/**"
     ],
     "python.analysis.fixAll": [
-        "source.unusedImports",
-        "source.convertImportFormat"
+        "source.convertImportFormat",
+        /*"source.unusedImports"*/
     ],
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportImportCycles": "none"
+    },
     "python.envFile": "${workspaceFolder}/.env",
     "python.REPL.enableREPLSmartSend": false,
     "python.analysis.importFormat": "absolute",
@@ -34,12 +37,11 @@
     "python.analysis.indexing": true,
     "python.analysis.inlayHints.functionReturnTypes": false,
     "editor.codeActionsOnSave": {
-        "source.unusedImports": "explicit",
+        "source.unusedImports": "never",
         "source.organizeImports": "explicit",
         "source.convertImportFormat": "explicit",
     },
     "python.analysis.inlayHints.variableTypes": false,
     "python.analysis.autoImportCompletions": true,
-    "python.analysis.diagnosticSeverityOverrides": {},
 
 }

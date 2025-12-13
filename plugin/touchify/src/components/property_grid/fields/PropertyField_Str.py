@@ -148,7 +148,7 @@ class PropertyField_Str(PropertyField):
         self.dlg.header_buttons.accepted.connect(lambda: self.dlg_accept())
         self.dlg.header_buttons.rejected.connect(lambda: self.dlg_reject())
 
-        self.dlg.load_list(mode)
+        self.dlg.load_list(mode, self.variable_data)
         self.stack_host.setCurrentIndex(self.stack_host.addWidget(self.dlg))
         if self.dlg.exec_():
             result = self.dlg.selectedResult()

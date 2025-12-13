@@ -21,7 +21,7 @@ from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
 
 TIMER_INTERVAL = 10
 
-class ShelfDockWidget(DockWidget):
+class ToolshelfDockerWidget(DockWidget):
 
     DOCKER_TITLE=f"{Env.Title.CORE_DOCKERS_PREFIX} Toolshelf"
     CLONE_DOCKER_TITLE=f"{Env.Title.CLONE_DOCKERS_PREFIX}  Toolshelf"
@@ -35,17 +35,16 @@ class ShelfDockWidget(DockWidget):
         self.mainWidget: ShelfWidget = None
         
         self._originalSizePolicy = self.sizePolicy()
-        self.isSizeManaged = False
         self.sizeManagementType = ToolshelfSettings.ResizeStyle.Default
 
 
         
         if index == 0:
-            self.setWindowTitle(ShelfDockWidget.DOCKER_TITLE)
+            self.setWindowTitle(ToolshelfDockerWidget.DOCKER_TITLE)
             self.PanelIndex = 0
         elif index != -1:
             self.PanelIndex = index
-            self.setWindowTitle(f"{ShelfDockWidget.CLONE_DOCKER_TITLE} (Ext. {index})")
+            self.setWindowTitle(f"{ToolshelfDockerWidget.CLONE_DOCKER_TITLE} (Ext. {index})")
 
         
         GlobalEvents().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
@@ -54,7 +53,7 @@ class ShelfDockWidget(DockWidget):
 
 
     def timerEvent(self, a0: QTimerEvent):
-        if self.shrinkToFit and self.isVisible():
+        if self.isVisible():
             self.shrinkToFit()
         return super().timerEvent(a0)
 
@@ -81,6 +80,9 @@ class ShelfDockWidget(DockWidget):
                 self.resize(self.mainWidget.sizeHint().grownBy(margins))
             elif self.sizeManagementType == ToolshelfSettings.ResizeStyle.SizeHintMinimum:
                 self.resize(self.mainWidget.minimumSizeHint().grownBy(margins))
+        else:
+            pass
+
 
     def onShelfIndexChanged(self):
         pass
@@ -89,23 +91,18 @@ class ShelfDockWidget(DockWidget):
         if state.options.resize_style == ToolshelfSettings.ResizeStyle.Minimum:
             self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
             self.sizeManagementType = ToolshelfSettings.ResizeStyle.Minimum
-            self.isSizeManaged = True
         elif state.options.resize_style == ToolshelfSettings.ResizeStyle.AdjustSize:
             self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
             self.sizeManagementType = ToolshelfSettings.ResizeStyle.AdjustSize
-            self.isSizeManaged = True
         elif state.options.resize_style == ToolshelfSettings.ResizeStyle.SizeHintMinimum:
             self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
             self.sizeManagementType = ToolshelfSettings.ResizeStyle.SizeHintMinimum
-            self.isSizeManaged = True
         elif state.options.resize_style == ToolshelfSettings.ResizeStyle.SizeHint:
             self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
             self.sizeManagementType = ToolshelfSettings.ResizeStyle.SizeHint
-            self.isSizeManaged = True
         else:
             self.setSizePolicy(self._originalSizePolicy)
             self.sizeManagementType = ToolshelfSettings.ResizeStyle.Default
-            self.isSizeManaged = False
 
     def onConfigUpdated(self, registry_index: int = -1):
         if registry_index == -1 or registry_index == self.PanelIndex:
@@ -125,4 +122,11 @@ class ShelfDockWidget(DockWidget):
     # 'pass' means do not do anything
     def canvasChanged(self, canvas):
         pass
+
+
+def DynamicToolshelfDockerWidget(value: int):
+    class DynamicToolshelfDockerWidget(ToolshelfDockerWidget):
+        def __init__(self):
+            super().__init__(value)
     
+    return DynamicToolshelfDockerWidget

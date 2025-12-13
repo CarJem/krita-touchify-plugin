@@ -42,9 +42,6 @@ class Toolshelf:
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
         return row
-    
-    def propertygrid_view_type(self):
-        return "tabs_vertical"
 
     def propertygrid_labels(self):
         labels = {}

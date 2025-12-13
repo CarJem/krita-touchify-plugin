@@ -125,7 +125,8 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
     def selectedResult(self):
         return self.selected_item
 
-    def load_list(self, mode):
+
+    def load_list(self, mode, selection_input: str | None = None):
         self.list_view.setSelectionRectVisible(True)
         
         self.list_view.setStyleSheet(f"""
@@ -134,6 +135,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             }}
         """)
 
+        selected_items: list[QListWidgetItem] = []
 
         if mode == PropertyGrid_Restrictions.StrMod.IconSelection:
             self.show_status_bar = True
@@ -144,6 +146,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem = QListWidgetItem()
                 listItem.setIcon(ResourceManager.iconLoader(preset_key))
                 listItem.setData(DATA_INDEX, preset_key)
+                if preset_key == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
 
             custom_icons = ResourceManager.iconList("custom")
@@ -151,7 +154,9 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem = QListWidgetItem()
                 listItem.setIcon(ResourceManager.iconLoader(customIconName))
                 listItem.setData(DATA_INDEX, customIconName)
+                if customIconName == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
+            
         elif mode == PropertyGrid_Restrictions.StrMod.PopupRegistry or \
             mode == PropertyGrid_Restrictions.StrMod.DockerGroupRegistry or \
             mode == PropertyGrid_Restrictions.StrMod.CanvasPresetRegistry or \
@@ -177,7 +182,9 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem = QListWidgetItem()
                 listItem.setText(displayName)
                 listItem.setData(DATA_INDEX, preset_key.actual_key)
+                if preset_key.actual_key == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
+
         elif mode == PropertyGrid_Restrictions.StrMod.BrushSelection:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
@@ -188,7 +195,9 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem.setIcon(ResourceManager.brushIcon(preset.name()))
                 listItem.setText(preset.name())
                 listItem.setData(DATA_INDEX, preset_key)
+                if preset_key == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
+
         elif mode == PropertyGrid_Restrictions.StrMod.DockerSelection:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
@@ -198,7 +207,9 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem = QListWidgetItem()
                 listItem.setText(displayName)
                 listItem.setData(DATA_INDEX, dockerData.objectName())
+                if dockerData.objectName() == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
+
         elif mode == PropertyGrid_Restrictions.StrMod.ActionSelection:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
@@ -210,19 +221,33 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 listItem.setText(displayName)
                 listItem.setIcon(icon)
                 listItem.setData(DATA_INDEX, actionData.objectName())
+                if actionData.objectName() == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
+
         elif mode == PropertyGrid_Restrictions.StrMod.MultiToolSelection:
-            self.list_view.setViewMode(QListView.ViewMode.ListMode)
+            __requiredTools = selection_input.split(",")
+            if "" in __requiredTools: __requiredTools.remove("")
+
+            self.list_view.setViewMode(QListView.ViewMode.IconMode)
             self.list_view.setUniformItemSizes(True)
+
             self.is_checkbox_selector = True
             for value, data in Tool._member_map_.items():
                 data: Tool
                 listItem = QListWidgetItem()
                 listItem.setFlags(listItem.flags() | QtCore.Qt.ItemFlag.ItemIsUserCheckable)
                 listItem.setCheckState(Qt.CheckState.Unchecked)
-                listItem.setText(data.pretty_name)
+                listItem.setToolTip(data.pretty_name)
                 listItem.setIcon(data.icon)
                 listItem.setData(DATA_INDEX, data.value)
+                if data.value in __requiredTools: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
         
         self.list_view.model().sort(0, Qt.SortOrder.DescendingOrder)
+        
+        if self.is_checkbox_selector:
+            for item in selected_items:
+                item.setCheckState(Qt.CheckState.Checked)
+        else:
+            for item in selected_items:
+                item.setSelected(True)

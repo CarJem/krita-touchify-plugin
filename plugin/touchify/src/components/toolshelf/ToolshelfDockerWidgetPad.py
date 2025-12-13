@@ -1,19 +1,70 @@
 
-from enum import Enum
+from enum import Enum, IntEnum
 from functools import partial
 from typing import TYPE_CHECKING
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from touchify.__env__ import *
-from touchify.src.components.toolshelf.ShelfDockWidget import ShelfDockWidget
+from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
 from touchify.src.managers.shared.resources import ResourceManager
 from touchify.src.managers.shared.settings_krita import KritaSettings
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
     from touchify.src.PluginManagers import TouchifyManagers
 
-class ShelfWidgetPad(ShelfDockWidget):
+
+EDGE_PADDING=5
+
+class WidgetPadAlignment(IntEnum):
+    AlignNone = 0,
+    TopLeft = 1,
+    TopCenter = 2,
+    TopRight = 3,
+    MidLeft = 4,
+    MidRight = 5,
+    BottomLeft = 6,
+    BottomCenter = 7,
+    BottomRight = 8       
+    
+class WidgetPadState:
+    WIDGETPAD_DIRECTIONS: dict[int, list["ToolshelfDockerWidgetPad"]] = {}
+
+
+    @staticmethod
+    def updateNeighbors(alignKey: WidgetPadAlignment):
+        if alignKey not in WidgetPadState.WIDGETPAD_DIRECTIONS:
+            WidgetPadState.WIDGETPAD_DIRECTIONS[alignKey] = []
+    
+        WidgetPadState.WIDGETPAD_DIRECTIONS[alignKey].sort(key=lambda x: x._priority, reverse=False)
+        for i, j in enumerate(WidgetPadState.WIDGETPAD_DIRECTIONS[alignKey]):
+            if i == 0: 
+                j.setNeighbor(None)
+            else: 
+                j.setNeighbor(WidgetPadState.WIDGETPAD_DIRECTIONS[alignKey][i-1])
+
+    @staticmethod
+    def movePadTo(src: "ToolshelfDockerWidgetPad", alignFrom: WidgetPadAlignment, alignTo: WidgetPadAlignment):
+        if alignFrom == alignTo:
+            return
+
+        if alignFrom not in WidgetPadState.WIDGETPAD_DIRECTIONS:
+            WidgetPadState.WIDGETPAD_DIRECTIONS[alignFrom] = []
+        
+        if src in WidgetPadState.WIDGETPAD_DIRECTIONS[alignFrom]:
+            WidgetPadState.WIDGETPAD_DIRECTIONS[alignFrom].remove(src)
+        
+
+        if alignTo not in WidgetPadState.WIDGETPAD_DIRECTIONS:
+            WidgetPadState.WIDGETPAD_DIRECTIONS[alignTo] = []
+
+        WidgetPadState.WIDGETPAD_DIRECTIONS[alignTo].append(src)
+        WidgetPadState.updateNeighbors(alignFrom)
+        WidgetPadState.updateNeighbors(alignTo)
+
+
+
+class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
     DOCKER_TITLE=f"{Env.Title.CORE_DOCKERS_PREFIX} Widget Pad"
     CLONE_DOCKER_TITLE=f"{Env.Title.CLONE_DOCKERS_PREFIX} Widget Pad"
 
@@ -83,24 +134,16 @@ class ShelfWidgetPad(ShelfDockWidget):
             self._mode = mode
             self.syncIcons(self.toggleButton.isChecked())
 
-    class WidgetAlignment(Enum):
-        TopLeft = 1
-        TopCenter = 2
-        TopRight = 3
-        MidLeft = 4
-        MidRight = 5
-        BottomLeft = 6
-        BottomCenter = 7
-        BottomRight = 8
-
     class Settings(QObject):
 
-        def __init__(self, parent: "ShelfWidgetPad"):
+        def __init__(self, parent: "ToolshelfDockerWidgetPad"):
             super().__init__(parent)
             self._parent = parent
 
         def getSettingsPath(self):
-            return f"{Env.SettingsPath.WIDGETPAD}_{str(self._parent.PanelIndex)}"
+            result = f"{Env.SettingsPath.WIDGETPAD}_{str(self._parent.PanelIndex)}"
+            print(result)
+            return result
 
         def getShowHeader(self):
             return KritaSettings.readSettingBool(self.getSettingsPath(), "ShowHeader", True)
@@ -114,28 +157,38 @@ class ShelfWidgetPad(ShelfDockWidget):
         def setCollapsed(self, value: bool):
             KritaSettings.writeSettingBool(self.getSettingsPath(), "Collapsed", value, False)
 
+        def getPriority(self):
+            return KritaSettings.readSettingInt(self.getSettingsPath(), "Priority", 0)
+
+        def setPriority(self, value: int):
+            KritaSettings.writeSettingInt(self.getSettingsPath(), "Priority", value, False)
+
         def getAlignment(self):
             try:
-                input = KritaSettings.readSettingInt(self.getSettingsPath(), "Alignment", 0)
-                return ShelfWidgetPad.WidgetAlignment(input)
-            except:
-                return ShelfWidgetPad.WidgetAlignment.TopLeft
+                input = KritaSettings.readSettingInt(self.getSettingsPath(), "Alignment", 1)
+                if input == 0: return WidgetPadAlignment.TopLeft
+                return WidgetPadAlignment(input)
+            except Exception as ex:
+                return WidgetPadAlignment.TopLeft
 
-        def setAlignment(self, value: int):
-            KritaSettings.writeSettingInt(self.getSettingsPath(), "Alignment", value, False)
+        def setAlignment(self, value: WidgetPadAlignment):
+            KritaSettings.writeSettingInt(self.getSettingsPath(), "Alignment", value.value, False)
 
     def __init__(self, index: int = 0):
         super().__init__(-1)
         
-        self.setWindowTitle(f"{ShelfWidgetPad.CLONE_DOCKER_TITLE} (Ext. {index})")
+        self.setWindowTitle(f"{ToolshelfDockerWidgetPad.CLONE_DOCKER_TITLE} (Ext. {index})")
         self.PanelIndex = 10 + index
 
-        self._alignment = self.WidgetAlignment.TopLeft
+        self._alignment = WidgetPadAlignment.AlignNone
         self._edgePosition = QPoint(0,0)
         self._collapsed_size = QSize()
         self._collapsed_position = QPoint()
+        self._priority = 0
+        self._neighbor: "ToolshelfDockerWidgetPad" = None
         self._max_width = 1
         self._max_height = 1
+        self._lastNeighborSize = QSize(0,0)
         self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
 
         self._settings = self.Settings(self)
@@ -149,6 +202,7 @@ class ShelfWidgetPad(ShelfDockWidget):
         super().setup(app_window)
         self.setAlignment(self._settings.getAlignment())
         self.mainWidget.setTitlebarVisibility(self._settings.getShowHeader())
+        self.setPriority(self._settings.getPriority())
 
         is_collapsed = self._settings.getCollapsed()
         if is_collapsed:
@@ -171,30 +225,51 @@ class ShelfWidgetPad(ShelfDockWidget):
         showHeaderAct.setChecked(self._settings.getShowHeader())
         showHeaderAct.toggled.connect(self.onHeaderToggled)
 
+        
+        priorityMenu = menu.addMenu("Set Priority to...")
+        currentPriority = self._settings.getPriority()
+        priorityMenuGroup = QActionGroup(menu)
+        priorityMenuGroup.setExclusive(True)
+        for entry in range(0, 9):
+            action = priorityMenuGroup.addAction(str(entry))
+            action.setCheckable(True)
+            if entry == currentPriority:
+                action.setChecked(True)
+            action.triggered.connect(partial(self.onPriorityUpdated, entry))
+            priorityMenu.addAction(action)
+
         alignmentMenu = menu.addMenu("Align to...")
-
-
         currentAlignment = self._settings.getAlignment().value
         alignmentMenuGroup = QActionGroup(menu)
         alignmentMenuGroup.setExclusive(True)
-        for entry in ShelfWidgetPad.WidgetAlignment:
+        for entry in WidgetPadAlignment:
+            if entry.value == 0:
+                continue
+
             action = alignmentMenuGroup.addAction(entry.name)
             action.setCheckable(True)
             if entry.value == currentAlignment:
                 action.setChecked(True)
-            action.triggered.connect(partial(self.onAlignmentUpdated, entry.value))
+            action.triggered.connect(partial(self.onAlignmentUpdated, entry))
             alignmentMenu.addAction(action)
 
         menu.exec_(pos)
 
     def onAlignmentUpdated(self, value: int):
-        alignment = ShelfWidgetPad.WidgetAlignment.TopLeft
-        try:
-            alignment = ShelfWidgetPad.WidgetAlignment(value)
-        except:
-            pass
-        self.setAlignment(alignment)
-        self._settings.setAlignment(alignment.value)
+        self.setAlignment(WidgetPadAlignment(value))
+        self._settings.setAlignment(value)
+
+    def onPriorityUpdated(self, value: int):
+        self.setPriority(value)
+        self._settings.setPriority(value)
+
+    def moveEvent(self, a0):
+        self._lastNeighborSize = self.getOffset()
+        return super().moveEvent(a0)
+
+    def resizeEvent(self, a0):
+        self._lastNeighborSize = self.getOffset()
+        return super().resizeEvent(a0)
 
     def onHeaderToggled(self, state: bool):
         self.mainWidget.setTitlebarVisibility(state)
@@ -216,27 +291,43 @@ class ShelfWidgetPad(ShelfDockWidget):
         self.syncPosition()
         super().timerEvent(a0)
 
-    def setAlignment(self, align: WidgetAlignment):
+    def setAlignment(self, align: WidgetPadAlignment):
+        WidgetPadState.movePadTo(self,  self._alignment, align)
         self._alignment = align
+
         match align:
-            case self.WidgetAlignment.TopLeft:
+            case WidgetPadAlignment.TopLeft:
                 self._titlebar.updateButtons("left")
-            case self.WidgetAlignment.MidLeft:
+            case WidgetPadAlignment.MidLeft:
                 self._titlebar.updateButtons("left")
-            case self.WidgetAlignment.BottomLeft:
+            case WidgetPadAlignment.BottomLeft:
                 self._titlebar.updateButtons("left")
-            case self.WidgetAlignment.TopRight:
+            case WidgetPadAlignment.TopRight:
                 self._titlebar.updateButtons("right")
-            case self.WidgetAlignment.MidRight:
+            case WidgetPadAlignment.MidRight:
                 self._titlebar.updateButtons("right")
-            case self.WidgetAlignment.BottomRight:
+            case WidgetPadAlignment.BottomRight:
                 self._titlebar.updateButtons("right")
-            case self.WidgetAlignment.TopCenter:
+            case WidgetPadAlignment.TopCenter:
                 self._titlebar.updateButtons("up")
-            case self.WidgetAlignment.BottomCenter:
+            case WidgetPadAlignment.BottomCenter:
                 self._titlebar.updateButtons("down")
             case _:
                 pass
+
+    def setNeighbor(self, neighbor: "ToolshelfDockerWidgetPad"):
+        self._neighbor = neighbor
+        self._lastNeighborSize = self.getOffset()
+
+    def getOffset(self):
+        if self._neighbor == None: 
+            return QSize(0,0)
+        else:
+            return self._neighbor.size() + QSize(EDGE_PADDING, EDGE_PADDING) + self._neighbor.getOffset()
+
+    def setPriority(self, level: int):
+        self._priority = level
+        WidgetPadState.updateNeighbors(self._alignment)
 
     def syncPosition(self):
         if not self.isVisible():
@@ -252,8 +343,7 @@ class ShelfWidgetPad(ShelfDockWidget):
 
         if not active_canvas:
             return
-
-        edge_padding: int = 5
+        
         space_rect = active_canvas.rect()
         docker_width = self.width()
         docker_height = self.height()
@@ -265,50 +355,60 @@ class ShelfWidgetPad(ShelfDockWidget):
             docker_halfwidth = 0
             docker_halfheight = 0
 
-        top_left = QPoint(space_rect.topLeft()) + QPoint(edge_padding, edge_padding)
-        top_center = QPoint(space_rect.center().x(),space_rect.top()) - QPoint(docker_halfwidth, 0) + QPoint(0, edge_padding)
-        top_right = QPoint(space_rect.topRight()) - QPoint(docker_width, 0) + QPoint(-edge_padding, edge_padding)
+    
+        top_left = QPoint(space_rect.topLeft()) + QPoint(EDGE_PADDING, EDGE_PADDING)
+        top_center = QPoint(space_rect.center().x(),space_rect.top()) - QPoint(docker_halfwidth, 0) + QPoint(0, EDGE_PADDING)
+        top_right = QPoint(space_rect.topRight()) - QPoint(docker_width, 0) + QPoint(-EDGE_PADDING, EDGE_PADDING)
 
-        mid_left = QPoint(space_rect.left(), space_rect.center().y()) - QPoint(0, docker_halfheight) + QPoint(edge_padding, 0)
-        mid_right = QPoint(space_rect.right(), space_rect.center().y()) - QPoint(docker_width, docker_halfheight) + QPoint(-edge_padding, 0)
+        mid_left = QPoint(space_rect.left(), space_rect.center().y()) - QPoint(0, docker_halfheight) + QPoint(EDGE_PADDING, 0)
+        mid_right = QPoint(space_rect.right(), space_rect.center().y()) - QPoint(docker_width, docker_halfheight) + QPoint(-EDGE_PADDING, 0)
 
-        bottom_left = QPoint(space_rect.bottomLeft()) - QPoint(0, docker_height) + QPoint(edge_padding, -edge_padding)
-        bottom_center = QPoint(space_rect.center().x(), space_rect.bottom()) - QPoint(docker_halfwidth, docker_height) + QPoint(0, -edge_padding)
-        bottom_right = QPoint(space_rect.bottomRight()) - QPoint(docker_width, docker_height) + QPoint(-edge_padding, -edge_padding)
-        
+        bottom_left = QPoint(space_rect.bottomLeft()) - QPoint(0, docker_height) + QPoint(EDGE_PADDING, -EDGE_PADDING)
+        bottom_center = QPoint(space_rect.center().x(), space_rect.bottom()) - QPoint(docker_halfwidth, docker_height) + QPoint(0, -EDGE_PADDING)
+        bottom_right = QPoint(space_rect.bottomRight()) - QPoint(docker_width, docker_height) + QPoint(-EDGE_PADDING, -EDGE_PADDING)
+
 
         _position: QPoint = QPoint(0,0)
+
         match self._alignment:
-            case self.WidgetAlignment.TopLeft:
+            case WidgetPadAlignment.TopLeft:
                 _position = active_canvas.mapToGlobal(top_left)
-            case self.WidgetAlignment.TopRight:
+                _position.setX(_position.x() + self._lastNeighborSize.width())
+            case WidgetPadAlignment.TopRight:
                 _position = active_canvas.mapToGlobal(top_right)
-            case self.WidgetAlignment.BottomRight:
+                _position.setX(_position.x() - self._lastNeighborSize.width())
+            case WidgetPadAlignment.BottomRight:
                 _position = active_canvas.mapToGlobal(bottom_right)
-            case self.WidgetAlignment.BottomLeft:
+                _position.setX(_position.x() - self._lastNeighborSize.width())
+            case WidgetPadAlignment.BottomLeft:
                 _position = active_canvas.mapToGlobal(bottom_left)
-            case self.WidgetAlignment.TopCenter:
+                _position.setX(_position.x() + self._lastNeighborSize.width())
+            case WidgetPadAlignment.TopCenter:
                 _position = active_canvas.mapToGlobal(top_center)
-            case self.WidgetAlignment.BottomCenter:
+                _position.setY(_position.y() + self._lastNeighborSize.height())
+            case WidgetPadAlignment.BottomCenter:
                 _position = active_canvas.mapToGlobal(bottom_center)
-            case self.WidgetAlignment.MidLeft:
+                _position.setY(_position.y() - self._lastNeighborSize.height())
+            case WidgetPadAlignment.MidLeft:
                 _position = active_canvas.mapToGlobal(mid_left)
-            case self.WidgetAlignment.MidRight:
+                _position.setX(_position.x() + self._lastNeighborSize.width())
+            case WidgetPadAlignment.MidRight:
                 _position = active_canvas.mapToGlobal(mid_right)
+                _position.setX(_position.x() - self._lastNeighborSize.width())
             case _:
                 _position = active_canvas.mapToGlobal(QPoint(0,0))
-        
-        _max_height = space_rect.height() - edge_padding *2
-        _max_width = space_rect.width() - edge_padding * 2
+
+
+        _max_height = space_rect.height() - EDGE_PADDING * 2
+        _max_width = space_rect.width() - EDGE_PADDING * 2
 
 
         _c_width = self.width()
         _c_height = self.height()
         _c_pos = self.pos()
 
-        if self.isSizeManaged:
-            self.shrinkToFit()
-
+        self.shrinkToFit()
+        
         if _c_width > _max_width:
             self.resize(_max_width, _c_height)
 
@@ -317,3 +417,10 @@ class ShelfWidgetPad(ShelfDockWidget):
 
         if _c_pos != _position:
             self.move(_position)
+
+def DynamicToolshelfDockerWidgetPad(value: int):
+    class DynamicToolshelfDockerWidgetPad(ToolshelfDockerWidgetPad):
+        def __init__(self):
+            super().__init__(value)
+
+    return DynamicToolshelfDockerWidgetPad

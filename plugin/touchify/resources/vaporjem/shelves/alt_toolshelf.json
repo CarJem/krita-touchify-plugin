@@ -95,6 +95,8 @@
                 "max_size_y": 0,
                 "ignore_scaling": false,
                 "section_type": "docker",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -108,6 +110,27 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
                 "json_version": 4
             },
             "2529aa29-3a78-432a-b308-cafe2ee04e2c": {
@@ -121,6 +144,8 @@
                 "max_size_y": 0,
                 "ignore_scaling": false,
                 "section_type": "docker",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
                 "docker_nesting_mode": "docking",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -134,6 +159,27 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
                 "json_version": 4
             },
             "5e5ca049-14c2-4ef3-b103-869e554d4b8b": {
@@ -147,6 +193,8 @@
                 "max_size_y": 0,
                 "ignore_scaling": false,
                 "section_type": "docker",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -160,6 +208,27 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
                 "json_version": 4
             },
             "33af9154-9698-4383-bde2-44f54940fef9": {
@@ -173,6 +242,8 @@
                 "max_size_y": 30,
                 "ignore_scaling": false,
                 "section_type": "special",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -186,6 +257,27 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "layer_label_box",
                 "special_slider_orientation": "horizontal",
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
                 "json_version": 4
             },
             "c95e8bfa-41ac-4c01-bc32-75da6076c750": {
@@ -199,6 +291,8 @@
                 "max_size_y": 30,
                 "ignore_scaling": false,
                 "section_type": "actions",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -333,6 +427,27 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
                 "json_version": 4
             },
             "1ec8c90b-5c25-4a80-9ba4-39d96ed0559f": {
@@ -346,6 +461,8 @@
                 "max_size_y": 0,
                 "ignore_scaling": false,
                 "section_type": "actions",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -434,6 +551,27 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
                 "json_version": 4
             },
             "a41cd564-aac6-4af7-ac74-8c13bd606e87": {
@@ -447,6 +585,8 @@
                 "max_size_y": 0,
                 "ignore_scaling": false,
                 "section_type": "actions",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -535,6 +675,27 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
                 "json_version": 4
             }
         },

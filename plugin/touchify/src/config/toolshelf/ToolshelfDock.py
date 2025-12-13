@@ -10,7 +10,7 @@ class ToolshelfDock:
         Actions = "actions"
         Docker = "docker"
         Special = "special"
-
+        Placeholder = "placeholder"
 
     class SliderOrientation(EnumStr):
         Horizontal="horizontal"
@@ -31,6 +31,7 @@ class ToolshelfDock:
         BrushPicker = "brush_preset_picker"
         GradientPicker = "pattern_chooser_popup"
         PatternPicker = "gradient_chooser_popup"
+        NestedShelf = "nested_shelf"
 
     class SectionAlignmentX(EnumStr):
         Nothing = "none"
@@ -80,6 +81,8 @@ class ToolshelfDock:
 
         self.ignore_scaling: bool = False
         self.section_type: str = "docker"
+        self.requires_specific_tool: str = ""
+        self.invert_required_tools: bool = False
 
         self.docker_nesting_mode: str = "normal"
         self.docker_unloaded_visibility: str = "normal"
@@ -97,11 +100,15 @@ class ToolshelfDock:
         self.special_item_type: str = "none"
         self.special_slider_orientation: str = "horizontal"
 
+        from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
+        self.special_nested_data: ToolshelfContainer = ToolshelfContainer()
+
         self.json_version: int = 4
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        JsonExtensions.dictToObject(self, args, [])
+        from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
+        JsonExtensions.dictToObject(self, args, [ToolshelfContainer])
         self.action_section_contents = JsonExtensions.init_list(args, "action_section_contents", TriggerGroup)
 
     def forceLoad(self):
@@ -167,7 +174,7 @@ class ToolshelfDock:
         ]
 
         special_groups = [
-            "special_item_type"
+            "special_item_type",
         ]
 
         known_sliders = [
@@ -194,6 +201,8 @@ class ToolshelfDock:
         if self.section_type != ToolshelfDock.SectionType.Special or self.special_item_type not in known_sliders:
             for item in slider_groups:
                 result.append(item)
+                
+        result.append("special_nested_data")
 
         return result
 
@@ -208,9 +217,11 @@ class ToolshelfDock:
         labels["size"] = "Base Width / Height"
         labels["max_size"] = "Max Width / Height"
         labels["min_size"] = "Min Width / Height"
-        labels["panel_location"] = "Panel Position"
         labels["ignore_scaling"] = "Ignore Scaling"
         labels["section_type"] = "Section Type"
+
+        labels["requires_specific_tool"] = "Requires Specific Tool"
+        labels["invert_required_tools"] = "Invert Requirements"
 
         labels["docker_id"] = "Docker ID"
         labels["docker_nesting_mode"] = "Nesting Mode"
@@ -236,8 +247,9 @@ class ToolshelfDock:
             "min_size",
             "max_size",
             "size",
-            "panel_location",
-            "ignore_scaling"
+            "ignore_scaling",
+            "requires_specific_tool",
+            "invert_required_tools"
         ]
 
         variant_group = [
@@ -253,7 +265,8 @@ class ToolshelfDock:
             "action_section_icon_size",
             "action_section_contents",
             "special_item_type",
-            "special_slider_orientation"
+            "special_slider_orientation",
+            "special_nested_data"
         ]
 
         row["general_group"] = {"items": global_groups, "is_group": True}
@@ -275,6 +288,8 @@ class ToolshelfDock:
         restrictions["max_size_x"] = PropertyGrid_Restrictions.range(min=0)
         restrictions["max_size_y"] = PropertyGrid_Restrictions.range(min=0)
         restrictions["section_type"] = PropertyGrid_Restrictions.strValues(self.SectionType.values())
+        restrictions["requires_specific_tool"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.MultiToolSelection)
+
 
         restrictions["docker_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.DockerSelection)
         restrictions["docker_nesting_mode"] = PropertyGrid_Restrictions.strValues(self.DockerNestingMode.values())
