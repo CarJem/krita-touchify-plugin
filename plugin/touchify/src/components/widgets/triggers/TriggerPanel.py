@@ -95,16 +95,13 @@ class TriggerPanel(QWidget):
         self.actions_manager = actions_manager
         self.display_type = TriggerPanel.DisplayType.convertFromOther(cfg.display_mode)
 
-        if cfg.ignore_scaling: scale = 1
-        else: scale = TouchifySettings.preferences().Interface_ToolshelfActionSectionScale
-
-        icon_size = int(cfg.action_section_icon_size * scale)
+        icon_size = cfg.action_section_icon_size
 
         self.icon_width: int = icon_size
         self.icon_height: int = icon_size
         
-        self.item_width: int = int(cfg.action_section_btn_width * scale)
-        self.item_height: int = int(cfg.action_section_btn_height * scale)
+        self.item_width: int = cfg.action_section_btn_width
+        self.item_height: int = cfg.action_section_btn_height
         
         self.opacity: float = 1.0
 
@@ -136,16 +133,13 @@ class TriggerPanel(QWidget):
                 btn.triggerActivated.connect(self.onButtonClicked)
                 self.stylizeButton(btn)
                 self.appendButton(act[1], btn, act[0])
-        
-        if self.cfg.ignore_scaling: scale = 1
-        else: scale = TouchifySettings.preferences().Interface_ToolshelfActionSectionScale
     
-        size_x = int(self.cfg.size_x * scale)
-        size_y = int(self.cfg.size_y * scale)
-        min_size_x = int(self.cfg.min_size_x * scale)
-        min_size_y = int(self.cfg.min_size_y * scale)
-        max_size_x = int(self.cfg.max_size_x * scale)
-        max_size_y = int(self.cfg.max_size_y * scale)
+        size_x = int(self.cfg.size_x)
+        size_y = int(self.cfg.size_y)
+        min_size_x = int(self.cfg.min_size_x)
+        min_size_y = int(self.cfg.min_size_y)
+        max_size_x = int(self.cfg.max_size_x)
+        max_size_y = int(self.cfg.max_size_y)
     
         self.layout().setAlignment(Qt.AlignmentFlag.AlignTop)
 

@@ -13,6 +13,7 @@ from touchify.src.extensions.krita_extensions import *
 
 if TYPE_CHECKING:
     from ..PluginManagers import TouchifyManagers
+    from ..Plugin import TouchifyWindow
     from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
 
 
@@ -41,9 +42,9 @@ class WidgetPadManager(QObject):
         for alignKey in WidgetPadManager.Alignment:
             self.LAYOUT_CACHE[alignKey] = []
 
-    def Window_Load(self, api_window: WindowAPI):
-        GlobalEvents().SIGNAL_WINDOW_MOVED.connect(self.onWidgetPadAreaUpdate)
-        GlobalEvents().SIGNAL_WINDOW_RESIZED.connect(self.onWidgetPadAreaUpdate)
+    def Window_Load(self, window: "TouchifyWindow"):
+        window.sigWindowMoved.connect(self.onWidgetPadAreaUpdate)
+        window.sigWindowResized.connect(self.onWidgetPadAreaUpdate)
     
     #region Get / Set
 
@@ -108,15 +109,10 @@ class WidgetPadManager(QObject):
             elif index > len(self.LAYOUT_CACHE[alignKey]) - 1:
                 return None
             else:
-                return self.LAYOUT_CACHE[alignKey][index]
+                return self.LAYOUT_CACHE[alignKey][index]    
 
-        # This keeps the widgets from reorganizing before they are actually visible when a view opens up
-        if self.managers.mgr_canvas.active_canvas == None:
-            return            
-
-        self.LAYOUT_CACHE[alignKey].sort(key=lambda x: (x.isVisible(), x._priority))
+        self.LAYOUT_CACHE[alignKey].sort(key=lambda x: (x._priority))
         for i, j in enumerate(self.LAYOUT_CACHE[alignKey]):
-            j._priority = i
             j._previousNeighbor = getElement(i-1)
             j._nextNeighbor = getElement(i+1)
 

@@ -75,7 +75,7 @@ class ShelfToolbar(QWidget):
         self.updateStyleSheet()
 
     def reload(self, state: ToolshelfArea, currentPresetId: str):
-        button_size = int(state.options.header_size * TouchifySettings.preferences().Interface_ToolshelfHeaderScale)
+        button_size = state.options.header_size
         icon_size = button_size - 4
         match state.options.position:
             case "top":

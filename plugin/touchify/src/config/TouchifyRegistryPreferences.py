@@ -38,14 +38,6 @@ class TouchifyRegistryPreferences:
         self.DockerUtils_HiddenDockersUp: str = ""
         self.DockerUtils_HiddenDockersDown: str = ""
 
-        self.Interface_CanvasToggleScale: float = 1.0
-        self.Interface_ToolboxIconScale: float = 1.0
-        self.Interface_ToolshelfActionBarScale: float = 1.0
-        self.Interface_ToolshelfTabBarScale: float = 1.0
-        self.Interface_ToolshelfHeaderScale: float = 1.0
-        self.Interface_ToolshelfActionSectionScale: float = 1.0
-        self.Interface_ColorOptionsDockerScale: float = 1.0
-
         self.Canvas_RightClickAction: str = ""
         self.Canvas_LeftClickAction: str = ""
         self.Canvas_MiddleClickAction: str = ""
@@ -68,13 +60,6 @@ class TouchifyRegistryPreferences:
     
     def propertygrid_labels(self):
         return {
-            "Interface_CanvasToggleScale": "Canvas Widget Toggle Scale",
-            "Interface_ToolboxIconScale": "Toolbox Icon Scale",
-            "Interface_ToolshelfTabBarScale": "Toolshelf Tab Bar Scale",
-            "Interface_ToolshelfActionBarScale": "Toolshelf Action Bar Scale",
-            "Interface_ToolshelfHeaderScale": "Toolshelf Header Scale",
-            "Interface_ToolshelfActionSectionScale": "Toolshelf Action Section Scale",
-            "Interface_ColorOptionsDockerScale": "Color Options Docker Scale",
             "Canvas_RightClickAction": "Canvas Right Click Action",
             "Canvas_LeftClickAction": "Canvas Left Click Action",
             "Canvas_MiddleClickAction": "Canvas Middle Click Action"
@@ -84,26 +69,11 @@ class TouchifyRegistryPreferences:
         return [
             "Canvas_LeftClickAction",
             "Canvas_RightClickAction",
-            "Canvas_MiddleClickAction",
-            "#NEW_COLUMN",
-            "Interface_CanvasToggleScale",
-            "Interface_ToolboxIconScale",
-            "Interface_ToolshelfActionBarScale",
-            "Interface_ToolshelfTabBarScale",
-            "Interface_ToolshelfHeaderScale",
-            "Interface_ToolshelfActionSectionScale",
-            "Interface_ColorOptionsDockerScale"
+            "Canvas_MiddleClickAction"
         ]
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["Interface_CanvasToggleScale"] = PropertyGrid_Restrictions.range(min=1)
-        restrictions["Interface_ToolboxIconScale"] = PropertyGrid_Restrictions.range(min=1)
-        restrictions["Interface_ToolshelfActionBarScale"] = PropertyGrid_Restrictions.range(min=1)
-        restrictions["Interface_ToolshelfTabBarScale"] = PropertyGrid_Restrictions.range(min=1)
-        restrictions["Interface_ToolshelfHeaderScale"] = PropertyGrid_Restrictions.range(min=1)
-        restrictions["Interface_ToolshelfActionSectionScale"] = PropertyGrid_Restrictions.range(min=1)
-        restrictions["Interface_ColorOptionsDockerScale"] = PropertyGrid_Restrictions.range(min=1)
         restrictions["Canvas_RightClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ActionSelection)
         restrictions["Canvas_LeftClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ActionSelection)
         restrictions["Canvas_MiddleClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ActionSelection)
@@ -121,14 +91,6 @@ class TouchifyRegistryPreferences:
         self.DockerUtils_HiddenDockersUp = TouchifyRegistryPreferences.IO.readStr("DockerUtils_HiddenUp", "")
         self.DockerUtils_HiddenDockersDown = TouchifyRegistryPreferences.IO.readStr("DockerUtils_HiddenDown", "")
 
-        self.Interface_CanvasToggleScale = TouchifyRegistryPreferences.IO.readFloat("Interface_CanvasToggleScale", 1.0)
-        self.Interface_ToolboxIconScale = TouchifyRegistryPreferences.IO.readFloat("Interface_ToolboxIconScale", 1.0)
-        self.Interface_ToolshelfActionBarScale = TouchifyRegistryPreferences.IO.readFloat("Interface_ToolshelfActionBarScale", 1.0)
-        self.Interface_ToolshelfTabBarScale = TouchifyRegistryPreferences.IO.readFloat("Interface_ToolshelfTabBarScale", 1.0)
-        self.Interface_ToolshelfHeaderScale = TouchifyRegistryPreferences.IO.readFloat("Interface_ToolshelfHeaderScale", 1.0)
-        self.Interface_ToolshelfActionSectionScale = TouchifyRegistryPreferences.IO.readFloat("Interface_ToolshelfActionSectionScale", 1.0)
-        self.Interface_ColorOptionsDockerScale = TouchifyRegistryPreferences.IO.readFloat("Interface_ColorOptionsDockerScale", 1.0)
-
         self.Canvas_RightClickAction = TouchifyRegistryPreferences.IO.readStr("Canvas_RightClickAction", "")
         self.Canvas_LeftClickAction = TouchifyRegistryPreferences.IO.readStr("Canvas_LeftClickAction", "")
         self.Canvas_MiddleClickAction = TouchifyRegistryPreferences.IO.readStr("Canvas_MiddleClickAction", "")
@@ -140,19 +102,11 @@ class TouchifyRegistryPreferences:
         TouchifyRegistryPreferences.IO.writeBool("Styles_DockedBrushEditor", self.Styles_DockedBrushEditor, False)
         TouchifyRegistryPreferences.IO.writeBool("Styles_BrushEditorZoomFix", self.Styles_BrushEditorZoomFix, False)
         
-
         TouchifyRegistryPreferences.IO.writeStr("DockerUtils_HiddenLeft", self.DockerUtils_HiddenDockersLeft, "")
         TouchifyRegistryPreferences.IO.writeStr("DockerUtils_HiddenRight", self.DockerUtils_HiddenDockersRight, "")
         TouchifyRegistryPreferences.IO.writeStr("DockerUtils_HiddenUp", self.DockerUtils_HiddenDockersUp, "")
         TouchifyRegistryPreferences.IO.writeStr("DockerUtils_HiddenDown", self.DockerUtils_HiddenDockersDown, "")
 
-        TouchifyRegistryPreferences.IO.writeFloat("Interface_CanvasToggleScale", self.Interface_CanvasToggleScale, 1.0)
-        TouchifyRegistryPreferences.IO.writeFloat("Interface_ToolboxIconScale", self.Interface_ToolboxIconScale, 1.0)
-        TouchifyRegistryPreferences.IO.writeFloat("Interface_ToolshelfActionBarScale", self.Interface_ToolshelfActionBarScale, 1.0)
-        TouchifyRegistryPreferences.IO.writeFloat("Interface_ToolshelfTabBarScale", self.Interface_ToolshelfTabBarScale, 1.0)
-        TouchifyRegistryPreferences.IO.writeFloat("Interface_ToolshelfHeaderScale", self.Interface_ToolshelfHeaderScale, 1.0)
-        TouchifyRegistryPreferences.IO.writeFloat("Interface_ToolshelfActionSectionScale", self.Interface_ToolshelfActionSectionScale, 1.0)
-        TouchifyRegistryPreferences.IO.writeFloat("Interface_ColorOptionsDockerScale", self.Interface_ColorOptionsDockerScale, 1.0)
 
         TouchifyRegistryPreferences.IO.writeStr("Canvas_RightClickAction", self.Canvas_RightClickAction, "")
         TouchifyRegistryPreferences.IO.writeStr("Canvas_LeftClickAction", self.Canvas_LeftClickAction, "")

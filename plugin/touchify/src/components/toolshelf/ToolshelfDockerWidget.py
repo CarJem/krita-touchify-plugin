@@ -106,7 +106,7 @@ class ToolshelfDockerWidget(DockWidget):
     def onConfigUpdated(self, registry_index: int = -1):
         if registry_index == -1 or registry_index == self.PanelIndex:
             if self.mainWidget: 
-                self.mainWidget.onConfigUpdated()
+                QTimer.singleShot(100, self.mainWidget.onConfigUpdated)
 
     def resizeEvent(self, a0):
         return super().resizeEvent(a0)
@@ -121,6 +121,9 @@ class ToolshelfDockerWidget(DockWidget):
     # 'pass' means do not do anything
     def canvasChanged(self, canvas):
         pass
+
+    def onThemeChanged(self):
+        self.onConfigUpdated()
 
 
 def DynamicToolshelfDockerWidget(value: int):

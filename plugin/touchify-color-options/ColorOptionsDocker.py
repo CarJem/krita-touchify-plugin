@@ -59,7 +59,7 @@ class ColorSourceToggle(QWidget):
         self.updateStyle()
 
     def updateStyle(self):
-        cubeSize = int(self.cubeSize * TouchifySettings.preferences().Interface_ColorOptionsDockerScale)
+        cubeSize = self.cubeSize
         iconSize = int(cubeSize - 8)
 
         self.toggleBtn.setFixedSize(cubeSize, cubeSize)
@@ -106,7 +106,7 @@ class ColorOptionsDocker(DockWidget):
         self.colorToggle.setup(instance)
 
     def addonUpdateStyle(self):
-        widgetHeight = int(50 * TouchifySettings.preferences().Interface_ColorOptionsDockerScale)
+        widgetHeight = 50
         self.setFixedHeight(widgetHeight)
         self.colorToggle.updateStyle()
 

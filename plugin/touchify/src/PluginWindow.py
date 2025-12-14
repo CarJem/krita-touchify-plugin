@@ -19,6 +19,8 @@ if TYPE_CHECKING:
 
 class TouchifyWindow(QObject):
     
+    sigWindowMoved = pyqtSignal()
+    sigWindowResized = pyqtSignal()
 
     def __init__(self, parent: QObject):
         super().__init__(parent)
@@ -31,6 +33,10 @@ class TouchifyWindow(QObject):
         self.api_window = window
         self.setParent(self.api_window.qwindow)
         self.managers.Load(self)
+
+        self.api_window.qwindow.installEventFilter(self)
+        
+        self.api_window.themeChanged.connect(self.ReloadTheme)
 
         self.action_plugin_instance = QAction(f"Instance: #{self.INSTANCE_ID}", self.action_plugin_tools_menu)
         self.action_plugin_instance.setEnabled(False)
@@ -52,6 +58,16 @@ class TouchifyWindow(QObject):
  
     def Unload(self):
         pass
+
+    def ReloadTheme(self):
+        self.managers.ReloadTheme()
+
+    def eventFilter(self, a0: QObject, a1: QEvent):
+        if isinstance(a0, QMainWindow) and a1.type() == QEvent.Type.Resize:
+            self.sigWindowResized.emit()
+        elif isinstance(a0, QMainWindow) and a1.type() == QEvent.Type.Move:
+            self.sigWindowMoved.emit()
+        return super().eventFilter(a0, a1)
 
     def OpenSettings(self):
         if self.dlg_settings != None:

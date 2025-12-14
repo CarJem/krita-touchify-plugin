@@ -28,6 +28,8 @@ class TouchifyManagers:
     def __init__(self, window: "TouchifyWindow"):
         self.__window__ = window
 
+        self.__managedDockers: list[QDockWidget] = []
+
         self.mgr_tweaker = TweakManager(window)
         self.mgr_shortcuts = ShortcutsManager(window)
         self.mgr_canvas = CanvasManager(window, self)
@@ -44,7 +46,14 @@ class TouchifyManagers:
         self.mgr_shortcuts.Window_Load()
         self.mgr_tweaker.Window_Load()
         self.mgr_canvas.Window_Load(window.api_window)
-        self.mgr_widgetpad.Window_Load(window.api_window)
+        self.mgr_widgetpad.Window_Load(window)
+
+
+    def ReloadTheme(self):
+        for docker in self.__managedDockers:
+            if not hasattr(docker, "onThemeChanged"): pass
+            elif not callable(getattr(docker, "onThemeChanged", False)): pass
+            else: getattr(docker, "onThemeChanged")()
 
     def Addons(self, window: "TouchifyWindow"):
         dockers_menu_action = KritaExtensions.getDockerMenu(window.api_window)
@@ -108,17 +117,23 @@ class TouchifyManagers:
             if docker_id.startswith(Env.DockerID.TOOLSHELFDOCKER):
                 toolshelfDocker: ToolshelfDockerWidget = docker
                 toolshelfDocker.setup(window)
+                self.__managedDockers.append(toolshelfDocker)
             elif docker_id.startswith(Env.DockerID.WIDGETPAD):
                 widgetPadDocker: ToolshelfDockerWidgetPad = docker
                 widgetPadDocker.setup(window)
+                self.__managedDockers.append(widgetPadDocker)
             elif docker_id == Env.DockerID.TOOLBOX:
                 toolboxDocker: ToolboxDocker = docker
                 toolboxDocker.setup(window)
+                self.__managedDockers.append(toolboxDocker)
             else:
                 if not docker_id.startswith(addon_id_prefix): pass
                 elif not hasattr(docker, addon_setup_method): pass
                 elif not callable(getattr(docker, addon_setup_method, False)): pass
-                else: getattr(docker, addon_setup_method)(window)
+                else: 
+                    getattr(docker, addon_setup_method)(window)
+                    self.__managedDockers.append(docker)
+
 
     def Actions(self, window: WindowAPI):
         self.mgr_shortcuts.Actions_Init(window, "tools/touchify", "settings")

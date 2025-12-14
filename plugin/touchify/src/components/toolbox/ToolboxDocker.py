@@ -1,4 +1,5 @@
 # This Python file uses the following encoding: utf-8
+from ast import Global
 from uuid import uuid4
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -202,6 +203,9 @@ class ToolboxDocker(QDockWidget):
 
     def updatePalette(self):
         pass
+
+    def onThemeChanged(self):
+        self.onConfigUpdated()
 
     def updateStyleSheet(self):
         layout_config = self.settingsManager.getCurrentToolbox()
