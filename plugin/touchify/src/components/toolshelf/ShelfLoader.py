@@ -67,8 +67,8 @@ class ShelfLoader(QObject):
         if actionInfo.docker_loading_priority == ToolshelfDock.DockerLoadingPriority.Passive:
             actionWidget.setPassiveMode(True)
             
-        if actionInfo.size_x != 0 and actionInfo.size_y != 0:
-            actionWidget.setSizeHint([actionInfo.size_x, actionInfo.size_y])
+        if actionInfo.docker_size_hint_x != 0 and actionInfo.docker_size_hint_y != 0:
+            actionWidget.setSizeHint([actionInfo.docker_size_hint_x, actionInfo.docker_size_hint_y])
 
         dock.addWidget(actionWidget)
         dock.setTitle(self.rootPanel.managers.mgr_dockers.dockerWindowTitle(actionInfo.docker_id))

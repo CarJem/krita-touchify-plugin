@@ -1,7 +1,7 @@
 
 from typing import Any
 from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
-from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
+from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
 from touchify.src.extensions.json_extensions import JsonExtensions
@@ -10,19 +10,19 @@ from touchify.src.extensions.json_extensions import JsonExtensions
 
 
    
-class ToolshelfContainer:
+class ToolshelfArea:
     def __defaults__(self):
         self.layout: dict[str, Any] = {}
         self.items: dict[str, ToolshelfDock] = {}
         self.pages: TypedList[ToolshelfPage] = []
-        self.options: ToolshelfSettings = ToolshelfSettings()
+        self.options: ToolshelfAreaSettings = ToolshelfAreaSettings()
         self.pageOptions: ToolshelfPageSettings = ToolshelfPageSettings()
 
         self.json_version: int = 1
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        JsonExtensions.dictToObject(self, args, [ToolshelfDock, ToolshelfSettings, ToolshelfPage, ToolshelfPageSettings])
+        JsonExtensions.dictToObject(self, args, [ToolshelfDock, ToolshelfAreaSettings, ToolshelfPage, ToolshelfPageSettings])
         self.pages = JsonExtensions.init_list(args, "pages", ToolshelfPage)
 
         for entry in self.items:

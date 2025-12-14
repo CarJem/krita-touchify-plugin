@@ -15,9 +15,9 @@ from touchify.src.components.toolshelf.ShelfTabBar import ShelfTabBar
 from touchify.src.components.toolshelf.ShelfToolbar import ShelfToolbar
 from touchify.src.components.toolshelf.ShelfWidgetStack import ShelfWidgetStack
 from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
-from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
+from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
-from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
+from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
 from touchify.src.extensions.json_extensions import JsonExtensions
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
@@ -94,21 +94,21 @@ class ShelfWidget(QWidget):
                 return self.getCurrentShelf(registry_index).preset_data
             else:
                 jsonStr = KritaSettings.readSetting(Env.SettingsPath.TOOLSHELF_NOPRESETDATA, str(registry_index), "")
-                return JsonExtensions.loadClass(jsonStr, ToolshelfContainer)
+                return JsonExtensions.loadClass(jsonStr, ToolshelfArea)
             
-        def saveLayout(self, state: ToolshelfContainer, registry_index: int):
+        def saveLayout(self, state: ToolshelfArea, registry_index: int):
             if self.getCurrentShelfId(registry_index).lower() != "none":
                 self.savePreset(state, registry_index, True)
             else:
                 jsonStr = JsonExtensions.saveClass(state)
                 KritaSettings.writeSetting(Env.SettingsPath.TOOLSHELF_NOPRESETDATA, str(registry_index), jsonStr, False)
             
-        def savePreset(self, state: ToolshelfContainer, registry_index: int, no_reload: bool = False):
+        def savePreset(self, state: ToolshelfArea, registry_index: int, no_reload: bool = False):
             cached_state = self.getCurrentShelf(registry_index)
             cached_state.preset_data = state
             self.sync(registry_index, no_reload)
         
-        def savePresetAs(self, editorResults: ShelfClasses.PresetSaveAs, state: ToolshelfContainer, registry_index: int):
+        def savePresetAs(self, editorResults: ShelfClasses.PresetSaveAs, state: ToolshelfArea, registry_index: int):
             selectedResourcePackIndex: int = int(editorResults.resource_pack) - 1
             if selectedResourcePackIndex <= -1: return
 
@@ -139,7 +139,7 @@ class ShelfWidget(QWidget):
     sigShelfIndexChanged = QtCore.pyqtSignal()
     sigEditModeChanged = QtCore.pyqtSignal(bool)
 
-    def __init__(self, parent, managers: "TouchifyManagers", registry_index: int = 0, fixed_state: ToolshelfContainer = None, parent_dock_widget: "ToolshelfNestedDock" = None):
+    def __init__(self, parent, managers: "TouchifyManagers", registry_index: int = 0, fixed_state: ToolshelfArea = None, parent_dock_widget: "ToolshelfNestedDock" = None):
         super(ShelfWidget, self).__init__(parent)
         self.display: "ToolshelfDockerWidget" | "PopupWidget" | "ToolshelfNestedDock" = parent
         self.managers = managers
@@ -169,7 +169,7 @@ class ShelfWidget(QWidget):
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
         self.dlgConfigEditor: PropertyGridDialog | None = None
-        self.containerOptions: ToolshelfSettings = ToolshelfSettings()
+        self.containerOptions: ToolshelfAreaSettings = ToolshelfAreaSettings()
         self.homepageOptions: ToolshelfPageSettings = ToolshelfPageSettings()
 
         self.api_window = self.managers.api_window()
@@ -267,7 +267,7 @@ class ShelfWidget(QWidget):
     def currentPresetId(self) -> str:
         return self.settingsLoader.getCurrentShelfId(self.registry_index)
 
-    def currentState(self) -> ToolshelfContainer:
+    def currentState(self) -> ToolshelfArea:
         def getState(dock_area: ShelfDockArea):
             subState = ToolshelfPage()
             subState.layout = dock_area.saveState()
@@ -279,9 +279,9 @@ class ShelfWidget(QWidget):
                     subState.items[uuid] = dock._dockSettings
             return subState
 
-        result = ToolshelfContainer()
+        result = ToolshelfArea()
 
-        rootState: ToolshelfContainer = getState(self.dockArea)
+        rootState: ToolshelfArea = getState(self.dockArea)
         result.layout = rootState.layout
         result.items = rootState.items
 
@@ -333,7 +333,7 @@ class ShelfWidget(QWidget):
             page.deleteLater()
 
 
-        self.containerOptions = ToolshelfSettings()
+        self.containerOptions = ToolshelfAreaSettings()
 
         self.dockPages.clear()
         self.dockPageOptions.clear()
@@ -351,7 +351,7 @@ class ShelfWidget(QWidget):
             self.settingsLoader.saveLayout(self.currentState(), self.registry_index)
 
     def loadLayout(self):
-        def loadShelf(sub_state: ToolshelfPage | ToolshelfContainer, dock_area: ShelfDockArea, dock_index: int):
+        def loadShelf(sub_state: ToolshelfPage | ToolshelfArea, dock_area: ShelfDockArea, dock_index: int):
             dock_area.setAreaId(self.getDockAreaId(dock_index))
             for uuid in sub_state.items:
                 item = sub_state.items[uuid]
@@ -367,19 +367,19 @@ class ShelfWidget(QWidget):
 
 
         self.resetLayout()
-        state: ToolshelfContainer
+        state: ToolshelfArea
 
         if self.is_restricted:
-            state: ToolshelfContainer = deepcopy(self.constant_data)
+            state: ToolshelfArea = deepcopy(self.constant_data)
         elif self.is_nested:
-            state: ToolshelfContainer = self.nestedDock.getMetadata()
+            state: ToolshelfArea = self.nestedDock.getMetadata()
         else:
-            state: ToolshelfContainer = self.settingsLoader.loadLayout(self.registry_index)
+            state: ToolshelfArea = self.settingsLoader.loadLayout(self.registry_index)
 
         if state == None:
             return
 
-        self.containerOptions: ToolshelfSettings = state.options
+        self.containerOptions: ToolshelfAreaSettings = state.options
         self.homepageOptions: ToolshelfPageSettings = state.pageOptions
 
         match self.containerOptions.position:

@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 from touchify.__env__ import *
 from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
-from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
+from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 from touchify.src.settings.TouchifySettings import TouchifySettings
 from krita import *
@@ -22,7 +22,7 @@ class PopupLoader(QObject):
         self.rootWidget = parent
 
     def Section_Actions(self, data: PopupData):
-        toolshelf_data: ToolshelfContainer = ToolshelfContainer()
+        toolshelf_data: ToolshelfArea = ToolshelfArea()
 
 
         action_section: ToolshelfDock = ToolshelfDock()
@@ -34,14 +34,14 @@ class PopupLoader(QObject):
         action_section.action_section_btn_width = data.actions_item_width
         action_section.min_size_x = data.popup_min_width
         action_section.min_size_y = data.popup_min_height
-        action_section.size_x = data.popup_width
-        action_section.size_y = data.popup_height
+        action_section.docker_size_hint_x = data.popup_width
+        action_section.docker_size_hint_y = data.popup_height
 
         toolshelf_data.items["action_list"] = action_section
         return toolshelf_data
     
     def Section_Dockers(self, data: PopupData):
-        toolshelf_data: ToolshelfContainer = ToolshelfContainer()
+        toolshelf_data: ToolshelfArea = ToolshelfArea()
 
         dockers = [ ]
 
@@ -65,8 +65,8 @@ class PopupLoader(QObject):
             docker_section.docker_nesting_mode = ToolshelfDock.DockerNestingMode.Docking
             docker_section.docker_unloaded_visibility = ToolshelfDock.DockerUnloadedVisibility.Hidden
             docker_section.docker_id = docker_id
-            docker_section.size_x = data.popup_width
-            docker_section.size_y = data.popup_height
+            docker_section.docker_size_hint_x = data.popup_width
+            docker_section.docker_size_hint_y = data.popup_height
             docker_section.min_size_x = data.popup_min_width
             docker_section.min_size_y = data.popup_min_height
             toolshelf_data.items[docker_id] = docker_section

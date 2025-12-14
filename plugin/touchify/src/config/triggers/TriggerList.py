@@ -89,8 +89,8 @@ class TriggerList:
             self.min_size_y = actionInfo.min_size_y
             self.max_size_x = actionInfo.max_size_x
             self.max_size_y = actionInfo.max_size_y
-            self.size_x = actionInfo.size_x
-            self.size_y = actionInfo.size_y
+            self.size_x = actionInfo.docker_size_hint_x
+            self.size_y = actionInfo.docker_size_hint_y
             self.ignore_scaling = actionInfo.ignore_scaling
     
     def propertygrid_hints(self):

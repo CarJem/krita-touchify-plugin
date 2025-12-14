@@ -1,3 +1,4 @@
+from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from touchify.src.alib_datatypes.TypedList import TypedList
 from touchify.src.extensions.json_extensions import JsonExtensions
@@ -70,9 +71,6 @@ class ToolshelfDock:
 
         self.docker_id: str = ""
 
-        self.size_x: int = 0
-        self.size_y: int = 0
-
         self.min_size_x: int = 0
         self.min_size_y: int = 0
 
@@ -87,6 +85,8 @@ class ToolshelfDock:
         self.docker_nesting_mode: str = "normal"
         self.docker_unloaded_visibility: str = "normal"
         self.docker_loading_priority: str = "normal"
+        self.docker_size_hint_x: int = 0
+        self.docker_size_hint_y: int = 0
 
         self.action_section_id: str = "Panel"
         self.action_section_display_mode: str = "normal"
@@ -101,15 +101,16 @@ class ToolshelfDock:
         self.special_slider_orientation: str = "horizontal"
         self.special_nested_show_titlebar: bool = True
 
-        from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
-        self.special_nested_data: ToolshelfContainer = ToolshelfContainer()
+        from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
+        self.special_nested_data: ToolshelfArea = ToolshelfArea()
 
-        self.json_version: int = 4
+        self.json_version: int = 5
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
-        JsonExtensions.dictToObject(self, args, [ToolshelfContainer])
+        args = BackwardsCompatibility.ToolshelfDock(args)
+        from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
+        JsonExtensions.dictToObject(self, args, [ToolshelfArea])
         self.action_section_contents = JsonExtensions.init_list(args, "action_section_contents", TriggerGroup)
 
     def forceLoad(self):
@@ -139,7 +140,7 @@ class ToolshelfDock:
     
     def propertygrid_hints(self):
         hints = {}
-        hints["size"] = "the base size of this section; leave set to 0 for automatic sizing"
+        hints["docker_size_hint"] = "the size hint of this docker; leave set to 0 for automatic sizing"
         hints["min_size"] = "the minimum size of this section; leave set to 0 for automatic sizing"
         hints["max_size"] = "the maximum size of this section; leave set to 0 for automatic sizing"
         return hints
@@ -223,7 +224,6 @@ class ToolshelfDock:
 
         labels["display_name"] = "Display Name"
 
-        labels["size"] = "Base Width / Height"
         labels["max_size"] = "Max Width / Height"
         labels["min_size"] = "Min Width / Height"
         labels["ignore_scaling"] = "Ignore Scaling"
@@ -233,6 +233,7 @@ class ToolshelfDock:
         labels["invert_required_tools"] = "Invert Requirements"
 
         labels["docker_id"] = "Docker ID"
+        labels["docker_size_hint"] = "Docker Width / Height Hint"
         labels["docker_nesting_mode"] = "Nesting Mode"
         labels["docker_unloaded_visibility"] = "Unloaded Visibility"
         labels["docker_loading_priority"] = "Loading Priority"
@@ -256,7 +257,6 @@ class ToolshelfDock:
             "display_name",
             "min_size",
             "max_size",
-            "size",
             "ignore_scaling",
             "requires_specific_tool",
             "invert_required_tools"
@@ -265,6 +265,7 @@ class ToolshelfDock:
         variant_group = [
             "section_type",
             "docker_id", 
+            "docker_size_hint",
             "docker_nesting_mode", 
             "docker_unloaded_visibility", 
             "docker_loading_priority",
@@ -285,15 +286,15 @@ class ToolshelfDock:
 
         row["action_section_btn_size"] = {"items": ["action_section_btn_width", "action_section_btn_height"]}
         row["action_section_alignment"] = {"items": ["action_section_alignment_x","action_section_alignment_y"]}
-        row["size"] = {"items": ["size_x","size_y"]}
+        row["docker_size_hint"] = {"items": ["docker_size_hint_x","docker_size_hint_y"]}
         row["min_size"] = {"items": ["min_size_x","min_size_y"]}
         row["max_size"] = {"items": ["max_size_x","max_size_y"]}
         return row
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["size_x"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["size_y"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["docker_size_hint_x"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["docker_size_hint_y"] = PropertyGrid_Restrictions.range(min=0)
         restrictions["min_size_x"] = PropertyGrid_Restrictions.range(min=0)
         restrictions["min_size_y"] = PropertyGrid_Restrictions.range(min=0)
         restrictions["max_size_x"] = PropertyGrid_Restrictions.range(min=0)

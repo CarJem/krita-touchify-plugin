@@ -8,7 +8,7 @@ from touchify.src.components.toolshelf.ShelfDock import ShelfDock
 
 from PyQt5.QtWidgets import QSizePolicy
 
-from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
+from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 
 if TYPE_CHECKING:
@@ -71,7 +71,7 @@ class ToolshelfNestedDock(ShelfDock):
     def onShelfIndexChanged(self):
         pass
 
-    def shelfReloadEvent(self, state: ToolshelfContainer):
+    def shelfReloadEvent(self, state: ToolshelfArea):
         pass
         #from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
         #if state.options.resize_style == ToolshelfSettings.ResizeStyle.Minimum:
@@ -90,11 +90,11 @@ class ToolshelfNestedDock(ShelfDock):
         #    self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         #    self.sizeManagementType = ToolshelfSettings.ResizeStyle.Default
 
-    def setMetadata(self, state: ToolshelfContainer):
+    def setMetadata(self, state: ToolshelfArea):
         self._dockSettings.special_nested_data = state
         self.parentShelf.saveLayout()
 
-    def getMetadata(self) -> ToolshelfContainer:
+    def getMetadata(self) -> ToolshelfArea:
         return self._dockSettings.special_nested_data
     
     def loadLayout(self):

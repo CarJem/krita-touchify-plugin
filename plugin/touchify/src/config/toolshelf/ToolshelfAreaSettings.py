@@ -4,7 +4,7 @@ from touchify.src.alib_datatypes.EnumStr import EnumStr
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
-class ToolshelfSettings:
+class ToolshelfAreaSettings:
     class StackPreview(EnumStr):
         Default = "default"
         Tabbed = "tabbed"

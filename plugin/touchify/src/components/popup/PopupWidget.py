@@ -10,8 +10,8 @@ from touchify.src.components.popup.PopupLoader import PopupLoader
 from touchify.src.components.popup.PopupTitlebar import PopupTitlebar
 from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
 from touchify.src.config.popup.PopupData import PopupData
-from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
-from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
+from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
+from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.alib_widgets.widget.AnimatedWidget import AnimatedWidget
 
@@ -82,7 +82,7 @@ class PopupWidget(QDockWidget, AnimatedWidget):
         self.container.setLayout(self.containerLayout)
 
         self.containerLoader = PopupLoader(self)
-        self.containerWidget = ShelfWidget(self, self.managers, 0, ToolshelfContainer())
+        self.containerWidget = ShelfWidget(self, self.managers, 0, ToolshelfArea())
         self.containerLayout.addWidget(self.containerWidget)
         
         self.dockLocationChanged.connect(self.onDockLocationChanged)
@@ -405,8 +405,8 @@ class PopupWidget(QDockWidget, AnimatedWidget):
     def enterEvent(self, e: QEnterEvent):
         return super().enterEvent(e)
 
-    def shelfReloadEvent(self, state: ToolshelfContainer):
-        if state.options.resize_style == ToolshelfSettings.ResizeStyle.Minimum:
+    def shelfReloadEvent(self, state: ToolshelfArea):
+        if state.options.resize_style == ToolshelfAreaSettings.ResizeStyle.Minimum:
             self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
             self._shrinkToFit = True
         else:

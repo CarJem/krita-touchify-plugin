@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 
 
 from touchify.__env__ import *
-from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
-from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
+from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
+from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 from touchify.src.managers.GlobalEvents import GlobalEvents
 
 if TYPE_CHECKING:
@@ -35,7 +35,7 @@ class ToolshelfDockerWidget(DockWidget):
         self.mainWidget: ShelfWidget = None
         
         self._originalSizePolicy = self.sizePolicy()
-        self.sizeManagementType = ToolshelfSettings.ResizeStyle.Default
+        self.sizeManagementType = ToolshelfAreaSettings.ResizeStyle.Default
 
 
         
@@ -71,13 +71,13 @@ class ToolshelfDockerWidget(DockWidget):
     def shrinkToFit(self):
         margins = self.getWindowMargins()
         if self.isFloating():
-            if self.sizeManagementType == ToolshelfSettings.ResizeStyle.Minimum:
+            if self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.Minimum:
                 self.resize(self.mainWidget.minimumSize().grownBy(margins))
-            elif self.sizeManagementType == ToolshelfSettings.ResizeStyle.AdjustSize:
+            elif self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.AdjustSize:
                 self.adjustSize()
-            elif self.sizeManagementType == ToolshelfSettings.ResizeStyle.SizeHint:
+            elif self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.SizeHint:
                 self.resize(self.mainWidget.sizeHint().grownBy(margins))
-            elif self.sizeManagementType == ToolshelfSettings.ResizeStyle.SizeHintMinimum:
+            elif self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.SizeHintMinimum:
                 self.resize(self.mainWidget.minimumSizeHint().grownBy(margins))
         else:
             pass
@@ -86,22 +86,22 @@ class ToolshelfDockerWidget(DockWidget):
     def onShelfIndexChanged(self):
         pass
 
-    def shelfReloadEvent(self, state: ToolshelfContainer):
-        if state.options.resize_style == ToolshelfSettings.ResizeStyle.Minimum:
+    def shelfReloadEvent(self, state: ToolshelfArea):
+        if state.options.resize_style == ToolshelfAreaSettings.ResizeStyle.Minimum:
             self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-            self.sizeManagementType = ToolshelfSettings.ResizeStyle.Minimum
-        elif state.options.resize_style == ToolshelfSettings.ResizeStyle.AdjustSize:
+            self.sizeManagementType = ToolshelfAreaSettings.ResizeStyle.Minimum
+        elif state.options.resize_style == ToolshelfAreaSettings.ResizeStyle.AdjustSize:
             self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-            self.sizeManagementType = ToolshelfSettings.ResizeStyle.AdjustSize
-        elif state.options.resize_style == ToolshelfSettings.ResizeStyle.SizeHintMinimum:
+            self.sizeManagementType = ToolshelfAreaSettings.ResizeStyle.AdjustSize
+        elif state.options.resize_style == ToolshelfAreaSettings.ResizeStyle.SizeHintMinimum:
             self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-            self.sizeManagementType = ToolshelfSettings.ResizeStyle.SizeHintMinimum
-        elif state.options.resize_style == ToolshelfSettings.ResizeStyle.SizeHint:
+            self.sizeManagementType = ToolshelfAreaSettings.ResizeStyle.SizeHintMinimum
+        elif state.options.resize_style == ToolshelfAreaSettings.ResizeStyle.SizeHint:
             self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-            self.sizeManagementType = ToolshelfSettings.ResizeStyle.SizeHint
+            self.sizeManagementType = ToolshelfAreaSettings.ResizeStyle.SizeHint
         else:
             self.setSizePolicy(self._originalSizePolicy)
-            self.sizeManagementType = ToolshelfSettings.ResizeStyle.Default
+            self.sizeManagementType = ToolshelfAreaSettings.ResizeStyle.Default
 
     def onConfigUpdated(self, registry_index: int = -1):
         if registry_index == -1 or registry_index == self.PanelIndex:

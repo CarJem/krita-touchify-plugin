@@ -109,8 +109,10 @@ class WidgetPadManager(QObject):
                 return None
             else:
                 return self.LAYOUT_CACHE[alignKey][index]
-            
 
+        # This keeps the widgets from reorganizing before they are actually visible when a view opens up
+        if self.managers.mgr_canvas.active_canvas == None:
+            return            
 
         self.LAYOUT_CACHE[alignKey].sort(key=lambda x: (x.isVisible(), x._priority))
         for i, j in enumerate(self.LAYOUT_CACHE[alignKey]):

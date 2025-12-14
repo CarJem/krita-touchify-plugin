@@ -78,48 +78,12 @@ class BackwardsCompatibility:
             Helpers.setVersion(args, 1)
         return args
 
-    def ToolshelfData(args: dict[str, any]):
+    def ToolshelfDock(args: dict[str, any]):
         if not args: return args
-        if Helpers.isLegacyConfig(args):
-            Helpers.changeVarName(args, "actionHeight", "action_height")
-            Helpers.changeVarName(args, "presetName", "preset_name")
-            Helpers.setVersion(args, 1)
-        if Helpers.getVersion(args) == 1:
-            Helpers.changeVarName(args, "panels", "pages")
-            Helpers.setVersion(args, 2)
-        if Helpers.getVersion(args) == 2:
-            args["homepage"] = {}
-            if "sections" in args: args["homepage"]["sections"] = args["sections"]
-            if "actions" in args: args["homepage"]["actions"] = args["actions"]
-            if "tab_type" in args: args["homepage"]["tab_type"] = args["tab_type"]
-            if "action_height" in args: args["homepage"]["action_height"] = args["action_height"]
-            Helpers.setVersion(args, 3)
-        return args
-    
-    def ToolshelfDataPage(args: dict[str, any]):
-        if not args: return args
-        if Helpers.isLegacyConfig(args):
-            Helpers.changeVarName(args, "actionHeight", "action_height")
-            Helpers.setVersion(args, 1)
-        if Helpers.getVersion(args) == 1:
-            Helpers.changeVarName(args, "row", "toolshelf_tab_row")
-            Helpers.setVersion(args, 2)
-        return args
-
-    def ToolshelfDataSection(args: dict[str, any]):
-        if not args: return args
-        if Helpers.isLegacyConfig(args) or Helpers.getVersion(args) == 1:
-            Helpers.changeVarName(args, "id", "docker_id")
-            Helpers.changeVarName(args, "action_section_name", "action_section_id")
-            Helpers.setVersion(args, 2)
-        if Helpers.getVersion(args) == 2:
-            Helpers.changeVarName(args, "action_section_alignment_x", "section_alignment_x")
-            Helpers.changeVarName(args, "action_section_alignment_y", "section_alignment_y")
-            Helpers.setVersion(args, 3)
-        if Helpers.getVersion(args) == 3:
-            Helpers.changeVarName(args, "section_alignment_x", "action_section_alignment_x")
-            Helpers.changeVarName(args, "section_alignment_y", "action_section_alignment_y")
-            Helpers.setVersion(args, 4)
+        if Helpers.getVersion(args) == 4:
+            Helpers.changeVarName(args, "size_x", "docker_size_hint_x")
+            Helpers.changeVarName(args, "size_y", "docker_size_hint_y")
+            Helpers.setVersion(args, 5)
         return args
   
     def PopupData(args: dict[str, any]):
@@ -152,14 +116,6 @@ class BackwardsCompatibility:
         if Helpers.isLegacyConfig(args):
             Helpers.changeVarName(args, "presetName", "preset_name")
             Helpers.setVersion(args, 1)
-        return args
-    
-    def WidgetLayout(args: dict[str, any]):
-        if not args: return args
-        if Helpers.getVersion(args) == 1:
-            Helpers.changeVarName(args, "toolshelf", "toolshelf_alpha")
-            Helpers.changeVarName(args, "toolshelf_alt", "toolshelf_beta")
-            Helpers.setVersion(args, 2)
         return args
     
     def ToolboxDataItem(args: dict[str, any]):
