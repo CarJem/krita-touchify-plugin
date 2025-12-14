@@ -7,6 +7,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from touchify.__env__ import *
 from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
+from touchify.src.managers.normal.canvas import WidgetPadAlignment
 from touchify.src.managers.shared.resources import ResourceManager
 from touchify.src.managers.shared.settings_krita import KritaSettings
 if TYPE_CHECKING:
@@ -15,54 +16,6 @@ if TYPE_CHECKING:
 
 
 EDGE_PADDING=5
-
-class WidgetPadAlignment(IntEnum):
-    AlignNone = 0,
-    TopLeft = 1,
-    TopCenter = 2,
-    TopRight = 3,
-    MidLeft = 4,
-    MidRight = 5,
-    BottomLeft = 6,
-    BottomCenter = 7,
-    BottomRight = 8       
-    
-class WidgetPadState:
-    WIDGETPAD_DIRECTIONS: dict[int, list["ToolshelfDockerWidgetPad"]] = {}
-
-
-    @staticmethod
-    def updateNeighbors(alignKey: WidgetPadAlignment):
-        if alignKey not in WidgetPadState.WIDGETPAD_DIRECTIONS:
-            WidgetPadState.WIDGETPAD_DIRECTIONS[alignKey] = []
-    
-        WidgetPadState.WIDGETPAD_DIRECTIONS[alignKey].sort(key=lambda x: x._priority, reverse=False)
-        for i, j in enumerate(WidgetPadState.WIDGETPAD_DIRECTIONS[alignKey]):
-            if i == 0: 
-                j.setNeighbor(None)
-            else: 
-                j.setNeighbor(WidgetPadState.WIDGETPAD_DIRECTIONS[alignKey][i-1])
-
-    @staticmethod
-    def movePadTo(src: "ToolshelfDockerWidgetPad", alignFrom: WidgetPadAlignment, alignTo: WidgetPadAlignment):
-        if alignFrom == alignTo:
-            return
-
-        if alignFrom not in WidgetPadState.WIDGETPAD_DIRECTIONS:
-            WidgetPadState.WIDGETPAD_DIRECTIONS[alignFrom] = []
-        
-        if src in WidgetPadState.WIDGETPAD_DIRECTIONS[alignFrom]:
-            WidgetPadState.WIDGETPAD_DIRECTIONS[alignFrom].remove(src)
-        
-
-        if alignTo not in WidgetPadState.WIDGETPAD_DIRECTIONS:
-            WidgetPadState.WIDGETPAD_DIRECTIONS[alignTo] = []
-
-        WidgetPadState.WIDGETPAD_DIRECTIONS[alignTo].append(src)
-        WidgetPadState.updateNeighbors(alignFrom)
-        WidgetPadState.updateNeighbors(alignTo)
-
-
 
 class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
     DOCKER_TITLE=f"{Env.Title.CORE_DOCKERS_PREFIX} Widget Pad"
@@ -263,14 +216,6 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self.setPriority(value)
         self._settings.setPriority(value)
 
-    def moveEvent(self, a0):
-        self._lastNeighborSize = self.getOffset()
-        return super().moveEvent(a0)
-
-    def resizeEvent(self, a0):
-        self._lastNeighborSize = self.getOffset()
-        return super().resizeEvent(a0)
-
     def onHeaderToggled(self, state: bool):
         self.mainWidget.setTitlebarVisibility(state)
         self._settings.setShowHeader(state)
@@ -292,7 +237,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         super().timerEvent(a0)
 
     def setAlignment(self, align: WidgetPadAlignment):
-        WidgetPadState.movePadTo(self,  self._alignment, align)
+        self.managers.mgr_canvas.api_widgetpad.movePadTo(self,  self._alignment, align)
         self._alignment = align
 
         match align:
@@ -317,17 +262,19 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
 
     def setNeighbor(self, neighbor: "ToolshelfDockerWidgetPad"):
         self._neighbor = neighbor
-        self._lastNeighborSize = self.getOffset()
 
     def getOffset(self):
         if self._neighbor == None: 
             return QSize(0,0)
         else:
-            return self._neighbor.size() + QSize(EDGE_PADDING, EDGE_PADDING) + self._neighbor.getOffset()
+            if self._neighbor.isVisible():
+                return self._neighbor.size() + QSize(EDGE_PADDING, EDGE_PADDING)+ self._neighbor.getOffset()
+            else:
+                return self._neighbor.getOffset()
 
     def setPriority(self, level: int):
         self._priority = level
-        WidgetPadState.updateNeighbors(self._alignment)
+        self.managers.mgr_canvas.api_widgetpad.updateNeighbors(self._alignment)
 
     def syncPosition(self):
         if not self.isVisible():
@@ -343,6 +290,9 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
 
         if not active_canvas:
             return
+        
+
+        self._lastNeighborSize = self.getOffset()
         
         space_rect = active_canvas.rect()
         docker_width = self.width()
