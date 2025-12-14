@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
 from krita import QStackedWidget
 
-from touchify.src.managers.normal.dockers import QStackedWidget
-from touchify.src.managers.shared.settings import QStackedWidget
+from touchify.src.managers.DockerManager import QStackedWidget
+from touchify.src.settings.TouchifySettings import QStackedWidget
 
 
 from PyQt5.QtWidgets import QStackedWidget

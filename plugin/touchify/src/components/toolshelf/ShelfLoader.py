@@ -3,29 +3,29 @@ from PyQt5.QtCore import *
 
 from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
 from touchify.src.components.toolshelf.ShelfDock import ShelfDock
-from touchify.src.components.trigger_buttons.TouchifyActionPanel import TouchifyActionPanel
-from touchify.src.components.widgets.CanvasDualColorButton import CanvasDualColorButton
+from touchify.src.components.widgets.triggers.TriggerPanel import TriggerPanel
+from touchify.src.components.widgets.canvas.CanvasDualColorButton import CanvasDualColorButton
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
-from touchify.src.components.widgets.BrushBlendingSelector import BrushBlendingSelector
-from touchify.src.components.widgets.sliders.BrushFlowSlider import BrushFlowSlider
-from touchify.src.components.widgets.sliders.BrushOpacitySlider import BrushOpacitySlider
-from touchify.src.components.widgets.BrushAngleSelector import BrushAngleSelector
-from touchify.src.components.widgets.sliders.BrushSizeSlider import BrushSizeSlider
-from touchify.src.components.widgets.BrushPresetPicker import BrushPresetPicker
-from touchify.src.components.widgets.CanvasColorPicker import CanvasColorPicker
-from touchify.src.components.widgets.CanvasGradientPicker import CanvasGradientPicker
-from touchify.src.components.widgets.CanvasPatternPicker import CanvasPatternPicker
-from touchify.src.components.special.DockerContainer import DockerContainer
+from touchify.src.components.widgets.brush.BrushBlendingSelector import BrushBlendingSelector
+from touchify.src.components.widgets.brush.BrushFlowSlider import BrushFlowSlider
+from touchify.src.components.widgets.brush.BrushOpacitySlider import BrushOpacitySlider
+from touchify.src.components.widgets.brush.BrushAngleSelector import BrushAngleSelector
+from touchify.src.components.widgets.brush.BrushSizeSlider import BrushSizeSlider
+from touchify.src.components.widgets.brush.BrushPresetPicker import BrushPresetPicker
+from touchify.src.components.widgets.canvas.CanvasColorPicker import CanvasColorPicker
+from touchify.src.components.widgets.canvas.CanvasGradientPicker import CanvasGradientPicker
+from touchify.src.components.widgets.canvas.CanvasPatternPicker import CanvasPatternPicker
+from touchify.src.components.widgets.other.DockerContainer import DockerContainer
 
-from touchify.src.components.widgets.LayerBlendingSelector import LayerBlendingSelector
-from touchify.src.components.widgets.LayerLabelBox import LayerLabelBox
+from touchify.src.components.widgets.layers.LayerBlendingSelector import LayerBlendingSelector
+from touchify.src.components.widgets.layers.LayerLabelBox import LayerLabelBox
 
 
 from krita import *
 
 from typing import TYPE_CHECKING
 
-from touchify.src.config.triggers.TriggerPanel import TriggerPanel
+from touchify.src.config.triggers.TriggerList import TriggerList
 
 if TYPE_CHECKING:
     from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
@@ -46,10 +46,10 @@ class ShelfLoader(QObject):
     def Section_Actions(self, actionInfo: ToolshelfDock):
         dock = ShelfDock(actionInfo)
         
-        cfg = TriggerPanel()
+        cfg = TriggerList()
         cfg.convertFrom(type(ToolshelfDock), actionInfo)
 
-        actionWidget = TouchifyActionPanel(cfg=cfg, parent=dock, actions_manager=self.rootPanel.managers.mgr_actions)
+        actionWidget = TriggerPanel(cfg=cfg, parent=dock, actions_manager=self.rootPanel.managers.mgr_actions)
         actionWidget.Data_Load()
         dock.setTitle(actionWidget.title)
         dock.addWidget(actionWidget)

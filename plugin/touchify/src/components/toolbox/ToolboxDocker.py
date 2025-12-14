@@ -10,9 +10,9 @@ from krita import *
 from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.__env__ import *
 from touchify.src.components.toolbox.ToolboxLayout import ToolboxEmptySpace
-from touchify.src.components.special.PropertyGridDialog import PropertyGridDialog
+from touchify.src.alib_propertygrid.PropertyGridDialog import PropertyGridDialog
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
-from touchify.src.managers.shared.events import GlobalEvents
+from touchify.src.managers.GlobalEvents import GlobalEvents
 from touchify.__env__ import *
 
 from touchify.src.components.toolbox.ToolboxLoader import ToolboxLoader
@@ -21,12 +21,12 @@ from touchify.src.components.toolbox.ToolboxMenu import ToolboxMenu
 from touchify.src.components.toolbox.ToolboxScrollArea import ToolboxScrollArea
 from touchify.src.config.toolbox.ToolboxDataCategory import ToolboxDataCategory
 from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
-from touchify.src.managers.shared.settings import TouchifySettings
+from touchify.src.settings.TouchifySettings import TouchifySettings
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 
 from typing import TYPE_CHECKING, Any
 
-from touchify.src.managers.shared.settings_krita import KritaSettings
+from touchify.src.settings.KritaSettings import KritaSettings
 if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
     from ...PluginWindow import TouchifyWindow
@@ -257,25 +257,25 @@ class ToolboxDocker(QDockWidget):
             QScrollArea > QWidget > QWidget {{ background: transparent; }}
             QScrollArea > QWidget > QScrollBar {{ background: palette(base); }}
             
-            TouchifyActionButton {{
+            TriggerButton {{
                 background-color: #{alt_opacity_hex}{background_hex};
                 border: 1px solid transparent;
                 border-radius: 4px;
             }}
             
-            TouchifyActionButton[toggled="true"] {{
+            TriggerButton[toggled="true"] {{
                 background-color: #{alt_opacity_hex}{highlight_hex};
             }}
 
-            TouchifyActionButton[menu_toggled="true"] {{
+            TriggerButton[menu_toggled="true"] {{
                 border: 1px solid #{alt_opacity_hex}{highlight_hex};
             }}
             
-            TouchifyActionButton:hover {{
+            TriggerButton:hover {{
                 background-color: #{alt_opacity_hex}{highlight_hex};
             }}
             
-            TouchifyActionButton:pressed {{
+            TriggerButton:pressed {{
                 background-color: #{alt_opacity_hex}{alternate_hex};
             }}
         """)

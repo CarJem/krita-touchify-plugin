@@ -4,14 +4,14 @@ from krita import *
 from PyQt5.QtCore import *
 
 from touchify.src.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
-from touchify.src.components.widgets.sliders.BrushFlowSlider import BrushFlowSlider
-from touchify.src.components.widgets.sliders.BrushOpacitySlider import BrushOpacitySlider
-from touchify.src.components.widgets.BrushAngleSelector import BrushAngleSelector
-from touchify.src.components.widgets.sliders.BrushSizeSlider import BrushSizeSlider
+from touchify.src.components.widgets.brush.BrushFlowSlider import BrushFlowSlider
+from touchify.src.components.widgets.brush.BrushOpacitySlider import BrushOpacitySlider
+from touchify.src.components.widgets.brush.BrushAngleSelector import BrushAngleSelector
+from touchify.src.components.widgets.brush.BrushSizeSlider import BrushSizeSlider
 from touchify.__env__ import *
 
-from touchify.src.managers.shared.settings_krita import *
-from touchify.src.components.krita.KisSliderSpinBox import KisSliderSpinBox
+from touchify.src.settings.KritaSettings import *
+from touchify.src.alib_kis.widgets.KisSliderSpinBox import KisSliderSpinBox
 
 DOCKER_TITLE = 'Touchify Addon: Brush Options'
 DOCKER_ID = "Touchify/BrushOptionsDocker"

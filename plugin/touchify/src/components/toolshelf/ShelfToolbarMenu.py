@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from krita import QAction, QMenu, pyqtSignal
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
-from touchify.src.managers.shared.settings import TouchifySettings
+from touchify.src.settings.TouchifySettings import TouchifySettings
 
 
 from PyQt5.QtWidgets import QAction, QMenu

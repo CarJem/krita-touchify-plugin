@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.src.components.toolshelf.ShelfDock import ShelfDock
-from touchify.src.components.special.PropertyGridDialog import PropertyGridDialog
+from touchify.src.alib_propertygrid.PropertyGridDialog import PropertyGridDialog
 from touchify.src.components.toolshelf.ShelfLoader import ShelfLoader
 
 from touchify.src.components.toolshelf.ShelfDockArea import ShelfDockArea
@@ -21,15 +21,15 @@ from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
 from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
 from touchify.src.extensions.json_extensions import JsonExtensions
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
-from touchify.src.managers.shared.events import GlobalEvents
+from touchify.src.managers.GlobalEvents import GlobalEvents
 import touchify.src.components.toolshelf.ShelfClasses as ShelfClasses
-from touchify.src.managers.shared.settings import *
+from touchify.src.settings.TouchifySettings import *
 from touchify.__env__ import *
-from touchify.src.managers.normal.dockers import *
+from touchify.src.managers.DockerManager import *
 
 from typing import TYPE_CHECKING, Any
 
-from touchify.src.managers.shared.settings_krita import KritaSettings
+from touchify.src.settings.KritaSettings import KritaSettings
 if TYPE_CHECKING:
     from .ToolshelfDockerWidget import ToolshelfDockerWidget
     from ..popup.PopupWidget import PopupWidget
@@ -549,6 +549,21 @@ class ShelfWidget(QWidget):
         dock_item: ToolshelfNestedDock = current_area.docks[item_uuid]   
         dock_item.setContainerEditMode(True)
 
+    def editNestedContainerSettings(self, item_uuid: str):
+        current_area: ShelfDockArea | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfDockArea):
+            return
+
+        if item_uuid not in current_area.docks:
+            return
+        
+        from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
+        if not isinstance(current_area.docks[item_uuid], ToolshelfNestedDock):
+            return
+        
+        dock_item: ToolshelfNestedDock = current_area.docks[item_uuid]   
+        dock_item.nestedShelf.openShelfMenu(QCursor.pos())
+
     #endregion
 
     #region Actions (Presets)
@@ -580,6 +595,12 @@ class ShelfWidget(QWidget):
     #endregion
 
     #region Actions
+
+    def openShelfMenu(self, pos: QPoint = None):
+        if pos == None:
+            pos = QCursor.pos()
+        
+        self.header.showToolbarMenuDetached(pos)
 
     def goToHomePage(self):
         self.dockStack.setCurrentIndex(0)
@@ -616,13 +637,16 @@ class ShelfWidget(QWidget):
         from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
         if isinstance(dock_item, ToolshelfNestedDock):
             context_menu.addAction("Edit Dock...", partial(self.editShelfItem, item_id))
-            context_menu.addAction("Edit Container...", partial(self.editNestedContainer, item_id))
+            context_menu.addAction("Edit Shelf...", partial(self.editNestedContainer, item_id))
         else:
             context_menu.addAction("Edit Dock...", partial(self.editShelfItem, item_id))
 
         context_menu.addAction("Clone Dock", partial(self.cloneShelfItem, item_id))
         context_menu.addSeparator()
         context_menu.addAction("Delete Dock", partial(self.deleteShelfItem, item_id))
+
+        if isinstance(dock_item, ToolshelfNestedDock):
+            context_menu.addAction("Open Shelf Menu...", partial(self.editNestedContainerSettings, item_id))
 
 
         context_menu.exec_(pos)

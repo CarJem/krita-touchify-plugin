@@ -1,0 +1,178 @@
+from PyQt5.QtWidgets import *
+from touchify.__env__ import *
+from touchify.src.api_krita import KritaAPI
+from touchify.src.api_krita.wrappers.window import WindowAPI
+from touchify.src.managers.DockerManager import *
+from krita import *
+from touchify.src.api_krita.enums.blending_mode import BlendingMode, PRETTY_NAMES
+
+
+class BrushBlendingOption(QWidgetAction):
+
+
+    class Label(QLabel):
+        clicked=pyqtSignal()
+
+        def mousePressEvent(self, ev):
+            self.clicked.emit()
+
+    toggled = pyqtSignal(QWidgetAction)
+
+    def __init__(self, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+
+        self.hostWidget = QWidget(parent)
+        self.setDefaultWidget(self.hostWidget)
+
+        self.hostLayout = QHBoxLayout(self.hostWidget)
+        self.hostLayout.setContentsMargins(0,0,0,0)
+        self.hostWidget.setLayout(self.hostLayout)
+
+        self.checkbox = QCheckBox(self.hostWidget)
+        self.checkbox.stateChanged.connect(self.onToggled)
+        self.hostLayout.addWidget(self.checkbox, 0, Qt.AlignmentFlag.AlignLeft)
+
+        self.label = BrushBlendingOption.Label(self.hostWidget)
+        self.label.setStyleSheet("text-align: left; padding: 4px;")
+        self.label.clicked.connect(self.onClicked)
+        self.hostLayout.addWidget(self.label, 0, Qt.AlignmentFlag.AlignLeft)
+
+        self.hostLayout.addStretch()
+        
+
+
+        self.__doNotUpdate = False
+
+    def setText(self, text: str):
+        self.label.setText(text)
+        super().setText(text)
+
+    def isCheckboxChecked(self):
+        return self.checkbox.isChecked()
+
+    def setCheckboxChecked(self, state: bool):
+        self.__doNotUpdate = True
+        self.checkbox.setChecked(state)
+        self.__doNotUpdate = False
+
+    def onClicked(self):
+        self.triggered.emit()
+
+    def onToggled(self):
+        if self.__doNotUpdate == False:
+            self.toggled.emit(self)
+
+class BrushBlendingSelector(QPushButton):
+    def __init__(self, parent: QWidget=None):
+        super().__init__(parent)
+        self.constructLayout()
+
+    def constructLayout(self):
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.modeActions: list[BrushBlendingOption] = []
+        self.setMinimumHeight(30)
+
+        self.clicked.connect(self.showMenu)  
+        self.menu = QMenu(self)
+        self.menu.aboutToShow.connect(self.beforeShow)
+        self.setStyleSheet("text-align: left; padding: 4px;")
+
+        self.favsMenu = self.menu.addMenu("Favorites")
+        self.favsUpdating = False
+
+        for group in BlendingMode._groups_:
+            subMenu = self.menu.addMenu(group)
+            for mode in BlendingMode._groups_[group]:
+                actualName = self.getFancyName(mode.value)
+                action = BrushBlendingOption(subMenu)
+                action.setText(actualName)
+                action.setData(mode.value)
+                action.triggered.connect(self.changePreset)
+                action.toggled.connect(self.toggleFavorite)
+                self.modeActions.append(action)
+                subMenu.addAction(action)
+        self.updateFavs()
+        self.setMenu(self.menu)
+
+    def setInstance(self, window: WindowAPI):
+        self.notifier = window.notifier
+        self.notifier.brushBlendingModeChanged.connect(self.onBlendingModeChanged)
+        self.onBlendingModeChanged(self.notifier.getBrushBlendingMode())
+
+    def showEvent(self, event):
+        super().showEvent(event)
+
+    def hideEvent(self, event):
+        super().hideEvent(event)
+        
+    def closeEvent(self, event):
+        super().closeEvent(event)
+
+    def beforeShow(self):
+        self.updateFavs()
+
+    def onBlendingModeChanged(self, blending_mode: str):
+        text = self.getFancyName(blending_mode)
+        self.setText(text)
+
+    def updateFavs(self):
+        if self.favsUpdating: return
+
+        self.favsUpdating = True
+        self.favsMenu.clear()
+
+        self.favoriteModes = KritaAPI.read_setting("", "favoriteCompositeOps", "").split(",")
+        for mode in self.favoriteModes:
+            actualName = self.getFancyName(mode)
+            action = self.favsMenu.addAction(actualName)
+            action.setData(mode)
+            action.triggered.connect(self.changePreset)
+
+        for action in self.modeActions:
+            mode_id = str(action.data())
+            if mode_id in self.favoriteModes:
+                action.setCheckboxChecked(True)
+            else:
+                action.setCheckboxChecked(False)
+        self.favsUpdating = False
+
+    def toggleFavorite(self, sender: BrushBlendingOption):
+        if self.favsUpdating: return
+        
+        mode = str(sender.data())
+
+        favoriteCompositeOps = KritaAPI.read_setting("", "favoriteCompositeOps", "").split(",")
+
+        if sender.isCheckboxChecked() == True and mode not in favoriteCompositeOps:
+            favoriteCompositeOps.append(mode)
+        elif sender.isCheckboxChecked() == False and mode in favoriteCompositeOps:
+            favoriteCompositeOps.remove(mode)
+
+        KritaAPI.write_setting("", "favoriteCompositeOps", ",".join(favoriteCompositeOps))
+        self.updateFavs()
+
+    def getFancyName(self, activeMode: str):
+        for group in BlendingMode._groups_:
+            for mode in BlendingMode._groups_[group]:
+                if activeMode == mode.value:
+                    actualName = mode.name
+                    if mode in PRETTY_NAMES:
+                        actualName = PRETTY_NAMES[mode]
+                    else:
+                        actualName = mode.name.replace('_', ' ').title()
+                    return actualName
+        return activeMode
+        
+    @pyqtSlot()
+    def changePreset(self):
+        sender: QAction = self.sender()
+        mode = str(sender.data())
+
+        activeView = KritaAPI.get_active_view()
+        if not activeView: return
+
+        activeView.blending_mode = BlendingMode.of(mode)
+        self.setText(sender.text())
+        self.updateFavs()
+

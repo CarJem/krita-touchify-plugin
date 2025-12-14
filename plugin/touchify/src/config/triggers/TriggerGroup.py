@@ -1,5 +1,5 @@
 
-from touchify.src.datatypes.sequence.TypedList import TypedList
+from touchify.src.alib_datatypes.TypedList import TypedList
 from touchify.src.extensions.json_extensions import JsonExtensions
 
 class TriggerGroup:

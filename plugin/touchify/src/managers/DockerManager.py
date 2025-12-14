@@ -1,0 +1,200 @@
+from enum import Enum
+from krita import *
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtCore import *
+
+from touchify.src.settings.TouchifySettings import *
+
+from typing import TYPE_CHECKING, Callable
+if TYPE_CHECKING:
+    from ..PluginWindow import TouchifyWindow
+
+ENABLE_DEBUG=False
+
+def printDebug(value: str):
+    if ENABLE_DEBUG: print("[DockerManager] :: ", value)
+
+class DockerManager(QObject):
+    class BorrowData:
+        def __init__(self, dockMode: bool, previousVisibility: bool, mainWindow: QMainWindow, dockWidgetArea: Qt.DockWidgetArea) -> None:
+            self.dockerParent = None
+            self.dockerWidget = None
+            self.dockerScrollArea: QScrollArea | None = None
+
+            self.dockMode = dockMode
+            self.previousVisibility = previousVisibility
+            self.dockWidgetArea = dockWidgetArea
+            self.detachedScrollArea = False
+            self.previousTitlebar = None
+
+
+            self.mainWindow = mainWindow
+
+            self.isDead = False
+        
+        def setWidgetData(self, docker: QDockWidget):
+            if self.dockMode:
+                self.dockerWidget: QDockWidget = docker
+                self.previousTitlebar = self.dockerWidget.titleBarWidget()
+                self.titleBarHider = QWidget()
+                self.titleBarHider.setFixedHeight(0)
+                self.dockerWidget.setTitleBarWidget(self.titleBarHider)
+            else:
+                self.dockerParent: QDockWidget = docker
+                self.dockerWidget: QWidget = docker.widget()
+                self.dockerParent.hide()
+
+            if isinstance(self.dockerWidget, QScrollArea):
+                self.detachedScrollArea = True
+                self.dockerScrollArea: QScrollArea = self.dockerWidget
+                self.dockerWidget = self.dockerScrollArea.takeWidget()
+        
+        def clearWidgetData(self):
+            self.dockerWidget: QDockWidget
+            
+            if self.detachedScrollArea:
+                self.dockerScrollArea.setWidget(self.dockerWidget)
+                self.dockerWidget = self.dockerScrollArea
+
+
+            if self.dockMode == True:
+                self.mainWindow.addDockWidget(self.dockWidgetArea, self.dockerWidget)
+                self.dockerWidget.setTitleBarWidget(self.previousTitlebar)
+                if self.previousVisibility == False:
+                    self.dockerWidget.hide()
+            else:
+                self.dockerParent.setWidget(self.dockerWidget)
+                if self.previousVisibility == True:
+                    self.dockerParent.show()
+            
+            self.isDead = True
+
+    class SignalType(Enum):
+        OnReleaseDocker = 1,
+        OnLoadDocker = 3
+
+    class LoadArguments:
+        def __init__(self, dockMode: bool = False) -> None:
+            self.dockMode = dockMode
+
+    onReleaseDockerSignal = pyqtSignal(str)
+    onStealDockerSignal = pyqtSignal(str)
+    onLoadDockerSignal = pyqtSignal(str)
+
+    def __init__(self, app_window: "TouchifyWindow"):
+        
+        super().__init__(app_window)
+
+        self.app_window = app_window
+
+        self._shareData: dict[any, DockerManager.BorrowData] = {}
+        self._listeners: dict[DockerManager.SignalType, list] = {}
+        self._hiddenDockers: dict[Qt.DockWidgetArea, list[str]] = {}
+
+        self._hiddenDockers[1] = TouchifySettings.preferences().DockerUtils_HiddenDockersLeft.split(",")
+        self._hiddenDockers[2] = TouchifySettings.preferences().DockerUtils_HiddenDockersRight.split(",")
+        self._hiddenDockers[4] = TouchifySettings.preferences().DockerUtils_HiddenDockersUp.split(",")
+        self._hiddenDockers[8] = TouchifySettings.preferences().DockerUtils_HiddenDockersDown.split(",")
+        self.api_window = self.app_window.api_window
+        self.qWin = self.api_window.qwindow
+
+    def isNotForbidden(self, obj):
+        from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
+        from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
+        return not isinstance(obj, ToolshelfDockerWidget) and not isinstance(obj, ToolshelfDockerWidgetPad)
+
+    def registerListener(self, type: SignalType, source: Callable):
+        if type not in self._listeners:
+            self._listeners[type] = list()
+    
+        self._listeners[type].append(source)
+    
+        if type == DockerManager.SignalType.OnReleaseDocker:
+            self.onReleaseDockerSignal.connect(source)
+        elif type == DockerManager.SignalType.OnLoadDocker:
+            self.onLoadDockerSignal.connect(source)
+
+    def removeListener(self, type: SignalType, source: Callable):
+        if type in self._listeners:
+            self._listeners[type].remove(source)
+            if type == DockerManager.SignalType.OnReleaseDocker:
+                self.onReleaseDockerSignal.disconnect(source)
+            elif type == DockerManager.SignalType.OnLoadDocker:
+                self.onLoadDockerSignal.disconnect(source)
+
+    def invokeListeners(self, docker_id: str, type: SignalType):
+        if type in self._listeners:
+            if type == DockerManager.SignalType.OnReleaseDocker:
+                self.onReleaseDockerSignal.emit(docker_id)
+            elif type == DockerManager.SignalType.OnLoadDocker:
+                self.onLoadDockerSignal.emit(docker_id)
+
+    def findDocker(self, docker_id: str):
+        return self.qWin.findChild(QDockWidget, docker_id)
+
+    def loadDocker(self, docker_id: str, args: LoadArguments):
+        printDebug("loading_docker")
+        # Already in Use, don't borrow twice; unload previous docker
+        if docker_id in self._shareData:
+            if self._shareData[docker_id].isDead == False:
+                self._shareData[docker_id].clearWidgetData()
+                del self._shareData[docker_id]
+
+        docker = self.findDocker(docker_id)
+        # Does requested widget exist?
+        if isinstance(docker, QDockWidget) and QDockWidget.widget(docker) and self.isNotForbidden(docker):
+            self._shareData[docker_id] = DockerManager.BorrowData(args.dockMode, docker.isVisible(), self.qWin, self.qWin.dockWidgetArea(docker))
+            self._shareData[docker_id].setWidgetData(docker)
+            self.invokeListeners(docker_id, DockerManager.SignalType.OnLoadDocker)
+            printDebug("loading_docker_success")
+            return self._shareData[docker_id].dockerWidget
+        printDebug("loading_docker_fail")
+        return None
+         
+    def unloadDocker(self, docker_id: str):
+        # Ensure there's a widget to return
+        if docker_id in self._shareData:
+            self._shareData[docker_id].clearWidgetData()
+            del self._shareData[docker_id]
+            self.invokeListeners(docker_id, DockerManager.SignalType.OnReleaseDocker)
+
+    def toggleDockersPerArea(self, area: int):
+        dockers = self.api_window.dockers
+        mainWindow = self.qWin
+
+        if len(self._hiddenDockers[area]) > 0: # show
+            for dockerId in self._hiddenDockers[area]:
+                docker = next((w for w in dockers if w.objectName() == dockerId), None)
+                if docker:
+                    docker.setVisible(True)
+            self._hiddenDockers[area] = []
+        else: # hide
+            for docker in dockers:
+                if docker.isHidden() or docker.isFloating():
+                    continue
+
+                if mainWindow.dockWidgetArea(docker) == area:
+                    self._hiddenDockers[area].append(docker.objectName())
+                    docker.setVisible(False)
+
+        match area:
+            case 1:
+                TouchifySettings.preferences().DockerUtils_HiddenDockersLeft = ",".join(self._hiddenDockers[area])
+            case 2:
+                TouchifySettings.preferences().DockerUtils_HiddenDockersRight = ",".join(self._hiddenDockers[area])
+            case 4:
+                TouchifySettings.preferences().DockerUtils_HiddenDockersUp = ",".join(self._hiddenDockers[area])
+            case 8:
+                TouchifySettings.preferences().DockerUtils_HiddenDockersDown = ",".join(self._hiddenDockers[area])
+        TouchifySettings.preferences().save()
+
+    def dockerWindowTitle(self, docker_id: str):
+        docker = self.findDocker(docker_id)
+        if docker:
+            title = docker.windowTitle()
+            return title.replace('&', '')
+        else:
+            return docker_id
+        
+
+

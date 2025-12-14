@@ -5,7 +5,7 @@ from krita import *
 from touchify.__env__ import *
 from touchify.src.api_krita import KritaAPI
 from touchify.src.api_krita.wrappers.window import WindowAPI
-from touchify.src.managers.shared.events import GlobalEvents
+from touchify.src.managers.GlobalEvents import GlobalEvents
 
 from touchify.src.PluginWindow import TouchifyWindow
 

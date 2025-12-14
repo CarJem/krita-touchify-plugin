@@ -2,9 +2,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from krita import *
-from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.config.resource_pack.ResourcePack import ResourcePack
-from touchify.src.managers.shared.settings import TouchifySettings
+from touchify.src.settings.TouchifySettings import TouchifySettings
 
 class NewContainerOptions:
     def __init__(self) -> None:

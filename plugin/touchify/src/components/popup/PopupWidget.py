@@ -13,16 +13,16 @@ from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
 from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
-from touchify.src.components.common.widget.AnimatedWidget import AnimatedWidget
+from touchify.src.alib_widgets.widget.AnimatedWidget import AnimatedWidget
 
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
-    from touchify.src.managers.normal.action_manager import ActionManager
-    from touchify.src.managers.normal.dockers import DockerManager
-    from touchify.src.managers.normal.canvas import CanvasManager
+    from touchify.src.managers.ActionManager import ActionManager
+    from touchify.src.managers.DockerManager import DockerManager
+    from touchify.src.managers.CanvasManager import CanvasManager
 
 
 class PopupWidget(QDockWidget, AnimatedWidget):

@@ -7,9 +7,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from touchify.__env__ import *
 from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
-from touchify.src.managers.normal.canvas import WidgetPadAlignment
-from touchify.src.managers.shared.resources import ResourceManager
-from touchify.src.managers.shared.settings_krita import KritaSettings
+from touchify.src.managers.WidgetPadManager import WidgetPadAlignment
+from touchify.src.managers.ResourceManager import ResourceManager
+from touchify.src.settings.KritaSettings import KritaSettings
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
     from touchify.src.PluginManagers import TouchifyManagers
@@ -236,7 +236,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         super().timerEvent(a0)
 
     def setAlignment(self, align: WidgetPadAlignment):
-        self.managers.mgr_canvas.api_widgetpad.movePadTo(self,  self._alignment, align)
+        self.managers.mgr_widgetpad.movePadTo(self,  self._alignment, align)
         self._alignment = align
 
         match align:
@@ -273,7 +273,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
 
     def setPriority(self, level: int):
         self._priority = level
-        self.managers.mgr_canvas.api_widgetpad.updateNeighbors(self._alignment)
+        self.managers.mgr_widgetpad.updateNeighbors(self._alignment)
 
     def syncPosition(self):
         if not self.isVisible():

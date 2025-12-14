@@ -11,9 +11,9 @@ from touchify.src.api_krita import KritaAPI
 from touchify.src.components.toolshelf.ShelfToolbarMenu import ShelfToolbarMenu
 from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
 from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
-from touchify.src.managers.shared.settings import TouchifySettings
+from touchify.src.settings.TouchifySettings import TouchifySettings
 from touchify.__env__ import *
-from touchify.src.managers.shared.resources import ResourceManager
+from touchify.src.managers.ResourceManager import ResourceManager
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -128,6 +128,12 @@ class ShelfToolbar(QWidget):
 
 
     #region Actions
+
+    def showToolbarMenuDetached(self, pos: QPoint):
+        if self.shelf.is_restricted:
+            return
+        
+        self.optionsMenu.exec_(pos)
 
     def showToolbarMenu(self):
         if self.shelf.is_restricted:

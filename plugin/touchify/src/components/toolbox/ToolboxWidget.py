@@ -11,7 +11,7 @@ from PyQt5.QtGui import *
 
 from touchify.src.alib_pyqtgraph.Qt import QtWidgets
 from touchify.src.components.toolbox.ToolboxLayout import ToolboxLayout, Section
-from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
+from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 from touchify.src.extensions import pyqt_extensions  as PyQtExt
 
 BUTTON_MARGIN = 10
@@ -170,7 +170,7 @@ class ToolboxWidget(QWidget):
         if event.type() == QEvent.Type.PaletteChange:
             for button in self.buttons:
                 toolBoxButton = button
-                if isinstance(toolBoxButton, TouchifyActionButton):
+                if isinstance(toolBoxButton, TriggerButton):
                     pass
     
     def setOrientation(self, orientation: Qt.Orientation):

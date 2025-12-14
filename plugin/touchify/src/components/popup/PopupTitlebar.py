@@ -4,15 +4,15 @@ from PyQt5.QtCore import *
 
 from touchify.__env__ import *
 from touchify.src.api_krita import KritaAPI
-from touchify.src.components.common.labels.ElidedLabel import ElidedLabel
+from touchify.src.alib_widgets.labels.ElidedLabel import ElidedLabel
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
     from touchify.src.components.popup.PopupWidget import PopupWidget
-    from touchify.src.managers.normal.dockers import DockerManager
-    from touchify.src.managers.normal.canvas import CanvasManager
+    from touchify.src.managers.DockerManager import DockerManager
+    from touchify.src.managers.CanvasManager import CanvasManager
 
 class PopupTitlebar(QWidget):
     def __init__(self, parent_popup: "PopupWidget"):

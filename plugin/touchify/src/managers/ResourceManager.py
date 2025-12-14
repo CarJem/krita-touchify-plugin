@@ -1,0 +1,277 @@
+
+from PyQt5 import QtGui, QtSvg
+import os
+
+from touchify.__env__ import ASSETS_DIRECTORY, RESOURCE_PACKS_DIRECTORY
+
+import xml.etree.ElementTree as ET
+
+from touchify.src.api_krita import KritaAPI
+from touchify.src.settings.TouchifySettings import *
+from zipfile import ZipFile
+
+from krita import *
+
+
+ICON_PACKS_LOADED = False
+RESOURCE_PACK_ICONS_INIT = False
+
+ENABLE_DEBUG=False
+def printDebug(input: str):
+    if ENABLE_DEBUG: print("[ResourceManager] :: ", input)
+
+class ResourceManager:
+
+    class IconEngine(QIconEngine):
+        def __init__(self, svgData: bytes, autoColorMode: bool = True):
+            super().__init__()
+            self.svgData = ET.fromstring(svgData)
+            self.autoColorMode = autoColorMode
+
+            if self.autoColorMode:
+                for child in self.svgData:
+                    if child.get("style"):
+                        child.set("ignore-krita-style", "true")
+                    else:
+                        child.set("ignore-krita-style", "false")
+
+            self.currentColor = None
+            self.renderer = QtSvg.QSvgRenderer()
+
+        def iconColor(self):
+            background = qApp.palette().window().color()
+            is_dark = background.value() > 100
+            if is_dark: return QColor(55,55,55) # dark icons
+            else: return QColor(202, 202, 202) # light icons
+    
+        def updateData(self):
+            if self.autoColorMode:
+                color = self.iconColor().name().split("#")[1]
+                for child in self.svgData:
+                    if child.get("ignore-krita-style") == "false":
+                        child.set("style", f"fill:#{color};fill-opacity:1")
+            self.renderer.load(ET.tostring(self.svgData))
+
+
+        def pixmap(self, size: QSize, mode: QIcon.Mode, state: QIcon.State):
+            img = QPixmap(size)
+            img.fill(Qt.GlobalColor.transparent)
+            painter = QPainter(img)
+            self.updateData()
+            self.renderer.render(painter, QRectF(img.rect()))
+            painter.end()
+            return img
+
+        def paint(self, painter: QPainter, rect: QRect, mode: QIcon.Mode, state: QIcon.State):
+            self.updateData()
+            self.renderer.render(painter, QRectF(rect))
+
+    material_icons: dict[str, QIcon] = {}
+    resource_pack_icons: dict[str, dict[str, QIcon]] = {}
+
+    settings_clipboard_type: type = None
+    settings_clipboard_data: any = None
+
+    def __is_vaild_custom_icon__(fileName: str):
+        return fileName.lower().endswith(".svg")
+    
+    def __get_icon_name_from_file__(fileName: str):
+        if fileName.lower().endswith(".svg"):
+            return fileName[:-4]
+        return fileName
+
+    def __resourcesDir__():
+        return ASSETS_DIRECTORY
+    
+    def __resourcePacksDir__():
+        return RESOURCE_PACKS_DIRECTORY
+
+    def loadResourcePackIcons(isStartup: bool = False):
+        global RESOURCE_PACK_ICONS_INIT
+        if RESOURCE_PACK_ICONS_INIT and isStartup == True:
+            return
+        
+        printDebug("load_resourcepack_icons")
+        
+        ResourceManager.resource_pack_icons.clear()
+
+        resource_pack_dir = ResourceManager.__resourcePacksDir__()
+        directories = [f for f in os.listdir(resource_pack_dir) if os.path.isdir(os.path.join(resource_pack_dir, f))]
+        for resource_pack in directories:
+            pack_icons_path = os.path.join(resource_pack_dir, resource_pack, "icons")
+            if os.path.exists(pack_icons_path) and os.path.isdir(pack_icons_path):
+
+                if resource_pack not in ResourceManager.resource_pack_icons:
+                    ResourceManager.resource_pack_icons[resource_pack] = {}
+
+                files = [f for f in os.listdir(pack_icons_path) if os.path.isfile(os.path.join(pack_icons_path, f))]
+                for icon_filename in files:
+                    icon_filepath = os.path.join(pack_icons_path, icon_filename)
+
+                    if ResourceManager.__is_vaild_custom_icon__(icon_filename):
+                        icon_name = ResourceManager.__get_icon_name_from_file__(icon_filename)
+                        icon_data = QtGui.QIcon(icon_filepath)
+                        #print(icon_name)
+                        ResourceManager.resource_pack_icons[resource_pack][icon_name] = icon_data
+
+
+
+
+
+        RESOURCE_PACK_ICONS_INIT = True
+        printDebug("load_resourcepack_icons_done")
+
+    def loadIconPacks():
+        global ICON_PACKS_LOADED
+        if ICON_PACKS_LOADED:
+            return
+        
+        printDebug("load_icon_packs")
+        
+        material_icon_zip = os.path.join(ResourceManager.__resourcesDir__(), 'material-icons.zip')
+        with ZipFile(material_icon_zip, 'r') as zip:
+            for item in zip.filelist:
+                if item.filename.startswith('MaterialDesign-master/svg/') and item.filename.endswith('.svg'):
+                    actualName = item.filename.removeprefix('MaterialDesign-master/svg/').removesuffix('.svg')
+                    iconBytes = zip.read(item)
+                    ResourceManager.material_icons[actualName] = QIcon(ResourceManager.IconEngine(iconBytes))
+        ICON_PACKS_LOADED = True
+        printDebug("load_icon_packs_done")
+
+    #region Icon Retrival
+
+    def resourcePackIcon(iconName: str):
+        try:
+            routes = iconName.split(":", 1)
+            pack_name = routes[0]
+            icon_name = routes[1]
+
+            if pack_name in ResourceManager.resource_pack_icons:
+                icon_directory = ResourceManager.resource_pack_icons[pack_name]
+                if icon_name in icon_directory:
+                    return icon_directory[icon_name]
+        except:
+            pass    
+        
+        return ResourceManager.fallbackIcon()
+
+    def materialIcon(iconName: str):
+        if iconName in ResourceManager.material_icons:
+            return ResourceManager.material_icons[iconName]
+        else:
+            return ResourceManager.fallbackIcon()
+
+    def actionIcon(action_id: str):
+        target_action = KritaAPI.get_action(action_id)
+        if target_action: return target_action.icon()
+        else: return QIcon()
+        
+    def brushIcon(brushName: str):
+        brush_presets = KritaAPI.get_presets()
+        if brushName in brush_presets:
+            preset = brush_presets[brushName]
+            return QIcon(QPixmap.fromImage(preset.image()))
+        else:
+            return ResourceManager.fallbackIcon()
+   
+    def kritaIcon(iconName: str):
+        return KritaAPI.get_icon(iconName)
+    
+    def fallbackIcon():
+        return QtGui.QIcon(os.path.join(ResourceManager.__resourcesDir__(), 'default.svg'))
+
+    #endregion
+
+    #region Other Retrival
+
+    def brushPresets():
+        return KritaAPI.get_presets()
+    
+    def actionText(action_id: str):
+        target_action = KritaAPI.get_action(action_id)
+        if target_action: return target_action.text()
+        else: return ""
+
+    #endregion
+
+
+    def iconList(directory_type: str):
+        def custom_registry():
+            result = []
+
+            for packName in ResourceManager.resource_pack_icons:
+                for iconName in ResourceManager.resource_pack_icons[packName]:
+                    result.insert(0, f'resource_pack:{packName}:{iconName}')
+
+            for iconName in ResourceManager.material_icons:
+                result.insert(0, f'material:{iconName}')
+            
+            return result
+
+        def krita_registry():
+            result = []
+
+            iconFormats = ["*.svg","*.svgz","*.svz","*.png"]
+
+            iconList = QDir(":/pics/").entryList(iconFormats, QDir.Files)
+            iconList += QDir(":/").entryList(iconFormats, QDir.Files)
+
+            for iconName in iconList:
+                name = iconName.split('_',1)
+                if any(iconSize == name[0] for iconSize in [ '16', '22', '24', '32', '48', '64', '128', '256', '512', '1048' ]):
+                    iconName = name[1]
+
+                name = iconName.split('_',1)
+                if any(iconSize == name[0] for iconSize in [ 'light', 'dark' ]):
+                    iconName = name[1]
+
+                name = iconName.split('.')
+                iconName = name[0]
+                if iconName not in result: 
+                    result.insert(0, iconName)
+
+            iconList = QDir(":/icons/").entryList(iconFormats, QDir.Files)
+            #iconList += QDir(":/images/").entryList(iconFormats, QDir.Files)
+
+            for iconName in iconList:
+                name = iconName.split('.')
+                iconName = name[0]
+                if iconName not in result: 
+                    result.insert(0, iconName)
+
+            #with open( os.path.dirname(os.path.realpath(__file__)) + '/ThemeIcons.txt' ) as f:
+            #    for iconName in f.readlines():
+            #        result.insert(0, iconName.rstrip())
+                
+            return sorted(result)
+
+        match directory_type:
+            case "custom":
+                return custom_registry()
+            case "krita" | _:
+                return krita_registry()
+
+    def iconLoader(iconName: str):
+        if str(iconName).startswith("material:"):
+            materialName = str(iconName)[len("material:"):]
+            return ResourceManager.materialIcon(materialName)
+        elif str(iconName).startswith("resource_pack:"):
+            resource_pack_name = str(iconName)[len("resource_pack:"):]
+            return ResourceManager.resourcePackIcon(resource_pack_name)
+        else:
+            return ResourceManager.kritaIcon(iconName)
+
+    def getSettingsClipboard(requested_type: type):
+        if ResourceManager.settings_clipboard_type == requested_type:
+            return ResourceManager.settings_clipboard_data
+        else: return None
+
+    def setSettingsClipboard(item_type: type, item_data: any):
+        ResourceManager.settings_clipboard_type = item_type
+        ResourceManager.settings_clipboard_data = item_data
+
+    
+
+    
+ResourceManager.loadIconPacks()
+ResourceManager.loadResourcePackIcons()

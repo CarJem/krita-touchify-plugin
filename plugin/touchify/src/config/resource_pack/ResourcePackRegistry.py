@@ -1,11 +1,11 @@
 from touchify.src.config.resource_pack.ResourcePack import ResourcePack
 from touchify.src.extensions.file_extensions import FileExtensions
-from touchify.src.datatypes.sequence.TypedList import TypedList
+from touchify.src.alib_datatypes.TypedList import TypedList
 import os
 from touchify.__env__ import RESOURCE_PACKS_DIRECTORY
 import shutil
 
-from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 HAS_ALREADY_LOADED: bool = False
 

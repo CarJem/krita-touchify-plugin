@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPaintEvent, QPainter, QPen
-from touchify.src.components.special.DockerContainer import DockerContainer
+from touchify.src.components.widgets.other.DockerContainer import DockerContainer
 from touchify.src.components.toolshelf.ShelfContainer import ShelfContainer
 from touchify.src.components.toolshelf.ShelfDockDrop import ShelfDropDock
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock

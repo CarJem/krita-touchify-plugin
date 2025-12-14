@@ -1,5 +1,5 @@
 from touchify.src.extensions.json_extensions import JsonExtensions
-from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 
 class DockerItem:

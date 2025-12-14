@@ -2,9 +2,9 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from touchify.src.api_krita.wrappers.window import WindowAPI
-from touchify.src.components.property_grid.PropertyGrid import PropertyGrid
-from touchify.src.managers.shared.events import GlobalEvents
-from touchify.src.managers.shared.settings import TouchifySettings
+from touchify.src.alib_propertygrid.PropertyGrid import PropertyGrid
+from touchify.src.managers.GlobalEvents import GlobalEvents
+from touchify.src.settings.TouchifySettings import TouchifySettings
 
 from krita import *
 

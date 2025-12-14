@@ -5,7 +5,7 @@ from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
 from touchify.src.extensions.json_extensions import JsonExtensions
-from touchify.src.datatypes.sequence.TypedList import TypedList
+from touchify.src.alib_datatypes.TypedList import TypedList
 from touchify.src.extensions.json_extensions import JsonExtensions
 
 

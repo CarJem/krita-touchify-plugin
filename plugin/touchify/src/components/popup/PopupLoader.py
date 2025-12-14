@@ -7,7 +7,7 @@ from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
-from touchify.src.managers.shared.settings import TouchifySettings
+from touchify.src.settings.TouchifySettings import TouchifySettings
 from krita import *
 
 from typing import TYPE_CHECKING

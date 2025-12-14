@@ -27,7 +27,7 @@ class ToolshelfNestedDock(ShelfDock):
         from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
         self.nestedShelf = ShelfWidget(self, self.managers, parent_dock_widget=self)
         self.nestedShelf.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.nestedShelf.setTitlebarVisibility(True)
+        self.nestedShelf.setTitlebarVisibility(self._dockSettings.special_nested_show_titlebar)
         self.addWidget(self.nestedShelf)
         self.loadLayout()
 

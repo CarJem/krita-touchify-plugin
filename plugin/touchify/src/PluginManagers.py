@@ -6,19 +6,20 @@ from krita import *
 from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
 from touchify.src.extensions.krita_extensions import KritaExtensions
-from touchify.src.managers.normal.canvas import CanvasManager
-from touchify.src.managers.normal.developer import DeveloperManager
+from touchify.src.managers.CanvasManager import CanvasManager
+from touchify.src.managers.DeveloperManager import DeveloperManager
 from touchify.__env__ import *
-from touchify.src.managers.normal.dockers import DockerManager
-from touchify.src.managers.normal.action_manager import ActionManager
+from touchify.src.managers.DockerManager import DockerManager
+from touchify.src.managers.ActionManager import ActionManager
 
 
-from touchify.src.managers.normal.shortcuts import ShortcutsManager
-from touchify.src.managers.normal.tweaks import TweakManager
+from touchify.src.managers.ShortcutManager import ShortcutsManager
+from touchify.src.managers.TweakManager import TweakManager
 
 
 from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
 from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
+from touchify.src.managers.WidgetPadManager import WidgetPadManager
 
 if TYPE_CHECKING:
     from .Plugin import TouchifyWindow
@@ -32,6 +33,7 @@ class TouchifyManagers:
         self.mgr_canvas = CanvasManager(window, self)
         self.mgr_dev = DeveloperManager(window)
         self.mgr_actions = ActionManager(window, self)
+        self.mgr_widgetpad = WidgetPadManager(window, self)
 
     def api_window(self):
         return self.__window__.api_window

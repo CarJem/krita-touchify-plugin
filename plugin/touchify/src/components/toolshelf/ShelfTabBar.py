@@ -9,13 +9,13 @@ from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
 from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
-from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
+from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
 
-from touchify.src.managers.shared.settings import TouchifySettings
+from touchify.src.settings.TouchifySettings import TouchifySettings
 from touchify.__env__ import *
-from touchify.src.managers.shared.resources import ResourceManager
+from touchify.src.managers.ResourceManager import ResourceManager
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -100,7 +100,7 @@ class ShelfTabBar(QWidget):
         
         self._rows: dict[int, QWidget] = {}
         self._buttons: dict[str, ShelfTabBar.TabItem] = {}
-        self._actions: list[TouchifyActionButton] = []
+        self._actions: list[TriggerButton] = []
         self._homeButton: ShelfTabBar.TabItem | None = None
 
 
@@ -136,7 +136,7 @@ class ShelfTabBar(QWidget):
 
         self._rows: dict[int, QWidget] = {}
         self._buttons: dict[str, ShelfTabBar.TabItem] = {}
-        self._actions: list[TouchifyActionButton] = []
+        self._actions: list[TriggerButton] = []
         self._homeButton: ShelfTabBar.TabItem | None = None
         
         
@@ -334,7 +334,7 @@ class ShelfTabBar(QWidget):
         """
         self.setStyleSheet(stylesheet)  
 
-    def applyActionRules(self, btn: TouchifyActionButton, page_id: str):
+    def applyActionRules(self, btn: TriggerButton, page_id: str):
         preview_type = self.stack_preview
         should_hide = False
 

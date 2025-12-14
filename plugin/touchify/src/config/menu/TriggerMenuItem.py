@@ -1,8 +1,8 @@
 from touchify.src.config.triggers.Trigger import Trigger
-from touchify.src.datatypes.metaclass.EnumStr import EnumStr
-from touchify.src.datatypes.sequence.TypedList import TypedList
+from touchify.src.alib_datatypes.EnumStr import EnumStr
+from touchify.src.alib_datatypes.TypedList import TypedList
 from touchify.src.extensions.json_extensions import JsonExtensions
-from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class TriggerMenuItem(Trigger):
 

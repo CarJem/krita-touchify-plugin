@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from touchify.__env__ import BASE_DIR
 from touchify.src.config.resource_pack.ResourcePackRegistry import ResourcePackRegistry
 from touchify.src.config.TouchifyRegistryPreferences import TouchifyRegistryPreferences
-from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.__env__ import *
 
 

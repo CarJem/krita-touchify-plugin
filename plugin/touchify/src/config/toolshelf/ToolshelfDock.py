@@ -1,8 +1,8 @@
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
-from touchify.src.datatypes.sequence.TypedList import TypedList
+from touchify.src.alib_datatypes.TypedList import TypedList
 from touchify.src.extensions.json_extensions import JsonExtensions
-from touchify.src.datatypes.metaclass.EnumStr import EnumStr
-from touchify.src.components.property_grid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from touchify.src.alib_datatypes.EnumStr import EnumStr
+from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class ToolshelfDock:
 
@@ -99,6 +99,7 @@ class ToolshelfDock:
 
         self.special_item_type: str = "none"
         self.special_slider_orientation: str = "horizontal"
+        self.special_nested_show_titlebar: bool = True
 
         from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
         self.special_nested_data: ToolshelfContainer = ToolshelfContainer()
@@ -187,6 +188,10 @@ class ToolshelfDock:
             "special_slider_orientation"
         ]
 
+        nested_shelf_groups = [
+            "special_nested_show_titlebar"
+        ]
+
         result = []
         if self.section_type != ToolshelfDock.SectionType.Docker:
             for item in docker_groups:
@@ -200,6 +205,10 @@ class ToolshelfDock:
 
         if self.section_type != ToolshelfDock.SectionType.Special or self.special_item_type not in known_sliders:
             for item in slider_groups:
+                result.append(item)
+
+        if self.section_type != ToolshelfDock.SectionType.Special or self.special_item_type != ToolshelfDock.SpecialItemType.NestedShelf:
+            for item in nested_shelf_groups:
                 result.append(item)
                 
         result.append("special_nested_data")
@@ -237,6 +246,7 @@ class ToolshelfDock:
 
         labels["special_item_type"] = "Component Type"
         labels["special_slider_orientation"] = "Orientation"
+        labels["special_nested_show_titlebar"] = "Show Titlebar"
         return labels
     
     def propertygrid_sisters(self):
@@ -266,7 +276,8 @@ class ToolshelfDock:
             "action_section_contents",
             "special_item_type",
             "special_slider_orientation",
-            "special_nested_data"
+            "special_nested_data",
+            "special_nested_show_titlebar"
         ]
 
         row["general_group"] = {"items": global_groups, "is_group": True}

@@ -10,13 +10,13 @@ from typing import TYPE_CHECKING
 from touchify.src.api_krita import KritaAPI
 from touchify.src.components.toolbox.ToolboxMenu import ToolboxMenu
 from touchify.src.components.toolbox.ToolboxStyle import ToolboxStyle
-from touchify.src.components.trigger_buttons.TouchifyActionButton import TouchifyActionButton
+from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
 from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
 from touchify.src.config.triggers.Trigger import Trigger
-from touchify.src.managers.shared.resources import ResourceManager
-from touchify.src.managers.shared.settings import TouchifySettings
+from touchify.src.managers.ResourceManager import ResourceManager
+from touchify.src.settings.TouchifySettings import TouchifySettings
 
 
 if TYPE_CHECKING:
@@ -39,7 +39,7 @@ class ToolboxLoader(QObject):
 
     def Signal_OnSwap(self):
         ac: QAction = self.sender()
-        btn: TouchifyActionButton = ac.parent()
+        btn: TriggerButton = ac.parent()
         btn.onToolboxButtonSwap(ac)
 
     def Signal_OnMenu(self):
@@ -95,7 +95,7 @@ class ToolboxLoader(QObject):
 
         is_toolbox_menu = len(tool.items) >= 1
 
-        btn: TouchifyActionButton = self.rootWidget.managers.mgr_actions.Create_Button(self.rootWidget, trigger)
+        btn: TriggerButton = self.rootWidget.managers.mgr_actions.Create_Button(self.rootWidget, trigger)
         if btn:
             tool_names: list[str] = [item.name for item in tool.items]
             tool_names.append(tool.name)

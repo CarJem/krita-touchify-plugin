@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from touchify.__env__ import *
 from touchify.src.config.toolshelf.ToolshelfContainer import ToolshelfContainer
 from touchify.src.config.toolshelf.ToolshelfSettings import ToolshelfSettings
-from touchify.src.managers.shared.events import GlobalEvents
+from touchify.src.managers.GlobalEvents import GlobalEvents
 
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow

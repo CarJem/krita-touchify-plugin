@@ -16,7 +16,7 @@
 
 from PyQt5.QtCore import Qt
 from touchify.src.api_krita import KritaAPI
-from touchify.src.components.krita.KisAngleSelector import KisAngleSelector
+from touchify.src.alib_kis.widgets.KisAngleSelector import KisAngleSelector
 
 from krita import *
  
