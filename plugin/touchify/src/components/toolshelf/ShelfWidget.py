@@ -232,6 +232,18 @@ class ShelfWidget(QWidget):
     def hideEvent(self, event: QHideEvent):
         super().hideEvent(event)
 
+
+    def contextMenuEvent(self, a0: QContextMenuEvent):
+
+        current_area: ShelfDockArea | None = self.dockStack.currentWidget()
+        if current_area == None or not isinstance(current_area, ShelfDockArea):
+            return super().contextMenuEvent()
+        
+        if self.isEditMode() and len(current_area.docks) == 0:
+            self.onContextMenu(a0.globalPos())
+            
+        return super().contextMenuEvent(a0)
+
     #endregion
     
     #region Getters / Setters
@@ -600,7 +612,7 @@ class ShelfWidget(QWidget):
         if pos == None:
             pos = QCursor.pos()
         
-        self.header.showToolbarMenuDetached(pos)
+        self.header.optionsMenu.exec_(pos)
 
     def goToHomePage(self):
         self.dockStack.setCurrentIndex(0)
@@ -622,7 +634,20 @@ class ShelfWidget(QWidget):
     def onMouseHover(self, state: bool, item_uuid: str):
         pass
 
-    def onContextMenu(self, pos: QPoint, item_id: str):
+    def onContextMenu(self, pos: QPoint, item_id: str = None):
+
+        if item_id == None:
+            if self.is_restricted: return
+            self.header.optionsMenu.exec_(pos)
+            return
+        else:
+            self.header.optionsMenu.close()
+        
+        
+        
+
+
+
         current_area: ShelfDockArea | None = self.dockStack.currentWidget()
         if current_area == None or not isinstance(current_area, ShelfDockArea):
             return
@@ -645,8 +670,8 @@ class ShelfWidget(QWidget):
         context_menu.addSeparator()
         context_menu.addAction("Delete Dock", partial(self.deleteShelfItem, item_id))
 
-        if isinstance(dock_item, ToolshelfNestedDock):
-            context_menu.addAction("Open Shelf Menu...", partial(self.editNestedContainerSettings, item_id))
+        if isinstance(self.nestedDock, ToolshelfNestedDock):
+            context_menu.addAction("Open Shelf Menu...", self.openShelfMenu)
 
 
         context_menu.exec_(pos)

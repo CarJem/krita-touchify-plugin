@@ -35,22 +35,36 @@ class ToolshelfNestedDock(ShelfDock):
 
     def setContainerEditMode(self, state: bool):
         self._isAllowedToEditContainer = state
-        self.nestedShelf.setEditMode(state)
+        self.updateContainerEditMode(self._isEditMode, state)
 
     def onContainerEditModeChanged(self, state: bool):
         self._isAllowedToEditContainer = state
-        self.updateContainerEditMode()
+        self.updateContainerEditMode(self._isEditMode, state, True)
 
-    def updateContainerEditMode(self):
-        if self._isEditMode:
-            self.editableDragArea.setEditMode(not self._isAllowedToEditContainer)
+    def updateContainerEditMode(self, _isEditMode: bool, _isAllowedToEditContainer: bool, in_bounds: bool = False):
+        if not hasattr(self, "nestedShelf"):
+            return
+        
+        if _isEditMode:
+            self._isEditMode = True
+            if _isAllowedToEditContainer:
+                self.editableDragArea.setEditMode(False)
+                if not in_bounds: self.nestedShelf.setEditMode(True)
+                self._isAllowedToEditContainer = True
+            else:
+                self.editableDragArea.setEditMode(True)
+                if not in_bounds: self.nestedShelf.setEditMode(False)
+                self._isAllowedToEditContainer = False
         else:
             self.editableDragArea.setEditMode(False)
+            if not in_bounds: self.nestedShelf.setEditMode(False)
+            self._isEditMode = False
             self._isAllowedToEditContainer = False
+            
 
     def setEditMode(self, enabled):
         super().setEditMode(enabled)
-        self.updateContainerEditMode()
+        self.updateContainerEditMode(enabled, self._isAllowedToEditContainer)
 
 
 

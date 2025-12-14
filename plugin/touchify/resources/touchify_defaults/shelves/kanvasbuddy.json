@@ -59,6 +59,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_size_slider",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -108,6 +109,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_opacity_slider",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -232,6 +234,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -303,6 +306,7 @@
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
                         "special_slider_orientation": "horizontal",
+                        "special_nested_show_titlebar": true,
                         "special_nested_data": {
                             "layout": {},
                             "items": {},
@@ -379,6 +383,7 @@
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
                         "special_slider_orientation": "horizontal",
+                        "special_nested_show_titlebar": true,
                         "special_nested_data": {
                             "layout": {},
                             "items": {},
@@ -455,6 +460,7 @@
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
                         "special_slider_orientation": "horizontal",
+                        "special_nested_show_titlebar": true,
                         "special_nested_data": {
                             "layout": {},
                             "items": {},
@@ -531,6 +537,7 @@
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
                         "special_slider_orientation": "horizontal",
+                        "special_nested_show_titlebar": true,
                         "special_nested_data": {
                             "layout": {},
                             "items": {},
@@ -607,6 +614,7 @@
                         "action_section_icon_size": 0,
                         "special_item_type": "none",
                         "special_slider_orientation": "horizontal",
+                        "special_nested_show_titlebar": true,
                         "special_nested_data": {
                             "layout": {},
                             "items": {},

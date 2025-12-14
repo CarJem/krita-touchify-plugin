@@ -129,12 +129,6 @@ class ShelfToolbar(QWidget):
 
     #region Actions
 
-    def showToolbarMenuDetached(self, pos: QPoint):
-        if self.shelf.is_restricted:
-            return
-        
-        self.optionsMenu.exec_(pos)
-
     def showToolbarMenu(self):
         if self.shelf.is_restricted:
             return

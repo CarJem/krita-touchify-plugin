@@ -137,6 +137,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_size_slider",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -186,6 +187,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_opacity_slider",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -235,6 +237,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_flow_slider",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -382,6 +385,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -431,6 +435,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "foreground_background_color_picker",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -480,6 +485,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_preset_picker",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -529,6 +535,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -578,6 +585,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "gradient_chooser_popup",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -712,6 +720,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -761,6 +770,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "pattern_chooser_popup",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
@@ -810,6 +820,7 @@
                 "action_section_icon_size": 0,
                 "special_item_type": "brush_blending_options",
                 "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
                 "special_nested_data": {
                     "layout": {},
                     "items": {},
