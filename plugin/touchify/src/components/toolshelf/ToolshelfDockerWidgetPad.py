@@ -95,7 +95,6 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
 
         def getSettingsPath(self):
             result = f"{Env.SettingsPath.WIDGETPAD}_{str(self._parent.PanelIndex)}"
-            print(result)
             return result
 
         def getShowHeader(self):

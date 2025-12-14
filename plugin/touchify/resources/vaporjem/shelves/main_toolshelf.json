@@ -20,7 +20,7 @@
                 {
                     "sizes": [
                         232,
-                        609
+                        505
                     ]
                 }
             ],
@@ -40,7 +40,7 @@
                 "section_type": "docker",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
-                "docker_nesting_mode": "docking",
+                "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
                 "action_section_id": "Panel",
@@ -147,7 +147,7 @@
                                             35,
                                             35,
                                             35,
-                                            204
+                                            140
                                         ]
                                     }
                                 ],
@@ -180,9 +180,9 @@
                                             ],
                                             {
                                                 "sizes": [
-                                                    31,
                                                     30,
-                                                    31
+                                                    30,
+                                                    30
                                                 ]
                                             }
                                         ],
@@ -194,7 +194,7 @@
                                     ],
                                     {
                                         "sizes": [
-                                            324,
+                                            260,
                                             32
                                         ]
                                     }
@@ -205,7 +205,7 @@
                                     32,
                                     35,
                                     35,
-                                    100
+                                    98
                                 ]
                             }
                         ],
@@ -962,7 +962,7 @@
             "header_size": 16,
             "enable_pinning": false,
             "position": "top",
-            "resize_style": "default",
+            "resize_style": "adjust_size",
             "stack_preview": "default",
             "stack_alignment": "default",
             "stack_actions": [],
