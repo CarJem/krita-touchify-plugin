@@ -44,6 +44,7 @@ class TouchifyManagers:
         self.mgr_shortcuts.Window_Load()
         self.mgr_tweaker.Window_Load()
         self.mgr_canvas.Window_Load(window.api_window)
+        self.mgr_widgetpad.Window_Load(window.api_window)
 
     def Addons(self, window: "TouchifyWindow"):
         dockers_menu_action = KritaExtensions.getDockerMenu(window.api_window)

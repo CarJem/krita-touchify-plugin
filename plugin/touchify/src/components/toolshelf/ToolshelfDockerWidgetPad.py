@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
 
 
-EDGE_PADDING=5
+
 
 class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
     DOCKER_TITLE=f"{Env.Title.CORE_DOCKERS_PREFIX} Widget Pad"
@@ -110,7 +110,9 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
             KritaSettings.writeSettingBool(self.getSettingsPath(), "Collapsed", value, False)
 
         def getPriority(self):
-            return KritaSettings.readSettingInt(self.getSettingsPath(), "Priority", 0)
+            result = KritaSettings.readSettingInt(self.getSettingsPath(), "Priority", 0)
+            if result < 0: return 0
+            else: return result
 
         def setPriority(self, value: int):
             KritaSettings.writeSettingInt(self.getSettingsPath(), "Priority", value, False)
@@ -126,6 +128,9 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         def setAlignment(self, value: WidgetPadAlignment):
             KritaSettings.writeSettingInt(self.getSettingsPath(), "Alignment", value.value, False)
 
+    sigOnMoved = pyqtSignal(QDockWidget, QMoveEvent)
+    sigOnResized = pyqtSignal(QDockWidget, QResizeEvent)
+
     def __init__(self, index: int = 0):
         super().__init__(-1)
         
@@ -133,14 +138,13 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self.PanelIndex = 10 + index
 
         self._alignment = WidgetPadAlignment.AlignNone
-        self._edgePosition = QPoint(0,0)
         self._collapsed_size = QSize()
         self._collapsed_position = QPoint()
         self._priority = 0
-        self._neighbor: "ToolshelfDockerWidgetPad" = None
-        self._max_width = 1
-        self._max_height = 1
-        self._lastNeighborSize = QSize(0,0)
+        self._previousNeighbor: "ToolshelfDockerWidgetPad" = None
+        self._nextNeighbor: "ToolshelfDockerWidgetPad" = None
+        self._allowSignals = True
+
         self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
 
         self._settings = self.Settings(self)
@@ -177,18 +181,16 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         showHeaderAct.setChecked(self._settings.getShowHeader())
         showHeaderAct.toggled.connect(self.onHeaderToggled)
 
+        menu.addSeparator()
+        increasePriorityAct = menu.addAction("Increase Priority...")
+        increasePriorityAct.setEnabled(self._nextNeighbor != None)
+        increasePriorityAct.triggered.connect(self.onIncreasePriority)
+
+        decrasePriorityAct = menu.addAction("Decrease Priority...")
+        decrasePriorityAct.setEnabled(self._previousNeighbor != None)
+        decrasePriorityAct.triggered.connect(self.onDecreasePriority)
+        menu.addSeparator()
         
-        priorityMenu = menu.addMenu("Set Priority to...")
-        currentPriority = self._settings.getPriority()
-        priorityMenuGroup = QActionGroup(menu)
-        priorityMenuGroup.setExclusive(True)
-        for entry in range(0, 9):
-            action = priorityMenuGroup.addAction(str(entry))
-            action.setCheckable(True)
-            if entry == currentPriority:
-                action.setChecked(True)
-            action.triggered.connect(partial(self.onPriorityUpdated, entry))
-            priorityMenu.addAction(action)
 
         alignmentMenu = menu.addMenu("Align to...")
         currentAlignment = self._settings.getAlignment().value
@@ -207,13 +209,19 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
 
         menu.exec_(pos)
 
+    def onIncreasePriority(self):
+        result = self._priority + 2
+        self.setPriority(result)
+        self._settings.setPriority(self._priority)
+    
+    def onDecreasePriority(self):
+        result = self._priority - 2
+        self.setPriority(result)
+        self._settings.setPriority(self._priority)
+
     def onAlignmentUpdated(self, value: int):
         self.setAlignment(WidgetPadAlignment(value))
         self._settings.setAlignment(value)
-
-    def onPriorityUpdated(self, value: int):
-        self.setPriority(value)
-        self._settings.setPriority(value)
 
     def onHeaderToggled(self, state: bool):
         self.mainWidget.setTitlebarVisibility(state)
@@ -230,13 +238,16 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         else:
             self.mainWidget.show()
             self.resize(self._collapsed_size)
-            
-    def timerEvent(self, a0):
-        self.syncPosition()
-        super().timerEvent(a0)
+
+    def setAllowSignals(self, state: bool):
+        self._allowSignals = state
+
+    def setPriority(self, level: int):
+        self._priority = level
+        self.managers.mgr_widgetpad.nudgeWidgetPad(self)
 
     def setAlignment(self, align: WidgetPadAlignment):
-        self.managers.mgr_widgetpad.movePadTo(self,  self._alignment, align)
+        old_alignment = self._alignment
         self._alignment = align
 
         match align:
@@ -259,113 +270,16 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
             case _:
                 pass
 
-    def setNeighbor(self, neighbor: "ToolshelfDockerWidgetPad"):
-        self._neighbor = neighbor
+        self.managers.mgr_widgetpad.moveWidgetPad(self, old_alignment, align)
 
-    def getOffset(self):
-        if self._neighbor == None: 
-            return QSize(0,0)
-        else:
-            if self._neighbor.isVisible():
-                return self._neighbor.size() + QSize(EDGE_PADDING, EDGE_PADDING)+ self._neighbor.getOffset()
-            else:
-                return self._neighbor.getOffset()
-
-    def setPriority(self, level: int):
-        self._priority = level
-        self.managers.mgr_widgetpad.updateNeighbors(self._alignment)
-
-    def syncPosition(self):
-        if not self.isVisible():
-            return
-        
-        if self.isFloating() == False:
-            self.setFloating(True)
-
-        if not self.managers:
-            return
-        
-        active_canvas = self.managers.mgr_canvas.active_canvas
-
-        if not active_canvas:
-            return
-        
-
-        self._lastNeighborSize = self.getOffset()
-        
-        space_rect = active_canvas.rect()
-        docker_width = self.width()
-        docker_height = self.height()
-
-        if docker_width != 0 and docker_height != 0:
-            docker_halfwidth = int(docker_width / 2)
-            docker_halfheight = int(docker_height / 2)
-        else:
-            docker_halfwidth = 0
-            docker_halfheight = 0
-
+    def resizeEvent(self, a0: QResizeEvent):
+        if self._allowSignals: self.sigOnResized.emit(self, a0)
+        return super().resizeEvent(a0)
     
-        top_left = QPoint(space_rect.topLeft()) + QPoint(EDGE_PADDING, EDGE_PADDING)
-        top_center = QPoint(space_rect.center().x(),space_rect.top()) - QPoint(docker_halfwidth, 0) + QPoint(0, EDGE_PADDING)
-        top_right = QPoint(space_rect.topRight()) - QPoint(docker_width, 0) + QPoint(-EDGE_PADDING, EDGE_PADDING)
+    def moveEvent(self, a0: QMoveEvent):
+        if self._allowSignals: self.sigOnMoved.emit(self, a0)
+        return super().moveEvent(a0)
 
-        mid_left = QPoint(space_rect.left(), space_rect.center().y()) - QPoint(0, docker_halfheight) + QPoint(EDGE_PADDING, 0)
-        mid_right = QPoint(space_rect.right(), space_rect.center().y()) - QPoint(docker_width, docker_halfheight) + QPoint(-EDGE_PADDING, 0)
-
-        bottom_left = QPoint(space_rect.bottomLeft()) - QPoint(0, docker_height) + QPoint(EDGE_PADDING, -EDGE_PADDING)
-        bottom_center = QPoint(space_rect.center().x(), space_rect.bottom()) - QPoint(docker_halfwidth, docker_height) + QPoint(0, -EDGE_PADDING)
-        bottom_right = QPoint(space_rect.bottomRight()) - QPoint(docker_width, docker_height) + QPoint(-EDGE_PADDING, -EDGE_PADDING)
-
-
-        _position: QPoint = QPoint(0,0)
-
-        match self._alignment:
-            case WidgetPadAlignment.TopLeft:
-                _position = active_canvas.mapToGlobal(top_left)
-                _position.setX(_position.x() + self._lastNeighborSize.width())
-            case WidgetPadAlignment.TopRight:
-                _position = active_canvas.mapToGlobal(top_right)
-                _position.setX(_position.x() - self._lastNeighborSize.width())
-            case WidgetPadAlignment.BottomRight:
-                _position = active_canvas.mapToGlobal(bottom_right)
-                _position.setX(_position.x() - self._lastNeighborSize.width())
-            case WidgetPadAlignment.BottomLeft:
-                _position = active_canvas.mapToGlobal(bottom_left)
-                _position.setX(_position.x() + self._lastNeighborSize.width())
-            case WidgetPadAlignment.TopCenter:
-                _position = active_canvas.mapToGlobal(top_center)
-                _position.setY(_position.y() + self._lastNeighborSize.height())
-            case WidgetPadAlignment.BottomCenter:
-                _position = active_canvas.mapToGlobal(bottom_center)
-                _position.setY(_position.y() - self._lastNeighborSize.height())
-            case WidgetPadAlignment.MidLeft:
-                _position = active_canvas.mapToGlobal(mid_left)
-                _position.setX(_position.x() + self._lastNeighborSize.width())
-            case WidgetPadAlignment.MidRight:
-                _position = active_canvas.mapToGlobal(mid_right)
-                _position.setX(_position.x() - self._lastNeighborSize.width())
-            case _:
-                _position = active_canvas.mapToGlobal(QPoint(0,0))
-
-
-        _max_height = space_rect.height() - EDGE_PADDING * 2
-        _max_width = space_rect.width() - EDGE_PADDING * 2
-
-
-        _c_width = self.width()
-        _c_height = self.height()
-        _c_pos = self.pos()
-
-        self.shrinkToFit()
-        
-        if _c_width > _max_width:
-            self.resize(_max_width, _c_height)
-
-        if _c_height > _max_height:
-            self.resize(_c_width, _max_height)
-
-        if _c_pos != _position:
-            self.move(_position)
 
 def DynamicToolshelfDockerWidgetPad(value: int):
     class DynamicToolshelfDockerWidgetPad(ToolshelfDockerWidgetPad):

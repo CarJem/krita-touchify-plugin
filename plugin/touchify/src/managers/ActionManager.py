@@ -14,7 +14,7 @@ from touchify.src.config.menu.TriggerMenu import TriggerMenu
 from touchify.src.config.script.CustomScript import CustomScript
 
 import touchify.src.extensions.pyqt_extensions as PyQtExtensions
-from touchify.src.components.widgets.triggers.TriggerMenu import TriggerMenu
+from touchify.src.components.widgets.triggers.TriggerMenu import TriggerMenuWidget
 
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 
@@ -139,14 +139,14 @@ class ActionManager(QObject):
 
         return result
     
-    def Create_MenuItem(self, parent: TriggerMenu, data: TriggerMenuItem):
+    def Create_MenuItem(self, parent: TriggerMenuWidget, data: TriggerMenuItem):
         if data.variant == TriggerMenuItem.Variants.Action:
             if data.action_id and data.action_id in self.registeredActions:
                 data = self.registeredActionsData[data.action_id]
 
         match data.variant:
             case TriggerMenuItem.Variants.Menu:
-                actual_menu = TriggerMenu(data, parent, self)
+                actual_menu = TriggerMenuWidget(data, parent, self)
                 actual_menu.setTitle(data.display_custom_text)
                 parent.addMenu(actual_menu)
             case TriggerMenuItem.Variants.Action:
@@ -479,7 +479,7 @@ class ActionManager(QObject):
         btn: TriggerButton = self.Button_Core(None, act.display_custom_text)   
         self.Helper_SetButtonDisplay(act, btn)
         
-        contextMenu = TriggerMenu(data, btn, self)
+        contextMenu = TriggerMenuWidget(data, btn, self)
         btn.setMenu(contextMenu)
         btn.triggerActivated.connect(btn.showMenu)
         return btn
@@ -564,7 +564,7 @@ class ActionManager(QObject):
         if not isinstance(data, TriggerMenu) or data == None: return
 
         _parent = self.Helper_GetActionSource(action)
-        contextMenu = TriggerMenu(data, _parent, self)
+        contextMenu = TriggerMenuWidget(data, _parent, self)
         contextMenu.show()
             
     def Execute_Brush(self, id):

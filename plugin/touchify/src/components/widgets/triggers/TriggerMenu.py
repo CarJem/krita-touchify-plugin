@@ -10,7 +10,7 @@ from krita import *
 if TYPE_CHECKING:
     from touchify.src.managers.ActionManager import ActionManager
 
-class TriggerMenu(QMenu):
+class TriggerMenuWidget(QMenu):
     
     def __init__(self, cfg: TriggerMenuItem | TriggerMenu, parent: QWidget, action_mgr: "ActionManager"):
         super().__init__(parent)

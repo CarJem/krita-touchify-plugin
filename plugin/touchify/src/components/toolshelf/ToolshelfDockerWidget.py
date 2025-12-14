@@ -51,7 +51,6 @@ class ToolshelfDockerWidget(DockWidget):
         GlobalEvents().SIGNAL_TOOLSHELF_UPDATED.connect(self.onConfigUpdated)
         self.startTimer(TIMER_INTERVAL)
 
-
     def timerEvent(self, a0: QTimerEvent):
         if self.isVisible():
             self.shrinkToFit()
