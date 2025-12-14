@@ -211,11 +211,18 @@ class ShelfWidget(QWidget):
         return self.dlgConfigEditor
 
     def updateStyle(self):
-        self.dockStack.setStyleSheet(f"""
-            ShelfWidgetStack {{
-                border: 1px solid palette(base)  
-            }}
-        """)
+        if self.is_nested:
+            self.dockStack.setStyleSheet(f"""
+                ShelfWidgetStack {{
+                    border: 0px solid transparent
+                }}
+            """)
+        else:
+            self.dockStack.setStyleSheet(f"""
+                ShelfWidgetStack {{
+                    border: 1px solid palette(base)  
+                }}
+            """)
 
 
     #region Events
