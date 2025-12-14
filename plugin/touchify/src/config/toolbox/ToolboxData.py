@@ -16,6 +16,11 @@ class ToolboxData:
         Horizontal = "horizontal"
         Vertical = "vertical"
 
+    class ThemeStyle(EnumStr):
+        Default = "default"
+        Touchify = "touchify"
+        Krita = "krita"
+
     def __defaults__(self):
         self.preset_name: str = "New Toolbox Preset"
 
@@ -25,6 +30,8 @@ class ToolboxData:
         self.submenu_delay: int = 200
         self.background_opacity: int = 255
         self.button_opacity: int = 255
+
+        self.theme: str = "default"
 
         self.orientation_mode: str = "dynamic"
 
@@ -62,6 +69,7 @@ class ToolboxData:
             "background_opacity",
             "button_opacity",
             "orientation_mode",
+            "theme"
             # Items
             "categories"
         ]
@@ -73,6 +81,7 @@ class ToolboxData:
         labels["submenu_delay"] = "Menu Delay"
         labels["column_count"] = "Column Count"
         labels["icon_size"] = "Icon Size"
+        labels["theme"] = "Theme"
         labels["background_opacity"] = "Background Opacity"
         labels["orientation_mode"] = "Orientation Mode"
         labels["button_opacity"] = "Button Opacity"
@@ -84,6 +93,7 @@ class ToolboxData:
         restrictions["background_opacity"] = PropertyGrid_Restrictions.range(min=0, max=255)
         restrictions["button_opacity"] = PropertyGrid_Restrictions.range(min=0, max=255)
         restrictions["orientation_mode"] = PropertyGrid_Restrictions.strValues(self.OrientationMode.values())
+        restrictions["theme"] = PropertyGrid_Restrictions.strValues(self.ThemeStyle.values())
         return restrictions
     
     def update(self, item: "ToolboxData"):
@@ -95,6 +105,7 @@ class ToolboxData:
         self.orientation_mode = item.orientation_mode
         self.preset_name = item.preset_name
         self.submenu_delay = item.submenu_delay
+        self.theme = item.theme
     
     def loadDefaults(self):
         result = TypedList([], ToolboxDataCategory)

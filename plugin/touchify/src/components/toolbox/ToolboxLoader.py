@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 from touchify.src.api_krita import KritaAPI
 from touchify.src.components.toolbox.ToolboxMenu import ToolboxMenu
-from touchify.src.components.toolbox.ToolboxStyle import ToolboxStyle
+from touchify.src.components.toolbox.ToolboxStyles import ToolboxStyles
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
@@ -30,12 +30,13 @@ class ToolboxLoader(QObject):
         self._iconSize = 16
         self._submenu_delay = 200
         self._opacityLevel = 0.65
+        self._cfg = ToolboxData()
 
     def Sync(self, cfg: ToolboxData):
         self._iconSize = cfg.icon_size
         self._submenu_delay = cfg.submenu_delay
+        self._cfg = cfg
         #self._opacityLevel = cfg.opacity_level
-
 
     def Signal_OnSwap(self):
         ac: QAction = self.sender()
@@ -95,11 +96,11 @@ class ToolboxLoader(QObject):
 
         is_toolbox_menu = len(tool.items) >= 1
 
-        btn: TriggerButton = self.rootWidget.managers.mgr_actions.Create_Button(self.rootWidget, trigger)
+        btn: TriggerButton = self.rootWidget.managers.mgr_actions.Create_Button(self.rootWidget._toolbox, trigger)
         if btn:
             tool_names: list[str] = [item.name for item in tool.items]
             tool_names.append(tool.name)
-            btn.setupToolboxButton(is_toolbox_menu, tool_names)
+            btn.setupBlenderButton(is_toolbox_menu, tool_names)
             btn.setWindowOpacity(self._opacityLevel)
 
             if tool.icon != "": 
@@ -109,7 +110,7 @@ class ToolboxLoader(QObject):
 
             btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             btn.setIconSize(QSize(self._iconSize, self._iconSize))
-            btn.setStyle(ToolboxStyle("fusion", self._submenu_delay))
+            ToolboxStyles.setButtonStyleSheet(btn, self.rootWidget.style_data)
 
             if is_toolbox_menu:
                 subMenu = ToolboxMenu(btn, tool)

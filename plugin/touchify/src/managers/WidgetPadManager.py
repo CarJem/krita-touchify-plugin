@@ -3,10 +3,7 @@ from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from touchify.src.api_krita import KritaAPI
 
-from touchify.src.managers.GlobalEvents import GlobalEvents
-from touchify.src.settings.TouchifySettings import TouchifySettings
 from touchify.__env__ import *
 
 from touchify.src.extensions.krita_extensions import *
@@ -45,6 +42,8 @@ class WidgetPadManager(QObject):
     def Window_Load(self, window: "TouchifyWindow"):
         window.sigWindowMoved.connect(self.onWidgetPadAreaUpdate)
         window.sigWindowResized.connect(self.onWidgetPadAreaUpdate)
+        self.managers.mgr_canvas.canvasResized.connect(self.onWidgetPadAreaUpdate)
+        self.managers.mgr_canvas.canvasMoved.connect(self.onWidgetPadAreaUpdate)
     
     #region Get / Set
 
@@ -192,22 +191,26 @@ class WidgetPadManager(QObject):
             case _:
                 _position = active_canvas.mapToGlobal(QPoint(0,0))
 
+        #TODO: Determine if we actually want to account for the space avaliable
+        #------
+        #_max_height = space_rect.height() - EDGE_PADDING * 2
+        #_max_width = space_rect.width() - EDGE_PADDING * 2
 
-        _max_height = space_rect.height() - EDGE_PADDING * 2
-        _max_width = space_rect.width() - EDGE_PADDING * 2
-
-
-        _c_width = src.width()
-        _c_height = src.height()
+        #TODO: Determine if we actually want to account for the space avaliable
+        #------
+        #_c_width = src.width()
+        #_c_height = src.height()
         _c_pos = src.pos()
 
         src.shrinkToFit()
         
-        if _c_width > _max_width:
-            src.resize(_max_width, _c_height)
-
-        if _c_height > _max_height:
-            src.resize(_c_width, _max_height)
+        #TODO: Determine if we actually want to account for the space avaliable|
+        #------
+        #if _c_width > _max_width:
+        #    src.resize(_max_width, _c_height)
+        #
+        #if _c_height > _max_height:
+        #    src.resize(_c_width, _max_height)
 
         if _c_pos != _position:
             src.move(_position)

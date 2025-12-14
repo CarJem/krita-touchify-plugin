@@ -16,7 +16,7 @@
     ],
     "python.analysis.fixAll": [
         "source.convertImportFormat",
-        /*"source.unusedImports"*/
+        "source.unusedImports"
     ],
     "python.analysis.diagnosticSeverityOverrides": {
         "reportImportCycles": "none"
@@ -37,7 +37,7 @@
     "python.analysis.indexing": true,
     "python.analysis.inlayHints.functionReturnTypes": false,
     "editor.codeActionsOnSave": {
-        "source.unusedImports": "never",
+        "source.unusedImports": "explicit",
         "source.organizeImports": "explicit",
         "source.convertImportFormat": "explicit",
     },

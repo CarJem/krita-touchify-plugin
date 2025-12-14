@@ -1,5 +1,4 @@
 # This Python file uses the following encoding: utf-8
-from ast import Global
 from uuid import uuid4
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -10,6 +9,7 @@ from krita import *
 
 from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.__env__ import *
+from touchify.src.components.toolbox.ToolboxStyles import ToolboxStyles
 from touchify.src.components.toolbox.ToolboxLayout import ToolboxEmptySpace
 from touchify.src.alib_propertygrid.PropertyGridDialog import PropertyGridDialog
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
@@ -60,7 +60,7 @@ class ToolboxDocker(QDockWidget):
             KritaSettings.writeSetting(Env.DockerID.TOOLBOX, "SelectedPreset", id, False)
             GlobalEvents().SIGNAL_TOOLBOX_UPDATED.emit()
 
-        def sync():
+        def sync(self):
             TouchifySettings.save()
             TouchifySettings.load()
             GlobalEvents().SIGNAL_TOOLBOX_UPDATED.emit()
@@ -69,6 +69,7 @@ class ToolboxDocker(QDockWidget):
         super().__init__(parent)
 
         self.settingsManager = self.SettingsManager(self)
+        self.style_data = ToolboxStyles.ThemeData(ToolboxData(), Qt.Orientation.Vertical)
 
         self.setWindowTitle(DOCKER_TITLE) # window title also acts as the Docker title in Settings > Dockers
         self.setContentsMargins(0,0,0,0)
@@ -209,80 +210,9 @@ class ToolboxDocker(QDockWidget):
 
     def updateStyleSheet(self):
         layout_config = self.settingsManager.getCurrentToolbox()
-
-        highlight_hex = qApp.palette().color(QPalette.ColorRole.Highlight).name().split("#")[1]
-        background_hex = qApp.palette().color(QPalette.ColorRole.Base).name().split("#")[1]
-        alternate_hex = qApp.palette().color(QPalette.ColorRole.AlternateBase).name().split("#")[1]
-        inactive_text_color_hex = qApp.palette().color(QPalette.ColorRole.ToolTipText).name().split("#")[1]
-        active_text_color_hex = qApp.palette().color(QPalette.ColorRole.WindowText).name().split("#")[1]
-
-        background_opacity = layout_config.background_opacity
-        alternative_opacity = layout_config.button_opacity
-
-        if background_opacity > 255: background_opacity = 255
-        if background_opacity < 0: background_opacity = 0
-
-        if alternative_opacity > 255: alternative_opacity = 255
-        if alternative_opacity < 0: alternative_opacity = 0
-
-
-        bg_opacity_hex = hex(background_opacity)[2:]
-        alt_opacity_hex = hex(alternative_opacity)[2:]
-
-
-        if self.scrollArea.orientation() == Qt.Orientation.Horizontal:
-            frame_style = f"""
-                QFrame {{ 
-                    background-color: #{bg_opacity_hex}{background_hex};
-                    border-radius: 4px;
-                    padding: 0px;
-                }}
-            """
-            #TODO: Add a Variant of this that Uses Seperators?
-            #   border-right: 1px solid #{inactive_text_color_hex};
-            #   border-radius: 0px;
-        else:
-            frame_style = f"""
-                QFrame {{ 
-                    background-color: #{bg_opacity_hex}{background_hex};
-                    border-radius: 4px;
-                    padding: 0px;
-                }}
-            """
-            #TODO: Add a Variant of this that Uses Seperators?
-            #   border-bottom: 1px solid #{inactive_text_color_hex};
-            #   border-radius: 0px;
-        
-    
-        self.setStyleSheet(f"""
-            {frame_style}
-
-            QScrollArea {{ background: transparent; }}
-            QScrollArea > QWidget > QWidget {{ background: transparent; }}
-            QScrollArea > QWidget > QScrollBar {{ background: palette(base); }}
-            
-            TriggerButton {{
-                background-color: #{alt_opacity_hex}{background_hex};
-                border: 1px solid transparent;
-                border-radius: 4px;
-            }}
-            
-            TriggerButton[toggled="true"] {{
-                background-color: #{alt_opacity_hex}{highlight_hex};
-            }}
-
-            TriggerButton[menu_toggled="true"] {{
-                border: 1px solid #{alt_opacity_hex}{highlight_hex};
-            }}
-            
-            TriggerButton:hover {{
-                background-color: #{alt_opacity_hex}{highlight_hex};
-            }}
-            
-            TriggerButton:pressed {{
-                background-color: #{alt_opacity_hex}{alternate_hex};
-            }}
-        """)
+        orientation = self.scrollArea.orientation()
+        self.style_data = ToolboxStyles.ThemeData(layout_config, orientation)
+        self.setStyleSheet(ToolboxStyles.getStyleSheet(self.style_data))
 
     def setOrientation(self, orientation: Qt.Orientation):
         self.scrollArea.setOrientation(orientation)

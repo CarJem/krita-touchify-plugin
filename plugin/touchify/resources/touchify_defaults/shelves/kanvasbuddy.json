@@ -36,19 +36,18 @@
             "de5e301e-7e11-40e9-b0c2-3720305f05aa": {
                 "display_name": "",
                 "docker_id": "",
-                "size_x": 0,
-                "size_y": 0,
                 "min_size_x": 250,
                 "min_size_y": 0,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "ignore_scaling": false,
                 "section_type": "special",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
                 "action_section_id": "Panel",
                 "action_section_display_mode": "normal",
                 "action_section_contents": [],
@@ -81,24 +80,23 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 4
+                "json_version": 5
             },
             "8b5f08a1-f9ab-4933-866e-148f1c93f130": {
                 "display_name": "",
                 "docker_id": "",
-                "size_x": 0,
-                "size_y": 0,
                 "min_size_x": 250,
                 "min_size_y": 0,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "ignore_scaling": false,
                 "section_type": "special",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
                 "action_section_id": "Panel",
                 "action_section_display_mode": "normal",
                 "action_section_contents": [],
@@ -131,24 +129,23 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 4
+                "json_version": 5
             },
             "65d3c3f3-5163-45a7-8857-32b26b8e959a": {
                 "display_name": "",
                 "docker_id": "",
-                "size_x": 0,
-                "size_y": 0,
                 "min_size_x": 0,
                 "min_size_y": 0,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "ignore_scaling": false,
                 "section_type": "actions",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
                 "action_section_id": "Panel",
                 "action_section_display_mode": "normal",
                 "action_section_contents": [
@@ -256,7 +253,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 4
+                "json_version": 5
             }
         },
         "pages": [
@@ -283,19 +280,18 @@
                     "fddd9363-4f13-4e5f-836e-752544768bc3": {
                         "display_name": "",
                         "docker_id": "PresetDocker",
-                        "size_x": 0,
-                        "size_y": 0,
                         "min_size_x": 250,
                         "min_size_y": 250,
                         "max_size_x": 0,
                         "max_size_y": 0,
-                        "ignore_scaling": false,
                         "section_type": "docker",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
                         "docker_nesting_mode": "normal",
                         "docker_unloaded_visibility": "normal",
                         "docker_loading_priority": "normal",
+                        "docker_size_hint_x": 0,
+                        "docker_size_hint_y": 0,
                         "action_section_id": "Panel",
                         "action_section_display_mode": "normal",
                         "action_section_contents": [],
@@ -328,7 +324,7 @@
                             },
                             "json_version": 1
                         },
-                        "json_version": 4
+                        "json_version": 5
                     }
                 },
                 "options": {
@@ -360,19 +356,18 @@
                     "0f838670-2619-42d5-bbd1-795700b8e56d": {
                         "display_name": "",
                         "docker_id": "PaletteDocker",
-                        "size_x": 0,
-                        "size_y": 0,
                         "min_size_x": 250,
                         "min_size_y": 250,
                         "max_size_x": 0,
                         "max_size_y": 0,
-                        "ignore_scaling": false,
                         "section_type": "docker",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
                         "docker_nesting_mode": "normal",
                         "docker_unloaded_visibility": "normal",
                         "docker_loading_priority": "normal",
+                        "docker_size_hint_x": 0,
+                        "docker_size_hint_y": 0,
                         "action_section_id": "Panel",
                         "action_section_display_mode": "normal",
                         "action_section_contents": [],
@@ -405,7 +400,7 @@
                             },
                             "json_version": 1
                         },
-                        "json_version": 4
+                        "json_version": 5
                     }
                 },
                 "options": {
@@ -437,19 +432,18 @@
                     "7c8bd12a-bce2-4511-a53b-b91b1f4edea5": {
                         "display_name": "",
                         "docker_id": "KisLayerBox",
-                        "size_x": 0,
-                        "size_y": 0,
                         "min_size_x": 250,
                         "min_size_y": 250,
                         "max_size_x": 0,
                         "max_size_y": 0,
-                        "ignore_scaling": false,
                         "section_type": "docker",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
                         "docker_nesting_mode": "normal",
                         "docker_unloaded_visibility": "normal",
                         "docker_loading_priority": "normal",
+                        "docker_size_hint_x": 0,
+                        "docker_size_hint_y": 0,
                         "action_section_id": "Panel",
                         "action_section_display_mode": "normal",
                         "action_section_contents": [],
@@ -482,7 +476,7 @@
                             },
                             "json_version": 1
                         },
-                        "json_version": 4
+                        "json_version": 5
                     }
                 },
                 "options": {
@@ -514,19 +508,18 @@
                     "5859ff3f-e172-4d0a-b986-5752fd304156": {
                         "display_name": "",
                         "docker_id": "ColorSelectorNg",
-                        "size_x": 0,
-                        "size_y": 0,
                         "min_size_x": 250,
                         "min_size_y": 250,
                         "max_size_x": 0,
                         "max_size_y": 0,
-                        "ignore_scaling": false,
                         "section_type": "docker",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
                         "docker_nesting_mode": "normal",
                         "docker_unloaded_visibility": "normal",
                         "docker_loading_priority": "normal",
+                        "docker_size_hint_x": 0,
+                        "docker_size_hint_y": 0,
                         "action_section_id": "Panel",
                         "action_section_display_mode": "normal",
                         "action_section_contents": [],
@@ -559,7 +552,7 @@
                             },
                             "json_version": 1
                         },
-                        "json_version": 4
+                        "json_version": 5
                     }
                 },
                 "options": {
@@ -591,19 +584,18 @@
                     "575c341e-6bb0-48dc-a579-5ffc3eb0cba4": {
                         "display_name": "",
                         "docker_id": "OverviewDocker",
-                        "size_x": 0,
-                        "size_y": 0,
                         "min_size_x": 250,
                         "min_size_y": 250,
                         "max_size_x": 0,
                         "max_size_y": 0,
-                        "ignore_scaling": false,
                         "section_type": "docker",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
                         "docker_nesting_mode": "docking",
                         "docker_unloaded_visibility": "normal",
                         "docker_loading_priority": "normal",
+                        "docker_size_hint_x": 0,
+                        "docker_size_hint_y": 0,
                         "action_section_id": "Panel",
                         "action_section_display_mode": "normal",
                         "action_section_contents": [],
@@ -636,7 +628,7 @@
                             },
                             "json_version": 1
                         },
-                        "json_version": 4
+                        "json_version": 5
                     }
                 },
                 "options": {

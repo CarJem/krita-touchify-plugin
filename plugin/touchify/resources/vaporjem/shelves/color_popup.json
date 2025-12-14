@@ -27,19 +27,18 @@
             "10911bc9-5243-446a-8a50-705e8e5d36f2": {
                 "display_name": "",
                 "docker_id": "ColorSelectorNg",
-                "size_x": 0,
-                "size_y": 0,
                 "min_size_x": 300,
                 "min_size_y": 300,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "ignore_scaling": false,
                 "section_type": "docker",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
                 "action_section_id": "Panel",
                 "action_section_display_mode": "normal",
                 "action_section_contents": [],
@@ -72,24 +71,23 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 4
+                "json_version": 5
             },
             "61e42e75-9745-4fbe-ae1a-1c22a50a83cd": {
                 "display_name": "",
                 "docker_id": "PaletteDocker",
-                "size_x": 0,
-                "size_y": 0,
                 "min_size_x": 300,
                 "min_size_y": 300,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "ignore_scaling": false,
                 "section_type": "docker",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
                 "action_section_id": "Panel",
                 "action_section_display_mode": "normal",
                 "action_section_contents": [],
@@ -122,7 +120,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 4
+                "json_version": 5
             }
         },
         "pages": [],

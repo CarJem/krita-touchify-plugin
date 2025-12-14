@@ -77,7 +77,6 @@ class ToolshelfDock:
         self.max_size_x: int = 0
         self.max_size_y: int = 0
 
-        self.ignore_scaling: bool = False
         self.section_type: str = "docker"
         self.requires_specific_tool: str = ""
         self.invert_required_tools: bool = False
@@ -226,7 +225,6 @@ class ToolshelfDock:
 
         labels["max_size"] = "Max Width / Height"
         labels["min_size"] = "Min Width / Height"
-        labels["ignore_scaling"] = "Ignore Scaling"
         labels["section_type"] = "Section Type"
 
         labels["requires_specific_tool"] = "Requires Specific Tool"
@@ -257,7 +255,6 @@ class ToolshelfDock:
             "display_name",
             "min_size",
             "max_size",
-            "ignore_scaling",
             "requires_specific_tool",
             "invert_required_tools"
         ]

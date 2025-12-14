@@ -1,4 +1,3 @@
-from enum import IntEnum
 from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -27,8 +26,8 @@ class CanvasManager(QObject):
     normalFocus=pyqtSignal()
     delayedFocus=pyqtSignal()
 
-
-
+    canvasResized = pyqtSignal()
+    canvasMoved = pyqtSignal()
 
 
 
@@ -101,6 +100,11 @@ class CanvasManager(QObject):
             if not self.active_canvas == obj: return False
         except:
             return False
+
+        if event.type() == QEvent.Type.Resize and obj == self.active_canvas:
+            self.canvasResized.emit()
+        if event.type() == QEvent.Type.Move and obj == self.active_canvas:
+            self.canvasMoved.emit()
 
         if not Check_Event(): return False
 

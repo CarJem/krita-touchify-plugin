@@ -46,19 +46,18 @@
             "5e5ca049-14c2-4ef3-b103-869e554d4b8b": {
                 "display_name": "",
                 "docker_id": "KisLayerBox",
-                "size_x": 0,
-                "size_y": 0,
                 "min_size_x": 0,
                 "min_size_y": 0,
                 "max_size_x": 0,
                 "max_size_y": 0,
-                "ignore_scaling": false,
                 "section_type": "docker",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
                 "action_section_id": "Panel",
                 "action_section_display_mode": "normal",
                 "action_section_contents": [],
@@ -91,24 +90,23 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 4
+                "json_version": 5
             },
             "33af9154-9698-4383-bde2-44f54940fef9": {
                 "display_name": "",
                 "docker_id": "",
-                "size_x": 0,
-                "size_y": 0,
                 "min_size_x": 48,
                 "min_size_y": 30,
                 "max_size_x": 48,
                 "max_size_y": 30,
-                "ignore_scaling": false,
                 "section_type": "special",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
                 "action_section_id": "Panel",
                 "action_section_display_mode": "normal",
                 "action_section_contents": [],
@@ -141,24 +139,23 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 4
+                "json_version": 5
             },
             "c95e8bfa-41ac-4c01-bc32-75da6076c750": {
                 "display_name": "",
                 "docker_id": "",
-                "size_x": 0,
-                "size_y": 0,
                 "min_size_x": 0,
                 "min_size_y": 30,
                 "max_size_x": 0,
                 "max_size_y": 30,
-                "ignore_scaling": false,
                 "section_type": "actions",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
                 "action_section_id": "Panel",
                 "action_section_display_mode": "normal",
                 "action_section_contents": [
@@ -312,7 +309,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 4
+                "json_version": 5
             }
         },
         "pages": [],

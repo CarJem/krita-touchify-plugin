@@ -41,8 +41,6 @@ class TriggerList:
         self.max_size_x: int = 0
         self.max_size_y: int = 0
 
-        self.ignore_scaling: bool = False
-
         self.action_section_id: str = "Panel"
         self.display_mode: str = "normal"
         self.action_section_contents: TypedList[TriggerGroup] = []
@@ -91,7 +89,6 @@ class TriggerList:
             self.max_size_y = actionInfo.max_size_y
             self.size_x = actionInfo.docker_size_hint_x
             self.size_y = actionInfo.docker_size_hint_y
-            self.ignore_scaling = actionInfo.ignore_scaling
     
     def propertygrid_hints(self):
         hints = {}
@@ -142,7 +139,6 @@ class TriggerList:
         labels["max_size"] = "Max Width / Height"
         labels["min_size"] = "Min Width / Height"
         labels["panel_location"] = "Panel Position"
-        labels["ignore_scaling"] = "Ignore Scaling"
         labels["section_type"] = "Section Type"
 
         labels["docker_id"] = "Docker ID"
@@ -166,8 +162,7 @@ class TriggerList:
             "min_size",
             "max_size",
             "size",
-            "panel_location",
-            "ignore_scaling"
+            "panel_location"
         ]
 
         variant_group = [
