@@ -98,8 +98,6 @@ class ShelfTContainer(ShelfContainer, TContainer):
     def restoreState(self, state):
         TContainer.restoreState(self, state)
         ShelfContainer.restoreState(self, state)
-        self.stack.setCurrentIndex(-1)
-        self.stack.setCurrentIndex(state['index'])
 
     def setItemFold(self, item: "ShelfDock", state: bool):
         ShelfContainer.setItemFold(self, item, state)

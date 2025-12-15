@@ -132,6 +132,7 @@ class ToolboxDocker(QDockWidget):
 
         self.settingsMenu = ToolboxMenu(self, self.settingsManager.getCurrentToolboxId())
         self.settingsMenu.sigEditModeToggled.connect(self.onEditModeChanged)
+        self.settingsMenu.sigSettingsRequested.connect(self.editToolbox)
         self.settingsMenu.sigPresetsChangedRequested.connect(self.changePreset)
         self.settingsMenu.sigDeletePresetRequested.connect(self.deletePreset)
         self.settingsMenu.sigSavePresetAsRequested.connect(self.savePresetAs)
@@ -146,6 +147,8 @@ class ToolboxDocker(QDockWidget):
         self.settingsMenu.sigEditToolRequested.connect(self.editTool)
         self.settingsMenu.sigDuplicateToolRequested.connect(self.duplicateTool)
         self.settingsMenu.sigDeleteToolRequested.connect(self.deleteTool)
+
+        
         
 
         self.updateStylesheet()
