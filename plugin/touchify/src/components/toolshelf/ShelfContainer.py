@@ -1,14 +1,12 @@
-from re import L
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
-from touchify.src.alib_pyqtgraph.dockarea.Container import Container, HContainer, TContainer, VContainer
+from touchify.src.alib_pyqtgraph.dockarea.Container import HContainer, TContainer, VContainer
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 
-from touchify.src.components.toolshelf.ShelfDockArea import ShelfDockArea
 
 if TYPE_CHECKING:
     from touchify.src.components.toolshelf.ShelfDock import ShelfDockLabel, ShelfDock
@@ -100,6 +98,8 @@ class ShelfTContainer(ShelfContainer, TContainer):
     def restoreState(self, state):
         TContainer.restoreState(self, state)
         ShelfContainer.restoreState(self, state)
+        self.stack.setCurrentIndex(-1)
+        self.stack.setCurrentIndex(state['index'])
 
     def setItemFold(self, item: "ShelfDock", state: bool):
         ShelfContainer.setItemFold(self, item, state)
