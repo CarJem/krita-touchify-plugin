@@ -186,10 +186,6 @@ class ShelfDock(Dock):
     def startDrag(self):
         if self.editableDragArea.isEnabled():
             return super().startDrag()
-        
-    def startDrag(self):
-        if self.editableDragArea.isEnabled():
-            return super().startDrag()
 
     def float(self):
         pass

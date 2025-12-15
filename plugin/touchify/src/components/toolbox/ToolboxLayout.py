@@ -11,6 +11,8 @@ from typing import Optional
 from PyQt5.QtCore import Qt, QSize, QRect, QPoint
 from PyQt5.QtWidgets import QLayout, QWidget, QAbstractButton, QLayoutItem, QWidgetItem, QFrame, QToolButton
 
+from touchify.src.alib_pyqtgraph.Qt import QtCore
+
 class ToolboxEmptySpace(QToolButton):
     def __init__(self, parent: QWidget = None):
         super().__init__(parent)
@@ -119,6 +121,9 @@ class SectionLayout(QLayout):
         self.m_orientation = orientation
 
 class Section(QFrame):
+
+    sigContextMenuRequested = QtCore.pyqtSignal(str, QPoint)
+
     class SeparatorFlag(Flag):
         SeparatorTop = auto()  # 0x0001
         SeparatorBottom = auto()  # 0x0002
@@ -133,6 +138,8 @@ class Section(QFrame):
         self.m_layout = SectionLayout(self)
         self.m_name = ""
         self.m_separators = Section.SeparatorFlag(0)
+        self._isEditMode = False
+        self._blockNextContextMenu = False
         
         # Re-enable this when we need to debug the section layout again.
         # setAutoFillBackground(true);
@@ -170,6 +177,16 @@ class Section(QFrame):
         #     break;
         # }
         # i++;
+
+    def setEditMode(self, val: bool):
+        self._isEditMode = val
+
+    def contextMenuEvent(self, a0):
+        if self._isEditMode: 
+            self.sigContextMenuRequested.emit(self.m_name, a0.globalPos())
+            a0.accept()
+            return
+        return super().contextMenuEvent(a0)
 
     def addButton(self, button: QAbstractButton, priority: int):
         self.m_layout.addButton(button, priority)

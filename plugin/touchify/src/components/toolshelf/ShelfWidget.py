@@ -20,14 +20,13 @@ from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
 from touchify.src.extensions.json_extensions import JsonExtensions
-import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.managers.GlobalEvents import GlobalEvents
 import touchify.src.components.toolshelf.ShelfClasses as ShelfClasses
 from touchify.src.settings.TouchifySettings import *
 from touchify.__env__ import *
 from touchify.src.managers.DockerManager import *
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from touchify.src.settings.KritaSettings import KritaSettings
 if TYPE_CHECKING:
@@ -168,7 +167,7 @@ class ShelfWidget(QWidget):
         self.setContentsMargins(0,0,0,0)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
-        self.dlgConfigEditor: PropertyGridDialog | None = None
+        self.propertyEditor: PropertyGridDialog | None = None
         self.containerOptions: ToolshelfAreaSettings = ToolshelfAreaSettings()
         self.homepageOptions: ToolshelfPageSettings = ToolshelfPageSettings()
 
@@ -200,15 +199,6 @@ class ShelfWidget(QWidget):
 
         managers.mgr_canvas.normalFocus.connect(self.onCanvasFocusGained)
         managers.api_window().notifier.toolChanged.connect(self.onToolChanged)
-
-    def __setupDialog(self, options: Any):
-        if self.dlgConfigEditor != None:
-            if PyQtExtensions.CommonHelpers.isDeleted(self.dlgConfigEditor) == False:
-                self.dlgConfigEditor.close()
-                self.dlgConfigEditor = None
-        
-        self.dlgConfigEditor = PropertyGridDialog(self.api_window, options)
-        return self.dlgConfigEditor
 
     def updateStyle(self):
         if self.is_nested:
@@ -427,9 +417,9 @@ class ShelfWidget(QWidget):
         self.display.shelfReloadEvent(state)
 
     def editLayout(self):
-        dlg = self.__setupDialog(self.containerOptions)
-        if dlg.exec_():
-            self.containerOptions = dlg.editableConfig
+        self.propertyEditor = PropertyGridDialog.Setup(self.propertyEditor, self.api_window, self.containerOptions)
+        if self.propertyEditor.exec_():
+            self.containerOptions = self.propertyEditor.editableConfig
             self.saveLayout()
             self.loadLayout()
 
@@ -453,10 +443,10 @@ class ShelfWidget(QWidget):
         else:
             pageData = self.dockPageOptions[index]
 
-        dlg = self.__setupDialog(pageData)
-        if dlg.exec_():
-            if index == -1: self.homepageOptions = dlg.editableConfig
-            else: self.dockPageOptions[index] = dlg.editableConfig
+        self.propertyEditor = PropertyGridDialog.Setup(self.propertyEditor, self.api_window, pageData)
+        if self.propertyEditor.exec_():
+            if index == -1: self.homepageOptions = self.propertyEditor.editableConfig
+            else: self.dockPageOptions[index] = self.propertyEditor.editableConfig
 
             self.saveLayout()
             self.loadLayout()
@@ -485,9 +475,9 @@ class ShelfWidget(QWidget):
         if current_area == None or not isinstance(current_area, ShelfDockArea):
             return
 
-        dlg = self.__setupDialog(ToolshelfDock())
-        if dlg.exec_():
-            dock_item = self.dockLoader.Init_Section(dlg.editableConfig)
+        self.propertyEditor = PropertyGridDialog.Setup(self.propertyEditor, self.api_window, ToolshelfDock())
+        if self.propertyEditor.exec_():
+            dock_item = self.dockLoader.Init_Section(self.propertyEditor.editableConfig)
             self.__shelfSetup(dock_item, None, current_area._parentAreaId)
             current_area.addDock(dock_item)
             self.saveLayout()
@@ -518,13 +508,13 @@ class ShelfWidget(QWidget):
         
         dock_item: ShelfDock = current_area.docks[uuid]   
         
-        dlg = self.__setupDialog(dock_item._dockSettings)
-        if dlg.exec_():
+        self.propertyEditor = PropertyGridDialog.Setup(self.propertyEditor, self.api_window, dock_item._dockSettings)
+        if self.propertyEditor.exec_():
             lastState = current_area.saveState()
             self.__shelfDispose(dock_item)
             dock_item.close()
 
-            dock_item = self.dockLoader.Init_Section(dlg.editableConfig)
+            dock_item = self.dockLoader.Init_Section(self.propertyEditor.editableConfig)
             self.__shelfSetup(dock_item, uuid, current_area._parentAreaId)
             current_area.addDock(dock_item)
             current_area.restoreState(lastState)
@@ -596,16 +586,13 @@ class ShelfWidget(QWidget):
             self.settingsLoader.setCurrentShelf(self.registry_index, id)
             self.loadLayout()
 
-    def editPreset(self):
-        pass
-
     def savePreset(self):
         self.SettingsLoader.savePreset(self.currentState(), self.registry_index)
 
     def savePresetAs(self):
-        dlg = self.__setupDialog(ShelfClasses.PresetSaveAs())
-        if dlg.exec_():
-            editorResults: ShelfClasses.PresetSaveAs = dlg.editableConfig
+        self.propertyEditor = PropertyGridDialog.Setup(self.propertyEditor, self.api_window, ShelfClasses.PresetSaveAs())
+        if self.propertyEditor.exec_():
+            editorResults: ShelfClasses.PresetSaveAs = self.propertyEditor.editableConfig
             self.SettingsLoader.savePresetAs(editorResults, self.currentState(), self.registry_index)
 
     def deletePreset(self):

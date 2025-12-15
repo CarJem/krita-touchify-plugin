@@ -10,7 +10,6 @@ from touchify.__env__ import *
 from touchify.src.PluginOptions import PluginOptions
 
 
-import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 
 
 WINDOW_ID: int = 0
@@ -70,9 +69,5 @@ class TouchifyWindow(QObject):
         return super().eventFilter(a0, a1)
 
     def OpenSettings(self):
-        if self.dlg_settings != None:
-            if PyQtExtensions.CommonHelpers.isDeleted(self.dlg_settings) == False:
-                return
-          
-        self.dlg_settings = PluginOptions(self.api_window)
-        self.dlg_settings.show()
+        self.dlg = PluginOptions.Setup(self.dlg, self.api_window)
+        self.dlg.show()

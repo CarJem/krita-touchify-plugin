@@ -5,10 +5,22 @@ from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.alib_propertygrid.PropertyGrid import PropertyGrid
 from touchify.src.managers.GlobalEvents import GlobalEvents
 from touchify.src.settings.TouchifySettings import TouchifySettings
+import touchify.src.extensions.pyqt_extensions as PyQtExtensions
 
 from krita import *
 
 class PluginOptions(QDialog):
+
+
+    @staticmethod
+    def Setup(dlg: "PluginOptions", api_window: WindowAPI):
+        if dlg != None:
+            if PyQtExtensions.CommonHelpers.isDeleted(dlg) == False:
+                dlg.close()
+                dlg = None
+        
+        dlg = PluginOptions(api_window)
+        return dlg
 
     def __init__(self, qwin: WindowAPI):
         super().__init__(qwin.qwindow.window())

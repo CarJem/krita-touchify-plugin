@@ -20,7 +20,6 @@ class ShelfToolbarMenu(QMenu):
     sigPresetsChangedRequested = pyqtSignal(str)
     sigSavePresetRequested = pyqtSignal()
     sigSavePresetAsRequested = pyqtSignal()
-    sigEditPresetRequested = pyqtSignal()
     sigDeletePresetRequested = pyqtSignal()
     sigResetRequested = pyqtSignal()
 
@@ -134,10 +133,6 @@ class ShelfToolbarMenu(QMenu):
 
 
         if not isNoPresetActive:
-            presetEditAction = self.shelfPresetsSubmenuAction.menu().addAction("Edit...")
-            presetEditAction.setEnabled(True)
-            presetEditAction.triggered.connect(self.onEditPresetRequested)
-
             presetSaveAction = self.shelfPresetsSubmenuAction.menu().addAction("Save")
             presetSaveAction.setEnabled(True)
             presetSaveAction.triggered.connect(self.onSavePresetRequested)
@@ -190,9 +185,6 @@ class ShelfToolbarMenu(QMenu):
 
     def onSavePresetAsRequested(self):
         self.sigSavePresetAsRequested.emit()
-
-    def onEditPresetRequested(self):
-        self.sigEditPresetRequested.emit()
 
     def onPresetChangeRequested(self):
         ac: QAction = self.sender()

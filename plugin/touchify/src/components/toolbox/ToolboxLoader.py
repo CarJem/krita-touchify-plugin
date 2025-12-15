@@ -8,15 +8,14 @@ from krita import *
 from typing import TYPE_CHECKING
 
 from touchify.src.api_krita import KritaAPI
-from touchify.src.components.toolbox.ToolboxMenu import ToolboxMenu
+from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
+from touchify.src.components.toolbox.ToolboxSubtoolMenu import ToolboxSubtoolMenu
 from touchify.src.components.toolbox.ToolboxStyles import ToolboxStyles
-from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
 from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.managers.ResourceManager import ResourceManager
-from touchify.src.settings.TouchifySettings import TouchifySettings
 
 
 if TYPE_CHECKING:
@@ -40,54 +39,12 @@ class ToolboxLoader(QObject):
 
     def Signal_OnSwap(self):
         ac: QAction = self.sender()
-        btn: TriggerButton = ac.parent()
+        btn: ToolboxButton = ac.parent()
         btn.onToolboxButtonSwap(ac)
 
     def Signal_OnMenu(self):
-        subMenu: ToolboxMenu = self.sender() # link the toolbutton menu to this function
+        subMenu: ToolboxSubtoolMenu = self.sender() # link the toolbutton menu to this function
         if subMenu.isEmpty(): self.Build_Menu(subMenu) # prevents the menu from continuously adding actions every click
-
-    def Signal_OnPreset(self):
-        ac: QAction = self.sender()
-        if isinstance(ac, QAction):
-            id: str = ac.data()
-            if isinstance(id, str):
-                self.rootWidget.settingsManager.setCurrentToolbox(id)
-                self.rootWidget.sync()
-
-    def Signal_OnSettings(self):
-        self.rootWidget.onSettings()
-        
-
-    def Build_Context(self):
-
-        menu = QMenu(self.rootWidget)
-
-        presetsMenu = menu.addMenu("Presets")
-        presetMenuList: dict[str, QMenu] = {}
-        selected_preset_id = self.rootWidget.settingsManager.getCurrentToolboxId()
-        registry = TouchifySettings.registry(ToolboxData)
-        if registry != None:
-            for key, preset in registry.items():
-                if not key.id in presetMenuList:
-                    presetMenuList[key.id] = presetsMenu.addMenu(key.name)
-                preset: ToolboxData
-                action = QAction(preset.preset_name, presetsMenu)
-                action.setCheckable(True)
-                if selected_preset_id == key.actual_key:
-                    action.setChecked(True)
-                action.setData(key.actual_key)
-                action.triggered.connect(self.Signal_OnPreset)
-                presetMenuList[key.id].addAction(action)
-            
-            presetsMenu.addSeparator()
-        
-
-        menu.addSeparator()
-        
-        settingsButton = menu.addAction("Toolbox Settings...")
-        settingsButton.triggered.connect(self.Signal_OnSettings)
-        return menu
 
     def Build_Action(self, tool: ToolboxDataItem):
         trigger = Trigger()
@@ -96,7 +53,7 @@ class ToolboxLoader(QObject):
 
         is_toolbox_menu = len(tool.items) >= 1
 
-        btn: TriggerButton = self.rootWidget.managers.mgr_actions.Create_Button(self.rootWidget._toolbox, trigger)
+        btn: ToolboxButton = self.rootWidget.managers.mgr_actions.Create_Button(self.rootWidget.toolbox, trigger, classType=ToolboxButton)
         if btn:
             tool_names: list[str] = [item.name for item in tool.items]
             tool_names.append(tool.name)
@@ -113,7 +70,7 @@ class ToolboxLoader(QObject):
             ToolboxStyles.setButtonStyleSheet(btn, self.rootWidget.style_data)
 
             if is_toolbox_menu:
-                subMenu = ToolboxMenu(btn, tool)
+                subMenu = ToolboxSubtoolMenu(btn, tool)
                 btn.setMenu(subMenu) # this will be the submenu for each main tool
 
                 btn.menu().aboutToShow.connect(self.Signal_OnMenu) # Show submenu when clicked
@@ -122,7 +79,7 @@ class ToolboxLoader(QObject):
             return btn
         return None
 
-    def Build_Menu(self, subMenu: ToolboxMenu):
+    def Build_Menu(self, subMenu: ToolboxSubtoolMenu):
         self.Build_MenuAction(subMenu, subMenu.tool.name, subMenu.tool.icon)
         for toolItem in subMenu.items: # iterate through all the tools in the category
             toolItem: ToolboxDataSubitem
@@ -131,7 +88,7 @@ class ToolboxLoader(QObject):
         for action in subMenu.actions(): # show tool icons in submenu
             action.setIconVisibleInMenu(True)
 
-    def Build_MenuAction(self, subMenu: ToolboxMenu, actionName: str, iconName: str):
+    def Build_MenuAction(self, subMenu: ToolboxSubtoolMenu, actionName: str, iconName: str):
         act = KritaAPI.get_action(actionName)
         if act:
             toolIcon = self.Build_ActionIcon(actionName, iconName)

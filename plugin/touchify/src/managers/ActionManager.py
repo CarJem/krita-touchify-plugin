@@ -115,22 +115,22 @@ class ActionManager(QObject):
         if has_icon: action.setIcon(icon)
         return action   
     
-    def Create_Button(self, parent: QWidget, data: Trigger):
+    def Create_Button(self, parent: QWidget, data: Trigger, classType: type = TriggerButton):
         if data.variant == Trigger.Variants.Action:
             if data.action_id and data.action_id in self.registeredActions:
                 data = self.registeredActionsData[data.action_id]
 
         match data.variant:
             case Trigger.Variants.Brush:
-                result = self.Button_Brush(data)
+                result = self.Button_Brush(data, classType=classType)
             case Trigger.Variants.Menu:
-                result = self.Button_Menu(data)
+                result = self.Button_Menu(data, classType=classType)
             case Trigger.Variants.Popup:
-                result = self.Button_Popup(data)
+                result = self.Button_Popup(data, classType=classType)
             case Trigger.Variants.Action:
-                result = self.Button_Trigger(data)
+                result = self.Button_Trigger(data, classType=classType)
             case _:
-                result = self.Button_Generic(data)
+                result = self.Button_Generic(data, classType=classType)
 
         if result and result != None:
             if data.extra_closes_popup == True:
@@ -448,8 +448,8 @@ class ActionManager(QObject):
 
     #region Button Constructors
 
-    def Button_Core(self, onClick: any, toolTip: str, composerMode: bool = False, trigger_mode: TriggerButton.TriggerMode = TriggerButton.TriggerMode.OnClick):
-        btn = TriggerButton()
+    def Button_Core(self, onClick: any, toolTip: str, composerMode: bool = False, trigger_mode: TriggerButton.TriggerMode = TriggerButton.TriggerMode.OnClick, classType: type = TriggerButton):
+        btn: TriggerButton = classType()
         
         if onClick:
             if composerMode: btn.setTrigger(lambda: self.ButtonEvent_ShortcutComposer(btn, onClick), TriggerButton.TriggerMode.OnRelease)
@@ -459,24 +459,24 @@ class ActionManager(QObject):
         btn.setContentsMargins(0,0,0,0)
         return btn
    
-    def Button_Brush(self, act: Trigger):
+    def Button_Brush(self, act: Trigger, classType: type = TriggerButton):
         btn: TriggerButton | None = None
         id = act.brush_name
         brush_presets = ResourceManager.brushPresets()
         
         if id in brush_presets:
             preset = brush_presets[id]
-            btn = self.Button_Core(lambda: self.Execute_Brush(id), preset.name())
+            btn = self.Button_Core(lambda: self.Execute_Brush(id), preset.name(), classType=classType)
             match_tool = self.__lastBrushPreset == preset
             btn.setupBrushChange(self.api_window, id, match_tool)
             self.Helper_SetButtonDisplay(act, btn)
         return btn
                    
-    def Button_Menu(self, act: Trigger):
+    def Button_Menu(self, act: Trigger, classType: type = TriggerButton):
         data: TriggerMenu = TouchifySettings.registryItem(act.context_menu_id, TriggerMenu)
         if not isinstance(data, TriggerMenu) or data == None: return None
         
-        btn: TriggerButton = self.Button_Core(None, act.display_custom_text)   
+        btn: TriggerButton = self.Button_Core(None, act.display_custom_text, classType=classType)   
         self.Helper_SetButtonDisplay(act, btn)
         
         contextMenu = TriggerMenuWidget(data, btn, self)
@@ -484,14 +484,14 @@ class ActionManager(QObject):
         btn.triggerActivated.connect(btn.showMenu)
         return btn
     
-    def Button_Popup(self, data: Trigger):
+    def Button_Popup(self, data: Trigger, classType: type = TriggerButton):
         btn: TriggerButton | None = None
-        btn = self.Button_Core(None, data.display_custom_text, False, TriggerButton.TriggerMode.OnRelease)
+        btn = self.Button_Core(None, data.display_custom_text, False, TriggerButton.TriggerMode.OnRelease, classType=classType)
         btn.triggerActivated.connect((lambda: self.Create_Popup(data.popup_data, btn)))
         self.Helper_SetButtonDisplay(data, btn)
         return btn
 
-    def Button_Generic(self, data: Trigger):
+    def Button_Generic(self, data: Trigger, classType: type = TriggerButton):
         btn: TriggerButton | None = None
         
         onClick = None
@@ -508,11 +508,11 @@ class ActionManager(QObject):
             case Trigger.Variants.Script:
                 onClick = (lambda: self.Execute_Script(data.script_id))
 
-        btn = self.Button_Core(onClick, data.display_custom_text)
+        btn = self.Button_Core(onClick, data.display_custom_text, classType=classType)
         self.Helper_SetButtonDisplay(data, btn)
         return btn
         
-    def Button_Trigger(self, act: Trigger):
+    def Button_Trigger(self, act: Trigger, classType: type = TriggerButton):
         action = KritaAPI.get_action(act.action_id)
         btn: TriggerButton | None = None
         if action:
@@ -526,7 +526,7 @@ class ActionManager(QObject):
                 toolbox_item = True
 
             
-            btn = self.Button_Core(action.trigger, action.toolTip(), act.extra_composer_mode)
+            btn = self.Button_Core(action.trigger, action.toolTip(), act.extra_composer_mode, classType=classType)
 
             if toolbox_item: 
                 match_tool = self.__lastToolboxTool == act.action_id

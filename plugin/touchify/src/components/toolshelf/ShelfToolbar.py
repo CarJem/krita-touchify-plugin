@@ -11,7 +11,6 @@ from touchify.src.api_krita import KritaAPI
 from touchify.src.components.toolshelf.ShelfToolbarMenu import ShelfToolbarMenu
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
-from touchify.src.settings.TouchifySettings import TouchifySettings
 from touchify.__env__ import *
 from touchify.src.managers.ResourceManager import ResourceManager
 
@@ -44,7 +43,7 @@ class ShelfToolbar(QWidget):
         self.optionsMenu.sigEditPageRequested.connect(self.shelf.editPage)
         self.optionsMenu.sigDeletePageRequested.connect(self.shelf.deletePage)
         self.optionsMenu.sigPresetsChangedRequested.connect(self.shelf.changePreset)
-        self.optionsMenu.sigEditPresetRequested.connect(self.shelf.editPreset)
+
         self.optionsMenu.sigSavePresetAsRequested.connect(self.shelf.savePresetAs)
         self.optionsMenu.sigSavePresetRequested.connect(self.shelf.savePreset)
         self.optionsMenu.sigDeletePresetRequested.connect(self.shelf.deletePreset)

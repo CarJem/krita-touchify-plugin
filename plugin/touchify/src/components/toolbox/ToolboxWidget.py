@@ -10,7 +10,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
 from touchify.src.alib_pyqtgraph.Qt import QtWidgets
-from touchify.src.components.toolbox.ToolboxLayout import ToolboxLayout, Section
+from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
+from touchify.src.components.toolbox.ToolboxLayout import ToolboxEmptySpace, ToolboxLayout, Section
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 from touchify.src.extensions import pyqt_extensions  as PyQtExt
 
@@ -19,6 +20,8 @@ BUTTON_MARGIN = 10
 
 class ToolboxWidget(QWidget):
 
+    sigToolContextMenuRequested = pyqtSignal(str, str, QPoint)
+    sigSectionContextMenuRequested = pyqtSignal(str, QPoint)
     sigContextMenuRequested = pyqtSignal(QPoint)
 
     def __init__(self):
@@ -36,6 +39,8 @@ class ToolboxWidget(QWidget):
         self.contextIconSizes = {}
         self.defaultIconSizeAction = None
         self.orientation = Qt.Orientation.Vertical
+        self._isEditMode = False
+        self._blockNextContextMenu = False
 
         self.addSection(Section(self), "main")
         self.addSection(Section(self), "dynamic")
@@ -60,10 +65,6 @@ class ToolboxWidget(QWidget):
         self.addSection(Section(self), "main")
         self.addSection(Section(self), "dynamic")
 
-    def contextMenuEvent(self, a0: QContextMenuEvent):
-        self.sigContextMenuRequested.emit(a0.globalPos())
-        a0.ignore()
-
     def setIconSize(self, iconSize: int):
         self.iconSize = iconSize
         self.applyIconSize()
@@ -75,9 +76,12 @@ class ToolboxWidget(QWidget):
         for section in self.sections.values():
             section.setButtonSize(QSize(self.iconSize + BUTTON_MARGIN, self.iconSize + BUTTON_MARGIN))
     
-    def addButton(self, button: QWidget, section: str, priority: int, item_id: str):
+    def addButton(self, button: ToolboxButton | ToolboxEmptySpace, section: str, priority: int, item_id: str):
         button.setObjectName(item_id)
         self.buttons.append(button)
+
+        if isinstance(button, ToolboxButton):
+            button.sigContextMenuRequested.connect(self.onToolContextMenu)
         
         sectionToBeAddedTo = None
         section = section
@@ -105,6 +109,8 @@ class ToolboxWidget(QWidget):
         self._toolboxLayout.setPreferredRowCount(val)
     
     def addSection(self, section: Section, name: str):
+        section.setEditMode(self._isEditMode)
+        section.sigContextMenuRequested.connect(self.onSectionContextMenu)
         section.setName(name)
         self._toolboxLayout.addSection(section)
         self.sections[name] = section
@@ -179,10 +185,26 @@ class ToolboxWidget(QWidget):
         QTimer.singleShot(0, self.update)
         for section in self.sections.values():
             section.setOrientation(orientation)
+
+    def setEditMode(self, enabled: bool):
+        self._isEditMode = enabled
+        for key, value in self.sections.items():
+            value.setEditMode(enabled)
+
+    def onSectionContextMenu(self, uuid: str, pos: QPoint):
+        self.sigSectionContextMenuRequested.emit(uuid, pos)
+
+    def onToolContextMenu(self, section_uuid: str, tool_uuid: str, pos: QPoint):
+        self.sigToolContextMenuRequested.emit(section_uuid, tool_uuid, pos)
     
     def setFloating(self, v: bool):
         self.floating = v
 
     def toolBoxLayout(self):
         return self._toolboxLayout
+    
+    def contextMenuEvent(self, a0):
+        self.sigContextMenuRequested.emit(a0.globalPos())
+        a0.accept()
+        return
 
