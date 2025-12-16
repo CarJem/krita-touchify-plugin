@@ -38,15 +38,44 @@ class ResourceManager:
             self.currentColor = None
             self.renderer = QtSvg.QSvgRenderer()
 
-        def iconColor(self):
+        def blendColors(self, foreground: QColor, background: QColor):
+            #Get the alpha value of the foreground color (0 to 255)
+            alpha = foreground.alpha()
+
+            #If fully opaque or fully transparent, no blending is needed
+            if (alpha == 255):
+                return foreground
+            
+            if (alpha == 0):
+                return background
+
+            #Convert alpha to a float percentage (0.0 to 1.0)
+            alphaF = alpha / 255.0
+            invAlphaF = 1.0 - alphaF
+
+            #Manually blend each color component using linear interpolation (lerp)
+            blendedRed = int(foreground.red() * alphaF + background.red() * invAlphaF)
+            blendedGreen = int(foreground.green() * alphaF + background.green() * invAlphaF)
+            blendedBlue = int(foreground.blue() * alphaF + background.blue() * invAlphaF)
+
+            #The resulting color is fully opaque (alpha = 255) because it's already "baked" onto the background
+            return QColor(blendedRed, blendedGreen, blendedBlue, 255)
+
+        def iconColor(self, mode: QIcon.Mode, state: QIcon.State):
             background = qApp.palette().window().color()
             is_dark = background.value() > 100
-            if is_dark: return QColor(55,55,55) # dark icons
-            else: return QColor(202, 202, 202) # light icons
+            if is_dark: base_color = QColor(55,55,55) # dark icons
+            else: base_color = QColor(202, 202, 202) # light icons
+
+            if mode == QIcon.Mode.Disabled:
+                base_color.setAlpha(128)
+                return self.blendColors(base_color, background)
+            else:
+                return base_color
     
-        def updateData(self):
+        def updateData(self, mode: QIcon.Mode, state: QIcon.State):
             if self.autoColorMode:
-                color = self.iconColor().name().split("#")[1]
+                color = self.iconColor(mode, state).name().split("#")[1]
                 for child in self.svgData:
                     if child.get("ignore-krita-style") == "false":
                         child.set("style", f"fill:#{color};fill-opacity:1")
@@ -57,13 +86,13 @@ class ResourceManager:
             img = QPixmap(size)
             img.fill(Qt.GlobalColor.transparent)
             painter = QPainter(img)
-            self.updateData()
+            self.updateData(mode, state)
             self.renderer.render(painter, QRectF(img.rect()))
             painter.end()
             return img
 
         def paint(self, painter: QPainter, rect: QRect, mode: QIcon.Mode, state: QIcon.State):
-            self.updateData()
+            self.updateData(mode, state)
             self.renderer.render(painter, QRectF(rect))
 
     material_icons: dict[str, QIcon] = {}
