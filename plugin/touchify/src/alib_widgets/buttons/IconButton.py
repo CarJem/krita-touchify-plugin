@@ -18,7 +18,7 @@ class IconButton(QPushButton):
         if self.icon_img == None:
             return
         
-        icon_size = ev.rect().size().shrunkBy(QMargins(self._margin,self._margin,self._margin,self._margin))        
+        icon_size = self.rect().size().shrunkBy(QMargins(self._margin,self._margin,self._margin,self._margin))        
         painter = QPainter(self)
         painter.drawPixmap(QPoint(self._margin,self._margin), self.icon_img.pixmap(QSize(icon_size.width(), icon_size.height())))
         painter.end()

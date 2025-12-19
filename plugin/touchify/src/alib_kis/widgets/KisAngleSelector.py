@@ -271,7 +271,7 @@ class KisAngleSelector(QWidget):
         return self.spinBox.value()
 
     def setAngle(self, angle):
-        self.spinBox.setValue(angle)
+        self.spinBox.setValue(angle % 360)
 
     def setFlipOptionsMode(self, mode: FlipOptionsMode):
         self._flip_options_mode = mode

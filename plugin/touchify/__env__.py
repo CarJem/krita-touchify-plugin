@@ -69,6 +69,7 @@ class Env:
         TOOLBOX="Touchify/TouchifyToolbox"
         TOOLSHELFDOCKER="Touchify/ToolshelfDocker"
         WIDGETPAD="Touchify/WidgetPad"
+        SUB_VIEW="Touchify/SubView"
     
     class SettingsPath:
         TOOLSHELF="Touchify/Shelves"
@@ -76,3 +77,4 @@ class Env:
         WIDGETPAD="Touchify/WidgetPads"
         TOOLBOX_NOPRESETDATA="Touchify/Toolbox/NoPresetData"
         TOUCHIFY="Touchify"
+        SUB_VIEW="Touchify/SubView"

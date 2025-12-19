@@ -7,6 +7,7 @@ from touchify.__env__ import ASSETS_DIRECTORY, RESOURCE_PACKS_DIRECTORY
 import xml.etree.ElementTree as ET
 
 from touchify.src.api_krita import KritaAPI
+from touchify.src.extensions.pyqt_extensions import QPainterTools
 from touchify.src.settings.TouchifySettings import *
 from zipfile import ZipFile
 
@@ -38,28 +39,7 @@ class ResourceManager:
             self.currentColor = None
             self.renderer = QtSvg.QSvgRenderer()
 
-        def blendColors(self, foreground: QColor, background: QColor):
-            #Get the alpha value of the foreground color (0 to 255)
-            alpha = foreground.alpha()
 
-            #If fully opaque or fully transparent, no blending is needed
-            if (alpha == 255):
-                return foreground
-            
-            if (alpha == 0):
-                return background
-
-            #Convert alpha to a float percentage (0.0 to 1.0)
-            alphaF = alpha / 255.0
-            invAlphaF = 1.0 - alphaF
-
-            #Manually blend each color component using linear interpolation (lerp)
-            blendedRed = int(foreground.red() * alphaF + background.red() * invAlphaF)
-            blendedGreen = int(foreground.green() * alphaF + background.green() * invAlphaF)
-            blendedBlue = int(foreground.blue() * alphaF + background.blue() * invAlphaF)
-
-            #The resulting color is fully opaque (alpha = 255) because it's already "baked" onto the background
-            return QColor(blendedRed, blendedGreen, blendedBlue, 255)
 
         def iconColor(self, mode: QIcon.Mode, state: QIcon.State):
             background = qApp.palette().window().color()
@@ -69,7 +49,7 @@ class ResourceManager:
 
             if mode == QIcon.Mode.Disabled:
                 base_color.setAlpha(128)
-                return self.blendColors(base_color, background)
+                return QPainterTools.blendColors(base_color, background)
             else:
                 return base_color
     

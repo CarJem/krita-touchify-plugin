@@ -261,7 +261,7 @@ class TriggerButton(QToolButton):
         if self.is_blender_menu: self.paintBlenderMenu(e)
 
     def paintBlenderMenu(self, e: QPaintEvent):
-        rect = e.rect()
+        rect = self.rect()
 
         triangleScale = 4
         triangleOffset = 2
@@ -283,7 +283,7 @@ class TriggerButton(QToolButton):
 
     def paintBrushHighlight(self, e: QPaintEvent):
         hc = self.window().palette().color(QPalette.ColorRole.Highlight)
-        rect = e.rect()
+        rect = self.rect()
         opacity = 75
         thickness = 4
 

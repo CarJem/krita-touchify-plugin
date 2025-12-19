@@ -1,9 +1,42 @@
 
+import json
 from typing import *
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+
+
+class QPainterTools:
+
+    @staticmethod
+    def setAlpha(color: QColor, alpha: int):
+        color.setAlpha(alpha)
+        return color
+
+    @staticmethod
+    def blendColors(foreground: QColor, background: QColor):
+        #Get the alpha value of the foreground color (0 to 255)
+        alpha = foreground.alpha()
+
+        #If fully opaque or fully transparent, no blending is needed
+        if (alpha == 255):
+            return foreground
+        
+        if (alpha == 0):
+            return background
+
+        #Convert alpha to a float percentage (0.0 to 1.0)
+        alphaF = alpha / 255.0
+        invAlphaF = 1.0 - alphaF
+
+        #Manually blend each color component using linear interpolation (lerp)
+        blendedRed = int(foreground.red() * alphaF + background.red() * invAlphaF)
+        blendedGreen = int(foreground.green() * alphaF + background.green() * invAlphaF)
+        blendedBlue = int(foreground.blue() * alphaF + background.blue() * invAlphaF)
+
+        #The resulting color is fully opaque (alpha = 255) because it's already "baked" onto the background
+        return QColor(blendedRed, blendedGreen, blendedBlue, 255)
 
 class CommonHelpers:
     @staticmethod  
@@ -93,7 +126,6 @@ class GeometryHelpers:
             
         return result
 
-
 class EventTypes:
     """Stores a string name for each event type.
 
@@ -115,3 +147,86 @@ class EventTypes:
             return self.string_name[event]
         except KeyError:
             return f"UnknownEvent:{event}"
+
+
+class JsonQt:
+
+    @staticmethod
+    def serialize_qbytearray(array: QByteArray):
+        return json.dumps(bytes(array.toHex()).decode('ascii'))
+    
+    @staticmethod
+    def deserialize_qbytearray(array_data: str):
+        return QByteArray.fromHex(bytes(json.loads(array_data), 'ascii'))
+
+    @staticmethod
+    def serialize_qpointf(point: QPointF) -> dict:
+        """Serializes a QPoint object to a dict."""
+        return {
+            "x": point.x(),
+            "y": point.y()
+        }
+
+    @staticmethod
+    def deserialize_qpointf(data: dict) -> QPointF:
+        """Deserializes a dict into a QPoint object."""
+        return QPointF(
+            data["x"],
+            data["y"]
+        )
+    
+    @staticmethod
+    def serialize_qpoint(point: QPoint) -> dict:
+        """Serializes a QPoint object to a dict."""
+        return {
+            "x": point.x(),
+            "y": point.y()
+        }
+
+    @staticmethod
+    def deserialize_qpoint(data: dict) -> QPoint:
+        """Deserializes a dict into a QPoint object."""
+        return QPoint(
+            data["x"],
+            data["y"]
+        )
+
+    @staticmethod
+    def serialize_qrectf(rect: QRectF) -> dict:
+        """Serializes a QRectF object to a dict."""
+        return {
+            "x": rect.x(),
+            "y": rect.y(),
+            "width": rect.width(),
+            "height": rect.height()
+        }
+
+    @staticmethod
+    def deserialize_qrectf(rect_data: dict) -> QRectF:
+        """Deserializes a dict into a QRectF object."""
+        return QRectF(
+            rect_data["x"],
+            rect_data["y"],
+            rect_data["width"],
+            rect_data["height"]
+        )
+
+    @staticmethod
+    def serialize_qrect(rect: QRect) -> dict:
+        """Serializes a QRect object to a dict."""
+        return {
+            "x": rect.x(),
+            "y": rect.y(),
+            "width": rect.width(),
+            "height": rect.height()
+        }
+
+    @staticmethod
+    def deserialize_qrect(rect_data: dict) -> QRect:
+        """Deserializes a dict into a QRect object."""
+        return QRect(
+            rect_data["x"],
+            rect_data["y"],
+            rect_data["width"],
+            rect_data["height"]
+        )

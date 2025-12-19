@@ -22,7 +22,7 @@ class ColorFramedButton(QPushButton):
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)
         
-        r = event.rect()
+        r = self.rect()
         p = QPainter(self)
         
         frame_size = 1

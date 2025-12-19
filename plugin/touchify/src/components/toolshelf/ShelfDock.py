@@ -1,4 +1,3 @@
-from typing import TYPE_CHECKING
 from uuid import uuid4
 
 from PyQt5.QtCore import Qt
@@ -302,13 +301,13 @@ class ShelfDockOverlay(QtWidgets.QWidget):
             painter.setOpacity(0.2)
             painter.setBrush(Qt.GlobalColor.blue)
             painter.setPen(QPen(Qt.GlobalColor.blue))
-            painter.drawRect(event.rect())
+            painter.drawRect(self.rect())
 
         
         painter.setOpacity(0.2 if self.isMouseOver else 0.0)
         painter.setBrush(Qt.GlobalColor.blue)
         painter.setPen(QPen(Qt.GlobalColor.blue))
-        painter.drawRect(event.rect())
+        painter.drawRect(self.rect())
 
         painter.end()
 

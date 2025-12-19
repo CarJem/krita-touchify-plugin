@@ -11,6 +11,11 @@
                         [
                             [
                                 "dock",
+                                "64e087ee-2f95-4edb-8ba2-c648e4f68d61",
+                                {}
+                            ],
+                            [
+                                "dock",
                                 "2529aa29-3a78-432a-b308-cafe2ee04e2c",
                                 {}
                             ],
@@ -40,8 +45,8 @@
                         ],
                         {
                             "sizes": [
-                                110,
-                                211
+                                157,
+                                154
                             ]
                         }
                     ],
@@ -62,7 +67,7 @@
                         {
                             "sizes": [
                                 48,
-                                273
+                                263
                             ]
                         }
                     ],
@@ -74,10 +79,10 @@
                 ],
                 {
                     "sizes": [
-                        275,
+                        322,
                         22,
                         30,
-                        432
+                        321
                     ]
                 }
             ],
@@ -671,6 +676,55 @@
                 "action_section_alignment_y": "none",
                 "action_section_btn_width": 20,
                 "action_section_btn_height": 20,
+                "action_section_icon_size": 0,
+                "special_item_type": "none",
+                "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
+                "json_version": 5
+            },
+            "64e087ee-2f95-4edb-8ba2-c648e4f68d61": {
+                "display_name": "",
+                "docker_id": "Touchify/SubView",
+                "min_size_x": 0,
+                "min_size_y": 0,
+                "max_size_x": 0,
+                "max_size_y": 0,
+                "section_type": "docker",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
+                "docker_nesting_mode": "docking",
+                "docker_unloaded_visibility": "normal",
+                "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
+                "action_section_id": "Panel",
+                "action_section_display_mode": "normal",
+                "action_section_contents": [],
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none",
+                "action_section_btn_width": 0,
+                "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",

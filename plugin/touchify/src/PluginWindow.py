@@ -26,7 +26,7 @@ class TouchifyWindow(QObject):
 
         global WINDOW_ID; self.INSTANCE_ID = WINDOW_ID; WINDOW_ID += 1
         self.managers = TouchifyManagers(self)
-        self.dlg_settings: PluginOptions | None = None
+        self.dlg: PluginOptions | None = None
 
     def Load(self, window: WindowAPI):
         self.api_window = window

@@ -60,7 +60,7 @@ class ToolboxButton(TriggerButton):
         painter.setOpacity(0.2 if self._isHovered else 0.0)
         painter.setBrush(Qt.GlobalColor.blue)
         painter.setPen(QPen(Qt.GlobalColor.blue))
-        painter.drawRect(event.rect())
+        painter.drawRect(self.rect())
 
         painter.end()
     

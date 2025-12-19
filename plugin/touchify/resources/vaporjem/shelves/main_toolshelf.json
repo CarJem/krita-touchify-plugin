@@ -32,7 +32,7 @@
                         35,
                         45,
                         160,
-                        83
+                        290
                     ]
                 }
             ],
@@ -96,7 +96,7 @@
                 "max_size_x": 0,
                 "max_size_y": 160,
                 "section_type": "special",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
+                "requires_specific_tool": "KritaShape/KisToolLazyBrush,KisToolPolyline,PathTool,KritaShape/KisToolBrush,KritaShape/KisToolLine,KritaShape/KisToolRectangle,KritaShape/KisToolEllipse,KisToolPolygon,KisToolPath,KisToolPencil,KritaShape/KisToolDyna,KritaShape/KisToolMultiBrush",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -537,7 +537,7 @@
                 "max_size_x": 0,
                 "max_size_y": 35,
                 "section_type": "special",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
+                "requires_specific_tool": "KritaShape/KisToolLazyBrush,KisToolPolyline,PathTool,KritaShape/KisToolBrush,KritaShape/KisToolLine,KritaShape/KisToolRectangle,KritaShape/KisToolEllipse,KisToolPolygon,KisToolPath,KisToolPencil,KritaShape/KisToolDyna,KritaShape/KisToolMultiBrush",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",

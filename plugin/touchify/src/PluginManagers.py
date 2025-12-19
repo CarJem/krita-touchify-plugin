@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.src.api_krita.wrappers.window import WindowAPI
+from touchify.src.components.sub_view.SubViewDocker import SubViewDocker
 from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
 from touchify.src.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.CanvasManager import CanvasManager
@@ -122,6 +123,10 @@ class TouchifyManagers:
                 widgetPadDocker: ToolshelfDockerWidgetPad = docker
                 widgetPadDocker.setup(window)
                 self.__managedDockers.append(widgetPadDocker)
+            elif docker_id == Env.DockerID.SUB_VIEW:
+                subViewDocker: SubViewDocker = docker
+                subViewDocker.setup(window)
+                self.__managedDockers.append(subViewDocker)
             elif docker_id == Env.DockerID.TOOLBOX:
                 toolboxDocker: ToolboxDocker = docker
                 toolboxDocker.setup(window)
