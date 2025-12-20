@@ -156,6 +156,7 @@ class ToolshelfDock:
     def propertygrid_hidden(self):
         docker_groups = [
             "docker_id", 
+            "docker_size_hint",
             "docker_nesting_mode", 
             "docker_unloaded_visibility", 
             "docker_loading_priority"
@@ -189,7 +190,8 @@ class ToolshelfDock:
         ]
 
         nested_shelf_groups = [
-            "special_nested_show_titlebar"
+            "special_nested_show_titlebar",
+            "special_nested_data"
         ]
 
         result = []
@@ -210,8 +212,6 @@ class ToolshelfDock:
         if self.section_type != ToolshelfDock.SectionType.Special or self.special_item_type != ToolshelfDock.SpecialItemType.NestedShelf:
             for item in nested_shelf_groups:
                 result.append(item)
-                
-        result.append("special_nested_data")
 
         return result
 
@@ -231,7 +231,7 @@ class ToolshelfDock:
         labels["invert_required_tools"] = "Invert Requirements"
 
         labels["docker_id"] = "Docker ID"
-        labels["docker_size_hint"] = "Docker Width / Height Hint"
+        labels["docker_size_hint"] = "Docker Size Hint"
         labels["docker_nesting_mode"] = "Nesting Mode"
         labels["docker_unloaded_visibility"] = "Unloaded Visibility"
         labels["docker_loading_priority"] = "Loading Priority"
@@ -246,6 +246,7 @@ class ToolshelfDock:
         labels["special_item_type"] = "Component Type"
         labels["special_slider_orientation"] = "Orientation"
         labels["special_nested_show_titlebar"] = "Show Titlebar"
+        labels["special_nested_data"] = "Nested Data"
         return labels
     
     def propertygrid_sisters(self):
@@ -314,4 +315,5 @@ class ToolshelfDock:
 
         restrictions["special_item_type"] = DataConstraints.strValues(self.SpecialItemType.values())
         restrictions["special_slider_orientation"] = DataConstraints.strValues(self.SliderOrientation.values())
+        restrictions["special_nested_data"] = DataConstraints.expandable()
         return restrictions

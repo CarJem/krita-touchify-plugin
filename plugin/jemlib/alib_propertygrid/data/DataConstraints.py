@@ -29,6 +29,10 @@ class DataConstraints:
         AddRemoveEditOnly="add_remove_edit_only"
         PropertyView="property_view"
         Subarray="sub_array"
+        Locked="locked"
+
+    class DictMod(EnumStr):
+        ListLike="list_like"
 
     def listSubArray(sub_id: str, sub_type: type):
         return { "type": DataConstraints.ListMod.Subarray, "sub_id": sub_id, "sub_type": sub_type }
@@ -36,8 +40,14 @@ class DataConstraints:
     def listMod(type: ListMod):
         return {"type": type}
 
-    def expandable():
-         return {"type": DataConstraints.OtherMod.Expandable}
+    def dictMod(type: DictMod):
+        return {"type": type}
+
+    def expandable(text: str = None):
+         if not text:
+            return {"type": DataConstraints.OtherMod.Expandable}
+         else:
+             return {"type": DataConstraints.OtherMod.Expandable, "text": text}
 
     def strMod(type: StrMod):
         return {"type": type}

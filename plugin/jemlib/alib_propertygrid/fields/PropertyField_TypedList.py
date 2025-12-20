@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 class PropertyField_TypedList(PropertyField[TypedList]):
     def __init__(self, handler: "DataHandler", property: DataPath[TypedList], manual_restrictions: list[dict[str, any]] = []):
-        super().__init__(handler, property, True)
+        super(PropertyField_TypedList, self).__init__(handler, property, True)
         self.variable_list_type = self.propertyData.variableData().allowedTypes()
 
         self.nested_list_id = ""
@@ -29,6 +29,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         
         self.allow_move = True
         self.allow_clipboard = True
+        self.allow_length_changes = True
 
         self.test_restrictions(manual_restrictions)
 
@@ -90,18 +91,18 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         btns.setAlignment(Qt.AlignmentFlag.AlignBottom)
         self.btns_widget.setLayout(btns)
 
+        if self.allow_length_changes == True:
+            addButton = QPushButton(self.btns_widget)
+            addButton.setIcon(IconRepository.iconLoader("material:plus"))
+            addButton.setFixedHeight(24)
+            addButton.clicked.connect(self.list_add)
+            btns.addWidget(addButton)
 
-        addButton = QPushButton(self.btns_widget)
-        addButton.setIcon(IconRepository.iconLoader("material:plus"))
-        addButton.setFixedHeight(24)
-        addButton.clicked.connect(self.list_add)
-        btns.addWidget(addButton)
-
-        removeButton = QPushButton(self.btns_widget)
-        removeButton.setIcon(IconRepository.iconLoader("material:minus"))
-        removeButton.setFixedHeight(24)
-        removeButton.clicked.connect(self.list_remove)
-        btns.addWidget(removeButton)
+            removeButton = QPushButton(self.btns_widget)
+            removeButton.setIcon(IconRepository.iconLoader("material:minus"))
+            removeButton.setFixedHeight(24)
+            removeButton.clicked.connect(self.list_remove)
+            btns.addWidget(removeButton)
 
         if self.allow_move == True:
             moveUpButton = QPushButton(self.btns_widget)
@@ -161,6 +162,10 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 self.allow_clipboard = False
             if restriction["type"] == DataConstraints.ListMod.Inmovable:
                 self.allow_move = False
+            if restriction["type"] == DataConstraints.ListMod.Locked:
+                self.allow_move = False
+                self.allow_clipboard = False
+                self.allow_length_changes = False
 
 
 

@@ -6,8 +6,6 @@ T = TypeVar("T")
 
 
 class DataPath(Generic[T]):
-    
-
     def __init__(self, name: str, source: any):
         self.__variable_name: str = name
         self.__variable_data: T = getattr(source, name)
@@ -37,3 +35,19 @@ class DataPath(Generic[T]):
         '''Forcefully update the data directly to the source. Will update it's own data to stay in sync'''
         setattr(self.__variable_source, self.__variable_name, data)
         self.__variable_data = data
+
+class DataPathIndexable(DataPath[T]):
+    def __init__(self, name, source):
+        super().__init__(name, source)
+
+    def variableName(self):
+        return super().variableName()
+    
+    def currentData(self):
+        return super().currentData()
+    
+    def variableType(self):
+        return super().variableType()
+    
+    def variableListType(self):
+        return super().variableListType()

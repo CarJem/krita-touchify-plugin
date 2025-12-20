@@ -197,9 +197,10 @@ class PropertyView_Form(QWidget, PropertyView):
 
             if field == None: continue
 
-            field.setContentsMargins(0,0,0,0)
+            field.setContentsMargins(6,0,0,0)
 
             if no_labels:
+                field.setContentsMargins(0,25,0,0)
                 formLayout.addRow(field)
             else:
                 label = self.createLabel(variable_id, labelData, hintData)

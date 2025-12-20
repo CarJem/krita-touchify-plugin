@@ -1,5 +1,6 @@
 
 from typing import Any
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
@@ -30,6 +31,26 @@ class ToolshelfArea:
 
     def forceLoad(self):
         self.pages = TypedList(self.pages, ToolshelfPage)
+
+    def propertygrid_labels(self):
+        labels = {}
+        labels["items"] = "Items"
+        labels["pages"] = "Pages"
+        labels["options"] = "Options"
+        labels["pageOptions"] = "Homepage Options"
+        return labels
+
+    def propertygrid_hidden(self):
+        return [
+            "layout"
+        ]
+
+    def propertygrid_restrictions(self):
+        restrictions = {}
+        restrictions["items"] = DataConstraints.dictMod(DataConstraints.DictMod.ListLike)
+        restrictions["options"] = DataConstraints.expandable()
+        restrictions["pageOptions"] = DataConstraints.expandable()
+        return restrictions
 
 
 

@@ -2,6 +2,7 @@
 # Field Imports
 from copy import deepcopy
 from jemlib.alib_propertygrid.data.DataPath import DataPath
+from jemlib.alib_propertygrid.fields.PropertyField_Dict import PropertyField_Dict
 from jemlib.alib_propertygrid.fields.PropertyField import PropertyField
 from jemlib.alib_propertygrid.fields.PropertyField_Float import PropertyField_Float
 from jemlib.alib_propertygrid.fields.PropertyField_Int import PropertyField_Int
@@ -54,6 +55,8 @@ class DataHandler:
             return PropertyField_Float(self, property)            
         elif varType == bool:
             return PropertyField_Bool(self, property)
+        elif varType == dict:
+            return PropertyField_Dict(self, property)
         elif varType == TypedList:
             return PropertyField_TypedList(self, property)
         else:
@@ -129,8 +132,8 @@ class DataHandler:
         return "default"
 
     def getObjectConstraints(self, property: DataPath) -> list[dict[str, any]]:
-        if hasattr(property.__variable_source, "propertygrid_restrictions"):
-            cfg =  dict(property.__variable_source.propertygrid_restrictions())
+        if hasattr(property.variableSource(), "propertygrid_restrictions"):
+            cfg =  dict(property.variableSource().propertygrid_restrictions())
             if property.variableName() in cfg:
                 result = cfg[property.variableName()]
                 returnable_result = []
