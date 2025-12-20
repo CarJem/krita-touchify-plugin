@@ -30,7 +30,7 @@ if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
 
 
-class TouchifyPieMenu(ComposerPieMenu):
+class ComposerCustomPieMenu(ComposerPieMenu):
 
 
 
@@ -141,7 +141,7 @@ class TouchifyPieMenu(ComposerPieMenu):
         active_color = KisColor.toQt(data.active_color)
 
                 
-        result = TouchifyPieMenu(
+        result = ComposerCustomPieMenu(
             name=data.id,
             controller=PieActionController(),
             background_color=background_color,

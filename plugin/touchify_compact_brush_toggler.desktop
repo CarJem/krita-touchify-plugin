@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 ServiceTypes=Krita/PythonPlugin
-X-KDE-Library=touchify-compact-brush-toggler
+X-KDE-Library=touchify_compact_brush_toggler
 X-Python-2-Compatible=false
 X-Krita-Manual=Manual.html
 Name=Touchify Addon - Compact Brush Toggler

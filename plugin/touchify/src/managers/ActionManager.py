@@ -671,13 +671,13 @@ class ActionManager(QObject):
     def Execute_PieWheel(self, pie_wheel_registry_id: str):
         try:
 
-            from jemlib.api_composer.TouchifyPieMenu import TouchifyPieMenu
+            from jemlib.api_composer.ComposerCustomPieMenu import ComposerCustomPieMenu
             from shortcut_composer.templates.pie_menu_utils import PieWidget
 
             data: PieWheelData = TouchifySettings.registryItem(pie_wheel_registry_id, PieWheelData)
             if not isinstance(data, PieWheelData) or data == None: return
 
-            result = TouchifyPieMenu.generate(data)
+            result = ComposerCustomPieMenu.generate(data)
             result.Show()
             self.OnEvent_ComposerStart()
 
