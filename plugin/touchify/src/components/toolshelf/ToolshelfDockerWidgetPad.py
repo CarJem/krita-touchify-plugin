@@ -1,5 +1,4 @@
 
-from enum import Enum, IntEnum
 from functools import partial
 from typing import TYPE_CHECKING
 from PyQt5.QtCore import *
@@ -8,7 +7,7 @@ from PyQt5.QtWidgets import *
 from touchify.__env__ import *
 from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
 from touchify.src.managers.WidgetPadManager import WidgetPadAlignment
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 from touchify.src.settings.KritaSettings import KritaSettings
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
@@ -33,10 +32,10 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
             self.setContentsMargins(0,0,0,0)
 
 
-            self._rightArrow = ResourceManager.iconLoader("material:menu-right")
-            self._leftArrow = ResourceManager.iconLoader("material:menu-left")
-            self._upArrow = ResourceManager.iconLoader("material:menu-up")
-            self._downArrow = ResourceManager.iconLoader("material:menu-down")
+            self._rightArrow = IconRepository.iconLoader("material:menu-right")
+            self._leftArrow = IconRepository.iconLoader("material:menu-left")
+            self._upArrow = IconRepository.iconLoader("material:menu-up")
+            self._downArrow = IconRepository.iconLoader("material:menu-down")
 
             self.setLayout(QVBoxLayout())
             self.layout().setContentsMargins(0,0,0,0)

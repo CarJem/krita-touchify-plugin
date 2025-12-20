@@ -15,7 +15,7 @@ from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
 from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
 from touchify.src.config.triggers.Trigger import Trigger
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 
 
 if TYPE_CHECKING:
@@ -61,7 +61,7 @@ class ToolboxLoader(QObject):
             btn.setWindowOpacity(self._opacityLevel)
 
             if tool.icon != "": 
-                btn.setIcon(ResourceManager.iconLoader(tool.icon))
+                btn.setIcon(IconRepository.iconLoader(tool.icon))
                 btn.action_use_icon = False
 
 
@@ -117,7 +117,7 @@ class ToolboxLoader(QObject):
         act = KritaAPI.get_action(actionName)
 
         if iconName and iconName != "":
-            customIcon = ResourceManager.iconLoader(iconName)
+            customIcon = IconRepository.iconLoader(iconName)
             if customIcon: return QIcon(customIcon)
         elif act: return QIcon(act.icon())
         else: return QIcon()

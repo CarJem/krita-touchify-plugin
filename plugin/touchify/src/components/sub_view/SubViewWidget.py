@@ -9,7 +9,7 @@ from touchify.src.components.sub_view.SubViewViewport import SubViewViewport
 
 from jemlib.alib_kis.widgets.KisAngleSelector import KisAngleSelector
 from jemlib.alib_vaporjem.extensions.pyqt_extensions import GeometryHelpers
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 
 
 class SubViewWidget(QWidget):
@@ -68,17 +68,17 @@ class SubViewWidget(QWidget):
         for item in self.view.zoomIncrements:
             self.zoomValue.menu().addAction(item[1], self.onZoomSelectionChanged).setData(item[0])
         
-        self.zoomOutButton = QAction(ResourceManager.iconLoader("material:minus-circle-outline"), "Zoom Out", self)
+        self.zoomOutButton = QAction(IconRepository.iconLoader("material:minus-circle-outline"), "Zoom Out", self)
         self.zoomOutButton.triggered.connect(self.zoomOut)
         self.toolbarAlpha.addAction(self.zoomOutButton)
         self.__viewerActions.append(self.zoomOutButton)
         
-        self.zoomInButton = QAction(ResourceManager.iconLoader("material:plus-circle-outline"), "Zoom In", self)
+        self.zoomInButton = QAction(IconRepository.iconLoader("material:plus-circle-outline"), "Zoom In", self)
         self.zoomInButton.triggered.connect(self.zoomIn)
         self.toolbarAlpha.addAction(self.zoomInButton)
         self.__viewerActions.append(self.zoomInButton)
 
-        self.fitToNavigatorButton = QAction(ResourceManager.iconLoader("zoom-fit-best"), "Fit to Navigator", self)
+        self.fitToNavigatorButton = QAction(IconRepository.iconLoader("zoom-fit-best"), "Fit to Navigator", self)
         self.fitToNavigatorButton.triggered.connect(self.fitToNavigator)
         self.toolbarAlpha.addAction(self.fitToNavigatorButton)
         self.__viewerActions.append(self.fitToNavigatorButton)
@@ -89,34 +89,34 @@ class SubViewWidget(QWidget):
         self.toolbarBeta.addWidget(self.__createSpacer(self.rotationSlider))
         self.__viewerActions.append(self.rotationSlider)
 
-        self.rotateLeftBtn = QAction(ResourceManager.iconLoader("material:rotate-left"), "Rotate Left", self)
+        self.rotateLeftBtn = QAction(IconRepository.iconLoader("material:rotate-left"), "Rotate Left", self)
         self.rotateLeftBtn.triggered.connect(self.rotateLeft)
         self.toolbarBeta.addAction(self.rotateLeftBtn)
         self.__viewerActions.append(self.rotateLeftBtn)
 
-        self.rotateRightBtn = QAction(ResourceManager.iconLoader("material:rotate-right"), "Rotate Right", self)
+        self.rotateRightBtn = QAction(IconRepository.iconLoader("material:rotate-right"), "Rotate Right", self)
         self.rotateRightBtn.triggered.connect(self.rotateRight)
         self.toolbarBeta.addAction(self.rotateRightBtn)
         self.__viewerActions.append(self.rotateRightBtn)
 
-        self.resetRotationBtn = QAction(ResourceManager.iconLoader("rotation-reset"), "Reset Rotation", self)
+        self.resetRotationBtn = QAction(IconRepository.iconLoader("rotation-reset"), "Reset Rotation", self)
         self.resetRotationBtn.triggered.connect(self.resetRotation)
         self.toolbarBeta.addAction(self.resetRotationBtn)
         self.__viewerActions.append(self.resetRotationBtn)
 
-        self.flipHorizontalBtn = QAction(ResourceManager.iconLoader("material:flip-horizontal"), "Flip Horizontal", self)
+        self.flipHorizontalBtn = QAction(IconRepository.iconLoader("material:flip-horizontal"), "Flip Horizontal", self)
         self.flipHorizontalBtn.setCheckable(True)
         self.flipHorizontalBtn.toggled.connect(self.flipHorizontal)
         self.toolbarBeta.addAction(self.flipHorizontalBtn)
         self.__viewerActions.append(self.flipHorizontalBtn)
 
-        self.flipVerticalBtn = QAction(ResourceManager.iconLoader("material:flip-vertical"), "Flip Vertical", self)
+        self.flipVerticalBtn = QAction(IconRepository.iconLoader("material:flip-vertical"), "Flip Vertical", self)
         self.flipVerticalBtn.setCheckable(True)
         self.flipVerticalBtn.toggled.connect(self.flipVertical)
         self.toolbarBeta.addAction(self.flipVerticalBtn)
         self.__viewerActions.append(self.flipVerticalBtn)
 
-        self.eyedropperBtn = QAction(ResourceManager.iconLoader("material:eyedropper"), "Switch to eyedropper automatically", self)
+        self.eyedropperBtn = QAction(IconRepository.iconLoader("material:eyedropper"), "Switch to eyedropper automatically", self)
         self.eyedropperBtn.setCheckable(True)
         self.eyedropperBtn.toggled.connect(self.toggleColorPicker)
         self.toolbarGamma.addAction(self.eyedropperBtn)
@@ -124,32 +124,32 @@ class SubViewWidget(QWidget):
 
         self.toolbarGamma.addWidget(self.__createSpacer())
 
-        self.previousImageBtn = QAction(ResourceManager.iconLoader("material:arrow-left"), "To previous image", self)
+        self.previousImageBtn = QAction(IconRepository.iconLoader("material:arrow-left"), "To previous image", self)
         self.previousImageBtn.triggered.connect(self.toPreviousImage)
         self.toolbarGamma.addAction(self.previousImageBtn)
         self.__viewerActions.append(self.previousImageBtn)
 
-        self.nextImageBtn = QAction(ResourceManager.iconLoader("material:arrow-right"), "To next image", self)
+        self.nextImageBtn = QAction(IconRepository.iconLoader("material:arrow-right"), "To next image", self)
         self.nextImageBtn.triggered.connect(self.toNextImage)
         self.toolbarGamma.addAction(self.nextImageBtn)
         self.__viewerActions.append(self.nextImageBtn)
 
-        self.imageListBtn = QAction(ResourceManager.iconLoader("material:view-grid"), "Image list", self)
+        self.imageListBtn = QAction(IconRepository.iconLoader("material:view-grid"), "Image list", self)
         self.imageListBtn.triggered.connect(self.showImageList)
         self.toolbarGamma.addAction(self.imageListBtn)
         self.__viewerActions.append(self.imageListBtn)
 
-        self.importImageBtn = QAction(ResourceManager.iconLoader("material:folder-multiple-plus-outline"), "Import", self)
+        self.importImageBtn = QAction(IconRepository.iconLoader("material:folder-multiple-plus-outline"), "Import", self)
         self.importImageBtn.triggered.connect(self.importImages)
         self.toolbarGamma.addAction(self.importImageBtn)
         self.__viewerActions.append(self.importImageBtn)
 
-        self.openImageOnCanvasBtn = QAction(ResourceManager.iconLoader("material:file-import"), "Open image on canvas", self)
+        self.openImageOnCanvasBtn = QAction(IconRepository.iconLoader("material:file-import"), "Open image on canvas", self)
         self.openImageOnCanvasBtn.triggered.connect(self.openImageInCanvas)
         self.toolbarGamma.addAction(self.openImageOnCanvasBtn)
         self.__viewerActions.append(self.openImageOnCanvasBtn)
 
-        self.clearImageBtn = QAction(ResourceManager.iconLoader("material:trash-can-outline"), "Clear", self)
+        self.clearImageBtn = QAction(IconRepository.iconLoader("material:trash-can-outline"), "Clear", self)
         self.clearImageBtn.triggered.connect(self.clearImage)
         self.toolbarGamma.addAction(self.clearImageBtn)
         self.__viewerActions.append(self.clearImageBtn)

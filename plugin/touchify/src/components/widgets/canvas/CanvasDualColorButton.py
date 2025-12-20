@@ -8,7 +8,7 @@ from touchify.__env__ import *
 
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.wrappers.window import WindowAPI
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 
 
 class CanvasDualColorButton(QWidget):
@@ -25,7 +25,7 @@ class CanvasDualColorButton(QWidget):
         self.__foreground_color: QColor = self.palette().color(self.backgroundRole())
 
     def updateIcons(self):
-        self.__resetIcon: QIcon = ResourceManager.kritaIcon("color-to-alpha")
+        self.__resetIcon: QIcon = IconRepository.kritaIcon("color-to-alpha")
 
     def metrics(self):
         PADDING = 2

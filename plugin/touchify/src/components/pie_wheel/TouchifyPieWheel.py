@@ -1,14 +1,10 @@
 from jemlib.api_krita import KritaAPI
 from PyQt5.QtGui import QColor
-from typing import TYPE_CHECKING, TypeVar
+from typing import TypeVar
 from functools import cached_property
 from krita import *
-from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
-from touchify.src.config.triggers.Trigger import Trigger
-from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from jemlib.alib_kis.dataclass.KisColor import KisColor
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
-from touchify.src.managers.GlobalEvents import GlobalEvents
 from jemlib.alib_widgets.buttons.RoundButton import RoundButton
 
 
@@ -20,17 +16,21 @@ from shortcut_composer.composer_utils import GroupOrderHolder
 from shortcut_composer.templates.pie_menu_utils import PieStyleHolder
 from shortcut_composer.templates.pie_menu_utils import PieLabelCreator, PieWidget
 
-from jemlib.api_composer.abstractions.preset_pie_config import PresetPieConfig
+from touchify.src.components.pie_wheel.api_composer.preset_pie_config import PresetPieConfig
 
 T = TypeVar('T')
 
-from jemlib.api_composer.constants import SEPERATOR
-
-if TYPE_CHECKING:
-    from touchify.src.PluginManagers import TouchifyManagers
+from touchify.src.components.pie_wheel.api_composer.touchify_constants import SEPERATOR
 
 
-class ComposerCustomPieMenu(ComposerPieMenu):
+
+from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
+from touchify.src.config.triggers.Trigger import Trigger
+from touchify.src.config.triggers.TriggerGroup import TriggerGroup
+from touchify.src.managers.GlobalEvents import GlobalEvents
+
+
+class TouchifyPieWheel(ComposerPieMenu):
 
 
 
@@ -111,7 +111,7 @@ class ComposerCustomPieMenu(ComposerPieMenu):
         from shortcut_composer.core_components import instructions, controllers
         from shortcut_composer.input_adapter import ComplexActionInterface
         from shortcut_composer.templates.pie_menu_utils import PieWidget
-        from jemlib.api_composer.abstractions.pie_controller import PieActionController
+        from touchify.src.components.pie_wheel.api_composer.pie_controller import PieActionController
         from shortcut_composer.data_components import (
             RotationDeadzoneStrategy,
             PieDeadzoneStrategy,
@@ -141,7 +141,7 @@ class ComposerCustomPieMenu(ComposerPieMenu):
         active_color = KisColor.toQt(data.active_color)
 
                 
-        result = ComposerCustomPieMenu(
+        result = TouchifyPieWheel(
             name=data.id,
             controller=PieActionController(),
             background_color=background_color,

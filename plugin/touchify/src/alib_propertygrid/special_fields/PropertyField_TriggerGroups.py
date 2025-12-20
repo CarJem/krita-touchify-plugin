@@ -8,7 +8,7 @@ from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from jemlib.alib_propertygrid.fields.PropertyField_TypedList import PropertyField_TypedList
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
-from touchify.src.managers.ResourceManager import *
+from jemlib.managers.IconRepository import *
 
 
 

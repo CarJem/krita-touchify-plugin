@@ -16,17 +16,12 @@ class PropertyGrid_Restrictions:
         WorkspaceSelection="workspace"
         IconSelection="icon_selection"
         BrushSelection="brush_selection"
-
         MultiToolSelection="multi_tool_selection"
 
-        DockerGroupRegistry="registry_docker_group_selection"
-        PopupRegistry="registry_popup_selection"
-        CanvasPresetRegistry="registry_canvas_preset_selection"
-        MenuRegistry="registry_menu_selection"
-        ScriptRegistry="registry_script_selection"
-        PieWheelRegistry="registry_piewheel_selection"
-        ToolshelfRegistry="registry_toolshelf_selection"
-        ShelfRegistry="registry_shelf_selection"
+        TouchifyRegistry="touchify_registry"
+
+
+
 
     class NumberMod(EnumStr):
         Range="range"
@@ -63,15 +58,8 @@ class PropertyGrid_Restrictions:
             PropertyGrid_Restrictions.StrMod.WorkspaceSelection,
             PropertyGrid_Restrictions.StrMod.IconSelection,
             PropertyGrid_Restrictions.StrMod.BrushSelection,
-            PropertyGrid_Restrictions.StrMod.DockerGroupRegistry,
-            PropertyGrid_Restrictions.StrMod.PopupRegistry,
-            PropertyGrid_Restrictions.StrMod.CanvasPresetRegistry,
-            PropertyGrid_Restrictions.StrMod.MenuRegistry,
-            PropertyGrid_Restrictions.StrMod.ScriptRegistry,
-            PropertyGrid_Restrictions.StrMod.PieWheelRegistry,
-            PropertyGrid_Restrictions.StrMod.ToolshelfRegistry,
-            PropertyGrid_Restrictions.StrMod.ShelfRegistry,
-            PropertyGrid_Restrictions.StrMod.MultiToolSelection
+            PropertyGrid_Restrictions.StrMod.MultiToolSelection,
+            PropertyGrid_Restrictions.StrMod.TouchifyRegistry
         ]
 
     def range(min: any = None, max: any = None):

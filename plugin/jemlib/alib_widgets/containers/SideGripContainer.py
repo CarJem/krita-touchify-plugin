@@ -1,7 +1,7 @@
 # Source - https://stackoverflow.com/a
 # Posted by musicamante, modified by community. See post 'Timeline' for change history
 # Retrieved 2025-12-17, License - CC BY-SA 4.0
-# Modified by CarJem Generations
+# Modified by Carter Wallace
 
 from PyQt5 import QtCore, QtWidgets
 

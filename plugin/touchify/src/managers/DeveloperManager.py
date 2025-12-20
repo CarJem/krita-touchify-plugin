@@ -5,7 +5,7 @@ from jemlib.alib_vaporjem.extensions.krita_extensions import *
 from touchify.__env__ import *
 
 from touchify.src.settings.TouchifySettings import *
-from touchify.src.managers.ResourceManager import *
+from jemlib.managers.IconRepository import *
 
 from krita import *
 from typing import TYPE_CHECKING

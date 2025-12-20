@@ -12,7 +12,7 @@ from jemlib.alib_propertygrid.views.PropertyView import PropertyView
 from jemlib.alib_propertygrid.views.PropertyView_Form import PropertyView_Form
 from jemlib.alib_propertygrid.views.PropertyView_Tabs import PropertyView_Tabs
 from jemlib.alib_datatypes.TypedList import *
-from touchify.src.managers.ResourceManager import *
+from jemlib.managers.IconRepository import *
 
 
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
@@ -23,13 +23,15 @@ class PropertyPage(QScrollArea):
 
     propertyChanged = pyqtSignal(bool)
 
-    def __init__(self, parentStack: PropertyGrid):
+    def __init__(self, parentStack: PropertyGrid, praser: PropertyUtils_Praser):
         super().__init__(parentStack)
         self.stackHost = parentStack
         self.current_view_type = "unloaded"
 
         self.override_view_type = False
         self.desired_view_type = "default"
+
+        self.praser = praser
 
 
         self.modifiers: dict[str, any] = {}
@@ -47,15 +49,15 @@ class PropertyPage(QScrollArea):
 
         match self.current_view_type:
             case "tabs":
-                result = PropertyView_Tabs(self)
+                result = PropertyView_Tabs(self, self.praser)
                 self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
                 self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
             case "tabs_vertical":
-                result = PropertyView_Tabs(self, True)
+                result = PropertyView_Tabs(self, self.praser, True)
                 self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
                 self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
             case _:
-                result = PropertyView_Form(self)
+                result = PropertyView_Form(self, self.praser)
                 self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
                 self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         

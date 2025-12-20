@@ -14,7 +14,7 @@ from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
 
 from jemlib.alib_propertygrid.views.PropertyView import PropertyView
 from jemlib.alib_datatypes.TypedList import *
-from touchify.src.managers.ResourceManager import *
+from jemlib.managers.IconRepository import *
 
 
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Expanding
@@ -27,17 +27,18 @@ if TYPE_CHECKING:
 
 class PropertyView_Form(QWidget, PropertyView):
 
-    def __init__(self, parent: "PropertyPage"):
+    def __init__(self, parent: "PropertyPage", praser: PropertyUtils_Praser):
         QWidget.__init__(self, parent)
-        PropertyView.__init__(self, parent)
+        PropertyView.__init__(self, parent, praser)
 
         self.parent_page: "PropertyPage" = parent
 
         self.fields: list[PropertyField] = []
         self.labels: list[PropertyLabel] = []
 
+        self.praser = praser
+
         self.setContentsMargins(0,0,0,0)
-        
 
         self.gridLayout = QVBoxLayout(self)
         self.gridLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -77,7 +78,7 @@ class PropertyView_Form(QWidget, PropertyView):
     
     def createField(self, source: any, _varName: str):
         variable = PropertyUtils_Extensions.getVariable(source, _varName)
-        field = PropertyUtils_Praser.getPropertyType(_varName, variable, source)
+        field = self.praser.getPropertyType(_varName, variable, source)
         if field:
             field.setParent(self)
             field.propertyChanged.connect(self.parent_page.onPropertyChanged)

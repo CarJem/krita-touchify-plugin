@@ -2,15 +2,13 @@
 from PyQt5 import QtGui, QtSvg
 import os
 
-from touchify.__env__ import ASSETS_DIRECTORY, RESOURCE_PACKS_DIRECTORY
+from jemlib.__env__ import ASSETS_DIRECTORY, RESOURCE_PACKS_DIRECTORY
 
 import xml.etree.ElementTree as ET
 
 from jemlib.api_krita import KritaAPI
 from jemlib.alib_vaporjem.extensions.pyqt_extensions import QPainterTools
-from touchify.src.settings.TouchifySettings import *
 from zipfile import ZipFile
-
 from krita import *
 
 
@@ -21,7 +19,7 @@ ENABLE_DEBUG=False
 def printDebug(input: str):
     if ENABLE_DEBUG: print("[ResourceManager] :: ", input)
 
-class ResourceManager:
+class IconRepository:
 
     class IconEngine(QIconEngine):
         def __init__(self, svgData: bytes, autoColorMode: bool = True):
@@ -102,26 +100,26 @@ class ResourceManager:
         
         printDebug("load_resourcepack_icons")
         
-        ResourceManager.resource_pack_icons.clear()
+        IconRepository.resource_pack_icons.clear()
 
-        resource_pack_dir = ResourceManager.__resourcePacksDir__()
+        resource_pack_dir = IconRepository.__resourcePacksDir__()
         directories = [f for f in os.listdir(resource_pack_dir) if os.path.isdir(os.path.join(resource_pack_dir, f))]
         for resource_pack in directories:
             pack_icons_path = os.path.join(resource_pack_dir, resource_pack, "icons")
             if os.path.exists(pack_icons_path) and os.path.isdir(pack_icons_path):
 
-                if resource_pack not in ResourceManager.resource_pack_icons:
-                    ResourceManager.resource_pack_icons[resource_pack] = {}
+                if resource_pack not in IconRepository.resource_pack_icons:
+                    IconRepository.resource_pack_icons[resource_pack] = {}
 
                 files = [f for f in os.listdir(pack_icons_path) if os.path.isfile(os.path.join(pack_icons_path, f))]
                 for icon_filename in files:
                     icon_filepath = os.path.join(pack_icons_path, icon_filename)
 
-                    if ResourceManager.__is_vaild_custom_icon__(icon_filename):
-                        icon_name = ResourceManager.__get_icon_name_from_file__(icon_filename)
+                    if IconRepository.__is_vaild_custom_icon__(icon_filename):
+                        icon_name = IconRepository.__get_icon_name_from_file__(icon_filename)
                         icon_data = QtGui.QIcon(icon_filepath)
                         #print(icon_name)
-                        ResourceManager.resource_pack_icons[resource_pack][icon_name] = icon_data
+                        IconRepository.resource_pack_icons[resource_pack][icon_name] = icon_data
 
 
 
@@ -137,13 +135,13 @@ class ResourceManager:
         
         printDebug("load_icon_packs")
         
-        material_icon_zip = os.path.join(ResourceManager.__resourcesDir__(), 'material-icons.zip')
+        material_icon_zip = os.path.join(IconRepository.__resourcesDir__(), 'material-icons.zip')
         with ZipFile(material_icon_zip, 'r') as zip:
             for item in zip.filelist:
                 if item.filename.startswith('MaterialDesign-master/svg/') and item.filename.endswith('.svg'):
                     actualName = item.filename.removeprefix('MaterialDesign-master/svg/').removesuffix('.svg')
                     iconBytes = zip.read(item)
-                    ResourceManager.material_icons[actualName] = QIcon(ResourceManager.IconEngine(iconBytes))
+                    IconRepository.material_icons[actualName] = QIcon(IconRepository.IconEngine(iconBytes))
         ICON_PACKS_LOADED = True
         printDebug("load_icon_packs_done")
 
@@ -155,20 +153,20 @@ class ResourceManager:
             pack_name = routes[0]
             icon_name = routes[1]
 
-            if pack_name in ResourceManager.resource_pack_icons:
-                icon_directory = ResourceManager.resource_pack_icons[pack_name]
+            if pack_name in IconRepository.resource_pack_icons:
+                icon_directory = IconRepository.resource_pack_icons[pack_name]
                 if icon_name in icon_directory:
                     return icon_directory[icon_name]
         except:
             pass    
         
-        return ResourceManager.fallbackIcon()
+        return IconRepository.fallbackIcon()
 
     def materialIcon(iconName: str):
-        if iconName in ResourceManager.material_icons:
-            return ResourceManager.material_icons[iconName]
+        if iconName in IconRepository.material_icons:
+            return IconRepository.material_icons[iconName]
         else:
-            return ResourceManager.fallbackIcon()
+            return IconRepository.fallbackIcon()
 
     def actionIcon(action_id: str):
         target_action = KritaAPI.get_action(action_id)
@@ -181,13 +179,13 @@ class ResourceManager:
             preset = brush_presets[brushName]
             return QIcon(QPixmap.fromImage(preset.image()))
         else:
-            return ResourceManager.fallbackIcon()
+            return IconRepository.fallbackIcon()
    
     def kritaIcon(iconName: str):
         return KritaAPI.get_icon(iconName)
     
     def fallbackIcon():
-        return QtGui.QIcon(os.path.join(ResourceManager.__resourcesDir__(), 'default.svg'))
+        return QtGui.QIcon(os.path.join(IconRepository.__resourcesDir__(), 'default.svg'))
 
     #endregion
 
@@ -208,11 +206,11 @@ class ResourceManager:
         def custom_registry():
             result = []
 
-            for packName in ResourceManager.resource_pack_icons:
-                for iconName in ResourceManager.resource_pack_icons[packName]:
+            for packName in IconRepository.resource_pack_icons:
+                for iconName in IconRepository.resource_pack_icons[packName]:
                     result.insert(0, f'resource_pack:{packName}:{iconName}')
 
-            for iconName in ResourceManager.material_icons:
+            for iconName in IconRepository.material_icons:
                 result.insert(0, f'material:{iconName}')
             
             return result
@@ -263,24 +261,24 @@ class ResourceManager:
     def iconLoader(iconName: str):
         if str(iconName).startswith("material:"):
             materialName = str(iconName)[len("material:"):]
-            return ResourceManager.materialIcon(materialName)
+            return IconRepository.materialIcon(materialName)
         elif str(iconName).startswith("resource_pack:"):
             resource_pack_name = str(iconName)[len("resource_pack:"):]
-            return ResourceManager.resourcePackIcon(resource_pack_name)
+            return IconRepository.resourcePackIcon(resource_pack_name)
         else:
-            return ResourceManager.kritaIcon(iconName)
+            return IconRepository.kritaIcon(iconName)
 
     def getSettingsClipboard(requested_type: type):
-        if ResourceManager.settings_clipboard_type == requested_type:
-            return ResourceManager.settings_clipboard_data
+        if IconRepository.settings_clipboard_type == requested_type:
+            return IconRepository.settings_clipboard_data
         else: return None
 
     def setSettingsClipboard(item_type: type, item_data: any):
-        ResourceManager.settings_clipboard_type = item_type
-        ResourceManager.settings_clipboard_data = item_data
+        IconRepository.settings_clipboard_type = item_type
+        IconRepository.settings_clipboard_data = item_data
 
     
 
     
-ResourceManager.loadIconPacks()
-ResourceManager.loadResourcePackIcons()
+IconRepository.loadIconPacks()
+IconRepository.loadResourcePackIcons()

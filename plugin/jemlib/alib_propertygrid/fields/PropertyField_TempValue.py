@@ -9,7 +9,7 @@ from jemlib.alib_propertygrid.PropertyGrid import *
 
 
 from jemlib.alib_datatypes.TypedList import *
-from touchify.src.managers.ResourceManager import *
+from jemlib.managers.IconRepository import *
 
 
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored

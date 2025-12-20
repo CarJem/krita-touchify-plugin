@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 from touchify.__env__ import *
 from touchify.src.settings.TouchifySettings import *
 from typing import TYPE_CHECKING
@@ -166,7 +166,7 @@ class Tweak_BrushEditor_Container(QWidget):
         self.setLayout(self.lay)
 
         self.close_action = QAction(self)
-        self.close_action.setIcon(ResourceManager.kritaIcon("window-close"))
+        self.close_action.setIcon(IconRepository.kritaIcon("window-close"))
         self.close_action.setText("Close")
         self.close_action.setToolTip("Close")
         self.close_action.triggered.connect(self.OnEvent_Close) 

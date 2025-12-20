@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QWidget
 
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 
 class PropertyLabel(QWidget):
 
@@ -36,7 +36,7 @@ class PropertyLabel(QWidget):
             self.hintLabel.setFlat(True)
             self.hintLabel.clicked.connect(self.showHint)
             self.hintLabel.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-            self.hintLabel.setIcon(ResourceManager.iconLoader("material:information-variant"))
+            self.hintLabel.setIcon(IconRepository.iconLoader("material:information-variant"))
             self.hintLabel.setToolTip(self.hint_text)
         else:
             self.hintLabel = None

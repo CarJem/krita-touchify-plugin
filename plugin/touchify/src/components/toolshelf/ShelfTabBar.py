@@ -14,7 +14,7 @@ import jemlib.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 
 from touchify.__env__ import *
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -199,7 +199,7 @@ class ShelfTabBar(QWidget):
     def createTab(self, icon: str, id: str, tabRow: int, onClick: any, toolTip: str):
         #print("Creating tab:", id)
         btn = ShelfTabBar.TabItem(self)
-        btn.setIcon(ResourceManager.iconLoader(icon))
+        btn.setIcon(IconRepository.iconLoader(icon))
         if onClick: 
             btn.clicked.connect(onClick)
 

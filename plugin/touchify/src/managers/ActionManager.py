@@ -28,7 +28,7 @@ from touchify.src.config.popup.PopupData import PopupData
 from jemlib.alib_vaporjem.extensions.krita_extensions import *
 
 from touchify.src.settings.TouchifySettings import TouchifySettings
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 
 from touchify.src.components.popup.PopupWidget import PopupWidget
 
@@ -330,11 +330,11 @@ class ActionManager(QObject):
         using_action_icon: bool = False
 
         if use_custom_icon:
-            icon = ResourceManager.iconLoader(data.display_custom_icon)
+            icon = IconRepository.iconLoader(data.display_custom_icon)
         else:
-            if is_brush: icon = ResourceManager.brushIcon(data.brush_name)
+            if is_brush: icon = IconRepository.brushIcon(data.brush_name)
             elif is_action: 
-                icon = ResourceManager.actionIcon(data.action_id)
+                icon = IconRepository.actionIcon(data.action_id)
                 using_action_icon = True
             else: icon = QIcon()
 
@@ -342,7 +342,7 @@ class ActionManager(QObject):
             text: str = data.display_custom_text  
         else:
             if is_brush: text = data.brush_name
-            elif is_action: text = ResourceManager.actionText(data.action_id)
+            elif is_action: text = IconRepository.actionText(data.action_id)
             else: text = ""
 
         has_icon = not icon.isNull()
@@ -462,7 +462,7 @@ class ActionManager(QObject):
     def Button_Brush(self, act: Trigger, classType: type = TriggerButton):
         btn: TriggerButton | None = None
         id = act.brush_name
-        brush_presets = ResourceManager.brushPresets()
+        brush_presets = IconRepository.brushPresets()
         
         if id in brush_presets:
             preset = brush_presets[id]
@@ -568,7 +568,7 @@ class ActionManager(QObject):
         contextMenu.show()
             
     def Execute_Brush(self, id):
-        brush_presets = ResourceManager.brushPresets()
+        brush_presets = IconRepository.brushPresets()
         if id in brush_presets:
             preset = brush_presets[id]
             self.api_window.active_view.setCurrentBrushPreset(preset)
@@ -671,13 +671,13 @@ class ActionManager(QObject):
     def Execute_PieWheel(self, pie_wheel_registry_id: str):
         try:
 
-            from jemlib.api_composer.ComposerCustomPieMenu import ComposerCustomPieMenu
+            from touchify.src.components.pie_wheel.TouchifyPieWheel import TouchifyPieWheel
             from shortcut_composer.templates.pie_menu_utils import PieWidget
 
             data: PieWheelData = TouchifySettings.registryItem(pie_wheel_registry_id, PieWheelData)
             if not isinstance(data, PieWheelData) or data == None: return
 
-            result = ComposerCustomPieMenu.generate(data)
+            result = TouchifyPieWheel.generate(data)
             result.Show()
             self.OnEvent_ComposerStart()
 

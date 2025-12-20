@@ -8,7 +8,7 @@ from touchify.src.components.widgets.canvas.CanvasColorPicker import CanvasColor
 from touchify.src.managers.GlobalEvents import GlobalEvents
 from touchify.__env__ import *
 
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 
 DOCKER_TITLE = 'Touchify Addon: Color Options'
 DOCKER_ID="Touchify/ColorOptionsDocker"
@@ -39,7 +39,7 @@ class ColorSourceToggle(QWidget):
         self.gridLayout.addWidget(self.setFgBtn)
 
         self.toggleBtn = QPushButton(self)
-        self.toggleBtn.setIcon(ResourceManager.materialIcon("swap-horizontal"))
+        self.toggleBtn.setIcon(IconRepository.materialIcon("swap-horizontal"))
         self.toggleBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.toggleBtn.clicked.connect(self.toggleColors)
         self.gridLayout.addWidget(self.toggleBtn)
@@ -49,7 +49,7 @@ class ColorSourceToggle(QWidget):
         self.gridLayout.addWidget(self.setBgBtn)
 
         self.resetBtn = QPushButton(self)
-        self.resetBtn.setIcon(ResourceManager.kritaIcon("color-to-alpha"))
+        self.resetBtn.setIcon(IconRepository.kritaIcon("color-to-alpha"))
         self.resetBtn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.resetBtn.clicked.connect(self.resetColors)
         

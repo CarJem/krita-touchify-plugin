@@ -1,13 +1,16 @@
+from typing import TYPE_CHECKING
 from PyQt5.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QTabBar, QSizePolicy, QPushButton, QDialog
 from PyQt5.QtCore import QEvent
 
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 
+if TYPE_CHECKING:
+    from jemlib.alib_propertygrid.utils.PropertyUtils_Praser import PropertyUtils_Praser
 
 class PropertyGrid(QWidget):
 
 
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(self, parent: QWidget | None = None, praser: "PropertyUtils_Praser" = None) -> None:
         super().__init__(parent)
         self.our_layout = QVBoxLayout(self)
         self.our_layout.setSpacing(0)
@@ -27,7 +30,7 @@ class PropertyGrid(QWidget):
         self.naviBarBackBtn = QPushButton(self.naviBarRow)
         self.naviBarBackBtn.setContentsMargins(0,0,0,0)
         self.naviBarBackBtn.setFlat(True)
-        self.naviBarBackBtn.setIcon(ResourceManager.materialIcon("arrow-left"))
+        self.naviBarBackBtn.setIcon(IconRepository.materialIcon("arrow-left"))
         self.naviBarBackBtn.clicked.connect(self.goBack)
         self.naviBarLayout.addWidget(self.naviBarBackBtn)
 
@@ -42,8 +45,11 @@ class PropertyGrid(QWidget):
 
         self.variable_path: list[str] = []
 
+        from jemlib.alib_propertygrid.utils.PropertyUtils_Praser import PropertyUtils_Praser
+        self.praser = praser if praser else PropertyUtils_Praser()
+
         from .PropertyPage import PropertyPage
-        self.rootPropertyGrid = PropertyPage(self)
+        self.rootPropertyGrid = PropertyPage(self, self.praser)
         self.rootPropertyGrid.setWindowTitle("ROOT")
 
         self.stackWidget = QStackedWidget(self)

@@ -1,6 +1,7 @@
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_datatypes.EnumStr import EnumStr
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
+from touchify.src.alib_propertygrid.utils.PropertyGrid_TouchifyRestrictions import PropertyGrid_TouchifyRestrictions
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
 from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
@@ -227,10 +228,10 @@ class Trigger:
         restrictions["action_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ActionSelection)
         restrictions["workspace_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.WorkspaceSelection)
         restrictions["docker_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.DockerSelection)
-        restrictions["docker_group_data"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.DockerGroupRegistry)
-        restrictions["popup_data"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.PopupRegistry)
-        restrictions["canvas_preset_data"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.CanvasPresetRegistry)
-        restrictions["context_menu_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.MenuRegistry)
-        restrictions["script_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ScriptRegistry)
-        restrictions["piewheel_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.PieWheelRegistry)
+        restrictions["docker_group_data"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.DockerGroupRegistry)
+        restrictions["popup_data"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.PopupRegistry)
+        restrictions["canvas_preset_data"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.CanvasPresetRegistry)
+        restrictions["context_menu_id"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.MenuRegistry)
+        restrictions["script_id"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.ScriptRegistry)
+        restrictions["piewheel_id"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.PieWheelRegistry)
         return restrictions

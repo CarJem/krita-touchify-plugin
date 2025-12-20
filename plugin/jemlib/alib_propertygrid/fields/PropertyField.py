@@ -10,7 +10,7 @@ from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import *
 from jemlib.alib_propertygrid.PropertyGrid import *
 
 from jemlib.alib_datatypes.TypedList import *
-from touchify.src.managers.ResourceManager import *
+from jemlib.managers.IconRepository import *
 
 
 class PropertyField(QWidget):
@@ -31,7 +31,7 @@ class PropertyField(QWidget):
         self.variable_source = variable_source
         self.sister_id = None
 
-    def setStackHost(self, host: PropertyGrid):
+    def setStackHost(self, host: "PropertyGrid"):
         self.stack_host = host
 
     def setVariable(self, source, name, data):
@@ -86,7 +86,7 @@ class PropertyField(QWidget):
     def nested_paste(self):
         item_type: type | None = type(self.variable_data)
         
-        clipboard_data = ResourceManager.getSettingsClipboard(item_type)
+        clipboard_data = IconRepository.getSettingsClipboard(item_type)
         if clipboard_data != None:
             pastable_data = copy.deepcopy(clipboard_data)
             self.variable_data = pastable_data
@@ -97,7 +97,7 @@ class PropertyField(QWidget):
         item_data: any | None = copy.deepcopy(self.variable_data)
 
         if item_data != None and item_type != None:
-            ResourceManager.setSettingsClipboard(item_type, item_data)
+            IconRepository.setSettingsClipboard(item_type, item_data)
 
     def nested_edit(self):
         self.nested_page_dialog = PropertyGrid_Dialog(self)
@@ -108,7 +108,7 @@ class PropertyField(QWidget):
         self.nested_page_layout.setSpacing(0)
 
         from ..PropertyPage import PropertyPage
-        self.nested_page_properties = PropertyPage(self.stack_host)
+        self.nested_page_properties = PropertyPage(self.stack_host, self.stack_host.praser)
         self.nested_page_layout.addWidget(self.nested_page_properties)
         self.nested_page_dialog.setLayout(self.nested_page_layout)
 

@@ -1,7 +1,6 @@
 
 from krita import *
 from PyQt5.QtCore import *
-from touchify.__env__ import *
 
 class IconButton(QPushButton):
 

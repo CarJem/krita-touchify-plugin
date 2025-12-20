@@ -5,7 +5,7 @@ from jemlib.alib_propertygrid.event_filters.MouseWheelWidgetAdjustmentGuard impo
 
 from jemlib.alib_datatypes.TypedList import *
 from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
-from touchify.src.managers.ResourceManager import *
+from jemlib.managers.IconRepository import *
 
 from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import *
 from jemlib.alib_propertygrid.PropertyGrid import *

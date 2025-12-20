@@ -11,7 +11,7 @@ from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import *
 
 from jemlib.alib_propertygrid.views.PropertyView import PropertyView
 from jemlib.alib_datatypes.TypedList import *
-from touchify.src.managers.ResourceManager import *
+from jemlib.managers.IconRepository import *
 
 
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
@@ -26,9 +26,9 @@ if TYPE_CHECKING:
 class PropertyView_Tabs(QTabWidget, PropertyView):
 
 
-    def __init__(self, parent: "PropertyPage", isVertical: bool = False):
+    def __init__(self, parent: "PropertyPage", praser: PropertyUtils_Praser, isVertical: bool = False):
         QTabWidget.__init__(self, parent)
-        PropertyView.__init__(self, parent)
+        PropertyView.__init__(self, parent, praser)
 
         self.is_vertical = isVertical
 
@@ -58,7 +58,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
 
     def createSisterPage(self, source: any, sister_items: list[str]):
         from jemlib.alib_propertygrid.PropertyPage import PropertyPage
-        page = PropertyPage(self.parent_page.stackHost)
+        page = PropertyPage(self.parent_page.stackHost, self.praser)
         page.propertyChanged.connect(self.onPropertyChanged)
         page.setParent(self)
         page.setLimiters(sister_items)
@@ -83,7 +83,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
 
         if is_expandable_area:
             from jemlib.alib_propertygrid.PropertyPage import PropertyPage
-            page = PropertyPage(self.parent_page.stackHost)
+            page = PropertyPage(self.parent_page.stackHost, self.praser)
             page.propertyChanged.connect(self.onPropertyChanged)
             page.setParent(self)
             page.updateDataObject(variable)
@@ -92,7 +92,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
         else:
             if has_nested_tabs:
                 from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
-                page = PropertyGrid(self)
+                page = PropertyGrid(self, self.praser)
                 page.rootPropertyGrid.propertyChanged.connect(self.onPropertyChanged)
                 page.rootPropertyGrid.setLimiters([_varName])
                 page.rootPropertyGrid.setModifiers({"no_labels": ""})
@@ -102,7 +102,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
                 return page
             else:
                 from jemlib.alib_propertygrid.PropertyPage import PropertyPage
-                page = PropertyPage(self.parent_page.stackHost)
+                page = PropertyPage(self.parent_page.stackHost, self.praser)
                 page.propertyChanged.connect(self.onPropertyChanged)
                 page.setParent(self)
                 page.setLimiters([_varName])

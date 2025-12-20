@@ -3,16 +3,12 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from jemlib.alib_datatypes.TypedList import *
-from touchify.src.managers.ResourceManager import *
-
+from jemlib.managers.IconRepository import *
 from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import *
 from jemlib.alib_propertygrid.PropertyGrid import *
 from jemlib.alib_propertygrid.fields.PropertyField import *
 from jemlib.alib_kis.dataclass.KisColor import KisColor
 from jemlib.alib_widgets.buttons.ColorButton import ColorButton
-
-
-
 
 class PropertyField_KsColor(PropertyField):
     def __init__(self, variable_name=str, variable_data=KisColor, variable_source=any):

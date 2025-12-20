@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from jemlib.alib_datatypes.TypedList import *
-from touchify.src.managers.ResourceManager import *
+from jemlib.managers.IconRepository import *
 
 from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import *
 from jemlib.alib_propertygrid.PropertyGrid import *

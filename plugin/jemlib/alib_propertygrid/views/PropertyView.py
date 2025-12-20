@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import PropertyUtils_Extensions
+from jemlib.alib_propertygrid.utils.PropertyUtils_Praser import PropertyUtils_Praser, PropertyUtils_PraserExtension
 
 
 
@@ -16,10 +17,12 @@ if TYPE_CHECKING:
 
 class PropertyView(QObject):
 
-    def __init__(self, parent: "PropertyPage"):
+    def __init__(self, parent: "PropertyPage", praser: PropertyUtils_Praser):
         super(PropertyView, self).__init__(parent)
         self.parent_page: "PropertyPage" = parent
         self.item = None
+
+        self.praser = praser
 
     def getHiddenVariableNames(self):
         if self.item == None:

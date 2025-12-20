@@ -15,7 +15,7 @@ from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
 from touchify.src.components.toolbox.ToolboxMenu import ToolboxMenu
 from touchify.src.components.toolbox.ToolboxStyles import ToolboxStyles
 from touchify.src.components.toolbox.ToolboxLayout import ToolboxEmptySpace
-from jemlib.alib_propertygrid.PropertyGridDialog import PropertyGridDialog
+from touchify.src.alib_propertygrid.PropertyGridDialog import PropertyGridDialog
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.managers.GlobalEvents import GlobalEvents
 from touchify.__env__ import *

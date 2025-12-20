@@ -7,7 +7,7 @@ from jemlib.alib_propertygrid.event_filters.MouseWheelWidgetAdjustmentGuard impo
 from jemlib.alib_widgets.textedit.PythonEditor import PythonEditor
 from jemlib.alib_datatypes.TypedList import *
 from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
-from touchify.src.managers.ResourceManager import *
+from jemlib.managers.IconRepository import *
 
 from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import *
 from jemlib.alib_propertygrid.PropertyGrid import *
@@ -27,6 +27,7 @@ class PropertyField_Str(PropertyField):
         self.is_brush_selection = False
         self.is_special_selector = False
         self.special_selector_type = "none"
+        self.special_selector_entries: dict = {}
         self.is_multiline_string = False
         self.is_python_editor = False
         self.is_combobox = False
@@ -45,13 +46,13 @@ class PropertyField_Str(PropertyField):
 
 
             if self.special_selector_type == "icons": 
-                self.editorHelper.setIcon(ResourceManager.iconLoader(self.variable_data.replace("\n", "\\n")))
+                self.editorHelper.setIcon(IconRepository.iconLoader(self.variable_data.replace("\n", "\\n")))
             elif self.special_selector_type == "brushes":
-                self.editorHelper.setIcon(ResourceManager.brushIcon(self.variable_data.replace("\n", "\\n")))
+                self.editorHelper.setIcon(IconRepository.brushIcon(self.variable_data.replace("\n", "\\n")))
             else:
-                self.editorHelper.setIcon(ResourceManager.iconLoader("properties"))
+                self.editorHelper.setIcon(IconRepository.iconLoader("properties"))
 
-            self.editorHelper.clicked.connect(lambda: self.helperRequested(self.special_selector_type))
+            self.editorHelper.clicked.connect(lambda: self.helperRequested(self.special_selector_type, self.special_selector_entries))
 
             editorLayout = QHBoxLayout(self)
             editorLayout.setSpacing(0)
@@ -130,6 +131,8 @@ class PropertyField_Str(PropertyField):
                 elif restriction["type"] in PropertyGrid_Restrictions.strSelectors():
                     self.is_special_selector = True
                     self.special_selector_type = restriction["type"]
+                    if "entries" in restriction and restriction["type"] == PropertyGrid_Restrictions.StrMod.TouchifyRegistry:
+                        self.special_selector_entries = dict(restriction["entries"])
                     list_setup = True
                 
 
@@ -142,20 +145,20 @@ class PropertyField_Str(PropertyField):
         self.stack_host.goBack()
         self.dlg.reject()
 
-    def helperRequested(self, mode):
+    def helperRequested(self, mode, entries):
         self.dlg = PropertyGrid_SelectorDialog(self.stack_host)
         self.dlg.setWindowFlags(Qt.WindowType.Widget)
         self.dlg.header_buttons.accepted.connect(lambda: self.dlg_accept())
         self.dlg.header_buttons.rejected.connect(lambda: self.dlg_reject())
 
-        self.dlg.load_list(mode, self.variable_data)
+        self.dlg.load_list(mode, entries, self.variable_data)
         self.stack_host.setCurrentIndex(self.stack_host.addWidget(self.dlg))
         if self.dlg.exec_():
             result = self.dlg.selectedResult()
             if self.is_icon_viewer: 
-                self.editorHelper.setIcon(ResourceManager.iconLoader(result))
+                self.editorHelper.setIcon(IconRepository.iconLoader(result))
             elif self.is_brush_selection:
-                self.editorHelper.setIcon(ResourceManager.brushIcon(result))
+                self.editorHelper.setIcon(IconRepository.brushIcon(result))
             self.editor.setText(result)
             
 
@@ -174,8 +177,8 @@ class PropertyField_Str(PropertyField):
         
         if self.editorHelper:
             if self.is_icon_viewer: 
-                self.editorHelper.setIcon(ResourceManager.iconLoader(self.variable_data.replace("\n", "\\n")))
+                self.editorHelper.setIcon(IconRepository.iconLoader(self.variable_data.replace("\n", "\\n")))
             elif self.is_brush_selection: 
-                self.editorHelper.setIcon(ResourceManager.brushIcon(self.variable_data.replace("\n", "\\n")))
+                self.editorHelper.setIcon(IconRepository.brushIcon(self.variable_data.replace("\n", "\\n")))
         
         super().setVariable(self.variable_source, self.variable_name, self.variable_data)

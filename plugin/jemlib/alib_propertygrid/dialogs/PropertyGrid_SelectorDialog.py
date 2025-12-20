@@ -1,21 +1,16 @@
+from typing import Any
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from krita import *
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.enums.tool import Tool
-from touchify.src.config.canvas_preset.CanvasPreset import CanvasPreset
-from touchify.src.config.docker_group.DockerGroup import DockerGroup
-from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
-from touchify.src.config.popup.PopupData import PopupData
-from touchify.src.config.menu.TriggerMenu import TriggerMenu
-from touchify.src.config.script.CustomScript import CustomScript
-from touchify.src.config.toolshelf.Toolshelf import Toolshelf
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
-from touchify.src.settings.TouchifySettings import TouchifySettings
-from jemlib.alib_propertygrid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
+from jemlib.managers.IconRepository import IconRepository
+
+
 
 
 DATA_INDEX = 3
@@ -126,7 +121,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         return self.selected_item
 
 
-    def load_list(self, mode, selection_input: str | None = None):
+    def load_list(self, mode, entries: Any = None, selection_input: str | None = None):
         self.list_view.setSelectionRectVisible(True)
         
         self.list_view.setStyleSheet(f"""
@@ -141,43 +136,26 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             self.show_status_bar = True
             self.list_view.setViewMode(QListView.ViewMode.IconMode)
             self.list_view.setUniformItemSizes(True)
-            presets = ResourceManager.iconList("krita")
+            presets = IconRepository.iconList("krita")
             for preset_key in presets:
                 listItem = QListWidgetItem()
-                listItem.setIcon(ResourceManager.iconLoader(preset_key))
+                listItem.setIcon(IconRepository.iconLoader(preset_key))
                 listItem.setData(DATA_INDEX, preset_key)
                 if preset_key == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
 
-            custom_icons = ResourceManager.iconList("custom")
+            custom_icons = IconRepository.iconList("custom")
             for customIconName in custom_icons:
                 listItem = QListWidgetItem()
-                listItem.setIcon(ResourceManager.iconLoader(customIconName))
+                listItem.setIcon(IconRepository.iconLoader(customIconName))
                 listItem.setData(DATA_INDEX, customIconName)
                 if customIconName == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
             
-        elif mode == PropertyGrid_Restrictions.StrMod.PopupRegistry or \
-            mode == PropertyGrid_Restrictions.StrMod.DockerGroupRegistry or \
-            mode == PropertyGrid_Restrictions.StrMod.CanvasPresetRegistry or \
-            mode == PropertyGrid_Restrictions.StrMod.MenuRegistry or \
-            mode == PropertyGrid_Restrictions.StrMod.ScriptRegistry or \
-            mode == PropertyGrid_Restrictions.StrMod.PieWheelRegistry or \
-            mode == PropertyGrid_Restrictions.StrMod.ShelfRegistry:
+        elif mode == PropertyGrid_Restrictions.StrMod.TouchifyRegistry:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
-
-            if mode == PropertyGrid_Restrictions.StrMod.PopupRegistry: self.selector_registry_type = PopupData
-            elif mode == PropertyGrid_Restrictions.StrMod.DockerGroupRegistry: self.selector_registry_type = DockerGroup
-            elif mode == PropertyGrid_Restrictions.StrMod.CanvasPresetRegistry: self.selector_registry_type = CanvasPreset
-            elif mode == PropertyGrid_Restrictions.StrMod.MenuRegistry: self.selector_registry_type = TriggerMenu
-            elif mode == PropertyGrid_Restrictions.StrMod.ShelfRegistry: self.selector_registry_type = Toolshelf
-            elif mode == PropertyGrid_Restrictions.StrMod.ScriptRegistry: self.selector_registry_type = CustomScript
-            elif mode == PropertyGrid_Restrictions.StrMod.PieWheelRegistry: self.selector_registry_type = PieWheelData
-            else: return
-
-            presets = TouchifySettings.registry(self.selector_registry_type)
-            for preset_key, value in presets.items():
+            for preset_key, value in entries.items():
                 displayName = f"{str(value)}\n{preset_key.actual_key}"
                 listItem = QListWidgetItem()
                 listItem.setText(displayName)
@@ -188,11 +166,11 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         elif mode == PropertyGrid_Restrictions.StrMod.BrushSelection:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
-            presets = ResourceManager.brushPresets()
+            presets = IconRepository.brushPresets()
             for preset_key in presets:
                 preset = presets[preset_key]
                 listItem = QListWidgetItem()
-                listItem.setIcon(ResourceManager.brushIcon(preset.name()))
+                listItem.setIcon(IconRepository.brushIcon(preset.name()))
                 listItem.setText(preset.name())
                 listItem.setData(DATA_INDEX, preset_key)
                 if preset_key == selection_input: selected_items.append(listItem)

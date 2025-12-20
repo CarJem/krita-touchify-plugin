@@ -10,7 +10,7 @@ from jemlib.alib_propertygrid.fields.PropertyField import PropertyField
 from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import PropertyUtils_Extensions
 from jemlib.alib_datatypes.TypedList import TypedList
-from touchify.src.managers.ResourceManager import *
+from jemlib.managers.IconRepository import *
 
 
 
@@ -69,7 +69,7 @@ class PropertyField_TypedList(PropertyField):
 
         if self.has_property_view:
             from ..PropertyPage import PropertyPage
-            self.view_editor = PropertyPage(self)
+            self.view_editor = PropertyPage(self, self.stack_host.praser)
             self.view_editor.propertyChanged.connect(self.onPropertyViewUpdate)
             self.field_layout.addWidget(self.view_editor)
 
@@ -90,39 +90,39 @@ class PropertyField_TypedList(PropertyField):
 
 
         addButton = QPushButton(self.btns_widget)
-        addButton.setIcon(ResourceManager.iconLoader("material:plus"))
+        addButton.setIcon(IconRepository.iconLoader("material:plus"))
         addButton.setFixedHeight(24)
         addButton.clicked.connect(self.list_add)
         btns.addWidget(addButton)
 
         removeButton = QPushButton(self.btns_widget)
-        removeButton.setIcon(ResourceManager.iconLoader("material:minus"))
+        removeButton.setIcon(IconRepository.iconLoader("material:minus"))
         removeButton.setFixedHeight(24)
         removeButton.clicked.connect(self.list_remove)
         btns.addWidget(removeButton)
 
         if self.allow_move == True:
             moveUpButton = QPushButton(self.btns_widget)
-            moveUpButton.setIcon(ResourceManager.iconLoader("material:arrow-up"))
+            moveUpButton.setIcon(IconRepository.iconLoader("material:arrow-up"))
             moveUpButton.setFixedHeight(24)
             moveUpButton.clicked.connect(self.list_moveUp)
             btns.addWidget(moveUpButton)
 
             moveDownButton = QPushButton(self.btns_widget)
-            moveDownButton.setIcon(ResourceManager.iconLoader("material:arrow-down"))  
+            moveDownButton.setIcon(IconRepository.iconLoader("material:arrow-down"))  
             moveDownButton.setFixedHeight(24)
             moveDownButton.clicked.connect(self.list_moveDown)
             btns.addWidget(moveDownButton)
 
         editButton = QPushButton(self.btns_widget)
-        editButton.setIcon(ResourceManager.iconLoader("material:pencil"))                                                                                                                                                                                                                                                                                                                                 
+        editButton.setIcon(IconRepository.iconLoader("material:pencil"))                                                                                                                                                                                                                                                                                                                                 
         editButton.setFixedHeight(24)
         editButton.clicked.connect(self.list_edit)
         btns.addWidget(editButton)
 
         if self.allow_clipboard == True:
             moreButton = QPushButton(self.btns_widget)
-            moreButton.setIcon(ResourceManager.iconLoader("material:menu"))                                                                                                                                                                                                                                                                                                              
+            moreButton.setIcon(IconRepository.iconLoader("material:menu"))                                                                                                                                                                                                                                                                                                              
             moreButton.setFixedHeight(24)
             btns.addWidget(moreButton)
 
@@ -262,7 +262,7 @@ class PropertyField_TypedList(PropertyField):
             container.setSpacing(0)
 
             from ..PropertyPage import PropertyPage
-            container_props = PropertyPage(self.stack_host)
+            container_props = PropertyPage(self.stack_host, self.stack_host.praser)
             container_props.setParent(dlg)
             container.addWidget(container_props)
             dlg.setLayout(container)
@@ -315,7 +315,7 @@ class PropertyField_TypedList(PropertyField):
 
             if item_data != None and item_type != None:
                 self.prepareCopiedItem(item_data)
-                ResourceManager.setSettingsClipboard(item_type, item_data)
+                IconRepository.setSettingsClipboard(item_type, item_data)
 
 
     def list_paste(self):
@@ -328,7 +328,7 @@ class PropertyField_TypedList(PropertyField):
                 item_type = self.variable_list_type
 
             if item_type != None:
-                clipboard_data = ResourceManager.getSettingsClipboard(item_type)
+                clipboard_data = IconRepository.getSettingsClipboard(item_type)
                 if clipboard_data != None:
                     pastable_data = copy.deepcopy(clipboard_data)
                     variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)

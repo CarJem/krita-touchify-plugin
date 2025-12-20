@@ -2,6 +2,8 @@
 SPDX-FileCopyrightText: 2017 Eliakin Costa <eliakim170@gmail.com>
 
 SPDX-License-Identifier: GPL-2.0-or-later
+
+Modified Further by Carter Wallace
 """
 from PyQt5.QtCore import Qt, QRect, QSize, pyqtSlot
 from PyQt5.QtWidgets import QPlainTextEdit, QTextEdit, QLabel, QWidget

@@ -6,7 +6,7 @@ from PyQt5.QtGui import *
 from jemlib.alib_widgets.containers.SideGripContainer import SideGripContainer
 from jemlib.alib_widgets.painters.CheckerPainter import CheckerPainter
 from jemlib.alib_vaporjem.extensions.pyqt_extensions import QPainterTools
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 
 from touchify.src.components.sub_view.SubViewLoader import SubViewLoader
 from touchify.src.components.sub_view.SubViewSettings import SubViewSettings
@@ -72,20 +72,20 @@ class SubViewTabList(SideGripContainer):
         self.toolbar.setIconSize(TOOLBAR_ITEM_SIZE)
         layout.addWidget(self.toolbar, 1, 0)
 
-        self.showHideSettingCheckboxesAction = QAction(ResourceManager.iconLoader("material:checkbox-multiple-outline"), "Show/hide setting checkboxes", self)
+        self.showHideSettingCheckboxesAction = QAction(IconRepository.iconLoader("material:checkbox-multiple-outline"), "Show/hide setting checkboxes", self)
         self.showHideSettingCheckboxesAction.setCheckable(True)
         self.showHideSettingCheckboxesAction.toggled.connect(self.onCheckboxModeUpdated)
         self.toolbar.addAction(self.showHideSettingCheckboxesAction)
 
-        self.selectAllAction = QAction(ResourceManager.iconLoader("material:select-all"), "Select all", self)
+        self.selectAllAction = QAction(IconRepository.iconLoader("material:select-all"), "Select all", self)
         self.selectAllAction.triggered.connect(self.selectAll)
         self.toolbar.addAction(self.selectAllAction)
 
-        self.importAction = QAction(ResourceManager.iconLoader("material:folder-multiple-plus-outline"), "Import", self)
+        self.importAction = QAction(IconRepository.iconLoader("material:folder-multiple-plus-outline"), "Import", self)
         self.importAction.triggered.connect(self.importImages)
         self.toolbar.addAction(self.importAction)
 
-        self.clearAction = QAction(ResourceManager.iconLoader("material:trash-can-outline"), "Clear", self)
+        self.clearAction = QAction(IconRepository.iconLoader("material:trash-can-outline"), "Clear", self)
         self.clearAction.triggered.connect(self.clear)
         self.toolbar.addAction(self.clearAction)
 

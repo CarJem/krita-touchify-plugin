@@ -1,5 +1,5 @@
 
-from typing import TYPE_CHECKING, NoReturn
+from typing import NoReturn
 
 from PyQt5.QtGui import QIcon
 
@@ -10,14 +10,13 @@ from jemlib.api_krita import KritaAPI
 from shortcut_composer.core_components.controller_base import Controller
 from shortcut_composer.composer_utils.label.label_text import LabelText
 from shortcut_composer.api_krita.enums.helpers import EnumGroup
-from touchify.src.config.triggers.Trigger import Trigger
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
-from touchify.src.managers.GlobalEvents import GlobalEvents
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
+from touchify.src.components.pie_wheel.api_composer.touchify_constants import SEPERATOR
 
-from jemlib.api_composer.constants import SEPERATOR
-if TYPE_CHECKING:
-    from touchify.src.PluginManagers import TouchifyManagers
+
+from touchify.src.config.triggers.Trigger import Trigger
+from touchify.src.managers.GlobalEvents import GlobalEvents
     
 class PieAction(EnumGroup):
     def __new__(cls, value):
@@ -98,7 +97,7 @@ class PieActionController(Controller[PieAction]):
         try:
             print(value)
             actual_value = value.split(SEPERATOR, -1)[1]
-            return ResourceManager.iconLoader(actual_value)
+            return IconRepository.iconLoader(actual_value)
         except AttributeError:
             return QIcon()
         except IndexError:

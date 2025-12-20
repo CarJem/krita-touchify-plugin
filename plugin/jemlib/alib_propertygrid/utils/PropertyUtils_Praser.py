@@ -9,15 +9,35 @@ from jemlib.alib_propertygrid.fields.PropertyField_TypedList import PropertyFiel
 
 # Special Field Imports
 from jemlib.alib_propertygrid.special_fields.PropertyField_KsColor import PropertyField_KsColor
-from jemlib.alib_propertygrid.special_fields.PropertyField_TriggerGroups import PropertyField_TriggerGroups
-from jemlib.alib_propertygrid.special_fields.PropertyField_TriggerList import PropertyField_TriggerList
 
 #Type Imports
 from jemlib.alib_datatypes.TypedList import TypedList
 
+
+
 class PropertyUtils_Praser:
 
+    def __init__(self):
+        self.__prasers: list[PropertyUtils_PraserExtension] = []
+        self.installPraser(PropertyUtils_PraserExtension())
 
+    def installPraser(self, praser: "PropertyUtils_PraserExtension"):
+        self.__prasers.append(praser)
+
+    def isSpecialType(self, varName, variable, item):
+        for praser in self.__prasers:
+            if praser.isSpecialType(varName, variable, item):
+                return True
+        return False
+
+    def getSpecialType(self, varName, variable, item):
+        for praser in self.__prasers:
+            result = praser.getSpecialType(varName, variable, item)
+            if result: return result
+        return PropertyField(varName, variable, item)
+
+
+    @staticmethod
     def getListType(variable: any):
         varType = type(variable)
         if varType == TypedList:
@@ -27,43 +47,11 @@ class PropertyUtils_Praser:
                 return listType
         return None
 
-    def isSpecialType(varName, variable, item):
-        from touchify.src.config.triggers.TriggerGroup import TriggerGroup
-        from touchify.src.config.triggers.Trigger import Trigger
-        from jemlib.alib_kis.dataclass.KisColor import KisColor
-        varType = type(variable)
-        listType = PropertyUtils_Praser.getListType(variable)
-        
-        if listType == TriggerGroup:
-            return True
-        if listType == Trigger:
-            return True
-        elif varType == KisColor:
-            return True
-        else:
-            return False
-
-    def getSpecialType(varName, variable, item):
-        from touchify.src.config.triggers.TriggerGroup import TriggerGroup
-        from touchify.src.config.triggers.Trigger import Trigger
-        from jemlib.alib_kis.dataclass.KisColor import KisColor
-        varType = type(variable)
-        listType = PropertyUtils_Praser.getListType(variable)
-        
-        if listType == TriggerGroup:
-            return PropertyField_TriggerGroups(varName, variable, item)
-        if listType == Trigger:
-            return PropertyField_TriggerList(varName, variable, item)
-        elif varType == KisColor:
-            return PropertyField_KsColor(varName, variable, item)
-        else:
-            return PropertyField(varName, variable, item)
-
-    def getPropertyType(varName, variable, item):
+    def getPropertyType(self, varName, variable, item):
         varType = type(variable)
         
-        if PropertyUtils_Praser.isSpecialType(varName, variable, item):
-            return PropertyUtils_Praser.getSpecialType(varName, variable, item)
+        if self.isSpecialType(varName, variable, item):
+            return self.getSpecialType(varName, variable, item)
         elif varType == str:
             return PropertyField_Str(varName, variable, item)
         elif varType == int:
@@ -76,3 +64,28 @@ class PropertyUtils_Praser:
             return PropertyField_TypedList(varName, variable, item)
         else:
             return PropertyField(varName, variable, item)
+        
+class PropertyUtils_PraserExtension:
+
+    def __init__(self):
+        pass
+    
+    def isSpecialType(self, varName, variable, item):
+        from jemlib.alib_kis.dataclass.KisColor import KisColor
+        varType = type(variable)
+        listType = PropertyUtils_Praser.getListType(variable)
+        
+        if varType == KisColor:
+            return True
+        else:
+            return False
+
+    def getSpecialType(self, varName, variable, item):
+        from jemlib.alib_kis.dataclass.KisColor import KisColor
+        varType = type(variable)
+        listType = PropertyUtils_Praser.getListType(variable)
+        
+        if varType == KisColor:
+            return PropertyField_KsColor(varName, variable, item)
+        else:
+            return None

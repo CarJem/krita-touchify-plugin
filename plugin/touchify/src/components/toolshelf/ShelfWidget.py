@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.src.components.toolshelf.ShelfDock import ShelfDock
-from jemlib.alib_propertygrid.PropertyGridDialog import PropertyGridDialog
+from touchify.src.alib_propertygrid.PropertyGridDialog import PropertyGridDialog
 from touchify.src.components.toolshelf.ShelfLoader import ShelfLoader
 
 from touchify.src.components.toolshelf.ShelfDockArea import ShelfDockArea

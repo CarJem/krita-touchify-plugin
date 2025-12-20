@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 from touchify.src.config.triggers.Trigger import Trigger
 from jemlib.alib_propertygrid.fields.PropertyField_TypedList import PropertyField_TypedList
 from jemlib.alib_datatypes.TypedList import TypedList
-from touchify.src.managers.ResourceManager import *
+from jemlib.managers.IconRepository import *
 
 
 

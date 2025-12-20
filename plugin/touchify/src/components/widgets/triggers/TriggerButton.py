@@ -1,6 +1,6 @@
 from enum import Enum
 import typing
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 from touchify.__env__ import *
 from jemlib.alib_vaporjem.extensions.krita_extensions import *
 from krita import *
@@ -164,7 +164,7 @@ class TriggerButton(QToolButton):
         self.toggled = (checked)
 
     def onBrushChanged(self, current_brush: Resource):
-        __brush_presets = ResourceManager.brushPresets()
+        __brush_presets = IconRepository.brushPresets()
         if id not in __brush_presets: return
         btn_preset = __brush_presets[id]
         

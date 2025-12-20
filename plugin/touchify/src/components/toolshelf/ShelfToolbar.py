@@ -12,7 +12,7 @@ from touchify.src.components.toolshelf.ShelfToolbarMenu import ShelfToolbarMenu
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.__env__ import *
-from touchify.src.managers.ResourceManager import ResourceManager
+from jemlib.managers.IconRepository import IconRepository
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -50,7 +50,7 @@ class ShelfToolbar(QWidget):
         self.optionsMenu.sigResetRequested.connect(partial(self.shelf.resetLayout, False))
 
         self.mainButton = QPushButton(self)
-        self.mainButton.setIcon(ResourceManager.iconLoader("material:circle"))
+        self.mainButton.setIcon(IconRepository.iconLoader("material:circle"))
         self.mainButton.setObjectName("menu-widget")
         self.mainButton.clicked.connect(self.showToolbarMenu)
 
