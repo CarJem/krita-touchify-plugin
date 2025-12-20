@@ -1,5 +1,5 @@
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_vaporjem.extensions.krita_extensions import *
 
 from touchify.__env__ import *
@@ -47,7 +47,7 @@ class DeveloperManager(object):
         dlg.header_buttons.buttons()[1].setText("Exit...")
         dlg.header_buttons.accepted.connect(copyItemToClipboard)
         dlg.header_buttons.rejected.connect(lambda: dlg.reject())
-        dlg.load_list(PropertyGrid_Restrictions.StrMod.IconSelection)
+        dlg.load_list(DataConstraints.StrMod.IconSelection)
         dlg.exec_()
 
 

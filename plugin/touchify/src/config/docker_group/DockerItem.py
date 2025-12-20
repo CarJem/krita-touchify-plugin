@@ -1,5 +1,5 @@
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 
 class DockerItem:
@@ -27,5 +27,5 @@ class DockerItem:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.DockerSelection)
+        restrictions["id"] = DataConstraints.strMod(DataConstraints.StrMod.DockerSelection)
         return restrictions

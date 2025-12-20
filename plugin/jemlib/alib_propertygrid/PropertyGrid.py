@@ -5,12 +5,12 @@ from PyQt5.QtCore import QEvent
 from jemlib.managers.IconRepository import IconRepository
 
 if TYPE_CHECKING:
-    from jemlib.alib_propertygrid.utils.PropertyUtils_Praser import PropertyUtils_Praser
+    from jemlib.alib_propertygrid.data.DataHandler import DataHandler
 
 class PropertyGrid(QWidget):
 
 
-    def __init__(self, parent: QWidget | None = None, praser: "PropertyUtils_Praser" = None) -> None:
+    def __init__(self, parent: QWidget | None = None, praser: "DataHandler" = None) -> None:
         super().__init__(parent)
         self.our_layout = QVBoxLayout(self)
         self.our_layout.setSpacing(0)
@@ -45,8 +45,8 @@ class PropertyGrid(QWidget):
 
         self.variable_path: list[str] = []
 
-        from jemlib.alib_propertygrid.utils.PropertyUtils_Praser import PropertyUtils_Praser
-        self.praser = praser if praser else PropertyUtils_Praser()
+        from jemlib.alib_propertygrid.data.DataHandler import DataHandler
+        self.praser = praser if praser else DataHandler()
 
         from .PropertyPage import PropertyPage
         self.rootPropertyGrid = PropertyPage(self, self.praser)

@@ -1,4 +1,4 @@
-from touchify.src.alib_propertygrid.utils.PropertyGrid_TouchifyRestrictions import PropertyGrid_TouchifyRestrictions
+from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import PropertyGrid_TouchifyRestrictions
 from touchify.src.config.docker_group.DockerItem import DockerItem
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
@@ -8,7 +8,7 @@ from jemlib.alib_datatypes.EnumStr import EnumStr
 
 from typing import TYPE_CHECKING
 
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 if TYPE_CHECKING:
     from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 
@@ -284,19 +284,19 @@ class PopupData:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["docker_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.DockerSelection)
-        restrictions["type"] = PropertyGrid_Restrictions.strValues(self.Variants.values())
-        restrictions["window_type"] = PropertyGrid_Restrictions.strValues(self.WindowType.values())
-        restrictions["popup_position_x"] = PropertyGrid_Restrictions.strValues(self.PopupPosition.values())
-        restrictions["popup_position_y"] = PropertyGrid_Restrictions.strValues(self.PopupPosition.values())
-        restrictions["closing_method"] = PropertyGrid_Restrictions.strValues(self.ClosingMethod.values())
-        restrictions["dockers_tab_type"] = PropertyGrid_Restrictions.strValues(self.DockersTabType.values())
-        restrictions["window_fixed_layout"] = PropertyGrid_Restrictions.strValues(self.WindowFixedLayoutMode.values())
+        restrictions["docker_id"] = DataConstraints.strMod(DataConstraints.StrMod.DockerSelection)
+        restrictions["type"] = DataConstraints.strValues(self.Variants.values())
+        restrictions["window_type"] = DataConstraints.strValues(self.WindowType.values())
+        restrictions["popup_position_x"] = DataConstraints.strValues(self.PopupPosition.values())
+        restrictions["popup_position_y"] = DataConstraints.strValues(self.PopupPosition.values())
+        restrictions["closing_method"] = DataConstraints.strValues(self.ClosingMethod.values())
+        restrictions["dockers_tab_type"] = DataConstraints.strValues(self.DockersTabType.values())
+        restrictions["window_fixed_layout"] = DataConstraints.strValues(self.WindowFixedLayoutMode.values())
         restrictions["shelf_id"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.ShelfRegistry)
 
-        restrictions["actions_item_height"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["actions_item_width"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["popup_width"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["popup_height"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["actions_item_height"] = DataConstraints.range(min=0)
+        restrictions["actions_item_width"] = DataConstraints.range(min=0)
+        restrictions["popup_width"] = DataConstraints.range(min=0)
+        restrictions["popup_height"] = DataConstraints.range(min=0)
 
         return restrictions

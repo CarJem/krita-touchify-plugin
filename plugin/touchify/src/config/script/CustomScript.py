@@ -1,6 +1,6 @@
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class CustomScript:
 
@@ -37,5 +37,5 @@ class CustomScript:
 
     def propertygrid_restrictions(self):   
         restrictions = {}
-        restrictions["script_code"]  = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.PythonEdtior)
+        restrictions["script_code"]  = DataConstraints.strMod(DataConstraints.StrMod.PythonEdtior)
         return restrictions

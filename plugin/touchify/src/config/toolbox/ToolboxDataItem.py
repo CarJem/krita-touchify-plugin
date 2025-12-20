@@ -2,7 +2,7 @@ from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class ToolboxDataItem:
 
@@ -46,6 +46,6 @@ class ToolboxDataItem:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["name"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ActionSelection)
-        restrictions["icon"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.IconSelection)
+        restrictions["name"] = DataConstraints.strMod(DataConstraints.StrMod.ActionSelection)
+        restrictions["icon"] = DataConstraints.strMod(DataConstraints.StrMod.IconSelection)
         return restrictions

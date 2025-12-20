@@ -5,7 +5,7 @@ from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.settings.KritaSettings import *
 from jemlib.alib_vaporjem.extensions.krita_extensions import *
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class CanvasPreset:
 
@@ -141,8 +141,8 @@ class CanvasPreset:
 
     def propertygrid_restrictions(self):   
         restrictions = {}
-        restrictions["checkers_size"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["pixgrid_threshold"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["selection_outline_opacity"] = PropertyGrid_Restrictions.range(min=0.0,max=1.0)
-        restrictions["selection_overlay_opacity"] = PropertyGrid_Restrictions.range(min=0.0,max=1.0)
+        restrictions["checkers_size"] = DataConstraints.range(min=0)
+        restrictions["pixgrid_threshold"] = DataConstraints.range(min=0)
+        restrictions["selection_outline_opacity"] = DataConstraints.range(min=0.0,max=1.0)
+        restrictions["selection_overlay_opacity"] = DataConstraints.range(min=0.0,max=1.0)
         return restrictions

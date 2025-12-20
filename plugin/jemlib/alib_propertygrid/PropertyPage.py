@@ -3,8 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
-from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import *
-from jemlib.alib_propertygrid.utils.PropertyUtils_Praser import *
+from jemlib.alib_propertygrid.data.DataHandler import *
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import *
 
 
@@ -23,7 +22,7 @@ class PropertyPage(QScrollArea):
 
     propertyChanged = pyqtSignal(bool)
 
-    def __init__(self, parentStack: PropertyGrid, praser: PropertyUtils_Praser):
+    def __init__(self, parentStack: PropertyGrid, praser: DataHandler):
         super().__init__(parentStack)
         self.stackHost = parentStack
         self.current_view_type = "unloaded"
@@ -93,7 +92,7 @@ class PropertyPage(QScrollArea):
         if self.override_view_type:
             view_type = self.desired_view_type
         else:
-            view_type = PropertyUtils_Extensions.classViewType(item)
+            view_type = self.praser.getObjectViewType(item)
 
         if view_type != self.current_view_type:
             self.current_view_type = view_type

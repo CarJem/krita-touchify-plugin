@@ -4,19 +4,20 @@ from PyQt5.QtCore import *
 
 from jemlib.alib_datatypes.TypedList import *
 from jemlib.managers.IconRepository import *
-from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import *
 from jemlib.alib_propertygrid.PropertyGrid import *
 from jemlib.alib_propertygrid.fields.PropertyField import *
 from jemlib.alib_kis.dataclass.KisColor import KisColor
 from jemlib.alib_widgets.buttons.ColorButton import ColorButton
 
-class PropertyField_KsColor(PropertyField):
-    def __init__(self, variable_name=str, variable_data=KisColor, variable_source=any):
-        super(PropertyField, self).__init__()
-        self.setup(variable_name, variable_data, variable_source)
+if TYPE_CHECKING:
+    from jemlib.alib_propertygrid.data.DataHandler import DataHandler
+
+class PropertyField_KsColor(PropertyField[KisColor]):
+    def __init__(self, handler: "DataHandler", property: DataPath[KisColor]):
+        super().__init__(handler, property, True)
         
         self.editor = ColorButton(self)
-        self.editor.setColor(variable_data.toQt())
+        self.editor.setColor(self.propertyData.variableData().toQt())
         self.editor.colorChanged.connect(self.updateColor)
         
         editorLayout = QHBoxLayout(self)
@@ -26,5 +27,5 @@ class PropertyField_KsColor(PropertyField):
         self.setLayout(editorLayout)
 
     def updateColor(self):
-        self.variable_data = KisColor.fromQt(self.editor.color())
-        super().setVariable(self.variable_source, self.variable_name, self.variable_data)
+        newData = KisColor.fromQt(self.editor.color())
+        super().setVariable(newData)

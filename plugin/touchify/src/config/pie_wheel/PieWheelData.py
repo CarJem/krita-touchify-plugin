@@ -5,7 +5,7 @@ from jemlib.alib_datatypes.TypedList import TypedList
 
 from typing import TYPE_CHECKING
 
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 if TYPE_CHECKING:
     from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 
@@ -79,7 +79,7 @@ class PieWheelData:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["icon_radius_scale"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["pie_radius_scale"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["pie_opacity"] = PropertyGrid_Restrictions.range(min=0, max=100)
+        restrictions["icon_radius_scale"] = DataConstraints.range(min=0)
+        restrictions["pie_radius_scale"] = DataConstraints.range(min=0)
+        restrictions["pie_opacity"] = DataConstraints.range(min=0, max=100)
         return restrictions

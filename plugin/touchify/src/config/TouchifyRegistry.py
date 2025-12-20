@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from touchify.__env__ import BASE_DIR
 from touchify.src.config.resource_pack.ResourcePackRegistry import ResourcePackRegistry
 from touchify.src.config.TouchifyRegistryPreferences import TouchifyRegistryPreferences
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from touchify.__env__ import *
 
 
@@ -38,8 +38,8 @@ class TouchifyRegistry:
     
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["resources"] = PropertyGrid_Restrictions.expandable()
-        restrictions["preferences"] = PropertyGrid_Restrictions.expandable()
+        restrictions["resources"] = DataConstraints.expandable()
+        restrictions["preferences"] = DataConstraints.expandable()
         return restrictions
     
     def save(self):

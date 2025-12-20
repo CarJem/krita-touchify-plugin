@@ -2,7 +2,7 @@ from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_datatypes.EnumStr import EnumStr
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class ToolshelfAreaSettings:
     class StackPreview(EnumStr):
@@ -83,8 +83,8 @@ class ToolshelfAreaSettings:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["stack_preview"] = PropertyGrid_Restrictions.strValues(self.StackPreview.values())
-        restrictions["stack_alignment"] = PropertyGrid_Restrictions.strValues(self.StackAlignment.values())
-        restrictions["resize_style"] = PropertyGrid_Restrictions.strValues(self.ResizeStyle.values())
-        restrictions["position"] = PropertyGrid_Restrictions.strValues(self.Position.values())
+        restrictions["stack_preview"] = DataConstraints.strValues(self.StackPreview.values())
+        restrictions["stack_alignment"] = DataConstraints.strValues(self.StackAlignment.values())
+        restrictions["resize_style"] = DataConstraints.strValues(self.ResizeStyle.values())
+        restrictions["position"] = DataConstraints.strValues(self.Position.values())
         return restrictions

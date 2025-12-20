@@ -5,7 +5,7 @@ from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 
    
@@ -89,11 +89,11 @@ class ToolboxData:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["column_count"] = PropertyGrid_Restrictions.range(min=1)
-        restrictions["background_opacity"] = PropertyGrid_Restrictions.range(min=0, max=255)
-        restrictions["button_opacity"] = PropertyGrid_Restrictions.range(min=0, max=255)
-        restrictions["orientation_mode"] = PropertyGrid_Restrictions.strValues(self.OrientationMode.values())
-        restrictions["theme"] = PropertyGrid_Restrictions.strValues(self.ThemeStyle.values())
+        restrictions["column_count"] = DataConstraints.range(min=1)
+        restrictions["background_opacity"] = DataConstraints.range(min=0, max=255)
+        restrictions["button_opacity"] = DataConstraints.range(min=0, max=255)
+        restrictions["orientation_mode"] = DataConstraints.strValues(self.OrientationMode.values())
+        restrictions["theme"] = DataConstraints.strValues(self.ThemeStyle.values())
         return restrictions
     
     def update(self, item: "ToolboxData"):

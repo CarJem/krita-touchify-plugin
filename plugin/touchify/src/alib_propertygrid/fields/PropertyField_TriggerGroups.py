@@ -1,0 +1,21 @@
+from typing import TYPE_CHECKING
+from PyQt5 import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+
+
+from jemlib.alib_propertygrid.data.DataPath import DataPath
+from touchify.src.config.triggers.Trigger import Trigger
+from touchify.src.config.triggers.TriggerGroup import TriggerGroup
+from jemlib.alib_propertygrid.fields.PropertyField_TypedList import PropertyField_TypedList
+from jemlib.alib_datatypes.TypedList import TypedList
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
+from jemlib.managers.IconRepository import *
+
+if TYPE_CHECKING:
+    from jemlib.alib_propertygrid.data.DataHandler import DataHandler
+
+class PropertyField_TriggerGroups(PropertyField_TypedList):
+    def __init__(self, handler: "DataHandler", property: DataPath[TypedList[TriggerGroup]]):
+        manual_restrictions = [DataConstraints.listSubArray("actions", Trigger)]
+        super(PropertyField_TriggerGroups, self).__init__(handler, property, manual_restrictions)

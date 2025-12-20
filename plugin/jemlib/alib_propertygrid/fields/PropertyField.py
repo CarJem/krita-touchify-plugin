@@ -1,55 +1,55 @@
 import copy
+from typing import Generic, TypeVar
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from jemlib.alib_propertygrid.data.DataPath import DataPath
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
-from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import *
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_propertygrid.PropertyGrid import *
 
 from jemlib.alib_datatypes.TypedList import *
 from jemlib.managers.IconRepository import *
 
+T = TypeVar("T")
 
-class PropertyField(QWidget):
+if TYPE_CHECKING:
+    from jemlib.alib_propertygrid.data.DataHandler import DataHandler
+
+class PropertyField(QWidget, Generic[T]):
 
     propertyChanged = pyqtSignal(bool)
 
-    def __init__(self, variable_name=str, variable_data=any, variable_source=any, is_typed: bool = False):
+    def __init__(self, praser: "DataHandler", property: DataPath[T], is_typed: bool = False):
         super().__init__(parent=None)
         self.is_typed = is_typed
-        self.setup(variable_name, variable_data, variable_source)
-        self.common_setup()
-        
-        if not self.is_typed: self.test_restrictions()
-         
-    def setup(self, variable_name=str, variable_data=any, variable_source=any):
-        self.variable_name = variable_name
-        self.variable_data = variable_data
-        self.variable_source = variable_source
+        self.praser = praser
+        self.propertyData = property
         self.sister_id = None
 
+        self.setContentsMargins(0, 0, 0, 0)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+    
+        if not self.is_typed: self.test_restrictions()
+         
     def setStackHost(self, host: "PropertyGrid"):
         self.stack_host = host
 
-    def setVariable(self, source, name, data):
-        PropertyUtils_Extensions.setVariable(source, name, data)
+    def setVariable(self, newData: T):
+        self.propertyData.updateData(newData)
         self.propertyChanged.emit(True)
 
     #region Commons / Nestables
 
-    def common_setup(self):   
-        self.setContentsMargins(0, 0, 0, 0)
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
     def test_restrictions(self):
-        restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source, self.variable_name)
+        restrictions = self.praser.getObjectConstraints(self.propertyData)
         setup_expandable = False
 
         for restriction in restrictions:
-            if restriction["type"] == PropertyGrid_Restrictions.OtherMod.Expandable and setup_expandable == False:
+            if restriction["type"] == DataConstraints.OtherMod.Expandable and setup_expandable == False:
                 btnText = "Edit..."
 
                 if "text" in restriction:
@@ -84,24 +84,23 @@ class PropertyField(QWidget):
                 setup_expandable = True
 
     def nested_paste(self):
-        item_type: type | None = type(self.variable_data)
+        item_type: type | None = self.propertyData.variableType()
         
         clipboard_data = IconRepository.getSettingsClipboard(item_type)
         if clipboard_data != None:
             pastable_data = copy.deepcopy(clipboard_data)
-            self.variable_data = pastable_data
-            self.setVariable(self.variable_source, self.variable_name, pastable_data)
+            self.setVariable(pastable_data)
 
     def nested_copy(self):
-        item_type: type | None = type(self.variable_data)
-        item_data: any | None = copy.deepcopy(self.variable_data)
+        item_type: type | None = self.propertyData.variableType()
+        item_data: any | None = copy.deepcopy(self.propertyData.variableData())
 
         if item_data != None and item_type != None:
             IconRepository.setSettingsClipboard(item_type, item_data)
 
     def nested_edit(self):
         self.nested_page_dialog = PropertyGrid_Dialog(self)
-        self.nested_page_dialog.setWindowTitle(str(self.variable_name))
+        self.nested_page_dialog.setWindowTitle(str(self.propertyData.variableName()))
         self.nested_page_dialog.setWindowFlags(Qt.WindowType.Widget)
         self.nested_page_layout = QVBoxLayout(self)
         self.nested_page_layout.setContentsMargins(0,0,0,0)
@@ -112,7 +111,7 @@ class PropertyField(QWidget):
         self.nested_page_layout.addWidget(self.nested_page_properties)
         self.nested_page_dialog.setLayout(self.nested_page_layout)
 
-        self.nested_page_properties.updateDataObject(self.variable_data)
+        self.nested_page_properties.updateDataObject(self.propertyData.variableData())
         self.stack_host.setCurrentIndex(self.stack_host.addWidget(self.nested_page_dialog))
         self.nested_page_dialog.show()
 

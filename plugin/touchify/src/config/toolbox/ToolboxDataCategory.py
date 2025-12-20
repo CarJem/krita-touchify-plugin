@@ -1,7 +1,7 @@
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_datatypes.TypedList import TypedList
 from touchify.src.config.toolbox.ToolboxDataItem import *
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class ToolboxDataCategory:
     def __defaults__(self):
@@ -47,5 +47,5 @@ class ToolboxDataCategory:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["column_count"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["column_count"] = DataConstraints.range(min=0)
         return restrictions

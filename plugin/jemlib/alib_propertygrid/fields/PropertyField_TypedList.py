@@ -1,30 +1,32 @@
 import copy
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 
+
+from jemlib.alib_propertygrid.data.DataPath import DataPath
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 from jemlib.alib_propertygrid.fields.PropertyField import PropertyField
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
-from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import PropertyUtils_Extensions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.managers.IconRepository import *
 
+if TYPE_CHECKING:
+    from jemlib.alib_propertygrid.data.DataHandler import DataHandler
 
 
-class PropertyField_TypedList(PropertyField):
-    def __init__(self, variable_name: str, variable_data: TypedList, variable_source: any, manual_restrictions: list[dict[str, any]] = []):
-        super().__init__(variable_name, variable_data, variable_source, True)
-        self.variable_list_type = variable_data.allowedTypes()
-        self.variable_data: TypedList
+
+class PropertyField_TypedList(PropertyField[TypedList]):
+    def __init__(self, handler: "DataHandler", property: DataPath[TypedList], manual_restrictions: list[dict[str, any]] = []):
+        super().__init__(handler, property, True)
+        self.variable_list_type = self.propertyData.variableData().allowedTypes()
 
         self.nested_list_id = ""
         self.has_sub_array = False
         self.has_property_view = False
         
-
         self.allow_move = True
         self.allow_clipboard = True
 
@@ -142,22 +144,22 @@ class PropertyField_TypedList(PropertyField):
         if len(manual_restrictions) != 0: 
             restrictions = manual_restrictions
         else: 
-            restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source, self.variable_name)
+            restrictions = self.praser.getObjectConstraints(self.propertyData)
 
         sub_array_setup = False
 
         for restriction in restrictions:
-            if restriction["type"] == PropertyGrid_Restrictions.ListMod.Subarray and sub_array_setup == False:
+            if restriction["type"] == DataConstraints.ListMod.Subarray and sub_array_setup == False:
                 self.nested_list_id: str = restriction["sub_id"]
                 self.nested_list_nested_type: type = restriction["sub_type"]
                 self.has_sub_array = True
                 sub_array_setup = True
-            if restriction["type"] == PropertyGrid_Restrictions.ListMod.PropertyView:
+            if restriction["type"] == DataConstraints.ListMod.PropertyView:
                 self.has_property_view = True
-            if restriction["type"] == PropertyGrid_Restrictions.ListMod.AddRemoveEditOnly:
+            if restriction["type"] == DataConstraints.ListMod.AddRemoveEditOnly:
                 self.allow_move = False
                 self.allow_clipboard = False
-            if restriction["type"] == PropertyGrid_Restrictions.ListMod.Inmovable:
+            if restriction["type"] == DataConstraints.ListMod.Inmovable:
                 self.allow_move = False
 
 
@@ -177,7 +179,7 @@ class PropertyField_TypedList(PropertyField):
     def list_move(self, direction: Literal['up', 'down'] = 'up'):
         if self.selectedIndex != -1:
             if self.selectedSubIndex != -1:
-                variable = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
+                variable = self.propertyData.currentData()
                 length = len(variable)
                 child = variable[self.selectedIndex]
                 sub_variable = self.getNestedList(child)
@@ -222,7 +224,7 @@ class PropertyField_TypedList(PropertyField):
                 self.propertyChanged.emit(True)
 
             else:
-                variable = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
+                variable = self.propertyData.currentData()
                 length = len(variable)
 
                 oldIndex = self.selectedIndex
@@ -253,7 +255,7 @@ class PropertyField_TypedList(PropertyField):
         def createPage():
             dlg = PropertyGrid_Dialog(self)
             dlg.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
-            dlg.setWindowTitle(self.variable_name + ' - ' + str(self.selectedItem))
+            dlg.setWindowTitle(self.propertyData.variableName() + ' - ' + str(self.selectedItem))
             dlg.setWindowFlags(Qt.WindowType.Widget)
             dlg.rejected.connect(self.updateList)
             
@@ -275,7 +277,7 @@ class PropertyField_TypedList(PropertyField):
                 self.getNestedList(self.selectedItem).append(editableValue)
             else:
                 editableValue = self.getEditableValue(self.variable_list_type())
-                self.variable_data.append(editableValue)
+                self.propertyData.variableData().append(editableValue)
             self.updateList()
             self.propertyChanged.emit(True)
         elif mode == 'edit':
@@ -305,11 +307,11 @@ class PropertyField_TypedList(PropertyField):
 
         if self.selectedIndex != -1:
             if self.selectedSubIndex != -1:
-                variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
+                variable: TypedList = self.propertyData.currentData()
                 item_type = type(self.selectedSubItem)
                 item_data = copy.deepcopy(self.getNestedList(variable[self.selectedIndex])[self.selectedSubIndex])
             else:
-                variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
+                variable: TypedList = self.propertyData.currentData()
                 item_type = self.variable_list_type
                 item_data = copy.deepcopy(variable[self.selectedIndex])
 
@@ -331,7 +333,7 @@ class PropertyField_TypedList(PropertyField):
                 clipboard_data = IconRepository.getSettingsClipboard(item_type)
                 if clipboard_data != None:
                     pastable_data = copy.deepcopy(clipboard_data)
-                    variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
+                    variable: TypedList = self.propertyData.currentData()
                     if self.selectedSubIndex != -1:
                         list: TypedList = self.getNestedList(variable[self.selectedIndex])
                         list.append(pastable_data)
@@ -345,7 +347,7 @@ class PropertyField_TypedList(PropertyField):
     def list_duplicate(self):
         if self.selectedIndex != -1:
             if self.selectedSubIndex != -1:
-                variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
+                variable: TypedList = self.propertyData.currentData()
                 list: TypedList = self.getNestedList(variable[self.selectedIndex])
                 item = list[self.selectedSubIndex]
                 newItem = copy.deepcopy(item)
@@ -353,7 +355,7 @@ class PropertyField_TypedList(PropertyField):
                 list.append(newItem)
                 self.updateList()
             else:
-                variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
+                variable: TypedList = self.propertyData.currentData()
                 item = variable[self.selectedIndex]
                 newItem = copy.deepcopy(item)
                 self.prepareCopiedItem(newItem)
@@ -363,7 +365,7 @@ class PropertyField_TypedList(PropertyField):
     def list_remove(self):
         if self.selectedIndex != -1:
             if self.selectedSubIndex != -1:
-                variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
+                variable: TypedList = self.propertyData.currentData()
                 newIndex = self.selectedSubIndex
                 list: TypedList = self.getNestedList(variable[self.selectedIndex])
                 if not newIndex - 1 < 0:
@@ -372,7 +374,7 @@ class PropertyField_TypedList(PropertyField):
                 self.updateList()
                 self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
             else:
-                variable: TypedList = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)
+                variable: TypedList = self.propertyData.currentData()
                 newIndex = self.selectedIndex
                 if not newIndex - 1 < 0:
                     newIndex -= 1
@@ -387,7 +389,7 @@ class PropertyField_TypedList(PropertyField):
 
         indicies = []
 
-        for varItem in self.variable_data:
+        for varItem in self.propertyData.variableData():
             item = QtGui.QStandardItem(str(varItem))
             index += 1
 
@@ -431,7 +433,7 @@ class PropertyField_TypedList(PropertyField):
         self.selectedSubIndex = y
  
         if self.selectedIndex != -1:
-            item = PropertyUtils_Extensions.getVariable(self.variable_source, self.variable_name)[self.selectedIndex]
+            item = self.propertyData.currentData()[self.selectedIndex]
             self.selectedItem = self.getEditableValue(item)
         else:
             self.selectedItem = None

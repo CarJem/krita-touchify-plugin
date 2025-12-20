@@ -1,6 +1,6 @@
 from jemlib.alib_datatypes.EnumStr import EnumStr
 
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class PropertyGrid_TouchifyRestrictions:
 
@@ -42,4 +42,4 @@ class PropertyGrid_TouchifyRestrictions:
 
         registryType = strRegistryModType()
         if not registryType: return {}
-        return {"type": PropertyGrid_Restrictions.StrMod.TouchifyRegistry, "entries": TouchifySettings.registry(registryType)}
+        return {"type": DataConstraints.StrMod.TouchifyRegistry, "entries": TouchifySettings.registry(registryType)}

@@ -2,14 +2,14 @@
 from typing import Any
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from jemlib.alib_propertygrid.utils.PropertyUtils_Praser import PropertyUtils_Praser
+from jemlib.alib_propertygrid.data.DataHandler import DataHandler
 from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
 import jemlib.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 import copy
 
 from krita import *
-from touchify.src.alib_propertygrid.utils.PropertyUtils_TouchifyPraser import PropertyUtils_TouchifyPraser
+from touchify.src.alib_propertygrid.data.TouchifyDataHandler import TouchifyDataHandler
 
 class PropertyGridDialog(QDialog):
 
@@ -28,8 +28,8 @@ class PropertyGridDialog(QDialog):
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.qwin = qwin.qwindow
 
-        self.praser = PropertyUtils_Praser()
-        self.praser.installPraser(PropertyUtils_TouchifyPraser())
+        self.praser = DataHandler()
+        self.praser.installExtension(TouchifyDataHandler())
         
         self.editableConfig = copy.deepcopy(options)
         self.propertyGrid = PropertyGrid(self, self.praser)

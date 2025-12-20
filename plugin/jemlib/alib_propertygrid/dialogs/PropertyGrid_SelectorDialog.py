@@ -6,7 +6,7 @@ from krita import *
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.enums.tool import Tool
 
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
 from jemlib.managers.IconRepository import IconRepository
 
@@ -132,7 +132,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
 
         selected_items: list[QListWidgetItem] = []
 
-        if mode == PropertyGrid_Restrictions.StrMod.IconSelection:
+        if mode == DataConstraints.StrMod.IconSelection:
             self.show_status_bar = True
             self.list_view.setViewMode(QListView.ViewMode.IconMode)
             self.list_view.setUniformItemSizes(True)
@@ -152,7 +152,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 if customIconName == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
             
-        elif mode == PropertyGrid_Restrictions.StrMod.TouchifyRegistry:
+        elif mode == DataConstraints.StrMod.TouchifyRegistry:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
             for preset_key, value in entries.items():
@@ -163,7 +163,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 if preset_key.actual_key == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
 
-        elif mode == PropertyGrid_Restrictions.StrMod.BrushSelection:
+        elif mode == DataConstraints.StrMod.BrushSelection:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
             presets = IconRepository.brushPresets()
@@ -176,7 +176,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 if preset_key == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
 
-        elif mode == PropertyGrid_Restrictions.StrMod.DockerSelection:
+        elif mode == DataConstraints.StrMod.DockerSelection:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
             dockers = KritaAPI.get_dockers()
@@ -188,7 +188,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 if dockerData.objectName() == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
 
-        elif mode == PropertyGrid_Restrictions.StrMod.ActionSelection:
+        elif mode == DataConstraints.StrMod.ActionSelection:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
             actions = KritaAPI.get_actions()
@@ -202,7 +202,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 if actionData.objectName() == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
 
-        elif mode == PropertyGrid_Restrictions.StrMod.MultiToolSelection:
+        elif mode == DataConstraints.StrMod.MultiToolSelection:
             __requiredTools = selection_input.split(",")
             if "" in __requiredTools: __requiredTools.remove("")
 

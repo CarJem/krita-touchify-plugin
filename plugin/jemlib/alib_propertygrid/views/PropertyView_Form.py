@@ -6,14 +6,14 @@ from PyQt5.QtWidgets import QWidget
 
 
 from jemlib.alib_propertygrid.fields.PropertyLabel import PropertyLabel
-from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import *
-from jemlib.alib_propertygrid.utils.PropertyUtils_Praser import *
+from jemlib.alib_propertygrid.data.DataHandler import *
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import *
 from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
 
 
 from jemlib.alib_propertygrid.views.PropertyView import PropertyView
 from jemlib.alib_datatypes.TypedList import *
+from jemlib.alib_vaporjem.extensions.pyqt_extensions import CommonHelpers
 from jemlib.managers.IconRepository import *
 
 
@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 
 class PropertyView_Form(QWidget, PropertyView):
 
-    def __init__(self, parent: "PropertyPage", praser: PropertyUtils_Praser):
+    def __init__(self, parent: "PropertyPage", praser: DataHandler):
         QWidget.__init__(self, parent)
         PropertyView.__init__(self, parent, praser)
 
@@ -62,7 +62,7 @@ class PropertyView_Form(QWidget, PropertyView):
 
         for field in self.fields:     
             
-            if field.variable_name in hiddenItems or (field.sister_id != None and field.sister_id in hiddenItems): field.setHidden(True)
+            if field.propertyData.variableName() in hiddenItems or (field.sister_id != None and field.sister_id in hiddenItems): field.setHidden(True)
             else: field.setHidden(False)
 
         for label in self.labels:     
@@ -70,15 +70,15 @@ class PropertyView_Form(QWidget, PropertyView):
             else: label.setHidden(False)
 
     def createLabel(self, varName: str, labelData: dict, hintData: dict, is_nested: bool = False):
-        labelText = PropertyUtils_Extensions.getVariableLabel(labelData, varName)
-        hintText = PropertyUtils_Extensions.getVariableHint(hintData, varName)
+        labelText = self.praser.getPropertyLabel(labelData, varName)
+        hintText = self.praser.getPropertyTextHint(hintData, varName)
         header = PropertyLabel(self, varName, labelText, hintText, is_nested)
         self.labels.append(header)
         return header
     
     def createField(self, source: any, _varName: str):
-        variable = PropertyUtils_Extensions.getVariable(source, _varName)
-        field = self.praser.getPropertyType(_varName, variable, source)
+        variable = self.praser.getPropertyVariable(source, _varName)
+        field = self.praser.getPropertyField(variable)
         if field:
             field.setParent(self)
             field.propertyChanged.connect(self.parent_page.onPropertyChanged)
@@ -136,7 +136,7 @@ class PropertyView_Form(QWidget, PropertyView):
         self.fields.clear()
         self.labels.clear()
         
-        PropertyUtils_Extensions.clearLayout(self.gridLayout)
+        CommonHelpers.clearLayout(self.gridLayout)
 
     def updateDataObject(self, item):
 
@@ -165,8 +165,8 @@ class PropertyView_Form(QWidget, PropertyView):
         if self.item == None:
             return
 
-        labelData = PropertyUtils_Extensions.classVariableLabels(item)
-        hintData = PropertyUtils_Extensions.classVariableHints(item)
+        labelData = self.praser.getObjectVariableLabels(item)
+        hintData = self.praser.getObjectVariableTextHints(item)
         variable_data, known_sisters, sister_data = PropertyView.getClassVariablesWithSisters(self, item)
 
         no_labels = "no_labels" in self.parent_page.modifiers

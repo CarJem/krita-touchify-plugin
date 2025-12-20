@@ -17,7 +17,7 @@ from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_datatypes.TypedList import TypedList
 
 from touchify.__env__ import RESOURCE_PACKS_DIRECTORY
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions as RS
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints as RS
 
 HAS_ALREADY_LOADED: bool = False
 

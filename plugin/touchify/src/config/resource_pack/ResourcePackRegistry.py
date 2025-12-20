@@ -5,7 +5,7 @@ import os
 from touchify.__env__ import RESOURCE_PACKS_DIRECTORY
 import shutil
 
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 HAS_ALREADY_LOADED: bool = False
 
@@ -88,5 +88,5 @@ class ResourcePackRegistry:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["presets"] = PropertyGrid_Restrictions.listMod(PropertyGrid_Restrictions.ListMod.AddRemoveEditOnly)
+        restrictions["presets"] = DataConstraints.listMod(DataConstraints.ListMod.AddRemoveEditOnly)
         return restrictions

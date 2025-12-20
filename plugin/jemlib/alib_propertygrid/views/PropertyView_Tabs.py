@@ -4,8 +4,7 @@ from PyQt5.QtCore import *
 
 from jemlib.alib_widgets.containers.VerticalQTabBar import VerticalQTabBar
 from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
-from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import *
-from jemlib.alib_propertygrid.utils.PropertyUtils_Praser import *
+from jemlib.alib_propertygrid.data.DataHandler import *
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import *
 
 
@@ -26,7 +25,7 @@ if TYPE_CHECKING:
 class PropertyView_Tabs(QTabWidget, PropertyView):
 
 
-    def __init__(self, parent: "PropertyPage", praser: PropertyUtils_Praser, isVertical: bool = False):
+    def __init__(self, parent: "PropertyPage", praser: DataHandler, isVertical: bool = False):
         QTabWidget.__init__(self, parent)
         PropertyView.__init__(self, parent, praser)
 
@@ -51,7 +50,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
             page.setStackHost(host)
 
     def createTab(self, varName: str, labelData: dict):
-        labelText: str = PropertyUtils_Extensions.getVariableLabel(labelData, varName)
+        labelText: str = self.praser.getPropertyLabel(labelData, varName)
         self.tabs.append(varName)
         return labelText
     
@@ -68,8 +67,8 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
         return page        
     
     def createPage(self, source: any, _varName: str):
-        variable = PropertyUtils_Extensions.getVariable(source, _varName)
-        restictions = PropertyUtils_Extensions.classRestrictions(source, _varName)
+        variable = self.praser.getPropertyVariable(source, _varName)
+        restictions = self.praser.getObjectConstraints(variable)
 
         is_expandable_area = False
         has_nested_tabs = False
@@ -86,7 +85,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
             page = PropertyPage(self.parent_page.stackHost, self.praser)
             page.propertyChanged.connect(self.onPropertyChanged)
             page.setParent(self)
-            page.updateDataObject(variable)
+            page.updateDataObject(variable.variableData())
             self.pages.append(page)
             return page
         else:
@@ -139,7 +138,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
         if self.item == None:
             return
 
-        labelData = PropertyUtils_Extensions.classVariableLabels(item)
+        labelData = self.praser.getObjectVariableLabels(item)
         variable_data, known_sisters, sister_data = PropertyView.getClassVariablesWithSisters(self, item)
 
         for variable_id in variable_data:    

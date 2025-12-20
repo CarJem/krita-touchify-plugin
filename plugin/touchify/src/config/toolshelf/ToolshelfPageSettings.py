@@ -1,5 +1,5 @@
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class ToolshelfPageSettings:
     def __defaults__(self):
@@ -21,5 +21,5 @@ class ToolshelfPageSettings:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["page_icon"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.IconSelection)
+        restrictions["page_icon"] = DataConstraints.strMod(DataConstraints.StrMod.IconSelection)
         return restrictions

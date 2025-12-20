@@ -1,6 +1,6 @@
 from jemlib.alib_datatypes.EnumStr import EnumStr
 
-class PropertyGrid_Restrictions:
+class DataConstraints:
 
     class OtherMod(EnumStr):
         Expandable="expandable"
@@ -20,9 +20,6 @@ class PropertyGrid_Restrictions:
 
         TouchifyRegistry="touchify_registry"
 
-
-
-
     class NumberMod(EnumStr):
         Range="range"
 
@@ -34,36 +31,36 @@ class PropertyGrid_Restrictions:
         Subarray="sub_array"
 
     def listSubArray(sub_id: str, sub_type: type):
-        return { "type": PropertyGrid_Restrictions.ListMod.Subarray, "sub_id": sub_id, "sub_type": sub_type }
+        return { "type": DataConstraints.ListMod.Subarray, "sub_id": sub_id, "sub_type": sub_type }
 
     def listMod(type: ListMod):
         return {"type": type}
 
     def expandable():
-         return {"type": PropertyGrid_Restrictions.OtherMod.Expandable}
+         return {"type": DataConstraints.OtherMod.Expandable}
 
     def strMod(type: StrMod):
         return {"type": type}
     
     def strValuesWithIndex(items: list):
-        return {"type": PropertyGrid_Restrictions.StrMod.ValuesWithIndex, "entries": items}
+        return {"type": DataConstraints.StrMod.ValuesWithIndex, "entries": items}
 
     def strValues(items: list):
-        return {"type": PropertyGrid_Restrictions.StrMod.Values, "entries": items}
+        return {"type": DataConstraints.StrMod.Values, "entries": items}
     
     def strSelectors():
         return [
-            PropertyGrid_Restrictions.StrMod.ActionSelection,
-            PropertyGrid_Restrictions.StrMod.DockerSelection,
-            PropertyGrid_Restrictions.StrMod.WorkspaceSelection,
-            PropertyGrid_Restrictions.StrMod.IconSelection,
-            PropertyGrid_Restrictions.StrMod.BrushSelection,
-            PropertyGrid_Restrictions.StrMod.MultiToolSelection,
-            PropertyGrid_Restrictions.StrMod.TouchifyRegistry
+            DataConstraints.StrMod.ActionSelection,
+            DataConstraints.StrMod.DockerSelection,
+            DataConstraints.StrMod.WorkspaceSelection,
+            DataConstraints.StrMod.IconSelection,
+            DataConstraints.StrMod.BrushSelection,
+            DataConstraints.StrMod.MultiToolSelection,
+            DataConstraints.StrMod.TouchifyRegistry
         ]
 
     def range(min: any = None, max: any = None):
-        result = {"type": PropertyGrid_Restrictions.NumberMod.Range}
+        result = {"type": DataConstraints.NumberMod.Range}
         
         if min != None: result["min"] = min
         if max != None: result["max"] = max

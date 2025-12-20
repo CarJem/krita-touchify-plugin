@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from krita import *
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from touchify.src.config.resource_pack.ResourcePack import ResourcePack
 from touchify.src.settings.TouchifySettings import TouchifySettings
 
@@ -23,7 +23,7 @@ class NewContainerOptions:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["container_type"] = PropertyGrid_Restrictions.strValues(["vertical", "horizontal", "tab"])
+        restrictions["container_type"] = DataConstraints.strValues(["vertical", "horizontal", "tab"])
         return restrictions    
     
 class PresetSaveAs:
@@ -54,5 +54,5 @@ class PresetSaveAs:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["resource_pack"] = PropertyGrid_Restrictions.strValuesWithIndex(self.getKnownResourcePacks())
+        restrictions["resource_pack"] = DataConstraints.strValuesWithIndex(self.getKnownResourcePacks())
         return restrictions    

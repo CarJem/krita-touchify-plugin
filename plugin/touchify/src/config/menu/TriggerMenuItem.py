@@ -2,7 +2,7 @@ from touchify.src.config.triggers.Trigger import Trigger
 from jemlib.alib_datatypes.EnumStr import EnumStr
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class TriggerMenuItem(Trigger):
 
@@ -63,5 +63,5 @@ class TriggerMenuItem(Trigger):
 
     def propertygrid_restrictions(self):
         restrictions = super().propertygrid_restrictions()
-        restrictions["variant"] = PropertyGrid_Restrictions.strValues(self.Variants.values())
+        restrictions["variant"] = DataConstraints.strValues(self.Variants.values())
         return restrictions

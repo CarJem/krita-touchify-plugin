@@ -1,6 +1,6 @@
 from touchify.__env__ import Env
 from touchify.src.settings.KritaSettings import KritaSettings
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class TouchifyRegistryPreferences:
 
@@ -74,9 +74,9 @@ class TouchifyRegistryPreferences:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["Canvas_RightClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ActionSelection)
-        restrictions["Canvas_LeftClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ActionSelection)
-        restrictions["Canvas_MiddleClickAction"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.ActionSelection)
+        restrictions["Canvas_RightClickAction"] = DataConstraints.strMod(DataConstraints.StrMod.ActionSelection)
+        restrictions["Canvas_LeftClickAction"] = DataConstraints.strMod(DataConstraints.StrMod.ActionSelection)
+        restrictions["Canvas_MiddleClickAction"] = DataConstraints.strMod(DataConstraints.StrMod.ActionSelection)
         return restrictions
 
     def load(self):

@@ -1,9 +1,7 @@
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
-from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import PropertyUtils_Extensions
-from jemlib.alib_propertygrid.utils.PropertyUtils_Praser import PropertyUtils_Praser, PropertyUtils_PraserExtension
+from jemlib.alib_propertygrid.data.DataHandler import DataHandler
 
 
 
@@ -17,7 +15,7 @@ if TYPE_CHECKING:
 
 class PropertyView(QObject):
 
-    def __init__(self, parent: "PropertyPage", praser: PropertyUtils_Praser):
+    def __init__(self, parent: "PropertyPage", praser: DataHandler):
         super(PropertyView, self).__init__(parent)
         self.parent_page: "PropertyPage" = parent
         self.item = None
@@ -29,7 +27,7 @@ class PropertyView(QObject):
             return
         
         hidden_variables = []
-        variables_requested_to_hide = PropertyUtils_Extensions.classHiddenVariables(self.item)
+        variables_requested_to_hide = self.praser.getObjectHiddenVariables(self.item)
         variable_names, known_sisters, sister_data = self.getClassVariablesWithSisters(self.item)
 
         hidden_variables.append("json_version")
@@ -48,8 +46,8 @@ class PropertyView(QObject):
         known_sisters = []
         sister_props = []
 
-        sister_data = PropertyUtils_Extensions.classSisters(item)
-        variable_data = PropertyUtils_Extensions.getClassVariables(item)
+        sister_data = self.praser.getObjectVariableGroups(item)
+        variable_data = self.praser.getObjectVariables(item)
         limiters = self.parent_page.limiters
 
         for var_name in variable_data[:]:

@@ -5,19 +5,20 @@ import sys
 from jemlib.alib_propertygrid.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
 from jemlib.alib_datatypes.TypedList import *
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.managers.IconRepository import *
 
-from jemlib.alib_propertygrid.utils.PropertyUtils_Extensions import *
+
 from jemlib.alib_propertygrid.PropertyGrid import *
 from jemlib.alib_propertygrid.fields.PropertyField import *
 
+if TYPE_CHECKING:
+    from jemlib.alib_propertygrid.data.DataHandler import DataHandler
 
 
-
-class PropertyField_Float(PropertyField):
-    def __init__(self, variable_name=str, variable_data=float, variable_source=any):
-        super().__init__(variable_name, variable_data, variable_source, True)
+class PropertyField_Float(PropertyField[float]):
+    def __init__(self, handler: "DataHandler", property: DataPath[float]):
+        super().__init__(handler, property, True)
         
         self.editor = QDoubleSpinBox(self)
         self.editor.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
@@ -25,11 +26,11 @@ class PropertyField_Float(PropertyField):
         self.editor.setMaximum(sys.float_info.max)
         self.editor.setMinimum(sys.float_info.min)
         self.editor.valueChanged.connect(self.updateValue)
-        self.editor.setValue(self.variable_data)
+        self.editor.setValue(self.propertyData.variableData())
 
-        restrictions = PropertyUtils_Extensions.classRestrictions(self.variable_source, variable_name)
+        restrictions = self.praser.getObjectConstraints(self.propertyData)
         for restriction in restrictions:
-            if restriction["type"] == PropertyGrid_Restrictions.NumberMod.Range:
+            if restriction["type"] == DataConstraints.NumberMod.Range:
                 if "min" in restriction:
                     self.editor.setMinimum(restriction["min"])
                 if "max" in restriction:
@@ -42,5 +43,5 @@ class PropertyField_Float(PropertyField):
         self.setLayout(editorLayout)
 
     def updateValue(self):
-        self.variable_data = self.editor.value()
-        super().setVariable(self.variable_source, self.variable_name, self.variable_data)
+        new_data = self.editor.value()
+        super().setVariable(new_data)

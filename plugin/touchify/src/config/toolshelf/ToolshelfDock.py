@@ -3,7 +3,7 @@ from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_datatypes.EnumStr import EnumStr
-from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class ToolshelfDock:
 
@@ -290,28 +290,28 @@ class ToolshelfDock:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["docker_size_hint_x"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["docker_size_hint_y"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["min_size_x"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["min_size_y"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["max_size_x"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["max_size_y"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["section_type"] = PropertyGrid_Restrictions.strValues(self.SectionType.values())
-        restrictions["requires_specific_tool"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.MultiToolSelection)
+        restrictions["docker_size_hint_x"] = DataConstraints.range(min=0)
+        restrictions["docker_size_hint_y"] = DataConstraints.range(min=0)
+        restrictions["min_size_x"] = DataConstraints.range(min=0)
+        restrictions["min_size_y"] = DataConstraints.range(min=0)
+        restrictions["max_size_x"] = DataConstraints.range(min=0)
+        restrictions["max_size_y"] = DataConstraints.range(min=0)
+        restrictions["section_type"] = DataConstraints.strValues(self.SectionType.values())
+        restrictions["requires_specific_tool"] = DataConstraints.strMod(DataConstraints.StrMod.MultiToolSelection)
 
 
-        restrictions["docker_id"] = PropertyGrid_Restrictions.strMod(PropertyGrid_Restrictions.StrMod.DockerSelection)
-        restrictions["docker_nesting_mode"] = PropertyGrid_Restrictions.strValues(self.DockerNestingMode.values())
-        restrictions["docker_unloaded_visibility"] = PropertyGrid_Restrictions.strValues(self.DockerUnloadedVisibility.values())
-        restrictions["docker_loading_priority"] = PropertyGrid_Restrictions.strValues(self.DockerLoadingPriority.values())
+        restrictions["docker_id"] = DataConstraints.strMod(DataConstraints.StrMod.DockerSelection)
+        restrictions["docker_nesting_mode"] = DataConstraints.strValues(self.DockerNestingMode.values())
+        restrictions["docker_unloaded_visibility"] = DataConstraints.strValues(self.DockerUnloadedVisibility.values())
+        restrictions["docker_loading_priority"] = DataConstraints.strValues(self.DockerLoadingPriority.values())
 
-        restrictions["action_section_display_mode"] = PropertyGrid_Restrictions.strValues(self.ActionSectionDisplayMode.values())
-        restrictions["action_section_btn_width"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["action_section_btn_height"] = PropertyGrid_Restrictions.range(min=0)
-        restrictions["action_section_alignment_x"] = PropertyGrid_Restrictions.strValues(self.SectionAlignmentX.values())
-        restrictions["action_section_alignment_y"] = PropertyGrid_Restrictions.strValues(self.SectionAlignmentY.values())
-        restrictions["action_section_icon_size"] = PropertyGrid_Restrictions.range(min=0)
+        restrictions["action_section_display_mode"] = DataConstraints.strValues(self.ActionSectionDisplayMode.values())
+        restrictions["action_section_btn_width"] = DataConstraints.range(min=0)
+        restrictions["action_section_btn_height"] = DataConstraints.range(min=0)
+        restrictions["action_section_alignment_x"] = DataConstraints.strValues(self.SectionAlignmentX.values())
+        restrictions["action_section_alignment_y"] = DataConstraints.strValues(self.SectionAlignmentY.values())
+        restrictions["action_section_icon_size"] = DataConstraints.range(min=0)
 
-        restrictions["special_item_type"] = PropertyGrid_Restrictions.strValues(self.SpecialItemType.values())
-        restrictions["special_slider_orientation"] = PropertyGrid_Restrictions.strValues(self.SliderOrientation.values())
+        restrictions["special_item_type"] = DataConstraints.strValues(self.SpecialItemType.values())
+        restrictions["special_slider_orientation"] = DataConstraints.strValues(self.SliderOrientation.values())
         return restrictions
