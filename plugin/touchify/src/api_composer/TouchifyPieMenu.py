@@ -7,7 +7,7 @@ from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from touchify.src.alib_kis.dataclass.KisColor import KisColor
-from touchify.src.extensions.json_extensions import JsonExtensions
+from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.managers.GlobalEvents import GlobalEvents
 from touchify.src.alib_widgets.buttons.RoundButton import RoundButton
 

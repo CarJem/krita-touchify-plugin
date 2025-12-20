@@ -5,7 +5,7 @@ from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.alib_propertygrid.PropertyGrid import PropertyGrid
 from touchify.src.managers.GlobalEvents import GlobalEvents
 from touchify.src.settings.TouchifySettings import TouchifySettings
-import touchify.src.extensions.pyqt_extensions as PyQtExtensions
+import touchify.src.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 
 from krita import *
 

@@ -1,6 +1,6 @@
 from touchify.src.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
-from touchify.src.extensions.krita_extensions import *
+from touchify.src.alib_vaporjem.extensions.krita_extensions import *
 
 from touchify.__env__ import *
 

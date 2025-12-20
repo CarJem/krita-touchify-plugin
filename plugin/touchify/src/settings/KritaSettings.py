@@ -1,7 +1,7 @@
 from krita import *
 from touchify.src.api_krita import KritaAPI
 from touchify.src.alib_kis.dataclass.KisColor import KisColor, KisAlphaColor
-from touchify.src.extensions.parse_extensions import ParseExtensions
+from touchify.src.alib_vaporjem.extensions.parse_extensions import ParseExtensions
 from touchify.src.managers.GlobalEvents import GlobalEvents
 
 class KritaSettings:

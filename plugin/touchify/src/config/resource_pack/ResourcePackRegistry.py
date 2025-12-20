@@ -1,5 +1,5 @@
 from touchify.src.config.resource_pack.ResourcePack import ResourcePack
-from touchify.src.extensions.file_extensions import FileExtensions
+from touchify.src.alib_vaporjem.extensions.file_extensions import FileExtensions
 from touchify.src.alib_datatypes.TypedList import TypedList
 import os
 from touchify.__env__ import RESOURCE_PACKS_DIRECTORY

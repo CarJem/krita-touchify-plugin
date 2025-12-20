@@ -1,6 +1,6 @@
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
-from touchify.src.extensions.json_extensions import JsonExtensions
+from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
 
 
 from typing import Any

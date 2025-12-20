@@ -5,7 +5,7 @@ from PyQt5.QtGui import *
 
 from touchify.src.alib_widgets.containers.SideGripContainer import SideGripContainer
 from touchify.src.alib_widgets.painters.CheckerPainter import CheckerPainter
-from touchify.src.extensions.pyqt_extensions import QPainterTools
+from touchify.src.alib_vaporjem.extensions.pyqt_extensions import QPainterTools
 from touchify.src.managers.ResourceManager import ResourceManager
 
 from touchify.src.components.sub_view.SubViewLoader import SubViewLoader

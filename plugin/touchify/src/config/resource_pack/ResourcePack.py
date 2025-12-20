@@ -12,8 +12,8 @@ from touchify.src.config.docker_group.DockerGroup import DockerGroup
 from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
-from touchify.src.extensions.file_extensions import FileExtensions
-from touchify.src.extensions.json_extensions import JsonExtensions
+from touchify.src.alib_vaporjem.extensions.file_extensions import FileExtensions
+from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.alib_datatypes.TypedList import TypedList
 
 from touchify.__env__ import RESOURCE_PACKS_DIRECTORY

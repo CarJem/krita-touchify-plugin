@@ -13,7 +13,7 @@ from touchify.src.config.docker_group.DockerGroup import DockerGroup
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
 from touchify.src.config.script.CustomScript import CustomScript
 
-import touchify.src.extensions.pyqt_extensions as PyQtExtensions
+import touchify.src.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.components.widgets.triggers.TriggerMenu import TriggerMenuWidget
 
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
@@ -25,7 +25,7 @@ from functools import partial
 
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.popup.PopupData import PopupData
-from touchify.src.extensions.krita_extensions import *
+from touchify.src.alib_vaporjem.extensions.krita_extensions import *
 
 from touchify.src.settings.TouchifySettings import TouchifySettings
 from touchify.src.managers.ResourceManager import ResourceManager

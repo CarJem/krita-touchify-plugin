@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from touchify.src.api_krita.wrappers.window import WindowAPI
 from touchify.src.alib_propertygrid.PropertyGrid import PropertyGrid
-import touchify.src.extensions.pyqt_extensions as PyQtExtensions
+import touchify.src.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 import copy
 
 from krita import *

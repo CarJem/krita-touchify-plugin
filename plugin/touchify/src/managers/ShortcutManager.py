@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 
 from touchify.src.api_krita import KritaAPI
 from touchify.src.api_krita.wrappers.window import WindowAPI
-from touchify.src.extensions.krita_extensions import KritaExtensions
+from touchify.src.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from touchify.__env__ import *
 from touchify.src.settings.TouchifySettings import *
 

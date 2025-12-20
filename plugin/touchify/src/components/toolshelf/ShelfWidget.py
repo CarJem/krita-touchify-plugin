@@ -19,7 +19,7 @@ from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSet
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
-from touchify.src.extensions.json_extensions import JsonExtensions
+from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.managers.GlobalEvents import GlobalEvents
 import touchify.src.components.toolshelf.ShelfClasses as ShelfClasses
 from touchify.src.settings.TouchifySettings import *

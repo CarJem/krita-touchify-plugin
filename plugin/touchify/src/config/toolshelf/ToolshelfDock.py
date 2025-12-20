@@ -1,7 +1,7 @@
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from touchify.src.alib_datatypes.TypedList import TypedList
-from touchify.src.extensions.json_extensions import JsonExtensions
+from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.alib_datatypes.EnumStr import EnumStr
 from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 

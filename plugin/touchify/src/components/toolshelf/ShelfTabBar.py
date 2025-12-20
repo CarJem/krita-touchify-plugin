@@ -10,7 +10,7 @@ from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSet
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
-import touchify.src.extensions.pyqt_extensions as PyQtExtensions
+import touchify.src.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 
 from touchify.src.settings.TouchifySettings import TouchifySettings

@@ -7,7 +7,7 @@ from PyQt5.QtGui import *
 
 from touchify.__env__ import Env
 from touchify.src.api_krita import KritaAPI
-from touchify.src.extensions.json_extensions import JsonExtensions
+from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.settings.KritaSettings import KritaSettings
 
 from touchify.src.components.sub_view.SubViewSettings import SubViewSettings

@@ -15,6 +15,7 @@ install_plugin() {
 }
 
 install_plugin "touchify"
+install_plugin "touchify-lib"
 install_plugin "touchify-compact-brush-toggler"
 install_plugin "touchify-brush-options"
 install_plugin "touchify-color-options"

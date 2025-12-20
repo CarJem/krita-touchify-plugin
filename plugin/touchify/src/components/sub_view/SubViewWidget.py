@@ -8,7 +8,7 @@ from touchify.src.components.sub_view.SubViewTabList import SubViewTabList
 from touchify.src.components.sub_view.SubViewViewport import SubViewViewport
 
 from touchify.src.alib_kis.widgets.KisAngleSelector import KisAngleSelector
-from touchify.src.extensions.pyqt_extensions import GeometryHelpers
+from touchify.src.alib_vaporjem.extensions.pyqt_extensions import GeometryHelpers
 from touchify.src.managers.ResourceManager import ResourceManager
 
 

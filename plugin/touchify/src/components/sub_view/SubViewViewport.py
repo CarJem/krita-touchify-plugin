@@ -30,13 +30,19 @@ class SubViewViewport(QWidget):
     class Viewstate:
         flip_h: Optional[bool] = False
         flip_v: Optional[bool] = False
-        is_sampling_colors: Optional[bool] = False
         rotation: Optional[float] = 0
         zoom: Optional[float] = 100.0
         x: Optional[float] = 0
         y: Optional[float] = 0
         width: Optional[float] = 0
         height: Optional[float] = 0
+
+        @classmethod
+        def from_dict(cls, env):      
+            return cls(**{
+                k: v for k, v in env.items() 
+                if k in inspect.signature(cls).parameters
+            })
         
     class Container(QGraphicsView):
         ''' Custom class for a hacky way to make sure input events are sent to the right place'''
@@ -544,12 +550,10 @@ class SubViewViewport(QWidget):
 
     def restoreState(self, input: dict[str, Any]):
         try:
-            state = self.Viewstate(**input)
+            state = self.Viewstate.from_dict(input)
             self.setFlipHorizontal(state.flip_h)
             self.reloadTransforms(True)
             self.setFlipVertical(state.flip_v)
-            self.reloadTransforms(True)
-            self.setSamplingColors(state.is_sampling_colors)
             self.reloadTransforms(True)
             self.setRotation(state.rotation)
             self.reloadTransforms(True)
@@ -568,7 +572,6 @@ class SubViewViewport(QWidget):
         return dataclasses.asdict(self.Viewstate(
             flip_h=self.getFlipHorizontal(),
             flip_v=self.getFlipVertical(),
-            is_sampling_colors=self.getSamplingColors(),
             rotation=self.getRotation(),
             zoom=self.getZoom(),
             x=pos.x(),

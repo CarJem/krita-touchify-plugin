@@ -8,7 +8,7 @@ from touchify.src.managers.GlobalEvents import GlobalEvents
 from touchify.src.settings.TouchifySettings import TouchifySettings
 from touchify.__env__ import *
 
-from touchify.src.extensions.krita_extensions import *
+from touchify.src.alib_vaporjem.extensions.krita_extensions import *
 
 if TYPE_CHECKING:
     from ..PluginManagers import TouchifyManagers

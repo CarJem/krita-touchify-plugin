@@ -13,7 +13,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 
-from touchify.src.extensions import pyqt_extensions as PyQtExt
+from touchify.src.alib_vaporjem.extensions import pyqt_extensions as PyQtExt
 
 
 

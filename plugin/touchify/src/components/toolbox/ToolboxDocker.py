@@ -26,7 +26,7 @@ from touchify.src.components.toolbox.ToolboxScrollArea import ToolboxScrollArea
 from touchify.src.config.toolbox.ToolboxDataCategory import ToolboxDataCategory
 from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
 from touchify.src.settings.TouchifySettings import TouchifySettings
-from touchify.src.extensions.json_extensions import JsonExtensions
+from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
 
 from typing import TYPE_CHECKING
 

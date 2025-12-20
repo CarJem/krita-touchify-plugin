@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import *
 
 from touchify.__env__ import *
 
-from touchify.src.extensions.krita_extensions import *
+from touchify.src.alib_vaporjem.extensions.krita_extensions import *
 
 if TYPE_CHECKING:
     from ..PluginManagers import TouchifyManagers

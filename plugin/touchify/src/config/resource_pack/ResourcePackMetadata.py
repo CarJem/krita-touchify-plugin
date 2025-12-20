@@ -1,5 +1,5 @@
 import textwrap
-from touchify.src.extensions.json_extensions import JsonExtensions
+from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
 
 HAS_ALREADY_LOADED: bool = False
 

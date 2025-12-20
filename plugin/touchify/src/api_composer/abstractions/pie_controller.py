@@ -11,7 +11,7 @@ from shortcut_composer.core_components.controller_base import Controller
 from shortcut_composer.composer_utils.label.label_text import LabelText
 from shortcut_composer.api_krita.enums.helpers import EnumGroup
 from touchify.src.config.triggers.Trigger import Trigger
-from touchify.src.extensions.json_extensions import JsonExtensions
+from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.managers.GlobalEvents import GlobalEvents
 from touchify.src.managers.ResourceManager import ResourceManager
 

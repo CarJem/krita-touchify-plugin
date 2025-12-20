@@ -7,7 +7,7 @@ from touchify.__env__ import ASSETS_DIRECTORY, RESOURCE_PACKS_DIRECTORY
 import xml.etree.ElementTree as ET
 
 from touchify.src.api_krita import KritaAPI
-from touchify.src.extensions.pyqt_extensions import QPainterTools
+from touchify.src.alib_vaporjem.extensions.pyqt_extensions import QPainterTools
 from touchify.src.settings.TouchifySettings import *
 from zipfile import ZipFile
 

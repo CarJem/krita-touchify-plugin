@@ -2,7 +2,7 @@ from enum import Enum
 import typing
 from touchify.src.managers.ResourceManager import ResourceManager
 from touchify.__env__ import *
-from touchify.src.extensions.krita_extensions import *
+from touchify.src.alib_vaporjem.extensions.krita_extensions import *
 from krita import *
 from touchify.src.settings.TouchifySettings import *
 from PyQt5.QtWidgets import *

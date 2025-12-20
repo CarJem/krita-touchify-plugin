@@ -12,7 +12,7 @@ from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
 from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
-import touchify.src.extensions.pyqt_extensions as PyQtExtensions
+import touchify.src.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.alib_widgets.widget.AnimatedWidget import AnimatedWidget
 
 

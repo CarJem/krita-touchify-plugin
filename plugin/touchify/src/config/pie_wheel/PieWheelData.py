@@ -1,6 +1,6 @@
 from touchify.src.alib_kis.dataclass.KisColor import KisColor
-from touchify.src.extensions.file_extensions import FileExtensions
-from touchify.src.extensions.json_extensions import JsonExtensions
+from touchify.src.alib_vaporjem.extensions.file_extensions import FileExtensions
+from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.alib_datatypes.TypedList import TypedList
 
 from typing import TYPE_CHECKING
