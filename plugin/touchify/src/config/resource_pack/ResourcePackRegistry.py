@@ -1,11 +1,11 @@
 from touchify.src.config.resource_pack.ResourcePack import ResourcePack
-from touchify.src.alib_vaporjem.extensions.file_extensions import FileExtensions
-from touchify.src.alib_datatypes.TypedList import TypedList
+from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
+from jemlib.alib_datatypes.TypedList import TypedList
 import os
 from touchify.__env__ import RESOURCE_PACKS_DIRECTORY
 import shutil
 
-from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 HAS_ALREADY_LOADED: bool = False
 

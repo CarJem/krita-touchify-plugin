@@ -2,8 +2,8 @@ from krita import *
 from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtGui import QIcon,QPixmap
 from touchify.__env__ import *
-from touchify.src.api_krita import KritaAPI
-from touchify.src.api_krita.wrappers.window import WindowAPI
+from jemlib.api_krita import KritaAPI
+from jemlib.api_krita.wrappers.window import WindowAPI
 
     
 def getCurrentLayer():

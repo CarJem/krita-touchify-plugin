@@ -14,8 +14,8 @@ install_plugin() {
     cp -r "$ROOT_DIR/plugin/$PLUGIN_NAME" "${KRITA_PATH:?}/"
 }
 
+install_plugin "jemlib"
 install_plugin "touchify"
-install_plugin "touchify-lib"
 install_plugin "touchify-compact-brush-toggler"
 install_plugin "touchify-brush-options"
 install_plugin "touchify-color-options"

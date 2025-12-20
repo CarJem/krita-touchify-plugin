@@ -3,10 +3,10 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
 
-from touchify.src.api_krita.wrappers.window import WindowAPI
+from jemlib.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.sub_view.SubViewDocker import SubViewDocker
 from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
-from touchify.src.alib_vaporjem.extensions.krita_extensions import KritaExtensions
+from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.CanvasManager import CanvasManager
 from touchify.src.managers.DeveloperManager import DeveloperManager
 from touchify.__env__ import *

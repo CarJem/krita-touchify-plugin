@@ -1,7 +1,7 @@
-from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
-from touchify.src.alib_datatypes.TypedList import TypedList
+from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
+from jemlib.alib_datatypes.TypedList import TypedList
 from touchify.src.config.toolbox.ToolboxDataItem import *
-from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class ToolboxDataCategory:
     def __defaults__(self):

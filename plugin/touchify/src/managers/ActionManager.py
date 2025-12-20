@@ -1,7 +1,7 @@
 from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-from touchify.src.api_krita import KritaAPI
+from jemlib.api_krita import KritaAPI
 
 from touchify.__env__ import REGISTERED_ACTIONS_FILE
 from touchify.src.config.menu.TriggerMenuItem import TriggerMenuItem
@@ -13,7 +13,7 @@ from touchify.src.config.docker_group.DockerGroup import DockerGroup
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
 from touchify.src.config.script.CustomScript import CustomScript
 
-import touchify.src.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
+import jemlib.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.components.widgets.triggers.TriggerMenu import TriggerMenuWidget
 
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
@@ -25,14 +25,14 @@ from functools import partial
 
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.popup.PopupData import PopupData
-from touchify.src.alib_vaporjem.extensions.krita_extensions import *
+from jemlib.alib_vaporjem.extensions.krita_extensions import *
 
 from touchify.src.settings.TouchifySettings import TouchifySettings
 from touchify.src.managers.ResourceManager import ResourceManager
 
 from touchify.src.components.popup.PopupWidget import PopupWidget
 
-from touchify.src.alib_kis.KritaActions import KritaActions
+from jemlib.alib_kis.KritaActions import KritaActions
 
 import xml.etree.ElementTree as ET
 from xml.dom import minidom as MiniDOM
@@ -671,7 +671,7 @@ class ActionManager(QObject):
     def Execute_PieWheel(self, pie_wheel_registry_id: str):
         try:
 
-            from touchify.src.api_composer.TouchifyPieMenu import TouchifyPieMenu
+            from jemlib.api_composer.TouchifyPieMenu import TouchifyPieMenu
             from shortcut_composer.templates.pie_menu_utils import PieWidget
 
             data: PieWheelData = TouchifySettings.registryItem(pie_wheel_registry_id, PieWheelData)

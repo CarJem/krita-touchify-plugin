@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from touchify.src.PluginManagers import TouchifyManagers
-from touchify.src.api_krita.wrappers.window import WindowAPI
+from jemlib.api_krita.wrappers.window import WindowAPI
 from touchify.__env__ import *
 
 from touchify.src.PluginOptions import PluginOptions

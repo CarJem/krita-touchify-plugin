@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from touchify.__env__ import *
-from touchify.src.api_krita.wrappers.window import WindowAPI
+from jemlib.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.popup.PopupGeometryInfo import PopupGeometryInfo
 from touchify.src.components.popup.PopupLoader import PopupLoader
 from touchify.src.components.popup.PopupTitlebar import PopupTitlebar
@@ -12,8 +12,8 @@ from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
 from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
-import touchify.src.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
-from touchify.src.alib_widgets.widget.AnimatedWidget import AnimatedWidget
+import jemlib.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
+from jemlib.alib_widgets.widget.AnimatedWidget import AnimatedWidget
 
 
 from typing import TYPE_CHECKING

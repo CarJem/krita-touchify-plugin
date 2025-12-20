@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from touchify.src.api_krita import KritaAPI
+from jemlib.api_krita import KritaAPI
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 

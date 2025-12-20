@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-from touchify.src.alib_pyqtgraph.dockarea.DockArea import DockArea
+from jemlib.alib_pyqtgraph.dockarea.DockArea import DockArea
 from touchify.src.components.toolshelf.ShelfDockDrop import ShelfDropDock
 
 

@@ -11,7 +11,7 @@ from typing import Optional
 from PyQt5.QtCore import Qt, QSize, QRect, QPoint
 from PyQt5.QtWidgets import QLayout, QWidget, QAbstractButton, QLayoutItem, QWidgetItem, QFrame, QToolButton
 
-from touchify.src.alib_pyqtgraph.Qt import QtCore
+from jemlib.alib_pyqtgraph.Qt import QtCore
 
 class ToolboxEmptySpace(QToolButton):
     def __init__(self, parent: QWidget = None):

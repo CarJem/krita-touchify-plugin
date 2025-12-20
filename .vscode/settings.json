@@ -11,7 +11,7 @@
         "${workspaceFolder}/.pykrita"
     ],
     "python.analysis.ignore": [
-        "plugin/touchify/src/alib_pyqtgraph/Qt/**"
+        "plugin/jemlib/alib_pyqtgraph/Qt/**"
     ],
     "python.analysis.fixAll": [
         "source.convertImportFormat",

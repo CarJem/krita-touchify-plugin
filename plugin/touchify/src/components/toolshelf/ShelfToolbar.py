@@ -5,7 +5,7 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 
-from touchify.src.api_krita import KritaAPI
+from jemlib.api_krita import KritaAPI
 
 
 from touchify.src.components.toolshelf.ShelfToolbarMenu import ShelfToolbarMenu

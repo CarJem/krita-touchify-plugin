@@ -8,14 +8,14 @@ from krita import *
 
 
 
-from touchify.src.api_krita.wrappers.window import WindowAPI
+from jemlib.api_krita.wrappers.window import WindowAPI
 from touchify.__env__ import *
 from touchify.src.components.toolbox import ToolboxClasses
 from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
 from touchify.src.components.toolbox.ToolboxMenu import ToolboxMenu
 from touchify.src.components.toolbox.ToolboxStyles import ToolboxStyles
 from touchify.src.components.toolbox.ToolboxLayout import ToolboxEmptySpace
-from touchify.src.alib_propertygrid.PropertyGridDialog import PropertyGridDialog
+from jemlib.alib_propertygrid.PropertyGridDialog import PropertyGridDialog
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.managers.GlobalEvents import GlobalEvents
 from touchify.__env__ import *
@@ -26,7 +26,7 @@ from touchify.src.components.toolbox.ToolboxScrollArea import ToolboxScrollArea
 from touchify.src.config.toolbox.ToolboxDataCategory import ToolboxDataCategory
 from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
 from touchify.src.settings.TouchifySettings import TouchifySettings
-from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
+from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 
 from typing import TYPE_CHECKING
 

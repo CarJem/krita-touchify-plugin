@@ -7,7 +7,7 @@ from krita import *
 
 from typing import TYPE_CHECKING
 
-from touchify.src.api_krita import KritaAPI
+from jemlib.api_krita import KritaAPI
 from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
 from touchify.src.components.toolbox.ToolboxSubtoolMenu import ToolboxSubtoolMenu
 from touchify.src.components.toolbox.ToolboxStyles import ToolboxStyles

@@ -3,10 +3,10 @@ from krita import *
 from PyQt5.QtCore import *
 from touchify.__env__ import *
 
-from touchify.src.api_krita.wrappers.window import WindowAPI
+from jemlib.api_krita.wrappers.window import WindowAPI
 from typing import TYPE_CHECKING
 
-from touchify.src.alib_widgets.buttons.IconButton import IconButton
+from jemlib.alib_widgets.buttons.IconButton import IconButton
 if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
 

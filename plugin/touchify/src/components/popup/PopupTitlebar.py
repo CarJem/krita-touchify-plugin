@@ -3,8 +3,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from touchify.__env__ import *
-from touchify.src.api_krita import KritaAPI
-from touchify.src.alib_widgets.labels.ElidedLabel import ElidedLabel
+from jemlib.api_krita import KritaAPI
+from jemlib.alib_widgets.labels.ElidedLabel import ElidedLabel
 
 from typing import TYPE_CHECKING
 

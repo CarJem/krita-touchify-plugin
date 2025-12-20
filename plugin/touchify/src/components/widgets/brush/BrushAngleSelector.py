@@ -3,9 +3,9 @@ from krita import *
 from PyQt5.QtCore import *
 from touchify.__env__ import *
 
-from touchify.src.api_krita.wrappers.window import WindowAPI
+from jemlib.api_krita.wrappers.window import WindowAPI
 from touchify.src.settings.KritaSettings import *
-from touchify.src.alib_kis.widgets.KisAngleSelector import KisAngleSelector
+from jemlib.alib_kis.widgets.KisAngleSelector import KisAngleSelector
 
 
 

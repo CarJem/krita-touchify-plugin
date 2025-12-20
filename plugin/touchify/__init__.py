@@ -1,8 +1,8 @@
 
 from touchify.src.Plugin import TouchifyPlugin
 from touchify.__env__ import *
-from touchify.src.api_krita import KritaAPI
-from touchify.src.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
+from jemlib.api_krita import KritaAPI
+from jemlib.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
 from touchify.src.components.sub_view.SubViewDocker import SubViewDocker
 from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget, DynamicToolshelfDockerWidget
 from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker

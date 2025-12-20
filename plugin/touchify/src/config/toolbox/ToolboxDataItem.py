@@ -1,8 +1,8 @@
-from touchify.src.alib_datatypes.TypedList import TypedList
-from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
+from jemlib.alib_datatypes.TypedList import TypedList
+from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
-from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class ToolboxDataItem:
 

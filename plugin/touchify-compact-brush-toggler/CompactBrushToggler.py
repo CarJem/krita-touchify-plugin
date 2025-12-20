@@ -41,7 +41,7 @@ from PyQt5.QtWidgets import (
         
 )
 
-from touchify.src.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
+from jemlib.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
 
 
 from .CBT_Icons import * 

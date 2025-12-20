@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from krita import *
-from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 from touchify.src.config.resource_pack.ResourcePack import ResourcePack
 from touchify.src.settings.TouchifySettings import TouchifySettings
 

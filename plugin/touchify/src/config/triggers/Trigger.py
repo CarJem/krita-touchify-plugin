@@ -1,8 +1,8 @@
-from touchify.src.alib_vaporjem.extensions.file_extensions import FileExtensions
-from touchify.src.alib_datatypes.EnumStr import EnumStr
-from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
+from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
+from jemlib.alib_datatypes.EnumStr import EnumStr
+from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
-from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class Trigger:
      

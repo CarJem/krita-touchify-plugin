@@ -4,9 +4,9 @@ from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSet
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
-from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
-from touchify.src.alib_datatypes.TypedList import TypedList
-from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
+from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
+from jemlib.alib_datatypes.TypedList import TypedList
+from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 
 
    

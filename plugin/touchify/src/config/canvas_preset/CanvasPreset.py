@@ -1,11 +1,11 @@
 from krita import *
 from PyQt5.QtCore import *
-from touchify.src.alib_kis.dataclass.KisColor import KisColor, KisAlphaColor
-from touchify.src.alib_vaporjem.extensions.file_extensions import FileExtensions
-from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
+from jemlib.alib_kis.dataclass.KisColor import KisColor, KisAlphaColor
+from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
+from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.settings.KritaSettings import *
-from touchify.src.alib_vaporjem.extensions.krita_extensions import *
-from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_vaporjem.extensions.krita_extensions import *
+from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class CanvasPreset:
 

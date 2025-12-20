@@ -1,7 +1,7 @@
 import uuid
 from krita import *
 from touchify.src.config.triggers.TriggerList import TriggerList
-from touchify.src.alib_datatypes.EnumStr import EnumStr
+from jemlib.alib_datatypes.EnumStr import EnumStr
 
 from touchify.src.components.widgets.triggers.TriggerButton import *
 

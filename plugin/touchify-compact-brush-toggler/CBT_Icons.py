@@ -33,7 +33,7 @@ from PyQt5.QtGui import (
     QIcon 
 )
 
-from touchify.src.api_krita import KritaAPI 
+from jemlib.api_krita import KritaAPI 
 
 class CBT_Icons():
     icon_names = [

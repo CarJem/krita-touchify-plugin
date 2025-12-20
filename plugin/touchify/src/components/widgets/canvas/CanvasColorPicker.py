@@ -5,9 +5,9 @@ from PyQt5.QtCore import *
 
 from touchify.__env__ import *
 
-from touchify.src.api_krita import KritaAPI
-from touchify.src.api_krita.wrappers.window import WindowAPI
-from touchify.src.alib_widgets.buttons.ColorFramedButton import ColorFramedButton
+from jemlib.api_krita import KritaAPI
+from jemlib.api_krita.wrappers.window import WindowAPI
+from jemlib.alib_widgets.buttons.ColorFramedButton import ColorFramedButton
 
 class CanvasColorPicker(ColorFramedButton):
 

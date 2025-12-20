@@ -2,13 +2,13 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-from touchify.src.alib_widgets.sliders.QDoubleSlider import QDoubleSlider
+from jemlib.alib_widgets.sliders.QDoubleSlider import QDoubleSlider
 from touchify.src.components.sub_view.SubViewLoader import SubViewLoader
 from touchify.src.components.sub_view.SubViewTabList import SubViewTabList
 from touchify.src.components.sub_view.SubViewViewport import SubViewViewport
 
-from touchify.src.alib_kis.widgets.KisAngleSelector import KisAngleSelector
-from touchify.src.alib_vaporjem.extensions.pyqt_extensions import GeometryHelpers
+from jemlib.alib_kis.widgets.KisAngleSelector import KisAngleSelector
+from jemlib.alib_vaporjem.extensions.pyqt_extensions import GeometryHelpers
 from touchify.src.managers.ResourceManager import ResourceManager
 
 

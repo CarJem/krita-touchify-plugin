@@ -2,11 +2,10 @@
 from krita import *
 from PyQt5.QtCore import *
 
-from touchify.src.api_krita import KritaAPI
-from touchify.src.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
+from jemlib.api_krita import KritaAPI
+from jemlib.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
 from touchify.src.components.widgets.canvas.CanvasColorPicker import CanvasColorPicker
 from touchify.src.managers.GlobalEvents import GlobalEvents
-from touchify.src.settings.TouchifySettings import TouchifySettings
 from touchify.__env__ import *
 
 from touchify.src.managers.ResourceManager import ResourceManager

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=jemlib
+X-Python-2-Compatible=false
+X-Krita-Manual=manual.html
+Name=JemLib
+Comment=A Core library for Touchify and other plugins

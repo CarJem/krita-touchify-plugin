@@ -2,9 +2,9 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.api_krita import KritaAPI
-from touchify.src.api_krita.wrappers.window import WindowAPI
-from touchify.src.alib_vaporjem.extensions.krita_extensions import KritaExtensions
+from jemlib.api_krita import KritaAPI
+from jemlib.api_krita.wrappers.window import WindowAPI
+from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from touchify.__env__ import *
 from touchify.src.settings.TouchifySettings import *
 

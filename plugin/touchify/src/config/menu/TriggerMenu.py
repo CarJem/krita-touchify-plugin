@@ -1,6 +1,6 @@
-from touchify.src.alib_vaporjem.extensions.file_extensions import FileExtensions
-from touchify.src.alib_datatypes.TypedList import TypedList
-from touchify.src.alib_vaporjem.extensions.json_extensions import JsonExtensions
+from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
+from jemlib.alib_datatypes.TypedList import TypedList
+from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from touchify.src.config.menu.TriggerMenuItem import TriggerMenuItem
 
 class TriggerMenu:

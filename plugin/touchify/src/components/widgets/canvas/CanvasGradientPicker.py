@@ -3,10 +3,10 @@ from krita import *
 from PyQt5.QtCore import *
 from xml.dom.minidom import parse as xmlParse
 
-from touchify.src.api_krita import KritaAPI
-from touchify.src.api_krita.wrappers.window import WindowAPI
-from touchify.src.alib_widgets.buttons.IconButton import IconButton
-from touchify.src.alib_widgets.painters.CheckerPainter import CheckerPainter
+from jemlib.api_krita import KritaAPI
+from jemlib.api_krita.wrappers.window import WindowAPI
+from jemlib.alib_widgets.buttons.IconButton import IconButton
+from jemlib.alib_widgets.painters.CheckerPainter import CheckerPainter
 from touchify.__env__ import *
 
 from typing import TYPE_CHECKING

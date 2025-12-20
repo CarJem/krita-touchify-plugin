@@ -1,5 +1,5 @@
 
-from touchify.src.alib_pyqtgraph.dockarea.DockDrop import DockDrop
+from jemlib.alib_pyqtgraph.dockarea.DockDrop import DockDrop
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *

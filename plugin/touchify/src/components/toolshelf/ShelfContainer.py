@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from touchify.src.alib_pyqtgraph.dockarea.Container import HContainer, TContainer, VContainer
+from jemlib.alib_pyqtgraph.dockarea.Container import HContainer, TContainer, VContainer
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *

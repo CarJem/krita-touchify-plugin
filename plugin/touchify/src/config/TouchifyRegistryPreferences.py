@@ -1,6 +1,6 @@
 from touchify.__env__ import Env
 from touchify.src.settings.KritaSettings import KritaSettings
-from touchify.src.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
+from jemlib.alib_propertygrid.utils.PropertyGrid_Restrictions import PropertyGrid_Restrictions
 
 class TouchifyRegistryPreferences:
 

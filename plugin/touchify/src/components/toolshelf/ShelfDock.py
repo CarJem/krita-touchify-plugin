@@ -6,14 +6,14 @@ from touchify.src.components.widgets.other.DockerContainer import DockerContaine
 from touchify.src.components.toolshelf.ShelfContainer import ShelfContainer
 from touchify.src.components.toolshelf.ShelfDockDrop import ShelfDropDock
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
-from touchify.src.alib_pyqtgraph.dockarea.Dock import Dock, DockLabel
+from jemlib.alib_pyqtgraph.dockarea.Dock import Dock, DockLabel
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 
-from touchify.src.alib_vaporjem.extensions import pyqt_extensions as PyQtExt
+from jemlib.alib_vaporjem.extensions import pyqt_extensions as PyQtExt
 
 
 

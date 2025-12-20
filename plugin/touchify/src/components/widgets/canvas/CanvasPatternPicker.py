@@ -8,10 +8,10 @@ from touchify.__env__ import *
 
 from typing import TYPE_CHECKING
 
-from touchify.src.alib_widgets.buttons.IconButton import IconButton
+from jemlib.alib_widgets.buttons.IconButton import IconButton
 if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
-from touchify.src.api_krita.wrappers.window import WindowAPI
+from jemlib.api_krita.wrappers.window import WindowAPI
 
 class CanvasPatternPicker(IconButton):
 

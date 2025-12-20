@@ -9,11 +9,11 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-from touchify.src.alib_pyqtgraph.Qt import QtWidgets
+from jemlib.alib_pyqtgraph.Qt import QtWidgets
 from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
 from touchify.src.components.toolbox.ToolboxLayout import ToolboxEmptySpace, ToolboxLayout, Section
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
-from touchify.src.alib_vaporjem.extensions import pyqt_extensions  as PyQtExt
+from jemlib.alib_vaporjem.extensions import pyqt_extensions  as PyQtExt
 
 BUTTON_MARGIN = 10
 

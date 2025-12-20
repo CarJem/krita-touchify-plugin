@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Service
-ServiceTypes=Krita/PythonPlugin
-X-KDE-Library=touchify-lib
-X-Python-2-Compatible=false
-X-Krita-Manual=manual.html
-Name=Touchify Lib
-Comment=A Core library for Touchify and other plugins
