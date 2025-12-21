@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 class PropertyField(QWidget, Generic[T]):
 
-    propertyChanged = pyqtSignal(bool)
+    sigPropertyFieldChanged = pyqtSignal()
 
     def __init__(self, praser: "DataHandler", property: DataPath[T], is_typed: bool = False):
         super().__init__(parent=None)
@@ -28,18 +28,22 @@ class PropertyField(QWidget, Generic[T]):
         self.praser = praser
         self.propertyData = property
         self.sister_id = None
+        self.__parent_grid = None
 
         self.setContentsMargins(0, 0, 0, 0)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
     
         if not self.is_typed: self.test_restrictions()
+
+    def getParentContainer(self):
+        return self.__parent_grid
          
-    def setStackHost(self, host: "PropertyGrid"):
-        self.stack_host = host
+    def setParentContainer(self, host: "PropertyGrid"):
+        self.__parent_grid = host
 
     def setVariable(self, newData: T):
         self.propertyData.updateData(newData)
-        self.propertyChanged.emit(True)
+        self.sigPropertyFieldChanged.emit()
 
     #region Commons / Nestables
 
@@ -106,13 +110,13 @@ class PropertyField(QWidget, Generic[T]):
         self.nested_page_layout.setContentsMargins(0,0,0,0)
         self.nested_page_layout.setSpacing(0)
 
-        from ..PropertyPage import PropertyPage
-        self.nested_page_properties = PropertyPage(self.stack_host, self.stack_host.praser)
+        from ..PropertyViewport import PropertyViewport
+        self.nested_page_properties = PropertyViewport(self.getParentContainer(), self.praser)
         self.nested_page_layout.addWidget(self.nested_page_properties)
         self.nested_page_dialog.setLayout(self.nested_page_layout)
 
-        self.nested_page_properties.updateDataObject(self.propertyData.variableData())
-        self.stack_host.setCurrentIndex(self.stack_host.addWidget(self.nested_page_dialog))
+        self.nested_page_properties.setDataObject(self.propertyData.variableData())
+        self.getParentContainer().navigateForwards(self.nested_page_dialog)
         self.nested_page_dialog.show()
 
     #endregion

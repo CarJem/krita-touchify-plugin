@@ -38,10 +38,9 @@ class PropertyField_Dict(PropertyField[dict]):
         else:
             self.standardViewer(handler, property)
 
-    def setStackHost(self, host: "PropertyGrid"):
-        self.stack_host = host
-        if hasattr(self, "list_view"):
-            self.list_view.setStackHost(self.stack_host)
+    def setParentContainer(self, host: "PropertyGrid"):
+        super().setParentContainer(host)
+        if hasattr(self, "list_view"): self.list_view.setParentContainer(self.getParentContainer())
 
     def listViewer(self, handler: "DataHandler", property: DataPath[dict]):
         keyType = type(property.variableData().keys().__iter__().__next__())

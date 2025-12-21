@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
-from PyQt5.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QTabBar, QSizePolicy, QPushButton, QDialog
-from PyQt5.QtCore import QEvent
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
 from jemlib.managers.IconRepository import IconRepository
 
@@ -9,124 +9,136 @@ if TYPE_CHECKING:
 
 class PropertyGrid(QWidget):
 
-
-    def __init__(self, parent: QWidget | None = None, praser: "DataHandler" = None) -> None:
-        super().__init__(parent)
-        self.our_layout = QVBoxLayout(self)
-        self.our_layout.setSpacing(0)
-        self.our_layout.setContentsMargins(0,0,0,0)
-        self.setLayout(self.our_layout)
-
-        self.navi_connection = None
-
-        self.naviBarRow = QWidget(self)
-        self.naviBarRow.setContentsMargins(0,0,0,0)
-        self.naviBarLayout = QHBoxLayout(self.naviBarRow)
-        self.naviBarLayout.setSpacing(0)
-        self.naviBarLayout.setContentsMargins(0,0,0,0)
-        self.naviBarRow.setLayout(self.naviBarLayout)
-        self.our_layout.addWidget(self.naviBarRow)
-
-        self.naviBarBackBtn = QPushButton(self.naviBarRow)
-        self.naviBarBackBtn.setContentsMargins(0,0,0,0)
-        self.naviBarBackBtn.setFlat(True)
-        self.naviBarBackBtn.setIcon(IconRepository.materialIcon("arrow-left"))
-        self.naviBarBackBtn.clicked.connect(self.goBack)
-        self.naviBarLayout.addWidget(self.naviBarBackBtn)
-
-        self.naviTabBar = QTabBar(self.naviBarRow)
-        self.naviTabBar.setExpanding(False)
-        self.naviTabBar.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        self.naviTabBar.setMovable(False)
-        self.naviTabBar.setUsesScrollButtons(True)
-        self.naviTabBar.installEventFilter(self)
-        self.naviTabBar.setTabsClosable(False)
-        self.naviBarLayout.addWidget(self.naviTabBar, 1)
-
-        self.variable_path: list[str] = []
-
+    def __init__(self, parent: QWidget | None = None, praser: "DataHandler" = None, **kwargs) -> None:
+        super(QWidget, self).__init__(parent)
+        
         from jemlib.alib_propertygrid.data.DataHandler import DataHandler
-        self.praser = praser if praser else DataHandler()
+        self.__praser = praser if praser else DataHandler()
+        self.__navigation_connection = None
 
-        from .PropertyPage import PropertyPage
-        self.rootPropertyGrid = PropertyPage(self, self.praser)
-        self.rootPropertyGrid.setWindowTitle("ROOT")
+        layout = QGridLayout(self)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0,0,0,0)
+        self.setLayout(layout)
+        
+        self.back_button = QPushButton(self)
+        self.back_button.setContentsMargins(0,0,0,0)
+        self.back_button.setFlat(True)
+        self.back_button.setIcon(IconRepository.materialIcon("arrow-left"))
+        self.back_button.clicked.connect(self.navigateBackwards)
+        layout.addWidget(self.back_button, 0, 0)
 
-        self.stackWidget = QStackedWidget(self)
-        self.stackWidget.insertWidget(0, self.rootPropertyGrid)
-        self.our_layout.addWidget(self.stackWidget)
+        self.tab_bar = QTabBar(self)
+        self.tab_bar.setExpanding(False)
+        self.tab_bar.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        self.tab_bar.setMovable(False)
+        self.tab_bar.setUsesScrollButtons(True)
+        self.tab_bar.installEventFilter(self)
+        self.tab_bar.setTabsClosable(False)
+        layout.addWidget(self.tab_bar, 0, 1)
+        layout.setColumnStretch(1, 1)
 
-        self.updateNavigationTabs()
+        self.page_stack = QStackedWidget(self)
+        layout.addWidget(self.page_stack, 1, 0, 1, 2)
 
+        from .PropertyViewport import PropertyViewport
+        self.__property_grid = PropertyViewport(self, self.__praser)
+        self.__property_grid.setWindowTitle("ROOT")
+        self.page_stack.insertWidget(0, self.__property_grid)
+
+        self.onNavigationTabsChanged()
+
+    #region Event Recievers
 
     def eventFilter(self, obj, event):
-        if obj is self.naviTabBar and event.type() == QEvent.Type.Wheel:
+        if obj is self.tab_bar and event.type() == QEvent.Type.Wheel:
             return True
         return super(PropertyGrid, self).eventFilter(obj, event)
 
+    #endregion
 
-    def navigationIndexChanged(self):
-        tabIndex = self.naviTabBar.currentIndex()
-        stackIndex = self.stackWidget.currentIndex()
+    #region Get / Set Functions
+
+    def getPropertyGrid(self):
+        return self.__property_grid
+
+    def getCurrentIndex(self):
+        return self.page_stack.currentIndex()
+    
+    def setCurrentIndex(self, index):
+        self.setNavigationConnection(False)
+        self.page_stack.setCurrentIndex(index)
+        self.onNavigationTabsChanged()
+    
+    def getCurrentWidget(self):
+        return self.page_stack.currentWidget()
+
+    def setNavigationConnection(self, s: bool):
+        if s and self.__navigation_connection == None:
+            self.__navigation_connection = self.tab_bar.currentChanged.connect(self.onNavigationIndexChanged)
+        elif self.__navigation_connection and s == False:
+            self.tab_bar.currentChanged.disconnect(self.onNavigationIndexChanged)
+            self.__navigation_connection = None
+
+    def getDataObject(self):
+        return self.__property_grid.getDataObject()
+
+    def setDataObject(self, data: any):
+        self.__property_grid.setDataObject(data)
+        self.onNavigationTabsChanged()
+
+    #endregion
+
+    #region Signal Recievers
+
+    def onNavigationIndexChanged(self):
+        tabIndex = self.tab_bar.currentIndex()
+        stackIndex = self.page_stack.currentIndex()
 
         if stackIndex > tabIndex:
             navigate_back_amount = stackIndex - tabIndex
-            self.goBack(navigate_back_amount)
-        
-    def setNavigationConnection(self, s: bool):
-        if s and self.navi_connection == None:
-            self.navi_connection = self.naviTabBar.currentChanged.connect(self.navigationIndexChanged)
-        elif self.navi_connection and s == False:
-            self.naviTabBar.currentChanged.disconnect(self.navigationIndexChanged)
-            self.navi_connection = None
+            self.navigateBackwards(navigate_back_amount)
 
-    def updateNavigationTabs(self):
+    def onNavigationTabsChanged(self):
         self.setNavigationConnection(False)
-        while self.naviTabBar.count() != 0:
-            self.naviTabBar.removeTab(0)
+        while self.tab_bar.count() != 0:
+            self.tab_bar.removeTab(0)
 
-        for i in range(0, self.stackWidget.count()):
-            item = self.stackWidget.widget(i)
-            self.naviTabBar.addTab(item.windowTitle())
+        for i in range(0, self.page_stack.count()):
+            item = self.page_stack.widget(i)
+            self.tab_bar.addTab(item.windowTitle())
 
-        self.naviTabBar.setCurrentIndex(self.stackWidget.currentIndex())
-        self.naviTabBar.scroll(self.naviTabBar.width(), 0)
+        self.tab_bar.setCurrentIndex(self.page_stack.currentIndex())
+        self.tab_bar.scroll(self.tab_bar.width(), 0)
         self.setNavigationConnection(True)
 
-    def currentIndex(self):
-        return self.stackWidget.currentIndex()
-    
-    def currentWidget(self):
-        return self.stackWidget.currentWidget()
+    #endregion
 
-    def addWidget(self, w: QWidget):
-        return self.stackWidget.addWidget(w)
+    #region Action Functions
 
-    def setCurrentIndex(self, index):
+    def navigateForwards(self, newPage: QWidget):
         self.setNavigationConnection(False)
-        self.stackWidget.setCurrentIndex(index)
-        self.updateNavigationTabs()
-    
-    def updateDataObject(self, data: any):
-        self.rootPropertyGrid.updateDataObject(data)
-        self.updateNavigationTabs()
+        new_index = self.page_stack.addWidget(newPage)
+        self.setCurrentIndex(new_index)
 
-    def goForward(self, newPage):
-        self.setNavigationConnection(False)
-        self.setCurrentIndex(self.addWidget(newPage))
-        self.updateNavigationTabs()
-
-
-    def goBack(self, amount: int = 1):
-        if self.stackWidget.count() == 1: return
-
+    def navigateBackwards(self, amount: int = 1):
+        if self.page_stack.count() == 1: return
         if amount < 1: amount = 1
         self.setNavigationConnection(False)
         for i in range(0, amount):
-            lastIndex = self.currentIndex() - 1
-            currentWidget = self.currentWidget()
+            lastIndex = self.getCurrentIndex() - 1
+            currentWidget = self.getCurrentWidget()
             if isinstance(currentWidget, QDialog):
                 currentWidget.reject()
             self.setCurrentIndex(lastIndex)
-            self.stackWidget.removeWidget(currentWidget)
-        self.updateNavigationTabs()
+            self.page_stack.removeWidget(currentWidget)
+        self.onNavigationTabsChanged()
+
+    #endregion
+
+    #region 
+
+
+
+
+    

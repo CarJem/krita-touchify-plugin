@@ -8,7 +8,6 @@ from PyQt5.QtWidgets import QWidget
 from jemlib.alib_propertygrid.fields.PropertyLabel import PropertyLabel
 from jemlib.alib_propertygrid.data.DataHandler import *
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import *
-from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
 
 
 from jemlib.alib_propertygrid.views.PropertyView import PropertyView
@@ -21,22 +20,18 @@ ROW_SIZE_POLICY_X = QSizePolicy.Policy.Expanding
 ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from jemlib.alib_propertygrid.PropertyPage import PropertyPage
+    from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
 
 
 
 class PropertyView_Form(QWidget, PropertyView):
 
-    def __init__(self, parent: "PropertyPage", praser: DataHandler):
+    def __init__(self, parent: "PropertyViewport", praser: DataHandler):
         QWidget.__init__(self, parent)
         PropertyView.__init__(self, parent, praser)
 
-        self.parent_page: "PropertyPage" = parent
-
-        self.fields: list[PropertyField] = []
-        self.labels: list[PropertyLabel] = []
-
-        self.praser = praser
+        self.__fields: list[PropertyField] = []
+        self.__labels: list[PropertyLabel] = []
 
         self.setContentsMargins(0,0,0,0)
 
@@ -47,44 +42,32 @@ class PropertyView_Form(QWidget, PropertyView):
         self.setLayout(self.gridLayout)
 
 
-    def setStackHost(self, host: PropertyGrid):
-        for field in self.fields:
-            field.setStackHost(host)
-    
-    def onPropertyChanged(self, value: bool):
-        self.updateVisibility()
+    #region Get / Set Functions
 
-    def updateVisibility(self):
-        if self.item == None:
-            return
-        
-        hiddenItems = PropertyView.getHiddenVariableNames(self)
+    def setViewport(self, viewport: "PropertyViewport"):
+        PropertyView.setViewport(self, viewport)
+        for field in self.__fields: field.setParentContainer(viewport.getContainer())
 
-        for field in self.fields:     
-            
-            if field.propertyData.variableName() in hiddenItems or (field.sister_id != None and field.sister_id in hiddenItems): field.setHidden(True)
-            else: field.setHidden(False)
+    #endregion
 
-        for label in self.labels:     
-            if label.variable_name in hiddenItems: label.setHidden(True)
-            else: label.setHidden(False)
+    #region Component Creation Functions
 
     def createLabel(self, varName: str, labelData: dict, hintData: dict, is_nested: bool = False):
-        labelText = self.praser.getPropertyLabel(labelData, varName)
-        hintText = self.praser.getPropertyTextHint(hintData, varName)
+        labelText = self.getPraser().getPropertyLabel(labelData, varName)
+        hintText = self.getPraser().getPropertyTextHint(hintData, varName)
         header = PropertyLabel(self, varName, labelText, hintText, is_nested)
-        self.labels.append(header)
+        self.__labels.append(header)
         return header
     
     def createField(self, source: any, _varName: str):
-        variable = self.praser.getPropertyVariable(source, _varName)
-        field = self.praser.getPropertyField(variable)
+        variable = self.getPraser().getPropertyVariable(source, _varName)
+        field = self.getPraser().getPropertyField(variable)
         if field:
             field.setParent(self)
-            field.propertyChanged.connect(self.parent_page.onPropertyChanged)
-            field.setStackHost(self.parent_page.stackHost)
+            field.sigPropertyFieldChanged.connect(self.getViewport().refreshData)
+            field.setParentContainer(self.getViewport().getContainer())
             field.setSizePolicy(ROW_SIZE_POLICY_X, ROW_SIZE_POLICY_Y)
-            self.fields.append(field)
+            self.__fields.append(field)
             return field
         return None
 
@@ -132,57 +115,69 @@ class PropertyView_Form(QWidget, PropertyView):
 
         return sister_field
     
-    def unloadPropertyView(self):
-        self.fields.clear()
-        self.labels.clear()
+    def createColumn(self, sectionLayout: QBoxLayout):
+        formLayout = QFormLayout()
+        formLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        formLayout.setSpacing(0)
+        formLayout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
+        formLayout.setContentsMargins(2, 2, 2, 2)
+        sectionLayout.addLayout(formLayout)
+        return formLayout
+
+    def createSection(self):
+        sectionLayout = QHBoxLayout()
+        sectionLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        sectionLayout.setSpacing(0)
+        sectionLayout.setContentsMargins(0,0,0,0)
+        self.gridLayout.addLayout(sectionLayout)
+        return sectionLayout
+    
+    #endregion
+
+    #region Signal Recievers
+
+    def onPropertiesChanged(self):
+        PropertyView.onPropertiesChanged(self)
+
+        if self.getDataObject() == None: return
         
+        hiddenItems = PropertyView.getHiddenVariableNames(self)
+
+        for field in self.__fields:     
+            if field.propertyData.variableName() in hiddenItems or (field.sister_id != None and field.sister_id in hiddenItems): field.setHidden(True)
+            else: field.setHidden(False)
+
+        for label in self.__labels:     
+            if label.variable_name in hiddenItems: label.setHidden(True)
+            else: label.setHidden(False)
+
+    def onDataObjectChanged(self):
+
+        self.__fields.clear()
+        self.__labels.clear()
         CommonHelpers.clearLayout(self.gridLayout)
 
-    def updateDataObject(self, item):
+        item = self.getDataObject()
+        if item == None: return
 
-        def createColumn(sectionLayout: QBoxLayout):
-            formLayout = QFormLayout()
-            formLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-            formLayout.setSpacing(0)
-            formLayout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
-            formLayout.setContentsMargins(2, 2, 2, 2)
-            sectionLayout.addLayout(formLayout)
-            return formLayout
-
-        def createSection():
-            sectionLayout = QHBoxLayout()
-            sectionLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-            sectionLayout.setSpacing(0)
-            sectionLayout.setContentsMargins(0,0,0,0)
-            self.gridLayout.addLayout(sectionLayout)
-            return sectionLayout
-            
-
-
-        PropertyView.updateDataObject(self, item)
-        self.unloadPropertyView()
-
-        if self.item == None:
-            return
-
-        labelData = self.praser.getObjectVariableLabels(item)
-        hintData = self.praser.getObjectVariableTextHints(item)
+        labelData = self.getPraser().getObjectVariableLabels(item)
+        hintData = self.getPraser().getObjectVariableTextHints(item)
         variable_data, known_sisters, sister_data = PropertyView.getClassVariablesWithSisters(self, item)
 
-        no_labels = "no_labels" in self.parent_page.modifiers
+        no_labels = "no_labels" in self.getViewport().getModifiers()
         
-        sectionLayout = createSection()
-        formLayout = createColumn(sectionLayout)
+        sectionLayout = self.createSection()
+        formLayout = self.createColumn(sectionLayout)
 
         for variable_id in variable_data:    
             variable_id: str     
             field = None
             if variable_id.startswith("#"):
                 if variable_id == "#NEW_SECTION":
-                    sectionLayout = createSection()
-                    formLayout = createColumn(sectionLayout)
+                    sectionLayout = self.createSection()
+                    formLayout = self.createColumn(sectionLayout)
                 elif variable_id == "#NEW_COLUMN":
-                    formLayout = createColumn(sectionLayout)
+                    formLayout = self.createColumn(sectionLayout)
             elif variable_id in known_sisters:
                 sister_info = sister_data[variable_id]
 
@@ -205,13 +200,8 @@ class PropertyView_Form(QWidget, PropertyView):
             else:
                 label = self.createLabel(variable_id, labelData, hintData)
                 label.setStyleSheet("font-weight: bold;")
-                #label.setMaximumWidth(250)
                 label.setContentsMargins(5,0,5,0)
                 formLayout.addRow(label)
                 formLayout.addRow(field)
 
-
-
-
-        self.updateVisibility()
-
+    #endregion

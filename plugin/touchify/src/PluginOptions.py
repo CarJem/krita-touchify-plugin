@@ -29,7 +29,7 @@ class PluginOptions(QDialog):
         
         self.editableConfig = TouchifySettings.configCopy()
         self.propertyGrid = PropertyGrid(self)
-        self.propertyGrid.updateDataObject(self.editableConfig)
+        self.propertyGrid.setDataObject(self.editableConfig)
 
         self.container = QVBoxLayout(self)
         self.setMinimumSize(600,400)

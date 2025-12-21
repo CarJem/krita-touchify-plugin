@@ -18,57 +18,58 @@ ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from jemlib.alib_propertygrid.PropertyPage import PropertyPage
+    from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport, PropertyViewportNested
     from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
 
 
 class PropertyView_Tabs(QTabWidget, PropertyView):
 
-
-    def __init__(self, parent: "PropertyPage", praser: DataHandler, isVertical: bool = False):
+    def __init__(self, parent: "PropertyViewport", praser: DataHandler, isVertical: bool = False):
         QTabWidget.__init__(self, parent)
         PropertyView.__init__(self, parent, praser)
 
-        self.is_vertical = isVertical
+        self.__pages: list["PropertyViewport" | "PropertyViewportNested"] = []
+        self.__tabs: list[str] = []
 
-        if self.is_vertical:
+        self.setContentsMargins(0,0,0,0)
+        self.setElideMode(Qt.TextElideMode.ElideNone)
+
+        if isVertical:
             self.setTabBar(VerticalQTabBar(self))
             self.setTabPosition(QTabWidget.TabPosition.West)
             self.setStyleSheet("QTabWidget::tab-bar {left : 0;}")
-
-        self.setElideMode(Qt.TextElideMode.ElideNone)
         self.tabBar().adjustSize()
 
-        self.pages: list["PropertyPage" | "PropertyGrid"] = []
-        self.tabs: list[str] = []
 
-        self.setContentsMargins(0,0,0,0)
+    #region Get / Set Functions
 
+    def setViewport(self, host: PropertyGrid):
+        PropertyView.setViewport(self, host)
+        for page in self.__pages: page.setContainer(host)
 
-    def setStackHost(self, host: PropertyGrid):
-        for page in self.pages:
-            page.setStackHost(host)
+    #endregion
+
+    #region Create Functions
 
     def createTab(self, varName: str, labelData: dict):
-        labelText: str = self.praser.getPropertyLabel(labelData, varName)
-        self.tabs.append(varName)
+        labelText: str = self.getPraser().getPropertyLabel(labelData, varName)
+        self.__tabs.append(varName)
         return labelText
     
-
     def createSisterPage(self, source: any, sister_items: list[str]):
-        from jemlib.alib_propertygrid.PropertyPage import PropertyPage
-        page = PropertyPage(self.parent_page.stackHost, self.praser)
-        page.propertyChanged.connect(self.onPropertyChanged)
+        from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
+        page = PropertyViewport(self.getViewport().getContainer(), self.getPraser())
+        page.sigPropertiesChanged.connect(self.onPropertiesChanged)
         page.setParent(self)
         page.setLimiters(sister_items)
-        page.setViewOverride("default")
-        page.updateDataObject(source)
-        self.pages.append(page)
+        page.setViewType("default")
+        page.setDataObject(source)
+        self.__pages.append(page)
         return page        
     
     def createPage(self, source: any, _varName: str):
-        variable = self.praser.getPropertyVariable(source, _varName)
-        restictions = self.praser.getObjectConstraints(variable)
+        variable = self.getPraser().getPropertyVariable(source, _varName)
+        restictions = self.getPraser().getObjectConstraints(variable)
 
         is_expandable_area = False
         has_nested_tabs = False
@@ -81,64 +82,60 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
                     has_nested_tabs = True
 
         if is_expandable_area:
-            from jemlib.alib_propertygrid.PropertyPage import PropertyPage
-            page = PropertyPage(self.parent_page.stackHost, self.praser)
-            page.propertyChanged.connect(self.onPropertyChanged)
+            from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
+            page = PropertyViewport(self.getViewport().getContainer(), self.getPraser())
+            page.sigPropertiesChanged.connect(self.onPropertiesChanged)
             page.setParent(self)
-            page.updateDataObject(variable.variableData())
-            self.pages.append(page)
+            page.setDataObject(variable.variableData())
+            self.__pages.append(page)
             return page
         else:
             if has_nested_tabs:
-                from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
-                page = PropertyGrid(self, self.praser)
-                page.rootPropertyGrid.propertyChanged.connect(self.onPropertyChanged)
-                page.rootPropertyGrid.setLimiters([_varName])
-                page.rootPropertyGrid.setModifiers({"no_labels": ""})
-                page.rootPropertyGrid.setViewOverride("default")
-                page.rootPropertyGrid.updateDataObject(source)
-                self.pages.append(page)
+                from jemlib.alib_propertygrid.PropertyViewport import PropertyViewportNested
+                page = PropertyViewportNested(self, self.getViewport().getContainer(), self.getPraser())
+                page.sigPropertiesChanged.connect(self.onPropertiesChanged)
+                page.setLimiters([_varName])
+                page.setModifiers({"no_labels": ""})
+                page.setViewType("default")
+                page.setDataObject(source)
+                self.__pages.append(page)
                 return page
             else:
-                from jemlib.alib_propertygrid.PropertyPage import PropertyPage
-                page = PropertyPage(self.parent_page.stackHost, self.praser)
-                page.propertyChanged.connect(self.onPropertyChanged)
+                from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
+                page = PropertyViewport(self.getViewport().getContainer(), self.getPraser())
+                page.sigPropertiesChanged.connect(self.onPropertiesChanged)
                 page.setParent(self)
                 page.setLimiters([_varName])
                 page.setModifiers({"no_labels": ""})
-                page.setViewOverride("default")
-                page.updateDataObject(source)
-                self.pages.append(page)
+                page.setViewType("default")
+                page.setDataObject(source)
+                self.__pages.append(page)
                 return page
-        
-    def updateVisibility(self):
-        if self.item == None:
-            return
+
+    #endregion
+
+    #region Signal Recievers
+
+    def onPropertiesChanged(self):
+        PropertyView.onPropertiesChanged(self)
+
+        if self.getDataObject() == None: return
         
         hiddenItems = PropertyView.getHiddenVariableNames(self)
 
-        for index, field in enumerate(self.tabs):     
+        for index, field in enumerate(self.__tabs):     
             if field in hiddenItems: self.setTabVisible(index, False)
             else: self.setTabVisible(index, True)
 
-    def onPropertyChanged(self, value):
-        super().onPropertyChanged(value)
-        self.updateVisibility()
-
-    def unloadPropertyView(self):
-        self.pages.clear()
-        self.tabs.clear()
+    def onDataObjectChanged(self):
+        self.__pages.clear()
+        self.__tabs.clear()
         self.clear()
 
-    def updateDataObject(self, item):
-        PropertyView.updateDataObject(self, item)
+        item = self.getDataObject()
+        if item == None: return
 
-        self.unloadPropertyView()
-
-        if self.item == None:
-            return
-
-        labelData = self.praser.getObjectVariableLabels(item)
+        labelData = self.getPraser().getObjectVariableLabels(item)
         variable_data, known_sisters, sister_data = PropertyView.getClassVariablesWithSisters(self, item)
 
         for variable_id in variable_data:    
@@ -158,5 +155,4 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
                 tab = self.createTab(variable_id, labelData)
                 tabIndex = self.addTab(page, tab)
 
-        self.updateVisibility()
-
+    #endregion

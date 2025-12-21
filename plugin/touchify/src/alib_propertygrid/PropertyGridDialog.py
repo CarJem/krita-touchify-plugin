@@ -33,7 +33,7 @@ class PropertyGridDialog(QDialog):
         
         self.editableConfig = copy.deepcopy(options)
         self.propertyGrid = PropertyGrid(self, self.praser)
-        self.propertyGrid.updateDataObject(self.editableConfig)
+        self.propertyGrid.setDataObject(self.editableConfig)
 
         self.container = QVBoxLayout(self)
         self.setMinimumSize(600,400)

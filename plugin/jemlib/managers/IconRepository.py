@@ -17,7 +17,7 @@ RESOURCE_PACK_ICONS_INIT = False
 
 ENABLE_DEBUG=False
 def printDebug(input: str):
-    if ENABLE_DEBUG: print("[ResourceManager] :: ", input)
+    if ENABLE_DEBUG: print("[IconRepository] :: ", input)
 
 class IconRepository:
 

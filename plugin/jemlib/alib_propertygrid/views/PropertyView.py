@@ -8,27 +8,28 @@ from jemlib.alib_propertygrid.data.DataHandler import DataHandler
 ROW_SIZE_POLICY_X = QSizePolicy.Policy.Ignored
 ROW_SIZE_POLICY_Y = QSizePolicy.Policy.Minimum
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
-    from jemlib.alib_propertygrid.PropertyPage import PropertyPage
+    from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
 
 
 class PropertyView(QObject):
 
-    def __init__(self, parent: "PropertyPage", praser: DataHandler):
+    def __init__(self, parent: "PropertyViewport", praser: DataHandler):
         super(PropertyView, self).__init__(parent)
-        self.parent_page: "PropertyPage" = parent
-        self.item = None
 
-        self.praser = praser
+        self.__praser: DataHandler = praser
+        self.__viewport: "PropertyViewport" = parent
+        self.__item = None
+
 
     def getHiddenVariableNames(self):
-        if self.item == None:
+        if self.__item == None:
             return
         
         hidden_variables = []
-        variables_requested_to_hide = self.praser.getObjectHiddenVariables(self.item)
-        variable_names, known_sisters, sister_data = self.getClassVariablesWithSisters(self.item)
+        variables_requested_to_hide = self.__praser.getObjectHiddenVariables(self.__item)
+        variable_names, known_sisters, sister_data = self.getClassVariablesWithSisters(self.__item)
 
         hidden_variables.append("json_version")
 
@@ -46,9 +47,9 @@ class PropertyView(QObject):
         known_sisters = []
         sister_props = []
 
-        sister_data = self.praser.getObjectVariableGroups(item)
-        variable_data = self.praser.getObjectVariables(item)
-        limiters = self.parent_page.limiters
+        sister_data = self.__praser.getObjectVariableGroups(item)
+        variable_data = self.__praser.getObjectVariables(item)
+        limiters = self.__viewport.getLimiters()
 
         for var_name in variable_data[:]:
             if var_name.startswith("INTERNAL_") or var_name == "json_version":
@@ -76,15 +77,38 @@ class PropertyView(QObject):
         else:
             return variable_data, known_sisters, sister_data
 
-    def setStackHost(self, host):
-        pass
+
+    #region Get / Set Functions
+
+    def getDataObject(self):
+        return self.__item
     
-    def onPropertyChanged(self, value: bool):
+    def setDataObject(self, item: Any):
+        self.__item = item
+        self.onDataObjectChanged()
+        self.onPropertiesChanged()
+
+    def getPraser(self):
+        return self.__praser
+    
+    def setPraser(self, praser: DataHandler):
+        self.__praser = praser
+
+    def getViewport(self):
+        return self.__viewport
+
+    def setViewport(self, viewport: "PropertyViewport"):
+        self.__viewport = viewport
+    
+    #endregion
+
+    #region Signal Recievers
+
+    def onPropertiesChanged(self):
         pass
 
-    def unloadPropertyView(self):
+    def onDataObjectChanged(self):
         pass
 
-    def updateDataObject(self, item):
-        self.item = item
+    #endregion
 

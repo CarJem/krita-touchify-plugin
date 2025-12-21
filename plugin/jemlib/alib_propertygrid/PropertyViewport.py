@@ -1,0 +1,176 @@
+from PyQt5 import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+
+from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
+from jemlib.alib_propertygrid.data.DataHandler import *
+from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import *
+
+
+from jemlib.alib_propertygrid.views.PropertyView import PropertyView
+from jemlib.alib_propertygrid.views.PropertyView_Form import PropertyView_Form
+from jemlib.alib_propertygrid.views.PropertyView_Tabs import PropertyView_Tabs
+from jemlib.alib_datatypes.TypedList import *
+from jemlib.managers.IconRepository import *
+
+class PropertyViewport(QScrollArea):
+
+    sigPropertiesChanged = pyqtSignal()
+
+    def __init__(self, container: PropertyGrid, praser: DataHandler):
+        super().__init__(parent=container)
+
+        self.__parent_container = container
+        self.__praser = praser
+        self.__last_view_type = ""
+        self.__view_type = "referenced"
+        self.__modifiers: dict[str, any] = {}
+        self.__limiters: list[str]  = []
+        self.__dataObject = None
+
+        self.property_view: PropertyView = None
+
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn) 
+        self.setWidgetResizable(True)
+        self.setContentsMargins(0,0,0,0)
+
+    #region Get / Set Functions
+
+    def getPraser(self):
+        return self.__praser
+
+    def getLastViewType(self):
+        return self.__last_view_type
+    
+    def setLastViewType(self, view_type: str):
+        self.__last_view_type = view_type
+
+    def getViewType(self):
+        return self.__view_type
+    
+    def setViewType(self, view_type: str):
+        if view_type == "": self.__view_type = "referenced"
+        else: self.__view_type = view_type
+
+    def getModifiers(self):
+        return self.__modifiers
+
+    def setModifiers(self, modifiers: dict[str, any] = {}):
+        self.__modifiers = modifiers
+
+    def getLimiters(self):
+        return self.__limiters
+    
+    def setLimiters(self, limiters: list[str] = []):
+        self.__limiters = limiters
+
+    def getContainer(self):
+        return self.__parent_container
+            
+    def setContainer(self, host: PropertyGrid):
+        self.__parent_container = host
+        if self.property_view: self.property_view.setViewport(self)
+
+    def getDataObject(self):
+        return self.__dataObject
+
+    def setDataObject(self, item: any):
+        self.__dataObject = item
+
+        if self.getViewType() == "referenced": view_type = self.getPraser().getObjectViewType(item)
+        else: view_type = self.getViewType()
+
+        if view_type != self.getLastViewType():
+            self.setLastViewType(view_type)
+            if self.property_view != None: 
+                self.deleteLater()
+                self.property_view = None
+
+            match view_type:
+                case "tabs":
+                    self.property_view = PropertyView_Tabs(self, self.getPraser())
+                    self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                    self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                    self.setWidget(self.property_view)
+                case "tabs_vertical":
+                    self.property_view = PropertyView_Tabs(self, self.getPraser(), True)
+                    self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                    self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                    self.setWidget(self.property_view)
+                case _:
+                    self.property_view = PropertyView_Form(self, self.getPraser())
+                    self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+                    self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+                    self.setWidget(self.property_view)
+
+        self.property_view.setDataObject(item)
+
+    #endregion
+
+    #region General Functions
+
+    def refreshData(self):
+        if self.property_view: self.property_view.onPropertiesChanged()
+        self.sigPropertiesChanged.emit()
+
+    #endregion
+
+class PropertyViewportNested(PropertyGrid):
+
+    sigPropertiesChanged = pyqtSignal()
+
+    def __init__(self, parent: "PropertyView", container: "PropertyGrid", praser: "DataHandler"):
+        super().__init__(parent, praser)
+
+        self.getPropertyGrid().sigPropertiesChanged.connect(self.onPropertiesChanged)
+
+    #region Get / Set
+
+    def getLastViewType(self):
+        return self.getPropertyGrid().getLastViewType()
+    
+    def setLastViewType(self, view_type: str):
+        return self.getPropertyGrid().setLastViewType(view_type)
+
+    def getViewType(self):
+        return self.getPropertyGrid().getViewType()
+    
+    def setViewType(self, view_type: str):
+        self.getPropertyGrid().setViewType(view_type)
+
+    def getModifiers(self):
+        return self.getPropertyGrid().getModifiers()
+
+    def setModifiers(self, modifiers: dict[str, any] = {}):
+        self.getPropertyGrid().setModifiers(modifiers)
+
+    def getLimiters(self):
+        return self.getPropertyGrid().getLimiters()
+    
+    def setLimiters(self, limiters: list[str] = []):
+        self.getPropertyGrid().setLimiters(limiters)
+
+    def getDataObject(self):
+        return self.getPropertyGrid().getDataObject()
+    
+    def setDataObject(self, item: any):
+        self.getPropertyGrid().setDataObject(item)
+
+    #endregion
+
+    #region Signal Reciever
+
+    def onPropertiesChanged(self):
+        self.sigPropertiesChanged.emit()
+
+    #endregion
+
+    #region General Functions
+
+    def refreshData(self):
+        self.getPropertyGrid().refreshData()
+        self.sigPropertiesChanged.emit()
+
+    #endregion
+
+    

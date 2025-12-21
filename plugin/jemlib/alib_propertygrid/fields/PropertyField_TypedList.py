@@ -15,6 +15,7 @@ from jemlib.managers.IconRepository import *
 
 if TYPE_CHECKING:
     from jemlib.alib_propertygrid.data.DataHandler import DataHandler
+    from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
 
 
 
@@ -71,9 +72,9 @@ class PropertyField_TypedList(PropertyField[TypedList]):
 
 
         if self.has_property_view:
-            from ..PropertyPage import PropertyPage
-            self.view_editor = PropertyPage(self, self.stack_host.praser)
-            self.view_editor.propertyChanged.connect(self.onPropertyViewUpdate)
+            from ..PropertyViewport import PropertyViewport
+            self.view_editor = PropertyViewport(self, self.praser)
+            self.view_editor.sigPropertiesChanged.connect(self.onPropertyViewUpdate)
             self.field_layout.addWidget(self.view_editor)
 
 
@@ -139,7 +140,6 @@ class PropertyField_TypedList(PropertyField[TypedList]):
             moreButton.setMenu(moreMenu)
 
 
-
     def test_restrictions(self, manual_restrictions: list[dict[str, any]] = []):
         restrictions: list[dict[str, any]] = []
         if len(manual_restrictions) != 0: 
@@ -168,11 +168,51 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 self.allow_length_changes = False
 
 
+    #region Get / Set Functions
 
-    def setStackHost(self, host):
-        super().setStackHost(host)
-        if self.has_property_view:
-            self.view_editor.setStackHost(host)
+    def getNestedList(self, item: any):
+        try:
+            attr = getattr(item, self.nested_list_id)
+            if isinstance(attr, TypedList):
+                return attr
+            else:
+                return []
+        except:
+            return []
+
+    def getParentContainer(self):
+        return super().getParentContainer()    
+    
+    def setParentContainer(self, container: "PropertyGrid"):
+        super().setParentContainer(container)
+        if self.has_property_view: self.view_editor.setContainer(container)
+
+    def getNewEditorPage(self):
+        dlg = PropertyGrid_Dialog(self)
+        dlg.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
+        dlg.setWindowTitle(self.propertyData.variableName() + ' - ' + str(self.selectedItem))
+        dlg.setWindowFlags(Qt.WindowType.Widget)
+        dlg.rejected.connect(self.updateList)
+        
+        container = QVBoxLayout(dlg)
+        container.setContentsMargins(0,0,0,0)
+        container.setSpacing(0)
+
+        from ..PropertyViewport import PropertyViewport
+        container_props = PropertyViewport(self.getParentContainer(), self.praser)
+        container_props.setParent(dlg)
+        container.addWidget(container_props)
+        dlg.setLayout(container)
+
+        return (container_props, dlg)
+
+    def getEditableValue(self, item):
+        if hasattr(item, "forceLoad"):
+            item.forceLoad()
+        return item     
+
+    #endregion
+
     #region List Actions
 
     def list_moveUp(self):
@@ -226,7 +266,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
 
                 self.updateList()
                 self.selection_model.setCurrentIndex(self.model.index(parentIndex, 0).child(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
-                self.propertyChanged.emit(True)
+                self.sigPropertyFieldChanged.emit()
 
             else:
                 variable = self.propertyData.currentData()
@@ -245,7 +285,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 variable.insert(newIndex, variable.pop(oldIndex))
                 self.updateList()
                 self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
-                self.propertyChanged.emit(True)
+                self.sigPropertyFieldChanged.emit()
 
     def list_add(self):
         self.list_modify("add")
@@ -253,29 +293,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
     def list_edit(self):
         self.list_modify("edit")
     
-    
     def list_modify(self, mode: Literal['edit', 'add'] = 'add'):
-
-
-        def createPage():
-            dlg = PropertyGrid_Dialog(self)
-            dlg.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
-            dlg.setWindowTitle(self.propertyData.variableName() + ' - ' + str(self.selectedItem))
-            dlg.setWindowFlags(Qt.WindowType.Widget)
-            dlg.rejected.connect(self.updateList)
-            
-            container = QVBoxLayout(dlg)
-            container.setContentsMargins(0,0,0,0)
-            container.setSpacing(0)
-
-            from ..PropertyPage import PropertyPage
-            container_props = PropertyPage(self.stack_host, self.stack_host.praser)
-            container_props.setParent(dlg)
-            container.addWidget(container_props)
-            dlg.setLayout(container)
-
-            return (container_props, dlg)
-
         if mode == 'add':
             if self.selectedSubIndex != -1:
                 editableValue = self.getEditableValue(type(self.selectedSubItem)())
@@ -284,27 +302,24 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 editableValue = self.getEditableValue(self.variable_list_type())
                 self.propertyData.variableData().append(editableValue)
             self.updateList()
-            self.propertyChanged.emit(True)
+            self.sigPropertyFieldChanged.emit()
         elif mode == 'edit':
             prop_grid = None
             page_dialog = None
 
             if self.has_property_view: prop_grid = self.view_editor
-            else: prop_grid, page_dialog = createPage()
+            else: prop_grid, page_dialog = self.getNewEditorPage()
 
 
             if self.selectedIndex != -1:
                 if self.selectedSubIndex != -1:
-                    prop_grid.updateDataObject(self.selectedSubItem)
+                    prop_grid.setDataObject(self.selectedSubItem)
                 else:
-                    prop_grid.updateDataObject(self.selectedItem)
+                    prop_grid.setDataObject(self.selectedItem)
 
             if not self.has_property_view and page_dialog:
-                self.stack_host.goForward(page_dialog)
+                self.getParentContainer().navigateForwards(page_dialog)
                 page_dialog.show()
-
-
-
 
     def list_copy(self):
         item_type: type | None = None
@@ -321,9 +336,8 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 item_data = copy.deepcopy(variable[self.selectedIndex])
 
             if item_data != None and item_type != None:
-                self.prepareCopiedItem(item_data)
+                self.onItemDuplication(item_data)
                 IconRepository.setSettingsClipboard(item_type, item_data)
-
 
     def list_paste(self):
         item_type: type | None = None
@@ -346,9 +360,6 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                         variable.append(pastable_data)
                     self.updateList()
 
-                        
-
-
     def list_duplicate(self):
         if self.selectedIndex != -1:
             if self.selectedSubIndex != -1:
@@ -356,14 +367,14 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 list: TypedList = self.getNestedList(variable[self.selectedIndex])
                 item = list[self.selectedSubIndex]
                 newItem = copy.deepcopy(item)
-                self.prepareCopiedItem(newItem)
+                self.onItemDuplication(newItem)
                 list.append(newItem)
                 self.updateList()
             else:
                 variable: TypedList = self.propertyData.currentData()
                 item = variable[self.selectedIndex]
                 newItem = copy.deepcopy(item)
-                self.prepareCopiedItem(newItem)
+                self.onItemDuplication(newItem)
                 variable.append(newItem)
                 self.updateList()
 
@@ -386,7 +397,10 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 variable.pop(self.selectedIndex)
                 self.updateList()
                 self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
+    
     #endregion
+
+    #region Update Actions
 
     def updateList(self):
         self.model.clear()
@@ -456,38 +470,24 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         if self.has_property_view:
             self.updatePropertyView()
 
-    def onPropertyViewUpdate(self, value: bool):
-        pass
-        #self.updateList()
-
     def updatePropertyView(self):
         if not self.has_property_view: return
         if self.view_editor == None: return
 
         if self.selectedIndex != -1:
             if self.selectedSubIndex != -1:
-                self.view_editor.updateDataObject(self.selectedSubItem)
+                self.view_editor.setDataObject(self.selectedSubItem)
             else:
-                self.view_editor.updateDataObject(self.selectedItem)
+                self.view_editor.setDataObject(self.selectedItem)
         else:
-            self.view_editor.updateDataObject(None)
+            self.view_editor.setDataObject(None)
+    
+    #endregion
 
+    #region Signal Recievers
 
-    def getNestedList(self, item: any):
-        try:
-            attr = getattr(item, self.nested_list_id)
-            if isinstance(attr, TypedList):
-                return attr
-            else:
-                return []
-        except:
-            return []
-        
-    def prepareCopiedItem(self, item):
+    def onItemDuplication(self, item):
         if hasattr(item, "propertygrid_on_duplicate"):
-            item.propertygrid_on_duplicate()
-
-    def getEditableValue(self, item):
-        if hasattr(item, "forceLoad"):
-            item.forceLoad()
-        return item        
+            item.propertygrid_on_duplicate()   
+    
+    #endregion
