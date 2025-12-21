@@ -1,7 +1,7 @@
 from enum import Enum
 import typing
 from jemlib.managers.IconRepository import IconRepository
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from jemlib.alib_vaporjem.extensions.krita_extensions import *
 from krita import *
 from touchify.src.settings.TouchifySettings import *

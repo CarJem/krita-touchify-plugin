@@ -5,12 +5,13 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-from touchify.__env__ import Env
+
 from jemlib.api_krita import KritaAPI
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
-from touchify.src.settings.KritaSettings import KritaSettings
+from jemlib.api_touchify.env import TouchifyEnv
+from jemlib.managers.KritaSettings import KritaSettings
 
-from touchify.src.components.sub_view.SubViewSettings import SubViewSettings
+from touchify_sub_view.SubViewSettings import SubViewSettings
 
 class SubViewLoader(QObject):
 
@@ -33,11 +34,11 @@ class SubViewLoader(QObject):
     #region Saving / Loading
 
     def load(self):
-        self._settings_cache = JsonExtensions.loadClass(KritaSettings.readSetting(Env.SettingsPath.SUB_VIEW, "json", ""), SubViewSettings)
+        self._settings_cache = JsonExtensions.loadClass(KritaSettings.readSetting(TouchifyEnv.SettingsPath.SUB_VIEW, "json", ""), SubViewSettings)
 
     def save(self, no_override: bool = False):
         jsonData = JsonExtensions.saveClass(self._settings_cache)
-        KritaSettings.writeSetting(Env.SettingsPath.SUB_VIEW, "json", jsonData, False)
+        KritaSettings.writeSetting(TouchifyEnv.SettingsPath.SUB_VIEW, "json", jsonData, False)
 
     #endregion
 

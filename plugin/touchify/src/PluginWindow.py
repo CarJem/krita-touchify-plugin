@@ -5,7 +5,7 @@ from krita import *
 
 from touchify.src.PluginManagers import TouchifyManagers
 from jemlib.api_krita.wrappers.window import WindowAPI
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
 from touchify.src.PluginOptions import PluginOptions
 
@@ -46,7 +46,7 @@ class TouchifyWindow(QObject):
         self.managers.Addons(self)
 
     def LoadActions(self, window: WindowAPI):
-        self.action_plugin_settings = window.create_action(Env.ActionID.CONFIGURE, "Configure Touchify...", "settings")
+        self.action_plugin_settings = window.create_action(TouchifyEnv.ActionID.CONFIGURE, "Configure Touchify...", "settings")
         self.action_plugin_settings.triggered.connect(self.OpenSettings)
 
         self.action_plugin_tools_menu = QMenu(None, window.qwindow)

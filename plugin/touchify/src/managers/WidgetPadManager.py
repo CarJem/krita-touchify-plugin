@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
 from jemlib.alib_vaporjem.extensions.krita_extensions import *
 

@@ -4,12 +4,12 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from jemlib.api_krita.wrappers.window import WindowAPI
-from touchify.src.components.sub_view.SubViewDocker import SubViewDocker
+
 from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
 from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.CanvasManager import CanvasManager
 from touchify.src.managers.DeveloperManager import DeveloperManager
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from touchify.src.managers.DockerManager import DockerManager
 from touchify.src.managers.ActionManager import ActionManager
 
@@ -60,9 +60,9 @@ class TouchifyManagers:
         dockers_menu_action = KritaExtensions.getDockerMenu(window.api_window)
         if dockers_menu_action == None: return
 
-        touchify_title_prefix = Env.Title.CORE_DOCKERS_PREFIX
-        addon_title_prefix = Env.Title.ADDON_DOCKERS_PREFIX
-        touchify_clone_prefix = Env.Title.CLONE_DOCKERS_PREFIX
+        touchify_title_prefix = TouchifyEnv.Title.CORE_DOCKERS_PREFIX
+        addon_title_prefix = TouchifyEnv.Title.ADDON_DOCKERS_PREFIX
+        touchify_clone_prefix = TouchifyEnv.Title.CLONE_DOCKERS_PREFIX
 
         addon_id_prefix = "Touchify/"
         addon_setup_method = "TOUCHIFY_ADDON_SETUP"
@@ -115,19 +115,15 @@ class TouchifyManagers:
                 window_title = window_title.removeprefix(touchify_clone_prefix)
                 docker.setWindowTitle(window_title)
 
-            if docker_id.startswith(Env.DockerID.TOOLSHELFDOCKER):
+            if docker_id.startswith(TouchifyEnv.DockerID.TOOLSHELFDOCKER):
                 toolshelfDocker: ToolshelfDockerWidget = docker
                 toolshelfDocker.setup(window)
                 self.__managedDockers.append(toolshelfDocker)
-            elif docker_id.startswith(Env.DockerID.WIDGETPAD):
+            elif docker_id.startswith(TouchifyEnv.DockerID.WIDGETPAD):
                 widgetPadDocker: ToolshelfDockerWidgetPad = docker
                 widgetPadDocker.setup(window)
                 self.__managedDockers.append(widgetPadDocker)
-            elif docker_id == Env.DockerID.SUB_VIEW:
-                subViewDocker: SubViewDocker = docker
-                subViewDocker.setup(window)
-                self.__managedDockers.append(subViewDocker)
-            elif docker_id == Env.DockerID.TOOLBOX:
+            elif docker_id == TouchifyEnv.DockerID.TOOLBOX:
                 toolboxDocker: ToolboxDocker = docker
                 toolboxDocker.setup(window)
                 self.__managedDockers.append(toolboxDocker)

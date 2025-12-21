@@ -5,8 +5,8 @@ from PyQt5.QtCore import *
 from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.alib_kis.widgets.KisSliderSpinBox import KisSliderSpinBox
 from jemlib.alib_kis.widgets.KisSliderSpinBoxContainer import KisSliderSpinBoxContainer
-from touchify.src.settings.KritaSettings import *
-from touchify.__env__ import *
+from jemlib.managers.KritaSettings import *
+from jemlib.api_touchify.env import *
 
 class BrushSizeSlider(KisSliderSpinBoxContainer):
 

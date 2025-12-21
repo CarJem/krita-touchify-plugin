@@ -1,7 +1,6 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from touchify.src.config.triggers.Trigger import Trigger
 
 
 
@@ -10,7 +9,7 @@ class GlobalEventsProxyInstance(QObject):
     SIGNAL_TOUCHIFY_CONFIG_UPDATED = pyqtSignal()
     SIGNAL_TOOLBOX_UPDATED = pyqtSignal()
     SIGNAL_TOOLSHELF_UPDATED = pyqtSignal(int)
-    SIGNAL_PIE_TRIGGER_SENT = pyqtSignal(Trigger)
+    SIGNAL_PIE_TRIGGER_SENT = pyqtSignal(object)
 
     SIGNAL_TIMER_TICKED = pyqtSignal()
     SIGNAL_MOUSE_RELEASED = pyqtSignal()

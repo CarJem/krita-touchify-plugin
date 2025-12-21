@@ -13,7 +13,7 @@ from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 from touchify.src.config.TouchifyRegistryPreferences import TouchifyRegistryPreferences
 from touchify.src.config.menu.TriggerMenu import TriggerMenu
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
 
 RegistryItemType = None | TriggerMenu | PopupData | DockerGroup | CanvasPreset | Toolshelf | ToolboxData | CustomScript | PieWheelData

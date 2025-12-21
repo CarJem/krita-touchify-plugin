@@ -8,9 +8,9 @@ from touchify.src.components.widgets.brush.BrushFlowSlider import BrushFlowSlide
 from touchify.src.components.widgets.brush.BrushOpacitySlider import BrushOpacitySlider
 from touchify.src.components.widgets.brush.BrushAngleSelector import BrushAngleSelector
 from touchify.src.components.widgets.brush.BrushSizeSlider import BrushSizeSlider
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
-from touchify.src.settings.KritaSettings import *
+from jemlib.managers.KritaSettings import *
 from jemlib.alib_kis.widgets.KisSliderSpinBox import KisSliderSpinBox
 
 DOCKER_TITLE = 'Touchify Addon: Brush Options'

@@ -2,12 +2,9 @@ from krita import *
 from jemlib.api_krita import KritaAPI
 from jemlib.alib_kis.dataclass.KisColor import KisColor, KisAlphaColor
 from jemlib.alib_vaporjem.extensions.parse_extensions import ParseExtensions
-from touchify.src.managers.GlobalEvents import GlobalEvents
+from jemlib.managers.GlobalEvents import GlobalEvents
 
 class KritaSettings:
-    def init():
-        KritaSettings.notify_hooks = []
-
     def readSetting(group:str, name:str, defaultValue:str):
         return KritaAPI.read_setting(group, name, defaultValue)
     
@@ -82,5 +79,3 @@ class KritaSettings:
         settingStr: str = KritaSettings.readSetting("", "hideScrollbars", "false")
         result = True if settingStr.lower() == "true" else False
         return result
-    
-KritaSettings.init()

@@ -3,7 +3,7 @@ from enum import Enum
 from krita import *
 from PyQt5.QtCore import *
 
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.wrappers.window import WindowAPI

@@ -4,9 +4,9 @@ from PyQt5.QtWidgets import *
 
 from jemlib.api_krita import KritaAPI
 
-from touchify.src.managers.GlobalEvents import GlobalEvents
+from jemlib.managers.GlobalEvents import GlobalEvents
 from touchify.src.settings.TouchifySettings import TouchifySettings
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
 from jemlib.alib_vaporjem.extensions.krita_extensions import *
 

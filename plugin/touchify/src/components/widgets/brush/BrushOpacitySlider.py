@@ -1,11 +1,11 @@
 from krita import *
 from PyQt5.QtCore import *
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
 from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.alib_kis.widgets.KisSliderSpinBox import KisSliderSpinBox
 from jemlib.alib_kis.widgets.KisSliderSpinBoxContainer import KisSliderSpinBoxContainer
-from touchify.src.settings.KritaSettings import *
+from jemlib.managers.KritaSettings import *
 
 
 

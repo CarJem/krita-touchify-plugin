@@ -20,15 +20,15 @@ from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
-from touchify.src.managers.GlobalEvents import GlobalEvents
+from jemlib.managers.GlobalEvents import GlobalEvents
 import touchify.src.components.toolshelf.ShelfClasses as ShelfClasses
 from touchify.src.settings.TouchifySettings import *
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from touchify.src.managers.DockerManager import *
 
 from typing import TYPE_CHECKING
 
-from touchify.src.settings.KritaSettings import KritaSettings
+from jemlib.managers.KritaSettings import KritaSettings
 if TYPE_CHECKING:
     from .ToolshelfDockerWidget import ToolshelfDockerWidget
     from ..popup.PopupWidget import PopupWidget
@@ -47,7 +47,7 @@ class ShelfWidget(QWidget):
             fallback_val = "none"
 
             if registry_index >= 0:
-                return KritaSettings.readSetting(Env.SettingsPath.TOOLSHELF, "SelectedPreset_" + str(registry_index), fallback_val)
+                return KritaSettings.readSetting(TouchifyEnv.SettingsPath.TOOLSHELF, "SelectedPreset_" + str(registry_index), fallback_val)
             else:
                 return fallback_val
 
@@ -69,7 +69,7 @@ class ShelfWidget(QWidget):
             
         def setCurrentShelf(self, registry_index: int, id: str) -> str:
             if registry_index >= 0:
-                KritaSettings.writeSetting(Env.SettingsPath.TOOLSHELF, "SelectedPreset_" + str(registry_index), id, False)
+                KritaSettings.writeSetting(TouchifyEnv.SettingsPath.TOOLSHELF, "SelectedPreset_" + str(registry_index), id, False)
 
         def getCurrentRegistryKey(self, registry_index: int) -> "TouchifySettings.RegistryKey":
             registry = TouchifySettings.registry(Toolshelf)
@@ -92,7 +92,7 @@ class ShelfWidget(QWidget):
             if self.getCurrentShelfId(registry_index).lower() != "none":
                 return self.getCurrentShelf(registry_index).preset_data
             else:
-                jsonStr = KritaSettings.readSetting(Env.SettingsPath.TOOLSHELF_NOPRESETDATA, str(registry_index), "")
+                jsonStr = KritaSettings.readSetting(TouchifyEnv.SettingsPath.TOOLSHELF_NOPRESETDATA, str(registry_index), "")
                 return JsonExtensions.loadClass(jsonStr, ToolshelfArea)
             
         def saveLayout(self, state: ToolshelfArea, registry_index: int):
@@ -100,7 +100,7 @@ class ShelfWidget(QWidget):
                 self.savePreset(state, registry_index, True)
             else:
                 jsonStr = JsonExtensions.saveClass(state)
-                KritaSettings.writeSetting(Env.SettingsPath.TOOLSHELF_NOPRESETDATA, str(registry_index), jsonStr, False)
+                KritaSettings.writeSetting(TouchifyEnv.SettingsPath.TOOLSHELF_NOPRESETDATA, str(registry_index), jsonStr, False)
             
         def savePreset(self, state: ToolshelfArea, registry_index: int, no_reload: bool = False):
             cached_state = self.getCurrentShelf(registry_index)
@@ -259,7 +259,7 @@ class ShelfWidget(QWidget):
         if self.is_nested:
             return f"{str(self.nestedDock._parentAreaId)}/{str(dock_index)}/{str(self.nestedDock._name)}"
         else:
-            return f"{Env.SettingsPath.TOOLSHELF}/{str(self.registry_index)}/{str(dock_index)}"
+            return f"{TouchifyEnv.SettingsPath.TOOLSHELF}/{str(self.registry_index)}/{str(dock_index)}"
 
     def currentPresetId(self) -> str:
         return self.settingsLoader.getCurrentShelfId(self.registry_index)

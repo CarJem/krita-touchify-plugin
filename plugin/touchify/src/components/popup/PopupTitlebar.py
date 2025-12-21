@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from jemlib.api_krita import KritaAPI
 from jemlib.alib_widgets.labels.ElidedLabel import ElidedLabel
 

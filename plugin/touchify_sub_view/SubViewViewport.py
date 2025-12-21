@@ -8,7 +8,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget
 
 from krita import *
-from touchify.src.components.sub_view.SubViewSettings import SubViewSettings
+from touchify_sub_view.SubViewSettings import SubViewSettings
 
 
 class SubViewViewport(QWidget):

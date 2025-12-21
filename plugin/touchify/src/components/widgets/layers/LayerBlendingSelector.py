@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.wrappers.window import WindowAPI
 from krita import *
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from jemlib.api_krita.enums.blending_mode import BlendingMode, PRETTY_NAMES
 
 class LayerBlendingOption(QWidgetAction):

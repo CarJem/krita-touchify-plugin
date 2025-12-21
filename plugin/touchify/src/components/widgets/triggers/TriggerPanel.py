@@ -10,7 +10,7 @@ from PyQt5.QtGui import *
 
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from touchify.src.settings.TouchifySettings import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea

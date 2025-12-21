@@ -1,7 +1,7 @@
 
 from krita import *
 from PyQt5.QtCore import *
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
 from jemlib.api_krita.wrappers.window import WindowAPI
 from typing import TYPE_CHECKING
@@ -24,7 +24,7 @@ class BrushPresetPicker(IconButton):
         self.onBrushChanged(self.notifier.getCurrentBrush())
 
     def openBrushPicker(self):
-        self.managers.mgr_actions.Create_Popup(Env.InternalPopups.BRUSH_PICKER, self) 
+        self.managers.mgr_actions.Create_Popup(TouchifyEnv.InternalPopups.BRUSH_PICKER, self) 
 
     def onBrushChanged(self, current_brush: Resource):
         self.brush = current_brush

@@ -4,11 +4,11 @@ from typing import TYPE_CHECKING
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
 from touchify.src.managers.WidgetPadManager import WidgetPadAlignment
 from jemlib.managers.IconRepository import IconRepository
-from touchify.src.settings.KritaSettings import KritaSettings
+from jemlib.managers.KritaSettings import KritaSettings
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
     from touchify.src.PluginManagers import TouchifyManagers
@@ -17,8 +17,8 @@ if TYPE_CHECKING:
 
 
 class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
-    DOCKER_TITLE=f"{Env.Title.CORE_DOCKERS_PREFIX} Widget Pad"
-    CLONE_DOCKER_TITLE=f"{Env.Title.CLONE_DOCKERS_PREFIX} Widget Pad"
+    DOCKER_TITLE=f"{TouchifyEnv.Title.CORE_DOCKERS_PREFIX} Widget Pad"
+    CLONE_DOCKER_TITLE=f"{TouchifyEnv.Title.CLONE_DOCKERS_PREFIX} Widget Pad"
 
     class TitlebarWidget(QWidget):
 
@@ -93,7 +93,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
             self._parent = parent
 
         def getSettingsPath(self):
-            result = f"{Env.SettingsPath.WIDGETPAD}_{str(self._parent.PanelIndex)}"
+            result = f"{TouchifyEnv.SettingsPath.WIDGETPAD}_{str(self._parent.PanelIndex)}"
             return result
 
         def getShowHeader(self):

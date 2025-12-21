@@ -2,10 +2,10 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from krita import *
 
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.wrappers.window import WindowAPI
-from touchify.src.managers.GlobalEvents import GlobalEvents
+from jemlib.managers.GlobalEvents import GlobalEvents
 
 from touchify.src.PluginWindow import TouchifyWindow
 

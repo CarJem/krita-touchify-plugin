@@ -13,7 +13,7 @@ from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 import jemlib.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from jemlib.managers.IconRepository import IconRepository
 
 from typing import TYPE_CHECKING

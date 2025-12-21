@@ -11,7 +11,7 @@ from jemlib.api_krita import KritaAPI
 from touchify.src.components.toolshelf.ShelfToolbarMenu import ShelfToolbarMenu
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from jemlib.managers.IconRepository import IconRepository
 
 from typing import TYPE_CHECKING

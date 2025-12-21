@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
-from touchify.src.managers.GlobalEvents import GlobalEvents
+from jemlib.managers.GlobalEvents import GlobalEvents
 from touchify.src.settings.TouchifySettings import TouchifySettings
 import jemlib.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 

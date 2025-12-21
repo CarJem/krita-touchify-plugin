@@ -9,7 +9,7 @@ from krita import *
 
 
 from jemlib.api_krita.wrappers.window import WindowAPI
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from touchify.src.components.toolbox import ToolboxClasses
 from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
 from touchify.src.components.toolbox.ToolboxMenu import ToolboxMenu
@@ -17,8 +17,8 @@ from touchify.src.components.toolbox.ToolboxStyles import ToolboxStyles
 from touchify.src.components.toolbox.ToolboxLayout import ToolboxEmptySpace
 from touchify.src.alib_propertygrid.PropertyGridDialog import PropertyGridDialog
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
-from touchify.src.managers.GlobalEvents import GlobalEvents
-from touchify.__env__ import *
+from jemlib.managers.GlobalEvents import GlobalEvents
+from jemlib.api_touchify.env import *
 
 from touchify.src.components.toolbox.ToolboxLoader import ToolboxLoader
 from touchify.src.components.toolbox.ToolboxWidget import ToolboxWidget
@@ -30,14 +30,14 @@ from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 
 from typing import TYPE_CHECKING
 
-from touchify.src.settings.KritaSettings import KritaSettings
+from jemlib.managers.KritaSettings import KritaSettings
 if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
     from ...PluginWindow import TouchifyWindow
 
     
 
-DOCKER_TITLE=f"{Env.Title.CORE_DOCKERS_PREFIX} Toolbox"
+DOCKER_TITLE=f"{TouchifyEnv.Title.CORE_DOCKERS_PREFIX} Toolbox"
 
 class ToolboxDocker(QDockWidget):
 
@@ -48,10 +48,10 @@ class ToolboxDocker(QDockWidget):
 
         def getCurrentToolboxId(self) -> str:
             fallback_val = "none"
-            return KritaSettings.readSetting(Env.DockerID.TOOLBOX, "SelectedPreset", fallback_val)
+            return KritaSettings.readSetting(TouchifyEnv.DockerID.TOOLBOX, "SelectedPreset", fallback_val)
 
         def setCurrentToolboxId(self, id: str):
-            KritaSettings.writeSetting(Env.DockerID.TOOLBOX, "SelectedPreset", id, False)
+            KritaSettings.writeSetting(TouchifyEnv.DockerID.TOOLBOX, "SelectedPreset", id, False)
             GlobalEvents().SIGNAL_TOOLBOX_UPDATED.emit()
 
         def getCurrentRegistryKey(self) -> "TouchifySettings.RegistryKey":
@@ -76,7 +76,7 @@ class ToolboxDocker(QDockWidget):
                     return ToolboxData()
             else:
                 try:
-                    jsonStr = KritaSettings.readSetting(Env.SettingsPath.TOOLBOX_NOPRESETDATA, "Cache", "")
+                    jsonStr = KritaSettings.readSetting(TouchifyEnv.SettingsPath.TOOLBOX_NOPRESETDATA, "Cache", "")
                     return JsonExtensions.loadClass(jsonStr, ToolboxData)
                 except:
                     return ToolboxData()
@@ -85,7 +85,7 @@ class ToolboxDocker(QDockWidget):
             is_cache_preset_active = self.getCurrentToolboxId().lower() == "none"
             if is_cache_preset_active and use_cache:
                 jsonStr = JsonExtensions.saveClass(cache_data)
-                KritaSettings.writeSetting(Env.SettingsPath.TOOLBOX_NOPRESETDATA, "Cache", jsonStr, False)
+                KritaSettings.writeSetting(TouchifyEnv.SettingsPath.TOOLBOX_NOPRESETDATA, "Cache", jsonStr, False)
                 GlobalEvents().SIGNAL_TOOLBOX_UPDATED.emit()
             else:
                 TouchifySettings.save()

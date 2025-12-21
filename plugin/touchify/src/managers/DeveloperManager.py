@@ -2,7 +2,7 @@ from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import Propert
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_vaporjem.extensions.krita_extensions import *
 
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
 from touchify.src.settings.TouchifySettings import *
 from jemlib.managers.IconRepository import *

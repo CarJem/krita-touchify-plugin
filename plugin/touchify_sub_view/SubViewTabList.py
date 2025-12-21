@@ -8,10 +8,10 @@ from jemlib.alib_widgets.painters.CheckerPainter import CheckerPainter
 from jemlib.alib_vaporjem.extensions.pyqt_extensions import QPainterTools
 from jemlib.managers.IconRepository import IconRepository
 
-from touchify.src.components.sub_view.SubViewLoader import SubViewLoader
-from touchify.src.components.sub_view.SubViewSettings import SubViewSettings
+from touchify_sub_view.SubViewLoader import SubViewLoader
+from touchify_sub_view.SubViewSettings import SubViewSettings
 if TYPE_CHECKING:
-    from touchify.src.components.sub_view.SubViewWidget import SubViewWidget
+    from touchify_sub_view.SubViewWidget import SubViewWidget
 
 
 ITEM_SIZE = QSize(128,128)

@@ -1,34 +1,24 @@
 
+from jemlib.api_krita import KritaAPI
+from jemlib.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
+from jemlib.api_touchify.env import TouchifyEnv
 from krita import DockWidget
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from typing import TYPE_CHECKING
 
-
-from touchify.__env__ import *
-
-if TYPE_CHECKING:
-    from ...PluginWindow import TouchifyWindow
-    from touchify.src.PluginManagers import TouchifyManagers
 
 class SubViewDocker(DockWidget):
 
-    DOCKER_TITLE=f"{Env.Title.CORE_DOCKERS_PREFIX} Sub View"
+    DOCKER_TITLE=f"{TouchifyEnv.Title.ADDON_DOCKERS_PREFIX} Sub View"
 
     resizeByDefaultRequested=pyqtSignal()
 
     def __init__(self): 
         super().__init__()
-        self.app_window: "TouchifyWindow" = None
-        self.managers: "TouchifyManagers" = None
         self.setWindowTitle(SubViewDocker.DOCKER_TITLE)
 
-    def setup(self, app_window: "TouchifyWindow"):
-        self.app_window = app_window
-        self.managers = app_window.managers
-
-        from touchify.src.components.sub_view.SubViewWidget import SubViewWidget
+        from touchify_sub_view.SubViewWidget import SubViewWidget
         self.imageView = SubViewWidget(self)
         self.setWidget(self.imageView)
     
@@ -48,3 +38,5 @@ class SubViewDocker(DockWidget):
 
     def onThemeChanged(self):
         pass
+
+KritaAPI.add_dock_widget_factory(TouchifyEnv.DockerID.SUB_VIEW, DockWidgetFactoryAPI.DockPosition.DockTornOff, SubViewDocker)

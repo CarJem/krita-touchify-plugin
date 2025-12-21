@@ -5,8 +5,8 @@ from PyQt5.QtCore import *
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
 from touchify.src.components.widgets.canvas.CanvasColorPicker import CanvasColorPicker
-from touchify.src.managers.GlobalEvents import GlobalEvents
-from touchify.__env__ import *
+from jemlib.managers.GlobalEvents import GlobalEvents
+from jemlib.api_touchify.env import *
 
 from jemlib.managers.IconRepository import IconRepository
 

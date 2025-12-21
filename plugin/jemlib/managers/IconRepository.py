@@ -2,7 +2,7 @@
 from PyQt5 import QtGui, QtSvg
 import os
 
-from jemlib.__env__ import ASSETS_DIRECTORY, RESOURCE_PACKS_DIRECTORY
+from jemlib.__env__ import JEMLIB_ASSETS_DIRECTORY, TOUCHIFY_RESOURCE_PACKS_DIRECTORY
 
 import xml.etree.ElementTree as ET
 
@@ -88,10 +88,10 @@ class IconRepository:
         return fileName
 
     def __resourcesDir__():
-        return ASSETS_DIRECTORY
+        return JEMLIB_ASSETS_DIRECTORY
     
     def __resourcePacksDir__():
-        return RESOURCE_PACKS_DIRECTORY
+        return TOUCHIFY_RESOURCE_PACKS_DIRECTORY
 
     def loadResourcePackIcons(isStartup: bool = False):
         global RESOURCE_PACK_ICONS_INIT

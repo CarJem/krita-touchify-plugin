@@ -3,7 +3,7 @@ from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from jemlib.managers.IconRepository import IconRepository
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from touchify.src.settings.TouchifySettings import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -57,19 +57,19 @@ class TweakManager(QObject):
         config = TouchifySettings.preferences()
 
         nu_options_menu = QMenu("Tweaks", window.qwindow)
-        options_action = window.create_action(Env.ActionID.Styles.MENU, "Tweaks", path)
+        options_action = window.create_action(TouchifyEnv.ActionID.Styles.MENU, "Tweaks", path)
         options_action.setMenu(nu_options_menu)
-        sublocation_path = "{0}/{1}".format(path, Env.ActionID.Styles.MENU)
+        sublocation_path = "{0}/{1}".format(path, TouchifyEnv.ActionID.Styles.MENU)
 
-        nu_options_menu.addAction(createAction(Env.ActionID.Styles.PRIVACYMODE, "Privacy Mode", sublocation_path, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
-        nu_options_menu.addAction(createAction(Env.ActionID.Styles.BORDERLESSTOOLBARS, "Borderless Toolbars", sublocation_path, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))
-        nu_options_menu.addAction(createAction(Env.ActionID.Styles.TABHEIGHT, "Thin Document Tabs", sublocation_path, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
-        nu_options_menu.addAction(createAction(Env.ActionID.Styles.DOCKEDBRUSHEDITOR, "Docked Brush Editor", sublocation_path, True, config.Styles_DockedBrushEditor, self.dockedBrushEditorToggled))
-        nu_options_menu.addAction(createAction(Env.ActionID.Styles.DOCKEDBRUSHEDITORZOOMFIX, "Brush Editor Zoom Fix", sublocation_path, True, config.Styles_BrushEditorZoomFix, self.brushEditorZoomFixToggled))
+        nu_options_menu.addAction(createAction(TouchifyEnv.ActionID.Styles.PRIVACYMODE, "Privacy Mode", sublocation_path, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
+        nu_options_menu.addAction(createAction(TouchifyEnv.ActionID.Styles.BORDERLESSTOOLBARS, "Borderless Toolbars", sublocation_path, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))
+        nu_options_menu.addAction(createAction(TouchifyEnv.ActionID.Styles.TABHEIGHT, "Thin Document Tabs", sublocation_path, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
+        nu_options_menu.addAction(createAction(TouchifyEnv.ActionID.Styles.DOCKEDBRUSHEDITOR, "Docked Brush Editor", sublocation_path, True, config.Styles_DockedBrushEditor, self.dockedBrushEditorToggled))
+        nu_options_menu.addAction(createAction(TouchifyEnv.ActionID.Styles.DOCKEDBRUSHEDITORZOOMFIX, "Brush Editor Zoom Fix", sublocation_path, True, config.Styles_BrushEditorZoomFix, self.brushEditorZoomFixToggled))
 
     def Actions_Post(self):
         settings_menu = self.qt_window.findChild(QMenu, 'settings')
-        KritaExtensions.moveActionTo(Env.ActionID.Styles.MENU, settings_menu, settings_menu, 'style_menu')
+        KritaExtensions.moveActionTo(TouchifyEnv.ActionID.Styles.MENU, settings_menu, settings_menu, 'style_menu')
 
     #endregion
 

@@ -18,8 +18,8 @@ from touchify.src.components.widgets.triggers.TriggerMenu import TriggerMenuWidg
 
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 
-from touchify.src.managers.GlobalEvents import GlobalEvents
-from touchify.__env__ import *
+from jemlib.managers.GlobalEvents import GlobalEvents
+from jemlib.api_touchify.env import *
 
 from functools import partial
 
@@ -169,14 +169,14 @@ class ActionManager(QObject):
 
     def Create_Popup(self, id: str, _parent: QWidget = None):
 
-        if id == Env.InternalPopups.BRUSH_PICKER:
+        if id == TouchifyEnv.InternalPopups.BRUSH_PICKER:
             data: PopupData = PopupData()
             data.type = "docker"
             data.window_type = "popup"
             data.docker_id = "PresetDocker"
             data.popup_width = 300
             data.popup_height = 500
-        elif id == Env.InternalPopups.PATTERN_CHOOSER or id == Env.InternalPopups.GRADIENT_CHOOSER:    
+        elif id == TouchifyEnv.InternalPopups.PATTERN_CHOOSER or id == TouchifyEnv.InternalPopups.GRADIENT_CHOOSER:    
             main_window = self.api_window.qwindow
             frames = main_window.findChildren(QFrame,'KisPopupButtonFrame')
             for frame in frames:
@@ -226,10 +226,10 @@ class ActionManager(QObject):
         menu.addMenu(self.__registry_menu)
 
     def Actions_Init(self, window: WindowAPI, subItemPath: str):
-        self.__registry_menu = QtWidgets.QMenu(Env.Title.REGISTERED_ACTIONS, window.qwindow)
-        root_action = window.create_action(Env.ActionID.RegisteredActions.MENU, Env.Title.REGISTERED_ACTIONS, subItemPath)
+        self.__registry_menu = QtWidgets.QMenu(TouchifyEnv.Title.REGISTERED_ACTIONS, window.qwindow)
+        root_action = window.create_action(TouchifyEnv.ActionID.RegisteredActions.MENU, TouchifyEnv.Title.REGISTERED_ACTIONS, subItemPath)
         root_action.setMenu(self.__registry_menu)
-        registryItemsPath = "{0}/{1}".format(subItemPath, Env.ActionID.RegisteredActions.MENU)
+        registryItemsPath = "{0}/{1}".format(subItemPath, TouchifyEnv.ActionID.RegisteredActions.MENU)
 
         registered_elements: dict[str, tuple[ResourcePackMetadata, list[ET.Element]]] = {}
 
@@ -247,7 +247,7 @@ class ActionManager(QObject):
             registered_elements[packMeta.registry_id] = packMeta, []
             for data in pack.triggers:
                 data: Trigger
-                id = '{0}{1}_{2}'.format(Env.ActionID.RegisteredActions.PREFIX, packMeta.registry_id, data.registry_id)
+                id = '{0}{1}_{2}'.format(TouchifyEnv.ActionID.RegisteredActions.PREFIX, packMeta.registry_id, data.registry_id)
                 action = self.Create_RegistryAction(id, data, window, packItemsPath)
                 registered_elements[packMeta.registry_id][1].append(self.Actions_Add(id))
                 pack_menu.addAction(action)
@@ -383,7 +383,7 @@ class ActionManager(QObject):
             meta: ResourcePackMetadata = pack.metadata
             for data in pack.triggers:
                 data: Trigger
-                subActionIdentifier = '{0}{1}_{2}'.format(Env.ActionID.RegisteredActions.PREFIX, meta.registry_id, data.registry_id)
+                subActionIdentifier = '{0}{1}_{2}'.format(TouchifyEnv.ActionID.RegisteredActions.PREFIX, meta.registry_id, data.registry_id)
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
         printDebug("config_updating_done")

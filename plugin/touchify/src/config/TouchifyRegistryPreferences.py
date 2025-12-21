@@ -1,30 +1,30 @@
-from touchify.__env__ import Env
-from touchify.src.settings.KritaSettings import KritaSettings
+from jemlib.api_touchify.env import TouchifyEnv
+from jemlib.managers.KritaSettings import KritaSettings
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class TouchifyRegistryPreferences:
 
     class IO:
         def readStr(name: str, defaultValue: str) -> str:
-            return KritaSettings.readSetting(Env.SettingsPath.TOUCHIFY, name, defaultValue)
+            return KritaSettings.readSetting(TouchifyEnv.SettingsPath.TOUCHIFY, name, defaultValue)
 
         def writeStr(name: str, value: str, defaultValue: str) -> None:
             if TouchifyRegistryPreferences.IO.readStr(name, defaultValue) != value:
-                KritaSettings.writeSetting(Env.SettingsPath.TOUCHIFY, name, value)
+                KritaSettings.writeSetting(TouchifyEnv.SettingsPath.TOUCHIFY, name, value)
 
         def readBool(name: str, defaultValue: bool) -> bool:
-            return KritaSettings.readSettingBool(Env.SettingsPath.TOUCHIFY, name, defaultValue)
+            return KritaSettings.readSettingBool(TouchifyEnv.SettingsPath.TOUCHIFY, name, defaultValue)
 
         def writeBool(name: str, value: bool, defaultValue: bool) -> None:
             if TouchifyRegistryPreferences.IO.readBool(name, defaultValue) != value:
-                KritaSettings.writeSettingBool(Env.SettingsPath.TOUCHIFY, name, value)
+                KritaSettings.writeSettingBool(TouchifyEnv.SettingsPath.TOUCHIFY, name, value)
 
         def readFloat(name: str, defaultValue: float) -> float:
-            return KritaSettings.readSettingFloat(Env.SettingsPath.TOUCHIFY, name, defaultValue)
+            return KritaSettings.readSettingFloat(TouchifyEnv.SettingsPath.TOUCHIFY, name, defaultValue)
 
         def writeFloat(name: str, value: float, defaultValue: float) -> None:
             if TouchifyRegistryPreferences.IO.readFloat(name, defaultValue) != value:
-                KritaSettings.writeSettingFloat(Env.SettingsPath.TOUCHIFY, name, value)
+                KritaSettings.writeSettingFloat(TouchifyEnv.SettingsPath.TOUCHIFY, name, value)
 
     def __init__(self) -> None:
         self.Styles_BorderlessToolbar = False

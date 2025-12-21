@@ -2,7 +2,7 @@
 from krita import *
 from PyQt5.QtCore import *
 
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
 
 
@@ -27,7 +27,7 @@ class CanvasPatternPicker(IconButton):
         self.onPatternChanged(self.notifier.getCurrentPattern())
 
     def openBrushPicker(self):
-        self.managers.mgr_actions.Create_Popup(Env.InternalPopups.PATTERN_CHOOSER, self)
+        self.managers.mgr_actions.Create_Popup(TouchifyEnv.InternalPopups.PATTERN_CHOOSER, self)
     
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)

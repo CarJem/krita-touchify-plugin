@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=touchify_sub_view
+X-Python-2-Compatible=false
+X-Krita-Manual=manual.html
+Name=Touchify Addon - Sub View
+Comment=[Requires Touchify] A Docker that mimics Clip Studio Paint's Sub View Window.

@@ -6,10 +6,10 @@ from PyQt5.QtWidgets import *
 from typing import TYPE_CHECKING
 
 
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
-from touchify.src.managers.GlobalEvents import GlobalEvents
+from jemlib.managers.GlobalEvents import GlobalEvents
 
 if TYPE_CHECKING:
     from ...PluginWindow import TouchifyWindow
@@ -23,8 +23,8 @@ TIMER_INTERVAL = 10
 
 class ToolshelfDockerWidget(DockWidget):
 
-    DOCKER_TITLE=f"{Env.Title.CORE_DOCKERS_PREFIX} Toolshelf"
-    CLONE_DOCKER_TITLE=f"{Env.Title.CLONE_DOCKERS_PREFIX}  Toolshelf"
+    DOCKER_TITLE=f"{TouchifyEnv.Title.CORE_DOCKERS_PREFIX} Toolshelf"
+    CLONE_DOCKER_TITLE=f"{TouchifyEnv.Title.CLONE_DOCKERS_PREFIX}  Toolshelf"
 
     resizeByDefaultRequested=pyqtSignal()
 

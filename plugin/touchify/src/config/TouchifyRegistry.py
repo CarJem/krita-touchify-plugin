@@ -5,7 +5,7 @@ from touchify.__env__ import BASE_DIR
 from touchify.src.config.resource_pack.ResourcePackRegistry import ResourcePackRegistry
 from touchify.src.config.TouchifyRegistryPreferences import TouchifyRegistryPreferences
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
 
 

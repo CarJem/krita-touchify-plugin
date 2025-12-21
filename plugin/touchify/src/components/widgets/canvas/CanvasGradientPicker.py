@@ -7,7 +7,7 @@ from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.alib_widgets.buttons.IconButton import IconButton
 from jemlib.alib_widgets.painters.CheckerPainter import CheckerPainter
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -283,7 +283,7 @@ class CanvasGradientPicker(IconButton):
         self.onGradientChanged(self.notifier.getCurrentGradient())
 
     def openBrushPicker(self):
-        self.managers.mgr_actions.Create_Popup(Env.InternalPopups.GRADIENT_CHOOSER, self)
+        self.managers.mgr_actions.Create_Popup(TouchifyEnv.InternalPopups.GRADIENT_CHOOSER, self)
 
     def updateIcon(self):
         if self.gradient:

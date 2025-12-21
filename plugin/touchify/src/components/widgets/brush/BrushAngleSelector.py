@@ -1,10 +1,10 @@
 from PyQt5.QtWidgets import QWidget
 from krita import *
 from PyQt5.QtCore import *
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 
 from jemlib.api_krita.wrappers.window import WindowAPI
-from touchify.src.settings.KritaSettings import *
+from jemlib.managers.KritaSettings import *
 from jemlib.alib_kis.widgets.KisAngleSelector import KisAngleSelector
 
 

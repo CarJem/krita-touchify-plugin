@@ -1,7 +1,7 @@
 from krita import *
 from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtGui import QIcon,QPixmap
-from touchify.__env__ import *
+from jemlib.api_touchify.env import *
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.wrappers.window import WindowAPI
 

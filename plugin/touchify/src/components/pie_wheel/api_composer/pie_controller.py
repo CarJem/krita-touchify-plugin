@@ -16,7 +16,7 @@ from touchify.src.components.pie_wheel.api_composer.touchify_constants import SE
 
 
 from touchify.src.config.triggers.Trigger import Trigger
-from touchify.src.managers.GlobalEvents import GlobalEvents
+from jemlib.managers.GlobalEvents import GlobalEvents
     
 class PieAction(EnumGroup):
     def __new__(cls, value):
