@@ -1,7 +1,8 @@
-from jemlib.api_krita import KritaAPI
+
 from PyQt5.QtGui import QColor
 from typing import TypeVar
 from functools import cached_property
+from jemlib.api_krita import KritaAPI
 from krita import *
 from jemlib.alib_kis.dataclass.KisColor import KisColor
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions

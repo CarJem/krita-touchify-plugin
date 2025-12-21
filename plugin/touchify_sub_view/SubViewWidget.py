@@ -17,6 +17,7 @@ class SubViewWidget(QWidget):
         super().__init__(parent)
 
         self.__toolbar_icon_size = QSize(20,20)
+        self.__menu_icon_size = QSize(18,18)
 
         self.__viewerActions = []
         self.__isUpdatingValues = False
@@ -36,19 +37,68 @@ class SubViewWidget(QWidget):
         self.view.sigViewerStateChanged.connect(self.onViewerStateChanged)
         self.view.sigViewerRequestedSave.connect(self.onViewerRequestedSave)
 
-        layout.addWidget(self.view, 0, 0)
+        self.menuBar = QToolBar(self)
+        self.menuBar.setMaximumHeight(self.__menu_icon_size.height())
+        self.menuBar.setStyleSheet("QToolBar { margin: 0px; padding: 0px; }" "QToolBar::item { margin: 0px; padding: 0px; }")
+        self.menuBar.setContentsMargins(0,0,0,0)
+        layout.addWidget(self.menuBar, 0, 0)
+    
+        layout.addWidget(self.view, 1, 0)
         
-        self.toolbarAlpha = QToolBar(self)
-        self.toolbarAlpha.setIconSize(self.__toolbar_icon_size)
-        layout.addWidget(self.toolbarAlpha, 1, 0)
+        self.zoomToolbar = QToolBar(self)
+        self.zoomToolbar.setIconSize(self.__toolbar_icon_size)
+        self.zoomToolbar.setStyleSheet("QToolBar { margin: 0px; padding: 0px; }" "QToolBar::item { margin: 0px; padding: 0px; }")
+        layout.addWidget(self.zoomToolbar, 2, 0)
 
-        self.toolbarBeta = QToolBar(self)
-        self.toolbarBeta.setIconSize(self.__toolbar_icon_size)
-        layout.addWidget(self.toolbarBeta, 2, 0)
+        self.rotationToolbar = QToolBar(self)
+        self.rotationToolbar.setIconSize(self.__toolbar_icon_size)
+        self.rotationToolbar.setStyleSheet("QToolBar { margin: 0px; padding: 0px; }" "QToolBar::item { margin: 0px; padding: 0px; }")
+        layout.addWidget(self.rotationToolbar, 3, 0)
 
-        self.toolbarGamma = QToolBar(self)
-        self.toolbarGamma.setIconSize(self.__toolbar_icon_size)
-        layout.addWidget(self.toolbarGamma, 3, 0)
+        self.navigationToolbar = QToolBar(self)
+        self.navigationToolbar.setIconSize(self.__toolbar_icon_size)
+        self.navigationToolbar.setStyleSheet("QToolBar { margin: 0px; padding: 0px; }" "QToolBar::item { margin: 0px; padding: 0px; }")
+        layout.addWidget(self.navigationToolbar, 4, 0)
+
+        self.options_menu = QMenu(self)
+        self.options_menu_button = QToolButton(self)
+        self.options_menu_button.setMaximumSize(self.__menu_icon_size)
+        self.options_menu_button.setContentsMargins(0,0,0,0)
+        self.options_menu_button.setPopupMode(QToolButton.InstantPopup)
+        self.options_menu_button.setStyleSheet("QToolButton::menu-indicator { image: none }")
+        self.options_menu_button.setAutoRaise(True)
+        self.options_menu_button.setMenu(self.options_menu)
+        self.options_menu_button.setIcon(IconRepository.materialIcon("menu"))
+        self.menuBar.addWidget(self.options_menu_button)
+
+
+
+        self.file_label = QLabel(self)
+        self.file_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.file_label.setContentsMargins(0,0,0,0)
+        self.menuBar.addWidget(self.__createSpacer(self.file_label))
+
+        self.fullscreenModeBtn = self.options_menu.addAction("Fullscreen Mode")
+        self.fullscreenModeBtn.setCheckable(True)
+        self.fullscreenModeBtn.setChecked(self.loader.getPrefs().fullscreenMode)
+        self.fullscreenModeBtn.toggled.connect(self.onFullscreenToggled)
+
+        self.options_menu.addSeparator()
+
+        self.showRotationBarBtn = self.options_menu.addAction("Show Rotation Toolbar")
+        self.showRotationBarBtn.setCheckable(True)
+        self.showRotationBarBtn.setChecked(self.loader.getPrefs().showRotationBar)
+        self.showRotationBarBtn.toggled.connect(self.onRotationBarToggled)
+
+        self.showZoomBarBtn = self.options_menu.addAction("Show Zoom Toolbar")
+        self.showZoomBarBtn.setCheckable(True)
+        self.showZoomBarBtn.setChecked(self.loader.getPrefs().showZoomBar)
+        self.showZoomBarBtn.toggled.connect(self.onZoomBarToggled)
+
+        self.showNavigatorBarBtn = self.options_menu.addAction("Show Navigator Toolbar")
+        self.showNavigatorBarBtn.setCheckable(True)
+        self.showNavigatorBarBtn.setChecked(self.loader.getPrefs().showNavigationBar)
+        self.showNavigatorBarBtn.toggled.connect(self.onNavigationBarToggled)
 
         self.zoomSlider = QDoubleSlider(Qt.Orientation.Horizontal, self)
         self.zoomSlider.decimals = 1
@@ -56,108 +106,129 @@ class SubViewWidget(QWidget):
         self.zoomSlider.setMinimum(0.8)
         self.zoomSlider.setMaximum(3200.0)
         self.zoomSlider.valueChanged.connect(self.onZoomChanged)
-        self.toolbarAlpha.addWidget(self.__createSpacer(self.zoomSlider))
+        self.zoomToolbar.addWidget(self.__createSpacer(self.zoomSlider))
         self.__viewerActions.append(self.zoomSlider)
 
         self.zoomValue = QToolButton(self)
         self.zoomValue.clicked.connect(self.zoomValue.showMenu)
         self.zoomValue.setMenu(QMenu(self))
         self.zoomValue.setFixedSize(self.__toolbar_icon_size.width() * 4, self.__toolbar_icon_size.height())
-        self.toolbarAlpha.addWidget(self.zoomValue)
+        self.zoomToolbar.addWidget(self.zoomValue)
         self.__viewerActions.append(self.zoomValue)
         for item in self.view.zoomIncrements:
             self.zoomValue.menu().addAction(item[1], self.onZoomSelectionChanged).setData(item[0])
         
         self.zoomOutButton = QAction(IconRepository.iconLoader("material:minus-circle-outline"), "Zoom Out", self)
         self.zoomOutButton.triggered.connect(self.zoomOut)
-        self.toolbarAlpha.addAction(self.zoomOutButton)
+        self.zoomToolbar.addAction(self.zoomOutButton)
         self.__viewerActions.append(self.zoomOutButton)
         
         self.zoomInButton = QAction(IconRepository.iconLoader("material:plus-circle-outline"), "Zoom In", self)
         self.zoomInButton.triggered.connect(self.zoomIn)
-        self.toolbarAlpha.addAction(self.zoomInButton)
+        self.zoomToolbar.addAction(self.zoomInButton)
         self.__viewerActions.append(self.zoomInButton)
 
         self.fitToNavigatorButton = QAction(IconRepository.iconLoader("zoom-fit-best"), "Fit to Navigator", self)
         self.fitToNavigatorButton.triggered.connect(self.fitToNavigator)
-        self.toolbarAlpha.addAction(self.fitToNavigatorButton)
+        self.zoomToolbar.addAction(self.fitToNavigatorButton)
         self.__viewerActions.append(self.fitToNavigatorButton)
 
         self.rotationSlider = KisAngleSelector(self)
         self.rotationSlider.setFlipOptionsMode(KisAngleSelector.FlipOptionsMode.ContextMenu)
         self.rotationSlider.angleChanged.connect(self.onAngleChanged)
-        self.toolbarBeta.addWidget(self.__createSpacer(self.rotationSlider))
+        self.rotationToolbar.addWidget(self.__createSpacer(self.rotationSlider))
         self.__viewerActions.append(self.rotationSlider)
 
         self.rotateLeftBtn = QAction(IconRepository.iconLoader("material:rotate-left"), "Rotate Left", self)
         self.rotateLeftBtn.triggered.connect(self.rotateLeft)
-        self.toolbarBeta.addAction(self.rotateLeftBtn)
+        self.rotationToolbar.addAction(self.rotateLeftBtn)
         self.__viewerActions.append(self.rotateLeftBtn)
 
         self.rotateRightBtn = QAction(IconRepository.iconLoader("material:rotate-right"), "Rotate Right", self)
         self.rotateRightBtn.triggered.connect(self.rotateRight)
-        self.toolbarBeta.addAction(self.rotateRightBtn)
+        self.rotationToolbar.addAction(self.rotateRightBtn)
         self.__viewerActions.append(self.rotateRightBtn)
 
         self.resetRotationBtn = QAction(IconRepository.iconLoader("rotation-reset"), "Reset Rotation", self)
         self.resetRotationBtn.triggered.connect(self.resetRotation)
-        self.toolbarBeta.addAction(self.resetRotationBtn)
+        self.rotationToolbar.addAction(self.resetRotationBtn)
         self.__viewerActions.append(self.resetRotationBtn)
 
         self.flipHorizontalBtn = QAction(IconRepository.iconLoader("material:flip-horizontal"), "Flip Horizontal", self)
         self.flipHorizontalBtn.setCheckable(True)
         self.flipHorizontalBtn.toggled.connect(self.flipHorizontal)
-        self.toolbarBeta.addAction(self.flipHorizontalBtn)
+        self.rotationToolbar.addAction(self.flipHorizontalBtn)
         self.__viewerActions.append(self.flipHorizontalBtn)
 
         self.flipVerticalBtn = QAction(IconRepository.iconLoader("material:flip-vertical"), "Flip Vertical", self)
         self.flipVerticalBtn.setCheckable(True)
         self.flipVerticalBtn.toggled.connect(self.flipVertical)
-        self.toolbarBeta.addAction(self.flipVerticalBtn)
+        self.rotationToolbar.addAction(self.flipVerticalBtn)
         self.__viewerActions.append(self.flipVerticalBtn)
 
         self.eyedropperBtn = QAction(IconRepository.iconLoader("material:eyedropper"), "Switch to eyedropper automatically", self)
         self.eyedropperBtn.setCheckable(True)
         self.eyedropperBtn.toggled.connect(self.toggleColorPicker)
-        self.toolbarGamma.addAction(self.eyedropperBtn)
+        self.navigationToolbar.addAction(self.eyedropperBtn)
         self.__viewerActions.append(self.eyedropperBtn)
 
-        self.toolbarGamma.addWidget(self.__createSpacer())
+        self.navigationToolbar.addWidget(self.__createSpacer())
 
         self.previousImageBtn = QAction(IconRepository.iconLoader("material:arrow-left"), "To previous image", self)
         self.previousImageBtn.triggered.connect(self.toPreviousImage)
-        self.toolbarGamma.addAction(self.previousImageBtn)
+        self.navigationToolbar.addAction(self.previousImageBtn)
         self.__viewerActions.append(self.previousImageBtn)
 
         self.nextImageBtn = QAction(IconRepository.iconLoader("material:arrow-right"), "To next image", self)
         self.nextImageBtn.triggered.connect(self.toNextImage)
-        self.toolbarGamma.addAction(self.nextImageBtn)
+        self.navigationToolbar.addAction(self.nextImageBtn)
         self.__viewerActions.append(self.nextImageBtn)
 
         self.imageListBtn = QAction(IconRepository.iconLoader("material:view-grid"), "Image list", self)
         self.imageListBtn.triggered.connect(self.showImageList)
-        self.toolbarGamma.addAction(self.imageListBtn)
+        self.navigationToolbar.addAction(self.imageListBtn)
         self.__viewerActions.append(self.imageListBtn)
 
         self.importImageBtn = QAction(IconRepository.iconLoader("material:folder-multiple-plus-outline"), "Import", self)
         self.importImageBtn.triggered.connect(self.importImages)
-        self.toolbarGamma.addAction(self.importImageBtn)
+        self.navigationToolbar.addAction(self.importImageBtn)
         self.__viewerActions.append(self.importImageBtn)
 
         self.openImageOnCanvasBtn = QAction(IconRepository.iconLoader("material:file-import"), "Open image on canvas", self)
         self.openImageOnCanvasBtn.triggered.connect(self.openImageInCanvas)
-        self.toolbarGamma.addAction(self.openImageOnCanvasBtn)
+        self.navigationToolbar.addAction(self.openImageOnCanvasBtn)
         self.__viewerActions.append(self.openImageOnCanvasBtn)
 
         self.clearImageBtn = QAction(IconRepository.iconLoader("material:trash-can-outline"), "Clear", self)
         self.clearImageBtn.triggered.connect(self.clearImage)
-        self.toolbarGamma.addAction(self.clearImageBtn)
+        self.navigationToolbar.addAction(self.clearImageBtn)
         self.__viewerActions.append(self.clearImageBtn)
 
-
+        qApp.paletteChanged.connect(self.onPaletteChanged)
         self.tabs.refresh()
+        self.onPaletteChanged()
 
     #region Signals
+
+    def onPaletteChanged(self):
+        palette = self.file_label.palette()
+        palette.setBrush(QPalette.ColorRole.Window, qApp.palette().base())
+        self.file_label.setPalette(palette)
+        self.file_label.setBackgroundRole(QPalette.ColorRole.Window)
+        self.file_label.setAutoFillBackground(True)
+
+        self.menuBar.setStyleSheet(f"""
+            QToolBar {{ 
+                margin: 0px; 
+                padding: 0px; 
+                background-color: palette(base);
+            }}
+            QToolBar::item {{ 
+                margin: 0px; 
+                padding: 0px; 
+                background-color: palette(base);
+            }}
+        """)
 
     def onZoomSelectionChanged(self):
         if self.__isUpdatingValues: return
@@ -178,6 +249,9 @@ class SubViewWidget(QWidget):
         self.__isUpdatingValues = True
 
         is_image_loaded = self.view.getImageLoaded()
+        show_zoom_bar = self.showZoomBarBtn.isChecked() and not self.fullscreenModeBtn.isChecked()
+        show_rotation_bar = self.showRotationBarBtn.isChecked() and not self.fullscreenModeBtn.isChecked()
+        show_navigation_bar = self.showNavigatorBarBtn.isChecked() and not self.fullscreenModeBtn.isChecked()
 
         self.zoomInButton.setEnabled(is_image_loaded)
         self.zoomOutButton.setEnabled(is_image_loaded)
@@ -203,6 +277,16 @@ class SubViewWidget(QWidget):
         self.flipVerticalBtn.setChecked(self.view.getFlipVertical())
         self.eyedropperBtn.setChecked(self.view.getSamplingColors())
         
+        if self.zoomToolbar.isVisible() != show_zoom_bar: self.zoomToolbar.setVisible(show_zoom_bar)
+        if self.rotationToolbar.isVisible() != show_rotation_bar: self.rotationToolbar.setVisible(show_rotation_bar)
+        if self.navigationToolbar.isVisible() != show_navigation_bar: self.navigationToolbar.setVisible(show_navigation_bar)
+        self.showZoomBarBtn.setEnabled(not self.fullscreenModeBtn.isChecked())
+        self.showRotationBarBtn.setEnabled(not self.fullscreenModeBtn.isChecked())
+        self.showNavigatorBarBtn.setEnabled(not self.fullscreenModeBtn.isChecked())
+
+        self.file_label.setText("" if not is_image_loaded else self.tabs.currentData().getName())
+            
+        
         self.__isUpdatingValues = False
 
     def onTabImageSelectionChanged(self):
@@ -214,6 +298,30 @@ class SubViewWidget(QWidget):
         if self.isVisible(): 
             state = self.view.saveState()
             if state: self.loader.saveTabState(state)
+
+    def onFullscreenToggled(self, state: bool):
+        if self.loader.getPrefs().fullscreenMode != state:
+            self.loader.getPrefs().fullscreenMode = state
+            self.loader.save(True)
+            self.onViewerStateChanged()
+
+    def onZoomBarToggled(self, state: bool):
+        if self.loader.getPrefs().showZoomBar != state:
+            self.loader.getPrefs().showZoomBar = state
+            self.loader.save(True)
+            self.onViewerStateChanged()
+
+    def onRotationBarToggled(self, state: bool):
+        if self.loader.getPrefs().showRotationBar != state:
+            self.loader.getPrefs().showRotationBar = state
+            self.loader.save(True)
+            self.onViewerStateChanged()
+
+    def onNavigationBarToggled(self, state: bool):
+        if self.loader.getPrefs().showNavigationBar != state:
+            self.loader.getPrefs().showNavigationBar = state
+            self.loader.save(True)
+            self.onViewerStateChanged()
 
     #endregion
 
@@ -274,7 +382,7 @@ class SubViewWidget(QWidget):
         self.tabs.setContentsMargins(0,0,0,0)
         self.tabs.setWindowFlags(Qt.WindowType.Popup)
         
-        button_src = self.toolbarGamma.widgetForAction(self.imageListBtn)
+        button_src = self.navigationToolbar.widgetForAction(self.imageListBtn)
         position = button_src.mapToGlobal(button_src.rect().topRight()) - QPoint(self.tabs.width(), self.tabs.height())
         position = GeometryHelpers.clampToTarget(position, self.tabs.size(), self.window())
 

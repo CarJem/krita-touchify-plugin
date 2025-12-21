@@ -4,7 +4,7 @@
 from typing import TypeVar, Generic
 from PyQt5.QtGui import QColor
 
-from jemlib.api_krita import Krita
+from jemlib.api_krita import KritaAPI as Krita
 from shortcut_composer.core_components import Controller
 from shortcut_composer.config_system import FieldGroup
 from shortcut_composer.config_system.field_base_impl import DualField, FieldWithEditableDefault

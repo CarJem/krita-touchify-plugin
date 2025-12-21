@@ -30,25 +30,9 @@
                         }
                     ],
                     [
-                        "horizontal",
-                        [
-                            [
-                                "dock",
-                                "1ec8c90b-5c25-4a80-9ba4-39d96ed0559f",
-                                {}
-                            ],
-                            [
-                                "dock",
-                                "a41cd564-aac6-4af7-ac74-8c13bd606e87",
-                                {}
-                            ]
-                        ],
-                        {
-                            "sizes": [
-                                157,
-                                154
-                            ]
-                        }
+                        "dock",
+                        "1ec8c90b-5c25-4a80-9ba4-39d96ed0559f",
+                        {}
                     ],
                     [
                         "horizontal",
@@ -67,7 +51,7 @@
                         {
                             "sizes": [
                                 48,
-                                263
+                                298
                             ]
                         }
                     ],
@@ -79,10 +63,10 @@
                 ],
                 {
                     "sizes": [
-                        322,
+                        467,
                         22,
                         30,
-                        321
+                        314
                     ]
                 }
             ],
@@ -482,7 +466,7 @@
                                 "display_icon_hide": false,
                                 "display_text_hide": false,
                                 "display_custom_icon_enabled": true,
-                                "display_custom_icon": "folder-pictures",
+                                "display_custom_icon": "material:image-outline",
                                 "display_custom_text_enabled": false,
                                 "display_custom_text": "",
                                 "extra_closes_popup": false,
@@ -544,69 +528,37 @@
                                 "script_id": "",
                                 "piewheel_id": "",
                                 "json_version": 2
-                            }
-                        ]
-                    }
-                ],
-                "action_section_alignment_x": "left",
-                "action_section_alignment_y": "none",
-                "action_section_btn_width": 20,
-                "action_section_btn_height": 20,
-                "action_section_icon_size": 0,
-                "special_item_type": "none",
-                "special_slider_orientation": "horizontal",
-                "special_nested_show_titlebar": true,
-                "special_nested_data": {
-                    "layout": {},
-                    "items": {},
-                    "pages": [],
-                    "options": {
-                        "button_size": 32,
-                        "header_size": 16,
-                        "enable_pinning": false,
-                        "position": "top",
-                        "resize_style": "default",
-                        "stack_preview": "default",
-                        "stack_alignment": "default",
-                        "stack_actions": [],
-                        "json_version": 1
-                    },
-                    "pageOptions": {
-                        "page_icon": "material:home",
-                        "json_version": 1
-                    },
-                    "json_version": 1
-                },
-                "json_version": 5
-            },
-            "a41cd564-aac6-4af7-ac74-8c13bd606e87": {
-                "display_name": "",
-                "docker_id": "",
-                "min_size_x": 0,
-                "min_size_y": 22,
-                "max_size_x": 0,
-                "max_size_y": 22,
-                "section_type": "actions",
-                "requires_specific_tool": "",
-                "invert_required_tools": false,
-                "docker_nesting_mode": "normal",
-                "docker_unloaded_visibility": "normal",
-                "docker_loading_priority": "normal",
-                "docker_size_hint_x": 0,
-                "docker_size_hint_y": 0,
-                "action_section_id": "Panel",
-                "action_section_display_mode": "flat",
-                "action_section_contents": [
-                    {
-                        "row_name": "Actions Row",
-                        "actions": [
+                            },
+                            {
+                                "registry_id": "NewTrigger",
+                                "variant": "action",
+                                "display_icon_hide": false,
+                                "display_text_hide": false,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_custom_text_enabled": true,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "expanding_spacer_0",
+                                "context_menu_id": "",
+                                "brush_name": "",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "docker_group_data": "none",
+                                "popup_data": "none",
+                                "canvas_preset_data": "none",
+                                "script_id": "",
+                                "piewheel_id": "",
+                                "json_version": 2
+                            },
                             {
                                 "registry_id": "",
                                 "variant": "popup",
                                 "display_icon_hide": false,
                                 "display_text_hide": true,
                                 "display_custom_icon_enabled": true,
-                                "display_custom_icon": "material:view-grid",
+                                "display_custom_icon": "material:grid",
                                 "display_custom_text_enabled": true,
                                 "display_custom_text": "Grids & Guides",
                                 "extra_closes_popup": false,
@@ -629,7 +581,7 @@
                                 "display_icon_hide": false,
                                 "display_text_hide": true,
                                 "display_custom_icon_enabled": true,
-                                "display_custom_icon": "material:vector-link",
+                                "display_custom_icon": "material:link-variant",
                                 "display_custom_text_enabled": true,
                                 "display_custom_text": "Snap",
                                 "extra_closes_popup": false,
@@ -652,7 +604,7 @@
                                 "display_icon_hide": false,
                                 "display_text_hide": true,
                                 "display_custom_icon_enabled": true,
-                                "display_custom_icon": "visible",
+                                "display_custom_icon": "material:eye",
                                 "display_custom_text_enabled": true,
                                 "display_custom_text": "Show",
                                 "extra_closes_popup": false,
@@ -670,13 +622,17 @@
                                 "json_version": 2
                             }
                         ]
+                    },
+                    {
+                        "row_name": "Actions Row",
+                        "actions": []
                     }
                 ],
-                "action_section_alignment_x": "right",
-                "action_section_alignment_y": "none",
+                "action_section_alignment_x": "expanding",
+                "action_section_alignment_y": "center",
                 "action_section_btn_width": 20,
                 "action_section_btn_height": 20,
-                "action_section_icon_size": 0,
+                "action_section_icon_size": 20,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,

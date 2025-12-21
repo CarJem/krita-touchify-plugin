@@ -81,6 +81,9 @@ class SubViewLoader(QObject):
 
     #region Get / Set Functions
 
+    def getPrefs(self):
+        return self._settings_cache
+
     def getLastIndex(self):
         return self._settings_cache.lastImageIndex
     

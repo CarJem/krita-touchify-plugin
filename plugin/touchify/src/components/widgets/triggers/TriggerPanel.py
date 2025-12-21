@@ -1,4 +1,5 @@
 import uuid
+from jemlib.alib_kis.KritaActions import KritaActions
 from krita import *
 from touchify.src.config.triggers.TriggerList import TriggerList
 from jemlib.alib_datatypes.EnumStr import EnumStr
@@ -128,11 +129,15 @@ class TriggerPanel(QWidget):
 
     def OnEvent_DataLoaded(self, triggers: list[tuple[int, Trigger]]):
         for act in triggers:
-            btn = self.actions_manager.Create_Button(self, act[1])
-            if btn:
-                btn.triggerActivated.connect(self.onButtonClicked)
-                self.stylizeButton(btn)
-                self.appendButton(act[1], btn, act[0])
+            trigger: Trigger = act[1]
+            if trigger.variant == Trigger.Variants.Action and trigger.action_id in KritaActions.EXPANDING_SPACERS:
+                self.appendSpacer(act[0])
+            else:
+                btn = self.actions_manager.Create_Button(self, act[1])
+                if btn:
+                    btn.triggerActivated.connect(self.onButtonClicked)
+                    self.stylizeButton(btn)
+                    self.appendButton(act[1], btn, act[0])
     
         size_x = int(self.cfg.size_x)
         size_y = int(self.cfg.size_y)
@@ -234,6 +239,11 @@ class TriggerPanel(QWidget):
         elif isinstance(rowItem, QWidget):
             tlb: QWidget = rowItem
             tlb.layout().addWidget(btn)
+
+    def appendSpacer(self, row: int):
+        empty = QWidget()
+        empty.setSizePolicy(QSizePolicy.Policy.Expanding,QSizePolicy.Policy.Preferred)
+        self.addWidgetToRow(row, empty)
   
     def appendButton(self, data: Trigger, btn: TriggerButton, row: int):
         def action_id():

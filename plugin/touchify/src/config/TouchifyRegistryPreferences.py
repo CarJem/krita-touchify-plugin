@@ -10,21 +10,21 @@ class TouchifyRegistryPreferences:
 
         def writeStr(name: str, value: str, defaultValue: str) -> None:
             if TouchifyRegistryPreferences.IO.readStr(name, defaultValue) != value:
-                KritaSettings.writeSetting(TouchifyEnv.SettingsPath.TOUCHIFY, name, value)
+                KritaSettings.writeSetting(TouchifyEnv.SettingsPath.TOUCHIFY, name, value, False)
 
         def readBool(name: str, defaultValue: bool) -> bool:
             return KritaSettings.readSettingBool(TouchifyEnv.SettingsPath.TOUCHIFY, name, defaultValue)
 
         def writeBool(name: str, value: bool, defaultValue: bool) -> None:
             if TouchifyRegistryPreferences.IO.readBool(name, defaultValue) != value:
-                KritaSettings.writeSettingBool(TouchifyEnv.SettingsPath.TOUCHIFY, name, value)
+                KritaSettings.writeSettingBool(TouchifyEnv.SettingsPath.TOUCHIFY, name, value, False)
 
         def readFloat(name: str, defaultValue: float) -> float:
             return KritaSettings.readSettingFloat(TouchifyEnv.SettingsPath.TOUCHIFY, name, defaultValue)
 
         def writeFloat(name: str, value: float, defaultValue: float) -> None:
             if TouchifyRegistryPreferences.IO.readFloat(name, defaultValue) != value:
-                KritaSettings.writeSettingFloat(TouchifyEnv.SettingsPath.TOUCHIFY, name, value)
+                KritaSettings.writeSettingFloat(TouchifyEnv.SettingsPath.TOUCHIFY, name, value, False)
 
     def __init__(self) -> None:
         self.Styles_BorderlessToolbar = False

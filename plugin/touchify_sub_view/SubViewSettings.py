@@ -1,3 +1,4 @@
+import os
 from typing import Any
 
 from PyQt5.QtCore import *
@@ -19,6 +20,9 @@ class SubViewSettings:
             JsonExtensions.dictToObject(self, args)
 
             self.__image: QImage = None
+
+        def getName(self):
+            return os.path.basename(self.filepath)
 
         def getImageData(self):
             if self.__image != None:
@@ -44,6 +48,10 @@ class SubViewSettings:
         self.lastImageIndex = 0
         self.lastPopupWidth = 0
         self.lastPopupHeight = 0
+        self.showRotationBar = True
+        self.showZoomBar = True
+        self.showNavigationBar = True
+        self.fullscreenMode = False
         self.tabs: list[SubViewSettings.Tab] = []
         JsonExtensions.dictToObject(self, args)
         self.tabs = JsonExtensions.init_list(args, "tabs", SubViewSettings.Tab)
