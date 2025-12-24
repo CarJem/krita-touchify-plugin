@@ -9,6 +9,7 @@ from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import *
 
 from jemlib.alib_propertygrid.views.PropertyView import PropertyView
 from jemlib.alib_propertygrid.views.PropertyView_Form import PropertyView_Form
+from jemlib.alib_propertygrid.views.PropertyView_Sections import PropertyView_Sections
 from jemlib.alib_propertygrid.views.PropertyView_Tabs import PropertyView_Tabs
 from jemlib.alib_datatypes.TypedList import *
 from jemlib.managers.IconRepository import *
@@ -97,7 +98,18 @@ class PropertyViewport(QScrollArea):
                     self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
                     self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
                     self.setWidget(self.property_view)
-                case _:
+                case "sections":
+                    self.property_view = PropertyView_Sections(self, self.getPraser())
+                    self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+                    self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+                    self.setWidget(self.property_view)
+                case "form_alt":
+                    self.property_view = PropertyView_Form(self, self.getPraser())
+                    self.property_view.setHorizontalLabels(True)
+                    self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+                    self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+                    self.setWidget(self.property_view)
+                case _, "form":
                     self.property_view = PropertyView_Form(self, self.getPraser())
                     self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
                     self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)

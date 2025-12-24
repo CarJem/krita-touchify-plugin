@@ -32,6 +32,7 @@ class PropertyView_Form(QWidget, PropertyView):
 
         self.__fields: list[PropertyField] = []
         self.__labels: list[PropertyLabel] = []
+        self.__useHorizontalLabels = False
 
         self.setContentsMargins(0,0,0,0)
 
@@ -43,6 +44,9 @@ class PropertyView_Form(QWidget, PropertyView):
 
 
     #region Get / Set Functions
+
+    def setHorizontalLabels(self, enabled: bool):
+        self.__useHorizontalLabels = enabled
 
     def setViewport(self, viewport: "PropertyViewport"):
         PropertyView.setViewport(self, viewport)
@@ -201,7 +205,10 @@ class PropertyView_Form(QWidget, PropertyView):
                 label = self.createLabel(variable_id, labelData, hintData)
                 label.setStyleSheet("font-weight: bold;")
                 label.setContentsMargins(5,0,5,0)
-                formLayout.addRow(label)
-                formLayout.addRow(field)
+                if self.__useHorizontalLabels:
+                    formLayout.addRow(label, field)
+                else:
+                    formLayout.addRow(label)
+                    formLayout.addRow(field)
 
     #endregion

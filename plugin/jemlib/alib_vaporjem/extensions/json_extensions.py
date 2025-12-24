@@ -21,8 +21,8 @@ class JsonExtensions:
             print("failed to load json class of type: " + str(type))
             return type()
 
-    def saveClass(data: any) -> str:
-        return json.dumps(data, default=lambda o: o.__dict__, indent=4)
+    def saveClass(data: any, check_circular=True) -> str:
+        return json.dumps(data, default=lambda o: o.__dict__, indent=4,check_circular=check_circular)
 
     def loadClassFromFile(filePath: str, type: type):
         try:
@@ -31,9 +31,9 @@ class JsonExtensions:
         except:
             return type()
             
-    def saveClassToFile(data: any, filePath: str):
+    def saveClassToFile(data: any, filePath: str, check_circular=True):
         with open(filePath, "w") as f:
-            json.dump(data, f, default=lambda o: o.__dict__, indent=4)
+            json.dump(data, f, default=lambda o: o.__dict__, indent=4,check_circular=check_circular)
 
     def tryCast(jsonData, type, defaultValue):
         if not jsonData:

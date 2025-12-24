@@ -4,10 +4,17 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Run Plugin",
+            "type": "shell",
+            "linux": {
+                "command": "./build_scripts/run-plugin.sh"
+            },
+        },
+        {
             "label": "Install Plugin",
             "type": "shell",
             "linux": {
-                "command": "./build_scripts/dev-flatpak-install.sh"
+                "command": "./build_scripts/install-plugin.sh"
             },
             "presentation": {
                 "reveal": "silent",
@@ -19,7 +26,7 @@
             "label": "Update Configs",
             "type": "shell",
             "linux": {
-                "command": "./build_scripts/dev-flatpak-update-config.sh"
+                "command": "./build_scripts/update-configs.sh"
             },
             "presentation": {
                 "reveal": "silent",
@@ -32,7 +39,7 @@
             "hide": true,
             "type": "shell",
             "linux": {
-                "command": "/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=krita --file-forwarding org.kde.krita"
+                "command": "./build_scripts/launch-krita.sh"
             }
         },
         {
@@ -40,7 +47,7 @@
             "hide": true,
             "type": "shell",
             "linux": {
-                "command": "/usr/bin/flatpak kill org.kde.krita || echo 'Krita was not running'"
+                "command": "./build_scripts/close-krita.sh"
             },
             "presentation": {
                 "close": true

@@ -17,6 +17,8 @@ class PropertyField_Bool(PropertyField[bool]):
         super().__init__(handler, property, True)
         self.setMaximumWidth(20)
         self.setMinimumWidth(20)
+
+        self.setMinimumHeight(20)
         
         
         self.editor = QCheckBox(self)

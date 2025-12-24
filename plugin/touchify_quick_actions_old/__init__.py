@@ -1,0 +1,49 @@
+
+from jemlib.api_krita import KritaAPI
+from jemlib.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
+from jemlib.api_touchify.env import TouchifyEnv
+from krita import DockWidget
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from touchify.src.PluginWindow import TouchifyWindow
+
+
+
+class QuickActionsDocker(DockWidget):
+
+    DOCKER_TITLE=f"{TouchifyEnv.Title.ADDON_DOCKERS_PREFIX} Quick Actions"
+
+    resizeByDefaultRequested=pyqtSignal()
+
+    def __init__(self): 
+        super().__init__()
+        self.setWindowTitle(QuickActionsDocker.DOCKER_TITLE)
+
+        from touchify_quick_actions_old.QuickActionsWidget import QuickActionsWidget
+        self.imageView = QuickActionsWidget(self)
+        self.setWidget(self.imageView)
+
+    def TOUCHIFY_ADDON_SETUP(self, instance: "TouchifyWindow"):
+        self.imageView.setup(instance)
+    
+    def resizeEvent(self, a0):
+        return super().resizeEvent(a0)
+        
+    def showEvent(self, event):
+        super().showEvent(event)
+
+    def closeEvent(self, event):
+        return super().closeEvent(event)
+
+    # notifies when views are added or removed
+    # 'pass' means do not do anything
+    def canvasChanged(self, canvas):
+        pass
+
+    def onThemeChanged(self):
+        pass
+
+#KritaAPI.add_dock_widget_factory(TouchifyEnv.DockerID.QUICK_ACTIONS, DockWidgetFactoryAPI.DockPosition.DockTornOff, QuickActionsDocker)

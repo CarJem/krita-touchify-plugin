@@ -21,6 +21,7 @@ from touchify.src.managers.TweakManager import TweakManager
 from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
 from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
 from touchify.src.managers.WidgetPadManager import WidgetPadManager
+from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
 
 if TYPE_CHECKING:
     from .Plugin import TouchifyWindow
@@ -127,6 +128,10 @@ class TouchifyManagers:
                 toolboxDocker: ToolboxDocker = docker
                 toolboxDocker.setup(window)
                 self.__managedDockers.append(toolboxDocker)
+            elif docker_id == TouchifyEnv.DockerID.QUICK_ACTIONS:
+                quickActionsDocker: QuickActionsDocker = docker
+                quickActionsDocker.setup(window)
+                self.__managedDockers.append(quickActionsDocker)
             else:
                 if not docker_id.startswith(addon_id_prefix): pass
                 elif not hasattr(docker, addon_setup_method): pass

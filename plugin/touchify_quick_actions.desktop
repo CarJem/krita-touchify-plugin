@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=touchify_quick_actions
+X-Python-2-Compatible=false
+X-Krita-Manual=manual.html
+Name=Touchify Addon - Quick Actions
+Comment=[Requires Touchify] A Docker that provides a easy to customize and quick way of accessing Touchify triggers

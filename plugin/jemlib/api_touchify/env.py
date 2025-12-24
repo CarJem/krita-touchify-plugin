@@ -59,11 +59,13 @@ class TouchifyEnv:
         TOOLSHELFDOCKER="Touchify/ToolshelfDocker"
         WIDGETPAD="Touchify/WidgetPad"
         SUB_VIEW="Touchify/SubView"
+        QUICK_ACTIONS="Touchify/QuickActions"
     
     class SettingsPath:
+        TOUCHIFY="Touchify"
         TOOLSHELF="Touchify/Shelves"
         TOOLSHELF_NOPRESETDATA="Touchify/Shelves/NoPresetData"
         WIDGETPAD="Touchify/WidgetPads"
         TOOLBOX_NOPRESETDATA="Touchify/Toolbox/NoPresetData"
-        TOUCHIFY="Touchify"
         SUB_VIEW="Touchify/SubView"
+        QUICK_ACTIONS="Touchify/QuickActions"
