@@ -34,11 +34,11 @@ class PropertyField_TypedList(PropertyField[TypedList]):
 
         self.test_restrictions(manual_restrictions)
 
-        self.selectedIndex = -1
-        self.selectedSubIndex = -1
+        self.selected_row = -1
+        self.selected_sub_row = -1
 
-        self.selectedItem = None
-        self.selectedSubItem = None
+        self.selected_item = None
+        self.selected_sub_item = None
         
         self.field_layout = QHBoxLayout(self)
         self.field_layout.setSpacing(0)
@@ -65,7 +65,6 @@ class PropertyField_TypedList(PropertyField[TypedList]):
             self.view.setSelectionBehavior(QListView.SelectionBehavior.SelectItems)
         self.view.doubleClicked.connect(self.list_edit)
         self.view.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.updateList()
         self.view.setModel(self.model)
         self.view_layout.addWidget(self.view)
 
@@ -81,6 +80,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         self.selection_model = self.view.selectionModel()
         self.selection_model.currentChanged.connect(self.updateSelected)
 
+        self.updateList()
 
         self.btns_widget = QWidget(self)
         self.btns_widget.setContentsMargins(0,0,0,0)
@@ -190,7 +190,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
     def getNewEditorPage(self):
         dlg = PropertyGrid_Dialog(self)
         dlg.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
-        dlg.setWindowTitle(self.propertyData.variableName() + ' - ' + str(self.selectedItem))
+        dlg.setWindowTitle(self.propertyData.variableName() + ' - ' + str(self.selected_item))
         dlg.setWindowFlags(Qt.WindowType.Widget)
         dlg.rejected.connect(self.updateList)
         
@@ -222,18 +222,18 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         self.list_move('down')    
 
     def list_move(self, direction: Literal['up', 'down'] = 'up'):
-        if self.selectedIndex != -1:
-            if self.selectedSubIndex != -1:
+        if self.selected_row != -1:
+            if self.selected_sub_row != -1:
                 variable = self.propertyData.currentData()
                 length = len(variable)
-                child = variable[self.selectedIndex]
+                child = variable[self.selected_row]
                 sub_variable = self.getNestedList(child)
                 sub_length = len(sub_variable)
 
-                oldIndex = self.selectedSubIndex
-                newIndex = self.selectedSubIndex
+                oldIndex = self.selected_sub_row
+                newIndex = self.selected_sub_row
 
-                parentIndex = self.selectedIndex
+                parentIndex = self.selected_row
                 moveToOtherArray = False
                 
 
@@ -272,8 +272,8 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 variable = self.propertyData.currentData()
                 length = len(variable)
 
-                oldIndex = self.selectedIndex
-                newIndex = self.selectedIndex
+                oldIndex = self.selected_row
+                newIndex = self.selected_row
                 
                 if direction == 'up':
                     if not newIndex - 1 < 0:
@@ -295,14 +295,22 @@ class PropertyField_TypedList(PropertyField[TypedList]):
     
     def list_modify(self, mode: Literal['edit', 'add'] = 'add'):
         if mode == 'add':
-            if self.selectedSubIndex != -1:
-                editableValue = self.getEditableValue(type(self.selectedSubItem)())
-                self.getNestedList(self.selectedItem).append(editableValue)
+            if self.selected_sub_row != -1:
+                newIndex = self.selected_sub_row + 1
+                parent_row = self.selected_row
+                editableValue = self.getEditableValue(type(self.selected_sub_item)())
+                self.getNestedList(self.selected_item).append(editableValue)
+                self.updateList()
+                self.selection_model.setCurrentIndex(self.model.index(parent_row, 0).child(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
+                self.sigPropertyFieldChanged.emit()
             else:
+                newIndex = self.selected_row + 1
                 editableValue = self.getEditableValue(self.variable_list_type())
                 self.propertyData.variableData().append(editableValue)
-            self.updateList()
-            self.sigPropertyFieldChanged.emit()
+                self.updateList()
+                self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
+                self.sigPropertyFieldChanged.emit()
+            
         elif mode == 'edit':
             prop_grid = None
             page_dialog = None
@@ -311,11 +319,11 @@ class PropertyField_TypedList(PropertyField[TypedList]):
             else: prop_grid, page_dialog = self.getNewEditorPage()
 
 
-            if self.selectedIndex != -1:
-                if self.selectedSubIndex != -1:
-                    prop_grid.setDataObject(self.selectedSubItem)
+            if self.selected_row != -1:
+                if self.selected_sub_row != -1:
+                    prop_grid.setDataObject(self.selected_sub_item)
                 else:
-                    prop_grid.setDataObject(self.selectedItem)
+                    prop_grid.setDataObject(self.selected_item)
 
             if not self.has_property_view and page_dialog:
                 self.getParentContainer().navigateForwards(page_dialog)
@@ -325,15 +333,15 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         item_type: type | None = None
         item_data: any | None = None
 
-        if self.selectedIndex != -1:
-            if self.selectedSubIndex != -1:
+        if self.selected_row != -1:
+            if self.selected_sub_row != -1:
                 variable: TypedList = self.propertyData.currentData()
-                item_type = type(self.selectedSubItem)
-                item_data = copy.deepcopy(self.getNestedList(variable[self.selectedIndex])[self.selectedSubIndex])
+                item_type = type(self.selected_sub_item)
+                item_data = copy.deepcopy(self.getNestedList(variable[self.selected_row])[self.selected_sub_row])
             else:
                 variable: TypedList = self.propertyData.currentData()
                 item_type = self.variable_list_type
-                item_data = copy.deepcopy(variable[self.selectedIndex])
+                item_data = copy.deepcopy(variable[self.selected_row])
 
             if item_data != None and item_type != None:
                 self.onItemDuplication(item_data)
@@ -342,9 +350,9 @@ class PropertyField_TypedList(PropertyField[TypedList]):
     def list_paste(self):
         item_type: type | None = None
         
-        if self.selectedIndex != -1:
-            if self.selectedSubIndex != -1: 
-                item_type = type(self.selectedSubItem)
+        if self.selected_row != -1:
+            if self.selected_sub_row != -1: 
+                item_type = type(self.selected_sub_item)
             else: 
                 item_type = self.variable_list_type
 
@@ -353,56 +361,62 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 if clipboard_data != None:
                     pastable_data = copy.deepcopy(clipboard_data)
                     variable: TypedList = self.propertyData.currentData()
-                    if self.selectedSubIndex != -1:
-                        list: TypedList = self.getNestedList(variable[self.selectedIndex])
+                    if self.selected_sub_row != -1:
+                        list: TypedList = self.getNestedList(variable[self.selected_row])
                         list.append(pastable_data)
                     else:
                         variable.append(pastable_data)
                     self.updateList()
 
     def list_duplicate(self):
-        if self.selectedIndex != -1:
-            if self.selectedSubIndex != -1:
+        if self.selected_row != -1:
+            if self.selected_sub_row != -1:
                 variable: TypedList = self.propertyData.currentData()
-                list: TypedList = self.getNestedList(variable[self.selectedIndex])
-                item = list[self.selectedSubIndex]
+                list: TypedList = self.getNestedList(variable[self.selected_row])
+                item = list[self.selected_sub_row]
                 newItem = copy.deepcopy(item)
                 self.onItemDuplication(newItem)
                 list.append(newItem)
                 self.updateList()
             else:
                 variable: TypedList = self.propertyData.currentData()
-                item = variable[self.selectedIndex]
+                item = variable[self.selected_row]
                 newItem = copy.deepcopy(item)
                 self.onItemDuplication(newItem)
                 variable.append(newItem)
                 self.updateList()
 
     def list_remove(self):
-        if self.selectedIndex != -1:
-            if self.selectedSubIndex != -1:
+        if self.selected_row != -1:
+            if self.selected_sub_row != -1:
                 variable: TypedList = self.propertyData.currentData()
-                newIndex = self.selectedSubIndex
-                list: TypedList = self.getNestedList(variable[self.selectedIndex])
+                newIndex = self.selected_sub_row
+                parent_row = self.selected_row
+                list: TypedList = self.getNestedList(variable[self.selected_row])
                 if not newIndex - 1 < 0:
                     newIndex -= 1
-                list.pop(self.selectedSubIndex)
+                list.pop(self.selected_sub_row)
                 self.updateList()
-                self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
+                self.selection_model.setCurrentIndex(self.model.index(parent_row, 0).child(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
+                self.sigPropertyFieldChanged.emit()
             else:
                 variable: TypedList = self.propertyData.currentData()
-                newIndex = self.selectedIndex
+                newIndex = self.selected_row
                 if not newIndex - 1 < 0:
                     newIndex -= 1
-                variable.pop(self.selectedIndex)
+                variable.pop(self.selected_row)
                 self.updateList()
                 self.selection_model.setCurrentIndex(self.model.index(newIndex, 0), QItemSelectionModel.SelectionFlag.ClearAndSelect)
+                self.sigPropertyFieldChanged.emit()
     
     #endregion
 
     #region Update Actions
 
     def updateList(self):
+        if self.selection_model: self.selection_model.blockSignals(True)
+
+        self.model.index
         self.model.clear()
         index = 0
 
@@ -425,17 +439,20 @@ class PropertyField_TypedList(PropertyField[TypedList]):
             self.model.appendRow(item)
             indicies.append(sub_index + 1)
 
-        self.selectedIndex = -1
-        self.selectedItem = None
-        self.selectedSubIndex = -1
-        self.selectedSubItem = None
-
+        self.selected_row = -1
+        self.selected_item = None
+        self.selected_sub_row = -1
+        self.selected_sub_item = None
 
         if self.has_property_view:
             self.updatePropertyView()
 
         if self.has_sub_array:
             QTimer.singleShot(100, self.view.expandAll)
+
+        if self.selection_model: self.selection_model.blockSignals(False)
+
+            
         
     def updateSelected(self, current: QModelIndex, previous: QModelIndex):
         x = -1
@@ -448,21 +465,24 @@ class PropertyField_TypedList(PropertyField[TypedList]):
             y = current.row()
             x = current.parent().row()
 
-        self.selectedIndex = x
-        self.selectedSubIndex = y
- 
-        if self.selectedIndex != -1:
-            item = self.propertyData.currentData()[self.selectedIndex]
-            self.selectedItem = self.getEditableValue(item)
-        else:
-            self.selectedItem = None
+        self.selected_row = x
+        self.selected_sub_row = y
 
-        if self.selectedItem != None and self.selectedSubIndex != -1:
-            source = self.selectedItem
-            item = self.getNestedList(source)[self.selectedSubIndex]
-            self.selectedSubItem = self.getEditableValue(item)
+
+
+ 
+        if self.selected_row != -1:
+            item = self.propertyData.currentData()[self.selected_row]
+            self.selected_item = self.getEditableValue(item)
         else:
-            self.selectedSubItem = None
+            self.selected_item = None
+
+        if self.selected_item != None and self.selected_sub_row != -1:
+            source = self.selected_item
+            item = self.getNestedList(source)[self.selected_sub_row]
+            self.selected_sub_item = self.getEditableValue(item)
+        else:
+            self.selected_sub_item = None
 
         if self.has_sub_array:
             self.view.expandAll()
@@ -474,11 +494,11 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         if not self.has_property_view: return
         if self.view_editor == None: return
 
-        if self.selectedIndex != -1:
-            if self.selectedSubIndex != -1:
-                self.view_editor.setDataObject(self.selectedSubItem)
+        if self.selected_row != -1:
+            if self.selected_sub_row != -1:
+                self.view_editor.setDataObject(self.selected_sub_item)
             else:
-                self.view_editor.setDataObject(self.selectedItem)
+                self.view_editor.setDataObject(self.selected_item)
         else:
             self.view_editor.setDataObject(None)
     

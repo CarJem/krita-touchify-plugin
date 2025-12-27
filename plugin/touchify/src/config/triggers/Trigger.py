@@ -18,6 +18,7 @@ class Trigger:
         CanvasPreset = "canvas_preset"
         PieWheel = "pie_wheel"
         Script = "script"
+        Color = "color"
 
     def __defaults__(self):
         self.registry_id: str = "NewTrigger"      
@@ -28,7 +29,7 @@ class Trigger:
         self.display_text_hide: bool = False
         self.display_custom_icon_enabled: bool = False
         self.display_custom_icon: str = ""
-        self.display_custom_text_enabled: bool = True
+        self.display_custom_text_enabled: bool = False
         self.display_custom_text: str = ""
 
         #Extras Params
@@ -64,6 +65,9 @@ class Trigger:
 
         #Pie Wheel Params
         self.piewheel_id: str = ""
+
+        #Color Params
+        self.color_id: str = "#000000"
 
         self.json_version: int = 2
     
@@ -108,6 +112,9 @@ class Trigger:
             case Trigger.Variants.PieWheel:
                 prefix = "[Pie Wheel]"
                 suffix = self.display_custom_text
+            case Trigger.Variants.Color:
+                prefix = "[Color]"
+                suffix = self.color_id
             case _:
                 prefix = f"[{self.variant}]"
                 suffix = self.display_custom_text
@@ -132,17 +139,12 @@ class Trigger:
 
     def propertygrid_sorted(self):
         return [
-            "registry_id",
-
             "#NEW_SECTION",
 
-            "display_custom_text_opt",
-            "display_custom_icon_opt",
-            "display_opt",
+            "variant",
 
             "#NEW_COLUMN",
 
-            "variant",
             "action_id",
             "context_menu_id",
             "brush_name",
@@ -153,7 +155,21 @@ class Trigger:
             "canvas_preset_data",
             "script_id",
             "piewheel_id",
-            "extra_opt"
+            "color_id",
+
+            "#NEW_SECTION",
+            
+            "display_custom_text_opt",
+            "display_opt",
+
+            "#NEW_COLUMN",
+
+            "display_custom_icon_opt",
+            "extra_opt",
+
+            "#NEW_SECTION",
+
+            "registry_id"
         ]
 
     def propertygrid_hidden(self):
@@ -178,6 +194,18 @@ class Trigger:
             result.append("script_id")
         if self.variant != Trigger.Variants.PieWheel:
             result.append("piewheel_id")
+        if self.variant != Trigger.Variants.Color:
+            result.append("color_id")
+
+        if self.variant == Trigger.Variants.Color:
+            result.append("display_opt")
+            result.append("display_text_hide")
+            result.append("display_icon_hide")
+            result.append("display_custom_icon_opt")
+            result.append("display_custom_text_opt")
+            result.append("extra_opt")
+            result.append("extra_closes_popup")
+            result.append("extra_composer_mode")
 
         return result
     
@@ -211,6 +239,7 @@ class Trigger:
         labels["workspace_id"] = "Workspace ID"
         labels["docker_id"] = "Docker ID"
         labels["script_id"] = "Script ID"
+        labels["color_id"] = "Selected Color"
         
         labels["docker_group_data"] = "Group Settings"
         labels["popup_data"] = "Popup Settings"
@@ -234,4 +263,6 @@ class Trigger:
         restrictions["context_menu_id"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.MenuRegistry)
         restrictions["script_id"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.ScriptRegistry)
         restrictions["piewheel_id"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.PieWheelRegistry)
+        restrictions["color_id"] = DataConstraints.strMod(DataConstraints.StrMod.ColorPicker)
+        
         return restrictions

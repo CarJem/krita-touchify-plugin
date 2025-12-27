@@ -9,7 +9,8 @@ class DataConstraints:
         Values="values"
         ValuesWithIndex="indexed_values"
         Multiline="multiline_string"
-        PythonEdtior="python_editor"
+        PythonEditor="python_editor"
+        ColorPicker="color_picker"
         
         ActionSelection="action_selection"
         DockerSelection="docker_selection"

@@ -1,6 +1,5 @@
 from enum import Enum
 import typing
-from jemlib.managers.IconRepository import IconRepository
 from jemlib.api_touchify.env import *
 from jemlib.alib_vaporjem.extensions.krita_extensions import *
 from krita import *
@@ -57,8 +56,10 @@ class TriggerButton(QToolButton):
         self.tool_action_id = ""
         self.tool_last_action_id = ""
 
-        self.brush_id = ""
+        self.brush_id = None
         self.is_brush_selected = False
+
+        self.color_id = None
 
 
         qApp.paletteChanged.connect(self.onPaletteChanged)
@@ -94,12 +95,16 @@ class TriggerButton(QToolButton):
 
     #region Setup
 
+    def setupColorButton(self, color_id: str):
+        self.color_id = color_id        
+        self.update()
+
     def setupBrushChange(self, source_window: "WindowAPI", brush_id: str, is_active: bool):
         self.brush_id = brush_id
         source_window.notifier.brushChanged.connect(self.onBrushChanged)
         if is_active: 
             self.is_brush_selected = True
-            self.repaint()
+            self.update()
 
     def setupToolChange(self, source_window: "WindowAPI", tool_id: str, is_active: bool):
         self.is_tool_action = True
@@ -164,26 +169,21 @@ class TriggerButton(QToolButton):
         self.toggled = (checked)
 
     def onBrushChanged(self, current_brush: Resource):
-        __brush_presets = IconRepository.brushPresets()
-        if id not in __brush_presets: return
-        btn_preset = __brush_presets[id]
-        
-        if current_brush != btn_preset: 
-            self.is_brush_selected = False
-            self.repaint()
-        else: 
-            self.is_brush_selected = True
-            self.repaint()
+        if current_brush.name() == self.brush_id: is_active = True
+        else: is_active = False
+
+        if self.is_brush_selected != is_active:
+            self.is_brush_selected = is_active
+            self.update()
 
     def onToolChanged(self, current_tool: str):
         self.tool_last_action_id = current_tool
         if self.tool_action_id != "" and current_tool == self.tool_action_id: self.toggled = (True)
-        else: self.toggled = (False)
+        elif self.tool_action_id != "": self.toggled = (False)
 
         if self.is_blender_menu and current_tool in self.blender_item_list: self.menu_toggled = (True)
-        else: self.menu_toggled = (False)
+        elif self.is_blender_menu: self.menu_toggled = (False)
         
-
     def onReleased(self):
         if self.trigger_mode == TriggerButton.TriggerMode.OnRelease: self.trigger()
 
@@ -195,16 +195,16 @@ class TriggerButton(QToolButton):
 
     def onToggled(self, toggled):
         p = self.window().palette()
-        if toggled: p.setColor(QPalette.ColorRole.Button, p.color(QPalette.Highlight))
+        if toggled: p.setColor(QPalette.ColorRole.Button, p.color(QPalette.ColorRole.Highlight))
         self.setPalette(p)
-        self.repaint()
+        self.update()
 
     def onTriggered(self):
-        if self.is_action_checkable:
-            self.toggled = (self.action_source.isChecked())
-        elif self.is_tool_action:
+        if self.is_tool_action:
             self.toggled = (self.tool_action_id == self.tool_last_action_id)
-
+        elif self.is_action_checkable:
+            self.toggled = (self.action_source.isChecked())
+    
         if self.is_blender_menu:
             self.menu_toggled = (self.tool_last_action_id in self.blender_item_list)
 
@@ -259,6 +259,7 @@ class TriggerButton(QToolButton):
         super().paintEvent(e)
         if self.is_brush_selected: self.paintBrushHighlight(e)
         if self.is_blender_menu: self.paintBlenderMenu(e)
+        if self.color_id != None: self.paintColorBox(e)
 
     def paintBlenderMenu(self, e: QPaintEvent):
         rect = self.rect()
@@ -295,6 +296,30 @@ class TriggerButton(QToolButton):
         rectPath.addRect(rect.x(),rect.y(),rect.width(),rect.height())
         painter.setPen(QPen(hc, thickness))
         painter.drawPath(rectPath)
+
+    def paintColorBox(self, e: QPaintEvent):
+        r = self.rect()
+        p = QPainter(self)
+        
+        frame_size = 1
+        padding = 4
+        color = QColor(self.color_id)
+
+        x = padding
+        y = padding
+        width = (r.width()) - (padding * 2)
+        height = (r.height()) - (padding * 2)
+        
+        if color.isValid():
+            frame_color = self.palette().color(QPalette.ColorRole.AlternateBase)
+            fill_color = QColor(self.color_id)
+        
+            if not self.isEnabled():
+                fill_color.setAlpha(128)
+                frame_color.setAlpha(128)
+                
+            p.fillRect(int(x), int(y), int(width + frame_size), int(height + frame_size), frame_color)
+            p.fillRect(int(x + frame_size), int(y + frame_size), int(width - frame_size), int(height - frame_size), fill_color)
 
     #endregion
 

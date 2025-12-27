@@ -28,7 +28,7 @@ if TYPE_CHECKING:
 from ..dataclasses.SourceGridWidget import SourceGridWidget
 
 
-class ClickableGridWidget(QWidget):
+class DraggableGridWidget(QWidget):
     """A clickable and droppable grid widget for brush presets"""
 
     def __init__(self, grid_info: "GridInfo", parent_docker: "QuickActionsDocker"):
@@ -122,14 +122,14 @@ class ClickableGridWidget(QWidget):
                 self.parent_docker.update_grid(source_grid)
                 self.parent_docker.update_grid(self.grid_info)
 
-            self.parent_docker.save_grids_data()
+            self.parent_docker.save_grids()
             event.acceptProposedAction()
 
     def find_source_preset(self, preset_name):
         """Find source preset in grids"""
         for grid in self.parent_docker.grids:
             for i, preset in enumerate(grid.brush_presets):
-                if preset.name() == preset_name:
+                if preset.itemUUID() == preset_name:
                     return preset, grid, i
         return None, None, -1
 
@@ -160,7 +160,7 @@ class ClickableGridWidget(QWidget):
         grids_to_update = {}
         for data in source_presets_data:
             grid = data["grid"]
-            grid_name = grid.get("name", id(grid))
+            grid_name = grid.name
             if grid_name not in grids_to_update:
                 grids_to_update[grid_name] = {"grid_info": grid, "presets_data": []}
             grids_to_update[grid_name]["presets_data"].append(data)
@@ -229,21 +229,21 @@ class ClickableGridWidget(QWidget):
             self._handle_cross_grid_move(target_grid, presets_to_insert, grids_to_update, target_index)
 
         self.parent_docker.clear_selection()
-        self.parent_docker.save_grids_data()
+        self.parent_docker.save_grids()
         event.acceptProposedAction()
 
     def calculate_drop_position(self, drop_pos):
         """Calculate target position for drop"""
         # Use dynamic columns from parent docker instead of config
-        columns = self.parent_docker.get_dynamic_columns()
-        button_size = get_brush_icon_size()
-        spacing = get_spacing_between_buttons()
+        columns = self.parent_docker.get_dynamic_columns(self.grid_info)
+        button_size = get_brush_icon_size(self.grid_info)
+        spacing = get_spacing_between_buttons(self.grid_info)
         
         # Account for name label height if brush names are displayed
         name_label_height = 0
-        if get_display_brush_names():
+        if get_display_brush_names(self.grid_info):
             # Use 2-line height as max since we don't know exact grid state
-            name_label_height = get_brush_name_label_height(2)
+            name_label_height = get_brush_name_label_height(2, self.grid_info)
         
         total_button_height = button_size + name_label_height
 

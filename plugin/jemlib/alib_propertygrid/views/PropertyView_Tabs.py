@@ -56,13 +56,13 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
         self.__tabs.append(varName)
         return labelText
     
-    def createSisterPage(self, source: any, sister_items: list[str]):
+    def createSisterPage(self, source: any, sister_items: list[str], sister_view_type: str):
         from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
         page = PropertyViewport(self.getViewport().getContainer(), self.getPraser())
         page.sigPropertiesChanged.connect(self.onPropertiesChanged)
         page.setParent(self)
         page.setLimiters(sister_items)
-        page.setViewType("default")
+        page.setViewType(sister_view_type)
         page.setDataObject(source)
         self.__pages.append(page)
         return page        
@@ -98,6 +98,9 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
                 page.setModifiers({"no_labels": ""})
                 page.setViewType("default")
                 page.setDataObject(source)
+                page.setContentsMargins(0,0,0,0)
+                page.getPropertyGrid().setFrameShape(QFrame.Shape.NoFrame)
+                page.getPropertyGrid().widget().setContentsMargins(0,0,0,0)
                 self.__pages.append(page)
                 return page
             else:
@@ -109,6 +112,8 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
                 page.setModifiers({"no_labels": ""})
                 page.setViewType("default")
                 page.setDataObject(source)
+                page.setFrameShape(QFrame.Shape.NoFrame)
+                page.setContentsMargins(0,0,0,0)
                 self.__pages.append(page)
                 return page
 
@@ -145,9 +150,13 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
                 pass
             elif variable_id in known_sisters:
                 sister_info = sister_data[variable_id]
+                view_type = "default"
+                if "view_type" in sister_info:
+                    view_type = sister_info["view_type"]
+
                 if "is_group" in sister_info:
                     if bool(sister_info["is_group"]):
-                        page = self.createSisterPage(item, sister_info["items"])
+                        page = self.createSisterPage(item, sister_info["items"], view_type)
             else:
                 page = self.createPage(item, variable_id)
 

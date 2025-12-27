@@ -6,64 +6,22 @@ multi-grid selection and drag with visual feedback for drop position.
 """
 
 from typing import TYPE_CHECKING
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QApplication,QPushButton
-from PyQt5.QtCore import Qt, QPoint, QMimeData, QRect, QEvent
-from PyQt5.QtGui import QDrag, QPainter, QColor
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from krita import Krita  # type: ignore
+
+from touchify_quick_actions.utils.styles import COLLAPSE_BUTTON_STYLE
 
 from ..utils.drag_utils import encode_grid_single, encode_grid_multi, is_grid_drag, decode_grid_single, decode_grid_multi
-
-
-# Visual constants for drop zone highlighting
-_DROP_HIGHLIGHT_COLOR = QColor(70, 200, 255, 255)  # Bright cyan, fully opaque
-_DROP_HIGHLIGHT_HEIGHT = 4  # Thicker highlight line for better visibility
+from .DropIndicatorOverlay import DropIndicatorOverlay
 
 if TYPE_CHECKING:
     from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
     from touchify_quick_actions.dataclasses.GridInfo import GridInfo
 
-class DropIndicatorOverlay(QWidget):
-    """Overlay widget that draws drop indicator on top of all other widgets."""
-    
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setAttribute(Qt.WA_TransparentForMouseEvents)
-        self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        self.position = None  # 'top' or 'bottom'
-        self.hide()
-    
-    def set_position(self, position):
-        """Set the indicator position ('top', 'bottom', or None to hide)."""
-        if position != self.position:
-            self.position = position
-            if position:
-                self.show()
-                self.raise_()
-            else:
-                self.hide()
-            self.update()
-    
-    def paintEvent(self, event):
-        """Paint the drop indicator overlay."""
-        if not self.position:
-            return
-        
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
-        painter.setBrush(_DROP_HIGHLIGHT_COLOR)
-        painter.setPen(Qt.NoPen)
-        
-        width = self.width()
-        
-        if self.position == 'top':
-            rect = QRect(0, 0, width, _DROP_HIGHLIGHT_HEIGHT)
-        else:
-            rect = QRect(0, self.height() - _DROP_HIGHLIGHT_HEIGHT, width, _DROP_HIGHLIGHT_HEIGHT)
-        
-        painter.drawRect(rect)
-        painter.end()
 
-class DraggableGridRow(QWidget):
+class DraggableGridWidgetHeader(QWidget):
     """A draggable widget containing the collapse button and name button for a grid."""
     
     def __init__(self, grid_info: "GridInfo", parent_docker: "QuickActionsDocker"):
@@ -196,7 +154,7 @@ class DraggableGridRow(QWidget):
         
         # Start drag tracking for autoscroll (uses same mechanism as brush buttons)
         if hasattr(self.parent_docker, 'start_drag_tracking'):
-            self.parent_docker.start_drag_tracking(self)
+            self.parent_docker.dragStartTracking(self)
         
         drag = QDrag(self)
         mime_data = QMimeData()
@@ -216,14 +174,14 @@ class DraggableGridRow(QWidget):
     def dragEnterEvent(self, event):
         """Handle drag enter for receiving grid drops."""
         if event.mimeData().hasText() and is_grid_drag(event.mimeData().text()):
-            if self.grid_info not in self.parent_docker.get_grids_being_dragged():
+            if self.grid_info not in self.parent_docker.dragGetGridState():
                 event.acceptProposedAction()
                 self._update_drop_position(event.pos())
     
     def dragMoveEvent(self, event):
         """Handle drag move to update drop position indicator."""
         if event.mimeData().hasText() and is_grid_drag(event.mimeData().text()):
-            if self.grid_info not in self.parent_docker.get_grids_being_dragged():
+            if self.grid_info not in self.parent_docker.dragGetGridState():
                 event.acceptProposedAction()
                 self._update_drop_position(event.pos())
     
@@ -279,3 +237,33 @@ class DraggableGridRow(QWidget):
         """Clear the drop indicator."""
         self.drop_position = None
         self._drop_overlay.set_position(None)
+
+class DraggableGridWidgetHeaderToggle(QPushButton):
+    def __init__(self, name_button_height: int, parent: QWidget=None):
+        super().__init__(parent)
+        self.setObjectName("collapse_button")
+        self.setFixedSize(name_button_height, name_button_height)
+        self.setStyleSheet(COLLAPSE_BUTTON_STYLE)
+        self.icon_size = name_button_height - 8
+        self.setIconSize(QSize(self.icon_size, self.icon_size))
+
+    def updateIconSize(self):
+        button_height = self.height()
+        self.icon_size = button_height - 8
+    
+    def set_collapse_button_icon(self, is_collapsed):
+        """Set the collapse button icon based on collapse state."""
+        icon_name = "arrow-right" if is_collapsed else "arrow-down"
+        icon = Krita.instance().icon(icon_name)
+        
+        if not icon or icon.isNull():
+            return
+        
+        # Use high-res then scale down for quality
+        pixmap = icon.pixmap(self.icon_size * 2, self.icon_size * 2)
+        if not pixmap.isNull():
+            scaled = pixmap.scaled(self.icon_size, self.icon_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            self.setIcon(QIcon(scaled))
+        else:
+            self.setIcon(icon)
+        self.setIconSize(QSize(self.icon_size, self.icon_size))

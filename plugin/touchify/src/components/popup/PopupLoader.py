@@ -52,9 +52,6 @@ class PopupLoader(QObject):
                 dockers.append(item.id)
         else:
             dockers.append(data.docker_id)
-    
-        #TODO: Fix
-        #toolshelf_data.homepage.tab_type = data.dockers_tab_type
 
         
         layout_array = []

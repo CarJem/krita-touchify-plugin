@@ -29,14 +29,22 @@ class DeveloperManager(object):
 
 
         self.iconZoo = QAction("Icon Zoo...")
-        self.iconZoo.triggered.connect(self.onIconZooRequested)
+        self.iconZoo.triggered.connect(lambda: self.onZooRequested(DataConstraints.StrMod.IconSelection))
         self.root_menu.addAction(self.iconZoo)
+
+        self.actionZoo = QAction("Action Zoo...")
+        self.actionZoo.triggered.connect(lambda: self.onZooRequested(DataConstraints.StrMod.ActionSelection))
+        self.root_menu.addAction(self.actionZoo)
+
+        self.brushesZoo = QAction("Brushes Zoo...")
+        self.brushesZoo.triggered.connect(lambda: self.onZooRequested(DataConstraints.StrMod.BrushSelection))
+        self.root_menu.addAction(self.brushesZoo)
     
         if len(self.root_menu.actions()) == 0:
             testUIAction = self.root_menu.addAction("No Actions")
             testUIAction.setEnabled(False)
 
-    def onIconZooRequested(self):
+    def onZooRequested(self, type: DataConstraints.StrMod):
 
         def copyItemToClipboard():
             clipboard = QApplication.clipboard()
@@ -47,7 +55,7 @@ class DeveloperManager(object):
         dlg.header_buttons.buttons()[1].setText("Exit...")
         dlg.header_buttons.accepted.connect(copyItemToClipboard)
         dlg.header_buttons.rejected.connect(lambda: dlg.reject())
-        dlg.load_list(DataConstraints.StrMod.IconSelection)
+        dlg.load_list(type)
         dlg.exec_()
 
 

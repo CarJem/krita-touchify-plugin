@@ -37,5 +37,5 @@ class CustomScript:
 
     def propertygrid_restrictions(self):   
         restrictions = {}
-        restrictions["script_code"]  = DataConstraints.strMod(DataConstraints.StrMod.PythonEdtior)
+        restrictions["script_code"]  = DataConstraints.strMod(DataConstraints.StrMod.PythonEditor)
         return restrictions

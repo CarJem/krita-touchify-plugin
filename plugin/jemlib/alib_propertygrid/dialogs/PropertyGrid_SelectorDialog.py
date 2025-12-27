@@ -2,6 +2,7 @@ from typing import Any
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from krita import *
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.enums.tool import Tool
@@ -170,7 +171,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             for preset_key in presets:
                 preset = presets[preset_key]
                 listItem = QListWidgetItem()
-                listItem.setIcon(IconRepository.brushIcon(preset.name()))
+                listItem.setIcon(IconRepository.brushIcon(preset.name(), presets))
                 listItem.setText(preset.name())
                 listItem.setData(DATA_INDEX, preset_key)
                 if preset_key == selection_input: selected_items.append(listItem)
@@ -193,8 +194,18 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
             self.list_view.setUniformItemSizes(True)
             actions = KritaAPI.get_actions()
             for actionData in actions:
-                displayName = f"{actionData.toolTip()}\n---[{actionData.objectName()}]---"
+                action_text = KritaExtensions.formatActionText(actionData.text())
+                action_tooltip = KritaExtensions.formatActionText(actionData.toolTip())
+
+                if action_text != "":
+                    displayName = f"{action_text}\n[[{actionData.objectName()}]]"
+                elif action_tooltip != "":
+                    displayName = f"{action_tooltip}\n[[{actionData.objectName()}]]"
+                else:
+                    displayName = f"[[{actionData.objectName()}]]\n"
+
                 icon = actionData.icon()
+                if icon.isNull(): icon = IconRepository.fallbackIcon()
                 listItem = QListWidgetItem()
                 listItem.setText(displayName)
                 listItem.setIcon(icon)

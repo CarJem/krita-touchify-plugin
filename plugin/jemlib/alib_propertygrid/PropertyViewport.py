@@ -109,7 +109,12 @@ class PropertyViewport(QScrollArea):
                     self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
                     self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
                     self.setWidget(self.property_view)
-                case _, "form":
+                case "form":
+                    self.property_view = PropertyView_Form(self, self.getPraser())
+                    self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+                    self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+                    self.setWidget(self.property_view)
+                case _:
                     self.property_view = PropertyView_Form(self, self.getPraser())
                     self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
                     self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)

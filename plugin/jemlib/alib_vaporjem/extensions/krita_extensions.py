@@ -12,6 +12,15 @@ from jemlib.api_krita.wrappers.window import WindowAPI
 
 class KritaExtensions:
 
+
+    @staticmethod
+    def getActionData(action: QAction):
+        #shortcut = KritaAPI.get_action_shortcut(actionData.objectName())
+        #print(actionData.property("menulocation"))
+        if isinstance(action, QWidgetAction):
+            print(f"""Action Name: {action.objectName()}
+                  Action Data: {str(action.dynamicPropertyNames())}""")
+
     @staticmethod
     def moveActionTo(action_id: str, source: QMenu, dest: QMenu, after: str):
         actionToMove = KritaAPI.get_action(action_id)
@@ -50,6 +59,9 @@ class KritaExtensions:
         for seg in segments:
             if seg.startswith("&") and len(seg) != 1:
                 edited_segments.append(seg[1:])
+            elif "&" in seg and len(seg) != 1:
+                new_seg = seg.replace("&", "")
+                edited_segments.append(new_seg)
             else:
                 edited_segments.append(seg)
             

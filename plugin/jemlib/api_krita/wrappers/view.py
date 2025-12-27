@@ -51,12 +51,12 @@ class ViewAPI:
         if self.isValid(): self.__internal__.setForeGroundColor( color_data.color )
 
     @property
-    def foregroundColor(self) -> ManagedColorAPI:
-        if self.isValid(): return ManagedColorAPI(self.__internal__.foregroundColor())
+    def backgroundColor(self) -> ManagedColorAPI:
+        if self.isValid(): return ManagedColorAPI(self.__internal__.backgroundColor())
         else: return ManagedColorAPI(None)
 
-    @foregroundColor.setter
-    def foregroundColor(self, color_data: ManagedColorAPI):
+    @backgroundColor.setter
+    def backgroundColor(self, color_data: ManagedColorAPI):
         if self.isValid() and color_data.isValid(): self.__internal__.setBackGroundColor( color_data.color )
 
     @cached_property

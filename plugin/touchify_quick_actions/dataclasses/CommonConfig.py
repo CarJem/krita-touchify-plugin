@@ -38,11 +38,12 @@ class CommonConfig:
 
     class Layout:
         def __init__(self, **args) -> None:
-            self.max_shortcut_per_row = 4
             self.max_brush_per_row = 8
             self.spacing_between_buttons = 1
             self.spacing_between_grids = 1
             self.brush_icon_size = 65
+            self.list_mode = False
+            self.list_column_count = 1
             self.display_brush_names = True
             self.exclusive_uncollapse = False
             JsonExtensions.dictToObject(self, args, [])

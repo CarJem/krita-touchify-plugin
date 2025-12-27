@@ -2,7 +2,7 @@
 
 from PyQt5.QtGui import QColor
 
-from .data_manager import load_common_config
+from .config_utils import load_common_config
 
 def _make_name_button_style(bg_color, text_color, border="none"):
     """Generate a name button stylesheet."""
@@ -32,7 +32,7 @@ def _make_collapse_button_style(bg_color):
 # Theme color constants
 DOCKER_BUTTON_BG = "#63666a"
 DOCKER_BUTTON_TEXT = "#000000"
-DOCKER_BUTTON_FONT_SIZE = "10px"
+DOCKER_BUTTON_FONT_SIZE = "8px"
 GRID_NAME_COLOR = "#979797"
 SELECTION_HIGHLIGHT = "#46aaff"
 DARK_BG = "#2b2b2b"

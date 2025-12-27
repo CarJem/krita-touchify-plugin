@@ -173,8 +173,8 @@ class IconRepository:
         if target_action: return target_action.icon()
         else: return QIcon()
         
-    def brushIcon(brushName: str):
-        brush_presets = KritaAPI.get_presets()
+    def brushIcon(brushName: str, presets_cache: dict[str, any] = None):
+        brush_presets = KritaAPI.get_presets() if not presets_cache else presets_cache
         if brushName in brush_presets:
             preset = brush_presets[brushName]
             return QIcon(QPixmap.fromImage(preset.image()))
@@ -191,9 +191,12 @@ class IconRepository:
 
     #region Other Retrival
 
+
+    @staticmethod
     def brushPresets():
         return KritaAPI.get_presets()
     
+    @staticmethod
     def actionText(action_id: str):
         target_action = KritaAPI.get_action(action_id)
         if target_action: return target_action.text()

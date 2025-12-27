@@ -64,13 +64,13 @@ class PropertyView_Sections(QWidget, PropertyView):
         self.__titles.append(label)
         return label
     
-    def createSisterSection(self, source: any, sister_items: list[str]):
+    def createSisterSection(self, source: any, sister_items: list[str], sister_view_type: str):
         from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
         page = PropertyViewport(self.getViewport().getContainer(), self.getPraser())
         page.sigPropertiesChanged.connect(self.onPropertiesChanged)
         page.setParent(self)
         page.setLimiters(sister_items)
-        page.setViewType("default")
+        page.setViewType(sister_view_type)
         page.setDataObject(source)
         self.__sections.append(page)
         return page        
@@ -185,9 +185,13 @@ class PropertyView_Sections(QWidget, PropertyView):
                 pass
             elif variable_id in known_sisters:
                 sister_info = sister_data[variable_id]
+                view_type = "default"
+                if "view_type" in sister_info:
+                    view_type = sister_info["view_type"]
+
                 if "is_group" in sister_info:
                     if bool(sister_info["is_group"]):
-                        page = self.createSisterSection(item, sister_info["items"])
+                        page = self.createSisterSection(item, sister_info["items"], view_type)
             else:
                 page = self.createSection(item, variable_id)
 

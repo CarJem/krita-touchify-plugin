@@ -16,7 +16,8 @@ class GridConfig:
                 "brush_presets": x.brush_presets,
                 "name": x.name,
                 "is_collapsed": x.is_collapsed,
-                "is_active": x.is_active
+                "is_active": x.is_active,
+                "layout": x.layout
             } for x in self.grids]
         }
 

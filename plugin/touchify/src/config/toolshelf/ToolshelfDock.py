@@ -145,7 +145,7 @@ class ToolshelfDock:
         return hints
     
     def propertygrid_view_type(self):
-        return "tabs_vertical"
+        return "sections"
     
     def propertygrid_sorted(self):
         return [
@@ -279,8 +279,8 @@ class ToolshelfDock:
             "special_nested_show_titlebar"
         ]
 
-        row["general_group"] = {"items": global_groups, "is_group": True}
-        row["variant_group"] = {"items": variant_group, "is_group": True}
+        row["general_group"] = {"items": global_groups, "is_group": True, "view_type": "form_alt"}
+        row["variant_group"] = {"items": variant_group, "is_group": True, "view_type": "form_alt"}
 
         row["action_section_btn_size"] = {"items": ["action_section_btn_width", "action_section_btn_height"]}
         row["action_section_alignment"] = {"items": ["action_section_alignment_x","action_section_alignment_y"]}

@@ -73,7 +73,7 @@ class DraggableGridContainer(QWidget):
         """Find source preset in all grids (same logic as ClickableGridWidget)."""
         for grid in self.parent_docker.grids:
             for i, preset in enumerate(grid.brush_presets):
-                if preset.name() == preset_name:
+                if preset.itemUUID() == preset_name:
                     return preset, grid, i
         return None, None, -1
 
@@ -102,7 +102,7 @@ class DraggableGridContainer(QWidget):
             self.parent_docker.update_grid(source_grid)
             self.parent_docker.update_grid(target_grid)
 
-        self.parent_docker.save_grids_data()
+        self.parent_docker.save_grids()
         event.acceptProposedAction()
 
     def _handle_header_multi_brush_drop(self, event, text):
@@ -127,7 +127,7 @@ class DraggableGridContainer(QWidget):
         grids_to_update: dict[str, SourceGridWidget] = {}
         for data in source_presets_data:
             grid = data["grid"]
-            grid_name = grid.get("name", id(grid))
+            grid_name = grid.name
             if grid_name not in grids_to_update:
                 grids_to_update[grid_name] = {"grid_info": grid, "presets_data": []}
             grids_to_update[grid_name]["presets_data"].append(data)
@@ -153,5 +153,5 @@ class DraggableGridContainer(QWidget):
 
         # Clear selection and save
         self.parent_docker.clear_selection()
-        self.parent_docker.save_grids_data()
+        self.parent_docker.save_grids()
         event.acceptProposedAction()

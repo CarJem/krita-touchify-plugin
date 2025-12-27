@@ -17,8 +17,9 @@ class JsonExtensions:
     def loadClass(jsonStr: str, type: type):
         try:
             return type(**json.loads(jsonStr))
-        except:
+        except Exception as ex:
             print("failed to load json class of type: " + str(type))
+            print(ex)
             return type()
 
     def saveClass(data: any, check_circular=True) -> str:

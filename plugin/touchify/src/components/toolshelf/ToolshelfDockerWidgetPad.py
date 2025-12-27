@@ -95,6 +95,12 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         def getSettingsPath(self):
             result = f"{TouchifyEnv.SettingsPath.WIDGETPAD}_{str(self._parent.PanelIndex)}"
             return result
+        
+        def getAutoCollapse(self):
+            return KritaSettings.readSettingBool(self.getSettingsPath(), "AutoCollapse", False)
+        
+        def setAutoCollapse(self, value: bool):
+            KritaSettings.writeSettingBool(self.getSettingsPath(), "AutoCollapse", value, False)
 
         def getShowHeader(self):
             return KritaSettings.readSettingBool(self.getSettingsPath(), "ShowHeader", True)
@@ -142,6 +148,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self._priority = 0
         self._previousNeighbor: "ToolshelfDockerWidgetPad" = None
         self._nextNeighbor: "ToolshelfDockerWidgetPad" = None
+        self._autoCollapse = False
         self._allowSignals = True
 
         self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
@@ -159,14 +166,20 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self.mainWidget.setTitlebarVisibility(self._settings.getShowHeader())
         self.setPriority(self._settings.getPriority())
 
+        self._autoCollapse = self._settings.getAutoCollapse()
+
         is_collapsed = self._settings.getCollapsed()
-        if is_collapsed:
-            self._titlebar.toggleButton.blockSignals(True)
-            self._titlebar.toggleButton.setChecked(True)
-            self._titlebar.syncIcons(True)
-            self._titlebar.toggleButton.blockSignals(False)
-            self._collapsed_size = self.size()
-            self.mainWidget.hide()
+        if is_collapsed: self.collapse()
+
+        self.managers.mgr_canvas.normalFocus.connect(self.onCanvasFocused)
+
+    def collapse(self):
+        self._titlebar.toggleButton.blockSignals(True)
+        self._titlebar.toggleButton.setChecked(True)
+        self._titlebar.syncIcons(True)
+        self._titlebar.toggleButton.blockSignals(False)
+        self._collapsed_size = self.size()
+        self.mainWidget.hide()
 
     def onContextMenu(self, pos: QPoint):
         menu = QMenu(self)
@@ -206,6 +219,13 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
             action.triggered.connect(partial(self.onAlignmentUpdated, entry))
             alignmentMenu.addAction(action)
 
+        menu.addSeparator()
+
+        showHeaderAct = menu.addAction("Auto Collapse")
+        showHeaderAct.setCheckable(True)
+        showHeaderAct.setChecked(self._settings.getAutoCollapse())
+        showHeaderAct.toggled.connect(self.onAutoCollapseToggled)
+
         menu.exec_(pos)
 
     def onIncreasePriority(self):
@@ -226,6 +246,10 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self.mainWidget.setTitlebarVisibility(state)
         self._settings.setShowHeader(state)
 
+    def onAutoCollapseToggled(self, state: bool):
+        self._autoCollapse = state
+        self._settings.setAutoCollapse(state)
+
     def onShelfSettings(self, pos: QPoint):
         self.mainWidget.header.optionsMenu.exec_(pos)
 
@@ -237,6 +261,9 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         else:
             self.mainWidget.show()
             self.resize(self._collapsed_size)
+
+    def onCanvasFocused(self):
+        if self._autoCollapse: self.collapse()
 
     def setAllowSignals(self, state: bool):
         self._allowSignals = state

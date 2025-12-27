@@ -15,6 +15,7 @@ class PropertyLabel(QWidget):
         self.variable_name = variable_name
         self.label_text = label_text
         self.hint_text = hint_text
+        self.sister_id = None
 
         self.setup(is_nested)
         

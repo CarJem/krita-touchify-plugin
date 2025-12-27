@@ -40,6 +40,7 @@ class PropertyView_Form(QWidget, PropertyView):
         self.gridLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.gridLayout.setSpacing(0)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
+
         self.setLayout(self.gridLayout)
 
 
@@ -105,6 +106,7 @@ class PropertyView_Form(QWidget, PropertyView):
 
             if use_labels:
                 header = self.createLabel(variable_name, labelData, hintData, True)
+                header.sister_id = sister_id
                 if flip_labels:
                     header.setMaximumWidth(250)
                     layout.addRow(header, field)
@@ -124,7 +126,7 @@ class PropertyView_Form(QWidget, PropertyView):
         formLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         formLayout.setSpacing(0)
         formLayout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
-        formLayout.setContentsMargins(2, 2, 2, 2)
+        formLayout.setContentsMargins(0,0,0,0)
         sectionLayout.addLayout(formLayout)
         return formLayout
 
@@ -148,11 +150,17 @@ class PropertyView_Form(QWidget, PropertyView):
         hiddenItems = PropertyView.getHiddenVariableNames(self)
 
         for field in self.__fields:     
-            if field.propertyData.variableName() in hiddenItems or (field.sister_id != None and field.sister_id in hiddenItems): field.setHidden(True)
+            is_hidden = field.propertyData.variableName() in hiddenItems
+            is_within_hidden = (field.sister_id != None and field.sister_id in hiddenItems)
+
+            if is_hidden or is_within_hidden: field.setHidden(True)
             else: field.setHidden(False)
 
         for label in self.__labels:     
-            if label.variable_name in hiddenItems: label.setHidden(True)
+            is_hidden = label.variable_name in hiddenItems
+            is_within_hidden = (label.variable_name != None and label.sister_id in hiddenItems)
+
+            if is_hidden or is_within_hidden: label.setHidden(True)
             else: label.setHidden(False)
 
     def onDataObjectChanged(self):

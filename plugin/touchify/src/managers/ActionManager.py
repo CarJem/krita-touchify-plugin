@@ -1,3 +1,4 @@
+from jemlib.api_krita.wrappers.color import ManagedColorAPI
 from krita import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -129,6 +130,8 @@ class ActionManager(QObject):
                 result = self.Button_Popup(data, classType=classType)
             case Trigger.Variants.Action:
                 result = self.Button_Trigger(data, classType=classType)
+            case Trigger.Variants.Color:
+                result = self.Button_Color(data, classType=classType)
             case _:
                 result = self.Button_Generic(data, classType=classType)
 
@@ -276,6 +279,8 @@ class ActionManager(QObject):
                 self.Execute_Script(data.script_id)
             case Trigger.Variants.PieWheel:
                 self.Execute_PieWheel(data.piewheel_id)
+            case Trigger.Variants.Color:
+                self.Execute_Color(data.color_id)
 
     def Actions_Add(self, actionname):
         element = ET.Element("Action",{"name":"{0}".format(actionname)})
@@ -490,6 +495,12 @@ class ActionManager(QObject):
         btn.triggerActivated.connect((lambda: self.Create_Popup(data.popup_data, btn)))
         self.Helper_SetButtonDisplay(data, btn)
         return btn
+    
+    def Button_Color(self, act: Trigger, classType: type = TriggerButton):
+        btn: TriggerButton | None = None
+        btn = self.Button_Core(lambda: self.Execute_Color(act.color_id), act.color_id, classType=classType)
+        btn.setupColorButton(act.color_id)
+        return btn
 
     def Button_Generic(self, data: Trigger, classType: type = TriggerButton):
         btn: TriggerButton | None = None
@@ -570,8 +581,7 @@ class ActionManager(QObject):
     def Execute_Brush(self, id):
         brush_presets = IconRepository.brushPresets()
         if id in brush_presets:
-            preset = brush_presets[id]
-            self.api_window.active_view.setCurrentBrushPreset(preset)
+            self.api_window.active_view.brush_preset = id
     
     def Execute_Docker(self, path):
         dockersList = self.api_window.dockers
@@ -681,6 +691,13 @@ class ActionManager(QObject):
             result.Show()
             self.OnEvent_ComposerStart()
 
+        except Exception as ex:
+            raise ex
+    
+    def Execute_Color(self, color_id: str):
+        try:
+            managed_color = ManagedColorAPI.from_qt(QColor(color_id))
+            self.api_window.active_view.foregroundColor = managed_color
         except Exception as ex:
             raise ex
 

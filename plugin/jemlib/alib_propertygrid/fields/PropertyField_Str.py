@@ -4,6 +4,7 @@ from PyQt5.QtCore import *
 
 from jemlib.alib_propertygrid.event_filters.MouseWheelWidgetAdjustmentGuard import MouseWheelWidgetAdjustmentGuard
 
+from jemlib.alib_widgets.buttons.ColorButton import ColorButton
 from jemlib.alib_widgets.textedit.PythonEditor import PythonEditor
 from jemlib.alib_datatypes.TypedList import *
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
@@ -31,6 +32,7 @@ class PropertyField_Str(PropertyField[str]):
         self.special_selector_entries: dict = {}
         self.is_multiline_string = False
         self.is_python_editor = False
+        self.is_color_picker = False
         self.is_combobox = False
         self.combobox_items: list[tuple[str, str]] = []
         
@@ -38,68 +40,11 @@ class PropertyField_Str(PropertyField[str]):
 
         self.test_restrictions(self.propertyData.variableName())
 
-        if self.is_special_selector:
-            self.editor = QLineEdit()
-            self.editor.textChanged.connect(self.textChanged)
-            self.editor.setText(self.propertyData.variableData().replace("\n", "\\n"))
+        if self.is_color_picker: self.create_color_picker()
+        elif self.is_special_selector: self.create_special_selector()
+        elif self.is_combobox: self.create_combobox()
+        else: self.create_textbox()
 
-            self.editorHelper = QPushButton()
-
-
-            if self.special_selector_type == "icons": 
-                self.editorHelper.setIcon(IconRepository.iconLoader(self.propertyData.variableData().replace("\n", "\\n")))
-            elif self.special_selector_type == "brushes":
-                self.editorHelper.setIcon(IconRepository.brushIcon(self.propertyData.variableData().replace("\n", "\\n")))
-            else:
-                self.editorHelper.setIcon(IconRepository.iconLoader("properties"))
-
-            self.editorHelper.clicked.connect(lambda: self.helperRequested(self.special_selector_type, self.special_selector_entries))
-
-            editorLayout = QHBoxLayout(self)
-            editorLayout.setSpacing(0)
-            editorLayout.setContentsMargins(0,0,0,0)
-            editorLayout.addWidget(self.editor)
-            editorLayout.addWidget(self.editorHelper)
-            self.setLayout(editorLayout)
-        elif self.is_combobox:
-            self.editor = QComboBox(self)
-            self.editor.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
-            self.editor.installEventFilter(MouseWheelWidgetAdjustmentGuard(self))
-            for item in self.combobox_items:
-                self.editor.insertItem(0, item[0])
-                self.editor.setItemData(0, item[1], 1)
-            index = self.editor.findData(self.propertyData.variableData(), 1, Qt.MatchFlag.MatchFixedString)
-            if index >= 0:
-                self.editor.setCurrentIndex(index)
-                
-            self.editor.currentIndexChanged.connect(self.currentIndexChanged)
-
-            editorLayout = QHBoxLayout(self)
-            editorLayout.setSpacing(0)
-            editorLayout.setContentsMargins(0,0,0,0)
-            editorLayout.addWidget(self.editor)
-            self.setLayout(editorLayout)
-        else:
-            if self.is_python_editor:
-                self.editor = PythonEditor(self)
-                self.editor.setMinimumHeight(300)
-                self.editor.textChanged.connect(self.multilineTextChanged)
-                self.editor.setPlainText(self.propertyData.variableData())                
-            elif self.is_multiline_string:
-                self.editor = QPlainTextEdit(self)
-                self.editor.setMinimumHeight(300)
-                self.editor.textChanged.connect(self.multilineTextChanged)
-                self.editor.setPlainText(self.propertyData.variableData())
-            else:
-                self.editor = QLineEdit(self)
-                self.editor.textChanged.connect(self.textChanged)
-                self.editor.setText(self.propertyData.variableData().replace("\n", "\\n"))
-
-            editorLayout = QHBoxLayout(self)
-            editorLayout.setSpacing(0)
-            editorLayout.setContentsMargins(0,0,0,0)
-            editorLayout.addWidget(self.editor)
-            self.setLayout(editorLayout)
 
     def test_restrictions(self, variable_name: str):
         restrictions = self.praser.getObjectConstraints(self.propertyData)
@@ -107,9 +52,10 @@ class PropertyField_Str(PropertyField[str]):
 
         for restriction in restrictions:
             if list_setup == False:
-                if restriction["type"] == DataConstraints.StrMod.Multiline:
-                    self.is_multiline_string = True
-                elif restriction["type"] == DataConstraints.StrMod.PythonEdtior:
+                
+                if restriction["type"] == DataConstraints.StrMod.ColorPicker:
+                    self.is_color_picker = True
+                elif restriction["type"] == DataConstraints.StrMod.PythonEditor:
                     self.is_python_editor = True
                 elif restriction["type"] == DataConstraints.StrMod.Values:
                     combobox_items =  list[tuple[str, str]]()
@@ -135,7 +81,87 @@ class PropertyField_Str(PropertyField[str]):
                     if "entries" in restriction and restriction["type"] == DataConstraints.StrMod.TouchifyRegistry:
                         self.special_selector_entries = dict(restriction["entries"])
                     list_setup = True
-                
+
+
+    def create_combobox(self):
+        self.editor = QComboBox(self)
+        self.editor.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.editor.installEventFilter(MouseWheelWidgetAdjustmentGuard(self))
+        for item in self.combobox_items:
+            self.editor.insertItem(0, item[0])
+            self.editor.setItemData(0, item[1], 1)
+        index = self.editor.findData(self.propertyData.variableData(), 1, Qt.MatchFlag.MatchFixedString)
+        if index >= 0:
+            self.editor.setCurrentIndex(index)
+            
+        self.editor.currentIndexChanged.connect(self.currentIndexChanged)
+
+        editorLayout = QHBoxLayout(self)
+        editorLayout.setSpacing(0)
+        editorLayout.setContentsMargins(0,0,0,0)
+        editorLayout.addWidget(self.editor)
+        self.setLayout(editorLayout)
+        
+    def create_textbox(self):
+        if self.is_python_editor:
+            self.editor = PythonEditor(self)
+            self.editor.setMinimumHeight(300)
+            self.editor.textChanged.connect(self.multilineTextChanged)
+            self.editor.setPlainText(self.propertyData.variableData())                
+        elif self.is_multiline_string:
+            self.editor = QPlainTextEdit(self)
+            self.editor.setMinimumHeight(300)
+            self.editor.textChanged.connect(self.multilineTextChanged)
+            self.editor.setPlainText(self.propertyData.variableData())
+        else:
+            self.editor = QLineEdit(self)
+            self.editor.textChanged.connect(self.textChanged)
+            self.editor.setText(self.propertyData.variableData().replace("\n", "\\n"))
+
+        editorLayout = QHBoxLayout(self)
+        editorLayout.setSpacing(0)
+        editorLayout.setContentsMargins(0,0,0,0)
+        editorLayout.addWidget(self.editor)
+        self.setLayout(editorLayout)
+
+    def create_special_selector(self):
+        self.editor = QLineEdit()
+        self.editor.textChanged.connect(self.textChanged)
+        self.editor.setText(self.propertyData.variableData().replace("\n", "\\n"))
+
+        self.editorHelper = QPushButton()
+
+
+        if self.special_selector_type == "icons": 
+            self.editorHelper.setIcon(IconRepository.iconLoader(self.propertyData.variableData().replace("\n", "\\n")))
+        elif self.special_selector_type == "brushes":
+            self.editorHelper.setIcon(IconRepository.brushIcon(self.propertyData.variableData().replace("\n", "\\n")))
+        else:
+            self.editorHelper.setIcon(IconRepository.iconLoader("properties"))
+
+        self.editorHelper.clicked.connect(lambda: self.helperRequested(self.special_selector_type, self.special_selector_entries))
+
+        editorLayout = QHBoxLayout(self)
+        editorLayout.setSpacing(0)
+        editorLayout.setContentsMargins(0,0,0,0)
+        editorLayout.addWidget(self.editor)
+        editorLayout.addWidget(self.editorHelper)
+        self.setLayout(editorLayout)
+
+    def create_color_picker(self):
+        color_str = self.propertyData.variableData()
+        current_color = QColor(color_str)
+        if not current_color.isValid(): current_color = QColor("black")
+
+        self.editor = ColorButton(self)
+        self.editor.setColor(current_color)
+        self.editor.colorChanged.connect(self.colorChanged)
+
+        editorLayout = QHBoxLayout(self)
+        editorLayout.setSpacing(0)
+        editorLayout.setContentsMargins(0,0,0,0)
+        editorLayout.addWidget(self.editor)
+        self.setLayout(editorLayout)
 
 
     def dlg_accept(self):
@@ -162,6 +188,9 @@ class PropertyField_Str(PropertyField[str]):
                 self.editorHelper.setIcon(IconRepository.brushIcon(result))
             self.editor.setText(result)
             
+    def colorChanged(self):
+        new_color = self.editor.color().name(QColor.NameFormat.HexArgb)
+        super().setVariable(new_color)
 
     def currentIndexChanged(self):
         newData = str(self.editor.currentData(1)).replace("\\n", "\n")
