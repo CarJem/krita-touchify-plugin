@@ -13,7 +13,6 @@ The docker inherits from multiple mixins to organize functionality:
 - GridUpdateMixin: Grid layout updates
 - NameButtonEventsMixin: Grid name button events
 """
-from copy import deepcopy
 import re
 from typing import TYPE_CHECKING
 import uuid
@@ -40,7 +39,6 @@ from .utils.styles import *
 from .utils.config_utils import (
     get_common_config,
     load_grids_data,
-    save_common_config,
     save_grids_data,
     get_list_column_count,
     get_list_mode,
@@ -807,46 +805,6 @@ class QuickActionsDocker(QDockWidget):
         if not self.dlg.exec_():
             return
 
-        self.update_after_config_changes()
-
-    def set_view_type(self, view_type: str):
-        config = load_common_config()
-        new_config = deepcopy(config)
-        if view_type == "tvs":
-            new_config.layout.brush_icon_size = 32
-            new_config.layout.list_mode = False
-            new_config.layout.display_brush_names = False
-        elif view_type == "ts":
-            new_config.layout.brush_icon_size = 64
-            new_config.layout.list_mode = False
-            new_config.layout.display_brush_names = True
-        elif view_type == "tm":
-            new_config.layout.brush_icon_size = 96
-            new_config.layout.list_mode = False
-            new_config.layout.display_brush_names = True
-        elif view_type == "tl":
-            new_config.layout.brush_icon_size = 128
-            new_config.layout.list_mode = False
-            new_config.layout.display_brush_names = True
-
-        elif view_type == "lvs":
-            new_config.layout.brush_icon_size = 32
-            new_config.layout.list_mode = True
-            new_config.layout.display_brush_names = True
-        elif view_type == "ls":
-            new_config.layout.brush_icon_size = 64
-            new_config.layout.list_mode = True
-            new_config.layout.display_brush_names = True
-        elif view_type == "lm":
-            new_config.layout.brush_icon_size = 96
-            new_config.layout.list_mode = True
-            new_config.layout.display_brush_names = True
-        elif view_type == "ll":
-            new_config.layout.brush_icon_size = 128
-            new_config.layout.list_mode = True
-            new_config.layout.display_brush_names = True
-
-        save_common_config(new_config)
         self.update_after_config_changes()
 
     #endregion
