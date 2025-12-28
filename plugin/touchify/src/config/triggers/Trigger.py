@@ -1,6 +1,8 @@
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_datatypes.EnumStr import EnumStr
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
+
+from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import PropertyGrid_TouchifyRestrictions
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
@@ -79,55 +81,113 @@ class Trigger:
 
     def getFileName(self):
         return FileExtensions.fileStringify(self.registry_id)
-        
+    
+    def isActionIcon(self):
+        use_custom_icon: bool = self.display_custom_icon_enabled and self.display_custom_icon_enabled != ""
+        is_action: bool = self.variant == Trigger.Variants.Action
+
+        if not use_custom_icon and is_action: return True
+        else: return False
+    
+    def hasText(self):
+        display_name = self.getDisplayName()
+        has_text = display_name != "" and display_name != self.registry_id
+        if self.display_text_hide: has_text = False
+        return has_text
+
+    def hasIcon(self):
+        has_icon = not self.getDisplayIcon().isNull()
+        if self.display_icon_hide: has_icon = False
+        return has_icon
+
+
+    def getDisplayIcon(self):
+        from jemlib.managers.IconRepository import IconRepository
+        from PyQt5.QtGui import QIcon
+
+        use_custom_icon: bool = self.display_custom_icon_enabled and self.display_custom_icon_enabled != ""
+
+        is_brush: bool = self.variant == Trigger.Variants.Brush
+        is_action: bool = self.variant == Trigger.Variants.Action
+
+        if use_custom_icon:
+            icon = IconRepository.iconLoader(self.display_custom_icon)
+        else:
+            if is_brush: icon = IconRepository.brushIcon(self.brush_name)
+            elif is_action: icon = IconRepository.actionIcon(self.action_id)
+            else: icon = QIcon()
+
+        return icon
+
+    def getDisplayName(self):
+        use_custom_text: bool = self.display_custom_text_enabled and self.display_custom_text != ""
+
+        if use_custom_text:
+            text: str = self.display_custom_text  
+        else:
+            match self.variant:
+                case Trigger.Variants.Action:
+                    text = KritaExtensions.getActionText(self.action_id)
+                case Trigger.Variants.Menu:
+                    text = self.context_menu_id
+                case Trigger.Variants.Brush:
+                    text = self.brush_name
+                case Trigger.Variants.Popup:
+                    text = self.popup_data
+                case Trigger.Variants.Workspace:
+                    text = self.workspace_id
+                case Trigger.Variants.Docker:
+                    text = self.docker_id
+                case Trigger.Variants.DockerGroup:
+                    text = self.docker_group_data
+                case Trigger.Variants.CanvasPreset:
+                    text = self.canvas_preset_data
+                case Trigger.Variants.Script:
+                    text = self.script_id
+                case Trigger.Variants.PieWheel:
+                    text = self.piewheel_id
+                case Trigger.Variants.Color:
+                    text = self.color_id
+                case _:
+                    text = self.registry_id
+
+        return text
+
+
     def __str__(self):
         match self.variant:
             case Trigger.Variants.Action:
                 prefix = "[Action]"
-                suffix = self.action_id
             case Trigger.Variants.Menu:
                 prefix = "[Menu]"
-                suffix = self.display_custom_text
             case Trigger.Variants.Brush:
                 prefix = "[Brush]"
-                suffix = self.brush_name
             case Trigger.Variants.Popup:
                 prefix = "[Popup]"
-                suffix = self.display_custom_text
             case Trigger.Variants.Workspace:
                 prefix = "[Workspace]"
-                suffix = self.workspace_id
             case Trigger.Variants.Docker:
                 prefix = "[Docker]"
-                suffix = self.docker_id
             case Trigger.Variants.DockerGroup:
                 prefix = "[Docker Group]"
-                suffix = self.display_custom_text
             case Trigger.Variants.CanvasPreset:
                 prefix = "[Canvas Preset]"
-                suffix = self.display_custom_text
             case Trigger.Variants.Script:
                 prefix = "[Script]"
-                suffix = self.display_custom_text
             case Trigger.Variants.PieWheel:
                 prefix = "[Pie Wheel]"
-                suffix = self.display_custom_text
             case Trigger.Variants.Color:
                 prefix = "[Color]"
-                suffix = self.color_id
             case _:
                 prefix = f"[{self.variant}]"
-                suffix = self.display_custom_text
-                
-        if self.display_custom_text != "":
-            suffix = self.display_custom_text
         
-        return f"{suffix} {prefix}"
-
+        return f"{prefix} {self.getDisplayName()}"
 
     def forceLoad(self):
         pass
-    
+
+    def propertygrid_icon(self):
+        return self.getDisplayIcon()
 
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}

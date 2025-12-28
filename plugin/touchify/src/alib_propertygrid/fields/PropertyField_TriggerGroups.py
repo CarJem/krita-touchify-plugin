@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 
 
 from jemlib.alib_propertygrid.data.DataPath import DataPath
-from touchify.src.alib_propertygrid.fields.PropertyField_TriggerExtras import PropertyField_TriggerExtras
+from touchify.src.alib_propertygrid.fields.PropertyField_TouchifyExtras import PropertyField_TouchifyExtras
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from jemlib.alib_propertygrid.fields.PropertyField_TypedList import PropertyField_TypedList
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 class PropertyField_TriggerGroups(PropertyField_TypedList):
     def __init__(self, handler: "DataHandler", property: DataPath[TypedList[TriggerGroup]]):
-        manual_restrictions = [DataConstraints.listSubArray("actions", Trigger)]
+        manual_restrictions = [DataConstraints.listSubArray("actions", Trigger), DataConstraints.listMod(DataConstraints.ListMod.Icons)]
         super(PropertyField_TriggerGroups, self).__init__(handler, property, manual_restrictions)
 
     def list_on_quick_add(self, source: Trigger):
@@ -32,6 +32,6 @@ class PropertyField_TriggerGroups(PropertyField_TypedList):
 
     def list_add(self):
         if self.selected_sub_row != -1:
-            PropertyField_TriggerExtras.list_quick_add(self)
+            PropertyField_TouchifyExtras.trigger_list_quick_add(self)
         else:
             super().list_add()

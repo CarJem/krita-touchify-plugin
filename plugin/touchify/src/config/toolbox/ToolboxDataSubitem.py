@@ -1,5 +1,6 @@
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
+from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 
 class ToolboxDataSubitem:
 
@@ -14,17 +15,29 @@ class ToolboxDataSubitem:
         JsonExtensions.dictToObject(self, args)
     
     def __str__(self):
-        return self.name.replace("\n", "\\n")
+        return KritaExtensions.getActionText(self.name)
     
     def propertygrid_ismodel(self):
         return True
     
+    def propertygrid_hidden(self):
+        return [
+            "name"
+        ]
 
     def propertygrid_sorted(self):
         return [
             "name",
             "icon"
         ]
+    
+    def propertygrid_icon(self):
+        from PyQt5.QtGui import QIcon
+        from jemlib.api_krita import KritaAPI
+        try:
+            return KritaAPI.get_action(self.name).icon()
+        except:
+            return QIcon()
     
     def propertygrid_labels(self):
         labels = {}

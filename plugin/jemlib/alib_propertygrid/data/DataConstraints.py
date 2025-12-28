@@ -17,7 +17,9 @@ class DataConstraints:
         WorkspaceSelection="workspace"
         IconSelection="icon_selection"
         BrushSelection="brush_selection"
+        ToolSelection="tool_selection"
         MultiToolSelection="multi_tool_selection"
+        
 
         TouchifyRegistry="touchify_registry"
 
@@ -31,6 +33,7 @@ class DataConstraints:
         PropertyView="property_view"
         Subarray="sub_array"
         Locked="locked"
+        Icons="icons"
 
     class DictMod(EnumStr):
         ListLike="list_like"

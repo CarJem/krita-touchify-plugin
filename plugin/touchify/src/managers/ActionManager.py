@@ -112,7 +112,9 @@ class ActionManager(QObject):
         self.registeredActionsData[actionIdentifier] = data  
         action.triggered.connect(partial(self.Execute_RegistryAction, actionIdentifier, action))
              
-        (has_text, text, has_icon, icon, using_action_icon) = self.Helper_GetTriggerDisplay(data)
+        has_icon = data.hasIcon()
+        icon = data.getDisplayIcon()
+
         if has_icon: action.setIcon(icon)
         return action   
     
@@ -327,39 +329,13 @@ class ActionManager(QObject):
         else:
             return _sender
     
-    def Helper_GetTriggerDisplay(self, data: Trigger):
-        use_custom_icon: bool = data.display_custom_icon_enabled
-        use_custom_text: bool = data.display_custom_text_enabled
-        is_brush: bool = data.variant == Trigger.Variants.Brush
-        is_action: bool = data.variant == Trigger.Variants.Action
-        using_action_icon: bool = False
-
-        if use_custom_icon:
-            icon = IconRepository.iconLoader(data.display_custom_icon)
-        else:
-            if is_brush: icon = IconRepository.brushIcon(data.brush_name)
-            elif is_action: 
-                icon = IconRepository.actionIcon(data.action_id)
-                using_action_icon = True
-            else: icon = QIcon()
-
-        if use_custom_text:
-            text: str = data.display_custom_text  
-        else:
-            if is_brush: text = data.brush_name
-            elif is_action: text = IconRepository.actionText(data.action_id)
-            else: text = ""
-
-        has_icon = not icon.isNull()
-        has_text = text != ""
-
-        if data.display_text_hide: has_text = False
-        if data.display_icon_hide: has_icon = False
-
-        return (has_text, text, has_icon, icon, using_action_icon)
-
     def Helper_SetButtonDisplay(self, act: Trigger, btn: TriggerButton):
-        (has_text, text, has_icon, icon, using_action_icon) = self.Helper_GetTriggerDisplay(act)  
+        icon = act.getDisplayIcon()
+        text = act.getDisplayName()
+        has_text = act.hasText()
+        has_icon = act.hasIcon()
+        using_action_icon = act.isActionIcon()
+        
         if has_text: btn.setText(text)      
         if has_icon: btn.setIcon(icon) 
         if using_action_icon: btn.setupActionIcon()        

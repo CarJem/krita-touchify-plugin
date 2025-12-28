@@ -1,5 +1,6 @@
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
+from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
@@ -21,12 +22,28 @@ class ToolboxDataItem:
         self.items = JsonExtensions.init_list(args, "items", ToolboxDataSubitem)
 
     def __str__(self):
-        return self.name.replace("\n", "\\n")
+        return KritaExtensions.getActionText(self.name)
     
     def toSubItem(self):
         result = ToolboxDataSubitem()
         result.name = self.name
         return result
+    
+    def propertygrid_icon(self):
+        from PyQt5.QtGui import QIcon
+        from jemlib.api_krita import KritaAPI
+        try:
+            return KritaAPI.get_action(self.name).icon()
+        except:
+            return QIcon()
+    
+    def propertygrid_hidden(self):
+        return [
+            "name"
+        ]
+    
+    def propertygrid_view_type(self):
+        return "form_alt"
     
     def propertygrid_sorted(self):
         return [
@@ -39,9 +56,9 @@ class ToolboxDataItem:
     def propertygrid_labels(self):
         labels = {}
         labels["name"] = "Action ID"
-        labels["items"] = "Subitems"
         labels["icon"] = "Custom Icon"
-        labels["open_on_click"] = "Open Submenu on Click"
+        labels["open_on_click"] = "Click to Open Menu"
+        labels["items"] = "Menu Items"
         return labels
 
     def propertygrid_restrictions(self):

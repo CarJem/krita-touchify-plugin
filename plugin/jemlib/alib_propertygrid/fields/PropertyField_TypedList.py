@@ -31,6 +31,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         self.allow_move = True
         self.allow_clipboard = True
         self.allow_length_changes = True
+        self.allow_icons = False
 
         self.test_restrictions(manual_restrictions)
 
@@ -162,6 +163,8 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 self.allow_clipboard = False
             if restriction["type"] == DataConstraints.ListMod.Inmovable:
                 self.allow_move = False
+            if restriction["type"] == DataConstraints.ListMod.Icons:
+                self.allow_icons = True
             if restriction["type"] == DataConstraints.ListMod.Locked:
                 self.allow_move = False
                 self.allow_clipboard = False
@@ -413,6 +416,15 @@ class PropertyField_TypedList(PropertyField[TypedList]):
 
     #region Update Actions
 
+    def createListItem(self, varItem: any):
+        result = QtGui.QStandardItem(str(varItem))
+        if self.allow_icons:
+            if hasattr(varItem, "propertygrid_icon"):
+                result.setIcon(varItem.propertygrid_icon())
+            else:
+                result.setIcon(QIcon())
+        return result
+
     def updateList(self):
         if self.selection_model: self.selection_model.blockSignals(True)
 
@@ -423,14 +435,14 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         indicies = []
 
         for varItem in self.propertyData.variableData():
-            item = QtGui.QStandardItem(str(varItem))
+            item = self.createListItem(varItem)
             index += 1
 
             sub_index = 0
             columns = []
 
             for subAction in self.getNestedList(varItem):
-                subItem = QtGui.QStandardItem(str(subAction))
+                subItem = self.createListItem(subAction)
                 sub_index += 1
 
                 columns.append(subItem)

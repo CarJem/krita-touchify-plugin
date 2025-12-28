@@ -356,9 +356,9 @@ class DraggableGridButton(QWidget):
         if not self.preset or not self.preset.trigger_data or not self.parent_docker.actions_manager:
             return self.preset.itemUUID()
         
-        (has_text, text, has_icon, icon, using_action_icon) = self.parent_docker.actions_manager.Helper_GetTriggerDisplay(self.preset.trigger_data)  
+        text = self.preset.trigger_data.getDisplayName()
         
-        if not has_text:
+        if text == "":
             return self.preset.itemUUID()
 
         return text

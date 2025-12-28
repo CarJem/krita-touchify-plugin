@@ -131,11 +131,22 @@ class PropertyField_Str(PropertyField[str]):
 
         self.editorHelper = QPushButton()
 
-
-        if self.special_selector_type == "icons": 
+        if self.special_selector_type == DataConstraints.StrMod.IconSelection: 
+            self.is_icon_viewer = True
+            self.editor.setFixedHeight(24)
+            self.editor.setContentsMargins(0,0,0,0)
+            self.editorHelper.setFixedSize(24,24)
+            self.editorHelper.setContentsMargins(0,0,0,0)
             self.editorHelper.setIcon(IconRepository.iconLoader(self.propertyData.variableData().replace("\n", "\\n")))
-        elif self.special_selector_type == "brushes":
+            self.editor.setPlaceholderText("(unset icon)")
+        elif self.special_selector_type == DataConstraints.StrMod.BrushSelection:
+            self.is_brush_selection = True
+            self.editor.setFixedHeight(24)
+            self.editor.setContentsMargins(0,0,0,0)
+            self.editorHelper.setFixedSize(24,24)
+            self.editorHelper.setContentsMargins(0,0,0,0)
             self.editorHelper.setIcon(IconRepository.brushIcon(self.propertyData.variableData().replace("\n", "\\n")))
+            self.editor.setPlaceholderText("(unset brush)")
         else:
             self.editorHelper.setIcon(IconRepository.iconLoader("properties"))
 

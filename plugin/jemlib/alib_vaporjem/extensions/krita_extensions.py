@@ -51,6 +51,19 @@ class KritaExtensions:
         view.showFloatingMessage(message, KritaAPI.get_icon('move_layer_up'), 1000, 0)
 
     @staticmethod
+    def getActionText(action_id: str):
+        action = KritaAPI.get_action(action_id)
+        action_text = KritaExtensions.formatActionText(action.text())
+        action_tooltip = KritaExtensions.formatActionText(action.toolTip())
+
+        if action_text != "":
+            return action_text
+        elif action_tooltip != "":
+            return action_tooltip
+        else:
+            return action_id
+
+    @staticmethod
     def formatActionText(text: str):
         seperator = " "
         segments = text.split(seperator)

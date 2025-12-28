@@ -10,11 +10,11 @@ from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import Propert
 
 from touchify.src.config.triggers.Trigger import Trigger
 
-class ActionPickerDialog(QDialog):
+class QuickTriggerPickerDialog(QDialog):
     sigOnNewItem = pyqtSignal(Trigger)
     
     class TriggerTab(QDialog):
-        def __init__(self, parent: "ActionPickerDialog"):
+        def __init__(self, parent: "QuickTriggerPickerDialog"):
             super().__init__(parent)
             self.pickerParent = parent
 
@@ -61,7 +61,7 @@ class ActionPickerDialog(QDialog):
 
         self.tabWidget.addTab(self.createTab(self.onAddAction, DataConstraints.StrMod.ActionSelection), "Action")
         self.tabWidget.addTab(self.createTab(self.onAddBrush, DataConstraints.StrMod.BrushSelection), "Brush")
-        self.tabWidget.addTab(ActionPickerDialog.TriggerTab(self), "Custom")
+        self.tabWidget.addTab(QuickTriggerPickerDialog.TriggerTab(self), "Custom")
 
     def createTab(self, onAccept: any, mode: DataConstraints.StrMod):
         dlg = PropertyGrid_SelectorDialog(None)

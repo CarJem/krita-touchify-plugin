@@ -25,7 +25,7 @@ from PyQt5.QtCore import *
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify_quick_actions.dataclasses.GridInfo import GridInfo
 from touchify_quick_actions.dataclasses.GridPresetItem import GridPresetItem
-from touchify.src.alib_propertygrid.dialogs.ActionPickerDialog import ActionPickerDialog
+from touchify.src.alib_propertygrid.dialogs.QuickTriggerPickerDialog import QuickTriggerPickerDialog
 from touchify_quick_actions.dialogs.SettingsDialog import SettingsDialog
 from touchify_quick_actions.widgets.MenuIconButton import MenuIconButton
 
@@ -464,7 +464,7 @@ class QuickActionsDocker(QDockWidget):
             self.update_grid(self.active_grid)
             self.save_grids()
 
-        dlg = ActionPickerDialog(None)
+        dlg = QuickTriggerPickerDialog(None)
         dlg.sigOnNewItem.connect(accept)
         dlg.exec()
 

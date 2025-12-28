@@ -22,7 +22,10 @@ class ToolboxDataCategory:
         self.items.append(newItem)
 
     def __str__(self):
-        return self.id.replace("\n", "\\n")
+        if self.id == "" or not self.id:
+            return "(unnamed section)"
+        else:
+            return self.id.replace("\n", "\\n")
 
     def forceLoad(self):
         self.items = TypedList(self.items, ToolboxDataItem)

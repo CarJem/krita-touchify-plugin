@@ -213,6 +213,18 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
                 if actionData.objectName() == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
 
+        elif mode == DataConstraints.StrMod.ToolSelection:
+            self.list_view.setViewMode(QListView.ViewMode.IconMode)
+            self.list_view.setUniformItemSizes(True)
+            for value, data in Tool._member_map_.items():
+                data: Tool
+                listItem = QListWidgetItem()
+                listItem.setToolTip(data.pretty_name)
+                listItem.setIcon(data.icon)
+                listItem.setData(DATA_INDEX, data.value)
+                if data.value == selection_input: selected_items.append(listItem)
+                self.list_view.addItem(listItem)
+    
         elif mode == DataConstraints.StrMod.MultiToolSelection:
             __requiredTools = selection_input.split(",")
             if "" in __requiredTools: __requiredTools.remove("")
