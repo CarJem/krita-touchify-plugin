@@ -37,6 +37,7 @@ class SubViewDocker(DockWidget):
         pass
 
     def onThemeChanged(self):
-        pass
+        if self.imageView:
+            self.imageView.onThemeChanged()
 
 KritaAPI.add_dock_widget_factory(TouchifyEnv.DockerID.SUB_VIEW, DockWidgetFactoryAPI.DockPosition.DockTornOff, SubViewDocker)

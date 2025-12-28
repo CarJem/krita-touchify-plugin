@@ -1,6 +1,5 @@
 from uuid import uuid4
 
-from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPaintEvent, QPainter, QPen
 from touchify.src.components.widgets.other.DockerContainer import DockerContainer
 from touchify.src.components.toolshelf.ShelfContainer import ShelfContainer
@@ -297,16 +296,17 @@ class ShelfDockOverlay(QtWidgets.QWidget):
         super().paintEvent(event)
         painter = QPainter(self)
 
-        if self.isSelected:
-            painter.setOpacity(0.2)
-            painter.setBrush(Qt.GlobalColor.blue)
-            painter.setPen(QPen(Qt.GlobalColor.blue))
-            painter.drawRect(self.rect())
+        fill_color = self.window().palette().highlight().color()
 
+        if self.isSelected:
+            painter.setOpacity(0.5)
+            painter.setBrush(fill_color)
+            painter.setPen(QPen(fill_color))
+            painter.drawRect(self.rect())
         
-        painter.setOpacity(0.2 if self.isMouseOver else 0.0)
-        painter.setBrush(Qt.GlobalColor.blue)
-        painter.setPen(QPen(Qt.GlobalColor.blue))
+        painter.setOpacity(0.35 if self.isMouseOver else 0.0)
+        painter.setBrush(fill_color)
+        painter.setPen(QPen(fill_color))
         painter.drawRect(self.rect())
 
         painter.end()

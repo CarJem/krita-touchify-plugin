@@ -211,10 +211,7 @@ class SubViewWidget(QWidget):
     #region Signals
 
     def onPaletteChanged(self):
-        palette = self.file_label.palette()
-        palette.setBrush(QPalette.ColorRole.Window, qApp.palette().base())
-        self.file_label.setPalette(palette)
-        self.file_label.setBackgroundRole(QPalette.ColorRole.Window)
+        self.file_label.setStyleSheet("QLabel { background-color: palette(base) }")
         self.file_label.setAutoFillBackground(True)
 
         self.menuBar.setStyleSheet(f"""
@@ -229,6 +226,7 @@ class SubViewWidget(QWidget):
                 background-color: palette(base);
             }}
         """)
+        self.view.setBackgroundColor(qApp.palette().window().color())
 
     def onZoomSelectionChanged(self):
         if self.__isUpdatingValues: return

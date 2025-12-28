@@ -243,7 +243,7 @@ class DraggableGridWidgetHeaderToggle(QPushButton):
         super().__init__(parent)
         self.setObjectName("collapse_button")
         self.setFixedSize(name_button_height, name_button_height)
-        self.setStyleSheet(COLLAPSE_BUTTON_STYLE)
+        self.setStyleSheet(COLLAPSE_BUTTON_STYLE())
         self.icon_size = name_button_height - 8
         self.setIconSize(QSize(self.icon_size, self.icon_size))
 

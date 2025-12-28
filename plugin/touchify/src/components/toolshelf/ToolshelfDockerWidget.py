@@ -123,7 +123,8 @@ class ToolshelfDockerWidget(DockWidget):
         pass
 
     def onThemeChanged(self):
-        self.onConfigUpdated()
+        if self.mainWidget: 
+            QTimer.singleShot(100, self.mainWidget.onThemeChanged)
 
 
 def DynamicToolshelfDockerWidget(value: int):

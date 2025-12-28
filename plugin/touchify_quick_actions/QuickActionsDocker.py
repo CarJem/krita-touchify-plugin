@@ -38,6 +38,7 @@ from .widgets.DraggableGridButton import DraggableGridButton
 from .utils.styles import *
 from .utils.config_utils import (
     get_common_config,
+    load_common_config,
     load_grids_data,
     save_grids_data,
     get_list_column_count,
@@ -97,6 +98,7 @@ class QuickActionsDocker(QDockWidget):
         main_layout = QVBoxLayout()
         main_layout.setAlignment(Qt.AlignTop)
         main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
         #endregion
 
         """Create top controls row with brush size slider and settings."""
@@ -112,10 +114,12 @@ class QuickActionsDocker(QDockWidget):
 
         top_row_layout.addStretch()
 
-        top_row_widget = QWidget()
-        top_row_widget.setLayout(top_row_layout)
-        top_row_widget.setFixedHeight(self.setting_btn.sizeHint().height())
-        main_layout.addWidget(top_row_widget)
+        self.top_row_widget = QWidget()
+        self.top_row_widget.setAutoFillBackground(True)
+        self.top_row_widget.setLayout(top_row_layout)
+        self.top_row_widget.setStyleSheet(TOP_ROW_STYLE())
+        self.top_row_widget.setFixedHeight(self.setting_btn.sizeHint().height())
+        main_layout.addWidget(self.top_row_widget)
         #endregion
 
         """Create the scrollable grids section."""
@@ -158,6 +162,7 @@ class QuickActionsDocker(QDockWidget):
         #endregion
 
     def setup(self, instance: "TouchifyWindow"):
+        qApp.paletteChanged.connect(self.onPaletteChanged)
         self.api_window = instance.api_window
         self.actions_manager = instance.managers.mgr_actions
         self.reload_grids()
@@ -272,6 +277,11 @@ class QuickActionsDocker(QDockWidget):
 
     #region Signal Recievers
 
+    def onPaletteChanged(self):
+        Stylemap.instance(True)
+        self.refresh_styles()
+        self.reload_grids()
+
     def onSaveGridsRequested(self):
         """Actually perform the save operation."""
         self.__isSavePending = False
@@ -312,17 +322,7 @@ class QuickActionsDocker(QDockWidget):
             editor = QLineEdit(parent)
             editor.setObjectName("grid_name_editor")
             editor.setText(text)
-            editor.setStyleSheet(f"""
-                QLineEdit {{
-                    background-color: #383838;
-                    color: {GRID_NAME_COLOR};
-                    font-weight: bold;
-                    font-size: 12px;
-                    border: none;
-                    border-radius: 2px;
-                    padding: 2px 4px;
-                }}
-            """)
+            editor.setStyleSheet(INLINE_RENAME_EDITOR_STYLE())
             return editor
 
         if grid_info.ui.name_editor:
@@ -925,40 +925,28 @@ class QuickActionsDocker(QDockWidget):
         if grid_info in self.selected_grids:
                 _apply_grid_widget_styles(
                     grid_info,
-                    SELECTED_NAME_BUTTON_STYLE,
-                    SELECTED_COLLAPSE_BUTTON_STYLE,
-                    SELECTED_WIDGET_STYLE
+                    SELECTED_NAME_BUTTON_STYLE(),
+                    SELECTED_COLLAPSE_BUTTON_STYLE(),
+                    SELECTED_WIDGET_STYLE()
                 )
                 return
         
         is_active = grid_info.is_active
-        
-        #widget_style = """
-        #    QWidget {
-        #        border: 1px solid #555;
-        #        background-color: #474747;
-        #    }
-        #""" if is_active else """
-        #    QWidget {
-        #        border: 1px solid #555;
-        #        background-color: #474747;
-        #    }
-        #"""
 
         widget_style = ""
         
         if is_active:
             _apply_grid_widget_styles(
                 grid_info,
-                ACTIVE_NAME_BUTTON_STYLE,
-                ACTIVE_COLLAPSE_BUTTON_STYLE,
+                ACTIVE_NAME_BUTTON_STYLE(),
+                ACTIVE_COLLAPSE_BUTTON_STYLE(),
                 widget_style
             )
         else:
             _apply_grid_widget_styles(
                 grid_info,
-                INACTIVE_NAME_BUTTON_STYLE,
-                INACTIVE_COLLAPSE_BUTTON_STYLE,
+                INACTIVE_NAME_BUTTON_STYLE(),
+                INACTIVE_COLLAPSE_BUTTON_STYLE(),
                 widget_style
             )
         
@@ -1124,21 +1112,10 @@ class QuickActionsDocker(QDockWidget):
             """Refresh styles for icon buttons (settings, add, delete, etc.)."""
             for btn in self.findChildren(MenuIconButton):
                 btn.refreshStyles()
-    
-
-        def _refresh_grid_button_styles(grid: GridInfo):
-            """Refresh styles for buttons within a grid."""
-            layout = grid.ui.layout
-            if not layout:
-                return
-            for i in range(layout.count()):
-                btn = layout.itemAt(i).widget()
-                if btn:
-                    btn.setStyleSheet(docker_btn_style())
-
+        
         for grid in self.grids:
             self.update_grid_style(grid)
-            _refresh_grid_button_styles(grid)
+        self.top_row_widget.setStyleSheet(TOP_ROW_STYLE())
         _refresh_icon_button_styles()
 
     def update_after_config_changes(self):
@@ -1183,7 +1160,7 @@ class QuickActionsDocker(QDockWidget):
         def _create_name_button():
             """Create and configure the name button for a grid."""
             name_button = QPushButton(grid_info.name)
-            name_button.setStyleSheet(NAME_BUTTON_STYLE)
+            name_button.setStyleSheet(NAME_BUTTON_STYLE())
             name_button.drag_start_pos = None
             name_button.is_dragging_grid = False
 

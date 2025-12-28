@@ -122,8 +122,8 @@ class ToolboxStyles:
             else:
                 return f"""
                     TriggerButton {{
-                        background-color: #{data.dark_hex};
-                        border: 1px solid #{data.dark_hex};
+                        background-color: #{data.base_hex};
+                        border: 1px solid #{data.base_hex};
                         border-radius: 4px;
                         padding: 4px;
                     }}

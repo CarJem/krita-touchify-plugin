@@ -1,11 +1,131 @@
 """UI styling utilities and color constants."""
 
-from PyQt5.QtGui import QColor
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
-from .config_utils import load_common_config
 
-def _make_name_button_style(bg_color, text_color, border="none"):
+
+class Stylemap:
+    def __init__(self):
+        self.__DynamicColors()
+
+    def __DynamicColors(self):
+        palette = qApp.palette()
+
+        self.SELECTED_WIDGET_BORDER = palette.highlight().color().name()
+        self.SELECTED_WIDGET_BACKGROUND = palette.base().color().name()
+
+        self.COLLAPSE_BUTTON_BACKGROUND = palette.window().color().darker(120).name()
+        self.COLLAPSE_BUTTON_ACTIVE_BACKGROUND = palette.window().color().darker(150).name()
+        self.COLLAPSE_BUTTON_INACTIVE_BACKGROUND = palette.window().color().darker(120).name()
+        self.COLLAPSE_BUTTON_SELECTED_BACKGROUND = palette.window().color().darker(150).name()
+
+        self.NAME_BUTTON_BACKGROUND = palette.window().color().darker(120).name()
+        self.NAME_BUTTON_ACTIVE_BACKGROUND = palette.window().color().darker(150).name()
+        self.NAME_BUTTON_INACTIVE_BACKGROUND = palette.window().color().darker(120).name()
+        self.NAME_BUTTON_SELECTED_BACKGROUND = palette.window().color().darker(150).name()
+
+        self.NAME_BUTTON_TEXT_COLOR = palette.text().color().name()
+        self.NAME_BUTTON_ACTIVE_TEXT_COLOR = palette.highlight().color().lighter(125).name()
+        self.NAME_BUTTON_INACTIVE_TEXT_COLOR = palette.placeholderText().color().name()
+        self.NAME_BUTTON_SELECTED_TEXT_COLOR = palette.highlight().color().lighter(125).name()
+
+        self.INLINE_RENAME_TEXT_COLOR = palette.text().color().name()
+        self.INLINE_RENAME_BACKGROUND = palette.window().color().darker(120).name()
+
+        self.TITLEBAR_ICON_COLOR = palette.dark().color().name()
+
+        self.DRAGGABLE_GRID_BUTTON_BG_COLOR = palette.base().color().name()
+        self.DRAGGABLE_GRID_BUTTON_TEXT_COLOR = palette.text().color().name()
+        self.DRAGGABLE_GRID_BUTTON_BG_HOVER_COLOR = palette.base().color().darker(120).name()
+
+        self.DRAGGABLE_GRID_BUTTON_BACKGROUND = "transparent"
+        self.DRAGGABLE_GRID_BUTTON_BACKGROUND_HOVERED = palette.mid().color().name()
+        self.DRAGGABLE_GRID_BUTTON_BACKGROUND_PRESSED = palette.midlight().color().name()
+
+        self.DRAGGABLE_GRID_BUTTON_SELECTED_BACKGROUND = palette.highlight().color().name()
+        self.DRAGGABLE_GRID_BUTTON_SELECTED_BACKGROUND_HOVERED = palette.highlight().color().lighter(120).name()
+        self.DRAGGABLE_GRID_BUTTON_SELECTED_BACKGROUND_PRESSED = palette.highlight().color().darker(120).name()
+
+    def __OriginalColors(self):
+        self.SELECTED_WIDGET_BORDER = "#46aaff"
+        self.SELECTED_WIDGET_BACKGROUND = "#474747"
+
+        self.COLLAPSE_BUTTON_BACKGROUND = "#383838"
+        self.COLLAPSE_BUTTON_ACTIVE_BACKGROUND = "#2b2b2b"
+        self.COLLAPSE_BUTTON_INACTIVE_BACKGROUND = "#383838"
+        self.COLLAPSE_BUTTON_SELECTED_BACKGROUND = "#2b2b2b"
+
+        self.NAME_BUTTON_BACKGROUND = "#383838"
+        self.NAME_BUTTON_ACTIVE_BACKGROUND = "#2b2b2b"
+        self.NAME_BUTTON_INACTIVE_BACKGROUND = "#383838"
+        self.NAME_BUTTON_SELECTED_BACKGROUND = "#2b2b2b"
+
+        self.NAME_BUTTON_TEXT_COLOR = "#ffffff"
+        self.NAME_BUTTON_ACTIVE_TEXT_COLOR = "#46aaff"
+        self.NAME_BUTTON_INACTIVE_TEXT_COLOR = "#979797"
+        self.NAME_BUTTON_SELECTED_TEXT_COLOR = "#46aaff"
+
+        self.INLINE_RENAME_TEXT_COLOR = "#979797"
+        self.INLINE_RENAME_BACKGROUND = "#383838"
+
+        self.TITLEBAR_ICON_COLOR = "#474747"
+
+        self.DRAGGABLE_GRID_BUTTON_BG_COLOR = "#383838"
+        self.DRAGGABLE_GRID_BUTTON_TEXT_COLOR = "#d2d2d2"
+        self.DRAGGABLE_GRID_BUTTON_BG_HOVER_COLOR = "#282828"
+
+        self.DRAGGABLE_GRID_BUTTON_BACKGROUND = "transparent"
+        self.DRAGGABLE_GRID_BUTTON_BACKGROUND_HOVERED = "palette(mid)"
+        self.DRAGGABLE_GRID_BUTTON_BACKGROUND_PRESSED = "palette(midlight)"
+
+        self.DRAGGABLE_GRID_BUTTON_SELECTED_BACKGROUND = "palette(highlight)" #self.palette().highlight().color()
+        self.DRAGGABLE_GRID_BUTTON_SELECTED_BACKGROUND_HOVERED = "palette(highlight)" #hl.lighter(120).name()
+        self.DRAGGABLE_GRID_BUTTON_SELECTED_BACKGROUND_PRESSED = "palette(highlight)" #hl.darker(120).name()
+
+
+    @staticmethod
+    def instance(reload=False) -> "Stylemap":
+        global cached_data
+        if 'cached_data' not in globals() or not isinstance(cached_data, Stylemap) or reload == True:
+            cached_data = Stylemap()
+        return cached_data
+
+
+@staticmethod
+def SM(): return Stylemap.instance()
+
+
+@staticmethod
+def COLLAPSE_BUTTON_STYLE(bg_color: str = None):
+    if not bg_color: bg_color = SM().COLLAPSE_BUTTON_BACKGROUND
+    return f"""
+        QPushButton {{
+            background-color: {bg_color};
+            border: none;
+            border-radius: 2px;
+        }}
+        QPushButton:hover {{ background-color: rgba(0, 0, 0, 0.3); }}
+        QPushButton:pressed {{ background-color: rgba(0, 0, 0, 0.5); }}
+    """
+@staticmethod
+def ACTIVE_COLLAPSE_BUTTON_STYLE(): 
+    return COLLAPSE_BUTTON_STYLE(SM().COLLAPSE_BUTTON_ACTIVE_BACKGROUND)
+@staticmethod
+def INACTIVE_COLLAPSE_BUTTON_STYLE(): 
+    return COLLAPSE_BUTTON_STYLE(SM().COLLAPSE_BUTTON_INACTIVE_BACKGROUND)
+@staticmethod
+def SELECTED_COLLAPSE_BUTTON_STYLE(): 
+    return COLLAPSE_BUTTON_STYLE(SM().COLLAPSE_BUTTON_SELECTED_BACKGROUND)
+
+@staticmethod
+def NAME_BUTTON_STYLE(bg_color=None, text_color=None, border=None):
     """Generate a name button stylesheet."""
+    if not bg_color: bg_color = SM().NAME_BUTTON_BACKGROUND
+    if not text_color: text_color = SM().NAME_BUTTON_TEXT_COLOR
+    if not border: border = "none"
+
     return f"""
         QPushButton {{
             background-color: {bg_color};
@@ -17,117 +137,81 @@ def _make_name_button_style(bg_color, text_color, border="none"):
             text-align: left;
             padding: 2px 4px;
         }}
-    """ + BUTTON_STATES
-
-def _make_collapse_button_style(bg_color):
-    """Generate a collapse button stylesheet."""
+        QPushButton:hover {{ background-color: rgba(0, 0, 0, 0.3); }}
+        QPushButton:pressed {{ background-color: rgba(0, 0, 0, 0.5); }}
+    """
+@staticmethod
+def ACTIVE_NAME_BUTTON_STYLE():
+    return NAME_BUTTON_STYLE(SM().NAME_BUTTON_ACTIVE_BACKGROUND, SM().NAME_BUTTON_ACTIVE_TEXT_COLOR)
+@staticmethod
+def INACTIVE_NAME_BUTTON_STYLE():
+    return NAME_BUTTON_STYLE(SM().NAME_BUTTON_INACTIVE_BACKGROUND, SM().NAME_BUTTON_INACTIVE_TEXT_COLOR)
+@staticmethod
+def SELECTED_NAME_BUTTON_STYLE():
+    return NAME_BUTTON_STYLE(SM().NAME_BUTTON_SELECTED_BACKGROUND, SM().NAME_BUTTON_SELECTED_TEXT_COLOR, f"2px solid {SM().NAME_BUTTON_SELECTED_TEXT_COLOR}")
+@staticmethod
+def INLINE_RENAME_EDITOR_STYLE():
     return f"""
-        QPushButton {{
-            background-color: {bg_color};
+        QLineEdit {{
+            background-color: {SM().INLINE_RENAME_BACKGROUND};
+            color: {SM().INLINE_RENAME_TEXT_COLOR};
+            font-weight: bold;
+            font-size: 12px;
             border: none;
             border-radius: 2px;
-        }}
-    """ + BUTTON_STATES
-
-# Theme color constants
-DOCKER_BUTTON_BG = "#63666a"
-DOCKER_BUTTON_TEXT = "#000000"
-DOCKER_BUTTON_FONT_SIZE = "8px"
-GRID_NAME_COLOR = "#979797"
-SELECTION_HIGHLIGHT = "#46aaff"
-DARK_BG = "#2b2b2b"
-PANEL_BG = "#474747"
-BORDER_COLOR = "#555"
-BORDER_HOVER = "#777"
-BORDER_PRESSED = "#333"
-
-# Common hover/pressed states
-BUTTON_STATES = """
-    QPushButton:hover { background-color: rgba(0, 0, 0, 0.3); }
-    QPushButton:pressed { background-color: rgba(0, 0, 0, 0.5); }
-"""
-
-SELECTED_WIDGET_STYLE = f"""QWidget {{border: 2px solid {SELECTION_HIGHLIGHT};background-color: #474747;}}"""
-
-COLLAPSE_BUTTON_STYLE = """
-    QPushButton {
-        background-color: #383838;
-        border: none;
-        border-radius: 2px;
-    }
-    QPushButton:hover { background-color: rgba(0, 0, 0, 0.3); }
-    QPushButton:pressed { background-color: rgba(0, 0, 0, 0.5); }
-"""
-ACTIVE_COLLAPSE_BUTTON_STYLE = _make_collapse_button_style(DARK_BG)
-INACTIVE_COLLAPSE_BUTTON_STYLE = _make_collapse_button_style("#383838")
-SELECTED_COLLAPSE_BUTTON_STYLE = _make_collapse_button_style(DARK_BG)
-
-NAME_BUTTON_STYLE = """
-    QPushButton {
-        background-color: #383838;
-        color: #ffffff;
-        font-weight: bold;
-        font-size: 12px;
-        border: none;
-        border-radius: 2px;
-        text-align: left;
-        padding: 2px 4px;
-    }
-    QPushButton:hover { background-color: rgba(0, 0, 0, 0.3); }
-    QPushButton:pressed { background-color: rgba(0, 0, 0, 0.5); }
-"""
-ACTIVE_NAME_BUTTON_STYLE = _make_name_button_style(DARK_BG, SELECTION_HIGHLIGHT)
-INACTIVE_NAME_BUTTON_STYLE = _make_name_button_style("#383838", GRID_NAME_COLOR)
-SELECTED_NAME_BUTTON_STYLE = _make_name_button_style(DARK_BG, SELECTION_HIGHLIGHT, f"2px solid {SELECTION_HIGHLIGHT}")
-
-
-
-def lighten_color(hex_color, amount):
-    """Lighten a hex color by adjusting its HSV value."""
-    try:
-        color = QColor(hex_color)
-        h, s, v, a = color.getHsv()
-        color.setHsv(h, s, min(255, v + amount), a)
-        return color.name()
-    except Exception:
-        return hex_color
-
-def darken_color(hex_color, amount):
-    """Darken a hex color by adjusting its HSV value."""
-    try:
-        color = QColor(hex_color)
-        h, s, v, a = color.getHsv()
-        color.setHsv(h, s, max(0, v - amount), a)
-        return color.name()
-    except Exception:
-        return hex_color
-
-def docker_btn_style():
-    """Generate stylesheet for docker buttons."""
-    return f"""
-        QPushButton {{
-            background-color: {DOCKER_BUTTON_BG}; 
-            color: {DOCKER_BUTTON_TEXT}; 
-            font-size: {DOCKER_BUTTON_FONT_SIZE};
-            border-radius: 6px;
-            border: 1px solid {BORDER_COLOR};
-            padding: 3px 6px;
-            font-weight: 500;
-        }}
-        QPushButton:hover {{
-            background-color: {lighten_color(DOCKER_BUTTON_BG, 15)};
-            border: 1px solid {BORDER_HOVER};
-        }}
-        QPushButton:pressed {{
-            background-color: {darken_color(DOCKER_BUTTON_BG, 15)};
-            border: 1px solid {BORDER_PRESSED};
+            padding: 2px 4px;
         }}
     """
 
-def shortcut_btn_style():
-    """Generate stylesheet for shortcut buttons from config."""
-    config = load_common_config()
-    color = config.color.shortcut_button_background_color
-    font_color = config.color.shortcut_button_font_color
-    font_size = config.font.shortcut_button_font_size
-    return f"background-color: {color}; color: {font_color}; font-size: {font_size};"
+@staticmethod
+def MENU_ICON_BUTTON_STYLE():
+    return f"""
+            QPushButton {{
+                background-color: {SM().TITLEBAR_ICON_COLOR};
+                border: none;
+                border-radius: 2px;
+            }}
+            QPushButton:hover {{
+                background-color: rgba(0, 0, 0, 0.3);
+            }}
+        """
+@staticmethod
+def SELECTED_WIDGET_STYLE():
+    return f"""QWidget {{border: 2px solid {SM().SELECTED_WIDGET_BORDER};background-color: {SM().SELECTED_WIDGET_BACKGROUND};}}"""
+@staticmethod
+def TOP_ROW_STYLE():
+    return f"""
+        QWidget {{
+            background-color: {SM().TITLEBAR_ICON_COLOR};
+        }}
+    """
+
+@staticmethod
+def DRAGGABLE_GRID_BUTTON_LABEL_STYLE(font_size: str, bg_color: str):
+    return f"""
+            QLabel {{
+                background-color: {bg_color};
+                color: {SM().DRAGGABLE_GRID_BUTTON_TEXT_COLOR};
+                font-size: {font_size}px;
+                padding: 2px 1px;
+                border: none;
+            }}
+        """
+@staticmethod
+def DRAGGABLE_GRID_BUTTON_ICON_STYLE(bg_color: str):
+    return f"""
+            QToolButton {{
+                padding: 4px;
+                border: none;
+                background-color: {bg_color}
+            }}
+        """
+@staticmethod
+def DRAGGABLE_GRID_BUTTON_BACKGROUND_COLOR(pressed: bool, selected: bool, hovered: bool):
+    if selected:
+        if pressed: return SM().DRAGGABLE_GRID_BUTTON_SELECTED_BACKGROUND_PRESSED
+        elif hovered: return SM().DRAGGABLE_GRID_BUTTON_SELECTED_BACKGROUND_HOVERED
+        else: return SM().DRAGGABLE_GRID_BUTTON_SELECTED_BACKGROUND
+    elif pressed: return SM().DRAGGABLE_GRID_BUTTON_BACKGROUND_PRESSED
+    elif hovered: return SM().DRAGGABLE_GRID_BUTTON_BACKGROUND_HOVERED
+    else: return SM().DRAGGABLE_GRID_BUTTON_BACKGROUND

@@ -2,7 +2,8 @@ import os
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from krita import Krita # type: ignore
+from krita import Krita
+from touchify_quick_actions.utils.styles import MENU_ICON_BUTTON_STYLE # type: ignore
 
 
 _UI_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'resources')
@@ -24,16 +25,7 @@ class MenuIconButton(QPushButton):
         self.clicked.connect(callback)
 
     def refreshStyles(self):
-        self.setStyleSheet("""
-            QPushButton {
-                background-color: #474747;
-                border: none;
-                border-radius: 2px;
-            }
-            QPushButton:hover {
-                background-color: rgba(0, 0, 0, 0.3);
-            }
-        """)
+        self.setStyleSheet(MENU_ICON_BUTTON_STYLE())
 
     def _calculate_icon_size(self, icon_name, button_size):
         """Calculate icon size with special adjustments for specific icons"""

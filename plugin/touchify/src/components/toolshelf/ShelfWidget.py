@@ -686,6 +686,10 @@ class ShelfWidget(QWidget):
         _recursive(self.dockArea)
         for dockArea in self.dockPages:
             _recursive(dockArea)
+
+    def onThemeChanged(self):
+        self.updateStyle()
+        self.loadLayout()
             
     def onConfigUpdated(self):
         self.loadLayout()

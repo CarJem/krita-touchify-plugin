@@ -16,6 +16,7 @@ from PyQt5.QtGui import *
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 from touchify_quick_actions.dialogs.SettingsDialog import SettingsDialog
 from jemlib.alib_widgets.widget.DropIndicatorOverlay import DropIndicatorOverlay
+from touchify_quick_actions.utils.styles import DRAGGABLE_GRID_BUTTON_BACKGROUND_COLOR, DRAGGABLE_GRID_BUTTON_ICON_STYLE, DRAGGABLE_GRID_BUTTON_LABEL_STYLE
 
 from ..utils.config_utils import (
     get_brush_icon_size,
@@ -419,22 +420,7 @@ class DraggableGridButton(QWidget):
         else: self.setHighlightEdge(None)
 
     def updateStyles(self):
-        if self.__isToggled:
-            hl = self.palette().highlight().color()
-            if self.__isPressed:
-                bg_color = hl.lighter(120).name()
-            elif self.__isHovered:
-                bg_color = hl.darker(120).name()
-            else:
-                bg_color = hl.name()
-        elif self.__isPressed:
-            bg_color = "palette(mid)"
-        elif self.__isHovered:
-            bg_color = "palette(midlight)"
-        else:
-            bg_color = "transparent"
-
-
+        bg_color = DRAGGABLE_GRID_BUTTON_BACKGROUND_COLOR(self.__isPressed, self.__isToggled, self.__isHovered)
         if hasattr(self, "name_label"): self.name_label.updateStyles(bg_color)
         if hasattr(self, "icon_button"): self.icon_button.updateStyles(bg_color)
 
@@ -560,10 +546,7 @@ class DraggableGridButton(QWidget):
 class DraggableGridButtonLabel(QLabel):
     """A clickable label for displaying the brush preset name."""
 
-    # Brush name label colors
-    BG_COLOR = "#383838"
-    TEXT_COLOR = "#d2d2d2"
-    BG_HOVER_COLOR = "#282828"  # Darker version for hover
+
     
     def __init__(self, parent_widget: "DraggableGridButton"):
         super().__init__()
@@ -575,16 +558,7 @@ class DraggableGridButtonLabel(QLabel):
     def updateStyles(self, bg_color: str = "transparent"):
         """Update the name label background to reflect hover state."""
         font_size = get_brush_name_font_size(self.parent_widget.grid_info)
-        
-        self.setStyleSheet(f"""
-            QLabel {{
-                background-color: {bg_color};
-                color: {DraggableGridButtonLabel.TEXT_COLOR};
-                font-size: {font_size}px;
-                padding: 2px 1px;
-                border: none;
-            }}
-        """)
+        self.setStyleSheet(DRAGGABLE_GRID_BUTTON_LABEL_STYLE(font_size, bg_color))
         
     def mousePressEvent(self, event):
         self.parent_widget.mousePressEvent(event, True)
@@ -608,13 +582,7 @@ class DraggableGridButtonIcon(TriggerButton):
         if self.parent_widget: self.parent_widget.onToggled(state)
         
     def updateStyles(self, bg_color: str = "transparent"):
-        self.setStyleSheet(f"""
-            QToolButton {{
-                padding: 4px;
-                border: none;
-                background-color: {bg_color}
-            }}
-        """)
+        self.setStyleSheet(DRAGGABLE_GRID_BUTTON_ICON_STYLE(bg_color))
 
     def setParent(self, obj):
         super().setParent(obj)
