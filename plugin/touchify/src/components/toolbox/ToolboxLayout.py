@@ -12,6 +12,7 @@ from PyQt5.QtCore import Qt, QSize, QRect, QPoint
 from PyQt5.QtWidgets import QLayout, QWidget, QAbstractButton, QLayoutItem, QWidgetItem, QFrame, QToolButton
 
 from jemlib.alib_pyqtgraph.Qt import QtCore
+from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
 
 class ToolboxEmptySpace(QToolButton):
     def __init__(self, parent: QWidget = None):
@@ -130,6 +131,7 @@ class SectionLayout(QLayout):
 class Section(QFrame):
 
     sigContextMenuRequested = QtCore.pyqtSignal(str, QPoint)
+    sigItemContextMenuRequested = QtCore.pyqtSignal(str, str, QPoint)
 
     class SeparatorFlag(Flag):
         SeparatorTop = auto()  # 0x0001
@@ -190,10 +192,24 @@ class Section(QFrame):
 
     def contextMenuEvent(self, a0):
         if self._isEditMode: 
-            self.sigContextMenuRequested.emit(self.m_name, a0.globalPos())
-            a0.accept()
-            return
+            context_button = self.getContextButton()
+            if not context_button:
+                self.sigContextMenuRequested.emit(self.m_name, a0.globalPos())
+                a0.accept()
+                return
+            elif isinstance(context_button, ToolboxButton):
+                context_button: ToolboxButton
+                self.sigItemContextMenuRequested.emit(self.m_name, context_button.getUuid(), a0.globalPos())
+                a0.accept()
+                return
         return super().contextMenuEvent(a0)
+            
+    
+    def getContextButton(self):
+        for item in self.m_layout.m_items:
+            if item.widget() and item.widget().underMouse():
+                return item.widget()
+        return None
 
     def addButton(self, button: QAbstractButton, priority: int):
         self.m_layout.addButton(button, priority)

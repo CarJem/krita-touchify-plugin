@@ -115,6 +115,7 @@ class ToolboxWidget(QWidget):
     def addSection(self, section: Section, name: str):
         section.setEditMode(self._isEditMode)
         section.sigContextMenuRequested.connect(self.onSectionContextMenu)
+        section.sigItemContextMenuRequested.connect(self.onToolContextMenu)
         section.setName(name)
         self._toolboxLayout.addSection(section)
         self.sections[name] = section
@@ -196,9 +197,11 @@ class ToolboxWidget(QWidget):
             value.setEditMode(enabled)
 
     def onSectionContextMenu(self, uuid: str, pos: QPoint):
+        print("Section Context Menu")
         self.sigSectionContextMenuRequested.emit(uuid, pos)
 
     def onToolContextMenu(self, section_uuid: str, tool_uuid: str, pos: QPoint):
+        print("Tool Context Menu")
         self.sigToolContextMenuRequested.emit(section_uuid, tool_uuid, pos)
 
     def onToolDragStarted(self, section_uuid: str, tool_uuid: str):
@@ -214,6 +217,7 @@ class ToolboxWidget(QWidget):
         return self._toolboxLayout
     
     def contextMenuEvent(self, a0):
+        print("Context Menu")
         self.sigContextMenuRequested.emit(a0.globalPos())
         a0.accept()
         return
