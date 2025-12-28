@@ -32,7 +32,7 @@
                         35,
                         45,
                         160,
-                        290
+                        83
                     ]
                 }
             ],
@@ -367,6 +367,7 @@
                                             "canvas_preset_data": "none",
                                             "script_id": "",
                                             "piewheel_id": "",
+                                            "color_id": "#000000",
                                             "json_version": 2
                                         }
                                     ]
@@ -395,6 +396,7 @@
                                             "canvas_preset_data": "none",
                                             "script_id": "",
                                             "piewheel_id": "",
+                                            "color_id": "#000000",
                                             "json_version": 2
                                         }
                                     ]
@@ -423,6 +425,7 @@
                                             "canvas_preset_data": "none",
                                             "script_id": "",
                                             "piewheel_id": "",
+                                            "color_id": "#000000",
                                             "json_version": 2
                                         }
                                     ]
@@ -568,7 +571,7 @@
                             ],
                             {
                                 "sizes": [
-                                    33
+                                    35
                                 ]
                             }
                         ],
@@ -617,6 +620,7 @@
                                             "canvas_preset_data": "none",
                                             "script_id": "",
                                             "piewheel_id": "",
+                                            "color_id": "#000000",
                                             "json_version": 2
                                         },
                                         {
@@ -640,6 +644,7 @@
                                             "canvas_preset_data": "none",
                                             "script_id": "",
                                             "piewheel_id": "",
+                                            "color_id": "#000000",
                                             "json_version": 2
                                         },
                                         {
@@ -663,6 +668,7 @@
                                             "canvas_preset_data": "none",
                                             "script_id": "",
                                             "piewheel_id": "",
+                                            "color_id": "#000000",
                                             "json_version": 2
                                         },
                                         {
@@ -686,6 +692,7 @@
                                             "canvas_preset_data": "none",
                                             "script_id": "",
                                             "piewheel_id": "",
+                                            "color_id": "#000000",
                                             "json_version": 2
                                         }
                                     ]
@@ -1080,14 +1087,200 @@
                 "json_version": 5
             }
         },
-        "pages": [],
+        "pages": [
+            {
+                "layout": {
+                    "main": [
+                        "vertical",
+                        [
+                            [
+                                "dock",
+                                "352a372b-829f-4c66-956a-029de4f0d8ab",
+                                {}
+                            ],
+                            [
+                                "dock",
+                                "652b6ac3-c9f9-45f2-94f7-92c6d7c18ab6",
+                                {}
+                            ]
+                        ],
+                        {
+                            "sizes": [
+                                30,
+                                406
+                            ]
+                        }
+                    ],
+                    "float": []
+                },
+                "items": {
+                    "652b6ac3-c9f9-45f2-94f7-92c6d7c18ab6": {
+                        "display_name": "",
+                        "docker_id": "PresetDocker",
+                        "min_size_x": 300,
+                        "min_size_y": 400,
+                        "max_size_x": 0,
+                        "max_size_y": 0,
+                        "section_type": "docker",
+                        "requires_specific_tool": "",
+                        "invert_required_tools": false,
+                        "docker_nesting_mode": "normal",
+                        "docker_unloaded_visibility": "normal",
+                        "docker_loading_priority": "normal",
+                        "docker_size_hint_x": 0,
+                        "docker_size_hint_y": 0,
+                        "action_section_id": "Panel",
+                        "action_section_display_mode": "normal",
+                        "action_section_contents": [],
+                        "action_section_alignment_x": "none",
+                        "action_section_alignment_y": "none",
+                        "action_section_btn_width": 0,
+                        "action_section_btn_height": 0,
+                        "action_section_icon_size": 0,
+                        "special_item_type": "none",
+                        "special_slider_orientation": "horizontal",
+                        "special_nested_show_titlebar": true,
+                        "special_nested_data": {
+                            "layout": {},
+                            "items": {},
+                            "pages": [],
+                            "options": {
+                                "button_size": 32,
+                                "header_size": 16,
+                                "enable_pinning": false,
+                                "position": "top",
+                                "resize_style": "default",
+                                "stack_preview": "default",
+                                "stack_alignment": "default",
+                                "stack_actions": [],
+                                "json_version": 1
+                            },
+                            "pageOptions": {
+                                "page_icon": "material:home",
+                                "json_version": 1
+                            },
+                            "json_version": 1
+                        },
+                        "json_version": 5
+                    },
+                    "352a372b-829f-4c66-956a-029de4f0d8ab": {
+                        "display_name": "",
+                        "docker_id": "",
+                        "min_size_x": 0,
+                        "min_size_y": 0,
+                        "max_size_x": 0,
+                        "max_size_y": 30,
+                        "section_type": "actions",
+                        "requires_specific_tool": "",
+                        "invert_required_tools": false,
+                        "docker_nesting_mode": "normal",
+                        "docker_unloaded_visibility": "normal",
+                        "docker_loading_priority": "normal",
+                        "docker_size_hint_x": 0,
+                        "docker_size_hint_y": 0,
+                        "action_section_id": "Panel",
+                        "action_section_display_mode": "normal",
+                        "action_section_contents": [
+                            {
+                                "row_name": "Actions Row",
+                                "actions": [
+                                    {
+                                        "registry_id": "NewTrigger",
+                                        "variant": "action",
+                                        "display_icon_hide": false,
+                                        "display_text_hide": false,
+                                        "display_custom_icon_enabled": true,
+                                        "display_custom_icon": "paintop_settings_02",
+                                        "display_custom_text_enabled": false,
+                                        "display_custom_text": "",
+                                        "extra_closes_popup": false,
+                                        "extra_composer_mode": false,
+                                        "action_id": "show_brush_editor",
+                                        "context_menu_id": "",
+                                        "brush_name": "",
+                                        "docker_id": "",
+                                        "workspace_id": "",
+                                        "docker_group_data": "none",
+                                        "popup_data": "none",
+                                        "canvas_preset_data": "none",
+                                        "script_id": "",
+                                        "piewheel_id": "",
+                                        "color_id": "#000000",
+                                        "json_version": 2
+                                    },
+                                    {
+                                        "registry_id": "NewTrigger",
+                                        "variant": "action",
+                                        "display_icon_hide": false,
+                                        "display_text_hide": false,
+                                        "display_custom_icon_enabled": false,
+                                        "display_custom_icon": "",
+                                        "display_custom_text_enabled": false,
+                                        "display_custom_text": "",
+                                        "extra_closes_popup": false,
+                                        "extra_composer_mode": false,
+                                        "action_id": "reload_preset_action",
+                                        "context_menu_id": "",
+                                        "brush_name": "",
+                                        "docker_id": "",
+                                        "workspace_id": "",
+                                        "docker_group_data": "none",
+                                        "popup_data": "none",
+                                        "canvas_preset_data": "none",
+                                        "script_id": "",
+                                        "piewheel_id": "",
+                                        "color_id": "#000000",
+                                        "json_version": 2
+                                    }
+                                ]
+                            }
+                        ],
+                        "action_section_alignment_x": "none",
+                        "action_section_alignment_y": "none",
+                        "action_section_btn_width": 0,
+                        "action_section_btn_height": 30,
+                        "action_section_icon_size": 0,
+                        "special_item_type": "none",
+                        "special_slider_orientation": "horizontal",
+                        "special_nested_show_titlebar": true,
+                        "special_nested_data": {
+                            "layout": {},
+                            "items": {},
+                            "pages": [],
+                            "options": {
+                                "button_size": 32,
+                                "header_size": 16,
+                                "enable_pinning": false,
+                                "position": "top",
+                                "resize_style": "default",
+                                "stack_preview": "default",
+                                "stack_alignment": "default",
+                                "stack_actions": [],
+                                "json_version": 1
+                            },
+                            "pageOptions": {
+                                "page_icon": "material:home",
+                                "json_version": 1
+                            },
+                            "json_version": 1
+                        },
+                        "json_version": 5
+                    }
+                },
+                "options": {
+                    "page_icon": "material:brush",
+                    "json_version": 1
+                },
+                "name": ""
+            }
+        ],
         "options": {
             "button_size": 32,
             "header_size": 16,
             "enable_pinning": false,
             "position": "top",
             "resize_style": "size_hint",
-            "stack_preview": "default",
+            "stack_preview": "tabbed",
             "stack_alignment": "default",
             "stack_actions": [],
             "json_version": 1

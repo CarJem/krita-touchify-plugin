@@ -429,7 +429,9 @@ class ShelfWidget(QWidget):
 
     def insertPage(self):
         new_dock_area = ShelfDockArea(self)
+        new_dock_area_settigns = ToolshelfPageSettings()
         self.dockPages.append(new_dock_area)
+        self.dockPageOptions.append(new_dock_area_settigns)
         self.dockStack.addWidget(new_dock_area)
         
         self.saveLayout()
@@ -452,6 +454,7 @@ class ShelfWidget(QWidget):
             self.loadLayout()
 
     def deletePage(self, index: int):
+        removed_dock_area_options = self.dockPageOptions.pop(index)
         removed_dock_area = self.dockPages.pop(index)
         self.dockStack.removeWidget(removed_dock_area)
         
@@ -587,16 +590,16 @@ class ShelfWidget(QWidget):
             self.loadLayout()
 
     def savePreset(self):
-        self.SettingsLoader.savePreset(self.currentState(), self.registry_index)
+        self.settingsLoader.savePreset(self.currentState(), self.registry_index)
 
     def savePresetAs(self):
         self.propertyEditor = PropertyGridDialog.Setup(self.propertyEditor, self.api_window, ShelfClasses.PresetSaveAs())
         if self.propertyEditor.exec_():
             editorResults: ShelfClasses.PresetSaveAs = self.propertyEditor.editableConfig
-            self.SettingsLoader.savePresetAs(editorResults, self.currentState(), self.registry_index)
+            self.settingsLoader.savePresetAs(editorResults, self.currentState(), self.registry_index)
 
     def deletePreset(self):
-        self.SettingsLoader.deletePreset(self.registry_index)
+        self.settingsLoader.deletePreset(self.registry_index)
 
     #endregion
 

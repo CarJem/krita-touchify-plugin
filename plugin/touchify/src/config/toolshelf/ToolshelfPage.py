@@ -20,9 +20,16 @@ class ToolshelfPage:
 
         for entry in self.items:
             self.items[entry] = ToolshelfDock(**self.items[entry])
+    
+    def __str__(self):
+        if self.name != "":
+            return self.name
+        else:
+            return "(unnamed page)"
 
     def propertygrid_labels(self):
         labels = {}
+        labels["name"] = "Name"
         labels["items"] = "Items"
         labels["options"] = "Page Options"
         return labels
@@ -34,5 +41,6 @@ class ToolshelfPage:
     
     def propertygrid_restrictions(self):
         restrictions = {}
+        restrictions["items"] = DataConstraints.dictMod(DataConstraints.DictMod.ListLike)
         restrictions["options"] = DataConstraints.expandable()
         return restrictions

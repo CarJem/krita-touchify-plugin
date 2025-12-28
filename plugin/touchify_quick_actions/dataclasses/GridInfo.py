@@ -7,6 +7,7 @@ from touchify_quick_actions.widgets.DraggableGridContainer import DraggableGridC
 from touchify_quick_actions.widgets.DraggableGridWidget import DraggableGridWidget
 from touchify_quick_actions.widgets.DraggableGridWidgetHeader import DraggableGridWidgetHeaderToggle
 from .GridPresetItem import GridPresetItem
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints as RS
 
 class GridInfo:
 
@@ -22,7 +23,24 @@ class GridInfo:
             self.display_brush_names = True
             
             JsonExtensions.dictToObject(self, args, [])
-            
+
+        def propertygrid_labels(self):
+            labels = {}
+            labels["max_brush_per_row"] = "Max buttons per row"
+            labels["spacing_between_buttons"] = "Spacing between buttons"
+            labels["brush_icon_size"] = "Button icon size"
+            labels["list_mode"] = "List mode"
+            labels["list_column_count"] = "Number of list columns"
+            labels["display_brush_names"] = "Display brush names"
+            return labels
+        
+        def propertygrid_restrictions(self):
+            restrictions = {}
+            restrictions["max_brush_per_row"] = RS.range(min=1)
+            restrictions["spacing_between_buttons"] = RS.range(min=0)
+            restrictions["brush_icon_size"] = RS.range(min=4)
+            restrictions["list_column_count"] = RS.range(min=1)
+            return restrictions
 
         def propertygrid_view_type(self):
             return "form_alt"

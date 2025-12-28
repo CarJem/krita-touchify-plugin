@@ -5,26 +5,6 @@ from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints as RS
 
 class CommonConfig:
 
-    class Color:
-        def __init__(self, **args) -> None:
-            self.docker_button_font_color: str = "#000000"
-            self.docker_button_background_color: str = "#63666a"
-            self.shortcut_button_font_color: str = "#eaeaea"
-            self.shortcut_button_background_color: str = "#2a1c2a"
-            JsonExtensions.dictToObject(self, args, [])
-
-        def propertygrid_view_type(self):
-            return "form_alt"
-
-    class Font:
-        def __init__(self, **args) -> None:
-            self.docker_button_font_size: str = "10px"
-            self.shortcut_button_font_size: str = "14px"
-            JsonExtensions.dictToObject(self, args, [])
-
-        def propertygrid_view_type(self):
-            return "form_alt"
-
     class Shortcut:
         def __init__(self, **args) -> None:
             self.add_brush_to_grid = "W"
@@ -48,41 +28,50 @@ class CommonConfig:
             self.exclusive_uncollapse = False
             JsonExtensions.dictToObject(self, args, [])
 
+        def propertygrid_labels(self):
+            labels = {}
+            labels["max_brush_per_row"] = "Max buttons per row"
+            labels["spacing_between_buttons"] = "Spacing between buttons"
+            labels["spacing_between_grids"] = "Spacing between grids"
+            labels["brush_icon_size"] = "Button icon size"
+            labels["list_mode"] = "List mode"
+            labels["list_column_count"] = "Number of list columns"
+            labels["display_brush_names"] = "Display brush names"
+            labels["exclusive_uncollapse"] = "Exclusive uncollapse"
+            return labels
+        
+        def propertygrid_restrictions(self):
+            restrictions = {}
+            restrictions["max_brush_per_row"] = RS.range(min=1)
+            restrictions["spacing_between_buttons"] = RS.range(min=0)
+            restrictions["spacing_between_grids"] = RS.range(min=0)
+            restrictions["brush_icon_size"] = RS.range(min=4)
+            restrictions["list_column_count"] = RS.range(min=1)
+            return restrictions
+
         def propertygrid_view_type(self):
             return "form_alt"
-
-    class BrushSlider:
-        def __init__(self, **args) -> None:
-            self.max_brush_size = 1000
-            JsonExtensions.dictToObject(self, args, [])
-
-        def propertygrid_view_type(self):
-            return "form_alt"
-
+        
     def __init__(self, **args) -> None:
-        self.color = CommonConfig.Color()
-        self.font = CommonConfig.Font()
-        self.shortcut = CommonConfig.Shortcut()
+        #self.shortcut = CommonConfig.Shortcut()
         self.layout = CommonConfig.Layout()
-        self.brush_slider = CommonConfig.BrushSlider()
-        JsonExtensions.dictToObject(self, args, [CommonConfig.Color, CommonConfig.Font, CommonConfig.Shortcut, CommonConfig.Layout, CommonConfig.BrushSlider])
+        JsonExtensions.dictToObject(self, args, [CommonConfig.Shortcut, CommonConfig.Layout])
         
     def propertygrid_sorted(self):
         return [
-            "color",
-            "font",
             "shortcut",
             "layout",
-            "brush_slider"
+        ]
+    
+    def propertygrid_hidden(self):
+        return [
+            "shortcut"
         ]
 
     def propertygrid_labels(self):
         labels = {}
-        labels["color"] = "Color"
-        labels["font"] = "Font"
         labels["shortcut"] = "Shortcut"
         labels["layout"] = "Layout"
-        labels["brush_slider"] = "Brush Slider"
         return labels
     
     def propertygrid_view_type(self):
@@ -90,11 +79,6 @@ class CommonConfig:
     
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["metadata"] = RS.expandable()
-        restrictions["color"] = RS.expandable()
-        restrictions["font"] = RS.expandable()
-        restrictions["shortcut"] = RS.expandable()
         restrictions["layout"] = RS.expandable()
-        restrictions["brush_slider"] = RS.expandable()
         return restrictions
 

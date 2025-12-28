@@ -74,14 +74,14 @@ class QuickTriggerPickerDialog(QDialog):
 
     def onAddBrush(self, source: PropertyGrid_SelectorDialog):
         trigger = Trigger()
-        trigger.variant = Trigger.Variants.Brush
+        trigger.variant = str(Trigger.Variants.Brush)
         trigger.display_custom_text_enabled = False
         trigger.brush_name = source.selected_item
         self.sigOnNewItem.emit(deepcopy(trigger))
 
     def onAddAction(self, source: PropertyGrid_SelectorDialog):
         trigger = Trigger()
-        trigger.variant = Trigger.Variants.Action
+        trigger.variant = str(Trigger.Variants.Action)
         trigger.display_custom_text_enabled = False
         trigger.action_id = source.selected_item
         self.sigOnNewItem.emit(deepcopy(trigger))

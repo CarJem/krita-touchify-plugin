@@ -19,5 +19,6 @@
     "canvas_preset_data": "none",
     "script_id": "vaporjem/scripts/popup_palette_opener",
     "piewheel_id": "",
+    "color_id": "#000000",
     "json_version": 2
 }

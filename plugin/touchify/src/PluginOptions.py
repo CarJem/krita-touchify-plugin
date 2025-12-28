@@ -1,9 +1,11 @@
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from jemlib.alib_propertygrid.data.DataHandler import DataHandler
 from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
 from jemlib.managers.GlobalEvents import GlobalEvents
+from touchify.src.alib_propertygrid.data.TouchifyDataHandler import TouchifyDataHandler
 from touchify.src.settings.TouchifySettings import TouchifySettings
 import jemlib.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 
@@ -28,7 +30,11 @@ class PluginOptions(QDialog):
         self.qwin = qwin.qwindow
         
         self.editableConfig = TouchifySettings.configCopy()
-        self.propertyGrid = PropertyGrid(self)
+
+        self.praser = DataHandler()
+        self.praser.installExtension(TouchifyDataHandler())
+
+        self.propertyGrid = PropertyGrid(self, self.praser)
         self.propertyGrid.setDataObject(self.editableConfig)
 
         self.container = QVBoxLayout(self)
