@@ -1,4 +1,3 @@
-from typing import TYPE_CHECKING
 
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import Qt, QRect
@@ -7,10 +6,6 @@ from PyQt5.QtGui import QPainter, QColor
 # Visual constants for drop zone highlighting
 _DROP_HIGHLIGHT_COLOR = QColor(70, 200, 255, 255)  # Bright cyan, fully opaque
 _DROP_HIGHLIGHT_HEIGHT = 4  # Thicker highlight line for better visibility
-
-if TYPE_CHECKING:
-    from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
-    from touchify_quick_actions.dataclasses.GridInfo import GridInfo
 
 class DropIndicatorOverlay(QWidget):
     """Overlay widget that draws drop indicator on top of all other widgets."""

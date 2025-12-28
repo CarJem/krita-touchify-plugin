@@ -15,7 +15,7 @@ from PyQt5.QtGui import *
 
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 from touchify_quick_actions.dialogs.SettingsDialog import SettingsDialog
-from touchify_quick_actions.widgets.DropIndicatorOverlay import DropIndicatorOverlay
+from jemlib.alib_widgets.widget.DropIndicatorOverlay import DropIndicatorOverlay
 
 from ..utils.config_utils import (
     get_brush_icon_size,

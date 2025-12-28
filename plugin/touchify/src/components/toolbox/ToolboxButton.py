@@ -5,10 +5,13 @@ from PyQt5.QtCore import *
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
 
+UNIQUE_DRAG_ID = "####touchify/toolbox_button###"
 
 class ToolboxButton(TriggerButton):
 
     sigContextMenuRequested = pyqtSignal(str, str, QPoint)
+    sigDragStarted = pyqtSignal(str, str)
+    sigDragEnded = pyqtSignal(str, str)
     sigMouseOverChanged = pyqtSignal(bool)
         
     def __init__(self, parent: QWidget=None):
@@ -21,6 +24,8 @@ class ToolboxButton(TriggerButton):
         self._cuuid = ""
         self._data: ToolboxDataItem = ToolboxDataItem()
         self._dataIndex = 0
+        self._isDragging = False
+        self._hasDragDetection = False
 
         self.sigMouseOverChanged.connect(self.onMouseOverChanged)
 
@@ -32,6 +37,15 @@ class ToolboxButton(TriggerButton):
         self._dataIndex = data_index
         self._uuid = item_uuid
         self._cuuid = cat_uuid
+
+    def getCuuid(self):
+        return self._cuuid
+    
+    def getUuid(self):
+        return self._uuid
+
+    def matches(self, cat_uuid: str, item_uuid: str):
+        return self._uuid == item_uuid and self._cuuid == cat_uuid
 
 
     #region Signals
@@ -57,9 +71,11 @@ class ToolboxButton(TriggerButton):
         super().paintEvent(event)
         painter = QPainter(self)
 
-        painter.setOpacity(0.2 if self._isHovered else 0.0)
-        painter.setBrush(Qt.GlobalColor.blue)
-        painter.setPen(QPen(Qt.GlobalColor.blue))
+        highlight = self.window().palette().highlight().color().lighter(125)
+
+        painter.setOpacity(0.6 if self._isHovered else 0.0)
+        painter.setBrush(highlight)
+        painter.setPen(QPen(highlight))
         painter.drawRect(self.rect())
 
         painter.end()
@@ -73,13 +89,14 @@ class ToolboxButton(TriggerButton):
         else: return super().mouseMoveEvent(ev)
     
     def mouseReleaseEvent(self, ev: QMouseEvent):
+        self._isDragging = False
         if self._isEditMode: self.editModeMouseReleaseEvent(ev)
         else: return super().mouseReleaseEvent(ev)
 
     def editModeMouseMoveEvent(self, ev: QMouseEvent):
         lpos = ev.position() if hasattr(ev, 'position') else ev.localPos()
         self._pressPos = lpos
-        self._mouseMoved = False
+        self._mouseMoved = True
         ev.accept()
 
     def editModeMousePressEvent(self, ev: QMouseEvent):
@@ -88,12 +105,37 @@ class ToolboxButton(TriggerButton):
             self._mouseMoved = (lpos - self._pressPos).manhattanLength() > QApplication.startDragDistance()
 
         if self._mouseMoved and ev.buttons() == Qt.MouseButton.LeftButton:
-            pass #Start Drag
+            self.startDrag()
 
     def editModeMouseReleaseEvent(self, ev: QMouseEvent):
         if not self._mouseMoved:
             if ev.button() == Qt.MouseButton.RightButton:
                 self.sigContextMenuRequested.emit(self._cuuid, self._uuid, ev.globalPos())
 
+    #endregion
+
+    #region Drag Functions
+
+    def setDragDetection(self, state: bool):
+        self._hasDragDetection = state
+
+    def startDrag(self):
+        if self._isDragging: return
+
+        self._isDragging = True
+        self.sigDragStarted.emit(self._cuuid, self._uuid)
+        
+        drag = QDrag(self)
+        mime_data = QMimeData()
+        mime_data.setText(UNIQUE_DRAG_ID)
+        drag.setMimeData(mime_data)
+        drag.setPixmap(self.icon().pixmap(32, 32))
+        drag.setHotSpot(QPoint(10, 10))
+        drag.exec_(Qt.DropAction.MoveAction)
+
+        self._isDragging = False
+        self.sigDragEnded.emit(self._cuuid, self._uuid)
+        
+        
     #endregion
         

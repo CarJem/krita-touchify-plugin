@@ -14,7 +14,7 @@ from krita import Krita  # type: ignore
 from touchify_quick_actions.utils.styles import COLLAPSE_BUTTON_STYLE
 
 from ..utils.drag_utils import encode_grid_single, encode_grid_multi, is_grid_drag, decode_grid_single, decode_grid_multi
-from .DropIndicatorOverlay import DropIndicatorOverlay
+from jemlib.alib_widgets.widget.DropIndicatorOverlay import DropIndicatorOverlay
 
 if TYPE_CHECKING:
     from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker

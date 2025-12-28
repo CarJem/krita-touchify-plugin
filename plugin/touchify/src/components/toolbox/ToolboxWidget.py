@@ -21,6 +21,8 @@ BUTTON_MARGIN = 10
 class ToolboxWidget(QWidget):
 
     sigToolContextMenuRequested = pyqtSignal(str, str, QPoint)
+    sigDragStarted = pyqtSignal(str, str)
+    sigDragEnded = pyqtSignal(str, str)
     sigSectionContextMenuRequested = pyqtSignal(str, QPoint)
     sigContextMenuRequested = pyqtSignal(QPoint)
 
@@ -82,6 +84,8 @@ class ToolboxWidget(QWidget):
 
         if isinstance(button, ToolboxButton):
             button.sigContextMenuRequested.connect(self.onToolContextMenu)
+            button.sigDragStarted.connect(self.onToolDragStarted)
+            button.sigDragEnded.connect(self.onToolDragEnded)
         
         sectionToBeAddedTo = None
         section = section
@@ -196,6 +200,12 @@ class ToolboxWidget(QWidget):
 
     def onToolContextMenu(self, section_uuid: str, tool_uuid: str, pos: QPoint):
         self.sigToolContextMenuRequested.emit(section_uuid, tool_uuid, pos)
+
+    def onToolDragStarted(self, section_uuid: str, tool_uuid: str):
+        self.sigDragStarted.emit(section_uuid, tool_uuid)
+
+    def onToolDragEnded(self, section_uuid: str, tool_uuid: str):
+        self.sigDragEnded.emit(section_uuid, tool_uuid)
     
     def setFloating(self, v: bool):
         self.floating = v

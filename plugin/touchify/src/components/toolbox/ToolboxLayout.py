@@ -16,6 +16,13 @@ from jemlib.alib_pyqtgraph.Qt import QtCore
 class ToolboxEmptySpace(QToolButton):
     def __init__(self, parent: QWidget = None):
         super().__init__(parent)
+        self._cuuid = None
+
+    def setCuuid(self, val: str):
+        self._cuuid = val
+
+    def getCuuid(self):
+        return self._cuuid
     
     def paintEvent(self, a0):
         a0.ignore()
