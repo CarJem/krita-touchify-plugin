@@ -1,4 +1,3 @@
-from functools import partial
 from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QPushButton, QSizePolicy
 from krita import *
@@ -8,7 +7,6 @@ from PyQt5.QtWidgets import *
 from jemlib.api_krita import KritaAPI
 
 
-from touchify.src.components.toolshelf.ShelfToolbarMenu import ShelfToolbarMenu
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.__env__ import *
@@ -34,20 +32,7 @@ class ShelfToolbar(QWidget):
         self.ourLayout.setContentsMargins(0,0,0,0)
         self.setLayout(self.ourLayout)
 
-        self.optionsMenu = ShelfToolbarMenu(self, self.shelf.currentPresetId(), self.shelf.is_nested, self.shelf.is_restricted)
-        self.optionsMenu.aboutToHide.connect(self.onHideSettings)
-        self.optionsMenu.sigEditModeToggled.connect(self.shelf.onEditModeChanged)
-        self.optionsMenu.sigAddShelfItemRequested.connect(self.shelf.addShelfItem)
-        self.optionsMenu.sigSettingsRequested.connect(self.shelf.editLayout)
-        self.optionsMenu.sigAddPageRequested.connect(self.shelf.insertPage)
-        self.optionsMenu.sigEditPageRequested.connect(self.shelf.editPage)
-        self.optionsMenu.sigDeletePageRequested.connect(self.shelf.deletePage)
-        self.optionsMenu.sigPresetsChangedRequested.connect(self.shelf.changePreset)
 
-        self.optionsMenu.sigSavePresetAsRequested.connect(self.shelf.savePresetAs)
-        self.optionsMenu.sigSavePresetRequested.connect(self.shelf.savePreset)
-        self.optionsMenu.sigDeletePresetRequested.connect(self.shelf.deletePreset)
-        self.optionsMenu.sigResetRequested.connect(partial(self.shelf.resetLayout, False))
 
         self.mainButton = QPushButton(self)
         self.mainButton.setIcon(IconRepository.iconLoader("material:circle"))
@@ -123,8 +108,6 @@ class ShelfToolbar(QWidget):
         #self.mainButton.setVisible(not state.options.show_menu_button)
         self.pinButton.setVisible(state.options.enable_pinning)
 
-        self.optionsMenu.reload(currentPresetId)
-
 
     #region Actions
 
@@ -132,7 +115,8 @@ class ShelfToolbar(QWidget):
         if self.shelf.is_restricted:
             return
         
-        self.mainButton.setMenu(self.optionsMenu)
+        self.shelf.optionsMenu.updateSelection()
+        self.mainButton.setMenu(self.shelf.optionsMenu)
         self.mainButton.showMenu()
     
     def openRootPage(self):
@@ -216,11 +200,8 @@ class ShelfToolbar(QWidget):
 
     #region Signal Recievers
 
-    def onHideSettings(self):
-        self.mainButton.setMenu(None)
 
     def onPageChanged(self, index: int):
-        self.optionsMenu.onPageChanged(index)
         if self.shelf.containerOptions.stack_preview == ToolshelfAreaSettings.StackPreview.Default:
             if index != -1:
                 self.backButton.show()

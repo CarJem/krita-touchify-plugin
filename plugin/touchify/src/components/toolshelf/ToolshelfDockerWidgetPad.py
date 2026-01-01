@@ -185,7 +185,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         menu = QMenu(self)
         
         shelfOptionsAct = menu.addAction("Toolshelf Options...")
-        shelfOptionsAct.triggered.connect(partial(self.onShelfSettings, pos))
+        shelfOptionsAct.setMenu(self.mainWidget.optionsMenu)
         menu.addSeparator()
         
         showHeaderAct = menu.addAction("Show Header")
@@ -251,7 +251,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self._settings.setAutoCollapse(state)
 
     def onShelfSettings(self, pos: QPoint):
-        self.mainWidget.header.optionsMenu.exec_(pos)
+        self.mainWidget.optionsMenu.exec_(pos)
 
     def onToggled(self, state: bool):
         self._settings.setCollapsed(state)

@@ -8,6 +8,7 @@ from krita import *
 
 from jemlib.alib_vaporjem import Logger
 from touchify.src.PluginOptions import PluginOptions
+from touchify.src.components.toolshelf.ShelfContextMenu import ShelfContextMenu
 from touchify.src.components.toolshelf.ShelfDock import ShelfDock
 from touchify.src.components.toolshelf.ShelfLoader import ShelfLoader
 
@@ -195,6 +196,31 @@ class ShelfWidget(QWidget):
         self.dockArea = ShelfDockArea(self)
         self.dockStack.addWidget(self.dockArea)
 
+        self.optionsMenu = ShelfContextMenu(self, self.currentPresetId(), self.is_nested, self.is_restricted)
+        self.optionsMenu.aboutToHide.connect(self.onOptionsMenuAboutToHide)
+
+        self.optionsMenu.sigAddShelfItemRequested.connect(self.addShelfItem)
+        self.optionsMenu.sigEditShelfItemRequested.connect(self.editShelfItem)
+        self.optionsMenu.sigEnterShelfItemRequested.connect(self.enterNestedShelfItem)
+        self.optionsMenu.sigCloneShelfItemRequested.connect(self.cloneShelfItem)
+        self.optionsMenu.sigDeleteShelfItemRequested.connect(self.deleteShelfItem)
+
+        self.optionsMenu.sigEnterNestedShelfItemRequested.connect(self.enterNestedContainer)
+        self.optionsMenu.sigLeaveNestedShelfItemRequested.connect(self.exitNestedContainer)
+
+        self.optionsMenu.sigAddPageRequested.connect(self.insertPage)
+        self.optionsMenu.sigEditPageRequested.connect(self.editPage)
+        self.optionsMenu.sigDeletePageRequested.connect(self.deletePage)
+
+        self.optionsMenu.sigPresetsChangedRequested.connect(self.changePreset)
+        self.optionsMenu.sigEditModeToggled.connect(self.onEditModeChanged)
+        self.optionsMenu.sigSettingsRequested.connect(self.editLayout)
+
+        self.optionsMenu.sigSavePresetAsRequested.connect(self.savePresetAs)
+        self.optionsMenu.sigSavePresetRequested.connect(self.savePreset)
+        self.optionsMenu.sigDeletePresetRequested.connect(self.deletePreset)
+        self.optionsMenu.sigResetRequested.connect(partial(self.resetLayout, False))
+
         self.updateStyle()
 
         managers.mgr_canvas.normalFocus.connect(self.onCanvasFocusGained)
@@ -238,7 +264,9 @@ class ShelfWidget(QWidget):
         if current_area == None or not isinstance(current_area, ShelfDockArea):
             return super().contextMenuEvent()
         
-        if self.isEditMode() and len(current_area.docks) == 0:
+        is_context_menu_allowed = len(current_area.docks) == 0 or (self.header.underMouse() or self.tabBar.underMouse())
+        
+        if self.isEditMode() and is_context_menu_allowed:
             self.onContextMenu(a0.globalPos())
             
         return super().contextMenuEvent(a0)
@@ -252,16 +280,26 @@ class ShelfWidget(QWidget):
         self.header.setVisible(state)
 
     def setEditMode(self, state: bool) -> bool:
-        self.header.optionsMenu.editModeAction.setChecked(state)
+        self.optionsMenu.editModeAction.setChecked(state)
 
     def isEditMode(self) -> bool:
-        return self.header.optionsMenu.editModeAction.isChecked()
+        return self.optionsMenu.editModeAction.isChecked()
 
     def getDockAreaId(self, dock_index: int):
         if self.is_nested:
             return f"{str(self.nestedDock._parentAreaId)}/{str(dock_index)}/{str(self.nestedDock._name)}"
         else:
             return f"{TouchifyEnv.SettingsPath.TOOLSHELF}/{str(self.registry_index)}/{str(dock_index)}"
+
+    def getNestedLevel(self):
+        def nested_test(x: ShelfWidget, i: int = 0):
+            if x.is_nested:
+                i += 1 
+                return nested_test(x.nestedDock.parentShelf, i)
+            else:
+                return i
+
+        return nested_test(self)
 
     def currentPresetId(self) -> str:
         return self.settingsLoader.getCurrentShelfId(self.registry_index)
@@ -426,10 +464,10 @@ class ShelfWidget(QWidget):
             Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: load finished page_{str(idx)}')
             
 
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: load tabbar')
+        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: load tabbar/header/menu')
         self.tabBar.reload(state)
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: load header')
         self.header.reload(state, self.currentPresetId())
+        self.optionsMenu.reload(self.currentPresetId())
 
         self.header.setVisible(self._hideTitlebar)
 
@@ -567,7 +605,7 @@ class ShelfWidget(QWidget):
 
     #region Actions (Containers)
 
-    def editNestedContainer(self, item_uuid: str):
+    def enterNestedShelfItem(self, item_uuid: str):
         current_area: ShelfDockArea | None = self.dockStack.currentWidget()
         if current_area == None or not isinstance(current_area, ShelfDockArea):
             return
@@ -582,20 +620,17 @@ class ShelfWidget(QWidget):
         dock_item: ToolshelfNestedDock = current_area.docks[item_uuid]   
         dock_item.setContainerEditMode(True)
 
-    def editNestedContainerSettings(self, item_uuid: str):
-        current_area: ShelfDockArea | None = self.dockStack.currentWidget()
-        if current_area == None or not isinstance(current_area, ShelfDockArea):
+    def enterNestedContainer(self):
+        if not self.is_nested:
             return
+        
+        self.nestedDock.setContainerEditMode(True)
 
-        if item_uuid not in current_area.docks:
+    def exitNestedContainer(self):
+        if not self.is_nested:
             return
         
-        from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
-        if not isinstance(current_area.docks[item_uuid], ToolshelfNestedDock):
-            return
-        
-        dock_item: ToolshelfNestedDock = current_area.docks[item_uuid]   
-        dock_item.nestedShelf.openShelfMenu(QCursor.pos())
+        self.nestedDock.setContainerEditMode(False)
 
     #endregion
 
@@ -630,12 +665,13 @@ class ShelfWidget(QWidget):
         if pos == None:
             pos = QCursor.pos()
         
-        self.header.optionsMenu.exec_(pos)
+        self.optionsMenu.exec_(pos)
 
     def goToHomePage(self):
         self.dockStack.setCurrentIndex(0)
         self.tabBar.onPageChanged("ROOT")
         self.header.onPageChanged(-1)
+        self.optionsMenu.onPageChanged(-1)
 
     def goToPage(self, index: int):
         if index < 0: return
@@ -644,6 +680,7 @@ class ShelfWidget(QWidget):
         self.dockStack.setCurrentIndex(index + 1)
         self.tabBar.onPageChanged("Tab_" + str(index))
         self.header.onPageChanged(index)
+        self.optionsMenu.onPageChanged(index)
 
     #endregion
 
@@ -653,41 +690,13 @@ class ShelfWidget(QWidget):
         pass
 
     def onContextMenu(self, pos: QPoint, item_id: str = None):
+        if self.is_restricted: return
 
-        if item_id == None:
-            if self.is_restricted: return
-            self.header.optionsMenu.exec_(pos)
-            return
-        else:
-            self.header.optionsMenu.close()
-        
-        current_area: ShelfDockArea | None = self.dockStack.currentWidget()
-        if current_area == None or not isinstance(current_area, ShelfDockArea):
-            return
+        self.optionsMenu.updateSelection(item_id)
+        self.optionsMenu.exec_(pos)
 
-        if item_id not in current_area.docks:
-            return
-
-        context_menu = QtWidgets.QMenu(self)
-
-        dock_item: ShelfDock = current_area.docks[item_id]
-
-        from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
-        if isinstance(dock_item, ToolshelfNestedDock):
-            context_menu.addAction("Edit Dock...", partial(self.editShelfItem, item_id))
-            context_menu.addAction("Edit Shelf...", partial(self.editNestedContainer, item_id))
-        else:
-            context_menu.addAction("Edit Dock...", partial(self.editShelfItem, item_id))
-
-        context_menu.addAction("Clone Dock", partial(self.cloneShelfItem, item_id))
-        context_menu.addSeparator()
-        context_menu.addAction("Delete Dock", partial(self.deleteShelfItem, item_id))
-
-        if isinstance(self.nestedDock, ToolshelfNestedDock):
-            context_menu.addAction("Open Shelf Menu...", self.openShelfMenu)
-
-
-        context_menu.exec_(pos)
+    def onOptionsMenuAboutToHide(self):
+        self.header.mainButton.setMenu(None)
 
     def onCanvasFocusGained(self):
         Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | container_focus_gained')

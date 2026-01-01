@@ -46,6 +46,14 @@ class ToolboxMenu(QMenu):
         self.editModeAction.setChecked(False)
         self.editModeAction.toggled.connect(self.onEditModeToggled)
 
+        self.presetsSubmenuAction = self.addAction("Presets")
+        self.presetsSubmenuAction.setMenu(QMenu(self))
+        self.reloadPresets()
+
+        self.toolboxSettingsAction = self.addAction("Settings...")
+        self.toolboxSettingsAction.setEnabled(False)
+        self.toolboxSettingsAction.triggered.connect(self.onSettingsRequested)
+
         self.addSeparator()
 
 
@@ -108,15 +116,7 @@ class ToolboxMenu(QMenu):
 
         self.presetSeperator = self.addSeparator()
 
-        self.presetsSubmenuAction = self.addAction("Presets")
-        self.presetsSubmenuAction.setMenu(QMenu(self))
-        self.reloadPresets()
 
-        self.addSeparator()
-
-        self.toolboxSettingsAction = self.addAction("Toolbox Settings...")
-        self.toolboxSettingsAction.setEnabled(False)
-        self.toolboxSettingsAction.triggered.connect(self.onSettingsRequested)
 
     def setCurrentPreset(self, currentPresetId: str):
         self._currentPresetId = currentPresetId
@@ -186,11 +186,11 @@ class ToolboxMenu(QMenu):
             presetDeleteAction.setEnabled(True)
             presetDeleteAction.triggered.connect(self.onDeletePresetRequested)
         else:
-            presetSaveAsAction = self.presetsSubmenuAction.menu().addAction("Save to Preset...")
+            presetSaveAsAction = self.presetsSubmenuAction.menu().addAction("Export to Preset...")
             presetSaveAsAction.setEnabled(True)
             presetSaveAsAction.triggered.connect(self.onSavePresetAsRequested)
 
-            resetAction = self.presetsSubmenuAction.menu().addAction("Reset")
+            resetAction = self.presetsSubmenuAction.menu().addAction("Reset Layout")
             resetAction.setEnabled(True)
             resetAction.triggered.connect(self.onResetRequested)
 
@@ -200,6 +200,7 @@ class ToolboxMenu(QMenu):
         is_section = self._currentSectionUUID != None
 
         self.toolboxSettingsAction.setEnabled(is_editing)
+        self.toolboxSettingsAction.setVisible(is_editing)
 
         self.sectionOptionsAction.setVisible(is_tool and is_editing)
         self.sectionOptionsAction.setEnabled(is_tool and is_editing)
