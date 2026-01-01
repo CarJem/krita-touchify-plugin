@@ -8,19 +8,12 @@ from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.enums.tool import Tool
 
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
-from jemlib.alib_propertygrid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
+from jemlib.alib_propertygrid.dialogs.PropertyGrid_Subwindow import PropertyGrid_Subwindow
 from jemlib.managers.IconRepository import IconRepository
-
-
-
 
 DATA_INDEX = 3
 
-class PropertyGrid_SelectorDialogItem(QListWidgetItem):
-    def __init_subclass__(cls) -> None:
-        return super().__init_subclass__()
-
-class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
+class PropertyGrid_SelectorDialog(PropertyGrid_Subwindow):
     def __init__(self, parent: QStackedWidget):
         super().__init__(parent)
 
@@ -252,3 +245,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Dialog):
         else:
             for item in selected_items:
                 item.setSelected(True)
+
+class PropertyGrid_SelectorDialogItem(QListWidgetItem):
+    def __init_subclass__(cls) -> None:
+        return super().__init_subclass__()

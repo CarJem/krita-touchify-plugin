@@ -1,4 +1,5 @@
 
+from jemlib.alib_vaporjem import Logger
 from krita import DockWidget
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -45,10 +46,8 @@ class ToolshelfDockerWidget(DockWidget):
         elif index != -1:
             self.PanelIndex = index
             self.setWindowTitle(f"{ToolshelfDockerWidget.CLONE_DOCKER_TITLE} (Ext. {index})")
-
         
-        GlobalEvents().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
-        GlobalEvents().SIGNAL_TOOLSHELF_UPDATED.connect(self.onConfigUpdated)
+        GlobalEvents().SIGNAL_TOOLSHELF_PRESET_UPDATED.connect(self.onPresetUpdated)
         self.startTimer(TIMER_INTERVAL)
 
     def timerEvent(self, a0: QTimerEvent):
@@ -87,6 +86,7 @@ class ToolshelfDockerWidget(DockWidget):
         pass
 
     def shelfReloadEvent(self, state: ToolshelfArea):
+        Logger.debug('Touchify', 'ToolshelfDockerWidget', f'shelfReloadEvent: start')
         if state.options.resize_style == ToolshelfAreaSettings.ResizeStyle.Minimum:
             self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
             self.sizeManagementType = ToolshelfAreaSettings.ResizeStyle.Minimum
@@ -102,11 +102,17 @@ class ToolshelfDockerWidget(DockWidget):
         else:
             self.setSizePolicy(self._originalSizePolicy)
             self.sizeManagementType = ToolshelfAreaSettings.ResizeStyle.Default
+        Logger.debug('Touchify', 'ToolshelfDockerWidget', f'shelfReloadEvent: end')
 
-    def onConfigUpdated(self, registry_index: int = -1):
-        if registry_index == -1 or registry_index == self.PanelIndex:
-            if self.mainWidget: 
-                QTimer.singleShot(100, self.mainWidget.onConfigUpdated)
+    def onTouchifyReload(self):
+        Logger.debug('Touchify', 'ToolshelfDockerWidget', f'onTouchifyReload')
+        if self.mainWidget: 
+            QTimer.singleShot(100, self.mainWidget.onConfigUpdated)
+
+    def onPresetUpdated(self, registry_index: int = 0):
+        Logger.debug('Touchify', 'ToolshelfDockerWidget', f'onPresetUpdated')
+        if registry_index == 0 or registry_index == self.PanelIndex:
+            self.onTouchifyReload() 
 
     def resizeEvent(self, a0):
         return super().resizeEvent(a0)

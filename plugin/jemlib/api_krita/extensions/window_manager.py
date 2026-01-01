@@ -1,14 +1,11 @@
 from typing import Union, Callable
 from PyQt5.QtCore import pyqtBoundSignal, QObject, pyqtSignal, QTimer
 from PyQt5.QtWidgets import QWidget, QButtonGroup, QAbstractButton
+from jemlib.alib_vaporjem import Logger
 from krita import ManagedColor, Resource, View, Canvas, Node, Window, Krita as KritaAPI
 
 
 PYQT_SLOT = Union[Callable[..., None], pyqtBoundSignal]
-ENABLE_DEBUG = False
-
-def printDebug(input: str):
-    if ENABLE_DEBUG: print("[WindowManager] :: ", input)
 
 class WindowNotifier(QObject):
     brushChanged=pyqtSignal(Resource)
@@ -68,7 +65,7 @@ class WindowNotifier(QObject):
             toolboxTool = obj.objectName()
             if toolboxTool != self.__lastToolboxTool:
                 self.__lastToolboxTool = toolboxTool
-                printDebug("Tool Changed")
+                Logger.debug("JemLib", "WindowManager", "Tool Changed")
                 self.toolChanged.emit(toolboxTool)
 
     def __onTimerTicked__(self):
@@ -120,80 +117,80 @@ class WindowNotifier(QObject):
                     currentForegroundColor = currentView.foregroundColor()
                     currentBackgroundColor = currentView.backgroundColor()
         except Exception as e:
-            printDebug("Failed to Run Checks: " + str(e))
+            Logger.debug("JemLib", "WindowManager", "Failed to Run Checks: " + str(e))
 
         if currentGradient != self.__lastGradient:
-            printDebug("Selected Gradient Changed")
+            Logger.debug("JemLib", "WindowManager", "Selected Gradient Changed")
             self.gradientChanged.emit(currentGradient)
             self.__lastGradient = currentGradient
 
         if currentPattern != self.__lastPattern:
-            printDebug("Selected Pattern Changed")
+            Logger.debug("JemLib", "WindowManager", "Selected Pattern Changed")
             self.patternChanged.emit(currentPattern)
             self.__lastPattern = currentPattern
 
         if currentCanvas != self.__lastCanvas:
-            printDebug("Canvas Changed")
+            Logger.debug("JemLib", "WindowManager", "Canvas Changed")
             self.canvasChanged.emit(currentCanvas)
             self.__lastCanvas = currentCanvas
 
         if currentView != self.__lastView:
-            printDebug("View Changed")
+            Logger.debug("JemLib", "WindowManager", "View Changed")
             self.viewChanged.emit(currentView)
             self.__lastView = currentView
 
         if selectedNodes != self.__lastSelectedNodes:
-            printDebug("Selected Nodes Changed")
+            Logger.debug("JemLib", "WindowManager", "Selected Nodes Changed")
             self.selectedNodesChanged.emit()
             self.__lastSelectedNodes = selectedNodes
 
         if selectedNodeColors != self.__lastNodeColors:
-            printDebug("Selected Node Colors Changed")
+            Logger.debug("JemLib", "WindowManager", "Selected Node Colors Changed")
             self.selectedNodeColorsChanged.emit()
             self.__lastNodeColors = selectedNodeColors
 
         if currentLayerBlendingMode != self.__lastLayerBlendingMode:
-            printDebug("Layer Blending Mode Changed")
+            Logger.debug("JemLib", "WindowManager", "Layer Blending Mode Changed")
             self.layerBlendingModeChanged.emit(currentLayerBlendingMode)
             self.__lastLayerBlendingMode = currentLayerBlendingMode
 
         if currentBrushBlendingMode != self.__lastBrushBlendingMode:
-            printDebug("Brush Blending Mode Changed")
+            Logger.debug("JemLib", "WindowManager", "Brush Blending Mode Changed")
             self.brushBlendingModeChanged.emit(currentBrushBlendingMode)
             self.__lastBrushBlendingMode = currentBrushBlendingMode
 
         if currentForegroundColor != self.__lastForegroundColor:
-            printDebug("Foreground Color Changed")
+            Logger.debug("JemLib", "WindowManager", "Foreground Color Changed")
             self.foregroundColorChanged.emit(currentForegroundColor)
             self.__lastForegroundColor = currentForegroundColor
 
         if currentBackgroundColor != self.__lastBackgroundColor:
-            printDebug("Background Color Changed")
+            Logger.debug("JemLib", "WindowManager", "Background Color Changed")
             self.backgroundColorChanged.emit(currentBackgroundColor)
             self.__lastBackgroundColor = currentBackgroundColor
         
         if currentSize != self.__lastBrushSize:
-            printDebug("Brush Size Changed")
+            Logger.debug("JemLib", "WindowManager", "Brush Size Changed")
             self.brushSizeChanged.emit(currentSize)
             self.__lastBrushSize = currentSize
 
         if currentFlow != self.__lastBrushFlow:
-            printDebug("Brush Flow Changed")
+            Logger.debug("JemLib", "WindowManager", "Brush Flow Changed")
             self.brushFlowChanged.emit(currentFlow)
             self.__lastBrushFlow = currentFlow
 
         if currentOpacity != self.__lastBrushOpacity:
-            printDebug("Brush Opacity Changed")
+            Logger.debug("JemLib", "WindowManager", "Brush Opacity Changed")
             self.brushOpacityChanged.emit(currentOpacity)
             self.__lastBrushOpacity = currentOpacity
 
         if currentRotation != self.__lastBrushRotation:
-            printDebug("Brush Rotation Changed")
+            Logger.debug("JemLib", "WindowManager", "Brush Rotation Changed")
             self.brushRotationChanged.emit(currentRotation)
             self.__lastBrushRotation = currentRotation
 
         if currentBrush != self.__lastBrushPreset:
-            printDebug("Brush Changed")
+            Logger.debug("JemLib", "WindowManager", "Brush Changed")
             self.brushChanged.emit(currentBrush)
             self.__lastBrushPreset = currentBrush
 

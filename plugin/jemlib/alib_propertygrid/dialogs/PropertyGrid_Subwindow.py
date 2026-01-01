@@ -5,7 +5,7 @@ from krita import *
 
 
 
-class PropertyGrid_Dialog(QDialog):
+class PropertyGrid_Subwindow(QDialog):
 
     def __init__(self, parent: QStackedWidget):
         super().__init__(parent)

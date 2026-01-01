@@ -10,12 +10,12 @@ from krita import *
 
 from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.api_touchify.env import *
+from touchify.src.PluginOptions import PluginOptions
 from touchify.src.components.toolbox import ToolboxClasses
 from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
 from touchify.src.components.toolbox.ToolboxMenu import ToolboxMenu
 from touchify.src.components.toolbox.ToolboxStyles import ToolboxStyles
 from touchify.src.components.toolbox.ToolboxLayout import ToolboxEmptySpace
-from touchify.src.alib_propertygrid.PropertyGridDialog import PropertyGridDialog
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from jemlib.managers.GlobalEvents import GlobalEvents
 from jemlib.api_touchify.env import *
@@ -53,7 +53,7 @@ class ToolboxDocker(QDockWidget):
 
         def setCurrentToolboxId(self, id: str):
             KritaSettings.writeSetting(TouchifyEnv.DockerID.TOOLBOX, "SelectedPreset", id, False)
-            GlobalEvents().SIGNAL_TOOLBOX_UPDATED.emit()
+            GlobalEvents().SIGNAL_TOOLBOX_LAYOUT_UPDATED.emit()
 
         def getCurrentRegistryKey(self) -> "TouchifySettings.RegistryKey":
             registry = TouchifySettings.registry(ToolboxData)
@@ -87,11 +87,11 @@ class ToolboxDocker(QDockWidget):
             if is_cache_preset_active and use_cache:
                 jsonStr = JsonExtensions.saveClass(cache_data)
                 KritaSettings.writeSetting(TouchifyEnv.SettingsPath.TOOLBOX_NOPRESETDATA, "Cache", jsonStr, False)
-                GlobalEvents().SIGNAL_TOOLBOX_UPDATED.emit()
+                GlobalEvents().SIGNAL_TOOLBOX_LAYOUT_UPDATED.emit()
             else:
                 TouchifySettings.save()
                 TouchifySettings.load()
-                GlobalEvents().SIGNAL_TOOLBOX_UPDATED.emit()
+                GlobalEvents().SIGNAL_TOOLBOX_LAYOUT_UPDATED.emit()
 
 
     def __init__(self, parent: QWidget | None = None):
@@ -114,7 +114,7 @@ class ToolboxDocker(QDockWidget):
         self.managers: "TouchifyManagers" = None
 
         self.containerLoader = ToolboxLoader(self)
-        self.propertyEditor: PropertyGridDialog = None
+        self.propertyEditor: PluginOptions = None
         
         self._isDynamicOrientation = False
         self._toolboxItems: list[ToolboxButton] = []
@@ -163,13 +163,9 @@ class ToolboxDocker(QDockWidget):
         self.settingsMenu.sigDuplicateToolRequested.connect(self.duplicateTool)
         self.settingsMenu.sigDeleteToolRequested.connect(self.deleteTool)
 
-        
-        
-
         self.updateStylesheet()
 
-        GlobalEvents().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.onConfigUpdated)
-        GlobalEvents().SIGNAL_TOOLBOX_UPDATED.connect(self.onConfigUpdated)
+        GlobalEvents().SIGNAL_TOOLBOX_LAYOUT_UPDATED.connect(self.onTouchifyReload)
     
     def setup(self, instance: "TouchifyWindow"):
         self.api_window = instance.api_window
@@ -272,7 +268,7 @@ class ToolboxDocker(QDockWidget):
         self.updateToolbox()
 
     def savePresetAs(self):
-        self.propertyEditor = PropertyGridDialog.Setup(self.propertyEditor, self.api_window, ToolboxClasses.PresetSaveAs())
+        self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ToolboxClasses.PresetSaveAs())
         if self.propertyEditor.exec_():
             editorResults: ToolboxClasses.PresetSaveAs = self.propertyEditor.editableConfig
 
@@ -292,7 +288,7 @@ class ToolboxDocker(QDockWidget):
         avaliable_section_names = self.getSectionNames(layout_config)
         if not avaliable_section_names: return
         
-        self.propertyEditor = PropertyGridDialog.Setup(self.propertyEditor, self.api_window, ToolboxDataCategory())
+        self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ToolboxDataCategory())
         if self.propertyEditor.exec_():
             result: ToolboxDataCategory = self.propertyEditor.editableConfig
             while result.id in avaliable_section_names:
@@ -311,7 +307,7 @@ class ToolboxDocker(QDockWidget):
 
         selected_section_index = layout_config.categories.index(selected_section)
         
-        self.propertyEditor = PropertyGridDialog.Setup(self.propertyEditor, self.api_window, selected_section)
+        self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), selected_section)
         if self.propertyEditor.exec_():
             result: ToolboxDataCategory = self.propertyEditor.editableConfig
             while result.id in avaliable_section_names:
@@ -350,7 +346,7 @@ class ToolboxDocker(QDockWidget):
         selected_section = self.getSectionByUUID(layout_config, section_id)
         if not selected_section: return
         
-        self.propertyEditor = PropertyGridDialog.Setup(self.propertyEditor, self.api_window, ToolboxDataItem())
+        self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ToolboxDataItem())
         if self.propertyEditor.exec_():
             result: ToolboxDataItem = self.propertyEditor.editableConfig
             selected_section.items.append(result)
@@ -369,7 +365,7 @@ class ToolboxDocker(QDockWidget):
         selected_item_index = selected_button._dataIndex
         if len(selected_section.items) < selected_item_index or selected_item_index < 0: return
 
-        self.propertyEditor = PropertyGridDialog.Setup(self.propertyEditor, self.api_window, selected_item)
+        self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), selected_item)
         if self.propertyEditor.exec_():
             result: ToolboxDataItem = self.propertyEditor.editableConfig
             selected_section.items[selected_item_index] = result
@@ -448,7 +444,7 @@ class ToolboxDocker(QDockWidget):
 
     def editToolbox(self):
         layout_config = self.settingsManager.loadLayout()
-        self.propertyEditor = PropertyGridDialog.Setup(self.propertyEditor, self.api_window, layout_config)
+        self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), layout_config)
         if self.propertyEditor.exec_():
             result: ToolboxData = self.propertyEditor.editableConfig
             cached_state = self.settingsManager.loadLayout()
@@ -605,7 +601,7 @@ class ToolboxDocker(QDockWidget):
                 button.setEditMode(enabled)
         
 
-    def onConfigUpdated(self):
+    def onTouchifyReload(self):
         self.updateToolbox()
 
     def onThemeChanged(self):

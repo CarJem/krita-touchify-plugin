@@ -12,6 +12,14 @@ if TYPE_CHECKING:
 
 class TouchifyDataHandler(DataExtension):
 
+
+    @staticmethod
+    def Praser():
+        from jemlib.alib_propertygrid.data.DataHandler import DataHandler
+        praser = DataHandler()
+        praser.installExtension(TouchifyDataHandler())
+        return praser
+
     def __init__(self):
         super().__init__()
 

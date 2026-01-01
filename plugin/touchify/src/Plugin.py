@@ -7,12 +7,8 @@ from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.managers.GlobalEvents import GlobalEvents
 
+from jemlib.alib_vaporjem import Logger
 from touchify.src.PluginWindow import TouchifyWindow
-
-ENABLE_DEBUG=False
-
-def printDebug(value: str):
-    if ENABLE_DEBUG: print(value)
 
 class TouchifyPlugin(Extension):
     
@@ -51,21 +47,21 @@ class TouchifyPlugin(Extension):
 
         window.windowClosed.connect(lambda: self.onWindowDestroyed(window_id))
         self.instances[window_id] = self.new_instance
-        printDebug("window_load")
+        Logger.debug("Touchify", "Plugin","window_load")
         self.instances[window_id].Load(window)
-        printDebug("window_load_done")
+        Logger.debug("Touchify", "Plugin","window_load_done")
 
         self.setup_instance = False
 
     def onConfigurationChanged(self):
-        GlobalEvents().SIGNAL_TOUCHIFY_CONFIG_UPDATED.emit()
+        GlobalEvents().SIGNAL_KRITA_CONFIG_UPDATED.emit()
 
     def createActions(self, window: Window):
-        printDebug("create_actions")
+        Logger.debug("Touchify", "Plugin","create_actions")
         self.setup_instance = True
         self.new_instance = TouchifyWindow(self)
         self.new_instance.LoadActions(WindowAPI(window))
-        printDebug("create_actions_done")
+        Logger.debug("Touchify", "Plugin","create_actions_done")
 
 
 

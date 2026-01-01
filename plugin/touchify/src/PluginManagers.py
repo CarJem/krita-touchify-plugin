@@ -50,6 +50,12 @@ class TouchifyManagers:
         self.mgr_canvas.Window_Load(window.api_window)
         self.mgr_widgetpad.Window_Load(window)
 
+    def Reload(self):
+        self.mgr_actions.Window_Reload()
+        for docker in self.__managedDockers:
+            if not hasattr(docker, "onTouchifyReload"): pass
+            elif not callable(getattr(docker, "onTouchifyReload", False)): pass
+            else: getattr(docker, "onTouchifyReload")()
 
     def ReloadTheme(self):
         for docker in self.__managedDockers:
@@ -139,7 +145,6 @@ class TouchifyManagers:
                 else: 
                     getattr(docker, addon_setup_method)(window)
                     self.__managedDockers.append(docker)
-
 
     def Actions(self, window: WindowAPI):
         self.mgr_shortcuts.Actions_Init(window, "tools/touchify", "settings")

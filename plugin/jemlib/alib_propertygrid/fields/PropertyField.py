@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from jemlib.alib_propertygrid.data.DataPath import DataPath
-from jemlib.alib_propertygrid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
+from jemlib.alib_propertygrid.dialogs.PropertyGrid_Subwindow import PropertyGrid_Subwindow
 
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_propertygrid.PropertyGrid import *
@@ -102,7 +102,7 @@ class PropertyField(QWidget, Generic[T]):
             IconRepository.setSettingsClipboard(item_type, item_data)
 
     def nested_edit(self):
-        self.nested_page_dialog = PropertyGrid_Dialog(self)
+        self.nested_page_dialog = PropertyGrid_Subwindow(self)
         self.nested_page_dialog.setWindowTitle(str(self.propertyData.variableName()))
         self.nested_page_dialog.setWindowFlags(Qt.WindowType.Widget)
         self.nested_page_layout = QVBoxLayout(self)

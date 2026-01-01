@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 from PyQt5 import *
 from PyQt5.QtWidgets import *
+from jemlib.alib_propertygrid.dialogs.PropertyGrid_Window import PropertyGrid_Window
 from krita import *
 
 from touchify.src.PluginManagers import TouchifyManagers
@@ -8,6 +9,7 @@ from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.api_touchify.env import *
 
 from touchify.src.PluginOptions import PluginOptions
+from touchify.src.settings.TouchifySettings import TouchifySettings
 
 
 
@@ -26,7 +28,7 @@ class TouchifyWindow(QObject):
 
         global WINDOW_ID; self.INSTANCE_ID = WINDOW_ID; WINDOW_ID += 1
         self.managers = TouchifyManagers(self)
-        self.dlg: PluginOptions | None = None
+        self.dlg: PropertyGrid_Window | None = None
 
     def Load(self, window: WindowAPI):
         self.api_window = window
@@ -69,5 +71,27 @@ class TouchifyWindow(QObject):
         return super().eventFilter(a0, a1)
 
     def OpenSettings(self):
-        self.dlg = PluginOptions.Setup(self.dlg, self.api_window)
+        self.dlg = PluginOptions.Setup(self.dlg, self.api_window.qwindow.window(), TouchifySettings.configCopy(), [
+            QDialogButtonBox.StandardButton.Save,
+            QDialogButtonBox.StandardButton.Apply,
+            QDialogButtonBox.StandardButton.Close
+        ])
+        self.dlg.onApply = self.onSettingsApplied
+        self.dlg.onSave = self.onSettingsSaved
+        self.dlg.onClose = self.onSettingsClosed
         self.dlg.show()
+
+    def onSettingsSaved(self, dlg: "PropertyGrid_Window"):
+        dlg.editableConfig.save()
+        TouchifySettings.load()
+        self.managers.Reload()
+
+    def onSettingsApplied(self, dlg: "PropertyGrid_Window"):
+        dlg.btns.setEnabled(False)
+        dlg.editableConfig.save()
+        TouchifySettings.load()
+        self.managers.Reload()
+        dlg.btns.setEnabled(True)
+
+    def onSettingsClosed(self, dlg: "PropertyGrid_Window"):
+        dlg.close()

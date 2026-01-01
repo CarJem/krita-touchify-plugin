@@ -5,7 +5,6 @@ from PyQt5.QtCore import *
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.wrappers.docker_factory import DockWidgetFactoryAPI
 from touchify.src.components.widgets.canvas.CanvasColorPicker import CanvasColorPicker
-from jemlib.managers.GlobalEvents import GlobalEvents
 from jemlib.api_touchify.env import *
 
 from jemlib.managers.IconRepository import IconRepository
@@ -98,16 +97,11 @@ class ColorOptionsDocker(DockWidget):
         self.colorToggle = ColorSourceToggle(self, 25)
         self.setWidget(self.colorToggle)
         self.colorToggle.onCanvasChanged(self.canvas())
-        GlobalEvents().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.addonUpdateStyle)
-        self.addonUpdateStyle()
+        self.setFixedHeight(50)
+        self.colorToggle.updateStyle()
 
     def TOUCHIFY_ADDON_SETUP(self, instance: "TouchifyWindow"):
         self.colorToggle.setup(instance)
-
-    def addonUpdateStyle(self):
-        widgetHeight = 50
-        self.setFixedHeight(widgetHeight)
-        self.colorToggle.updateStyle()
 
     def showEvent(self, event):
         super().showEvent(event)

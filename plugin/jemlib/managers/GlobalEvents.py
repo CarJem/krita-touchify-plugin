@@ -6,9 +6,8 @@ from PyQt5.QtWidgets import *
 
 class GlobalEventsProxyInstance(QObject):
     SIGNAL_KRITA_CONFIG_UPDATED = pyqtSignal()
-    SIGNAL_TOUCHIFY_CONFIG_UPDATED = pyqtSignal()
-    SIGNAL_TOOLBOX_UPDATED = pyqtSignal()
-    SIGNAL_TOOLSHELF_UPDATED = pyqtSignal(int)
+    SIGNAL_TOOLBOX_LAYOUT_UPDATED = pyqtSignal()
+    SIGNAL_TOOLSHELF_PRESET_UPDATED = pyqtSignal(int)
     SIGNAL_PIE_TRIGGER_SENT = pyqtSignal(object)
 
     SIGNAL_TIMER_TICKED = pyqtSignal()

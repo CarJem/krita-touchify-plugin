@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 from jemlib.api_krita import KritaAPI
 
 from touchify.__env__ import REGISTERED_ACTIONS_FILE
+from jemlib.alib_vaporjem import Logger
 from touchify.src.config.menu.TriggerMenuItem import TriggerMenuItem
 from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.config.resource_pack.ResourcePack import ResourcePack
@@ -43,11 +44,6 @@ from xml.dom import minidom as MiniDOM
 if TYPE_CHECKING:
     from ..PluginManagers import TouchifyManagers
 
-ENABLE_DEBUG=False
-
-def printDebug(value: str):
-    if ENABLE_DEBUG: print("[ActionManager] :: ", value)
-
 class ActionManager(QObject):
     composerTriggerEnded=pyqtSignal()
     selectedToolChanged=pyqtSignal(str)
@@ -76,7 +72,6 @@ class ActionManager(QObject):
 
     def Connections(self):
         GlobalEvents().SIGNAL_MOUSE_RELEASED.connect(self.OnEvent_GlobalMouseRelease)
-        GlobalEvents().SIGNAL_TOUCHIFY_CONFIG_UPDATED.connect(self.OnEvent_ConfigUpdated)
         GlobalEvents().SIGNAL_PIE_TRIGGER_SENT.connect(self.OnEvent_PieTrigger)
 
     #endregion
@@ -92,12 +87,16 @@ class ActionManager(QObject):
         self.notifier.toolChanged.connect(self.Notifier_ToolChanged)
         self.notifier.brushChanged.connect(self.Notifier_BrushChanged)
 
+    def Window_Reload(self):
+        self.OnEvent_DisposePopups()
+        self.OnEvent_ReloadRegisteredActions()
+
     def Notifier_ToolChanged(self, tool: str):
-        printDebug("tool changed")
+        Logger.debug('Touchify', "ActionManager", "tool changed")
         self.__lastToolboxTool = tool
 
     def Notifier_BrushChanged(self, resource: Resource):
-        printDebug("brush changed")
+        Logger.debug('Touchify', "ActionManager", "brush changed")
         self.__lastBrushPreset = resource
 
     #endregion
@@ -345,20 +344,7 @@ class ActionManager(QObject):
     
     #region OnEvent Functions
 
-    def OnEvent_ConfigUpdated(self):
-        printDebug("config_updating")
-        registered_ids: list[str] = []
-        for data in self.registeredActions:
-            registered_ids.append(data)
-
-        for popup_id in self.active_popups:
-            try:
-                popup: PopupWidget = self.active_popups[popup_id]
-                popup.dispose()
-            except:
-                pass
-        self.active_popups.clear()
-
+    def OnEvent_ReloadRegisteredActions(self):
         for pack in TouchifySettings.resourcePacks():
             pack: ResourcePack
             meta: ResourcePackMetadata = pack.metadata
@@ -367,8 +353,15 @@ class ActionManager(QObject):
                 subActionIdentifier = '{0}{1}_{2}'.format(TouchifyEnv.ActionID.RegisteredActions.PREFIX, meta.registry_id, data.registry_id)
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
-        printDebug("config_updating_done")
 
+    def OnEvent_DisposePopups(self):
+        for popup_id in self.active_popups:
+            try:
+                popup: PopupWidget = self.active_popups[popup_id]
+                popup.dispose()
+            except:
+                pass
+        self.active_popups.clear()
 
     def OnEvent_GlobalMouseRelease(self):
         if self.composer_action_down and self.composer_action_down_start.addMSecs(250) < QDateTime.currentDateTime():

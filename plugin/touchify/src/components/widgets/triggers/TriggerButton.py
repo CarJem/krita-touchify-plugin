@@ -169,6 +169,7 @@ class TriggerButton(QToolButton):
         self.toggled = (checked)
 
     def onBrushChanged(self, current_brush: Resource):
+        if not current_brush: return
         if current_brush.name() == self.brush_id: is_active = True
         else: is_active = False
 

@@ -6,6 +6,7 @@ from jemlib.__env__ import JEMLIB_ASSETS_DIRECTORY, TOUCHIFY_RESOURCE_PACKS_DIRE
 
 import xml.etree.ElementTree as ET
 
+from jemlib.alib_vaporjem import Logger
 from jemlib.api_krita import KritaAPI
 from jemlib.alib_vaporjem.extensions.pyqt_extensions import QPainterTools
 from zipfile import ZipFile
@@ -14,10 +15,6 @@ from krita import *
 
 ICON_PACKS_LOADED = False
 RESOURCE_PACK_ICONS_INIT = False
-
-ENABLE_DEBUG=False
-def printDebug(input: str):
-    if ENABLE_DEBUG: print("[IconRepository] :: ", input)
 
 class IconRepository:
 
@@ -98,7 +95,7 @@ class IconRepository:
         if RESOURCE_PACK_ICONS_INIT and isStartup == True:
             return
         
-        printDebug("load_resourcepack_icons")
+        Logger.debug("JemLib", "IconRepository", "load_resourcepack_icons")
         
         IconRepository.resource_pack_icons.clear()
 
@@ -126,14 +123,14 @@ class IconRepository:
 
 
         RESOURCE_PACK_ICONS_INIT = True
-        printDebug("load_resourcepack_icons_done")
+        Logger.debug("JemLib", "IconRepository", "load_resourcepack_icons_done")
 
     def loadIconPacks():
         global ICON_PACKS_LOADED
         if ICON_PACKS_LOADED:
             return
         
-        printDebug("load_icon_packs")
+        Logger.debug("JemLib", "IconRepository", "load_icon_packs")
         
         material_icon_zip = os.path.join(IconRepository.__resourcesDir__(), 'material-icons.zip')
         with ZipFile(material_icon_zip, 'r') as zip:
@@ -143,7 +140,7 @@ class IconRepository:
                     iconBytes = zip.read(item)
                     IconRepository.material_icons[actualName] = QIcon(IconRepository.IconEngine(iconBytes))
         ICON_PACKS_LOADED = True
-        printDebug("load_icon_packs_done")
+        Logger.debug("JemLib", "IconRepository", "load_icon_packs_done")
 
     #region Icon Retrival
 

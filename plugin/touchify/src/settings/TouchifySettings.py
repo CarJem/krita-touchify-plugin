@@ -2,6 +2,8 @@ from copy import deepcopy
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+
+
 from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.config.resource_pack.ResourcePack import ResourcePack
 from touchify.src.config.TouchifyRegistry import TouchifyRegistry
@@ -45,7 +47,6 @@ class TouchifySettings:
             return None
 
 
-
     def __init__(self) -> None:
         self.notify_hooks = []
         self.cfg = TouchifyRegistry()
@@ -72,7 +73,7 @@ class TouchifySettings:
     @staticmethod
     def load():
         TouchifySettings.config().load()
-
+        
     @staticmethod
     def preferences() -> TouchifyRegistryPreferences:
         return TouchifySettings.config().preferences

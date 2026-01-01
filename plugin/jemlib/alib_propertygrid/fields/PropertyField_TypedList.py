@@ -7,7 +7,7 @@ from PyQt5.QtCore import *
 
 
 from jemlib.alib_propertygrid.data.DataPath import DataPath
-from jemlib.alib_propertygrid.dialogs.PropertyGrid_Dialog import PropertyGrid_Dialog
+from jemlib.alib_propertygrid.dialogs.PropertyGrid_Subwindow import PropertyGrid_Subwindow
 from jemlib.alib_propertygrid.fields.PropertyField import PropertyField
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_datatypes.TypedList import TypedList
@@ -191,7 +191,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         if self.has_property_view: self.view_editor.setContainer(container)
 
     def getNewEditorPage(self):
-        dlg = PropertyGrid_Dialog(self)
+        dlg = PropertyGrid_Subwindow(self)
         dlg.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
         dlg.setWindowTitle(self.propertyData.variableName() + ' - ' + str(self.selected_item))
         dlg.setWindowFlags(Qt.WindowType.Widget)
