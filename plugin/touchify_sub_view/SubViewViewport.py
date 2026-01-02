@@ -7,6 +7,7 @@ from enum import IntEnum
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget
 
+from jemlib.alib_vaporjem import Logger
 from krita import *
 from touchify_sub_view.SubViewSettings import SubViewSettings
 
@@ -640,8 +641,28 @@ class SubViewViewport(QWidget):
         # Canvas Space
         viewport_tl: QPointF = self.viewport.mapToScene(self.viewport.frameRect().topLeft())
         viewport_br: QPointF = self.viewport.mapToScene(self.viewport.frameRect().bottomRight())
-        viewport_rect: QRectF = QRectF(viewport_tl, viewport_br)
-        canvas_rect = self.imageItem.boundingRect().marginsAdded(QMarginsF(viewport_rect.width(), viewport_rect.height(), viewport_rect.width(), viewport_rect.height()))
+        pre_viewport_rect: QRectF = QRectF(viewport_tl, viewport_br)
+
+        if self.getFlipHorizontal():
+            left = pre_viewport_rect.right()
+            right = pre_viewport_rect.left()
+        else:
+            left = pre_viewport_rect.left()
+            right = pre_viewport_rect.right()
+
+        if self.getFlipVertical():
+            top = pre_viewport_rect.bottom()
+            bottom = pre_viewport_rect.top()
+        else:
+            top = pre_viewport_rect.top()
+            bottom = pre_viewport_rect.bottom()
+            
+        viewport_rect = QRectF(QPointF(left, top), QPointF(right, bottom))
+        image_rect = self.imageItem.boundingRect()
+        Logger.debug("TouchifySubView", "SubViewViewport", f"ViewportRect: {str(viewport_rect)}")
+        Logger.debug("TouchifySubView", "SubViewViewport", f"ImageRect: {str(image_rect)}")
+        
+        canvas_rect = image_rect.marginsAdded(QMarginsF(viewport_rect.width(), viewport_rect.height(), viewport_rect.width(), viewport_rect.height()))
         self.viewport.setSceneRect(canvas_rect)
             
     def reloadTransforms(self, force=False):
@@ -722,6 +743,7 @@ class SubViewViewport(QWidget):
         self._flipHorizontal = value
         self.reloadTransforms()
         self.refreshState()
+        self.reloadSceneRect()
 
     def getFlipVertical(self):
         return self._flipVertical
@@ -730,6 +752,7 @@ class SubViewViewport(QWidget):
         self._flipVertical = value
         self.reloadTransforms()
         self.refreshState()
+        self.reloadSceneRect()
 
     def getScalingMode(self):
         return self._scalingMode
