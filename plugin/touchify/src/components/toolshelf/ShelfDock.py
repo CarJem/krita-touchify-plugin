@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from PyQt5.QtGui import QPaintEvent, QPainter, QPen
 from touchify.src.components.widgets.other.DockerContainer import DockerContainer
-from touchify.src.components.toolshelf.ShelfContainer import ShelfContainer
+from touchify.src.components.toolshelf.ShelfContainer import ShelfContainer, ShelfHContainer, ShelfSplitterContainer, ShelfVContainer
 from touchify.src.components.toolshelf.ShelfDockDrop import ShelfDropDock
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
 from jemlib.alib_pyqtgraph.dockarea.Dock import Dock, DockLabel
@@ -87,6 +87,9 @@ class ShelfDock(Dock):
     def setParentAreaId(self, value: str):
         self._parentAreaId = value
         self.dockdrop.setParentAreaId(value)
+
+    def getHandleMode(self):
+        return self._dockSettings.section_handles
 
     def accessible(self, id: str):
         return id == self._parentAreaId
@@ -176,6 +179,13 @@ class ShelfDock(Dock):
     def sync(self):
         if self.matchesCurrentTool() or self._isEditMode: self.setFold(True)
         else: self.setFold(False)
+        self.updateGrips()
+
+    def updateGrips(self):
+        if(ShelfContainer.isContainer(self.container())):
+            cnt = ShelfContainer.asContainer(self.container())
+            if isinstance(cnt, ShelfHContainer) or isinstance(cnt, ShelfVContainer):
+                ShelfSplitterContainer.updateGrips(cnt, self)
 
     def setOrientation(self, o='auto', force=False):
         self.revalidateTitlebar()

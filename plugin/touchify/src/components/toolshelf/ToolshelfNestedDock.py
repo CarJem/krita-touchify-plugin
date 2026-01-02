@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING
-from touchify.src.components.toolshelf.ShelfContainer import ShelfContainer
 from touchify.src.components.toolshelf.ShelfDock import ShelfDock
 
 
@@ -65,8 +64,7 @@ class ToolshelfNestedDock(ShelfDock):
     def setEditMode(self, enabled):
         super().setEditMode(enabled)
         self.updateContainerEditMode(enabled, self._isAllowedToEditContainer)
-
-
+        self.updateGrips()
 
     def onShelfIndexChanged(self):
         pass

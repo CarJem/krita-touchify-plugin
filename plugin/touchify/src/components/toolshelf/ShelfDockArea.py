@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from jemlib.alib_pyqtgraph.dockarea.DockArea import DockArea
+from touchify.src.components.toolshelf.ShelfContainer import ShelfContainer, ShelfHContainer, ShelfSplitterContainer, ShelfVContainer
 from touchify.src.components.toolshelf.ShelfDockDrop import ShelfDropDock
 
 
@@ -115,9 +116,30 @@ class ShelfDockArea(DockArea):
         if old is not None:
             old.apoptose()
         
+        self.updateDocks()
         return dock
 
+    def moveDock(self, dock, position, neighbor):
+        super().moveDock(dock, position, neighbor)
+        self.updateDocks()
+
+    def restoreState(self, state, missing='error', extra='bottom'):
+        super().restoreState(state, missing, extra)
+        self.updateDocks()
+
+
     #endregion
+
+    def updateDocks(self):
+        from touchify.src.components.toolshelf.ShelfDock import ShelfDock
+        for cnt in self.findChildren(ShelfContainer):
+            if isinstance(cnt, ShelfVContainer) or isinstance(cnt, ShelfHContainer):
+                ShelfSplitterContainer.updateGrips(cnt)
+
+        for uuid in self.docks:
+            dock = self.docks[uuid]
+            if isinstance(dock, ShelfDock):
+                dock.updateGrips()
 
     def setEditMode(self, state: bool):
         from touchify.src.components.toolshelf.ShelfDock import ShelfDock

@@ -7,6 +7,12 @@ from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class ToolshelfDock:
 
+    class SectionHandles(EnumStr):
+        NoHandles = "no_handles"
+        LeftHandle = "left_handle"
+        RightHandle = "right_handle"
+        BothHandles = "both_handles"
+        
     class SectionType(EnumStr):
         Actions = "actions"
         Docker = "docker"
@@ -78,6 +84,7 @@ class ToolshelfDock:
         self.max_size_y: int = 0
 
         self.section_type: str = "docker"
+        self.section_handles: str = str(ToolshelfDock.SectionHandles.BothHandles)
         self.requires_specific_tool: str = ""
         self.invert_required_tools: bool = False
 
@@ -226,6 +233,7 @@ class ToolshelfDock:
         labels["max_size"] = "Max Width / Height"
         labels["min_size"] = "Min Width / Height"
         labels["section_type"] = "Section Type"
+        labels["section_handles"] = "Section Handles"
 
         labels["requires_specific_tool"] = "Requires Specific Tool"
         labels["invert_required_tools"] = "Invert Requirements"
@@ -256,6 +264,7 @@ class ToolshelfDock:
             "display_name",
             "min_size",
             "max_size",
+            "section_handles",
             "requires_specific_tool",
             "invert_required_tools"
         ]
@@ -299,6 +308,7 @@ class ToolshelfDock:
         restrictions["max_size_y"] = DataConstraints.range(min=0)
         restrictions["section_type"] = DataConstraints.strValues(self.SectionType.values())
         restrictions["requires_specific_tool"] = DataConstraints.strMod(DataConstraints.StrMod.MultiToolSelection)
+        restrictions["section_handles"] = DataConstraints.strValues(self.SectionHandles.values())
 
 
         restrictions["docker_id"] = DataConstraints.strMod(DataConstraints.StrMod.DockerSelection)

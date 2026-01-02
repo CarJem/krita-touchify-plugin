@@ -47,6 +47,7 @@
                 "max_size_x": 0,
                 "max_size_y": 0,
                 "section_type": "docker",
+                "section_handles": "both_handles",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
@@ -96,6 +97,7 @@
                 "max_size_x": 0,
                 "max_size_y": 160,
                 "section_type": "special",
+                "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolLazyBrush,KisToolPolyline,PathTool,KritaShape/KisToolBrush,KritaShape/KisToolLine,KritaShape/KisToolRectangle,KritaShape/KisToolEllipse,KisToolPolygon,KisToolPath,KisToolPencil,KritaShape/KisToolDyna,KritaShape/KisToolMultiBrush",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
@@ -162,7 +164,7 @@
                                     ],
                                     {
                                         "sizes": [
-                                            268,
+                                            284,
                                             32
                                         ]
                                     }
@@ -186,6 +188,7 @@
                             "max_size_x": 0,
                             "max_size_y": 32,
                             "section_type": "special",
+                            "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
                             "docker_nesting_mode": "normal",
@@ -235,6 +238,7 @@
                             "max_size_x": 0,
                             "max_size_y": 32,
                             "section_type": "special",
+                            "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
                             "docker_nesting_mode": "normal",
@@ -284,6 +288,7 @@
                             "max_size_x": 0,
                             "max_size_y": 32,
                             "section_type": "special",
+                            "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
                             "docker_nesting_mode": "normal",
@@ -333,6 +338,7 @@
                             "max_size_x": 32,
                             "max_size_y": 0,
                             "section_type": "actions",
+                            "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
                             "docker_nesting_mode": "normal",
@@ -470,6 +476,7 @@
                             "max_size_x": 0,
                             "max_size_y": 35,
                             "section_type": "special",
+                            "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
                             "docker_nesting_mode": "normal",
@@ -540,6 +547,7 @@
                 "max_size_x": 0,
                 "max_size_y": 35,
                 "section_type": "special",
+                "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolLazyBrush,KisToolPolyline,PathTool,KritaShape/KisToolBrush,KritaShape/KisToolLine,KritaShape/KisToolRectangle,KritaShape/KisToolEllipse,KisToolPolygon,KisToolPath,KisToolPencil,KritaShape/KisToolDyna,KritaShape/KisToolMultiBrush",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
@@ -586,6 +594,7 @@
                             "max_size_x": 0,
                             "max_size_y": 0,
                             "section_type": "actions",
+                            "section_handles": "both_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
                             "docker_nesting_mode": "normal",
@@ -758,6 +767,7 @@
                 "max_size_x": 0,
                 "max_size_y": 45,
                 "section_type": "special",
+                "section_handles": "both_handles",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
                 "docker_nesting_mode": "normal",
@@ -813,7 +823,7 @@
                                     35,
                                     35,
                                     35,
-                                    148
+                                    168
                                 ]
                             }
                         ],
@@ -828,6 +838,7 @@
                             "max_size_x": 35,
                             "max_size_y": 35,
                             "section_type": "special",
+                            "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
                             "docker_nesting_mode": "normal",
@@ -877,6 +888,7 @@
                             "max_size_x": 35,
                             "max_size_y": 35,
                             "section_type": "special",
+                            "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
                             "docker_nesting_mode": "normal",
@@ -926,6 +938,7 @@
                             "max_size_x": 0,
                             "max_size_y": 0,
                             "section_type": "actions",
+                            "section_handles": "both_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
                             "docker_nesting_mode": "normal",
@@ -975,6 +988,7 @@
                             "max_size_x": 35,
                             "max_size_y": 35,
                             "section_type": "special",
+                            "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
                             "docker_nesting_mode": "normal",
@@ -1024,6 +1038,7 @@
                             "max_size_x": 35,
                             "max_size_y": 35,
                             "section_type": "special",
+                            "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
                             "docker_nesting_mode": "normal",
@@ -1107,7 +1122,7 @@
                         {
                             "sizes": [
                                 30,
-                                406
+                                446
                             ]
                         }
                     ],
@@ -1122,6 +1137,7 @@
                         "max_size_x": 0,
                         "max_size_y": 0,
                         "section_type": "docker",
+                        "section_handles": "both_handles",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
                         "docker_nesting_mode": "normal",
@@ -1171,6 +1187,7 @@
                         "max_size_x": 0,
                         "max_size_y": 30,
                         "section_type": "actions",
+                        "section_handles": "both_handles",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
                         "docker_nesting_mode": "normal",
@@ -1316,7 +1333,7 @@
                         {
                             "sizes": [
                                 200,
-                                306
+                                276
                             ]
                         }
                     ],
@@ -1331,6 +1348,7 @@
                         "max_size_x": 0,
                         "max_size_y": 0,
                         "section_type": "docker",
+                        "section_handles": "both_handles",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
                         "docker_nesting_mode": "normal",
@@ -1380,6 +1398,7 @@
                         "max_size_x": 0,
                         "max_size_y": 0,
                         "section_type": "docker",
+                        "section_handles": "both_handles",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
                         "docker_nesting_mode": "normal",

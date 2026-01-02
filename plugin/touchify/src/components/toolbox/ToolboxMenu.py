@@ -50,10 +50,6 @@ class ToolboxMenu(QMenu):
         self.presetsSubmenuAction.setMenu(QMenu(self))
         self.reloadPresets()
 
-        self.toolboxSettingsAction = self.addAction("Settings...")
-        self.toolboxSettingsAction.setEnabled(False)
-        self.toolboxSettingsAction.triggered.connect(self.onSettingsRequested)
-
         self.addSeparator()
 
 
@@ -115,6 +111,10 @@ class ToolboxMenu(QMenu):
         self.sectionOptionsAction.setMenu(QMenu())
 
         self.presetSeperator = self.addSeparator()
+
+        self.toolboxSettingsAction = self.addAction("Settings...")
+        self.toolboxSettingsAction.setEnabled(False)
+        self.toolboxSettingsAction.triggered.connect(self.onSettingsRequested)
 
 
 

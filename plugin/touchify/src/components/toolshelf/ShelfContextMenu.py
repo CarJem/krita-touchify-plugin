@@ -65,10 +65,6 @@ class ShelfContextMenu(QMenu):
         self.shelfPresetsSubmenuAction.setMenu(QMenu(self))
         self.loadPresets(currentPresetId)
 
-        self.shelfSettingsAction = self.addAction("Settings...")
-        self.shelfSettingsAction.setEnabled(False)
-        self.shelfSettingsAction.triggered.connect(self.onSettingsRequested)
-
         self.addSeparator()
 
         self.addDockAction = self.addAction("Add Dock...")
@@ -107,6 +103,12 @@ class ShelfContextMenu(QMenu):
         self.pageOptionsAction = self.addAction("Page")
         self.pageOptionsAction.setVisible(False)
         self.pageOptionsAction.setMenu(QMenu())
+
+        self.editSeperator = self.addSeparator()
+
+        self.shelfSettingsAction = self.addAction("Settings...")
+        self.shelfSettingsAction.setEnabled(False)
+        self.shelfSettingsAction.triggered.connect(self.onSettingsRequested)
 
     def reload(self, currentPresetId: str):
         self.loadPresets(currentPresetId)
@@ -293,6 +295,8 @@ class ShelfContextMenu(QMenu):
 
         #endregion
        
+        self.editSeperator.setVisible(is_editing)
+
         self.shelfSettingsAction.setEnabled(is_editing)
         self.shelfSettingsAction.setVisible(is_editing)
 

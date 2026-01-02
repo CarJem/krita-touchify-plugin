@@ -8,6 +8,8 @@ from PyQt5.QtWidgets import *
 
 
 
+
+
 if TYPE_CHECKING:
     from touchify.src.components.toolshelf.ShelfDock import ShelfDockLabel, ShelfDock
 
@@ -46,6 +48,48 @@ class ShelfContainer(object):
     def asContainer(obj: object):
         res: ShelfHContainer | ShelfVContainer | ShelfTContainer = obj
         return res
+    
+class ShelfSplitterContainer:
+
+    @staticmethod
+    def setItemFold(self: "ShelfVContainer | ShelfHContainer", item: "ShelfDock", state: bool):
+        if state: item.show()
+        else: item.hide()
+
+        if all(self.widget(x).isHidden() for x in range(self.count())) == True: self.hide()
+        else: self.show()
+
+    @staticmethod
+    def updateGrips(self: "ShelfVContainer | ShelfHContainer", item: "ShelfDock" = None):
+        from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
+
+        def set_handle_state(dock_index: int, is_visible: bool):
+            handler = self.handle(dock_index)
+            is_vert = isinstance(self, ShelfVContainer)
+            if handler:
+                if is_visible: 
+                    handler.setMaximumSize(QSize(QWIDGETSIZE_MAX,4) if is_vert else QSize(4,QWIDGETSIZE_MAX))
+                    self.setCollapsible(dock_index, True)
+                else: 
+                    handler.setMaximumSize(QSize(1,1))
+                    self.setCollapsible(dock_index, False)
+
+        if not item:
+            for idx in range(0, self.count()): set_handle_state(idx, True)
+            return
+        
+        section_handles = item.getHandleMode()
+
+        show_left_grip = section_handles == ToolshelfDock.SectionHandles.BothHandles or \
+            section_handles == ToolshelfDock.SectionHandles.LeftHandle
+        
+        show_right_grip = section_handles == ToolshelfDock.SectionHandles.BothHandles or \
+            section_handles == ToolshelfDock.SectionHandles.RightHandle
+        
+        set_handle_state(self.indexOf(item), show_left_grip)
+        set_handle_state(self.indexOf(item) + 1, show_right_grip)
+        
+
 
 class ShelfVContainer(ShelfContainer, VContainer):
     def __init__(self, area):
@@ -61,11 +105,7 @@ class ShelfVContainer(ShelfContainer, VContainer):
 
     def setItemFold(self, item: "ShelfDock", state: bool):
         ShelfContainer.setItemFold(self, item, state)
-        if state: item.show()
-        else: item.hide()
-
-        if all(self.widget(x).isHidden() for x in range(self.count())) == True: self.hide()
-        else: self.show()
+        ShelfSplitterContainer.setItemFold(self, item, state)
 
 class ShelfHContainer(ShelfContainer, HContainer):
     def __init__(self, area):
@@ -79,13 +119,11 @@ class ShelfHContainer(ShelfContainer, HContainer):
         HContainer.restoreState(self, state)
         ShelfContainer.restoreState(self, state)
 
+
+
     def setItemFold(self, item: "ShelfDock", state: bool):
         ShelfContainer.setItemFold(self, item, state)
-        if state: item.show()
-        else: item.hide()
-
-        if all(self.widget(x).isHidden() for x in range(self.count())) == True: self.hide()
-        else: self.show()
+        ShelfSplitterContainer.setItemFold(self, item, state)
 
 class ShelfTContainer(ShelfContainer, TContainer):
     def __init__(self, area):
