@@ -648,6 +648,9 @@ class ActionManager(QObject):
             pass
 
     def Execute_PieWheel(self, pie_wheel_registry_id: str):
+        if self.composer_action_down:
+            return 
+        
         try:
 
             from touchify.src.components.pie_wheel.TouchifyPieWheel import TouchifyPieWheel
