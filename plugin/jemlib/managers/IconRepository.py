@@ -18,6 +18,22 @@ RESOURCE_PACK_ICONS_INIT = False
 
 class IconRepository:
 
+    class PaddedIcon(QIconEngine):
+        def __init__(self, icon: QIcon, padding: int):
+            super().__init__()
+            self.icon = icon
+            self.padding = padding
+            self.margins = QMargins(self.padding, self.padding, self.padding, self.padding)
+
+        def pixmap(self, size, mode, state):
+            if size:
+                return self.icon.pixmap(size.shrunkBy(self.margins), mode, state)
+            else:
+                return self.icon.pixmap(size, mode, state)
+        
+        def paint(self, painter, rect, mode, state):
+            self.icon.paint(painter, rect.marginsRemoved(self.margins), mode=mode, state=state)
+
     class IconEngine(QIconEngine):
         def __init__(self, svgData: bytes, autoColorMode: bool = True):
             super().__init__()
@@ -33,8 +49,6 @@ class IconRepository:
 
             self.currentColor = None
             self.renderer = QtSvg.QSvgRenderer()
-
-
 
         def iconColor(self, mode: QIcon.Mode, state: QIcon.State):
             background = qApp.palette().window().color()
@@ -183,21 +197,6 @@ class IconRepository:
     
     def fallbackIcon():
         return QtGui.QIcon(os.path.join(IconRepository.__resourcesDir__(), 'default.svg'))
-
-    #endregion
-
-    #region Other Retrival
-
-
-    @staticmethod
-    def brushPresets():
-        return KritaAPI.get_presets()
-    
-    @staticmethod
-    def actionText(action_id: str):
-        target_action = KritaAPI.get_action(action_id)
-        if target_action: return target_action.text()
-        else: return ""
 
     #endregion
 

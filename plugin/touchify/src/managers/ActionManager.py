@@ -30,7 +30,6 @@ from touchify.src.config.popup.PopupData import PopupData
 from jemlib.alib_vaporjem.extensions.krita_extensions import *
 
 from touchify.src.settings.TouchifySettings import TouchifySettings
-from jemlib.managers.IconRepository import IconRepository
 
 from touchify.src.components.popup.PopupWidget import PopupWidget
 
@@ -436,7 +435,7 @@ class ActionManager(QObject):
     def Button_Brush(self, act: Trigger, classType: type = TriggerButton):
         btn: TriggerButton | None = None
         id = act.brush_name
-        brush_presets = IconRepository.brushPresets()
+        brush_presets = KritaAPI.get_presets()
         
         if id in brush_presets:
             preset = brush_presets[id]
@@ -548,7 +547,7 @@ class ActionManager(QObject):
         contextMenu.show()
             
     def Execute_Brush(self, id):
-        brush_presets = IconRepository.brushPresets()
+        brush_presets = KritaAPI.get_presets()
         if id in brush_presets:
             self.api_window.active_view.brush_preset = id
     

@@ -33,6 +33,7 @@ class Trigger:
         self.display_custom_icon: str = ""
         self.display_custom_text_enabled: bool = False
         self.display_custom_text: str = ""
+        self.display_icon_padding: int = 0
 
         #Extras Params
         self.extra_closes_popup: bool = False
@@ -117,7 +118,9 @@ class Trigger:
             elif is_action: icon = IconRepository.actionIcon(self.action_id)
             else: icon = QIcon()
 
-        return icon
+        padding = IconRepository.PaddedIcon(icon, self.display_icon_padding)
+        result = QIcon(padding)
+        return result
 
     def getDisplayName(self):
         use_custom_text: bool = self.display_custom_text_enabled and self.display_custom_text != ""
@@ -229,6 +232,7 @@ class Trigger:
 
             "#NEW_SECTION",
 
+            "display_icon_padding",
             "registry_id"
         ]
 
@@ -259,6 +263,7 @@ class Trigger:
 
         if self.variant == Trigger.Variants.Color:
             result.append("display_opt")
+            result.append("display_icon_padding")
             result.append("display_text_hide")
             result.append("display_icon_hide")
             result.append("display_custom_icon_opt")
@@ -285,6 +290,7 @@ class Trigger:
         labels["display_custom_icon_opt"] = "Custom Icon"
         labels["display_text_hide"] = "Hide Text"
         labels["display_icon_hide"] ="Hide Icon"
+        labels["display_icon_padding"] = "Icon Padding"
 
         labels["extra_opt"] = "Extra Options"
         labels["extra_closes_popup"] = "Close popup on click"
@@ -312,6 +318,7 @@ class Trigger:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["display_custom_icon"] = DataConstraints.strMod(DataConstraints.StrMod.IconSelection)
+        restrictions["display_icon_padding"] = DataConstraints.range(min=0)
         restrictions["variant"] = DataConstraints.strValues(self.Variants.values())
         restrictions["brush_name"] = DataConstraints.strMod(DataConstraints.StrMod.BrushSelection)
         restrictions["action_id"] = DataConstraints.strMod(DataConstraints.StrMod.ActionSelection)

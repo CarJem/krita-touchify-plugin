@@ -7,6 +7,7 @@
     "display_custom_icon": "material:microsoft-xbox-controller-menu",
     "display_custom_text_enabled": true,
     "display_custom_text": "Toggle Popup Palette",
+    "display_icon_padding": 0,
     "extra_closes_popup": false,
     "extra_composer_mode": false,
     "action_id": "",

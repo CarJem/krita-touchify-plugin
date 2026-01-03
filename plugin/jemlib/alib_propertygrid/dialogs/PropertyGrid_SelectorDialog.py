@@ -160,7 +160,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Subwindow):
         elif mode == DataConstraints.StrMod.BrushSelection:
             self.list_view.setViewMode(QListView.ViewMode.ListMode)
             self.list_view.setUniformItemSizes(True)
-            presets = IconRepository.brushPresets()
+            presets = KritaAPI.get_presets()
             for preset_key in presets:
                 preset = presets[preset_key]
                 listItem = QListWidgetItem()
