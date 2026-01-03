@@ -50,7 +50,7 @@ class ToolshelfAreaSettings:
         
         self.stack_actions = JsonExtensions.init_list(args, "stack_actions", TriggerGroup)
     
-    def forceLoad(self):
+    def propertygrid_listload(self):
         self.stack_actions = TypedList(self.stack_actions, TriggerGroup)
 
     def propertygrid_sorted(self):
@@ -83,8 +83,8 @@ class ToolshelfAreaSettings:
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["stack_preview"] = DataConstraints.strValues(self.StackPreview.values())
-        restrictions["stack_alignment"] = DataConstraints.strValues(self.StackAlignment.values())
-        restrictions["resize_style"] = DataConstraints.strValues(self.ResizeStyle.values())
-        restrictions["position"] = DataConstraints.strValues(self.Position.values())
+        restrictions["stack_preview"] = DataConstraints.strEnumValues(self.StackPreview)
+        restrictions["stack_alignment"] = DataConstraints.strEnumValues(self.StackAlignment)
+        restrictions["resize_style"] = DataConstraints.strEnumValues(self.ResizeStyle)
+        restrictions["position"] = DataConstraints.strEnumValues(self.Position)
         return restrictions

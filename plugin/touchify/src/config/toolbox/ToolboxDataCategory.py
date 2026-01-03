@@ -27,7 +27,7 @@ class ToolboxDataCategory:
         else:
             return self.id.replace("\n", "\\n")
 
-    def forceLoad(self):
+    def propertygrid_listload(self):
         self.items = TypedList(self.items, ToolboxDataItem)
 
 

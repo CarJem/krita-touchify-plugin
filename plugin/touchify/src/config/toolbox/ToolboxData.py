@@ -55,7 +55,7 @@ class ToolboxData:
     def getFileName(self):
         return FileExtensions.fileStringify(self.preset_name)
     
-    def forceLoad(self):
+    def propertygrid_listload(self):
         self.categories = TypedList(self.categories, ToolboxDataCategory)
 
     def propertygrid_sorted(self):
@@ -92,8 +92,8 @@ class ToolboxData:
         restrictions["column_count"] = DataConstraints.range(min=1)
         restrictions["background_opacity"] = DataConstraints.range(min=0, max=255)
         restrictions["button_opacity"] = DataConstraints.range(min=0, max=255)
-        restrictions["orientation_mode"] = DataConstraints.strValues(self.OrientationMode.values())
-        restrictions["theme"] = DataConstraints.strValues(self.ThemeStyle.values())
+        restrictions["orientation_mode"] = DataConstraints.strEnumValues(self.OrientationMode)
+        restrictions["theme"] = DataConstraints.strEnumValues(self.ThemeStyle)
         return restrictions
     
     def update(self, item: "ToolboxData"):

@@ -104,7 +104,7 @@ class PopupData:
     def getFileName(self):
         return FileExtensions.fileStringify(self.id)
 
-    def forceLoad(self):
+    def propertygrid_listload(self):
         from touchify.src.config.triggers.TriggerGroup import TriggerGroup
         self.actions_items = TypedList(self.actions_items, TriggerGroup)
         self.dockers_list = TypedList(self.dockers_list, DockerItem)
@@ -285,13 +285,13 @@ class PopupData:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["docker_id"] = DataConstraints.strMod(DataConstraints.StrMod.DockerSelection)
-        restrictions["type"] = DataConstraints.strValues(self.Variants.values())
-        restrictions["window_type"] = DataConstraints.strValues(self.WindowType.values())
-        restrictions["popup_position_x"] = DataConstraints.strValues(self.PopupPosition.values())
-        restrictions["popup_position_y"] = DataConstraints.strValues(self.PopupPosition.values())
-        restrictions["closing_method"] = DataConstraints.strValues(self.ClosingMethod.values())
-        restrictions["dockers_tab_type"] = DataConstraints.strValues(self.DockersTabType.values())
-        restrictions["window_fixed_layout"] = DataConstraints.strValues(self.WindowFixedLayoutMode.values())
+        restrictions["type"] = DataConstraints.strEnumValues(self.Variants)
+        restrictions["window_type"] = DataConstraints.strEnumValues(self.WindowType)
+        restrictions["popup_position_x"] = DataConstraints.strEnumValues(self.PopupPosition)
+        restrictions["popup_position_y"] = DataConstraints.strEnumValues(self.PopupPosition)
+        restrictions["closing_method"] = DataConstraints.strEnumValues(self.ClosingMethod)
+        restrictions["dockers_tab_type"] = DataConstraints.strEnumValues(self.DockersTabType)
+        restrictions["window_fixed_layout"] = DataConstraints.strEnumValues(self.WindowFixedLayoutMode)
         restrictions["shelf_id"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.ShelfRegistry)
 
         restrictions["actions_item_height"] = DataConstraints.range(min=0)

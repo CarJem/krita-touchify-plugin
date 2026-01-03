@@ -16,8 +16,6 @@ class PropertyField_Bool(PropertyField[bool]):
     def __init__(self, handler: "DataHandler", property: DataPath[bool]):
         super().__init__(handler, property, True)
         self.setMaximumWidth(20)
-        self.setMinimumWidth(20)
-
         self.setMinimumHeight(20)
         
         

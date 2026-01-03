@@ -56,7 +56,7 @@ class SubViewSettings:
         JsonExtensions.dictToObject(self, args)
         self.tabs = JsonExtensions.init_list(args, "tabs", SubViewSettings.Tab)
 
-    def forceLoad(self):
+    def propertygrid_listload(self):
         self.tabs = TypedList(self.tabs, SubViewSettings.Tab)
 
 

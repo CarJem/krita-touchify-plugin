@@ -23,7 +23,7 @@ class PresetSaveAs:
     def propertygrid_hidden(self):
         return []
 
-    def forceLoad(self):
+    def propertygrid_listload(self):
         pass
 
     def propertygrid_labels(self):

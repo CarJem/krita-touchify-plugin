@@ -12,6 +12,7 @@ from krita import *
 
 class JsonExtensions:
 
+    
 
 
     def loadClass(jsonStr: str, type: type):
@@ -22,8 +23,8 @@ class JsonExtensions:
             print(ex)
             return type()
 
-    def saveClass(data: any, check_circular=True) -> str:
-        return json.dumps(data, default=lambda o: o.__dict__, indent=4,check_circular=check_circular)
+    def saveClass(data: any, check_circular=True, allow_private=False) -> str:
+        return json.dumps(data, default=lambda o: JsonExtensions.dumpObject(o, allow_private), indent=4,check_circular=check_circular,)
 
     def loadClassFromFile(filePath: str, type: type):
         try:
@@ -32,9 +33,9 @@ class JsonExtensions:
         except:
             return type()
             
-    def saveClassToFile(data: any, filePath: str, check_circular=True):
+    def saveClassToFile(data: any, filePath: str, check_circular=True, allow_private=False):
         with open(filePath, "w") as f:
-            json.dump(data, f, default=lambda o: o.__dict__, indent=4,check_circular=check_circular)
+            json.dump(data, f, default=lambda o: JsonExtensions.dumpObject(o, allow_private), indent=4,check_circular=check_circular)
 
     def tryCast(jsonData, type, defaultValue):
         if not jsonData:
@@ -42,7 +43,6 @@ class JsonExtensions:
         else:
             result = jsonData
             return result
-
 
     def tryGetEntry(jsonData, key, type, defaultValue):
         if not jsonData:
@@ -73,3 +73,10 @@ class JsonExtensions:
         for i in val:
             arraySrc.append(classSrc(**i))
         return arraySrc
+    
+    @staticmethod
+    def dumpObject(o: object, allow_private=False):
+        if allow_private:
+           return o.__dict__
+        
+        return { key: value for key, value in o.__dict__.items() if not key.startswith('_') }

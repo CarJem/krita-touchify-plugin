@@ -29,7 +29,7 @@ class Toolshelf:
         else:
             return actual_name
 
-    def forceLoad(self):
+    def propertygrid_listload(self):
         pass
 
     def propertygrid_sorted(self):

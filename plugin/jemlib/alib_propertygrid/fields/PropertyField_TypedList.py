@@ -28,6 +28,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         self.nested_list_id = ""
         self.has_sub_array = False
         self.has_property_view = False
+        self.item_modifiers: list[any] = []
         
         self.allow_move = True
         self.allow_clipboard = True
@@ -144,14 +145,18 @@ class PropertyField_TypedList(PropertyField[TypedList]):
 
     def test_restrictions(self, manual_restrictions: list[dict[str, any]] = []):
         restrictions: list[dict[str, any]] = []
-        if len(manual_restrictions) != 0: 
-            restrictions = manual_restrictions
-        else: 
-            restrictions = self.praser.getObjectConstraints(self.propertyData)
+        
+        for rs in manual_restrictions:
+            restrictions.append(rs)
+
+        for rs in self.praser.getObjectConstraints(self.propertyData):
+            restrictions.append(rs)
 
         sub_array_setup = False
 
         for restriction in restrictions:
+            if restriction["type"] == DataConstraints.ListMod.ItemModifier:
+                self.item_modifiers.append(restriction["param"])
             if restriction["type"] == DataConstraints.ListMod.Subarray and sub_array_setup == False:
                 self.nested_list_id: str = restriction["sub_id"]
                 self.nested_list_nested_type: type = restriction["sub_type"]
@@ -211,8 +216,11 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         return (container_props, dlg)
 
     def getEditableValue(self, item):
-        if hasattr(item, "forceLoad"):
-            item.forceLoad()
+        if hasattr(item, "propertygrid_listload"):
+            item.propertygrid_listload()
+        if hasattr(item, "propertygrid_listmod"):
+            print(self.item_modifiers)
+            item.propertygrid_listmod(self.item_modifiers)
         return item     
 
     #endregion

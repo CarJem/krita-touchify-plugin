@@ -75,8 +75,6 @@ class ToolshelfDock:
     def __defaults__(self):
         self.display_name: str = ""
 
-        self.docker_id: str = ""
-
         self.min_size_x: int = 0
         self.min_size_y: int = 0
 
@@ -88,6 +86,7 @@ class ToolshelfDock:
         self.requires_specific_tool: str = ""
         self.invert_required_tools: bool = False
 
+        self.docker_id: str = ""
         self.docker_nesting_mode: str = "normal"
         self.docker_unloaded_visibility: str = "normal"
         self.docker_loading_priority: str = "normal"
@@ -102,6 +101,8 @@ class ToolshelfDock:
         self.action_section_btn_width: int = 0
         self.action_section_btn_height: int = 0
         self.action_section_icon_size: int = 0
+        self.action_section_fixed_size_x: int = 0
+        self.action_section_fixed_size_y: int = 0
 
         self.special_item_type: str = "none"
         self.special_slider_orientation: str = "horizontal"
@@ -119,8 +120,7 @@ class ToolshelfDock:
         JsonExtensions.dictToObject(self, args, [ToolshelfArea])
         self.action_section_contents = JsonExtensions.init_list(args, "action_section_contents", TriggerGroup)
 
-    def forceLoad(self):
-        self.action_section_contents = TypedList(self.action_section_contents, TriggerGroup)
+
 
     def hasDisplayName(self):
         return self.display_name != None and self.display_name != "" and self.display_name.isspace() == False
@@ -144,6 +144,9 @@ class ToolshelfDock:
             
         return f"{name} {suffix}"
     
+    def propertygrid_listload(self):
+        self.action_section_contents = TypedList(self.action_section_contents, TriggerGroup)
+
     def propertygrid_hints(self):
         hints = {}
         hints["docker_size_hint"] = "the size hint of this docker; leave set to 0 for automatic sizing"
@@ -180,6 +183,7 @@ class ToolshelfDock:
             "action_section_alignment",
             "action_section_icon_size",
             "action_section_contents", 
+            "action_section_fixed_size"
         ]
 
         special_groups = [
@@ -250,6 +254,7 @@ class ToolshelfDock:
         labels["action_section_btn_size"] = "Button Width / Height"
         labels["action_section_alignment"] = "Horizontal / Vertical Alignment"
         labels["action_section_icon_size"] = "Icon Size"
+        labels["action_section_fixed_size"] = "Section Fixed Size"
 
         labels["special_item_type"] = "Component Type"
         labels["special_slider_orientation"] = "Orientation"
@@ -281,6 +286,7 @@ class ToolshelfDock:
             "action_section_btn_size",
             "action_section_alignment", 
             "action_section_icon_size",
+            "action_section_fixed_size",
             "action_section_contents",
             "special_item_type",
             "special_slider_orientation",
@@ -296,34 +302,39 @@ class ToolshelfDock:
         row["docker_size_hint"] = {"items": ["docker_size_hint_x","docker_size_hint_y"]}
         row["min_size"] = {"items": ["min_size_x","min_size_y"]}
         row["max_size"] = {"items": ["max_size_x","max_size_y"]}
+        row["action_section_fixed_size"] = {"items": ["action_section_fixed_size_x", "action_section_fixed_size_y"]}
         return row
 
     def propertygrid_restrictions(self):
         restrictions = {}
-        restrictions["docker_size_hint_x"] = DataConstraints.range(min=0)
-        restrictions["docker_size_hint_y"] = DataConstraints.range(min=0)
+
+        
         restrictions["min_size_x"] = DataConstraints.range(min=0)
         restrictions["min_size_y"] = DataConstraints.range(min=0)
         restrictions["max_size_x"] = DataConstraints.range(min=0)
         restrictions["max_size_y"] = DataConstraints.range(min=0)
-        restrictions["section_type"] = DataConstraints.strValues(self.SectionType.values())
+        restrictions["section_type"] = DataConstraints.strEnumValues(self.SectionType)
         restrictions["requires_specific_tool"] = DataConstraints.strMod(DataConstraints.StrMod.MultiToolSelection)
-        restrictions["section_handles"] = DataConstraints.strValues(self.SectionHandles.values())
+        restrictions["section_handles"] = DataConstraints.strEnumValues(self.SectionHandles)
 
 
         restrictions["docker_id"] = DataConstraints.strMod(DataConstraints.StrMod.DockerSelection)
-        restrictions["docker_nesting_mode"] = DataConstraints.strValues(self.DockerNestingMode.values())
-        restrictions["docker_unloaded_visibility"] = DataConstraints.strValues(self.DockerUnloadedVisibility.values())
-        restrictions["docker_loading_priority"] = DataConstraints.strValues(self.DockerLoadingPriority.values())
+        restrictions["docker_nesting_mode"] = DataConstraints.strEnumValues(self.DockerNestingMode)
+        restrictions["docker_unloaded_visibility"] = DataConstraints.strEnumValues(self.DockerUnloadedVisibility)
+        restrictions["docker_loading_priority"] = DataConstraints.strEnumValues(self.DockerLoadingPriority)
+        restrictions["docker_size_hint_x"] = DataConstraints.range(min=0)
+        restrictions["docker_size_hint_y"] = DataConstraints.range(min=0)
 
-        restrictions["action_section_display_mode"] = DataConstraints.strValues(self.ActionSectionDisplayMode.values())
+        restrictions["action_section_display_mode"] = DataConstraints.strEnumValues(self.ActionSectionDisplayMode)
         restrictions["action_section_btn_width"] = DataConstraints.range(min=0)
         restrictions["action_section_btn_height"] = DataConstraints.range(min=0)
-        restrictions["action_section_alignment_x"] = DataConstraints.strValues(self.SectionAlignmentX.values())
-        restrictions["action_section_alignment_y"] = DataConstraints.strValues(self.SectionAlignmentY.values())
+        restrictions["action_section_alignment_x"] = DataConstraints.strEnumValues(self.SectionAlignmentX)
+        restrictions["action_section_alignment_y"] = DataConstraints.strEnumValues(self.SectionAlignmentY)
         restrictions["action_section_icon_size"] = DataConstraints.range(min=0)
+        restrictions["action_section_fixed_size_x"] = DataConstraints.range(min=0)
+        restrictions["action_section_fixed_size_y"] = DataConstraints.range(min=0)
 
-        restrictions["special_item_type"] = DataConstraints.strValues(self.SpecialItemType.values())
-        restrictions["special_slider_orientation"] = DataConstraints.strValues(self.SliderOrientation.values())
+        restrictions["special_item_type"] = DataConstraints.strEnumValues(self.SpecialItemType)
+        restrictions["special_slider_orientation"] = DataConstraints.strEnumValues(self.SliderOrientation)
         restrictions["special_nested_data"] = DataConstraints.expandable()
         return restrictions

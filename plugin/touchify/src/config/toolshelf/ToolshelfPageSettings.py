@@ -11,7 +11,7 @@ class ToolshelfPageSettings:
         self.__defaults__()
         JsonExtensions.dictToObject(self, args)
     
-    def forceLoad(self):
+    def propertygrid_listload(self):
         pass
 
     def propertygrid_labels(self):

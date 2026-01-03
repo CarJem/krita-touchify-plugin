@@ -1,3 +1,4 @@
+from ast import Dict
 from PyQt5 import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
@@ -57,10 +58,10 @@ class PropertyView_Form(QWidget, PropertyView):
 
     #region Component Creation Functions
 
-    def createLabel(self, varName: str, labelData: dict, hintData: dict, is_nested: bool = False):
+    def createLabel(self, varName: str, labelData: dict, hintData: Dict):
         labelText = self.getPraser().getPropertyLabel(labelData, varName)
         hintText = self.getPraser().getPropertyTextHint(hintData, varName)
-        header = PropertyLabel(self, varName, labelText, hintText, is_nested)
+        header = PropertyLabel(self, varName, labelText, hintText)
         self.__labels.append(header)
         return header
     
@@ -75,6 +76,17 @@ class PropertyView_Form(QWidget, PropertyView):
             self.__fields.append(field)
             return field
         return None
+    
+    def createSisterLabel(self, varName: str, labelData: dict, hintData: dict):
+        labelText = self.getPraser().getPropertyLabel(labelData, varName)
+        hintText = self.getPraser().getPropertyTextHint(hintData, varName)
+
+        if labelText == "":
+            return None
+        
+        header = PropertyLabel(self, varName, labelText, hintText, True)
+        self.__labels.append(header)
+        return header
 
     def createSisterField(self, source: any, sister_id: str, sister_data: dict[str, any], labelData: dict, hintData: dict):
         sister_items = list[str](sister_data["items"])
@@ -105,17 +117,19 @@ class PropertyView_Form(QWidget, PropertyView):
             field.sister_id = sister_id
 
             if use_labels:
-                header = self.createLabel(variable_name, labelData, hintData, True)
-                header.sister_id = sister_id
-                if flip_labels:
-                    header.setMaximumWidth(250)
-                    layout.addRow(header, field)
+                header = self.createSisterLabel(variable_name, labelData, hintData)
+                if header == None:
+                    layout.addRow(field)
                 else:
-                    field.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-                    layout.addRow(field, header)
-
-                header.setStyleSheet("font-style: italic;")
-                header.setContentsMargins(5,0,5,0)
+                    header.sister_id = sister_id
+                    if flip_labels:
+                        header.setMaximumWidth(250)
+                        layout.addRow(header, field)
+                    else:
+                        field.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+                        layout.addRow(field, header)
+                    header.setStyleSheet("font-style: italic;")
+                    header.setContentsMargins(5,0,5,0)
             else:
                 layout.addWidget(field, 1)
 
@@ -152,6 +166,8 @@ class PropertyView_Form(QWidget, PropertyView):
         for field in self.__fields:     
             is_hidden = field.propertyData.variableName() in hiddenItems
             is_within_hidden = (field.sister_id != None and field.sister_id in hiddenItems)
+
+            Logger.debug("JemLib", "PropertyView_Form", f"Var: {field.propertyData.variableName()} IsHidden:{is_hidden} | IsHiddenWithin: {is_within_hidden}")
 
             if is_hidden or is_within_hidden: field.setHidden(True)
             else: field.setHidden(False)

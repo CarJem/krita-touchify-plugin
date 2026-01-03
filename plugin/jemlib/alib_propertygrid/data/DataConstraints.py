@@ -7,10 +7,12 @@ class DataConstraints:
 
     class StrMod(EnumStr):
         Values="values"
+        EnumStrValues="enumstr_values"
         ValuesWithIndex="indexed_values"
         Multiline="multiline_string"
         PythonEditor="python_editor"
         ColorPicker="color_picker"
+        Placeholder="placeholder"
         
         ActionSelection="action_selection"
         DockerSelection="docker_selection"
@@ -34,6 +36,7 @@ class DataConstraints:
         Subarray="sub_array"
         Locked="locked"
         Icons="icons"
+        ItemModifier="item_mod"
 
     class DictMod(EnumStr):
         ListLike="list_like"
@@ -41,8 +44,11 @@ class DataConstraints:
     def listSubArray(sub_id: str, sub_type: type):
         return { "type": DataConstraints.ListMod.Subarray, "sub_id": sub_id, "sub_type": sub_type }
 
-    def listMod(type: ListMod):
-        return {"type": type}
+    def listMod(type: ListMod, input: str = None):
+        if input:
+            return {"type": type, "param": input}
+        else:
+            return {"type": type}
 
     def dictMod(type: DictMod):
         return {"type": type}
@@ -52,6 +58,10 @@ class DataConstraints:
             return {"type": DataConstraints.OtherMod.Expandable}
          else:
              return {"type": DataConstraints.OtherMod.Expandable, "text": text}
+         
+
+    def strPlaceholder(text: str):
+        return {"type":  DataConstraints.StrMod.Placeholder, "text": text}
 
     def strMod(type: StrMod):
         return {"type": type}
@@ -61,6 +71,9 @@ class DataConstraints:
 
     def strValues(items: list):
         return {"type": DataConstraints.StrMod.Values, "entries": items}
+    
+    def strEnumValues(items: EnumStr):
+        return {"type": DataConstraints.StrMod.EnumStrValues, "entries": items}
     
     def strSelectors():
         return [

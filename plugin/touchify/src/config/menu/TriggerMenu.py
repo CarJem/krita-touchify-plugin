@@ -20,14 +20,16 @@ class TriggerMenu:
         JsonExtensions.dictToObject(self, args, [])
         self.context_menu_actions = JsonExtensions.init_list(args, "context_menu_actions", TriggerMenuItem)
 
+    def getDisplayName(self):
+        return self.registry_name
+
     def getFileName(self):
         return FileExtensions.fileStringify(self.registry_id)
         
     def __str__(self):
-        return self.registry_name
+        return self.getDisplayName()
 
-
-    def forceLoad(self):
+    def propertygrid_listload(self):
         self.context_menu_actions = TypedList(self.context_menu_actions, TriggerMenuItem)
 
     def propertygrid_sisters(self):

@@ -14,7 +14,7 @@ class DockerItem:
     def __str__(self):
         return self.id.replace("\n", "\\n")
 
-    def forceLoad(self):
+    def propertygrid_listload(self):
         pass
 
     def propertygrid_ismodel(self):

@@ -18,6 +18,7 @@ from jemlib.alib_datatypes.TypedList import TypedList
 
 from touchify.__env__ import RESOURCE_PACKS_DIRECTORY
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints as RS
+from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import PropertyGrid_TouchifyRestrictions as RSA
 
 HAS_ALREADY_LOADED: bool = False
 
@@ -50,7 +51,7 @@ class ResourcePack:
             self.metadata = None
             self.load()
 
-    def forceLoad(self):
+    def propertygrid_listload(self):
         self.triggers = TypedList(self.triggers, Trigger)
         self.menus = TypedList(self.menus, TriggerMenu)
         self.popups = TypedList(self.popups, PopupData)
@@ -255,13 +256,13 @@ class ResourcePack:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["metadata"] = RS.expandable()
-        restrictions["triggers"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
-        restrictions["menus"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
-        restrictions["toolboxes"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
-        restrictions["shelves"] =[RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
-        restrictions["popups"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
-        restrictions["docker_groups"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
-        restrictions["canvas_presets"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
-        restrictions["scripts"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
-        restrictions["pie_wheels"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs)]
+        restrictions["triggers"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
+        restrictions["menus"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
+        restrictions["toolboxes"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
+        restrictions["shelves"] =[RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
+        restrictions["popups"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
+        restrictions["docker_groups"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
+        restrictions["canvas_presets"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
+        restrictions["scripts"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
+        restrictions["pie_wheels"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
         return restrictions

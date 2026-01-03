@@ -17,13 +17,15 @@ class TriggerGroup:
         from touchify.src.config.triggers.Trigger import Trigger
         self.actions = JsonExtensions.init_list(args, "actions", Trigger)
 
-    def forceLoad(self):
-        from touchify.src.config.triggers.Trigger import Trigger
-        self.actions = TypedList(self.actions, Trigger)
+
 
     def __str__(self):
         return self.row_name.replace("\n", "\\n")
     
+    def propertygrid_listload(self):
+        from touchify.src.config.triggers.Trigger import Trigger
+        self.actions = TypedList(self.actions, Trigger)
+
     def propertygrid_hints(self):
         hints = {}
         return hints

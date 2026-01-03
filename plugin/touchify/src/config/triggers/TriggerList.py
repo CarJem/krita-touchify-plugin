@@ -57,7 +57,7 @@ class TriggerList:
         JsonExtensions.dictToObject(self, args, [])
         self.action_section_contents = JsonExtensions.init_list(args, "action_section_contents", TriggerGroup)
 
-    def forceLoad(self):
+    def propertygrid_listload(self):
         self.action_section_contents = TypedList(self.action_section_contents, TriggerGroup)
 
     def hasDisplayName(self):
@@ -87,8 +87,8 @@ class TriggerList:
             self.min_size_y = actionInfo.min_size_y
             self.max_size_x = actionInfo.max_size_x
             self.max_size_y = actionInfo.max_size_y
-            self.size_x = actionInfo.docker_size_hint_x
-            self.size_y = actionInfo.docker_size_hint_y
+            self.size_x = actionInfo.action_section_fixed_size_x
+            self.size_y = actionInfo.action_section_fixed_size_y
     
     def propertygrid_hints(self):
         hints = {}
@@ -139,12 +139,7 @@ class TriggerList:
         labels["max_size"] = "Max Width / Height"
         labels["min_size"] = "Min Width / Height"
         labels["panel_location"] = "Panel Position"
-        labels["section_type"] = "Section Type"
 
-        labels["docker_id"] = "Docker ID"
-        labels["docker_nesting_mode"] = "Nesting Mode"
-        labels["docker_unloaded_visibility"] = "Unloaded Visibility"
-        labels["docker_loading_priority"] = "Loading Priority"
 
         labels["action_section_display_mode"] = "Display Mode"
         labels["action_section_id"] = "Section ID"
@@ -166,11 +161,6 @@ class TriggerList:
         ]
 
         variant_group = [
-            "section_type",
-            "docker_id", 
-            "docker_nesting_mode", 
-            "docker_unloaded_visibility", 
-            "docker_loading_priority",
             "action_section_id", 
             "action_section_display_mode",
             "action_section_btn_size",
@@ -200,17 +190,11 @@ class TriggerList:
         restrictions["min_size_y"] = DataConstraints.range(min=0)
         restrictions["max_size_x"] = DataConstraints.range(min=0)
         restrictions["max_size_y"] = DataConstraints.range(min=0)
-        restrictions["section_type"] = DataConstraints.strValues(self.SectionType.values())
 
-        restrictions["docker_id"] = DataConstraints.strMod(DataConstraints.StrMod.DockerSelection)
-        restrictions["docker_nesting_mode"] = DataConstraints.strValues(self.DockerNestingMode.values())
-        restrictions["docker_unloaded_visibility"] = DataConstraints.strValues(self.DockerUnloadedVisibility.values())
-        restrictions["docker_loading_priority"] = DataConstraints.strValues(self.DockerLoadingPriority.values())
-
-        restrictions["action_section_display_mode"] = DataConstraints.strValues(self.ActionSectionDisplayMode.values())
+        restrictions["action_section_display_mode"] = DataConstraints.strEnumValues(self.ActionSectionDisplayMode)
         restrictions["action_section_btn_width"] = DataConstraints.range(min=0)
         restrictions["action_section_btn_height"] = DataConstraints.range(min=0)
-        restrictions["action_section_alignment_x"] = DataConstraints.strValues(self.SectionAlignmentX.values())
-        restrictions["action_section_alignment_y"] = DataConstraints.strValues(self.SectionAlignmentY.values())
+        restrictions["action_section_alignment_x"] = DataConstraints.strEnumValues(self.SectionAlignmentX)
+        restrictions["action_section_alignment_y"] = DataConstraints.strEnumValues(self.SectionAlignmentY)
         restrictions["action_section_icon_size"] = DataConstraints.range(min=0)
         return restrictions

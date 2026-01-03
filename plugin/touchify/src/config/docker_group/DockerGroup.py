@@ -25,7 +25,7 @@ class DockerGroup:
     def getFileName(self):
         return FileExtensions.fileStringify(self.id)
 
-    def forceLoad(self):
+    def propertygrid_listload(self):
         self.docker_names = TypedList(self.docker_names, DockerItem)
 
     def propertygrid_sorted(self):

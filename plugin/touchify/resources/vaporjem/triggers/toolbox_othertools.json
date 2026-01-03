@@ -2,24 +2,34 @@
     "registry_id": "Common_MiscTools",
     "variant": "menu",
     "display_icon_hide": false,
-    "display_text_hide": true,
+    "display_icon_padding": 0,
     "display_custom_icon_enabled": false,
     "display_custom_icon": "",
+    "display_text_hide": true,
     "display_custom_text_enabled": true,
     "display_custom_text": "Misc Tools",
-    "display_icon_padding": 0,
     "extra_closes_popup": false,
     "extra_composer_mode": false,
     "action_id": "",
-    "context_menu_id": "vaporjem/menu/Context_Misc",
     "brush_name": "",
     "docker_id": "",
     "workspace_id": "",
-    "docker_group_data": "none",
-    "popup_data": "vaporjem/popup/toolbox_selection",
-    "canvas_preset_data": "none",
-    "script_id": "",
-    "piewheel_id": "",
     "color_id": "#000000",
-    "json_version": 2
+    "menu_data": {
+        "registry_id": "NewTriggerMenu",
+        "registry_name": "New Trigger Menu",
+        "context_menu_actions": [],
+        "json_version": 1
+    },
+    "script_data": {
+        "script_name": "New Script",
+        "script_code": ""
+    },
+    "refrenced_menu": "vaporjem/menu/Context_Misc",
+    "refrenced_dockergroup": "none",
+    "refrenced_popup": "vaporjem/popup/toolbox_selection",
+    "refrenced_canvaspreset": "none",
+    "refrenced_script": "",
+    "refrenced_piewheel": "",
+    "json_version": 3
 }

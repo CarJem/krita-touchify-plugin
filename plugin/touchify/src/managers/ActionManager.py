@@ -124,9 +124,11 @@ class ActionManager(QObject):
         match data.variant:
             case Trigger.Variants.Brush:
                 result = self.Button_Brush(data, classType=classType)
+            case Trigger.Variants.Shared_Menu:
+                result = self.Button_Menu(data, classType=classType)
             case Trigger.Variants.Menu:
                 result = self.Button_Menu(data, classType=classType)
-            case Trigger.Variants.Popup:
+            case Trigger.Variants.Shared_Popup:
                 result = self.Button_Popup(data, classType=classType)
             case Trigger.Variants.Action:
                 result = self.Button_Trigger(data, classType=classType)
@@ -259,26 +261,30 @@ class ActionManager(QObject):
 
     def Actions_Run(self, data: Trigger, action: QAction):
         match data.variant:
-            case Trigger.Variants.CanvasPreset:
-                self.Execute_CanvasCfg(data.canvas_preset_data)
+            case Trigger.Variants.Shared_Canvas_Preset:
+                self.Execute_CanvasCfg(data.refrenced_canvaspreset)
             case Trigger.Variants.Docker:
                 self.Execute_Docker(data.docker_id)
             case Trigger.Variants.Workspace:
                 self.Execute_Workspace(data.workspace_id)
-            case Trigger.Variants.Popup:
-                self.Execute_Popup(action, data.popup_data)
+            case Trigger.Variants.Shared_Popup:
+                self.Execute_Popup(action, data.refrenced_popup)
             case Trigger.Variants.Brush:
                 self.Execute_Brush(data.brush_name)
-            case Trigger.Variants.DockerGroup:
-                self.Execute_DockerGroup(data.docker_group_data)
+            case Trigger.Variants.Shared_Docker_Group:
+                self.Execute_DockerGroup(data.refrenced_dockergroup)
+            case Trigger.Variants.Shared_Menu:
+                self.Execute_Menu(action, id=data.refrenced_menu)
             case Trigger.Variants.Menu:
-                self.Execute_Menu(action, data.context_menu_id)
+                self.Execute_Menu(action, data=data.menu_data)
             case Trigger.Variants.Action:
                 self.Execute_Trigger(data)
+            case Trigger.Variants.Shared_Script:
+                self.Execute_Script(id=data.refrenced_script)
             case Trigger.Variants.Script:
-                self.Execute_Script(data.script_id)
-            case Trigger.Variants.PieWheel:
-                self.Execute_PieWheel(data.piewheel_id)
+                self.Execute_Script(data=data.refrenced_script)
+            case Trigger.Variants.Shared_Pie_Wheel:
+                self.Execute_PieWheel(data.refrenced_piewheel)
             case Trigger.Variants.Color:
                 self.Execute_Color(data.color_id)
 
@@ -446,8 +452,13 @@ class ActionManager(QObject):
         return btn
                    
     def Button_Menu(self, act: Trigger, classType: type = TriggerButton):
-        data: TriggerMenu = TouchifySettings.registryItem(act.context_menu_id, TriggerMenu)
-        if not isinstance(data, TriggerMenu) or data == None: return None
+        if act.variant == Trigger.Variants.Shared_Menu:
+            data: TriggerMenu = TouchifySettings.registryItem(act.refrenced_menu, TriggerMenu)
+            if not isinstance(data, TriggerMenu) or data == None: return None
+        elif act.variant == Trigger.Variants.Menu:
+            data = act.menu_data
+        else:
+            return None
         
         btn: TriggerButton = self.Button_Core(None, act.display_custom_text, classType=classType)   
         self.Helper_SetButtonDisplay(act, btn)
@@ -460,7 +471,7 @@ class ActionManager(QObject):
     def Button_Popup(self, data: Trigger, classType: type = TriggerButton):
         btn: TriggerButton | None = None
         btn = self.Button_Core(None, data.display_custom_text, False, TriggerButton.TriggerMode.OnRelease, classType=classType)
-        btn.triggerActivated.connect((lambda: self.Create_Popup(data.popup_data, btn)))
+        btn.triggerActivated.connect((lambda: self.Create_Popup(data.refrenced_popup, btn)))
         self.Helper_SetButtonDisplay(data, btn)
         return btn
     
@@ -480,12 +491,12 @@ class ActionManager(QObject):
                 onClick = (lambda: self.Execute_Docker(data.docker_id))
             case Trigger.Variants.Workspace:
                 onClick = (lambda: self.Execute_Workspace(data.workspace_id))
-            case Trigger.Variants.DockerGroup:
-                onClick = (lambda: self.Execute_DockerGroup(data.docker_group_data))
-            case Trigger.Variants.CanvasPreset:
-                onClick = (lambda: self.Execute_CanvasCfg(data.canvas_preset_data))
-            case Trigger.Variants.Script:
-                onClick = (lambda: self.Execute_Script(data.script_id))
+            case Trigger.Variants.Shared_Docker_Group:
+                onClick = (lambda: self.Execute_DockerGroup(data.refrenced_dockergroup))
+            case Trigger.Variants.Shared_Canvas_Preset:
+                onClick = (lambda: self.Execute_CanvasCfg(data.refrenced_canvaspreset))
+            case Trigger.Variants.Shared_Script:
+                onClick = (lambda: self.Execute_Script(data.refrenced_script))
 
         btn = self.Button_Core(onClick, data.display_custom_text, classType=classType)
         self.Helper_SetButtonDisplay(data, btn)
@@ -538,12 +549,17 @@ class ActionManager(QObject):
                 if data.extra_composer_mode: self.OnEvent_ComposerStart()
                 action.trigger()
     
-    def Execute_Menu(self, action: QAction, id: str):
-        data: TriggerMenu = TouchifySettings.registryItem(id, TriggerMenu)
-        if not isinstance(data, TriggerMenu) or data == None: return
+    def Execute_Menu(self, action: QAction, id: str=None, data: TriggerMenu=None):
+        if id:
+            menu_data: TriggerMenu = TouchifySettings.registryItem(id, TriggerMenu)
+            if not isinstance(menu_data, TriggerMenu) or menu_data == None: return
+        elif data:
+            menu_data = data
+        else:
+            return
 
         _parent = self.Helper_GetActionSource(action)
-        contextMenu = TriggerMenuWidget(data, _parent, self)
+        contextMenu = TriggerMenuWidget(menu_data, _parent, self)
         contextMenu.show()
             
     def Execute_Brush(self, id):
@@ -636,12 +652,18 @@ class ActionManager(QObject):
             if (docker.objectName() == "KisLayerBox"):
                 slotConfigChanged(docker)
     
-    def Execute_Script(self, script_registry_id: str):
-        data: CustomScript = TouchifySettings.registryItem(script_registry_id, CustomScript)
-        if not isinstance(data, CustomScript) or data == None: return
+    def Execute_Script(self, id: str=None, data: CustomScript=None):
+
+        if id:
+            script_data: CustomScript = TouchifySettings.registryItem(id, CustomScript)
+            if not isinstance(script_data, CustomScript) or script_data == None: return
+        elif data:
+            script_data = data
+        else:
+            return
 
         try:
-            code = compile(data.script_code, '<string>', 'exec')
+            code = compile(script_data.script_code, '<string>', 'exec')
             exec(code, {'__name__': '__main__'})
         except Exception as ex:
             pass

@@ -1,4 +1,4 @@
-ENABLE_DEBUG=False
+ENABLE_DEBUG=True
 
 def debug(namespace: str, name: str = None, value: str = None):
     if ENABLE_DEBUG: 

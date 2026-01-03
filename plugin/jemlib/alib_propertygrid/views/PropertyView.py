@@ -29,7 +29,7 @@ class PropertyView(QObject):
         
         hidden_variables = []
         variables_requested_to_hide = self.__praser.getObjectHiddenVariables(self.__item)
-        variable_names, known_sisters, sister_data = self.getClassVariablesWithSisters(self.__item)
+        variable_names, known_sisters, sister_data = self.getClassVariablesWithSisters(self.__item, False)
 
         hidden_variables.append("json_version")
 
@@ -43,7 +43,7 @@ class PropertyView(QObject):
         
         return hidden_variables
         
-    def getClassVariablesWithSisters(self, item):
+    def getClassVariablesWithSisters(self, item, exclude_nested: bool = True):
         known_sisters = []
         sister_props = []
 
@@ -61,7 +61,7 @@ class PropertyView(QObject):
             known_sisters.append(str(sister_id))
 
             for sister_variable in sister_items:
-                if sister_variable in variable_data:
+                if sister_variable in variable_data and exclude_nested:
                     if sister_id not in variable_data:
                         index = variable_data.index(str(sister_variable))
                         variable_data.insert(index, str(sister_id))

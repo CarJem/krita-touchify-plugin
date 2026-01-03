@@ -7,78 +7,76 @@ from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import Property
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
+
+
 class Trigger:
      
     class Variants(EnumStr):
         Action = "action"
-        Menu = "menu"
+        Color = "color"
         Brush = "brush"
-        Popup = "popup"
         Docker = "docker"
         Workspace = "workspace"
-        DockerGroup = "docker_group"
-        CanvasPreset = "canvas_preset"
-        PieWheel = "pie_wheel"
-        Script = "script"
-        Color = "color"
+        Menu = "#menu"
+        Script ="#script"
+        
+        Shared_Menu = "menu"
+        Shared_Popup = "popup"
+        Shared_Docker_Group = "docker_group"
+        Shared_Canvas_Preset = "canvas_preset"
+        Shared_Pie_Wheel = "pie_wheel"
+        Shared_Script = "script"
 
     def __defaults__(self):
+        from touchify.src.config.menu.TriggerMenu import TriggerMenu
+        from touchify.src.config.script.CustomScript import CustomScript
+
         self.registry_id: str = "NewTrigger"      
         self.variant: str = "action"
 
-        #Display Params
+        #Icon Params
         self.display_icon_hide: bool = False
-        self.display_text_hide: bool = False
+        self.display_icon_padding: int = 0
         self.display_custom_icon_enabled: bool = False
         self.display_custom_icon: str = ""
+
+        #Text Params
+        self.display_text_hide: bool = False
         self.display_custom_text_enabled: bool = False
         self.display_custom_text: str = ""
-        self.display_icon_padding: int = 0
 
         #Extras Params
         self.extra_closes_popup: bool = False
         self.extra_composer_mode: bool = False
 
-        #Action Params
+        #Variant Values
         self.action_id: str = ""
-
-        #Menu Params
-        self.context_menu_id: str = ""
-
-        #Brush Params
         self.brush_name: str = ""
-        
-        #Docker Params
         self.docker_id: str = ""
-        
-        #Workspace Params
-        self.workspace_id: str = ""
-        
-        #Docker Group Params
-        self.docker_group_data: str = "none"
-        
-        #Popup Params
-        self.popup_data: str = "none"
-
-        #Canvas Preset Params
-        self.canvas_preset_data: str = "none"
-
-        #Script Params
-        self.script_id: str = ""
-
-        #Pie Wheel Params
-        self.piewheel_id: str = ""
-
-        #Color Params
+        self.workspace_id: str = ""      
         self.color_id: str = "#000000"
+        self.menu_data: TriggerMenu = TriggerMenu()
+        self.script_data: CustomScript = CustomScript()
+        
+        #Variant Refrences
+        self.refrenced_menu: str = ""  
+        self.refrenced_dockergroup: str = "none"
+        self.refrenced_popup: str = "none"
+        self.refrenced_canvaspreset: str = "none"
+        self.refrenced_script: str = ""
+        self.refrenced_piewheel: str = ""
 
-        self.json_version: int = 2
+        self.json_version: int = 3
     
 
     def __init__(self, **args) -> None:
+        from touchify.src.config.menu.TriggerMenu import TriggerMenu
+        from touchify.src.config.script.CustomScript import CustomScript
+
+        self.__is_registry = False
         self.__defaults__()
         args = BackwardsCompatibility.Trigger(args)
-        JsonExtensions.dictToObject(self, args, [])
+        JsonExtensions.dictToObject(self, args, [TriggerMenu, CustomScript])
 
     def getFileName(self):
         return FileExtensions.fileStringify(self.registry_id)
@@ -106,7 +104,7 @@ class Trigger:
         from jemlib.managers.IconRepository import IconRepository
         from PyQt5.QtGui import QIcon
 
-        use_custom_icon: bool = self.display_custom_icon_enabled and self.display_custom_icon_enabled != ""
+        use_custom_icon: bool = self.display_custom_icon_enabled and self.display_custom_icon != ""
 
         is_brush: bool = self.variant == Trigger.Variants.Brush
         is_action: bool = self.variant == Trigger.Variants.Action
@@ -131,26 +129,30 @@ class Trigger:
             match self.variant:
                 case Trigger.Variants.Action:
                     text = KritaExtensions.getActionText(self.action_id)
-                case Trigger.Variants.Menu:
-                    text = self.context_menu_id
                 case Trigger.Variants.Brush:
                     text = self.brush_name
-                case Trigger.Variants.Popup:
-                    text = self.popup_data
                 case Trigger.Variants.Workspace:
                     text = self.workspace_id
                 case Trigger.Variants.Docker:
                     text = self.docker_id
-                case Trigger.Variants.DockerGroup:
-                    text = self.docker_group_data
-                case Trigger.Variants.CanvasPreset:
-                    text = self.canvas_preset_data
-                case Trigger.Variants.Script:
-                    text = self.script_id
-                case Trigger.Variants.PieWheel:
-                    text = self.piewheel_id
                 case Trigger.Variants.Color:
                     text = self.color_id
+                case Trigger.Variants.Menu:
+                    text = self.menu_data.getDisplayName()
+                case Trigger.Variants.Script:
+                    text = self.script_data.script_name
+                case Trigger.Variants.Shared_Menu:
+                    text = self.refrenced_menu
+                case Trigger.Variants.Shared_Popup:
+                    text = self.refrenced_popup
+                case Trigger.Variants.Shared_Docker_Group:
+                    text = self.refrenced_dockergroup
+                case Trigger.Variants.Shared_Canvas_Preset:
+                    text = self.refrenced_canvaspreset
+                case Trigger.Variants.Shared_Script:
+                    text = self.refrenced_script
+                case Trigger.Variants.Shared_Pie_Wheel:
+                    text = self.refrenced_piewheel
                 case _:
                     text = self.registry_id
 
@@ -163,21 +165,25 @@ class Trigger:
                 prefix = "[Action]"
             case Trigger.Variants.Menu:
                 prefix = "[Menu]"
+            case Trigger.Variants.Shared_Menu:
+                prefix = "[Menu]"
             case Trigger.Variants.Brush:
                 prefix = "[Brush]"
-            case Trigger.Variants.Popup:
+            case Trigger.Variants.Shared_Popup:
                 prefix = "[Popup]"
             case Trigger.Variants.Workspace:
                 prefix = "[Workspace]"
             case Trigger.Variants.Docker:
                 prefix = "[Docker]"
-            case Trigger.Variants.DockerGroup:
+            case Trigger.Variants.Shared_Docker_Group:
                 prefix = "[Docker Group]"
-            case Trigger.Variants.CanvasPreset:
+            case Trigger.Variants.Shared_Canvas_Preset:
                 prefix = "[Canvas Preset]"
             case Trigger.Variants.Script:
                 prefix = "[Script]"
-            case Trigger.Variants.PieWheel:
+            case Trigger.Variants.Shared_Script:
+                prefix = "[Script]"
+            case Trigger.Variants.Shared_Pie_Wheel:
                 prefix = "[Pie Wheel]"
             case Trigger.Variants.Color:
                 prefix = "[Color]"
@@ -186,91 +192,103 @@ class Trigger:
         
         return f"{prefix} {self.getDisplayName()}"
 
-    def forceLoad(self):
-        pass
-
     def propertygrid_icon(self):
         return self.getDisplayIcon()
 
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
-        row["display_custom_text_opt"] = {"items": ["display_custom_text_enabled","display_custom_text"]}
-        row["display_custom_icon_opt"] = {"items": ["display_custom_icon_enabled","display_custom_icon"]}
-        row["display_opt"] = {"items": ["display_text_hide","display_icon_hide"], "use_labels": True}
-        row["extra_opt"] = {"items": ["extra_closes_popup","extra_composer_mode"], "use_labels": True}
+        row["text_options"] = { "items": ["display_text_hide", "display_custom_text_enabled", "display_custom_text"], "use_labels": True, "flip_labels": True}
+        row["icon_options"] = { "items": ["display_icon_hide", "display_icon_padding", "display_custom_icon_enabled", "display_custom_icon"], "use_labels": True, "flip_labels": True}
+        row["extra_options"] = {"items": ["extra_closes_popup","extra_composer_mode"], "use_labels": True}
         return row
 
     def propertygrid_sorted(self):
         return [
+            "registry_id",
+
             "#NEW_SECTION",
 
             "variant",
-
-            "#NEW_COLUMN",
-
             "action_id",
-            "context_menu_id",
             "brush_name",
             "docker_id",
             "workspace_id",
-            "docker_group_data",
-            "popup_data",
-            "canvas_preset_data",
-            "script_id",
-            "piewheel_id",
+            "menu_data",
+            "script_data",
+            "refrenced_menu",
+            "refrenced_dockergroup",
+            "refrenced_popup",
+            "refrenced_canvaspreset",
+            "refrenced_script",
+            "refrenced_piewheel",
             "color_id",
 
-            "#NEW_SECTION",
-            
-            "display_custom_text_opt",
-            "display_opt",
+            "text_options",
 
             "#NEW_COLUMN",
 
-            "display_custom_icon_opt",
-            "extra_opt",
+            "extra_options",
+            "icon_options",
 
-            "#NEW_SECTION",
+            "#NEW_SECTION"
 
-            "display_icon_padding",
-            "registry_id"
+
         ]
 
     def propertygrid_hidden(self):
         result = []
+
+        try:
+            if self.__is_registry == False:
+                result.append("registry_id")
+        except:
+            pass
+
+
+
         if self.variant != Trigger.Variants.Action:
             result.append("action_id")
-        if self.variant != Trigger.Variants.Menu:
-            result.append("context_menu_id")            
+        if self.variant != Trigger.Variants.Shared_Menu:
+            result.append("refrenced_menu")            
         if self.variant != Trigger.Variants.Brush:
             result.append("brush_name")
         if self.variant != Trigger.Variants.Workspace:
             result.append("workspace_id")
         if self.variant != Trigger.Variants.Docker:
             result.append("docker_id")
-        if self.variant != Trigger.Variants.Popup:
-            result.append("popup_data")
-        if self.variant != Trigger.Variants.DockerGroup:
-            result.append("docker_group_data")
-        if self.variant != Trigger.Variants.CanvasPreset:
-            result.append("canvas_preset_data")
-        if self.variant != Trigger.Variants.Script:
-            result.append("script_id")
-        if self.variant != Trigger.Variants.PieWheel:
-            result.append("piewheel_id")
+        if self.variant != Trigger.Variants.Shared_Popup:
+            result.append("refrenced_popup")
+        if self.variant != Trigger.Variants.Shared_Docker_Group:
+            result.append("refrenced_dockergroup")
+        if self.variant != Trigger.Variants.Shared_Canvas_Preset:
+            result.append("refrenced_canvaspreset")
+        if self.variant != Trigger.Variants.Shared_Script:
+            result.append("refrenced_script")
+        if self.variant != Trigger.Variants.Shared_Pie_Wheel:
+            result.append("refrenced_piewheel")
         if self.variant != Trigger.Variants.Color:
             result.append("color_id")
+        if self.variant != Trigger.Variants.Menu:
+            result.append("menu_data")
+        if self.variant != Trigger.Variants.Script:
+            result.append("script_data")
 
         if self.variant == Trigger.Variants.Color:
             result.append("display_opt")
             result.append("display_icon_padding")
             result.append("display_text_hide")
             result.append("display_icon_hide")
-            result.append("display_custom_icon_opt")
-            result.append("display_custom_text_opt")
-            result.append("extra_opt")
+            result.append("icon_options")
+            result.append("text_options")
+            result.append("extra_options")
             result.append("extra_closes_popup")
             result.append("extra_composer_mode")
+
+        if self.display_custom_icon_enabled == False:
+            result.append("display_custom_icon")
+        
+        if self.display_custom_text_enabled == False:
+            result.append("display_custom_text")
 
         return result
     
@@ -285,51 +303,67 @@ class Trigger:
         labels["registry_id"] = "Registry ID"
         labels["variant"] = "Action Type"
 
-        labels["display_opt"] = "Display Options"
-        labels["display_custom_text_opt"] = "Custom Text"
-        labels["display_custom_icon_opt"] = "Custom Icon"
+        labels["text_options"] = "Text Settings"
         labels["display_text_hide"] = "Hide Text"
+        labels["display_custom_text_enabled"] = "Override Text"
+        labels["display_custom_text"] = ""
+        
+        labels["icon_options"] = "Icon Settings"
         labels["display_icon_hide"] ="Hide Icon"
         labels["display_icon_padding"] = "Icon Padding"
+        labels["display_custom_icon_enabled"] = "Override Icon"
+        labels["display_custom_icon"] = ""
+        
 
-        labels["extra_opt"] = "Extra Options"
+        labels["extra_options"] = "Extra Options"
         labels["extra_closes_popup"] = "Close popup on click"
         labels["extra_composer_mode"] = "Shortcut Composer Compat"
 
         labels["action_id"] = "Action ID"
 
-        labels["context_menu_id"] = "Menu ID"
+        labels["refrenced_menu"] = "Menu ID"
 
         labels["brush_name"] = "Brush"
         
         labels["workspace_id"] = "Workspace ID"
         labels["docker_id"] = "Docker ID"
-        labels["script_id"] = "Script ID"
+        labels["refrenced_script"] = "Script ID"
         labels["color_id"] = "Selected Color"
         
-        labels["docker_group_data"] = "Group Settings"
-        labels["popup_data"] = "Popup Settings"
+        labels["refrenced_dockergroup"] = "Group Settings"
+        labels["refrenced_popup"] = "Popup Settings"
 
 
-        labels["canvas_preset_data"] = "Canvas Settings"
+        labels["refrenced_canvaspreset"] = "Canvas Settings"
 
         return labels
+    
+    def propertygrid_listload(self):
+        pass
+
+    def propertygrid_listmod(self, mods: list[any]):
+        for mod in mods:
+            if mod == PropertyGrid_TouchifyRestrictions.StrListModParams.IsRegistry:
+                self.__is_registry = True
 
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["display_custom_icon"] = DataConstraints.strMod(DataConstraints.StrMod.IconSelection)
+        restrictions["display_custom_text"] = DataConstraints.strPlaceholder("(unset text)")
         restrictions["display_icon_padding"] = DataConstraints.range(min=0)
-        restrictions["variant"] = DataConstraints.strValues(self.Variants.values())
+        restrictions["variant"] = DataConstraints.strEnumValues(self.Variants)
         restrictions["brush_name"] = DataConstraints.strMod(DataConstraints.StrMod.BrushSelection)
         restrictions["action_id"] = DataConstraints.strMod(DataConstraints.StrMod.ActionSelection)
         restrictions["workspace_id"] = DataConstraints.strMod(DataConstraints.StrMod.WorkspaceSelection)
         restrictions["docker_id"] = DataConstraints.strMod(DataConstraints.StrMod.DockerSelection)
-        restrictions["docker_group_data"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.DockerGroupRegistry)
-        restrictions["popup_data"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.PopupRegistry)
-        restrictions["canvas_preset_data"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.CanvasPresetRegistry)
-        restrictions["context_menu_id"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.MenuRegistry)
-        restrictions["script_id"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.ScriptRegistry)
-        restrictions["piewheel_id"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.PieWheelRegistry)
+        restrictions["menu_data"] = DataConstraints.expandable("...")
+        restrictions["script_data"] = DataConstraints.expandable("...")
+        restrictions["refrenced_dockergroup"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.DockerGroupRegistry)
+        restrictions["refrenced_popup"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.PopupRegistry)
+        restrictions["refrenced_canvaspreset"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.CanvasPresetRegistry)
+        restrictions["refrenced_menu"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.MenuRegistry)
+        restrictions["refrenced_script"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.ScriptRegistry)
+        restrictions["refrenced_piewheel"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.PieWheelRegistry)
         restrictions["color_id"] = DataConstraints.strMod(DataConstraints.StrMod.ColorPicker)
         
         return restrictions

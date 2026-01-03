@@ -29,8 +29,8 @@ class TriggerMenuItem(Trigger):
     def __str__(self):
         return super().__str__()
 
-    def forceLoad(self):
-        super().forceLoad()
+    def propertygrid_listload(self):
+        super().propertygrid_listload()
         self.context_menu_actions = TypedList(self.context_menu_actions, TriggerMenuItem)
 
     def propertygrid_sisters(self):
@@ -39,15 +39,14 @@ class TriggerMenuItem(Trigger):
 
     def propertygrid_sorted(self):
         result = super().propertygrid_sorted()
-        if "context_menu_id" in result:
-            result.insert(result.index("context_menu_id"), "context_menu_actions")
+        result.append("context_menu_actions")
         return result
 
     def propertygrid_hidden(self):
         result = super().propertygrid_hidden()
         result.append("context_menu_id")   
         result.append("registry_id")
-        if self.variant != Trigger.Variants.Menu:
+        if self.variant != TriggerMenuItem.Variants.Menu:
             result.append("context_menu_actions")
             
         return result
@@ -63,5 +62,5 @@ class TriggerMenuItem(Trigger):
 
     def propertygrid_restrictions(self):
         restrictions = super().propertygrid_restrictions()
-        restrictions["variant"] = DataConstraints.strValues(self.Variants.values())
+        restrictions["variant"] = DataConstraints.strEnumValues(self.Variants)
         return restrictions

@@ -29,7 +29,7 @@ class ToolshelfArea:
         for entry in self.items:
             self.items[entry] = ToolshelfDock(**self.items[entry])
 
-    def forceLoad(self):
+    def propertygrid_listload(self):
         self.pages = TypedList(self.pages, ToolshelfPage)
 
     def propertygrid_labels(self):

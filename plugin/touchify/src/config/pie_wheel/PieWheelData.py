@@ -40,7 +40,7 @@ class PieWheelData:
     def getFileName(self):
         return FileExtensions.fileStringify(self.id)
 
-    def forceLoad(self):
+    def propertygrid_listload(self):
         from touchify.src.config.triggers.TriggerGroup import TriggerGroup
         self.actions_items = TypedList(self.actions_items, TriggerGroup)
 

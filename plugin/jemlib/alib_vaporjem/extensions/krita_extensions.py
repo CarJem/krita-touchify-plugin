@@ -53,6 +53,8 @@ class KritaExtensions:
     @staticmethod
     def getActionText(action_id: str):
         action = KritaAPI.get_action(action_id)
+        if not action: return action_id
+        
         action_text = KritaExtensions.formatActionText(action.text())
         action_tooltip = KritaExtensions.formatActionText(action.toolTip())
 

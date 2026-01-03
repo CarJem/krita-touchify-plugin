@@ -5,6 +5,8 @@
 
 
 
+
+
 class Helpers:
     def setVersion(args: dict[str, any], ver: int):
         args["json_version"] = ver
@@ -68,6 +70,14 @@ class BackwardsCompatibility:
             args["display_text_hide"] = not show_text
             args["display_icon_hide"] = False
             Helpers.setVersion(args, 2)
+        if Helpers.getVersion(args) == 2:
+            Helpers.changeVarName(args, "context_menu_id", "refrenced_menu")
+            Helpers.changeVarName(args, "docker_group_data", "refrenced_dockergroup")
+            Helpers.changeVarName(args, "popup_data", "refrenced_popup")
+            Helpers.changeVarName(args, "canvas_preset_data", "refrenced_canvaspreset")
+            Helpers.changeVarName(args, "script_id", "refrenced_script")
+            Helpers.changeVarName(args, "piewheel_id", "refrenced_piewheel")
+            Helpers.setVersion(args, 3)
         return args
 
     def DockerGroup(args: dict[str, any]):
