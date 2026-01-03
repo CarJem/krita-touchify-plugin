@@ -6,6 +6,7 @@ from PyQt5.QtCore import *
 
 
 
+from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from jemlib.alib_propertygrid.data.DataPath import DataPath
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_Subwindow import PropertyGrid_Subwindow
 from jemlib.alib_propertygrid.fields.PropertyField import PropertyField
@@ -348,7 +349,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
 
             if item_data != None and item_type != None:
                 self.onItemDuplication(item_data)
-                IconRepository.setSettingsClipboard(item_type, item_data)
+                PropertySystem.setSettingsClipboard(item_type, item_data)
 
     def list_paste(self):
         item_type: type | None = None
@@ -360,7 +361,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 item_type = self.variable_list_type
 
             if item_type != None:
-                clipboard_data = IconRepository.getSettingsClipboard(item_type)
+                clipboard_data = PropertySystem.getSettingsClipboard(item_type)
                 if clipboard_data != None:
                     pastable_data = copy.deepcopy(clipboard_data)
                     variable: TypedList = self.propertyData.currentData()

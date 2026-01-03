@@ -4,6 +4,7 @@ from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from jemlib.alib_propertygrid.data.DataPath import DataPath
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_Subwindow import PropertyGrid_Subwindow
 
@@ -89,7 +90,7 @@ class PropertyField(QWidget, Generic[T]):
     def nested_paste(self):
         item_type: type | None = self.propertyData.variableType()
         
-        clipboard_data = IconRepository.getSettingsClipboard(item_type)
+        clipboard_data = PropertySystem.getSettingsClipboard(item_type)
         if clipboard_data != None:
             pastable_data = copy.deepcopy(clipboard_data)
             self.setVariable(pastable_data)
@@ -99,7 +100,7 @@ class PropertyField(QWidget, Generic[T]):
         item_data: any | None = copy.deepcopy(self.propertyData.variableData())
 
         if item_data != None and item_type != None:
-            IconRepository.setSettingsClipboard(item_type, item_data)
+            PropertySystem.setSettingsClipboard(item_type, item_data)
 
     def nested_edit(self):
         self.nested_page_dialog = PropertyGrid_Subwindow(self)

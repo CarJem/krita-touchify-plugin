@@ -87,9 +87,6 @@ class IconRepository:
     material_icons: dict[str, QIcon] = {}
     resource_pack_icons: dict[str, dict[str, QIcon]] = {}
 
-    settings_clipboard_type: type = None
-    settings_clipboard_data: any = None
-
     def __is_vaild_custom_icon__(fileName: str):
         return fileName.lower().endswith(".svg")
     
@@ -266,15 +263,6 @@ class IconRepository:
             return IconRepository.resourcePackIcon(resource_pack_name)
         else:
             return IconRepository.kritaIcon(iconName)
-
-    def getSettingsClipboard(requested_type: type):
-        if IconRepository.settings_clipboard_type == requested_type:
-            return IconRepository.settings_clipboard_data
-        else: return None
-
-    def setSettingsClipboard(item_type: type, item_data: any):
-        IconRepository.settings_clipboard_type = item_type
-        IconRepository.settings_clipboard_data = item_data
 
     
 
