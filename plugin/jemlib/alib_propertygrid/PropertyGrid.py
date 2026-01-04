@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class PropertyGrid(QWidget):
 
-    def __init__(self, parent: QWidget | None = None, praser: "DataHandler" = None, **kwargs) -> None:
+    def __init__(self, parent: QWidget | None = None, praser: "DataHandler" = None, scrolling=True, **kwargs) -> None:
         super(QWidget, self).__init__(parent)
         
         from jemlib.alib_propertygrid.data.DataHandler import DataHandler
@@ -42,7 +42,7 @@ class PropertyGrid(QWidget):
         layout.addWidget(self.page_stack, 1, 0, 1, 2)
 
         from .PropertyViewport import PropertyViewport
-        self.__property_grid = PropertyViewport(self, self.__praser)
+        self.__property_grid = PropertyViewport(self, self.__praser, scrolling)
         self.__property_grid.setWindowTitle("ROOT")
         self.page_stack.insertWidget(0, self.__property_grid)
 

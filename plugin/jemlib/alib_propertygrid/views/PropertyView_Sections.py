@@ -66,7 +66,7 @@ class PropertyView_Sections(QWidget, PropertyView):
     
     def createSisterSection(self, source: any, sister_items: list[str], sister_view_type: str):
         from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
-        page = PropertyViewport(self.getViewport().getContainer(), self.getPraser())
+        page = PropertyViewport(self.getViewport().getContainer(), self.getPraser(), False)
         page.sigPropertiesChanged.connect(self.onPropertiesChanged)
         page.setParent(self)
         page.setLimiters(sister_items)
@@ -91,7 +91,7 @@ class PropertyView_Sections(QWidget, PropertyView):
 
         if is_expandable_area:
             from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
-            page = PropertyViewport(self.getViewport().getContainer(), self.getPraser())
+            page = PropertyViewport(self.getViewport().getContainer(), self.getPraser(), False)
             page.sigPropertiesChanged.connect(self.onPropertiesChanged)
             page.setParent(self)
             page.setDataObject(variable.variableData())
@@ -100,7 +100,7 @@ class PropertyView_Sections(QWidget, PropertyView):
         else:
             if has_nested_tabs:
                 from jemlib.alib_propertygrid.PropertyViewport import PropertyViewportNested
-                page = PropertyViewportNested(self, self.getViewport().getContainer(), self.getPraser())
+                page = PropertyViewportNested(self, self.getViewport().getContainer(), self.getPraser(), False)
                 page.sigPropertiesChanged.connect(self.onPropertiesChanged)
                 page.setLimiters([_varName])
                 page.setModifiers({"no_labels": ""})
@@ -110,7 +110,7 @@ class PropertyView_Sections(QWidget, PropertyView):
                 return page
             else:
                 from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
-                page = PropertyViewport(self.getViewport().getContainer(), self.getPraser())
+                page = PropertyViewport(self.getViewport().getContainer(), self.getPraser(), False)
                 page.sigPropertiesChanged.connect(self.onPropertiesChanged)
                 page.setParent(self)
                 page.setLimiters([_varName])
@@ -129,26 +129,6 @@ class PropertyView_Sections(QWidget, PropertyView):
         self.__titles[index].setVisible(visible)
 
     def addTab(self, page: "PropertyViewport | PropertyViewportNested", title: QLabel):
-        from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport, PropertyViewportNested
-        if isinstance(page, PropertyViewport):
-            page: PropertyViewport
-            page.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-            page.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-            page.setContentsMargins(0,0,0,0)
-            page.setFrameShape(QFrame.Shape.NoFrame)
-            page.widget().setContentsMargins(0,0,0,0)
-            page.setMinimumSize(page.widget().sizeHint().grownBy(QMargins(0,5,0,5)))
-            page.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        elif isinstance(page, PropertyViewportNested):
-            page: PropertyViewportNested
-            page.getPropertyGrid().setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-            page.getPropertyGrid().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-            page.getPropertyGrid().setContentsMargins(0,0,0,0)
-            page.getPropertyGrid().setFrameShape(QFrame.Shape.NoFrame)
-            page.getPropertyGrid().widget().setContentsMargins(0,0,0,0)
-            page.setMinimumSize(page.getPropertyGrid().widget().sizeHint().grownBy(QMargins(0,5,0,5)))
-            page.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-
         self.gridLayout.addWidget(title)
         self.gridLayout.addWidget(page)
 

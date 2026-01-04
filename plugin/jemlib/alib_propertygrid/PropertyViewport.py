@@ -14,13 +14,14 @@ from jemlib.alib_propertygrid.views.PropertyView_Tabs import PropertyView_Tabs
 from jemlib.alib_datatypes.TypedList import *
 from jemlib.managers.IconRepository import *
 
-class PropertyViewport(QScrollArea):
+class PropertyViewport(QWidget):
 
     sigPropertiesChanged = pyqtSignal()
 
-    def __init__(self, container: PropertyGrid, praser: DataHandler):
+    def __init__(self, container: PropertyGrid, praser: DataHandler, scrolling=True):
         super().__init__(parent=container)
 
+        self.__scrolling = scrolling
         self.__parent_container = container
         self.__praser = praser
         self.__last_view_type = ""
@@ -31,10 +32,23 @@ class PropertyViewport(QScrollArea):
 
         self.property_view: PropertyView = None
 
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn) 
-        self.setWidgetResizable(True)
+        self.__scrollArea = None
+
+
+        self.__gridLayout = QGridLayout(self)
+        self.__gridLayout.setSpacing(0)
+        self.__gridLayout.setContentsMargins(0,0,0,0)
+
+        self.setLayout(self.__gridLayout)
         self.setContentsMargins(0,0,0,0)
 
+        if self.__scrolling:
+            self.__scrollArea = QScrollArea(self)
+            self.__scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn) 
+            self.__scrollArea.setWidgetResizable(True)
+            self.__scrollArea.setContentsMargins(0,0,0,0)
+            self.__gridLayout.addWidget(self.__scrollArea)
+            
     #region Get / Set Functions
 
     def getPraser(self):
@@ -122,6 +136,23 @@ class PropertyViewport(QScrollArea):
 
         self.property_view.setDataObject(item)
 
+    def setFrameShape(self, shape: QFrame.Shape):
+        if self.__scrollArea:
+            self.__scrollArea.setFrameShape(shape)
+
+    def setVerticalScrollBarPolicy(self, policy: Qt.ScrollBarPolicy):
+        if self.__scrollArea: self.__scrollArea.setVerticalScrollBarPolicy(policy)
+
+    def setHorizontalScrollBarPolicy(self, policy: Qt.ScrollBarPolicy):
+        if self.__scrollArea: self.__scrollArea.setHorizontalScrollBarPolicy(policy)
+
+    def setWidget(self, widget: QWidget):
+        if self.__scrollArea:
+            self.__scrollArea.setWidget(widget)
+        else:
+            self.__gridLayout.addWidget(widget)
+
+
     #endregion
 
     #region General Functions
@@ -136,8 +167,8 @@ class PropertyViewportNested(PropertyGrid):
 
     sigPropertiesChanged = pyqtSignal()
 
-    def __init__(self, parent: "PropertyView", container: "PropertyGrid", praser: "DataHandler"):
-        super().__init__(parent, praser)
+    def __init__(self, parent: "PropertyView", container: "PropertyGrid", praser: "DataHandler", scrolling=True):
+        super().__init__(parent, praser, scrolling)
 
         self.getPropertyGrid().sigPropertiesChanged.connect(self.onPropertiesChanged)
 
@@ -172,6 +203,9 @@ class PropertyViewportNested(PropertyGrid):
     
     def setDataObject(self, item: any):
         self.getPropertyGrid().setDataObject(item)
+
+    def setFrameShape(self, shape: QFrame.Shape):
+        self.getPropertyGrid().setFrameShape(shape)
 
     #endregion
 

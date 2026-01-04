@@ -5,10 +5,13 @@
 
 # Alpha 0.0.6
 - [ X ] Hint Text for Property Grid Items
-- [ ] Copy and Paste Item Types in PropertyGrid
+- [ X ] Copy and Paste Item Types in PropertyGrid
+- [ X ] Migrate Toolshelf Popups to Full Fledged Registries
+- [ X ] Allow Registry Actions to Form Individal Files
+
+# Beta Future
+- [ ] Blender Styled Menu Triggers
 - [ ] A Raw JSON String Editor for the Property Grid
-- [ ] Migrate Toolshelf Popups to Full Fledged Registries
-- [ ] Allow Registry Actions to Form Individal Files
 - [ ] Registry Import / Export
 
 # Future

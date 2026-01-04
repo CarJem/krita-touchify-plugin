@@ -98,9 +98,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
                 page.setModifiers({"no_labels": ""})
                 page.setViewType("default")
                 page.setDataObject(source)
-                page.setContentsMargins(0,0,0,0)
-                page.getPropertyGrid().setFrameShape(QFrame.Shape.NoFrame)
-                page.getPropertyGrid().widget().setContentsMargins(0,0,0,0)
+                page.setFrameShape(QFrame.Shape.NoFrame)
                 self.__pages.append(page)
                 return page
             else:
@@ -113,7 +111,6 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
                 page.setViewType("default")
                 page.setDataObject(source)
                 page.setFrameShape(QFrame.Shape.NoFrame)
-                page.setContentsMargins(0,0,0,0)
                 self.__pages.append(page)
                 return page
 
