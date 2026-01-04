@@ -12,14 +12,25 @@
                         {}
                     ],
                     [
-                        "dock",
-                        "bf735f46-630d-450e-8026-3e6a88d360c6",
-                        {}
-                    ],
-                    [
-                        "dock",
-                        "0544ad66-137d-4bb4-92bd-d3a10f39537e",
-                        {}
+                        "horizontal",
+                        [
+                            [
+                                "dock",
+                                "bf735f46-630d-450e-8026-3e6a88d360c6",
+                                {}
+                            ],
+                            [
+                                "dock",
+                                "0544ad66-137d-4bb4-92bd-d3a10f39537e",
+                                {}
+                            ]
+                        ],
+                        {
+                            "sizes": [
+                                160,
+                                172
+                            ]
+                        }
                     ],
                     [
                         "dock",
@@ -36,9 +47,8 @@
                     "sizes": [
                         35,
                         45,
-                        28,
                         160,
-                        80
+                        471
                     ]
                 }
             ],
@@ -47,7 +57,6 @@
         "items": {
             "58bbc7b4-a4ab-499c-8464-a11990f62765": {
                 "display_name": "",
-                "docker_id": "sharedtooldocker",
                 "min_size_x": 300,
                 "min_size_y": 0,
                 "max_size_x": 0,
@@ -56,6 +65,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
+                "docker_id": "sharedtooldocker",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -69,6 +79,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -97,7 +109,6 @@
             },
             "d691021c-311a-459b-8e71-0f27f2767482": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 0,
                 "min_size_y": 160,
                 "max_size_x": 0,
@@ -106,6 +117,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolLazyBrush,KisToolPolyline,PathTool,KritaShape/KisToolBrush,KritaShape/KisToolLine,KritaShape/KisToolRectangle,KritaShape/KisToolEllipse,KisToolPolygon,KisToolPath,KisToolPencil,KritaShape/KisToolDyna,KritaShape/KisToolMultiBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -119,6 +131,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "nested_shelf",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": false,
@@ -188,7 +202,6 @@
                     "items": {
                         "8563d666-9fe0-449e-bdea-4a0585e4888b": {
                             "display_name": "",
-                            "docker_id": "",
                             "min_size_x": 0,
                             "min_size_y": 0,
                             "max_size_x": 0,
@@ -197,6 +210,7 @@
                             "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
+                            "docker_id": "",
                             "docker_nesting_mode": "normal",
                             "docker_unloaded_visibility": "normal",
                             "docker_loading_priority": "normal",
@@ -210,6 +224,8 @@
                             "action_section_btn_width": 0,
                             "action_section_btn_height": 0,
                             "action_section_icon_size": 0,
+                            "action_section_fixed_size_x": 0,
+                            "action_section_fixed_size_y": 0,
                             "special_item_type": "brush_size_slider",
                             "special_slider_orientation": "horizontal",
                             "special_nested_show_titlebar": true,
@@ -238,7 +254,6 @@
                         },
                         "c631d2f0-7e8b-4d67-91b8-29d412b52f23": {
                             "display_name": "",
-                            "docker_id": "",
                             "min_size_x": 0,
                             "min_size_y": 0,
                             "max_size_x": 0,
@@ -247,6 +262,7 @@
                             "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
+                            "docker_id": "",
                             "docker_nesting_mode": "normal",
                             "docker_unloaded_visibility": "normal",
                             "docker_loading_priority": "normal",
@@ -260,6 +276,8 @@
                             "action_section_btn_width": 0,
                             "action_section_btn_height": 0,
                             "action_section_icon_size": 0,
+                            "action_section_fixed_size_x": 0,
+                            "action_section_fixed_size_y": 0,
                             "special_item_type": "brush_opacity_slider",
                             "special_slider_orientation": "horizontal",
                             "special_nested_show_titlebar": true,
@@ -288,7 +306,6 @@
                         },
                         "ba9cad0c-7f49-4051-ad03-ed3b70033912": {
                             "display_name": "",
-                            "docker_id": "",
                             "min_size_x": 0,
                             "min_size_y": 0,
                             "max_size_x": 0,
@@ -297,6 +314,7 @@
                             "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
+                            "docker_id": "",
                             "docker_nesting_mode": "normal",
                             "docker_unloaded_visibility": "normal",
                             "docker_loading_priority": "normal",
@@ -310,6 +328,8 @@
                             "action_section_btn_width": 0,
                             "action_section_btn_height": 0,
                             "action_section_icon_size": 0,
+                            "action_section_fixed_size_x": 0,
+                            "action_section_fixed_size_y": 0,
                             "special_item_type": "brush_flow_slider",
                             "special_slider_orientation": "horizontal",
                             "special_nested_show_titlebar": true,
@@ -338,7 +358,6 @@
                         },
                         "3a68760b-012f-45b7-8b5e-d866a87c2d4b": {
                             "display_name": "",
-                            "docker_id": "",
                             "min_size_x": 0,
                             "min_size_y": 0,
                             "max_size_x": 32,
@@ -347,6 +366,7 @@
                             "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
+                            "docker_id": "",
                             "docker_nesting_mode": "normal",
                             "docker_unloaded_visibility": "normal",
                             "docker_loading_priority": "normal",
@@ -375,12 +395,7 @@
                                             "docker_id": "",
                                             "workspace_id": "",
                                             "color_id": "#000000",
-                                            "menu_data": {
-                                                "registry_id": "NewTriggerMenu",
-                                                "registry_name": "New Trigger Menu",
-                                                "context_menu_actions": [],
-                                                "json_version": 1
-                                            },
+                                            "menu_data": [],
                                             "script_data": {
                                                 "script_name": "New Script",
                                                 "script_code": ""
@@ -415,12 +430,7 @@
                                             "docker_id": "",
                                             "workspace_id": "",
                                             "color_id": "#000000",
-                                            "menu_data": {
-                                                "registry_id": "NewTriggerMenu",
-                                                "registry_name": "New Trigger Menu",
-                                                "context_menu_actions": [],
-                                                "json_version": 1
-                                            },
+                                            "menu_data": [],
                                             "script_data": {
                                                 "script_name": "New Script",
                                                 "script_code": ""
@@ -455,12 +465,7 @@
                                             "docker_id": "",
                                             "workspace_id": "",
                                             "color_id": "#000000",
-                                            "menu_data": {
-                                                "registry_id": "NewTriggerMenu",
-                                                "registry_name": "New Trigger Menu",
-                                                "context_menu_actions": [],
-                                                "json_version": 1
-                                            },
+                                            "menu_data": [],
                                             "script_data": {
                                                 "script_name": "New Script",
                                                 "script_code": ""
@@ -481,6 +486,8 @@
                             "action_section_btn_width": 32,
                             "action_section_btn_height": 34,
                             "action_section_icon_size": 0,
+                            "action_section_fixed_size_x": 0,
+                            "action_section_fixed_size_y": 0,
                             "special_item_type": "none",
                             "special_slider_orientation": "horizontal",
                             "special_nested_show_titlebar": true,
@@ -509,7 +516,6 @@
                         },
                         "034834f4-5f5f-4eb0-a341-1baa6ea86fde": {
                             "display_name": "",
-                            "docker_id": "",
                             "min_size_x": 0,
                             "min_size_y": 35,
                             "max_size_x": 0,
@@ -518,6 +524,7 @@
                             "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
+                            "docker_id": "",
                             "docker_nesting_mode": "normal",
                             "docker_unloaded_visibility": "normal",
                             "docker_loading_priority": "normal",
@@ -531,6 +538,8 @@
                             "action_section_btn_width": 0,
                             "action_section_btn_height": 0,
                             "action_section_icon_size": 0,
+                            "action_section_fixed_size_x": 0,
+                            "action_section_fixed_size_y": 0,
                             "special_item_type": "brush_blending_options",
                             "special_slider_orientation": "horizontal",
                             "special_nested_show_titlebar": true,
@@ -580,7 +589,6 @@
             },
             "0d9b431f-6d29-48af-b4ad-584f2a16b32a": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 0,
                 "min_size_y": 35,
                 "max_size_x": 0,
@@ -589,6 +597,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolLazyBrush,KisToolPolyline,PathTool,KritaShape/KisToolBrush,KritaShape/KisToolLine,KritaShape/KisToolRectangle,KritaShape/KisToolEllipse,KisToolPolygon,KisToolPath,KisToolPencil,KritaShape/KisToolDyna,KritaShape/KisToolMultiBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -602,6 +611,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "nested_shelf",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": false,
@@ -627,7 +638,6 @@
                     "items": {
                         "f94e7f2f-bae3-47e6-b725-c9c55c52dde1": {
                             "display_name": "",
-                            "docker_id": "",
                             "min_size_x": 0,
                             "min_size_y": 0,
                             "max_size_x": 0,
@@ -636,6 +646,7 @@
                             "section_handles": "both_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
+                            "docker_id": "",
                             "docker_nesting_mode": "normal",
                             "docker_unloaded_visibility": "normal",
                             "docker_loading_priority": "normal",
@@ -664,12 +675,7 @@
                                             "docker_id": "",
                                             "workspace_id": "",
                                             "color_id": "#000000",
-                                            "menu_data": {
-                                                "registry_id": "NewTriggerMenu",
-                                                "registry_name": "New Trigger Menu",
-                                                "context_menu_actions": [],
-                                                "json_version": 1
-                                            },
+                                            "menu_data": [],
                                             "script_data": {
                                                 "script_name": "New Script",
                                                 "script_code": ""
@@ -699,12 +705,7 @@
                                             "docker_id": "",
                                             "workspace_id": "",
                                             "color_id": "#000000",
-                                            "menu_data": {
-                                                "registry_id": "NewTriggerMenu",
-                                                "registry_name": "New Trigger Menu",
-                                                "context_menu_actions": [],
-                                                "json_version": 1
-                                            },
+                                            "menu_data": [],
                                             "script_data": {
                                                 "script_name": "New Script",
                                                 "script_code": ""
@@ -734,12 +735,7 @@
                                             "docker_id": "",
                                             "workspace_id": "",
                                             "color_id": "#000000",
-                                            "menu_data": {
-                                                "registry_id": "NewTriggerMenu",
-                                                "registry_name": "New Trigger Menu",
-                                                "context_menu_actions": [],
-                                                "json_version": 1
-                                            },
+                                            "menu_data": [],
                                             "script_data": {
                                                 "script_name": "New Script",
                                                 "script_code": ""
@@ -769,12 +765,7 @@
                                             "docker_id": "",
                                             "workspace_id": "",
                                             "color_id": "#000000",
-                                            "menu_data": {
-                                                "registry_id": "NewTriggerMenu",
-                                                "registry_name": "New Trigger Menu",
-                                                "context_menu_actions": [],
-                                                "json_version": 1
-                                            },
+                                            "menu_data": [],
                                             "script_data": {
                                                 "script_name": "New Script",
                                                 "script_code": ""
@@ -795,6 +786,8 @@
                             "action_section_btn_width": 0,
                             "action_section_btn_height": 32,
                             "action_section_icon_size": 0,
+                            "action_section_fixed_size_x": 0,
+                            "action_section_fixed_size_y": 0,
                             "special_item_type": "none",
                             "special_slider_orientation": "horizontal",
                             "special_nested_show_titlebar": true,
@@ -844,7 +837,6 @@
             },
             "bf735f46-630d-450e-8026-3e6a88d360c6": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 0,
                 "min_size_y": 45,
                 "max_size_x": 0,
@@ -853,6 +845,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -866,6 +859,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "nested_shelf",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": false,
@@ -915,7 +910,6 @@
                     "items": {
                         "d6c9091b-28b5-43f8-9523-c051460717bb": {
                             "display_name": "",
-                            "docker_id": "",
                             "min_size_x": 35,
                             "min_size_y": 35,
                             "max_size_x": 35,
@@ -924,6 +918,7 @@
                             "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
+                            "docker_id": "",
                             "docker_nesting_mode": "normal",
                             "docker_unloaded_visibility": "normal",
                             "docker_loading_priority": "normal",
@@ -937,6 +932,8 @@
                             "action_section_btn_width": 0,
                             "action_section_btn_height": 0,
                             "action_section_icon_size": 0,
+                            "action_section_fixed_size_x": 0,
+                            "action_section_fixed_size_y": 0,
                             "special_item_type": "foreground_background_color_picker",
                             "special_slider_orientation": "horizontal",
                             "special_nested_show_titlebar": true,
@@ -965,7 +962,6 @@
                         },
                         "7cd9b10b-4aef-4be4-baca-d7ba53b02c54": {
                             "display_name": "",
-                            "docker_id": "",
                             "min_size_x": 35,
                             "min_size_y": 35,
                             "max_size_x": 35,
@@ -974,6 +970,7 @@
                             "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
+                            "docker_id": "",
                             "docker_nesting_mode": "normal",
                             "docker_unloaded_visibility": "normal",
                             "docker_loading_priority": "normal",
@@ -987,6 +984,8 @@
                             "action_section_btn_width": 0,
                             "action_section_btn_height": 0,
                             "action_section_icon_size": 0,
+                            "action_section_fixed_size_x": 0,
+                            "action_section_fixed_size_y": 0,
                             "special_item_type": "brush_preset_picker",
                             "special_slider_orientation": "horizontal",
                             "special_nested_show_titlebar": true,
@@ -1015,7 +1014,6 @@
                         },
                         "9ff57d6c-f6fd-4487-9224-45ebec2fe9ee": {
                             "display_name": "",
-                            "docker_id": "",
                             "min_size_x": 0,
                             "min_size_y": 0,
                             "max_size_x": 0,
@@ -1024,6 +1022,7 @@
                             "section_handles": "both_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
+                            "docker_id": "",
                             "docker_nesting_mode": "normal",
                             "docker_unloaded_visibility": "normal",
                             "docker_loading_priority": "normal",
@@ -1037,6 +1036,8 @@
                             "action_section_btn_width": 0,
                             "action_section_btn_height": 0,
                             "action_section_icon_size": 0,
+                            "action_section_fixed_size_x": 0,
+                            "action_section_fixed_size_y": 0,
                             "special_item_type": "none",
                             "special_slider_orientation": "horizontal",
                             "special_nested_show_titlebar": true,
@@ -1065,7 +1066,6 @@
                         },
                         "53325748-610b-4990-8df7-5f87ac120e3f": {
                             "display_name": "",
-                            "docker_id": "",
                             "min_size_x": 35,
                             "min_size_y": 35,
                             "max_size_x": 35,
@@ -1074,6 +1074,7 @@
                             "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
+                            "docker_id": "",
                             "docker_nesting_mode": "normal",
                             "docker_unloaded_visibility": "normal",
                             "docker_loading_priority": "normal",
@@ -1087,6 +1088,8 @@
                             "action_section_btn_width": 0,
                             "action_section_btn_height": 0,
                             "action_section_icon_size": 0,
+                            "action_section_fixed_size_x": 0,
+                            "action_section_fixed_size_y": 0,
                             "special_item_type": "gradient_chooser_popup",
                             "special_slider_orientation": "horizontal",
                             "special_nested_show_titlebar": true,
@@ -1115,7 +1118,6 @@
                         },
                         "26d8798f-b127-4aca-a2ce-668467df6720": {
                             "display_name": "",
-                            "docker_id": "",
                             "min_size_x": 35,
                             "min_size_y": 35,
                             "max_size_x": 35,
@@ -1124,6 +1126,7 @@
                             "section_handles": "no_handles",
                             "requires_specific_tool": "",
                             "invert_required_tools": false,
+                            "docker_id": "",
                             "docker_nesting_mode": "normal",
                             "docker_unloaded_visibility": "normal",
                             "docker_loading_priority": "normal",
@@ -1137,6 +1140,8 @@
                             "action_section_btn_width": 0,
                             "action_section_btn_height": 0,
                             "action_section_icon_size": 0,
+                            "action_section_fixed_size_x": 0,
+                            "action_section_fixed_size_y": 0,
                             "special_item_type": "pattern_chooser_popup",
                             "special_slider_orientation": "horizontal",
                             "special_nested_show_titlebar": true,
@@ -1186,7 +1191,6 @@
             },
             "0544ad66-137d-4bb4-92bd-d3a10f39537e": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 0,
                 "min_size_y": 0,
                 "max_size_x": 0,
@@ -1195,6 +1199,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KisToolTransform,KritaTransform/KisToolMove,KisToolEncloseAndFill,KisToolSelectRectangular,KisToolSelectElliptical,KisToolSelectPolygonal,KisToolSelectOutline,KisToolSelectContiguous,KisToolSelectSimilar,KisToolSelectPath,KisToolSelectMagnetic",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -1223,12 +1228,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -1258,12 +1258,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -1293,12 +1288,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -1328,12 +1318,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -1363,84 +1348,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
-                                "script_data": {
-                                    "script_name": "New Script",
-                                    "script_code": ""
-                                },
-                                "refrenced_menu": "",
-                                "refrenced_dockergroup": "none",
-                                "refrenced_popup": "none",
-                                "refrenced_canvaspreset": "none",
-                                "refrenced_script": "",
-                                "refrenced_piewheel": "",
-                                "json_version": 3
-                            },
-                            {
-                                "registry_id": "NewTrigger",
-                                "variant": "#menu",
-                                "display_icon_hide": true,
-                                "display_icon_padding": 0,
-                                "display_custom_icon_enabled": false,
-                                "display_custom_icon": "",
-                                "display_text_hide": false,
-                                "display_custom_text_enabled": true,
-                                "display_custom_text": "...",
-                                "extra_closes_popup": false,
-                                "extra_composer_mode": false,
-                                "action_id": "",
-                                "brush_name": "",
-                                "docker_id": "",
-                                "workspace_id": "",
-                                "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [
-                                        {
-                                            "registry_id": "",
-                                            "variant": "action",
-                                            "display_icon_hide": false,
-                                            "display_icon_padding": 0,
-                                            "display_custom_icon_enabled": false,
-                                            "display_custom_icon": "",
-                                            "display_text_hide": false,
-                                            "display_custom_text_enabled": false,
-                                            "display_custom_text": "",
-                                            "extra_closes_popup": false,
-                                            "extra_composer_mode": false,
-                                            "action_id": "",
-                                            "brush_name": "",
-                                            "docker_id": "",
-                                            "workspace_id": "",
-                                            "color_id": "#000000",
-                                            "menu_data": {
-                                                "registry_id": "NewTriggerMenu",
-                                                "registry_name": "New Trigger Menu",
-                                                "context_menu_actions": [],
-                                                "json_version": 1
-                                            },
-                                            "script_data": {
-                                                "script_name": "New Script",
-                                                "script_code": ""
-                                            },
-                                            "refrenced_menu": "",
-                                            "refrenced_dockergroup": "none",
-                                            "refrenced_popup": "none",
-                                            "refrenced_canvaspreset": "none",
-                                            "refrenced_script": "",
-                                            "refrenced_piewheel": "",
-                                            "json_version": 3,
-                                            "context_menu_actions": []
-                                        }
-                                    ],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -1457,10 +1365,12 @@
                     }
                 ],
                 "action_section_alignment_x": "none",
-                "action_section_alignment_y": "none",
+                "action_section_alignment_y": "center",
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 25,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -1517,7 +1427,6 @@
                 "items": {
                     "652b6ac3-c9f9-45f2-94f7-92c6d7c18ab6": {
                         "display_name": "",
-                        "docker_id": "PresetDocker",
                         "min_size_x": 300,
                         "min_size_y": 400,
                         "max_size_x": 0,
@@ -1526,6 +1435,7 @@
                         "section_handles": "both_handles",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
+                        "docker_id": "PresetDocker",
                         "docker_nesting_mode": "normal",
                         "docker_unloaded_visibility": "normal",
                         "docker_loading_priority": "normal",
@@ -1539,6 +1449,8 @@
                         "action_section_btn_width": 0,
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
+                        "action_section_fixed_size_x": 0,
+                        "action_section_fixed_size_y": 0,
                         "special_item_type": "none",
                         "special_slider_orientation": "horizontal",
                         "special_nested_show_titlebar": true,
@@ -1567,7 +1479,6 @@
                     },
                     "352a372b-829f-4c66-956a-029de4f0d8ab": {
                         "display_name": "",
-                        "docker_id": "",
                         "min_size_x": 0,
                         "min_size_y": 0,
                         "max_size_x": 0,
@@ -1576,6 +1487,7 @@
                         "section_handles": "both_handles",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
+                        "docker_id": "",
                         "docker_nesting_mode": "normal",
                         "docker_unloaded_visibility": "normal",
                         "docker_loading_priority": "normal",
@@ -1604,12 +1516,7 @@
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "color_id": "#000000",
-                                        "menu_data": {
-                                            "registry_id": "NewTriggerMenu",
-                                            "registry_name": "New Trigger Menu",
-                                            "context_menu_actions": [],
-                                            "json_version": 1
-                                        },
+                                        "menu_data": [],
                                         "script_data": {
                                             "script_name": "New Script",
                                             "script_code": ""
@@ -1639,12 +1546,7 @@
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "color_id": "#000000",
-                                        "menu_data": {
-                                            "registry_id": "NewTriggerMenu",
-                                            "registry_name": "New Trigger Menu",
-                                            "context_menu_actions": [],
-                                            "json_version": 1
-                                        },
+                                        "menu_data": [],
                                         "script_data": {
                                             "script_name": "New Script",
                                             "script_code": ""
@@ -1674,12 +1576,7 @@
                                         "docker_id": "",
                                         "workspace_id": "",
                                         "color_id": "#000000",
-                                        "menu_data": {
-                                            "registry_id": "NewTriggerMenu",
-                                            "registry_name": "New Trigger Menu",
-                                            "context_menu_actions": [],
-                                            "json_version": 1
-                                        },
+                                        "menu_data": [],
                                         "script_data": {
                                             "script_name": "New Script",
                                             "script_code": ""
@@ -1700,6 +1597,8 @@
                         "action_section_btn_width": 0,
                         "action_section_btn_height": 30,
                         "action_section_icon_size": 0,
+                        "action_section_fixed_size_x": 0,
+                        "action_section_fixed_size_y": 0,
                         "special_item_type": "none",
                         "special_slider_orientation": "horizontal",
                         "special_nested_show_titlebar": true,
@@ -1761,7 +1660,6 @@
                 "items": {
                     "887c8a63-b838-459e-bd33-06fafd30536d": {
                         "display_name": "",
-                        "docker_id": "ColorSelectorNg",
                         "min_size_x": 300,
                         "min_size_y": 200,
                         "max_size_x": 0,
@@ -1770,6 +1668,7 @@
                         "section_handles": "both_handles",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
+                        "docker_id": "ColorSelectorNg",
                         "docker_nesting_mode": "normal",
                         "docker_unloaded_visibility": "normal",
                         "docker_loading_priority": "normal",
@@ -1783,6 +1682,8 @@
                         "action_section_btn_width": 0,
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
+                        "action_section_fixed_size_x": 0,
+                        "action_section_fixed_size_y": 0,
                         "special_item_type": "none",
                         "special_slider_orientation": "horizontal",
                         "special_nested_show_titlebar": true,
@@ -1811,7 +1712,6 @@
                     },
                     "6d4202e9-0de1-4655-b076-da3d534ced2d": {
                         "display_name": "",
-                        "docker_id": "PaletteDocker",
                         "min_size_x": 300,
                         "min_size_y": 300,
                         "max_size_x": 0,
@@ -1820,6 +1720,7 @@
                         "section_handles": "both_handles",
                         "requires_specific_tool": "",
                         "invert_required_tools": false,
+                        "docker_id": "PaletteDocker",
                         "docker_nesting_mode": "normal",
                         "docker_unloaded_visibility": "normal",
                         "docker_loading_priority": "normal",
@@ -1833,6 +1734,8 @@
                         "action_section_btn_width": 0,
                         "action_section_btn_height": 0,
                         "action_section_icon_size": 0,
+                        "action_section_fixed_size_x": 0,
+                        "action_section_fixed_size_y": 0,
                         "special_item_type": "none",
                         "special_slider_orientation": "horizontal",
                         "special_nested_show_titlebar": true,

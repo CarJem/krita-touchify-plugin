@@ -45,7 +45,6 @@
         "items": {
             "5e5ca049-14c2-4ef3-b103-869e554d4b8b": {
                 "display_name": "",
-                "docker_id": "KisLayerBox",
                 "min_size_x": 0,
                 "min_size_y": 0,
                 "max_size_x": 0,
@@ -54,6 +53,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
+                "docker_id": "KisLayerBox",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -67,6 +67,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -95,7 +97,6 @@
             },
             "33af9154-9698-4383-bde2-44f54940fef9": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 48,
                 "min_size_y": 30,
                 "max_size_x": 48,
@@ -104,6 +105,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -117,6 +119,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "layer_label_box",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -145,7 +149,6 @@
             },
             "c95e8bfa-41ac-4c01-bc32-75da6076c750": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 0,
                 "min_size_y": 30,
                 "max_size_x": 0,
@@ -154,6 +157,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -182,12 +186,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -217,12 +216,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -252,12 +246,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -287,12 +276,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -322,12 +306,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -348,6 +327,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 30,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,

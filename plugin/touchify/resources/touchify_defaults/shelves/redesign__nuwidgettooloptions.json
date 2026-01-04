@@ -23,7 +23,6 @@
         "items": {
             "23bd1b19-4aa2-4d1e-8699-f08cef1d400a": {
                 "display_name": "",
-                "docker_id": "sharedtooldocker",
                 "min_size_x": 0,
                 "min_size_y": 0,
                 "max_size_x": 0,
@@ -32,6 +31,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
+                "docker_id": "sharedtooldocker",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -45,6 +45,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,

@@ -113,7 +113,6 @@
         "items": {
             "8563d666-9fe0-449e-bdea-4a0585e4888b": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 0,
                 "min_size_y": 0,
                 "max_size_x": 0,
@@ -122,6 +121,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -135,6 +135,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "brush_size_slider",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -163,7 +165,6 @@
             },
             "c631d2f0-7e8b-4d67-91b8-29d412b52f23": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 0,
                 "min_size_y": 0,
                 "max_size_x": 0,
@@ -172,6 +173,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -185,6 +187,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "brush_opacity_slider",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -213,7 +217,6 @@
             },
             "ba9cad0c-7f49-4051-ad03-ed3b70033912": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 0,
                 "min_size_y": 0,
                 "max_size_x": 0,
@@ -222,6 +225,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -235,6 +239,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "brush_flow_slider",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -263,7 +269,6 @@
             },
             "f94e7f2f-bae3-47e6-b725-c9c55c52dde1": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 0,
                 "min_size_y": 0,
                 "max_size_x": 0,
@@ -272,6 +277,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -300,12 +306,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -335,12 +336,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -370,12 +366,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -405,12 +396,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -431,6 +417,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 32,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -459,7 +447,6 @@
             },
             "d6c9091b-28b5-43f8-9523-c051460717bb": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 35,
                 "min_size_y": 35,
                 "max_size_x": 35,
@@ -468,6 +455,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -481,6 +469,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "foreground_background_color_picker",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -509,7 +499,6 @@
             },
             "7cd9b10b-4aef-4be4-baca-d7ba53b02c54": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 35,
                 "min_size_y": 35,
                 "max_size_x": 35,
@@ -518,6 +507,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -531,6 +521,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "brush_preset_picker",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -559,7 +551,6 @@
             },
             "9ff57d6c-f6fd-4487-9224-45ebec2fe9ee": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 0,
                 "min_size_y": 0,
                 "max_size_x": 0,
@@ -568,6 +559,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -581,6 +573,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -609,7 +603,6 @@
             },
             "53325748-610b-4990-8df7-5f87ac120e3f": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 35,
                 "min_size_y": 35,
                 "max_size_x": 35,
@@ -618,6 +611,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -631,6 +625,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "gradient_chooser_popup",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -659,7 +655,6 @@
             },
             "3a68760b-012f-45b7-8b5e-d866a87c2d4b": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 0,
                 "min_size_y": 0,
                 "max_size_x": 32,
@@ -668,6 +663,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -696,12 +692,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -736,12 +727,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -776,12 +762,7 @@
                                 "docker_id": "",
                                 "workspace_id": "",
                                 "color_id": "#000000",
-                                "menu_data": {
-                                    "registry_id": "NewTriggerMenu",
-                                    "registry_name": "New Trigger Menu",
-                                    "context_menu_actions": [],
-                                    "json_version": 1
-                                },
+                                "menu_data": [],
                                 "script_data": {
                                     "script_name": "New Script",
                                     "script_code": ""
@@ -802,6 +783,8 @@
                 "action_section_btn_width": 32,
                 "action_section_btn_height": 34,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "none",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -830,7 +813,6 @@
             },
             "26d8798f-b127-4aca-a2ce-668467df6720": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 35,
                 "min_size_y": 35,
                 "max_size_x": 35,
@@ -839,6 +821,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -852,6 +835,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "pattern_chooser_popup",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,
@@ -880,7 +865,6 @@
             },
             "034834f4-5f5f-4eb0-a341-1baa6ea86fde": {
                 "display_name": "",
-                "docker_id": "",
                 "min_size_x": 0,
                 "min_size_y": 35,
                 "max_size_x": 0,
@@ -889,6 +873,7 @@
                 "section_handles": "both_handles",
                 "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
                 "invert_required_tools": false,
+                "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
                 "docker_loading_priority": "normal",
@@ -902,6 +887,8 @@
                 "action_section_btn_width": 0,
                 "action_section_btn_height": 0,
                 "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
                 "special_item_type": "brush_blending_options",
                 "special_slider_orientation": "horizontal",
                 "special_nested_show_titlebar": true,

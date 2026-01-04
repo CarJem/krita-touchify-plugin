@@ -15,12 +15,7 @@
     "docker_id": "",
     "workspace_id": "",
     "color_id": "#000000",
-    "menu_data": {
-        "registry_id": "NewTriggerMenu",
-        "registry_name": "New Trigger Menu",
-        "context_menu_actions": [],
-        "json_version": 1
-    },
+    "menu_data": [],
     "script_data": {
         "script_name": "New Script",
         "script_code": ""
