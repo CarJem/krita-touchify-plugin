@@ -48,6 +48,7 @@ class PropertyViewport(QWidget):
             self.__scrollArea.setWidgetResizable(True)
             self.__scrollArea.setContentsMargins(0,0,0,0)
             self.__gridLayout.addWidget(self.__scrollArea)
+
             
     #region Get / Set Functions
 
@@ -98,7 +99,7 @@ class PropertyViewport(QWidget):
         if view_type != self.getLastViewType():
             self.setLastViewType(view_type)
             if self.property_view != None: 
-                self.deleteLater()
+                self.property_view.deleteLater()
                 self.property_view = None
 
             match view_type:

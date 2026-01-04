@@ -6,7 +6,6 @@ from touchify.src.alib_propertygrid.fields.PropertyField_ToolboxDataItem import 
 from touchify.src.alib_propertygrid.fields.PropertyField_ToolboxDataSubitem import PropertyField_ToolboxDataSubitem
 from touchify.src.alib_propertygrid.fields.PropertyField_TriggerGroups import PropertyField_TriggerGroups
 from touchify.src.alib_propertygrid.fields.PropertyField_TriggerList import PropertyField_TriggerList
-from touchify.src.alib_propertygrid.fields.PropertyField_TriggerMenuItemList import PropertyField_TriggerMenuItemList
 
 
 if TYPE_CHECKING:
@@ -30,15 +29,12 @@ class TouchifyDataHandler(DataExtension):
         from touchify.src.config.triggers.Trigger import Trigger
         from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
         from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
-        from touchify.src.config.menu.TriggerMenuItem import TriggerMenuItem
         varType = property.variableType()
         listType = property.variableListType()
         
         if listType == ToolboxDataItem:
             return True
         elif listType == ToolboxDataSubitem:
-            return True
-        elif listType == TriggerMenuItem:
             return True
         elif listType == TriggerGroup:
             return True
@@ -52,7 +48,6 @@ class TouchifyDataHandler(DataExtension):
         from touchify.src.config.triggers.Trigger import Trigger
         from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
         from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
-        from touchify.src.config.menu.TriggerMenuItem import TriggerMenuItem
         varType = property.variableType()
         listType = property.variableListType()
         
@@ -60,8 +55,6 @@ class TouchifyDataHandler(DataExtension):
             return PropertyField_TriggerGroups(handler, property)
         elif listType == Trigger:
             return PropertyField_TriggerList(handler, property)
-        elif listType == TriggerMenuItem:
-            return PropertyField_TriggerMenuItemList(handler, property)
         elif listType == ToolboxDataItem:
             return PropertyField_ToolboxDataItem(handler, property)
         elif listType == ToolboxDataSubitem:

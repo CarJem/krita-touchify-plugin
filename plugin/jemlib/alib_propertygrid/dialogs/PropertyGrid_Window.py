@@ -40,15 +40,16 @@ class PropertyGrid_Window(QDialog):
         else:
             self.praser = DataHandler()
         
-        self.editableConfig = copy.deepcopy(options)
-        self.propertyGrid = PropertyGrid(self, self.praser)
-        self.propertyGrid.setDataObject(self.editableConfig)
-
-        self.container = QVBoxLayout(self)
+        self.container = QGridLayout(self)
+        self.container.setContentsMargins(0,0,0,0)
+        self.container.setSpacing(0)
+        self.setLayout(self.container)     
+        
         self.setMinimumSize(600,400)
         self.setBaseSize(800,800)
 
         self.btns = QDialogButtonBox(self)
+        self.btns.setContentsMargins(5,5,5,5)
         if not buttons: buttons = PropertyGrid_Window.StandardButtons()
 
         if QDialogButtonBox.StandardButton.Apply in buttons: 
@@ -65,9 +66,14 @@ class PropertyGrid_Window(QDialog):
         self.onSave: Callable[[PropertyGrid_Window], None] = None
         self.onClose: Callable[[PropertyGrid_Window], None] = None
 
-        self.container.addWidget(self.propertyGrid)
-        self.container.addWidget(self.btns)
-        self.setLayout(self.container)     
+
+        self.editableConfig = copy.deepcopy(options)
+        self.propertyGrid = PropertyGrid(self, self.praser)
+        self.propertyGrid.setDataObject(self.editableConfig)
+
+        self.container.addWidget(self.propertyGrid, 0, 0)
+        self.container.addWidget(self.btns, 1, 0)
+        
 
     def _onApply(self):
         if self.onApply: self.onApply(self)

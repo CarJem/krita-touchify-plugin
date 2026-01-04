@@ -79,6 +79,17 @@ class BackwardsCompatibility:
             Helpers.changeVarName(args, "piewheel_id", "refrenced_piewheel")
             Helpers.setVersion(args, 3)
         return args
+    
+    def TriggerContextMenu(args: dict[str, any]):
+        if not args: return args
+        
+        if Helpers.isLegacyConfig(args):
+            Helpers.setVersion(args, 1)
+
+        if Helpers.getVersion(args) == 1:
+            Helpers.setVersion(args, 2)
+
+        return args
 
     def DockerGroup(args: dict[str, any]):
         if not args: return args
@@ -132,7 +143,5 @@ class BackwardsCompatibility:
         if not args: return args
         if Helpers.isLegacyConfig(args):
             Helpers.setVersion(args, 1)
-
-        #print(args)
 
         return args

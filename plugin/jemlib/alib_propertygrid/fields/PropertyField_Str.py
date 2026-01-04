@@ -146,11 +146,11 @@ class PropertyField_Str(PropertyField[str]):
         self.setLayout(editorLayout)
 
     def create_special_selector(self):
-        self.editor = QLineEdit()
+        self.editor = QLineEdit(self)
         self.editor.textChanged.connect(self.onTextChanged)
         self.editor.setText(self.propertyData.variableData().replace("\n", "\\n"))
 
-        self.editorHelper = QPushButton()
+        self.editorHelper = QPushButton(self)
         self.editorInspector = None
 
         if self.special_selector_type == DataConstraints.StrMod.IconSelection: 

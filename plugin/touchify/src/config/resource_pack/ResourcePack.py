@@ -11,7 +11,7 @@ from touchify.src.config.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.config.docker_group.DockerGroup import DockerGroup
 from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
-from touchify.src.config.menu.TriggerMenu import TriggerMenu
+from touchify.src.config.context_menu.ContextMenu import ContextMenu
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_datatypes.TypedList import TypedList
@@ -27,7 +27,7 @@ class ResourcePack:
     def __defaults__(self):
         self.metadata: ResourcePackMetadata | None = None
         self.triggers: TypedList[Trigger] = []
-        self.menus: TypedList[TriggerMenu] = []
+        self.menus: TypedList[ContextMenu] = []
         self.popups: TypedList[PopupData] = []
         self.docker_groups: TypedList[DockerGroup] = []
         self.canvas_presets: TypedList[CanvasPreset] = []
@@ -53,7 +53,7 @@ class ResourcePack:
 
     def propertygrid_listload(self):
         self.triggers = TypedList(self.triggers, Trigger)
-        self.menus = TypedList(self.menus, TriggerMenu)
+        self.menus = TypedList(self.menus, ContextMenu)
         self.popups = TypedList(self.popups, PopupData)
         self.docker_groups = TypedList(self.docker_groups, DockerGroup)
         self.canvas_presets = TypedList(self.canvas_presets, CanvasPreset)
@@ -106,7 +106,7 @@ class ResourcePack:
                     self.triggers = loadItems(contentPath, Trigger)
 
                 elif os.path.isdir(contentPath) and contentName == "menus":
-                    self.menus = loadItems(contentPath, TriggerMenu)
+                    self.menus = loadItems(contentPath, ContextMenu)
 
                 elif os.path.isdir(contentPath) and contentName == "toolboxes":
                     self.toolboxes = loadItems(contentPath, ToolboxData)

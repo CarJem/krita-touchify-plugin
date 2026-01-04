@@ -11,3 +11,4 @@ class PropertyGrid_Subwindow(QDialog):
         super().__init__(parent)
         self.setContentsMargins(0,0,0,0)
         self.setWindowTitle("EDITOR")
+        

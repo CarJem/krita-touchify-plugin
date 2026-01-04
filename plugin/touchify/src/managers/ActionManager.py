@@ -6,17 +6,16 @@ from jemlib.api_krita import KritaAPI
 
 from touchify.__env__ import REGISTERED_ACTIONS_FILE
 from jemlib.alib_vaporjem import Logger
-from touchify.src.config.menu.TriggerMenuItem import TriggerMenuItem
 from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.config.resource_pack.ResourcePack import ResourcePack
 from touchify.src.config.resource_pack.ResourcePackMetadata import ResourcePackMetadata
 from touchify.src.config.canvas_preset.CanvasPreset import CanvasPreset
 from touchify.src.config.docker_group.DockerGroup import DockerGroup
-from touchify.src.config.menu.TriggerMenu import TriggerMenu
+from touchify.src.config.context_menu.ContextMenu import ContextMenu
 from touchify.src.config.script.CustomScript import CustomScript
 
 import jemlib.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
-from touchify.src.components.widgets.triggers.TriggerMenu import TriggerMenuWidget
+from touchify.src.components.widgets.triggers.TriggerMenuWidget import TriggerMenuWidget
 
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 
@@ -144,32 +143,23 @@ class ActionManager(QObject):
 
         return result
     
-    def Create_MenuItem(self, parent: TriggerMenuWidget, data: TriggerMenuItem):
-        if data.variant == TriggerMenuItem.Variants.Action:
+    def Create_MenuItem(self, parent: TriggerMenuWidget, data: Trigger):
+        if data.variant == Trigger.Variants.Action:
             if data.action_id and data.action_id in self.registeredActions:
                 data = self.registeredActionsData[data.action_id]
 
         match data.variant:
-            case TriggerMenuItem.Variants.Menu:
-                actual_menu = TriggerMenuWidget(data, parent, self)
-                actual_menu.setTitle(data.display_custom_text)
-                parent.addMenu(actual_menu)
-            case TriggerMenuItem.Variants.Action:
-                if data.action_id in KritaActions.EXPANDING_SPACERS:
-                    actual_action = QAction(parent)
-                    actual_action.setSeparator(True)
-                else:
-                    actual_action = KritaAPI.get_action(data.action_id)
-                if actual_action: parent.addAction(actual_action)
-            case TriggerMenuItem.Variants.Seperator:
-                actual_action = QAction(parent)
-                actual_action.setText(data.display_custom_text)
-                actual_action.setSeparator(True)
-                if actual_action: parent.addAction(actual_action)                
+            case Trigger.Variants.Menu:
+                result = self.MenuItem_Submenu(parent, data)
+                parent.addMenu(result)
+            case Trigger.Variants.Action:
+                result = self.MenuItem_Action(parent, data)
+                if result: parent.addAction(result)
+            case Trigger.Variants.Seperator:
+                result = self.MenuItem_Seperator(parent, data)
+                if result: parent.addAction(result)                
             case _:
-                actual_action = QAction(parent)
-                actual_action.setText(data.display_custom_text)
-                actual_action.triggered.connect(lambda: self.Actions_Run(data, actual_action))
+                actual_action = self.MenuItem_Other(parent, data)
                 if actual_action: parent.addAction(actual_action)
 
     def Create_Popup(self, id: str, _parent: QWidget = None):
@@ -453,8 +443,8 @@ class ActionManager(QObject):
                    
     def Button_Menu(self, act: Trigger, classType: type = TriggerButton):
         if act.variant == Trigger.Variants.Shared_Menu:
-            data: TriggerMenu = TouchifySettings.registryItem(act.refrenced_menu, TriggerMenu)
-            if not isinstance(data, TriggerMenu) or data == None: return None
+            data: ContextMenu = TouchifySettings.registryItem(act.refrenced_menu, ContextMenu)
+            if not isinstance(data, ContextMenu) or data == None: return None
         elif act.variant == Trigger.Variants.Menu:
             data = act.menu_data
         else:
@@ -529,6 +519,36 @@ class ActionManager(QObject):
     
     #endregion
 
+    #region MenuItem Constructors
+
+    def MenuItem_Action(self, parent: TriggerMenuWidget, data: Trigger):
+        if data.action_id in KritaActions.EXPANDING_SPACERS:
+            actual_action = QAction(parent)
+            actual_action.setSeparator(True)
+        else:
+            actual_action = KritaAPI.get_action(data.action_id)
+
+        return actual_action
+
+    def MenuItem_Seperator(self, parent: TriggerMenuWidget, data: Trigger):
+        actual_action = QAction(parent)
+        actual_action.setText(data.display_custom_text)
+        actual_action.setSeparator(True)
+        return actual_action
+
+    def MenuItem_Submenu(self, parent: TriggerMenuWidget, data: Trigger):
+        actual_menu = TriggerMenuWidget(data, parent, self)
+        actual_menu.setTitle(data.display_custom_text)
+        return actual_menu
+    
+    def MenuItem_Other(self, parent: TriggerMenuWidget, data: Trigger):
+        actual_action = QAction(parent)
+        actual_action.setText(data.display_custom_text)
+        actual_action.triggered.connect(lambda: self.Actions_Run(data, actual_action))
+        return actual_action
+
+    #endregion
+
     #region Execution Functions    
 
     def Execute_RegistryAction(self, identifier: str, action: QAction):
@@ -549,10 +569,10 @@ class ActionManager(QObject):
                 if data.extra_composer_mode: self.OnEvent_ComposerStart()
                 action.trigger()
     
-    def Execute_Menu(self, action: QAction, id: str=None, data: TriggerMenu=None):
+    def Execute_Menu(self, action: QAction, id: str=None, data: ContextMenu=None):
         if id:
-            menu_data: TriggerMenu = TouchifySettings.registryItem(id, TriggerMenu)
-            if not isinstance(menu_data, TriggerMenu) or menu_data == None: return
+            menu_data: ContextMenu = TouchifySettings.registryItem(id, ContextMenu)
+            if not isinstance(menu_data, ContextMenu) or menu_data == None: return
         elif data:
             menu_data = data
         else:

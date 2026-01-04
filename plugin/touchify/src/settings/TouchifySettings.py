@@ -14,11 +14,11 @@ from touchify.src.config.script.CustomScript import CustomScript
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 from touchify.src.config.TouchifyRegistryPreferences import TouchifyRegistryPreferences
-from touchify.src.config.menu.TriggerMenu import TriggerMenu
+from touchify.src.config.context_menu.ContextMenu import ContextMenu
 from jemlib.api_touchify.env import *
 
 
-RegistryItemType = None | TriggerMenu | PopupData | DockerGroup | CanvasPreset | Toolshelf | ToolboxData | CustomScript | PieWheelData
+RegistryItemType = None | ContextMenu | PopupData | DockerGroup | CanvasPreset | Toolshelf | ToolboxData | CustomScript | PieWheelData
 
 class TouchifySettings:
 
@@ -93,9 +93,9 @@ class TouchifySettings:
                     item: PopupData
                     id = f"{pack.INTERNAL_UUID_ID}/popup/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
-            elif type == TriggerMenu:
+            elif type == ContextMenu:
                 for item in pack.menus:
-                    item: TriggerMenu
+                    item: ContextMenu
                     id = f"{pack.INTERNAL_UUID_ID}/menu/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
             elif type == Toolshelf:
@@ -143,9 +143,9 @@ class TouchifySettings:
                     item: PopupData
                     id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "popup", item.INTERNAL_UUID_ID)
                     results[id] = item
-            elif type == TriggerMenu:
+            elif type == ContextMenu:
                 for item in pack.menus:
-                    item: TriggerMenu
+                    item: ContextMenu
                     id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "menu", item.INTERNAL_UUID_ID)
                     results[id] = item
             elif type == DockerGroup:

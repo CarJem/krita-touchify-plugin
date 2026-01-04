@@ -1,24 +1,30 @@
+from typing import TYPE_CHECKING
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
-from touchify.src.config.menu.TriggerMenuItem import TriggerMenuItem
+from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
 
-class TriggerMenu:
+if TYPE_CHECKING:
+    from touchify.src.config.triggers.Trigger import Trigger
+
+class ContextMenu:
 
     def __defaults__(self):
-        self.registry_id: str = "NewTriggerMenu"    
-        self.registry_name: str = "New Trigger Menu"  
+        self.registry_id: str = "NewTriggerMenu" 
+        self.registry_name: str = "New Trigger Menu"
 
         #Menu Params
-        self.context_menu_actions: TypedList["TriggerMenuItem"] = []
+        self.context_menu_actions: TypedList["Trigger"] = []
 
-        self.json_version: int = 1
+        self.json_version: int = 2
     
 
     def __init__(self, **args) -> None:
+        from touchify.src.config.triggers.Trigger import Trigger
         self.__defaults__()
+        args = BackwardsCompatibility.TriggerContextMenu(args)
         JsonExtensions.dictToObject(self, args, [])
-        self.context_menu_actions = JsonExtensions.init_list(args, "context_menu_actions", TriggerMenuItem)
+        self.context_menu_actions = JsonExtensions.init_list(args, "context_menu_actions", Trigger)
 
     def getDisplayName(self):
         return self.registry_name
@@ -30,7 +36,8 @@ class TriggerMenu:
         return self.getDisplayName()
 
     def propertygrid_listload(self):
-        self.context_menu_actions = TypedList(self.context_menu_actions, TriggerMenuItem)
+        from touchify.src.config.triggers.Trigger import Trigger
+        self.context_menu_actions = TypedList(self.context_menu_actions, Trigger)
 
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
@@ -56,7 +63,7 @@ class TriggerMenu:
         labels = {}
         
         labels["registry_id"] = "Registry ID"
-        labels["registry_name"] = "Registry Name"
+        labels["registry_name"] = "Display Name"
 
         labels["context_menu_actions"] = "Menu Triggers"
 

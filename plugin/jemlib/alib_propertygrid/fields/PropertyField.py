@@ -43,7 +43,7 @@ class PropertyField(QWidget, Generic[T]):
         self.__parent_grid = host
 
     def setVariable(self, newData: T):
-        Logger.debug("JemLib", "PropertyField_Bool", f"Var: {self.propertyData.variableName()} NewState:{str(newData)}")
+        Logger.debug("JemLib", "PropertyField", f"Var: {self.propertyData.variableName()} NewState:{str(newData)}")
         self.propertyData.updateData(newData)
         self.sigPropertyFieldChanged.emit()
 

@@ -65,14 +65,14 @@ class PropertyGrid_TouchifyRestrictions:
         from touchify.src.config.docker_group.DockerGroup import DockerGroup
         from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
         from touchify.src.config.popup.PopupData import PopupData
-        from touchify.src.config.menu.TriggerMenu import TriggerMenu
+        from touchify.src.config.context_menu.ContextMenu import ContextMenu
         from touchify.src.config.script.CustomScript import CustomScript
         from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 
         if type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.PopupRegistry: return PopupData
         elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.DockerGroupRegistry: return DockerGroup
         elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.CanvasPresetRegistry: return CanvasPreset
-        elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.MenuRegistry: return TriggerMenu
+        elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.MenuRegistry: return ContextMenu
         elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.ShelfRegistry: return Toolshelf
         elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.ScriptRegistry: return CustomScript
         elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.PieWheelRegistry: return PieWheelData

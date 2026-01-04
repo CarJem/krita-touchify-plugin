@@ -1,3 +1,4 @@
+from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_datatypes.EnumStr import EnumStr
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
@@ -10,13 +11,13 @@ from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 
 class Trigger:
-     
     class Variants(EnumStr):
         Action = "action"
         Color = "color"
         Brush = "brush"
         Docker = "docker"
         Workspace = "workspace"
+        Seperator = "seperator"
         Menu = "#menu"
         Script ="#script"
         
@@ -27,10 +28,11 @@ class Trigger:
         Shared_Pie_Wheel = "pie_wheel"
         Shared_Script = "script"
 
-    def __defaults__(self):
-        from touchify.src.config.menu.TriggerMenu import TriggerMenu
-        from touchify.src.config.script.CustomScript import CustomScript
 
+    def __defaults__(self):
+        from touchify.src.config.context_menu.ContextMenu import ContextMenu
+        from touchify.src.config.script.CustomScript import CustomScript
+        
         self.registry_id: str = "NewTrigger"      
         self.variant: str = "action"
 
@@ -55,7 +57,7 @@ class Trigger:
         self.docker_id: str = ""
         self.workspace_id: str = ""      
         self.color_id: str = "#000000"
-        self.menu_data: TriggerMenu = TriggerMenu()
+        self.menu_data: TypedList["Trigger"] = []
         self.script_data: CustomScript = CustomScript()
         
         #Variant Refrences
@@ -68,38 +70,51 @@ class Trigger:
 
         self.json_version: int = 3
     
-
     def __init__(self, **args) -> None:
-        from touchify.src.config.menu.TriggerMenu import TriggerMenu
         from touchify.src.config.script.CustomScript import CustomScript
 
         self.__is_registry = False
         self.__defaults__()
         args = BackwardsCompatibility.Trigger(args)
-        JsonExtensions.dictToObject(self, args, [TriggerMenu, CustomScript])
+        JsonExtensions.dictToObject(self, args, [CustomScript, Trigger])
+
+    def __str__(self):
+        match self.variant:
+            case Trigger.Variants.Action:
+                prefix = "[Action]"
+            case Trigger.Variants.Menu:
+                prefix = "[Menu]"
+            case Trigger.Variants.Shared_Menu:
+                prefix = "[Menu]"
+            case Trigger.Variants.Brush:
+                prefix = "[Brush]"
+            case Trigger.Variants.Shared_Popup:
+                prefix = "[Popup]"
+            case Trigger.Variants.Workspace:
+                prefix = "[Workspace]"
+            case Trigger.Variants.Docker:
+                prefix = "[Docker]"
+            case Trigger.Variants.Shared_Docker_Group:
+                prefix = "[Docker Group]"
+            case Trigger.Variants.Shared_Canvas_Preset:
+                prefix = "[Canvas Preset]"
+            case Trigger.Variants.Script:
+                prefix = "[Script]"
+            case Trigger.Variants.Shared_Script:
+                prefix = "[Script]"
+            case Trigger.Variants.Shared_Pie_Wheel:
+                prefix = "[Pie Wheel]"
+            case Trigger.Variants.Color:
+                prefix = "[Color]"
+            case _:
+                prefix = f"[{self.variant}]"
+        
+        return f"{prefix} {self.getDisplayName()}"
+
 
     def getFileName(self):
         return FileExtensions.fileStringify(self.registry_id)
     
-    def isActionIcon(self):
-        use_custom_icon: bool = self.display_custom_icon_enabled and self.display_custom_icon_enabled != ""
-        is_action: bool = self.variant == Trigger.Variants.Action
-
-        if not use_custom_icon and is_action: return True
-        else: return False
-    
-    def hasText(self):
-        display_name = self.getDisplayName()
-        has_text = display_name != "" and display_name != self.registry_id
-        if self.display_text_hide: has_text = False
-        return has_text
-
-    def hasIcon(self):
-        has_icon = not self.getDisplayIcon().isNull()
-        if self.display_icon_hide: has_icon = False
-        return has_icon
-
-
     def getDisplayIcon(self):
         from jemlib.managers.IconRepository import IconRepository
         from PyQt5.QtGui import QIcon
@@ -159,38 +174,24 @@ class Trigger:
         return text
 
 
-    def __str__(self):
-        match self.variant:
-            case Trigger.Variants.Action:
-                prefix = "[Action]"
-            case Trigger.Variants.Menu:
-                prefix = "[Menu]"
-            case Trigger.Variants.Shared_Menu:
-                prefix = "[Menu]"
-            case Trigger.Variants.Brush:
-                prefix = "[Brush]"
-            case Trigger.Variants.Shared_Popup:
-                prefix = "[Popup]"
-            case Trigger.Variants.Workspace:
-                prefix = "[Workspace]"
-            case Trigger.Variants.Docker:
-                prefix = "[Docker]"
-            case Trigger.Variants.Shared_Docker_Group:
-                prefix = "[Docker Group]"
-            case Trigger.Variants.Shared_Canvas_Preset:
-                prefix = "[Canvas Preset]"
-            case Trigger.Variants.Script:
-                prefix = "[Script]"
-            case Trigger.Variants.Shared_Script:
-                prefix = "[Script]"
-            case Trigger.Variants.Shared_Pie_Wheel:
-                prefix = "[Pie Wheel]"
-            case Trigger.Variants.Color:
-                prefix = "[Color]"
-            case _:
-                prefix = f"[{self.variant}]"
-        
-        return f"{prefix} {self.getDisplayName()}"
+    def isActionIcon(self):
+        use_custom_icon: bool = self.display_custom_icon_enabled and self.display_custom_icon_enabled != ""
+        is_action: bool = self.variant == Trigger.Variants.Action
+
+        if not use_custom_icon and is_action: return True
+        else: return False
+    
+    def hasText(self):
+        display_name = self.getDisplayName()
+        has_text = display_name != "" and display_name != self.registry_id
+        if self.display_text_hide: has_text = False
+        return has_text
+
+    def hasIcon(self):
+        has_icon = not self.getDisplayIcon().isNull()
+        if self.display_icon_hide: has_icon = False
+        return has_icon
+
 
     def propertygrid_icon(self):
         return self.getDisplayIcon()
@@ -235,7 +236,7 @@ class Trigger:
 
         ]
 
-    def propertygrid_hidden(self):
+    def propertygrid_hidden(self, isTriggerMenuItem=False):
         result = []
 
         try:
@@ -243,35 +244,22 @@ class Trigger:
                 result.append("registry_id")
         except:
             pass
+        
+        if self.variant != Trigger.Variants.Action: result.append(f"{self.action_id=}".partition('=')[0][5:])
+        if self.variant != Trigger.Variants.Brush: result.append(f"{self.brush_name=}".partition('=')[0][5:])
+        if self.variant != Trigger.Variants.Docker: result.append(f"{self.docker_id=}".partition('=')[0][5:])
+        if self.variant != Trigger.Variants.Workspace: result.append("workspace_id")
 
+        if self.variant != Trigger.Variants.Menu or isTriggerMenuItem: result.append("menu_data")
+        if self.variant != Trigger.Variants.Shared_Menu or isTriggerMenuItem: result.append("refrenced_menu")            
+        
+        if self.variant != Trigger.Variants.Script: result.append("script_data")
+        if self.variant != Trigger.Variants.Shared_Script: result.append("refrenced_script")
 
-
-        if self.variant != Trigger.Variants.Action:
-            result.append("action_id")
-        if self.variant != Trigger.Variants.Shared_Menu:
-            result.append("refrenced_menu")            
-        if self.variant != Trigger.Variants.Brush:
-            result.append("brush_name")
-        if self.variant != Trigger.Variants.Workspace:
-            result.append("workspace_id")
-        if self.variant != Trigger.Variants.Docker:
-            result.append("docker_id")
-        if self.variant != Trigger.Variants.Shared_Popup:
-            result.append("refrenced_popup")
-        if self.variant != Trigger.Variants.Shared_Docker_Group:
-            result.append("refrenced_dockergroup")
-        if self.variant != Trigger.Variants.Shared_Canvas_Preset:
-            result.append("refrenced_canvaspreset")
-        if self.variant != Trigger.Variants.Shared_Script:
-            result.append("refrenced_script")
-        if self.variant != Trigger.Variants.Shared_Pie_Wheel:
-            result.append("refrenced_piewheel")
-        if self.variant != Trigger.Variants.Color:
-            result.append("color_id")
-        if self.variant != Trigger.Variants.Menu:
-            result.append("menu_data")
-        if self.variant != Trigger.Variants.Script:
-            result.append("script_data")
+        if self.variant != Trigger.Variants.Shared_Popup: result.append("refrenced_popup")
+        if self.variant != Trigger.Variants.Shared_Docker_Group: result.append("refrenced_dockergroup")
+        if self.variant != Trigger.Variants.Shared_Canvas_Preset: result.append("refrenced_canvaspreset")
+        if self.variant != Trigger.Variants.Shared_Pie_Wheel: result.append("refrenced_piewheel")
 
         if self.variant == Trigger.Variants.Color:
             result.append("display_opt")
@@ -283,12 +271,11 @@ class Trigger:
             result.append("extra_options")
             result.append("extra_closes_popup")
             result.append("extra_composer_mode")
+        else:
+            result.append("color_id")
 
-        if self.display_custom_icon_enabled == False:
-            result.append("display_custom_icon")
-        
-        if self.display_custom_text_enabled == False:
-            result.append("display_custom_text")
+        if self.display_custom_icon_enabled == False: result.append("display_custom_icon")
+        if self.display_custom_text_enabled == False: result.append("display_custom_text")
 
         return result
     
@@ -339,7 +326,7 @@ class Trigger:
         return labels
     
     def propertygrid_listload(self):
-        pass
+        self.menu_data = TypedList(self.menu_data, Trigger)
 
     def propertygrid_listmod(self, mods: list[any]):
         for mod in mods:

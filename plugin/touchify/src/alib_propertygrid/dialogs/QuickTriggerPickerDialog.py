@@ -9,13 +9,12 @@ from jemlib.alib_propertygrid.data.DataHandler import DataHandler
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 
 from touchify.src.config.triggers.Trigger import Trigger
-from touchify.src.config.menu.TriggerMenuItem import TriggerMenuItem
 
 class QuickTriggerPickerDialog(QDialog):
     sigOnNewItem = pyqtSignal(Trigger)
     
     class TriggerTab(QDialog):
-        def __init__(self, parent: "QuickTriggerPickerDialog", menuMode=False):
+        def __init__(self, parent: "QuickTriggerPickerDialog"):
             super().__init__(parent)
             self.pickerParent = parent
 
@@ -24,10 +23,7 @@ class QuickTriggerPickerDialog(QDialog):
             self.praser.installExtension(TouchifyDataHandler())
 
             self.propertyGrid = PropertyGrid(self, self.praser)
-            if menuMode:
-                self.propertyGrid.setDataObject(TriggerMenuItem())
-            else:
-                self.propertyGrid.setDataObject(Trigger())
+            self.propertyGrid.setDataObject(Trigger())
 
             self.container = QVBoxLayout(self)
             self.setMinimumSize(600,400)
@@ -53,9 +49,8 @@ class QuickTriggerPickerDialog(QDialog):
         def onCancel(self):
             self.pickerParent.onReject()
 
-    def __init__(self, parent: QWidget, menuMode=False):
+    def __init__(self, parent: QWidget):
         super().__init__(parent)
-        self.__menuMode = menuMode
 
         self.setLayout(QGridLayout())
         self.layout().setContentsMargins(0,0,0,0)
@@ -64,13 +59,9 @@ class QuickTriggerPickerDialog(QDialog):
         self.tabWidget = QTabWidget(self)
         self.layout().addWidget(self.tabWidget)
 
-        if self.__menuMode:
-            self.tabWidget.addTab(self.createTab(self.onAddAction, DataConstraints.StrMod.ActionSelection), "Action")
-            self.tabWidget.addTab(QuickTriggerPickerDialog.TriggerTab(self, menuMode), "Custom")
-        else:
-            self.tabWidget.addTab(self.createTab(self.onAddAction, DataConstraints.StrMod.ActionSelection), "Action")
-            self.tabWidget.addTab(self.createTab(self.onAddBrush, DataConstraints.StrMod.BrushSelection), "Brush")
-            self.tabWidget.addTab(QuickTriggerPickerDialog.TriggerTab(self, menuMode), "Custom")
+        self.tabWidget.addTab(self.createTab(self.onAddAction, DataConstraints.StrMod.ActionSelection), "Action")
+        self.tabWidget.addTab(self.createTab(self.onAddBrush, DataConstraints.StrMod.BrushSelection), "Brush")
+        self.tabWidget.addTab(QuickTriggerPickerDialog.TriggerTab(self), "Custom")
 
     def createTab(self, onAccept: any, mode: DataConstraints.StrMod):
         dlg = PropertyGrid_SelectorDialog(None)
@@ -82,26 +73,21 @@ class QuickTriggerPickerDialog(QDialog):
         return dlg
 
     def onAddBrush(self, source: PropertyGrid_SelectorDialog):
-        if self.__menuMode == False:   
-            trigger = Trigger()
-            trigger.variant = str(Trigger.Variants.Brush)
-            trigger.display_custom_text_enabled = False
-            trigger.brush_name = source.selected_item
-            self.sigOnNewItem.emit(deepcopy(trigger))
+        trigger = Trigger()
+        trigger.variant = str(Trigger.Variants.Brush)
+        trigger.display_custom_text_enabled = False
+        trigger.brush_name = source.selected_item
+        self.sigOnNewItem.emit(deepcopy(trigger))
 
     def onAddAction(self, source: PropertyGrid_SelectorDialog):
-        if self.__menuMode == False:
-            trigger = Trigger()
-            trigger.variant = str(Trigger.Variants.Action)
-        else:
-            trigger = TriggerMenuItem()
-            trigger.variant = str(TriggerMenuItem.Variants.Action)
+        trigger = Trigger()
+        trigger.variant = str(Trigger.Variants.Action)
 
         trigger.display_custom_text_enabled = False
         trigger.action_id = source.selected_item
         self.sigOnNewItem.emit(deepcopy(trigger))
 
-    def onAddTrigger(self, source: Trigger | TriggerMenuItem):
+    def onAddTrigger(self, source: Trigger):
         self.sigOnNewItem.emit(deepcopy(source))
 
     def onReject(self):

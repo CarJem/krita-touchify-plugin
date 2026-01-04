@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from jemlib.alib_propertygrid.PropertyTabs import PropertyTabs
 from jemlib.managers.IconRepository import IconRepository
 
 if TYPE_CHECKING:
@@ -11,6 +12,8 @@ class PropertyGrid(QWidget):
 
     def __init__(self, parent: QWidget | None = None, praser: "DataHandler" = None, scrolling=True, **kwargs) -> None:
         super(QWidget, self).__init__(parent)
+
+        self.setContentsMargins(0,0,0,0)
         
         from jemlib.alib_propertygrid.data.DataHandler import DataHandler
         self.__praser = praser if praser else DataHandler()
@@ -21,25 +24,22 @@ class PropertyGrid(QWidget):
         layout.setContentsMargins(0,0,0,0)
         self.setLayout(layout)
         
+        self.page_stack = QStackedWidget(self)
+        self.page_stack.setContentsMargins(0,0,0,0)
+        layout.addWidget(self.page_stack, 0, 0, 1, 2)
+
         self.back_button = QPushButton(self)
         self.back_button.setContentsMargins(0,0,0,0)
         self.back_button.setFlat(True)
         self.back_button.setIcon(IconRepository.materialIcon("arrow-left"))
         self.back_button.clicked.connect(self.navigateBackwards)
-        layout.addWidget(self.back_button, 0, 0)
+        layout.addWidget(self.back_button, 1, 0)
 
-        self.tab_bar = QTabBar(self)
-        self.tab_bar.setExpanding(False)
-        self.tab_bar.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        self.tab_bar.setMovable(False)
-        self.tab_bar.setUsesScrollButtons(True)
-        self.tab_bar.installEventFilter(self)
-        self.tab_bar.setTabsClosable(False)
-        layout.addWidget(self.tab_bar, 0, 1)
+        self.tab_bar = PropertyTabs(self)
+        self.tab_bar.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        self.tab_bar.setContentsMargins(0,0,0,0)
+        layout.addWidget(self.tab_bar, 1, 1)
         layout.setColumnStretch(1, 1)
-
-        self.page_stack = QStackedWidget(self)
-        layout.addWidget(self.page_stack, 1, 0, 1, 2)
 
         from .PropertyViewport import PropertyViewport
         self.__property_grid = PropertyViewport(self, self.__praser, scrolling)
@@ -47,15 +47,6 @@ class PropertyGrid(QWidget):
         self.page_stack.insertWidget(0, self.__property_grid)
 
         self.onNavigationTabsChanged()
-
-    #region Event Recievers
-
-    def eventFilter(self, obj, event):
-        if obj is self.tab_bar and event.type() == QEvent.Type.Wheel:
-            return True
-        return super(PropertyGrid, self).eventFilter(obj, event)
-
-    #endregion
 
     #region Get / Set Functions
 

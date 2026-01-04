@@ -22,23 +22,32 @@ if TYPE_CHECKING:
     from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
 
 
-class PropertyView_Tabs(QTabWidget, PropertyView):
+class PropertyView_Tabs(QWidget, PropertyView):
 
     def __init__(self, parent: "PropertyViewport", praser: DataHandler, isVertical: bool = False):
-        QTabWidget.__init__(self, parent)
+        QWidget.__init__(self, parent)
         PropertyView.__init__(self, parent, praser)
 
         self.__pages: list["PropertyViewport" | "PropertyViewportNested"] = []
         self.__tabs: list[str] = []
 
-        self.setContentsMargins(0,0,0,0)
-        self.setElideMode(Qt.TextElideMode.ElideNone)
+        self.gridLayout = QGridLayout(self)
+        self.gridLayout.setContentsMargins(0,0,0,0)
+        self.gridLayout.setSpacing(0)
+        self.setLayout(self.gridLayout)
 
+        self.__tabBar = QTabWidget(self)
         if isVertical:
-            self.setTabBar(VerticalQTabBar(self))
-            self.setTabPosition(QTabWidget.TabPosition.West)
-            self.setStyleSheet("QTabWidget::tab-bar {left : 0;}")
-        self.tabBar().adjustSize()
+            self.__tabBar.setTabBar(VerticalQTabBar(self))
+            self.__tabBar.setTabPosition(QTabWidget.TabPosition.West)
+            self.__tabBar.setStyleSheet("QTabWidget::tab-bar {left : 0;}")
+        self.__tabBar.setContentsMargins(0,0,0,0)
+        self.__tabBar.setElideMode(Qt.TextElideMode.ElideNone)
+        self.gridLayout.addWidget(self.__tabBar, 0, 0)
+
+        self.__tabBar.tabBar().adjustSize()
+
+
 
 
     #region Get / Set Functions
@@ -94,6 +103,7 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
                 from jemlib.alib_propertygrid.PropertyViewport import PropertyViewportNested
                 page = PropertyViewportNested(self, self.getViewport().getContainer(), self.getPraser())
                 page.sigPropertiesChanged.connect(self.onPropertiesChanged)
+                page.setParent(self)
                 page.setLimiters([_varName])
                 page.setModifiers({"no_labels": ""})
                 page.setViewType("default")
@@ -126,13 +136,13 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
         hiddenItems = PropertyView.getHiddenVariableNames(self)
 
         for index, field in enumerate(self.__tabs):     
-            if field in hiddenItems: self.setTabVisible(index, False)
-            else: self.setTabVisible(index, True)
+            if field in hiddenItems: self.__tabBar.setTabVisible(index, False)
+            else: self.__tabBar.setTabVisible(index, True)
 
     def onDataObjectChanged(self):
         self.__pages.clear()
         self.__tabs.clear()
-        self.clear()
+        self.__tabBar.clear()
 
         item = self.getDataObject()
         if item == None: return
@@ -159,6 +169,8 @@ class PropertyView_Tabs(QTabWidget, PropertyView):
 
             if page:
                 tab = self.createTab(variable_id, labelData)
-                tabIndex = self.addTab(page, tab)
+                tabIndex = self.__tabBar.addTab(page, tab)
+                
+
 
     #endregion
