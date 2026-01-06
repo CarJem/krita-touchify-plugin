@@ -8,27 +8,123 @@
                 [
                     [
                         "dock",
-                        "52217972-aa50-4c51-a322-30fb21ad443b",
+                        "8ed4dbbd-10ed-4bc9-acdf-731c0a655ea3",
                         {}
+                    ],
+                    [
+                        "vertical",
+                        [
+                            [
+                                "dock",
+                                "d48f00e1-3ce0-48af-bd2b-b441363e67d7",
+                                {}
+                            ],
+                            [
+                                "dock",
+                                "1efcf887-7858-40a3-85d0-f70a93be7070",
+                                {}
+                            ]
+                        ],
+                        {
+                            "sizes": [
+                                60,
+                                60
+                            ]
+                        }
+                    ],
+                    [
+                        "horizontal",
+                        [
+                            [
+                                "dock",
+                                "efc981e1-18e0-493f-a350-a5a15fc2d0cf",
+                                {}
+                            ],
+                            [
+                                "dock",
+                                "e8662042-6651-4e35-a112-a71ea4883904",
+                                {}
+                            ]
+                        ],
+                        {
+                            "sizes": [
+                                29,
+                                29
+                            ]
+                        }
                     ]
                 ],
                 {
                     "sizes": [
-                        553
+                        628,
+                        124,
+                        30
                     ]
                 }
             ],
             "float": []
         },
         "items": {
-            "52217972-aa50-4c51-a322-30fb21ad443b": {
+            "d48f00e1-3ce0-48af-bd2b-b441363e67d7": {
                 "display_name": "",
-                "min_size_x": 0,
-                "min_size_y": 0,
-                "max_size_x": 0,
-                "max_size_y": 0,
+                "min_size_x": 60,
+                "min_size_y": 60,
+                "max_size_x": 60,
+                "max_size_y": 60,
+                "section_type": "special",
+                "section_handles": "no_handles",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
+                "docker_id": "",
+                "docker_nesting_mode": "normal",
+                "docker_unloaded_visibility": "normal",
+                "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
+                "action_section_id": "Panel",
+                "action_section_display_mode": "normal",
+                "action_section_contents": [],
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none",
+                "action_section_btn_width": 0,
+                "action_section_btn_height": 0,
+                "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
+                "special_item_type": "foreground_background_color_picker",
+                "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
+                "json_version": 5
+            },
+            "8ed4dbbd-10ed-4bc9-acdf-731c0a655ea3": {
+                "display_name": "",
+                "min_size_x": 64,
+                "min_size_y": 630,
+                "max_size_x": 58,
+                "max_size_y": 630,
                 "section_type": "docker",
-                "section_handles": "both_handles",
+                "section_handles": "no_handles",
                 "requires_specific_tool": "",
                 "invert_required_tools": false,
                 "docker_id": "Touchify/TouchifyToolbox",
@@ -72,6 +168,162 @@
                     "json_version": 1
                 },
                 "json_version": 5
+            },
+            "efc981e1-18e0-493f-a350-a5a15fc2d0cf": {
+                "display_name": "",
+                "min_size_x": 30,
+                "min_size_y": 30,
+                "max_size_x": 30,
+                "max_size_y": 30,
+                "section_type": "special",
+                "section_handles": "no_handles",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
+                "docker_id": "",
+                "docker_nesting_mode": "normal",
+                "docker_unloaded_visibility": "normal",
+                "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
+                "action_section_id": "Panel",
+                "action_section_display_mode": "normal",
+                "action_section_contents": [],
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none",
+                "action_section_btn_width": 0,
+                "action_section_btn_height": 0,
+                "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
+                "special_item_type": "gradient_chooser_popup",
+                "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
+                "json_version": 5
+            },
+            "e8662042-6651-4e35-a112-a71ea4883904": {
+                "display_name": "",
+                "min_size_x": 30,
+                "min_size_y": 30,
+                "max_size_x": 30,
+                "max_size_y": 30,
+                "section_type": "special",
+                "section_handles": "no_handles",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
+                "docker_id": "",
+                "docker_nesting_mode": "normal",
+                "docker_unloaded_visibility": "normal",
+                "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
+                "action_section_id": "Panel",
+                "action_section_display_mode": "normal",
+                "action_section_contents": [],
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none",
+                "action_section_btn_width": 0,
+                "action_section_btn_height": 0,
+                "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
+                "special_item_type": "pattern_chooser_popup",
+                "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
+                "json_version": 5
+            },
+            "1efcf887-7858-40a3-85d0-f70a93be7070": {
+                "display_name": "",
+                "min_size_x": 60,
+                "min_size_y": 60,
+                "max_size_x": 60,
+                "max_size_y": 60,
+                "section_type": "special",
+                "section_handles": "no_handles",
+                "requires_specific_tool": "",
+                "invert_required_tools": false,
+                "docker_id": "",
+                "docker_nesting_mode": "normal",
+                "docker_unloaded_visibility": "normal",
+                "docker_loading_priority": "normal",
+                "docker_size_hint_x": 0,
+                "docker_size_hint_y": 0,
+                "action_section_id": "Panel",
+                "action_section_display_mode": "normal",
+                "action_section_contents": [],
+                "action_section_alignment_x": "none",
+                "action_section_alignment_y": "none",
+                "action_section_btn_width": 0,
+                "action_section_btn_height": 0,
+                "action_section_icon_size": 0,
+                "action_section_fixed_size_x": 0,
+                "action_section_fixed_size_y": 0,
+                "special_item_type": "brush_preset_picker",
+                "special_slider_orientation": "horizontal",
+                "special_nested_show_titlebar": true,
+                "special_nested_data": {
+                    "layout": {},
+                    "items": {},
+                    "pages": [],
+                    "options": {
+                        "button_size": 32,
+                        "header_size": 16,
+                        "enable_pinning": false,
+                        "position": "top",
+                        "resize_style": "default",
+                        "stack_preview": "default",
+                        "stack_alignment": "default",
+                        "stack_actions": [],
+                        "json_version": 1
+                    },
+                    "pageOptions": {
+                        "page_icon": "material:home",
+                        "json_version": 1
+                    },
+                    "json_version": 1
+                },
+                "json_version": 5
             }
         },
         "pages": [],
@@ -80,7 +332,7 @@
             "header_size": 16,
             "enable_pinning": false,
             "position": "top",
-            "resize_style": "size_hint",
+            "resize_style": "minimum",
             "stack_preview": "default",
             "stack_alignment": "default",
             "stack_actions": [],
