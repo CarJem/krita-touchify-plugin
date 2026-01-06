@@ -314,7 +314,7 @@ class PopupWidget(QDockWidget, AnimatedWidget):
         self._timeSinceOpened.addMSecs(250)
         self.closePopup(False)
         QTimer.singleShot(timeOffset, partial(self.openPopup, parent))
-        QTimer.singleShot(timeOffset + 50, self.repaint)
+        QTimer.singleShot(timeOffset + 50, self.update)
     
     def closePopup(self, activateParent: bool = True):
         if self._isChildPopupFocused == True:

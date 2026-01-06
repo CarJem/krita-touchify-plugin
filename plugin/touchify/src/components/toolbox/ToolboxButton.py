@@ -53,7 +53,7 @@ class ToolboxButton(TriggerButton):
     def onMouseOverChanged(self, state: bool):
         if self._isEditMode:
             self._isHovered = state
-            self.repaint()
+            self.update()
 
     #endregion
 

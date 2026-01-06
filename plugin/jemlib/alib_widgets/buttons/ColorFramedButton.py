@@ -17,7 +17,7 @@ class ColorFramedButton(QPushButton):
     @padding.setter
     def padding(self, val: int):
         self.__padding = val
-        self.repaint()
+        self.update()
         
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)
@@ -46,5 +46,5 @@ class ColorFramedButton(QPushButton):
       
     def setColor(self, color: QColor | None = None):
         self.__color = color
-        self.repaint()
+        self.update()
     

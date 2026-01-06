@@ -296,11 +296,11 @@ class ShelfDockOverlay(QtWidgets.QWidget):
     def toggleSelection(self):
         if self.isEditMode:
             self.isSelected = not self.isSelected
-            self.repaint()
+            self.update()
 
     def onMouseOverChanged(self, state: bool):
         self.isMouseOver = state
-        self.repaint()
+        self.update()
 
     def paintEvent(self, event: QPaintEvent):
         super().paintEvent(event)
