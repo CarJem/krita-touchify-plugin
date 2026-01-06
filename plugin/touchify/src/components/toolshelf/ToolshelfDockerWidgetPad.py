@@ -314,13 +314,13 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
     def resizeEvent(self, a0: QResizeEvent):
         if self._allowSignals: 
             self.__lastResizeEvent = a0
-            self.__resizeUpdateTimer.start(1)
+            self.__resizeUpdateTimer.start(50)
         return super().resizeEvent(a0)
     
     def moveEvent(self, a0: QMoveEvent):
         if self._allowSignals: 
             self.__lastMoveEvent = a0
-            self.__moveUpdateTimer.start(1)
+            self.__moveUpdateTimer.start(50)
         return super().moveEvent(a0)
     
     def resizeUpdateEvent(self):
