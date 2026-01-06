@@ -160,6 +160,17 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self._titlebar.sigContextMenuRequested.connect(self.onContextMenu)
         self.setTitleBarWidget(self._titlebar)
 
+        self.__lastResizeEvent: QResizeEvent = None
+        self.__lastMoveEvent: QMoveEvent = None
+
+        self.__resizeUpdateTimer = QTimer(self)
+        self.__resizeUpdateTimer.setSingleShot(True)
+        self.__resizeUpdateTimer.timeout.connect(self.resizeUpdateEvent)
+
+        self.__moveUpdateTimer = QTimer(self)
+        self.__moveUpdateTimer.setSingleShot(True)
+        self.__moveUpdateTimer.timeout.connect(self.moveUpdateEvent)
+
     def setup(self, app_window: "TouchifyWindow"):
         super().setup(app_window)
         self.setAlignment(self._settings.getAlignment())
@@ -180,6 +191,8 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self._titlebar.toggleButton.blockSignals(False)
         self._collapsed_size = self.size()
         self.mainWidget.hide()
+
+    
 
     def onContextMenu(self, pos: QPoint):
         menu = QMenu(self)
@@ -299,12 +312,26 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self.managers.mgr_widgetpad.moveWidgetPad(self, old_alignment, align)
 
     def resizeEvent(self, a0: QResizeEvent):
-        if self._allowSignals: self.sigOnResized.emit(self, a0)
+        if self._allowSignals: 
+            self.__lastResizeEvent = a0
+            self.__resizeUpdateTimer.start(1)
         return super().resizeEvent(a0)
     
     def moveEvent(self, a0: QMoveEvent):
-        if self._allowSignals: self.sigOnMoved.emit(self, a0)
+        if self._allowSignals: 
+            self.__lastMoveEvent = a0
+            self.__moveUpdateTimer.start(1)
         return super().moveEvent(a0)
+    
+    def resizeUpdateEvent(self):
+        if self.__lastResizeEvent:
+            self.sigOnResized.emit(self, self.__lastResizeEvent)
+            self.__lastResizeEvent = None
+    
+    def moveUpdateEvent(self):
+         if self.__lastMoveEvent:
+            self.sigOnMoved.emit(self, self.__lastMoveEvent)
+            self.__lastMoveEvent = None
 
 
 def DynamicToolshelfDockerWidgetPad(value: int):

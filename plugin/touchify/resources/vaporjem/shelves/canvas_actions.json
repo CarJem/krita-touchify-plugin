@@ -165,7 +165,7 @@
                             },
                             {
                                 "registry_id": "NewTrigger",
-                                "variant": "action",
+                                "variant": "seperator",
                                 "display_icon_hide": false,
                                 "display_icon_padding": 0,
                                 "display_custom_icon_enabled": false,
@@ -345,7 +345,7 @@
                             },
                             {
                                 "registry_id": "NewTrigger",
-                                "variant": "action",
+                                "variant": "seperator",
                                 "display_icon_hide": false,
                                 "display_icon_padding": 0,
                                 "display_custom_icon_enabled": false,
@@ -495,7 +495,7 @@
                             },
                             {
                                 "registry_id": "NewTrigger",
-                                "variant": "action",
+                                "variant": "seperator",
                                 "display_icon_hide": false,
                                 "display_icon_padding": 0,
                                 "display_custom_icon_enabled": false,

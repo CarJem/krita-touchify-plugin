@@ -19,6 +19,19 @@ if TYPE_CHECKING:
 
 class TriggerPanel(QWidget):
 
+    class Button(TriggerButton):
+        def __init__(self, parent=None):
+            super().__init__(parent)
+            self.__toolbarMode = False
+        
+        def setToolbarMode(self, s: bool):
+            self.__toolbarMode = s
+            if self.__toolbarMode: self.setAutoRaise(not self.toggled)
+        
+        def onToggled(self, toggled):
+            super().onToggled(toggled)
+            if self.__toolbarMode: self.setAutoRaise(not self.toggled)
+
     class Toolbar(QToolBar):
         def __init__(self, parent: QWidget | None = None, title: str | None = None):
             super().__init__(title, parent)
@@ -133,12 +146,15 @@ class TriggerPanel(QWidget):
             trigger: Trigger = act[1]
             if trigger.variant == Trigger.Variants.Action and trigger.action_id in KritaActions.EXPANDING_SPACERS:
                 self.appendSpacer(act[0])
+            elif trigger.variant == Trigger.Variants.Seperator:
+                self.appendSeperator(act[0])
             else:
-                btn = self.actions_manager.Create_Button(self, act[1])
+                btn = self.actions_manager.Create_Button(self, act[1], classType=TriggerPanel.Button)
                 if btn:
                     btn.triggerActivated.connect(self.onButtonClicked)
                     self.stylizeButton(btn)
                     self.appendButton(act[1], btn, act[0])
+                    self.configureButton(btn)
     
         size_x = int(self.cfg.size_x)
         size_y = int(self.cfg.size_y)
@@ -245,7 +261,18 @@ class TriggerPanel(QWidget):
         empty = QWidget()
         empty.setSizePolicy(QSizePolicy.Policy.Expanding,QSizePolicy.Policy.Preferred)
         self.addWidgetToRow(row, empty)
-  
+
+    def appendSeperator(self, row: int):
+        separator = QFrame()
+        separator.setFixedWidth(2)
+        separator.setFrameShape(QFrame.Shape.VLine)
+        separator.setFrameShadow(QFrame.Shadow.Sunken)
+            
+        if self.item_height > 0:
+            separator.setFixedHeight(self.item_height)
+
+        self.addWidgetToRow(row, separator)
+
     def appendButton(self, data: Trigger, btn: TriggerButton, row: int):
         def action_id():
             result = None
@@ -258,7 +285,8 @@ class TriggerPanel(QWidget):
                     
         self.addWidgetToRow(row, btn)
         
-    def stylizeButton(self, btn: TriggerButton):
+    def stylizeButton(self, btn: "TriggerPanel.Button"):
+        
         if self.icon_width > 0 and self.icon_height > 0:
             btn.setIconSize(QSize(self.icon_width, self.icon_height))
 
@@ -267,7 +295,7 @@ class TriggerPanel(QWidget):
             
         if self.item_height > 0:
             btn.setFixedHeight(self.item_height)
-            
+
         if self.display_type == "popup":
             stylesheet = f"""
                 QToolButton, QPushButton {{
@@ -295,6 +323,11 @@ class TriggerPanel(QWidget):
         elif self.display_type == "toolbar_flat":
             btn.setContentsMargins(0,0,0,0)
             btn.setStyleSheet(f"""QPushButton::menu-indicator {{ image: none; }} QToolButton::menu-indicator {{ image: none; }}""")
+
+    def configureButton(self, btn: "TriggerPanel.Button"):
+        is_checkable = btn.is_action_checkable or btn.is_tool_action
+        btn.setToolbarMode(self.display_type == "toolbar_flat" and is_checkable)
+            
 
     def onButtonClicked(self):
         self.actionTriggered.emit()
