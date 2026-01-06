@@ -1,4 +1,3 @@
-import copy
 from typing import TYPE_CHECKING, Literal
 from PyQt5 import *
 from PyQt5.QtWidgets import *
@@ -74,6 +73,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
 
 
         if self.has_property_view:
+            # TODO: Fix and Reimplement
             from ..PropertyViewport import PropertyViewport
             self.view_editor = PropertyViewport(self, self.praser)
             self.view_editor.sigPropertiesChanged.connect(self.onPropertyViewUpdate)
@@ -163,7 +163,8 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 self.has_sub_array = True
                 sub_array_setup = True
             if restriction["type"] == DataConstraints.ListMod.PropertyView:
-                self.has_property_view = True
+                # TODO: Fix and Reimplement
+                self.has_property_view = False
             if restriction["type"] == DataConstraints.ListMod.AddRemoveEditOnly:
                 self.allow_move = False
                 self.allow_clipboard = False
@@ -349,11 +350,11 @@ class PropertyField_TypedList(PropertyField[TypedList]):
             if self.selected_sub_row != -1:
                 variable: TypedList = self.propertyData.currentData()
                 item_type = type(self.selected_sub_item)
-                item_data = copy.deepcopy(self.getNestedList(variable[self.selected_row])[self.selected_sub_row])
+                item_data = PropertySystem.deepcopy(self.getNestedList(variable[self.selected_row])[self.selected_sub_row])
             else:
                 variable: TypedList = self.propertyData.currentData()
                 item_type = self.variable_list_type
-                item_data = copy.deepcopy(variable[self.selected_row])
+                item_data = PropertySystem.deepcopy(variable[self.selected_row])
 
             if item_data != None and item_type != None:
                 self.onItemDuplication(item_data)
@@ -371,7 +372,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
             if item_type != None:
                 clipboard_data = PropertySystem.getSettingsClipboard(item_type)
                 if clipboard_data != None:
-                    pastable_data = copy.deepcopy(clipboard_data)
+                    pastable_data = PropertySystem.deepcopy(clipboard_data)
                     variable: TypedList = self.propertyData.currentData()
                     if self.selected_sub_row != -1:
                         list: TypedList = self.getNestedList(variable[self.selected_row])
@@ -386,14 +387,14 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 variable: TypedList = self.propertyData.currentData()
                 list: TypedList = self.getNestedList(variable[self.selected_row])
                 item = list[self.selected_sub_row]
-                newItem = copy.deepcopy(item)
+                newItem = PropertySystem.deepcopy(item)
                 self.onItemDuplication(newItem)
                 list.append(newItem)
                 self.updateList()
             else:
                 variable: TypedList = self.propertyData.currentData()
                 item = variable[self.selected_row]
-                newItem = copy.deepcopy(item)
+                newItem = PropertySystem.deepcopy(item)
                 self.onItemDuplication(newItem)
                 variable.append(newItem)
                 self.updateList()
@@ -429,7 +430,9 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         result = QtGui.QStandardItem(str(varItem))
         if self.allow_icons:
             if hasattr(varItem, "propertygrid_icon"):
-                result.setIcon(varItem.propertygrid_icon())
+                icon = varItem.propertygrid_icon()
+                if icon: result.setIcon(icon)
+                else: result.setIcon(QIcon())
             else:
                 result.setIcon(QIcon())
         return result

@@ -6,8 +6,12 @@ class MouseWheelWidgetAdjustmentGuard(QObject):
         super().__init__(parent)
 
     def eventFilter(self, o: QObject, e: QEvent) -> bool:
-        widget: QWidget = o
-        if e.type() == QEvent.Wheel and not widget.hasFocus():
-            e.ignore()
-            return True
+        try:
+            widget: QWidget = o
+            if e.type() == QEvent.Wheel and not widget.hasFocus():
+                e.ignore()
+                return True
+        except:
+            pass
+        
         return super().eventFilter(o, e)

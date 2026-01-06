@@ -158,7 +158,7 @@ class PropertyViewport(QWidget):
 
     #region General Functions
 
-    def refreshData(self):
+    def syncProperties(self):
         if self.property_view: self.property_view.onPropertiesChanged()
         self.sigPropertiesChanged.emit()
 
@@ -171,7 +171,7 @@ class PropertyViewportNested(PropertyGrid):
     def __init__(self, parent: "PropertyView", container: "PropertyGrid", praser: "DataHandler", scrolling=True):
         super().__init__(parent, praser, scrolling)
 
-        self.getPropertyGrid().sigPropertiesChanged.connect(self.onPropertiesChanged)
+        self.getPropertyGrid().sigPropertiesChanged.connect(self.onParentPropertiesChanged)
 
     #region Get / Set
 
@@ -212,15 +212,15 @@ class PropertyViewportNested(PropertyGrid):
 
     #region Signal Reciever
 
-    def onPropertiesChanged(self):
+    def onParentPropertiesChanged(self):
         self.sigPropertiesChanged.emit()
 
     #endregion
 
     #region General Functions
 
-    def refreshData(self):
-        self.getPropertyGrid().refreshData()
+    def syncProperties(self):
+        self.getPropertyGrid().syncProperties()
         self.sigPropertiesChanged.emit()
 
     #endregion

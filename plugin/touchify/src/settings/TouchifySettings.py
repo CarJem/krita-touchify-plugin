@@ -1,9 +1,9 @@
-from copy import deepcopy
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 
 
+from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.config.resource_pack.ResourcePack import ResourcePack
 from touchify.src.config.TouchifyRegistry import TouchifyRegistry
@@ -50,6 +50,7 @@ class TouchifySettings:
     def __init__(self) -> None:
         self.notify_hooks = []
         self.cfg = TouchifyRegistry()
+        self.cfg.load()
 
     @staticmethod
     def instance():
@@ -64,7 +65,7 @@ class TouchifySettings:
         return TouchifySettings.instance().cfg
     
     def configCopy() -> TouchifyRegistry:
-        return deepcopy(TouchifySettings.instance().cfg)
+        return PropertySystem.deepcopy(TouchifySettings.instance().cfg)
 
     @staticmethod
     def save():

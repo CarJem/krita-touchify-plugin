@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 from PyQt5 import *
 from PyQt5.QtWidgets import *
+from jemlib.alib_vaporjem import Logger
 from krita import *
 
 from jemlib.api_krita.wrappers.window import WindowAPI
@@ -51,11 +52,14 @@ class TouchifyManagers:
         self.mgr_widgetpad.Window_Load(window)
 
     def Reload(self):
+        Logger.logDebug("Touchify", "TouchifyManagers", "Reload", "started")
         self.mgr_actions.Window_Reload()
         for docker in self.__managedDockers:
             if not hasattr(docker, "onTouchifyReload"): pass
             elif not callable(getattr(docker, "onTouchifyReload", False)): pass
-            else: getattr(docker, "onTouchifyReload")()
+            else: 
+                Logger.logDebug("Touchify", "TouchifyManagers", "Reload", f"calling_docker_reload_fn: {docker.objectName()}")
+                getattr(docker, "onTouchifyReload")()
 
     def ReloadTheme(self):
         for docker in self.__managedDockers:

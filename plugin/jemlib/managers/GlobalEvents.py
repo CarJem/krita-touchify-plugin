@@ -25,18 +25,21 @@ class GlobalEventsProxyInstance(QObject):
         self.SIGNAL_TIMER_TICKED.emit()
 
     def eventFilter(self, obj: QObject, event: QEvent):
-        if isinstance(obj, QMainWindow):
-            if event.type() == QEvent.Type.Resize:
-                self.SIGNAL_WINDOW_RESIZED.emit()
-            elif event.type() == QEvent.Type.Move:
-                self.SIGNAL_WINDOW_MOVED.emit()
+        try:
+            if isinstance(obj, QMainWindow):
+                if event.type() == QEvent.Type.Resize:
+                    self.SIGNAL_WINDOW_RESIZED.emit()
+                elif event.type() == QEvent.Type.Move:
+                    self.SIGNAL_WINDOW_MOVED.emit()
+                return False
+            elif event.type() == QEvent.Type.MouseButtonRelease or \
+            event.type() == QEvent.Type.TabletRelease:
+                self.SIGNAL_MOUSE_RELEASED.emit()
+            elif event.type() == QEvent.Type.KeyRelease:
+                self.SIGNAL_KEY_RELEASED.emit()
             return False
-        elif event.type() == QEvent.Type.MouseButtonRelease or \
-        event.type() == QEvent.Type.TabletRelease:
-            self.SIGNAL_MOUSE_RELEASED.emit()
-        elif event.type() == QEvent.Type.KeyRelease:
-            self.SIGNAL_KEY_RELEASED.emit()
-        return False
+        except:
+            return False
 
     def __init__(self, parent: QObject = None):
         super().__init__(parent)

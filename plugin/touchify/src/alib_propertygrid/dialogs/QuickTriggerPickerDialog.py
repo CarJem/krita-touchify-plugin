@@ -1,9 +1,9 @@
-from copy import deepcopy
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
+from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_propertygrid.data.DataHandler import DataHandler
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
@@ -77,7 +77,7 @@ class QuickTriggerPickerDialog(QDialog):
         trigger.variant = str(Trigger.Variants.Brush)
         trigger.display_custom_text_enabled = False
         trigger.brush_name = source.selected_item
-        self.sigOnNewItem.emit(deepcopy(trigger))
+        self.sigOnNewItem.emit(trigger)
 
     def onAddAction(self, source: PropertyGrid_SelectorDialog):
         trigger = Trigger()
@@ -85,10 +85,10 @@ class QuickTriggerPickerDialog(QDialog):
 
         trigger.display_custom_text_enabled = False
         trigger.action_id = source.selected_item
-        self.sigOnNewItem.emit(deepcopy(trigger))
+        self.sigOnNewItem.emit(trigger)
 
     def onAddTrigger(self, source: Trigger):
-        self.sigOnNewItem.emit(deepcopy(source))
+        self.sigOnNewItem.emit(PropertySystem.deepcopy(source))
 
     def onReject(self):
         self.reject()

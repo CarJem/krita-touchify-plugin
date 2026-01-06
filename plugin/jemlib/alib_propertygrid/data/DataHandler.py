@@ -1,6 +1,5 @@
 
 # Field Imports
-from copy import deepcopy
 from jemlib.alib_propertygrid.data.DataPath import DataPath
 from jemlib.alib_propertygrid.fields.PropertyField_Dict import PropertyField_Dict
 from jemlib.alib_propertygrid.fields.PropertyField import PropertyField
@@ -78,8 +77,8 @@ class DataHandler:
 
     def getObjectVariableLabels(self, obj):
         if hasattr(obj, "propertygrid_labels"):
-            return deepcopy(dict(obj.propertygrid_labels()))
-        else: return deepcopy({})
+            return dict(obj.propertygrid_labels())
+        else: return {}
 
     def getObjectVariableTextHints(self, obj):
         if hasattr(obj, "propertygrid_hints"):
@@ -93,8 +92,8 @@ class DataHandler:
 
     def getObjectVariableGroups(self, obj):
         if hasattr(obj, "propertygrid_sisters"):
-            return deepcopy(dict(obj.propertygrid_sisters()))
-        else: return deepcopy({})
+            return dict(obj.propertygrid_sisters())
+        else: return {}
 
     def getObjectVariables(self, obj: any):
         sorted_results = []

@@ -11,6 +11,13 @@
             },
         },
         {
+            "label": "Run Plugin (Debug)",
+            "type": "shell",
+            "linux": {
+                "command": "./build_scripts/run-plugin-debug.sh"
+            },
+        },
+        {
             "label": "Install Plugin",
             "type": "shell",
             "linux": {

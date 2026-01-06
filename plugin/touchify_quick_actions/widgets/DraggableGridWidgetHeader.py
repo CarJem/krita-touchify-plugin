@@ -70,31 +70,34 @@ class DraggableGridWidgetHeader(QWidget):
     
     def eventFilter(self, obj, event):
         """Intercept mouse events from child widgets to enable row-level dragging."""
-        if obj in self._child_widgets:
-            # Let double-click events pass through directly to enable inline rename
-            if event.type() == QEvent.MouseButtonDblClick:
-                return False  # Don't intercept, let the widget handle it
-            
-            if event.type() == QEvent.MouseButtonPress:
-                if event.button() == Qt.LeftButton:
-                    self.drag_start_position = self.mapFromGlobal(obj.mapToGlobal(event.pos()))
-                    self.is_dragging = False
-            
-            elif event.type() == QEvent.MouseMove:
-                if event.buttons() & Qt.LeftButton and self.drag_start_position:
-                    current_pos = self.mapFromGlobal(obj.mapToGlobal(event.pos()))
-                    distance = (current_pos - self.drag_start_position).manhattanLength()
-                    
-                    if distance >= QApplication.startDragDistance() and not self.is_dragging:
-                        self.is_dragging = True
-                        self._start_grid_drag()
-                        return True
-            
-            elif event.type() == QEvent.MouseButtonRelease:
-                if event.button() == Qt.LeftButton:
-                    self.is_dragging = False
-                    self.drag_start_position = QPoint()
-        
+        try:
+            if obj in self._child_widgets:
+                # Let double-click events pass through directly to enable inline rename
+                if event.type() == QEvent.MouseButtonDblClick:
+                    return False  # Don't intercept, let the widget handle it
+                
+                if event.type() == QEvent.MouseButtonPress:
+                    if event.button() == Qt.LeftButton:
+                        self.drag_start_position = self.mapFromGlobal(obj.mapToGlobal(event.pos()))
+                        self.is_dragging = False
+                
+                elif event.type() == QEvent.MouseMove:
+                    if event.buttons() & Qt.LeftButton and self.drag_start_position:
+                        current_pos = self.mapFromGlobal(obj.mapToGlobal(event.pos()))
+                        distance = (current_pos - self.drag_start_position).manhattanLength()
+                        
+                        if distance >= QApplication.startDragDistance() and not self.is_dragging:
+                            self.is_dragging = True
+                            self._start_grid_drag()
+                            return True
+                
+                elif event.type() == QEvent.MouseButtonRelease:
+                    if event.button() == Qt.LeftButton:
+                        self.is_dragging = False
+                        self.drag_start_position = QPoint()
+        except Exception:
+            # Catch-all for any unexpected errors to prevent crashes
+            pass  
         return super().eventFilter(obj, event)
     
     def mousePressEvent(self, event):

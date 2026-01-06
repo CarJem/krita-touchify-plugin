@@ -6,11 +6,8 @@ from jemlib.api_krita.wrappers.window import WindowAPI
 
 from krita import *
 from touchify.src.alib_propertygrid.data.TouchifyDataHandler import TouchifyDataHandler
-from touchify_quick_actions.utils.config_utils import save_common_config
 
 class SettingsDialog(PropertyGrid_Window):
-
-
     @staticmethod
     def Setup(dlg: "SettingsDialog", api_window: WindowAPI, title: str, input: any):
         result = PropertyGrid_Window.Setup(dlg, api_window.qwindow.window(), input, TouchifyDataHandler.Praser(), cls=SettingsDialog)
@@ -22,15 +19,4 @@ class SettingsDialog(PropertyGrid_Window):
         self.resize(325, 420)
         self.setMinimumSize(600,400)
         self.setBaseSize(800,800)
-    
-    def _saveFile(self):
-        save_common_config(self.editableConfig)
-
-    def onSave(self):
-        self._saveFile()
-        self.accept()
-
-    def onClose(self):
-        self.close()
-        self.reject()
 

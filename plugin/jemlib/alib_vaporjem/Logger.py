@@ -1,7 +1,24 @@
-ENABLE_DEBUG=True
+ENABLE_DEBUG = True
 
-def debug(namespace: str, name: str = None, value: str = None):
-    if ENABLE_DEBUG: 
-        if value: print(f'[{namespace}|{name}] :: {value}')
-        elif name: print(f'[{namespace}] :: {name}')
-        else: print(namespace)
+ALLOWED_NAMESPACES = [
+    "JemLib",
+    "Touchify",
+]
+
+ALLOWED_FILENAMES = [
+    #"TouchifyWindow",
+    #"TouchifyManagers",
+    "PropertyGrid_Window",
+    #"DockerManager",
+    #"DockerContainer",
+    #"ActionManager",
+]
+
+def logDebug(namespace: str, filename: str, function: str, value: str):
+    if not ENABLE_DEBUG: return
+
+    if namespace not in ALLOWED_NAMESPACES and len(ALLOWED_NAMESPACES) > 0: return
+    if filename not in ALLOWED_FILENAMES and len(ALLOWED_FILENAMES) > 0: return
+
+
+    print(f'[DEBUG][{namespace} : {filename} : {function}] {value}')

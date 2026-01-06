@@ -15,7 +15,6 @@ class TouchifyRegistry:
         self.__base_dir__ = BASE_DIR            
         self.resources: ResourcePackRegistry = ResourcePackRegistry()
         self.preferences: TouchifyRegistryPreferences = TouchifyRegistryPreferences()
-        self.load()
 
     def propertygrid_labels(self):
         labels = {}
@@ -41,6 +40,11 @@ class TouchifyRegistry:
         restrictions["resources"] = DataConstraints.expandable()
         restrictions["preferences"] = DataConstraints.expandable()
         return restrictions
+    
+    def deepcopy(self):
+        result = TouchifyRegistry()
+        result.load()
+        return result
     
     def save(self):
         self.resources.save()

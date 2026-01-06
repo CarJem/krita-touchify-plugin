@@ -90,11 +90,11 @@ class ActionManager(QObject):
         self.OnEvent_ReloadRegisteredActions()
 
     def Notifier_ToolChanged(self, tool: str):
-        Logger.debug('Touchify', "ActionManager", "tool changed")
+        Logger.logDebug('Touchify',"ActionManager", "Notifier_ToolChanged", "tool changed")
         self.__lastToolboxTool = tool
 
     def Notifier_BrushChanged(self, resource: Resource):
-        Logger.debug('Touchify', "ActionManager", "brush changed")
+        Logger.logDebug('Touchify',"ActionManager", "Notifier_BrushChanged", "brush changed")
         self.__lastBrushPreset = resource
 
     #endregion
@@ -340,6 +340,7 @@ class ActionManager(QObject):
     #region OnEvent Functions
 
     def OnEvent_ReloadRegisteredActions(self):
+        Logger.logDebug("Touchify", "ActionManager", "OnEvent_ReloadRegisteredActions", f"starting")
         for pack in TouchifySettings.resourcePacks():
             pack: ResourcePack
             meta: ResourcePackMetadata = pack.metadata
@@ -348,14 +349,18 @@ class ActionManager(QObject):
                 subActionIdentifier = '{0}{1}_{2}'.format(TouchifyEnv.ActionID.RegisteredActions.PREFIX, meta.registry_id, data.registry_id)
                 if subActionIdentifier in self.registeredActions:
                     self.registeredActionsData[subActionIdentifier] = data
+        Logger.logDebug("Touchify", "ActionManager", "OnEvent_ReloadRegisteredActions", f"finished")
 
     def OnEvent_DisposePopups(self):
+        
         for popup_id in self.active_popups:
             try:
+                Logger.logDebug("Touchify", "ActionManager", "OnEvent_DisposePopups", f"disposing: {popup_id}")
                 popup: PopupWidget = self.active_popups[popup_id]
                 popup.dispose()
+                Logger.logDebug("Touchify", "ActionManager", "OnEvent_DisposePopups", f"dispose finished: {popup_id}")
             except:
-                pass
+                Logger.logDebug("Touchify", "ActionManager", "OnEvent_DisposePopups", f"dispose FAILED: {popup_id}")
         self.active_popups.clear()
 
     def OnEvent_GlobalMouseRelease(self):

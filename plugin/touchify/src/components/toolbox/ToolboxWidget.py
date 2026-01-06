@@ -140,10 +140,11 @@ class ToolboxWidget(QWidget):
         self.update()
 
     def paintEvent(self, event: QPaintEvent):
-        painter = QPainter(self)
+        if PyQtExt.CommonHelpers.isDeleted(self): return
 
-        if self.layout() == None:
-            return
+        painter = QPainter(self)
+        
+        if self.layout() == None: return
         
         sections = list(self.sections.values())
         halfSpacing = self.layout().spacing()
@@ -151,6 +152,8 @@ class ToolboxWidget(QWidget):
             halfSpacing //= 2
         
         for section in sections:
+            if PyQtExt.CommonHelpers.isDeleted(section): continue
+                
             styleoption = QStyleOption()
             styleoption.palette = self.palette()
             
@@ -167,6 +170,7 @@ class ToolboxWidget(QWidget):
                 styleoption.rect = QRect(x - 1, section.y(), 2, section.height())
                 
                 self.style().drawPrimitive(QStyle.PrimitiveElement.PE_IndicatorToolBarSeparator, styleoption, painter)
+            
             elif section.separators() & Section.Separators.SeparatorLeft and section.isRightToLeft():
                 x = section.x() + section.width() + halfSpacing
                 styleoption.state = QStyle.State_Horizontal

@@ -11,6 +11,8 @@ from typing import Optional
 from PyQt5.QtCore import Qt, QSize, QRect, QPoint
 from PyQt5.QtWidgets import QLayout, QWidget, QAbstractButton, QLayoutItem, QWidgetItem, QFrame, QToolButton
 
+from jemlib.alib_vaporjem.extensions import pyqt_extensions  as PyQtExt
+
 from jemlib.alib_pyqtgraph.Qt import QtCore
 from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
 
@@ -352,6 +354,7 @@ class ToolboxLayout(QLayout):
         y = 0
         firstSection = True
         for wi in self.m_sections:
+            if PyQtExt.CommonHelpers.isDeleted(wi): continue
             section = wi.widget()
             buttonCount = section.visibleButtonCount()
             if buttonCount == 0:

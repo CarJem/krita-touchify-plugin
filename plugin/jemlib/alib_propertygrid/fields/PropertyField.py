@@ -1,4 +1,3 @@
-import copy
 from typing import Generic, TypeVar
 from PyQt5 import *
 from PyQt5.QtWidgets import *
@@ -43,7 +42,7 @@ class PropertyField(QWidget, Generic[T]):
         self.__parent_grid = host
 
     def setVariable(self, newData: T):
-        Logger.debug("JemLib", "PropertyField", f"Var: {self.propertyData.variableName()} NewState:{str(newData)}")
+        Logger.logDebug("JemLib", "PropertyField", "setVariable", f"Var: {self.propertyData.variableName()} NewState:{str(newData)}")
         self.propertyData.updateData(newData)
         self.sigPropertyFieldChanged.emit()
 
@@ -93,12 +92,12 @@ class PropertyField(QWidget, Generic[T]):
         
         clipboard_data = PropertySystem.getSettingsClipboard(item_type)
         if clipboard_data != None:
-            pastable_data = copy.deepcopy(clipboard_data)
+            pastable_data = PropertySystem.deepcopy(clipboard_data)
             self.setVariable(pastable_data)
 
     def nested_copy(self):
         item_type: type | None = self.propertyData.variableType()
-        item_data: any | None = copy.deepcopy(self.propertyData.variableData())
+        item_data: any | None = PropertySystem.deepcopy(self.propertyData.variableData())
 
         if item_data != None and item_type != None:
             PropertySystem.setSettingsClipboard(item_type, item_data)

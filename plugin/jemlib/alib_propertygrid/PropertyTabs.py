@@ -17,8 +17,12 @@ class PropertyTabs(QTabBar):
         self.installEventFilter(self)
 
     def eventFilter(self, obj, event):
-        if obj is self and event.type() == QEvent.Type.Wheel:
-            return True
+        try:
+            if obj is self and event.type() == QEvent.Type.Wheel:
+                return True
+        except:
+            pass
+
         return super().eventFilter(obj, event)
     
     def currentIndex(self):

@@ -106,7 +106,7 @@ class IconRepository:
         if RESOURCE_PACK_ICONS_INIT and isStartup == True:
             return
         
-        Logger.debug("JemLib", "IconRepository", "load_resourcepack_icons")
+        Logger.logDebug("JemLib","IconRepository", "unknown", "load_resourcepack_icons")
         
         IconRepository.resource_pack_icons.clear()
 
@@ -134,14 +134,14 @@ class IconRepository:
 
 
         RESOURCE_PACK_ICONS_INIT = True
-        Logger.debug("JemLib", "IconRepository", "load_resourcepack_icons_done")
+        Logger.logDebug("JemLib","IconRepository", "unknown", "load_resourcepack_icons_done")
 
     def loadIconPacks():
         global ICON_PACKS_LOADED
         if ICON_PACKS_LOADED:
             return
         
-        Logger.debug("JemLib", "IconRepository", "load_icon_packs")
+        Logger.logDebug("JemLib","IconRepository", "unknown", "load_icon_packs")
         
         material_icon_zip = os.path.join(IconRepository.__resourcesDir__(), 'material-icons.zip')
         with ZipFile(material_icon_zip, 'r') as zip:
@@ -151,7 +151,7 @@ class IconRepository:
                     iconBytes = zip.read(item)
                     IconRepository.material_icons[actualName] = QIcon(IconRepository.IconEngine(iconBytes))
         ICON_PACKS_LOADED = True
-        Logger.debug("JemLib", "IconRepository", "load_icon_packs_done")
+        Logger.logDebug("JemLib","IconRepository", "unknown", "load_icon_packs_done")
 
     #region Icon Retrival
 

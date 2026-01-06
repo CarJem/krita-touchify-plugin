@@ -1,4 +1,3 @@
-from copy import deepcopy
 from functools import partial
 from PyQt5.QtWidgets import QSizePolicy
 from krita import *
@@ -248,10 +247,10 @@ class ShelfWidget(QWidget):
 
     def showEvent(self, event: QShowEvent):
         if self.hasPreloaded == False:
-            Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | Preloading: start')
+            Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | Preloading: start')
             self.hasPreloaded = True
             self.loadLayout()
-            Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | Preloading: finish')
+            Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | Preloading: finish')
         super().showEvent(event)
 
     def hideEvent(self, event: QHideEvent):
@@ -352,7 +351,7 @@ class ShelfWidget(QWidget):
     #region Actions (ShelfLayout)
 
     def resetLayout(self, noSave: bool = True):
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | resetLayout: start')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | resetLayout: start')
         self.goToHomePage()
 
         for dock in self.dockArea.docks.values():
@@ -376,23 +375,23 @@ class ShelfWidget(QWidget):
         self.dockPages.clear()
         self.dockPageOptions.clear()
 
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | resetLayout: prefinished')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | resetLayout: prefinished')
 
         if not noSave:
             self.saveLayout()
             self.loadLayout()
 
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | resetLayout: finished')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | resetLayout: finished')
 
     def saveLayout(self):
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | save_layout: start')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | save_layout: start')
         if self.is_restricted: 
             return
         elif self.is_nested:
             self.nestedDock.setMetadata(self.currentState())
         else:
             self.settingsLoader.saveLayout(self.currentState(), self.registry_index)
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | save_layout: finish')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | save_layout: finish')
 
     def loadLayout(self):
         def loadShelf(sub_state: ToolshelfPage | ToolshelfArea, dock_area: ShelfDockArea, dock_index: int):
@@ -412,13 +411,13 @@ class ShelfWidget(QWidget):
         if not self.hasPreloaded: 
             return
 
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: init')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | loading_layout: init')
         self.resetLayout()
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: reset')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | loading_layout: reset')
         state: ToolshelfArea
 
         if self.is_restricted:
-            state: ToolshelfArea = deepcopy(self.constant_data)
+            state: ToolshelfArea = PropertySystem.deepcopy(self.constant_data)
         elif self.is_nested:
             state: ToolshelfArea = self.nestedDock.getMetadata()
         else:
@@ -448,39 +447,41 @@ class ShelfWidget(QWidget):
                 self.mainLayout.addWidget(self.tabBar, 1, 0)
                 self.mainLayout.addWidget(self.header, 2, 0)
 
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: load started mainpage')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | loading_layout: load started mainpage')
         loadShelf(state, self.dockArea, 0)
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: load finished mainpage')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | loading_layout: load finished mainpage')
         
 
         for idx, subpage_state in enumerate(state.pages):
-            Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: load started page_{str(idx)}')
+            Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | loading_layout: load started page_{str(idx)}')
             subpage_state: ToolshelfPage
             sub_dock_area = ShelfDockArea(self)
             self.dockStack.addWidget(sub_dock_area)
             self.dockPages.append(sub_dock_area)
             self.dockPageOptions.append(subpage_state.options)
             loadShelf(subpage_state, sub_dock_area, idx+1)
-            Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: load finished page_{str(idx)}')
+            Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | loading_layout: load finished page_{str(idx)}')
             
 
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: load tabbar/header/menu')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | loading_layout: load tabbar/header/menu')
         self.tabBar.reload(state)
         self.header.reload(state, self.currentPresetId())
         self.optionsMenu.reload(self.currentPresetId())
 
         self.header.setVisible(self._hideTitlebar)
 
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: reload display')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | loading_layout: reload display')
         self.display.shelfReloadEvent(state)
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | loading_layout: finished')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | loading_layout: finished')
 
     def editLayout(self):
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), self.containerOptions)
-        if self.propertyEditor.exec_():
-            self.containerOptions = self.propertyEditor.editableConfig
-            self.saveLayout()
-            self.loadLayout()
+        result: ToolshelfAreaSettings = self.propertyEditor.exec_()
+        if not result: return 
+        self.containerOptions = result
+             
+        self.saveLayout()
+        self.loadLayout()
 
     #endregion
 
@@ -505,12 +506,14 @@ class ShelfWidget(QWidget):
             pageData = self.dockPageOptions[index]
 
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), pageData)
-        if self.propertyEditor.exec_():
-            if index == -1: self.homepageOptions = self.propertyEditor.editableConfig
-            else: self.dockPageOptions[index] = self.propertyEditor.editableConfig
+        result: ToolshelfPageSettings = self.propertyEditor.exec_()
+        if not result: return
 
-            self.saveLayout()
-            self.loadLayout()
+        if index == -1: self.homepageOptions = result
+        else: self.dockPageOptions[index] = result
+
+        self.saveLayout()
+        self.loadLayout()
 
     def deletePage(self, index: int):
         removed_dock_area_options = self.dockPageOptions.pop(index)
@@ -538,11 +541,13 @@ class ShelfWidget(QWidget):
             return
 
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ToolshelfDock())
-        if self.propertyEditor.exec_():
-            dock_item = self.dockLoader.Init_Section(self.propertyEditor.editableConfig)
-            self.__shelfSetup(dock_item, None, current_area._parentAreaId)
-            current_area.addDock(dock_item)
-            self.saveLayout()
+        result: ToolshelfDock = self.propertyEditor.exec_()
+        if not result: return
+
+        dock_item = self.dockLoader.Init_Section()
+        self.__shelfSetup(dock_item, None, current_area._parentAreaId)
+        current_area.addDock(dock_item)
+        self.saveLayout()
 
     def cloneShelfItem(self, uuid: str):
         current_area: ShelfDockArea | None = self.dockStack.currentWidget()
@@ -553,7 +558,7 @@ class ShelfWidget(QWidget):
             return
 
         dock_item: ShelfDock = current_area.docks[uuid]   
-        dock_settings = deepcopy(dock_item._dockSettings)
+        dock_settings = PropertySystem.deepcopy(dock_item._dockSettings)
 
         dock_item = self.dockLoader.Init_Section(dock_settings)
         self.__shelfSetup(dock_item, None, current_area._parentAreaId)
@@ -571,16 +576,19 @@ class ShelfWidget(QWidget):
         dock_item: ShelfDock = current_area.docks[uuid]   
         
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), dock_item._dockSettings)
-        if self.propertyEditor.exec_():
-            lastState = current_area.saveState()
-            self.__shelfDispose(dock_item)
-            dock_item.close()
+        result: ShelfDock = self.propertyEditor.exec_()
+        if not result: return
 
-            dock_item = self.dockLoader.Init_Section(self.propertyEditor.editableConfig)
-            self.__shelfSetup(dock_item, uuid, current_area._parentAreaId)
-            current_area.addDock(dock_item)
-            current_area.restoreState(lastState)
-            self.saveLayout()
+
+        lastState = current_area.saveState()
+        self.__shelfDispose(dock_item)
+        dock_item.close()
+
+        dock_item = self.dockLoader.Init_Section(result)
+        self.__shelfSetup(dock_item, uuid, current_area._parentAreaId)
+        current_area.addDock(dock_item)
+        current_area.restoreState(lastState)
+        self.saveLayout()
 
     def deleteShelfItem(self, uuid: str):
         current_area: ShelfDockArea | None = self.dockStack.currentWidget()
@@ -650,9 +658,10 @@ class ShelfWidget(QWidget):
 
     def savePresetAs(self):
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ShelfClasses.PresetSaveAs())
-        if self.propertyEditor.exec_():
-            editorResults: ShelfClasses.PresetSaveAs = self.propertyEditor.editableConfig
-            self.settingsLoader.savePresetAs(editorResults, self.currentState(), self.registry_index)
+        result: ShelfClasses.PresetSaveAs = self.propertyEditor.exec_()
+        if not result: return
+
+        self.settingsLoader.savePresetAs(result, self.currentState(), self.registry_index)
 
     def deletePreset(self):
         self.settingsLoader.deletePreset(self.registry_index)
@@ -699,7 +708,7 @@ class ShelfWidget(QWidget):
         self.header.mainButton.setMenu(None)
 
     def onCanvasFocusGained(self):
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | container_focus_gained')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | container_focus_gained')
         if self.containerOptions.enable_pinning:
             if self.dockStack.currentIndex() != 1 and not self.header.pinButton.isChecked():
                 self.goToHomePage()
@@ -712,33 +721,33 @@ class ShelfWidget(QWidget):
                     dock: ShelfDock
                     dock.onToolChanged(current_tool)
 
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | tool_changed')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | tool_changed')
         _recursive(self.dockArea)
         for dockArea in self.dockPages:
             _recursive(dockArea)
 
     def onThemeChanged(self):
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | theme_changing: start')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | theme_changing: start')
         self.updateStyle()
         self.loadLayout()
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | theme_changing: finish')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | theme_changing: finish')
             
     def onConfigUpdated(self):
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | onConfigUpdated')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | onConfigUpdated')
         self.loadLayout()
 
     def onShelfIndexChanged(self):
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | onShelfIndexChanged')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | onShelfIndexChanged')
         self.sigShelfIndexChanged.emit()
 
     def onEditModeChanged(self, enabled: bool):        
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | onEditModeChanged: started')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | onEditModeChanged: started')
         self.dockArea.setEditMode(enabled)
         for dockArea in self.dockPages:
             dockArea.setEditMode(enabled)
         self.saveLayout()
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | onEditModeChanged: prefinished')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | onEditModeChanged: prefinished')
         self.sigEditModeChanged.emit(enabled)
-        Logger.debug('Touchify', 'ShelfWidget', f'shelf: {self.registry_index} | onEditModeChanged: finished')
+        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | onEditModeChanged: finished')
 
     #endregion

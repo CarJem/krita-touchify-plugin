@@ -1,8 +1,8 @@
-from copy import deepcopy
 from typing import TYPE_CHECKING
 from jemlib.alib_datatypes.EnumStr import EnumStr
 
 
+from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 
@@ -55,7 +55,7 @@ class PropertyGrid_TouchifyRestrictions:
         src.nested_page_layout.addWidget(src.nested_page_properties)
         src.nested_page_dialog.setLayout(src.nested_page_layout)
 
-        src.nested_page_properties.setDataObject(deepcopy(targetItem))
+        src.nested_page_properties.setDataObject(PropertySystem.deepcopy(targetItem))
         src.getParentContainer().navigateForwards(src.nested_page_dialog)
         src.nested_page_dialog.show()
 

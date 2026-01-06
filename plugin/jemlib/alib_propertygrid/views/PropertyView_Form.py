@@ -70,7 +70,7 @@ class PropertyView_Form(QWidget, PropertyView):
         field = self.getPraser().getPropertyField(variable)
         if field:
             field.setParent(self)
-            field.sigPropertyFieldChanged.connect(self.getViewport().refreshData)
+            field.sigPropertyFieldChanged.connect(self.onFieldPropertyChanged)
             field.setParentContainer(self.getViewport().getContainer())
             field.setSizePolicy(ROW_SIZE_POLICY_X, ROW_SIZE_POLICY_Y)
             self.__fields.append(field)
@@ -167,7 +167,7 @@ class PropertyView_Form(QWidget, PropertyView):
             is_hidden = field.propertyData.variableName() in hiddenItems
             is_within_hidden = (field.sister_id != None and field.sister_id in hiddenItems)
 
-            Logger.debug("JemLib", "PropertyView_Form", f"Var: {field.propertyData.variableName()} IsHidden:{is_hidden} | IsHiddenWithin: {is_within_hidden}")
+            Logger.logDebug("JemLib", "PropertyView_Form", "onPropertiesChanged", f"Var: {field.propertyData.variableName()} IsHidden:{is_hidden} | IsHiddenWithin: {is_within_hidden}")
 
             if is_hidden or is_within_hidden: field.setHidden(True)
             else: field.setHidden(False)
@@ -178,6 +178,9 @@ class PropertyView_Form(QWidget, PropertyView):
 
             if is_hidden or is_within_hidden: label.setHidden(True)
             else: label.setHidden(False)
+
+    def onFieldPropertyChanged(self):
+        self.getViewport().syncProperties()
 
     def onDataObjectChanged(self):
 

@@ -40,12 +40,21 @@ class QPainterTools:
 
 class CommonHelpers:
     @staticmethod  
-    def isDeleted(item: QObject):
-        try:
-            item.objectName()
-            return False
-        except RuntimeError as e:
-            return True
+    def isDeleted(item: any):
+        if isinstance(item, QObject):
+            try:
+                item.objectName()
+                return False
+            except RuntimeError as e:
+                return True
+        elif isinstance(item, QLayoutItem):
+            try:
+                item.widget()
+                return False
+            except RuntimeError as e:
+                return True
+        else:
+            raise Exception(f"Unsupported Wrapped C/C++ Object or Other Object: {str(item)}")
 
     @staticmethod
     def clearLayout(layout: QLayout | None):

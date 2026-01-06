@@ -57,12 +57,19 @@ class DockerContainer(QWidget):
         self.isLoaded = True
 
     def showEvent(self, event: QShowEvent):
+        Logger.logDebug("Touchify", "DockerContainer", "showEvent", f"activating super function")
         super().showEvent(event)
+        Logger.logDebug("Touchify", "DockerContainer", "showEvent", f"super function complete")
         self.loadWidget()
+        Logger.logDebug("Touchify", "DockerContainer", "showEvent", f"function complete")
+        
 
     def hideEvent(self, event: QHideEvent):
+        Logger.logDebug("Touchify", "DockerContainer", "hideEvent", f"activating super function")
         super().hideEvent(event)
+        Logger.logDebug("Touchify", "DockerContainer", "hideEvent", f"super function complete")
         self.unloadWidget()
+        Logger.logDebug("Touchify", "DockerContainer", "hideEvent", f"function complete")
 
     def eventFilter(self, a0: QObject, a1: QEvent):
         if a0 == self.borrowedDocker:
@@ -71,15 +78,19 @@ class DockerContainer(QWidget):
         return super().eventFilter(a0, a1)
 
     def unloadWidget(self):
+        Logger.logDebug("Touchify", "DockerContainer", "unloadWidget", f"started: {self.docker_id}")
         self.dockerShouldBeActive = False
         self._unloadDocker()
+        Logger.logDebug("Touchify", "DockerContainer", "unloadWidget", f"finished: {self.docker_id}")
 
     def loadWidget(self, force: bool = False):
+        Logger.logDebug("Touchify", "DockerContainer", "loadWidget", f"started: {self.docker_id}")
         self.dockerShouldBeActive = True
         if force:
             if not self.passiveMode: self.docker_manager.unloadDocker(self.docker_id)
             self._loadDocker()
         else: self._loadDocker()
+        Logger.logDebug("Touchify", "DockerContainer", "loadWidget", f"finished: {self.docker_id}")
 
     def shutdownWidget(self):
         self.docker_manager.removeListener(DockerManager.SignalType.OnReleaseDocker, self.onDockerReleased)
@@ -87,48 +98,73 @@ class DockerContainer(QWidget):
 
     def updateVisibility(self):
         if self.borrowedDocker != None and self.borrowedDocker.parentWidget() == self.container:
+            Logger.logDebug("Touchify", "DockerContainer", "updateVisibility", f"hiding: {self.docker_id}")
             self.unloaded_label.setVisible(False)
             self.container_layout.removeWidget(self.unloaded_label)
         else:
+            Logger.logDebug("Touchify", "DockerContainer", "updateVisibility", f"showing: {self.docker_id}")
             self.container_layout.addWidget(self.unloaded_label)
             self.unloaded_label.setVisible(True)
 
     #region Private Functions
     def _stealDocker(self):
+        Logger.logDebug("Touchify", "DockerContainer", "_stealDocker", f"started: {self.docker_id}")
         if self.dockerShouldBeActive:
+            Logger.logDebug("Touchify", "DockerContainer", "_stealDocker", f"unloading: {self.docker_id}")
             self.docker_manager.unloadDocker(self.docker_id)
+            Logger.logDebug("Touchify", "DockerContainer", "_stealDocker", f"loading: {self.docker_id}")
             self._loadDocker()
+            Logger.logDebug("Touchify", "DockerContainer", "_stealDocker", f"loaded: {self.docker_id}")
         self.updateVisibility()
+        Logger.logDebug("Touchify", "DockerContainer", "_stealDocker", f"finished: {self.docker_id}")
 
     def _loadDocker(self):
+        Logger.logDebug("Touchify", "DockerContainer", "_loadDocker", f"started: {self.docker_id}")
         shareArgs = DockerManager.LoadArguments(self.dockMode)
         dockerLoaded: QWidget | None = self.docker_manager.loadDocker(self.docker_id, shareArgs)
+        Logger.logDebug("Touchify", "DockerContainer", "_loadDocker", f"loaded: {self.docker_id}")
         if not dockerLoaded: return
         self.borrowedDocker = dockerLoaded
         self.borrowedDocker.installEventFilter(self)
+        Logger.logDebug("Touchify", "DockerContainer", "_loadDocker", f"installed: {self.docker_id}")
         self.dockerChanged.emit()
         self.container_layout.addWidget(self.borrowedDocker, 1)
         if self.dockMode: self.borrowedDocker.show()
         self.updateVisibility()
+        Logger.logDebug("Touchify", "DockerContainer", "_loadDocker", f"finished: {self.docker_id}")
 
     def _unloadDocker(self):
+        Logger.logDebug("Touchify", "DockerContainer", "_unloadDocker", f"unloading: {self.docker_id}")
         if self.borrowedDocker != None:
-            self.borrowedDocker.removeEventFilter(self)
+            Logger.logDebug("Touchify", "DockerContainer", "_unloadDocker", f"uninstalling: {self.docker_id}")
+            try:
+                self.borrowedDocker.removeEventFilter(self)
+            except (RuntimeError, AttributeError):
+                pass
+            Logger.logDebug("Touchify", "DockerContainer", "_unloadDocker", f"uninstall finished: {self.docker_id}")
             
         self.docker_manager.unloadDocker(self.docker_id)
         self.dockerChanged.emit()
         self.updateVisibility()
+        Logger.logDebug("Touchify", "DockerContainer", "_unloadDocker", f"unloading finished: {self.docker_id}")
 
     #endregion
 
     #region Event Functions
     def onDockerReleased(self, ID: any):
+        Logger.logDebug("Touchify", "DockerContainer", "onDockerReleased", f"{self.docker_id}")
         if self.dockerShouldBeActive and self.docker_id == ID:
+            Logger.logDebug("Touchify", "DockerContainer", "onDockerReleased", f"loading: {self.docker_id}")
             self._loadDocker()
+            Logger.logDebug("Touchify", "DockerContainer", "onDockerReleased", f"loaded: {self.docker_id}")
             self.updateVisibility()
+        Logger.logDebug("Touchify", "DockerContainer", "onDockerReleased", f"completed: {self.docker_id}")
+            
 
     def onDockerLoaded(self, ID: any):
+        Logger.logDebug("Touchify", "DockerContainer", "onDockerLoaded", f"started: {self.docker_id}")
         self.updateVisibility()
+        Logger.logDebug("Touchify", "DockerContainer", "onDockerLoaded", f"completed: {self.docker_id}")
 
     #endregion
 

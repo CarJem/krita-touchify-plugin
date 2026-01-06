@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_Window import PropertyGrid_Window
+from jemlib.alib_vaporjem import Logger
 from krita import *
 
 from touchify.src.PluginManagers import TouchifyManagers
@@ -9,6 +10,7 @@ from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.api_touchify.env import *
 
 from touchify.src.PluginOptions import PluginOptions
+from touchify.src.config.TouchifyRegistry import TouchifyRegistry
 from touchify.src.settings.TouchifySettings import TouchifySettings
 
 
@@ -18,7 +20,12 @@ WINDOW_ID: int = 0
 if TYPE_CHECKING:
     from .Plugin import TouchifyPlugin
 
+
+
+
 class TouchifyWindow(QObject):
+
+    RELOAD_COUNT: int = 0
     
     sigWindowMoved = pyqtSignal()
     sigWindowResized = pyqtSignal()
@@ -63,11 +70,23 @@ class TouchifyWindow(QObject):
     def ReloadTheme(self):
         self.managers.ReloadTheme()
 
+    def ReloadSettings(self):
+        TouchifyWindow.RELOAD_COUNT += 1
+        Logger.logDebug("Touchify", "TouchifyWindow", "ReloadSettings", f"Total Reloads (Starting): {TouchifyWindow.RELOAD_COUNT}")
+        TouchifySettings.load()
+        self.managers.Reload()
+        Logger.logDebug("Touchify", "TouchifyWindow", "ReloadSettings", f"Total Reloads (Ending): {TouchifyWindow.RELOAD_COUNT}")
+
+
     def eventFilter(self, a0: QObject, a1: QEvent):
-        if isinstance(a0, QMainWindow) and a1.type() == QEvent.Type.Resize:
-            self.sigWindowResized.emit()
-        elif isinstance(a0, QMainWindow) and a1.type() == QEvent.Type.Move:
-            self.sigWindowMoved.emit()
+        try:
+            if isinstance(a0, QMainWindow) and a1.type() == QEvent.Type.Resize:
+                self.sigWindowResized.emit()
+            elif isinstance(a0, QMainWindow) and a1.type() == QEvent.Type.Move:
+                self.sigWindowMoved.emit()
+        except Exception:
+            # Catch-all for any unexpected errors to prevent crashes
+            pass
         return super().eventFilter(a0, a1)
 
     def OpenSettings(self):
@@ -76,22 +95,13 @@ class TouchifyWindow(QObject):
             QDialogButtonBox.StandardButton.Apply,
             QDialogButtonBox.StandardButton.Close
         ])
-        self.dlg.onApply = self.onSettingsApplied
-        self.dlg.onSave = self.onSettingsSaved
-        self.dlg.onClose = self.onSettingsClosed
+        self.dlg.onObjectSave = self.onSettingsSaved
+        self.dlg.onWindowDeleted = self.onSettingsClosed
         self.dlg.show()
 
-    def onSettingsSaved(self, dlg: "PropertyGrid_Window"):
-        dlg.editableConfig.save()
-        TouchifySettings.load()
-        self.managers.Reload()
+    def onSettingsClosed(self):
+        self.dlg = None
 
-    def onSettingsApplied(self, dlg: "PropertyGrid_Window"):
-        dlg.btns.setEnabled(False)
-        dlg.editableConfig.save()
-        TouchifySettings.load()
-        self.managers.Reload()
-        dlg.btns.setEnabled(True)
-
-    def onSettingsClosed(self, dlg: "PropertyGrid_Window"):
-        dlg.close()
+    def onSettingsSaved(self, result: "TouchifyRegistry"):
+        result.save()
+        self.ReloadSettings()

@@ -42,8 +42,6 @@ class TouchifyRegistryPreferences:
         self.Canvas_LeftClickAction: str = ""
         self.Canvas_MiddleClickAction: str = ""
 
-        self.load()
-
     def propertygrid_hidden(self):
         return [
             "Styles_BorderlessToolbar",

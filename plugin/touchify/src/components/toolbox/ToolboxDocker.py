@@ -1,9 +1,9 @@
 # This Python file uses the following encoding: utf-8
-from copy import deepcopy
 from uuid import uuid4
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from krita import *
 
 
@@ -269,18 +269,18 @@ class ToolboxDocker(QDockWidget):
 
     def savePresetAs(self):
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ToolboxClasses.PresetSaveAs())
-        if self.propertyEditor.exec_():
-            editorResults: ToolboxClasses.PresetSaveAs = self.propertyEditor.editableConfig
+        editorResults: ToolboxClasses.PresetSaveAs = self.propertyEditor.exec_()
+        if not editorResults: return
 
-            selectedResourcePackIndex: int = int(editorResults.resource_pack) - 1
-            if selectedResourcePackIndex <= -1: return
+        selectedResourcePackIndex: int = int(editorResults.resource_pack) - 1
+        if selectedResourcePackIndex <= -1: return
 
-            selectedResourcePack = TouchifySettings.resourcePacks()[selectedResourcePackIndex]
-            result = ToolboxData()
-            result.update(deepcopy(self.settingsManager.loadLayout()))
-            result.preset_name = editorResults.display_name
-            selectedResourcePack.toolboxes.append(result)
-            self.settingsManager.saveLayout(result, False)
+        selectedResourcePack = TouchifySettings.resourcePacks()[selectedResourcePackIndex]
+        result = ToolboxData()
+        result.update(PropertySystem.deepcopy(self.settingsManager.loadLayout()))
+        result.preset_name = editorResults.display_name
+        selectedResourcePack.toolboxes.append(result)
+        self.settingsManager.saveLayout(result, False)
 
     def addSection(self):
         layout_config = self.settingsManager.loadLayout()
@@ -289,12 +289,13 @@ class ToolboxDocker(QDockWidget):
         if not avaliable_section_names: return
         
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ToolboxDataCategory())
-        if self.propertyEditor.exec_():
-            result: ToolboxDataCategory = self.propertyEditor.editableConfig
-            while result.id in avaliable_section_names:
-                result.id += ".clone"
-            layout_config.categories.append(result)
-            self.settingsManager.saveLayout(layout_config)
+        result: ToolboxDataCategory = self.propertyEditor.exec_()
+        if not result: return
+
+        while result.id in avaliable_section_names:
+            result.id += ".clone"
+        layout_config.categories.append(result)
+        self.settingsManager.saveLayout(layout_config)
 
     def editSection(self, id: str):
         layout_config = self.settingsManager.loadLayout()
@@ -308,13 +309,14 @@ class ToolboxDocker(QDockWidget):
         selected_section_index = layout_config.categories.index(selected_section)
         
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), selected_section)
-        if self.propertyEditor.exec_():
-            result: ToolboxDataCategory = self.propertyEditor.editableConfig
-            while result.id in avaliable_section_names:
-                result.id += ".clone"
-            cached_state = self.settingsManager.loadLayout()
-            cached_state.categories[selected_section_index] = result
-            self.settingsManager.saveLayout(layout_config)
+        result: ToolboxDataCategory = self.propertyEditor.exec_()
+        if not result: return
+
+        while result.id in avaliable_section_names:
+            result.id += ".clone"
+        cached_state = self.settingsManager.loadLayout()
+        cached_state.categories[selected_section_index] = result
+        self.settingsManager.saveLayout(layout_config)
         
     def duplicateSection(self, id: str):
         layout_config = self.settingsManager.loadLayout()
@@ -325,7 +327,7 @@ class ToolboxDocker(QDockWidget):
         selected_section = self.getSectionByUUID(layout_config, id)
         if not selected_section: return
         
-        new_section = deepcopy(selected_section)
+        new_section = PropertySystem.deepcopy(selected_section)
         while new_section.id in avaliable_section_names:
             new_section.id += ".clone"
         layout_config.categories.append(new_section)
@@ -347,10 +349,11 @@ class ToolboxDocker(QDockWidget):
         if not selected_section: return
         
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ToolboxDataItem())
-        if self.propertyEditor.exec_():
-            result: ToolboxDataItem = self.propertyEditor.editableConfig
-            selected_section.items.append(result)
-            self.settingsManager.saveLayout(layout_config)
+        result: ToolboxDataItem = self.propertyEditor.exec_()
+        if not result: return
+
+        selected_section.items.append(result)
+        self.settingsManager.saveLayout(layout_config)
 
     def editTool(self, section_id: str, tool_id: str):
         layout_config = self.settingsManager.loadLayout()
@@ -366,10 +369,11 @@ class ToolboxDocker(QDockWidget):
         if len(selected_section.items) < selected_item_index or selected_item_index < 0: return
 
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), selected_item)
-        if self.propertyEditor.exec_():
-            result: ToolboxDataItem = self.propertyEditor.editableConfig
-            selected_section.items[selected_item_index] = result
-            self.settingsManager.saveLayout(layout_config)
+        result: ToolboxDataItem = self.propertyEditor.exec_()
+        if not result: return
+
+        selected_section.items[selected_item_index] = result
+        self.settingsManager.saveLayout(layout_config)
 
     def moveTool(self, section_id: str, tool_id: str, target_section_id: str, target_tool_id: str, direction: str):
         layout_config = self.settingsManager.loadLayout()
@@ -421,7 +425,7 @@ class ToolboxDocker(QDockWidget):
         selected_item_index = selected_button._dataIndex
         if len(selected_section.items) < selected_item_index or selected_item_index < 0: return
         
-        selected_section.items.append(deepcopy(selected_item))
+        selected_section.items.append(PropertySystem.deepcopy(selected_item))
         self.settingsManager.saveLayout(layout_config)
 
     def deleteTool(self, section_id: str, tool_id: str):
@@ -445,11 +449,12 @@ class ToolboxDocker(QDockWidget):
     def editToolbox(self):
         layout_config = self.settingsManager.loadLayout()
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), layout_config)
-        if self.propertyEditor.exec_():
-            result: ToolboxData = self.propertyEditor.editableConfig
-            cached_state = self.settingsManager.loadLayout()
-            cached_state.update(result)
-            self.settingsManager.saveLayout(cached_state)
+        result: ToolboxData = self.propertyEditor.exec_()
+        if not result: return
+
+        cached_state = self.settingsManager.loadLayout()
+        cached_state.update(result)
+        self.settingsManager.saveLayout(cached_state)
 
     #endregion
 

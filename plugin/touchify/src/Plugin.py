@@ -47,9 +47,9 @@ class TouchifyPlugin(Extension):
 
         window.windowClosed.connect(lambda: self.onWindowDestroyed(window_id))
         self.instances[window_id] = self.new_instance
-        Logger.debug("Touchify", "Plugin","window_load")
+        Logger.logDebug("Touchify","Plugin", "unknown", "window_load")
         self.instances[window_id].Load(window)
-        Logger.debug("Touchify", "Plugin","window_load_done")
+        Logger.logDebug("Touchify","Plugin", "unknown", "window_load_done")
 
         self.setup_instance = False
 
@@ -57,11 +57,11 @@ class TouchifyPlugin(Extension):
         GlobalEvents().SIGNAL_KRITA_CONFIG_UPDATED.emit()
 
     def createActions(self, window: Window):
-        Logger.debug("Touchify", "Plugin","create_actions")
+        Logger.logDebug("Touchify","Plugin", "unknown", "create_actions")
         self.setup_instance = True
         self.new_instance = TouchifyWindow(self)
         self.new_instance.LoadActions(WindowAPI(window))
-        Logger.debug("Touchify", "Plugin","create_actions_done")
+        Logger.logDebug("Touchify","Plugin", "unknown", "create_actions_done")
 
 
 

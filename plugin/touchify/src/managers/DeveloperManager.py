@@ -18,6 +18,11 @@ class DeveloperManager(object):
     
     def __init__(self, instance: "TouchifyWindow"):
         self.appEngine = instance  
+        self.__testType = "none"
+
+        self.__timer = QTimer()
+        self.__timer.setInterval(150)
+        self.__timer.timeout.connect(self.onRapidTestInterval)
 
 
     def Actions_Post(self, menu: QMenu):
@@ -26,6 +31,20 @@ class DeveloperManager(object):
     def Actions_Init(self, window: WindowAPI, actionPath: str):
         subItemPath = actionPath + "/" + "developer"
         self.root_menu = QtWidgets.QMenu("Developer...")
+
+
+        self.danger_menu = self.root_menu.addMenu("Danger Zone")
+
+        self.rapidSaveLoadTest1 = QAction("Toggle Rapid Save/Load Test...")
+        self.rapidSaveLoadTest1.triggered.connect(lambda: self.onRapidTestRequested("io"))
+        self.danger_menu.addAction(self.rapidSaveLoadTest1)
+
+        self.rapidSaveLoadTest2 = QAction("Toggle Rapid PropertyGrid_Window Test...")
+        self.rapidSaveLoadTest2.triggered.connect(lambda: self.onRapidTestRequested("pg"))
+        self.danger_menu.addAction(self.rapidSaveLoadTest2)
+
+
+        self.root_menu.addSeparator()
 
 
         self.iconZoo = QAction("Icon Zoo...")
@@ -43,6 +62,42 @@ class DeveloperManager(object):
         if len(self.root_menu.actions()) == 0:
             testUIAction = self.root_menu.addAction("No Actions")
             testUIAction.setEnabled(False)
+
+    def onRapidTestRequested(self, type: str):
+        if self.__testType != type:
+            if self.__timer.isActive(): self.__timer.stop()
+            self.__testType = type
+            match self.__testType:
+                case "io":
+                    self.__timer.setInterval(150)
+                case "pg":
+                    self.__timer.setInterval(500)
+                case _:
+                    self.__timer.setInterval(150)
+        
+        if self.__timer.isActive(): 
+            self.__timer.stop()
+        else: 
+            self.__timer.start()
+
+    def onRapidTestInterval(self):
+        self.__timer.stop()
+
+        match self.__testType:
+            case "io":
+                self.appEngine.ReloadSettings()
+            case "pg":
+                if self.appEngine.dlg:
+                    print("closing")
+                    self.appEngine.dlg.close()
+                else:
+                    print("opening")
+                    self.appEngine.OpenSettings()
+            case _:
+                pass
+
+        
+        self.__timer.start()
 
     def onZooRequested(self, type: DataConstraints.StrMod):
 

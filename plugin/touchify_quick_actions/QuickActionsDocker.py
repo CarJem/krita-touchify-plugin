@@ -23,6 +23,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from touchify.src.config.triggers.Trigger import Trigger
+from touchify_quick_actions.dataclasses.CommonConfig import CommonConfig
 from touchify_quick_actions.dataclasses.GridInfo import GridInfo
 from touchify_quick_actions.dataclasses.GridPresetItem import GridPresetItem
 from touchify.src.alib_propertygrid.dialogs.QuickTriggerPickerDialog import QuickTriggerPickerDialog
@@ -40,6 +41,7 @@ from .utils.config_utils import (
     get_common_config,
     load_common_config,
     load_grids_data,
+    save_common_config,
     save_grids_data,
     get_list_column_count,
     get_list_mode,
@@ -474,10 +476,9 @@ class QuickActionsDocker(QDockWidget):
             return
         
         self.dlg = SettingsDialog.Setup(self.dlg, self.api_window, "Grid Options", grid_info.layout)
-        if not self.dlg.exec_():
-            return
+        result: GridInfo.Layout = self.dlg.exec_()
+        if not result: return
         
-        result: GridInfo.Layout = self.dlg.editableConfig
         grid_info.layout = result
         save_grids_data(self.grids)
         self.reload_grids()
@@ -802,9 +803,10 @@ class QuickActionsDocker(QDockWidget):
     def show_settings_dialog(self):
         """Show settings dialog and apply changes."""
         self.dlg = SettingsDialog.Setup(self.dlg, self.api_window, "Settings", load_common_config())
-        if not self.dlg.exec_():
-            return
+        result: CommonConfig = self.dlg.exec_()
+        if not result: return
 
+        save_common_config(result)
         self.update_after_config_changes()
 
     #endregion

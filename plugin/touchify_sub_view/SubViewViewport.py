@@ -659,8 +659,8 @@ class SubViewViewport(QWidget):
             
         viewport_rect = QRectF(QPointF(left, top), QPointF(right, bottom))
         image_rect = self.imageItem.boundingRect()
-        Logger.debug("TouchifySubView", "SubViewViewport", f"ViewportRect: {str(viewport_rect)}")
-        Logger.debug("TouchifySubView", "SubViewViewport", f"ImageRect: {str(image_rect)}")
+        Logger.logDebug("TouchifySubView", "SubViewViewport", "reloadSceneRect", f"ViewportRect: {str(viewport_rect)}")
+        Logger.logDebug("TouchifySubView", "SubViewViewport", "reloadSceneRect", f"ImageRect: {str(image_rect)}")
         
         canvas_rect = image_rect.marginsAdded(QMarginsF(viewport_rect.width(), viewport_rect.height(), viewport_rect.width(), viewport_rect.height()))
         self.viewport.setSceneRect(canvas_rect)

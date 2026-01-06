@@ -1,5 +1,6 @@
 import copy
 import types
+from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.config.script.CustomScript import CustomScript
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
@@ -175,7 +176,7 @@ class ResourcePack:
                 #print(item.INTERNAL_FILEPATH_ID)
                 found_files.append(filePath)
 
-                outputData = copy.deepcopy(item)
+                outputData = PropertySystem.deepcopy(item)
                 
                 if hasattr(item, "INTERNAL_FILEPATH_ID"):
                     del outputData.INTERNAL_FILEPATH_ID

@@ -65,7 +65,7 @@ class WindowNotifier(QObject):
             toolboxTool = obj.objectName()
             if toolboxTool != self.__lastToolboxTool:
                 self.__lastToolboxTool = toolboxTool
-                Logger.debug("JemLib", "WindowManager", "Tool Changed")
+                Logger.logDebug("JemLib","WindowManager", "unknown", "Tool Changed")
                 self.toolChanged.emit(toolboxTool)
 
     def __onTimerTicked__(self):
@@ -117,80 +117,80 @@ class WindowNotifier(QObject):
                     currentForegroundColor = currentView.foregroundColor()
                     currentBackgroundColor = currentView.backgroundColor()
         except Exception as e:
-            Logger.debug("JemLib", "WindowManager", "Failed to Run Checks: " + str(e))
+            Logger.logDebug("JemLib", "WindowManager", "__onTimerTicked__" "Failed to Run Checks: " + str(e))
 
         if currentGradient != self.__lastGradient:
-            Logger.debug("JemLib", "WindowManager", "Selected Gradient Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Selected Gradient Changed")
             self.gradientChanged.emit(currentGradient)
             self.__lastGradient = currentGradient
 
         if currentPattern != self.__lastPattern:
-            Logger.debug("JemLib", "WindowManager", "Selected Pattern Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Selected Pattern Changed")
             self.patternChanged.emit(currentPattern)
             self.__lastPattern = currentPattern
 
         if currentCanvas != self.__lastCanvas:
-            Logger.debug("JemLib", "WindowManager", "Canvas Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Canvas Changed")
             self.canvasChanged.emit(currentCanvas)
             self.__lastCanvas = currentCanvas
 
         if currentView != self.__lastView:
-            Logger.debug("JemLib", "WindowManager", "View Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "View Changed")
             self.viewChanged.emit(currentView)
             self.__lastView = currentView
 
         if selectedNodes != self.__lastSelectedNodes:
-            Logger.debug("JemLib", "WindowManager", "Selected Nodes Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Selected Nodes Changed")
             self.selectedNodesChanged.emit()
             self.__lastSelectedNodes = selectedNodes
 
         if selectedNodeColors != self.__lastNodeColors:
-            Logger.debug("JemLib", "WindowManager", "Selected Node Colors Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Selected Node Colors Changed")
             self.selectedNodeColorsChanged.emit()
             self.__lastNodeColors = selectedNodeColors
 
         if currentLayerBlendingMode != self.__lastLayerBlendingMode:
-            Logger.debug("JemLib", "WindowManager", "Layer Blending Mode Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Layer Blending Mode Changed")
             self.layerBlendingModeChanged.emit(currentLayerBlendingMode)
             self.__lastLayerBlendingMode = currentLayerBlendingMode
 
         if currentBrushBlendingMode != self.__lastBrushBlendingMode:
-            Logger.debug("JemLib", "WindowManager", "Brush Blending Mode Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Brush Blending Mode Changed")
             self.brushBlendingModeChanged.emit(currentBrushBlendingMode)
             self.__lastBrushBlendingMode = currentBrushBlendingMode
 
         if currentForegroundColor != self.__lastForegroundColor:
-            Logger.debug("JemLib", "WindowManager", "Foreground Color Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Foreground Color Changed")
             self.foregroundColorChanged.emit(currentForegroundColor)
             self.__lastForegroundColor = currentForegroundColor
 
         if currentBackgroundColor != self.__lastBackgroundColor:
-            Logger.debug("JemLib", "WindowManager", "Background Color Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Background Color Changed")
             self.backgroundColorChanged.emit(currentBackgroundColor)
             self.__lastBackgroundColor = currentBackgroundColor
         
         if currentSize != self.__lastBrushSize:
-            Logger.debug("JemLib", "WindowManager", "Brush Size Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Brush Size Changed")
             self.brushSizeChanged.emit(currentSize)
             self.__lastBrushSize = currentSize
 
         if currentFlow != self.__lastBrushFlow:
-            Logger.debug("JemLib", "WindowManager", "Brush Flow Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Brush Flow Changed")
             self.brushFlowChanged.emit(currentFlow)
             self.__lastBrushFlow = currentFlow
 
         if currentOpacity != self.__lastBrushOpacity:
-            Logger.debug("JemLib", "WindowManager", "Brush Opacity Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Brush Opacity Changed")
             self.brushOpacityChanged.emit(currentOpacity)
             self.__lastBrushOpacity = currentOpacity
 
         if currentRotation != self.__lastBrushRotation:
-            Logger.debug("JemLib", "WindowManager", "Brush Rotation Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Brush Rotation Changed")
             self.brushRotationChanged.emit(currentRotation)
             self.__lastBrushRotation = currentRotation
 
         if currentBrush != self.__lastBrushPreset:
-            Logger.debug("JemLib", "WindowManager", "Brush Changed")
+            Logger.logDebug("JemLib","WindowManager", "__onTimerTicked__", "Brush Changed")
             self.brushChanged.emit(currentBrush)
             self.__lastBrushPreset = currentBrush
 

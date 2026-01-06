@@ -86,7 +86,7 @@ class ToolshelfDockerWidget(DockWidget):
         pass
 
     def shelfReloadEvent(self, state: ToolshelfArea):
-        Logger.debug('Touchify', 'ToolshelfDockerWidget', f'shelfReloadEvent: start')
+        Logger.logDebug('Touchify','ToolshelfDockerWidget', "shelfReloadEvent", "start")
         if state.options.resize_style == ToolshelfAreaSettings.ResizeStyle.Minimum:
             self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
             self.sizeManagementType = ToolshelfAreaSettings.ResizeStyle.Minimum
@@ -102,15 +102,15 @@ class ToolshelfDockerWidget(DockWidget):
         else:
             self.setSizePolicy(self._originalSizePolicy)
             self.sizeManagementType = ToolshelfAreaSettings.ResizeStyle.Default
-        Logger.debug('Touchify', 'ToolshelfDockerWidget', f'shelfReloadEvent: end')
+        Logger.logDebug('Touchify','ToolshelfDockerWidget', "shelfReloadEvent", "end")
 
     def onTouchifyReload(self):
-        Logger.debug('Touchify', 'ToolshelfDockerWidget', f'onTouchifyReload')
+        Logger.logDebug('Touchify','ToolshelfDockerWidget', "onTouchifyReload", "start")
         if self.mainWidget: 
             QTimer.singleShot(100, self.mainWidget.onConfigUpdated)
 
     def onPresetUpdated(self, registry_index: int = 0):
-        Logger.debug('Touchify', 'ToolshelfDockerWidget', f'onPresetUpdated')
+        Logger.logDebug('Touchify','ToolshelfDockerWidget', "onPresetUpdated", "start")
         if registry_index == 0 or registry_index == self.PanelIndex:
             self.onTouchifyReload() 
 

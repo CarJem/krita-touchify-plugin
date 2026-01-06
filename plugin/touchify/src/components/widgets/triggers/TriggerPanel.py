@@ -36,16 +36,17 @@ class TriggerPanel(QWidget):
 
         def __init__(self, actions: list[TriggerGroup]):
             super().__init__()
-            self.seperate_thread = QThread()
-            self.moveToThread(self.seperate_thread)
-            self.seperate_thread.setTerminationEnabled(True)
+            #self.seperate_thread = QThread()
+            #self.moveToThread(self.seperate_thread)
+            #self.seperate_thread.setTerminationEnabled(True)
             self.actions = actions
 
             # Thread
-            self.seperate_thread.started.connect(self.LoadData_Async)
+            #self.seperate_thread.started.connect(self.LoadData_Async)
 
         def start(self, priority: QThread.Priority = QThread.Priority.NormalPriority):
-            self.seperate_thread.start(priority)
+            self.LoadData_Async()
+            #self.seperate_thread.start(priority)
 
         def LoadData_Async(self):
             row_index = 0
@@ -58,7 +59,7 @@ class TriggerPanel(QWidget):
                     results.append((row_index, act))
                 row_index += 1
             self.dataRecieved.emit(results)
-            self.seperate_thread.quit()
+            #self.seperate_thread.quit()
 
     class DisplayType(EnumStr):
         Toolbar = "toolbar"

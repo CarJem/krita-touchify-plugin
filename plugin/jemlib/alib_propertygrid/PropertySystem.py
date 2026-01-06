@@ -1,3 +1,6 @@
+import copy
+
+
 class PropertySystem:
     settings_clipboard_type: type = None
     settings_clipboard_data: any = None
@@ -10,3 +13,7 @@ class PropertySystem:
     def setSettingsClipboard(item_type: type, item_data: any):
         PropertySystem.settings_clipboard_type = item_type
         PropertySystem.settings_clipboard_data = item_data
+
+
+    def deepcopy(x):
+        return copy.deepcopy(x)

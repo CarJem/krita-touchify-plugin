@@ -83,56 +83,59 @@ class CanvasManager(QObject):
 
     def eventFilter(self, obj: QObject, event: QEvent):
 
-        def Check_Event():
-            event_type = event.type()
-            if event_type == QEvent.Type.FocusIn or \
-               event_type == QEvent.Type.MouseButtonPress or \
-               event_type == QEvent.Type.TabletPress or \
-               event_type == QEvent.Type.MouseButtonRelease or \
-               event_type == QEvent.Type.TabletRelease: return True
-            else: return False
-            
-
-        def Trigger_Run(actionName: str):
-            KritaAPI.trigger_action(actionName)
-
         try:
-            if not self.active_canvas == obj: return False
-        except:
+            def Check_Event():
+                event_type = event.type()
+                if event_type == QEvent.Type.FocusIn or \
+                event_type == QEvent.Type.MouseButtonPress or \
+                event_type == QEvent.Type.TabletPress or \
+                event_type == QEvent.Type.MouseButtonRelease or \
+                event_type == QEvent.Type.TabletRelease: return True
+                else: return False
+                
+            def Trigger_Run(actionName: str):
+                KritaAPI.trigger_action(actionName)
+
+            try:
+                if not self.active_canvas == obj: return False
+            except:
+                return False
+
+            if event.type() == QEvent.Type.Resize and obj == self.active_canvas:
+                self.canvasResized.emit()
+            if event.type() == QEvent.Type.Move and obj == self.active_canvas:
+                self.canvasMoved.emit()
+
+            if not Check_Event(): return False
+
+            if event.type() == QEvent.Type.MouseButtonPress or event.type() == QEvent.Type.TabletPress:
+                    match event.button():
+                        case Qt.MouseButton.LeftButton:
+                            Trigger_Run(TouchifySettings.preferences().Canvas_LeftClickAction)
+                            self.mouseLeftPress.emit()
+                        case Qt.MouseButton.RightButton:
+                            Trigger_Run(TouchifySettings.preferences().Canvas_RightClickAction)     
+                            self.mouseRightPress.emit()
+                        case Qt.MouseButton.MiddleButton:
+                            Trigger_Run(TouchifySettings.preferences().Canvas_MiddleClickAction)
+                            self.mouseMiddlePress.emit()
+            elif event.type() == QEvent.Type.MouseButtonRelease or event.type() == QEvent.Type.TabletRelease:
+                    if self.last_canvas_focus:
+                        self.delayedFocus.emit()
+                        self.last_canvas_focus = None
+
+                    match event.button():
+                        case Qt.MouseButton.LeftButton:
+                            self.mouseLeftRelease.emit()
+                        case Qt.MouseButton.RightButton:
+                            self.mouseRightRelease.emit()
+                        case Qt.MouseButton.MiddleButton:
+                            self.mouseMiddleRelease.emit()
+            elif event.type() == QEvent.Type.FocusIn:
+                if obj.hasFocus(): 
+                    self.last_canvas_focus = obj
+                    self.normalFocus.emit()
             return False
-
-        if event.type() == QEvent.Type.Resize and obj == self.active_canvas:
-            self.canvasResized.emit()
-        if event.type() == QEvent.Type.Move and obj == self.active_canvas:
-            self.canvasMoved.emit()
-
-        if not Check_Event(): return False
-
-        if event.type() == QEvent.Type.MouseButtonPress or event.type() == QEvent.Type.TabletPress:
-                match event.button():
-                    case Qt.MouseButton.LeftButton:
-                        Trigger_Run(TouchifySettings.preferences().Canvas_LeftClickAction)
-                        self.mouseLeftPress.emit()
-                    case Qt.MouseButton.RightButton:
-                        Trigger_Run(TouchifySettings.preferences().Canvas_RightClickAction)     
-                        self.mouseRightPress.emit()
-                    case Qt.MouseButton.MiddleButton:
-                        Trigger_Run(TouchifySettings.preferences().Canvas_MiddleClickAction)
-                        self.mouseMiddlePress.emit()
-        elif event.type() == QEvent.Type.MouseButtonRelease or event.type() == QEvent.Type.TabletRelease:
-                if self.last_canvas_focus:
-                    self.delayedFocus.emit()
-                    self.last_canvas_focus = None
-
-                match event.button():
-                    case Qt.MouseButton.LeftButton:
-                        self.mouseLeftRelease.emit()
-                    case Qt.MouseButton.RightButton:
-                        self.mouseRightRelease.emit()
-                    case Qt.MouseButton.MiddleButton:
-                        self.mouseMiddleRelease.emit()
-        elif event.type() == QEvent.Type.FocusIn:
-            if obj.hasFocus(): 
-                self.last_canvas_focus = obj
-                self.normalFocus.emit()
-        return False
+        except:
+            # Catch-all for any unexpected errors to prevent crashes
+            return False

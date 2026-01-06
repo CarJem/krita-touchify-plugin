@@ -18,7 +18,6 @@ class ResourcePackRegistry:
         self.__defaults__()
         self.INTERNAL_ROOT_DIRECTORY = RESOURCE_PACKS_DIRECTORY
         self.INTERNAL_active_files: list[str] = []
-        self.load()
 
     def load(self):
         self.presets.clear()

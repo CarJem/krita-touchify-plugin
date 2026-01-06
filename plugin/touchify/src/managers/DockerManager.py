@@ -129,7 +129,7 @@ class DockerManager(QObject):
         return self.qWin.findChild(QDockWidget, docker_id)
 
     def loadDocker(self, docker_id: str, args: LoadArguments):
-        Logger.debug('Touchify', "DockerManager", "loading_docker")
+        Logger.logDebug('Touchify',"DockerManager", "loadDocker", f"{docker_id}")
         # Already in Use, don't borrow twice; unload previous docker
         if docker_id in self._shareData:
             if self._shareData[docker_id].isDead == False:
@@ -142,17 +142,19 @@ class DockerManager(QObject):
             self._shareData[docker_id] = DockerManager.BorrowData(args.dockMode, docker.isVisible(), self.qWin, self.qWin.dockWidgetArea(docker))
             self._shareData[docker_id].setWidgetData(docker)
             self.invokeListeners(docker_id, DockerManager.SignalType.OnLoadDocker)
-            Logger.debug("Touchify", "DockerManager","loading_docker_success")
+            Logger.logDebug('Touchify', "DockerManager", "loadDocker", f"{docker_id}: success")
             return self._shareData[docker_id].dockerWidget
-        Logger.debug("Touchify", "DockerManager","loading_docker_fail")
+        Logger.logDebug('Touchify', "DockerManager", "loadDocker", f"{docker_id}: failed")
         return None
          
     def unloadDocker(self, docker_id: str):
         # Ensure there's a widget to return
         if docker_id in self._shareData:
+            Logger.logDebug('Touchify', "DockerManager", "unloadDocker", f"{docker_id}: start")
             self._shareData[docker_id].clearWidgetData()
             del self._shareData[docker_id]
             self.invokeListeners(docker_id, DockerManager.SignalType.OnReleaseDocker)
+            Logger.logDebug('Touchify', "DockerManager", "unloadDocker", f"{docker_id}: success")
 
     def toggleDockersPerArea(self, area: int):
         dockers = self.api_window.dockers

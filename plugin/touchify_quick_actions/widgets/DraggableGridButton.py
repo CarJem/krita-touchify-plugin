@@ -7,13 +7,13 @@ Each instance owns one Krita brush preset and is responsible for:
   - optionally displaying the brush name below the icon
 """
 
-from copy import deepcopy
 from typing import TYPE_CHECKING
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
+from touchify.src.config.triggers.Trigger import Trigger
 from touchify_quick_actions.dialogs.SettingsDialog import SettingsDialog
 from jemlib.alib_widgets.widget.DropIndicatorOverlay import DropIndicatorOverlay
 from touchify_quick_actions.utils.styles import DRAGGABLE_GRID_BUTTON_BACKGROUND_COLOR, DRAGGABLE_GRID_BUTTON_ICON_STYLE, DRAGGABLE_GRID_BUTTON_LABEL_STYLE
@@ -430,15 +430,15 @@ class DraggableGridButton(QWidget):
 
     def editButton(self):
         """Show settings dialog and apply changes."""
-        self.editDialog = SettingsDialog.Setup(self.editDialog, self.parent_docker.api_window, "Settings", deepcopy(self.preset.trigger_data))
-        if not self.editDialog.exec_():
-            return
+        self.editDialog = SettingsDialog.Setup(self.editDialog, self.parent_docker.api_window.qwindow, "Settings", self.preset.trigger_data)
+        result: Trigger = self.editDialog.exec_()
+        if not result: return
         
         button_index = self._find_button_index()
         presets = self.grid_info.brush_presets
 
         if 0 <= button_index < len(presets):
-            presets[button_index].trigger_data = self.editDialog.editableConfig
+            presets[button_index].trigger_data = result
 
             self.parent_docker.update_grid(self.grid_info)
             self.parent_docker.save_grids()
