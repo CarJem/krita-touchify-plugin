@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_Window import PropertyGrid_Window
-from jemlib.alib_vaporjem import Logger
 from krita import *
 
 from touchify.src.PluginManagers import TouchifyManagers
@@ -24,8 +23,6 @@ if TYPE_CHECKING:
 
 
 class TouchifyWindow(QObject):
-
-    RELOAD_COUNT: int = 0
     
     sigWindowMoved = pyqtSignal()
     sigWindowResized = pyqtSignal()
@@ -71,11 +68,8 @@ class TouchifyWindow(QObject):
         self.managers.ReloadTheme()
 
     def ReloadSettings(self):
-        TouchifyWindow.RELOAD_COUNT += 1
-        Logger.logDebug("Touchify", "TouchifyWindow", "ReloadSettings", f"Total Reloads (Starting): {TouchifyWindow.RELOAD_COUNT}")
         TouchifySettings.load()
         self.managers.Reload()
-        Logger.logDebug("Touchify", "TouchifyWindow", "ReloadSettings", f"Total Reloads (Ending): {TouchifyWindow.RELOAD_COUNT}")
 
 
     def eventFilter(self, a0: QObject, a1: QEvent):
@@ -90,7 +84,7 @@ class TouchifyWindow(QObject):
         return super().eventFilter(a0, a1)
 
     def OpenSettings(self):
-        self.dlg = PluginOptions.Setup(self.dlg, self.api_window.qwindow.window(), TouchifySettings.configCopy(), [
+        self.dlg = PluginOptions.Setup(self.dlg, self.api_window.qwindow.window(), TouchifySettings.config(), [
             QDialogButtonBox.StandardButton.Save,
             QDialogButtonBox.StandardButton.Apply,
             QDialogButtonBox.StandardButton.Close
@@ -100,6 +94,7 @@ class TouchifyWindow(QObject):
         self.dlg.show()
 
     def onSettingsClosed(self):
+        self.dlg.deleteLater()
         self.dlg = None
 
     def onSettingsSaved(self, result: "TouchifyRegistry"):

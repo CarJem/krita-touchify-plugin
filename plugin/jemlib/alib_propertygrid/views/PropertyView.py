@@ -1,3 +1,4 @@
+from logging import Logger
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -13,7 +14,7 @@ if TYPE_CHECKING:
     from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
 
 
-class PropertyView(QObject):
+class PropertyView(QWidget):
 
     def __init__(self, parent: "PropertyViewport", praser: DataHandler):
         super(PropertyView, self).__init__(parent)
@@ -85,8 +86,12 @@ class PropertyView(QObject):
     
     def setDataObject(self, item: Any):
         self.__item = item
-        self.onDataObjectChanged()
-        self.onPropertiesChanged()
+        try:
+            self.onDataObjectChanged()
+            self.onPropertiesChanged()
+        except Exception as ex:
+            Logger.logError("JemLib", "PropertyView", "setDataObject", f"Failure Setting Datatype: {ex}")
+
 
     def getPraser(self):
         return self.__praser

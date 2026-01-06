@@ -1,4 +1,4 @@
-ENABLE_DEBUG = True
+ENABLE_DEBUG = False
 
 ALLOWED_NAMESPACES = [
     "JemLib",
@@ -8,7 +8,9 @@ ALLOWED_NAMESPACES = [
 ALLOWED_FILENAMES = [
     #"TouchifyWindow",
     #"TouchifyManagers",
-    "PropertyGrid_Window",
+    #"PropertyViewport",
+    #"PropertyGrid_Window",
+    #"PropertyGrid",
     #"DockerManager",
     #"DockerContainer",
     #"ActionManager",
@@ -22,3 +24,6 @@ def logDebug(namespace: str, filename: str, function: str, value: str):
 
 
     print(f'[DEBUG][{namespace} : {filename} : {function}] {value}')
+
+def logError(namespace: str, filename: str, function: str, value: str):
+    print(f'[ERROR][{namespace} : {filename} : {function}] {value}')

@@ -3,7 +3,6 @@ from PyQt5.QtCore import *
 
 
 
-from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
 from touchify.src.config.resource_pack.ResourcePack import ResourcePack
 from touchify.src.config.TouchifyRegistry import TouchifyRegistry
@@ -63,9 +62,6 @@ class TouchifySettings:
     @staticmethod
     def config() -> TouchifyRegistry:
         return TouchifySettings.instance().cfg
-    
-    def configCopy() -> TouchifyRegistry:
-        return PropertySystem.deepcopy(TouchifySettings.instance().cfg)
 
     @staticmethod
     def save():

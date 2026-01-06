@@ -1,5 +1,6 @@
 from functools import partial
 from PyQt5.QtWidgets import QSizePolicy
+from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from krita import *
 from PyQt5.QtWidgets import *
 

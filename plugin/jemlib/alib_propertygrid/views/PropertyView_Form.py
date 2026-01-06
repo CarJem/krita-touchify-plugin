@@ -25,10 +25,9 @@ if TYPE_CHECKING:
 
 
 
-class PropertyView_Form(QWidget, PropertyView):
+class PropertyView_Form(PropertyView):
 
     def __init__(self, parent: "PropertyViewport", praser: DataHandler):
-        QWidget.__init__(self, parent)
         PropertyView.__init__(self, parent, praser)
 
         self.__fields: list[PropertyField] = []

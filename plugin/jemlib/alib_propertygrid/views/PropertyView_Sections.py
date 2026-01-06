@@ -21,10 +21,9 @@ if TYPE_CHECKING:
     from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
 
 
-class PropertyView_Sections(QWidget, PropertyView):
+class PropertyView_Sections(PropertyView):
 
     def __init__(self, parent: "PropertyViewport", praser: DataHandler):
-        QWidget.__init__(self, parent)
         PropertyView.__init__(self, parent, praser)
 
         self.__sections: list["PropertyViewport" | "PropertyViewportNested"] = []
@@ -92,31 +91,31 @@ class PropertyView_Sections(QWidget, PropertyView):
         if is_expandable_area:
             from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
             page = PropertyViewport(self.getViewport().getContainer(), self.getPraser(), False)
-            page.sigPropertiesChanged.connect(self.onPropertiesChanged)
             page.setParent(self)
             page.setDataObject(variable.variableData())
+            page.sigPropertiesChanged.connect(self.onPropertiesChanged)
             self.__sections.append(page)
             return page
         else:
             if has_nested_tabs:
                 from jemlib.alib_propertygrid.PropertyViewport import PropertyViewportNested
                 page = PropertyViewportNested(self, self.getViewport().getContainer(), self.getPraser(), False)
-                page.sigPropertiesChanged.connect(self.onPropertiesChanged)
                 page.setLimiters([_varName])
                 page.setModifiers({"no_labels": ""})
                 page.setViewType("default")
                 page.setDataObject(source)
+                page.sigPropertiesChanged.connect(self.onPropertiesChanged)
                 self.__sections.append(page)
                 return page
             else:
                 from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
                 page = PropertyViewport(self.getViewport().getContainer(), self.getPraser(), False)
-                page.sigPropertiesChanged.connect(self.onPropertiesChanged)
                 page.setParent(self)
                 page.setLimiters([_varName])
                 page.setModifiers({"no_labels": ""})
                 page.setViewType("default")
                 page.setDataObject(source)
+                page.sigPropertiesChanged.connect(self.onPropertiesChanged)
                 self.__sections.append(page)
                 return page
 

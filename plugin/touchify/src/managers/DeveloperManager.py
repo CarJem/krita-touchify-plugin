@@ -1,5 +1,6 @@
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
+from jemlib.alib_vaporjem.extensions import pyqt_extensions
 from jemlib.alib_vaporjem.extensions.krita_extensions import *
 
 from jemlib.api_touchify.env import *
@@ -32,21 +33,6 @@ class DeveloperManager(object):
         subItemPath = actionPath + "/" + "developer"
         self.root_menu = QtWidgets.QMenu("Developer...")
 
-
-        self.danger_menu = self.root_menu.addMenu("Danger Zone")
-
-        self.rapidSaveLoadTest1 = QAction("Toggle Rapid Save/Load Test...")
-        self.rapidSaveLoadTest1.triggered.connect(lambda: self.onRapidTestRequested("io"))
-        self.danger_menu.addAction(self.rapidSaveLoadTest1)
-
-        self.rapidSaveLoadTest2 = QAction("Toggle Rapid PropertyGrid_Window Test...")
-        self.rapidSaveLoadTest2.triggered.connect(lambda: self.onRapidTestRequested("pg"))
-        self.danger_menu.addAction(self.rapidSaveLoadTest2)
-
-
-        self.root_menu.addSeparator()
-
-
         self.iconZoo = QAction("Icon Zoo...")
         self.iconZoo.triggered.connect(lambda: self.onZooRequested(DataConstraints.StrMod.IconSelection))
         self.root_menu.addAction(self.iconZoo)
@@ -58,6 +44,18 @@ class DeveloperManager(object):
         self.brushesZoo = QAction("Brushes Zoo...")
         self.brushesZoo.triggered.connect(lambda: self.onZooRequested(DataConstraints.StrMod.BrushSelection))
         self.root_menu.addAction(self.brushesZoo)
+
+        self.root_menu.addSeparator()
+
+        self.danger_menu = self.root_menu.addMenu("Danger Zone")
+
+        self.rapidSaveLoadTest1 = QAction("Toggle Rapid Save/Load Test...")
+        self.rapidSaveLoadTest1.triggered.connect(lambda: self.onRapidTestRequested("io"))
+        self.danger_menu.addAction(self.rapidSaveLoadTest1)
+
+        self.rapidSaveLoadTest2 = QAction("Toggle Rapid PropertyGrid_Window Test...")
+        self.rapidSaveLoadTest2.triggered.connect(lambda: self.onRapidTestRequested("pg"))
+        self.danger_menu.addAction(self.rapidSaveLoadTest2)
     
         if len(self.root_menu.actions()) == 0:
             testUIAction = self.root_menu.addAction("No Actions")
@@ -87,7 +85,7 @@ class DeveloperManager(object):
             case "io":
                 self.appEngine.ReloadSettings()
             case "pg":
-                if self.appEngine.dlg:
+                if self.appEngine.dlg and not pyqt_extensions.CommonHelpers.isDeleted(self.appEngine.dlg):
                     print("closing")
                     self.appEngine.dlg.close()
                 else:

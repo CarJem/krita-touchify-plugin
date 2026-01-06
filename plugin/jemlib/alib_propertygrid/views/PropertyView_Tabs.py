@@ -22,10 +22,9 @@ if TYPE_CHECKING:
     from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
 
 
-class PropertyView_Tabs(QWidget, PropertyView):
+class PropertyView_Tabs(PropertyView):
 
     def __init__(self, parent: "PropertyViewport", praser: DataHandler, isVertical: bool = False):
-        QWidget.__init__(self, parent)
         PropertyView.__init__(self, parent, praser)
 
         self.__pages: list["PropertyViewport" | "PropertyViewportNested"] = []
@@ -93,34 +92,34 @@ class PropertyView_Tabs(QWidget, PropertyView):
         if is_expandable_area:
             from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
             page = PropertyViewport(self.getViewport().getContainer(), self.getPraser())
-            page.sigPropertiesChanged.connect(self.onPropertiesChanged)
             page.setParent(self)
             page.setDataObject(variable.variableData())
+            page.sigPropertiesChanged.connect(self.onPropertiesChanged)
             self.__pages.append(page)
             return page
         else:
             if has_nested_tabs:
                 from jemlib.alib_propertygrid.PropertyViewport import PropertyViewportNested
                 page = PropertyViewportNested(self, self.getViewport().getContainer(), self.getPraser())
-                page.sigPropertiesChanged.connect(self.onPropertiesChanged)
                 page.setParent(self)
                 page.setLimiters([_varName])
                 page.setModifiers({"no_labels": ""})
                 page.setViewType("default")
                 page.setDataObject(source)
                 page.setFrameShape(QFrame.Shape.NoFrame)
+                page.sigPropertiesChanged.connect(self.onPropertiesChanged)
                 self.__pages.append(page)
                 return page
             else:
                 from jemlib.alib_propertygrid.PropertyViewport import PropertyViewport
                 page = PropertyViewport(self.getViewport().getContainer(), self.getPraser())
-                page.sigPropertiesChanged.connect(self.onPropertiesChanged)
                 page.setParent(self)
                 page.setLimiters([_varName])
                 page.setModifiers({"no_labels": ""})
                 page.setViewType("default")
                 page.setDataObject(source)
                 page.setFrameShape(QFrame.Shape.NoFrame)
+                page.sigPropertiesChanged.connect(self.onPropertiesChanged)
                 self.__pages.append(page)
                 return page
 

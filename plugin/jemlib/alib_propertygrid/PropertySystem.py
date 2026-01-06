@@ -14,6 +14,9 @@ class PropertySystem:
         PropertySystem.settings_clipboard_type = item_type
         PropertySystem.settings_clipboard_data = item_data
 
-
     def deepcopy(x):
-        return copy.deepcopy(x)
+        if hasattr(x, "deepcopy"):
+            return x.deepcopy()
+        else:
+            #print(f"WARNING: DeepCopy is being used to clone this object: {str(x)}")
+            return copy.deepcopy(x)

@@ -91,51 +91,60 @@ class PropertyViewport(QWidget):
         return self.__dataObject
 
     def setDataObject(self, item: any):
-        self.__dataObject = item
+        try:
+            Logger.logDebug("JemLib", "PropertyViewport", "setDataObject", f"Setting Data: {str(item)}")
+            self.__dataObject = item
 
-        if self.getViewType() == "referenced": view_type = self.getPraser().getObjectViewType(item)
-        else: view_type = self.getViewType()
+            if self.getViewType() == "referenced": view_type = self.getPraser().getObjectViewType(item)
+            else: view_type = self.getViewType()
 
-        if view_type != self.getLastViewType():
-            self.setLastViewType(view_type)
-            if self.property_view != None: 
-                self.property_view.deleteLater()
-                self.property_view = None
+            if view_type != self.getLastViewType():
+                self.setLastViewType(view_type)
+                if self.property_view != None: 
+                    self.property_view.deleteLater()
+                    self.property_view = None
 
-            match view_type:
-                case "tabs":
-                    self.property_view = PropertyView_Tabs(self, self.getPraser())
-                    self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-                    self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-                    self.setWidget(self.property_view)
-                case "tabs_vertical":
-                    self.property_view = PropertyView_Tabs(self, self.getPraser(), True)
-                    self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-                    self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-                    self.setWidget(self.property_view)
-                case "sections":
-                    self.property_view = PropertyView_Sections(self, self.getPraser())
-                    self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-                    self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-                    self.setWidget(self.property_view)
-                case "form_alt":
-                    self.property_view = PropertyView_Form(self, self.getPraser())
-                    self.property_view.setHorizontalLabels(True)
-                    self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-                    self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-                    self.setWidget(self.property_view)
-                case "form":
-                    self.property_view = PropertyView_Form(self, self.getPraser())
-                    self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-                    self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-                    self.setWidget(self.property_view)
-                case _:
-                    self.property_view = PropertyView_Form(self, self.getPraser())
-                    self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-                    self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-                    self.setWidget(self.property_view)
+                match view_type:
+                    case "tabs":
+                        self.property_view = PropertyView_Tabs(self, self.getPraser())
+                        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                        self.setWidget(self.property_view)
+                    case "tabs_vertical":
+                        self.property_view = PropertyView_Tabs(self, self.getPraser(), True)
+                        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                        self.setWidget(self.property_view)
+                    case "sections":
+                        self.property_view = PropertyView_Sections(self, self.getPraser())
+                        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+                        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+                        self.setWidget(self.property_view)
+                    case "form_alt":
+                        self.property_view = PropertyView_Form(self, self.getPraser())
+                        self.property_view.setHorizontalLabels(True)
+                        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+                        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+                        self.setWidget(self.property_view)
+                    case "form":
+                        self.property_view = PropertyView_Form(self, self.getPraser())
+                        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+                        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+                        self.setWidget(self.property_view)
+                    case _:
+                        self.property_view = PropertyView_Form(self, self.getPraser())
+                        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+                        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+                        self.setWidget(self.property_view)
 
-        self.property_view.setDataObject(item)
+            Logger.logDebug("JemLib", "PropertyViewport", "setDataObject", f"Updating Data Viewtype: {str(self.property_view)}")
+            self.property_view.setDataObject(item)
+            Logger.logDebug("JemLib", "PropertyViewport", "setDataObject", f"Data Viewtype Updated: {str(self.property_view)}")
+
+            Logger.logDebug("JemLib", "PropertyViewport", "setDataObject", f"Setting Data Complete: {str(item)}")
+        except Exception as ex:
+            Logger.logError("JemLib", "PropertyViewport", "setDataObject", f"Setting Data Failed: {ex}")
+            
 
     def setFrameShape(self, shape: QFrame.Shape):
         if self.__scrollArea:

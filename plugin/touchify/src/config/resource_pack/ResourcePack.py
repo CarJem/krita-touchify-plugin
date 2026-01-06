@@ -1,4 +1,3 @@
-import copy
 import types
 from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
