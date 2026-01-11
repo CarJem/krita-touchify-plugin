@@ -23,8 +23,6 @@ class PropertyField_Int(PropertyField[int]):
         self.editor.installEventFilter(MouseWheelWidgetAdjustmentGuard(self))
         self.editor.setMaximum(2147483647)
         self.editor.setMinimum(-2147483648)
-        self.editor.valueChanged.connect(self.updateValue)
-        self.editor.setValue(self.propertyData.variableData())
 
         restrictions = self.praser.getObjectConstraints(self.propertyData)
         for restriction in restrictions:
@@ -33,6 +31,9 @@ class PropertyField_Int(PropertyField[int]):
                     self.editor.setMinimum(restriction["min"])
                 if "max" in restriction:
                     self.editor.setMaximum(restriction["max"])
+
+        self.editor.valueChanged.connect(self.updateValue)
+        self.editor.setValue(self.propertyData.variableData())
         
         editorLayout = QHBoxLayout(self)
         editorLayout.setSpacing(0)

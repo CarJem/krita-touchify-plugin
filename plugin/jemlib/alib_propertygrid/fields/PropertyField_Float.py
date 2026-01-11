@@ -25,8 +25,6 @@ class PropertyField_Float(PropertyField[float]):
         self.editor.installEventFilter(MouseWheelWidgetAdjustmentGuard(self))
         self.editor.setMaximum(sys.float_info.max)
         self.editor.setMinimum(sys.float_info.min)
-        self.editor.valueChanged.connect(self.updateValue)
-        self.editor.setValue(self.propertyData.variableData())
 
         restrictions = self.praser.getObjectConstraints(self.propertyData)
         for restriction in restrictions:
@@ -35,6 +33,9 @@ class PropertyField_Float(PropertyField[float]):
                     self.editor.setMinimum(restriction["min"])
                 if "max" in restriction:
                     self.editor.setMaximum(restriction["max"])
+
+        self.editor.valueChanged.connect(self.updateValue)
+        self.editor.setValue(self.propertyData.variableData())
         
         editorLayout = QHBoxLayout(self)
         editorLayout.setSpacing(0)

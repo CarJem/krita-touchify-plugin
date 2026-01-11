@@ -545,7 +545,7 @@ class ShelfWidget(QWidget):
         result: ToolshelfDock = self.propertyEditor.exec_()
         if not result: return
 
-        dock_item = self.dockLoader.Init_Section()
+        dock_item = self.dockLoader.Init_Section(result)
         self.__shelfSetup(dock_item, None, current_area._parentAreaId)
         current_area.addDock(dock_item)
         self.saveLayout()

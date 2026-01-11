@@ -12,7 +12,7 @@ from touchify.src.config.popup.PopupData import PopupData
 from touchify.src.config.script.CustomScript import CustomScript
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
-from touchify.src.config.TouchifyRegistryPreferences import TouchifyRegistryPreferences
+from touchify.src.config.TouchifyPreferences import TouchifyPreferences
 from touchify.src.config.context_menu.ContextMenu import ContextMenu
 from jemlib.api_touchify.env import *
 
@@ -72,7 +72,7 @@ class TouchifySettings:
         TouchifySettings.config().load()
         
     @staticmethod
-    def preferences() -> TouchifyRegistryPreferences:
+    def preferences() -> TouchifyPreferences:
         return TouchifySettings.config().preferences
 
     @staticmethod

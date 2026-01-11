@@ -9,6 +9,7 @@ from jemlib.managers.GlobalEvents import GlobalEvents
 
 from jemlib.alib_vaporjem import Logger
 from touchify.src.PluginWindow import TouchifyWindow
+from touchify.src.managers.ApplicationManager import ApplicationManager
 
 class TouchifyPlugin(Extension):
     
@@ -26,6 +27,7 @@ class TouchifyPlugin(Extension):
         KritaAPI.notifier().add_window_created_callback(self.onWindowCreated)
         KritaAPI.notifier().add_configuration_changed_callback(self.onConfigurationChanged)
         GlobalEvents().setup()
+        ApplicationManager.instance().onApplicationLoad()
     
     def onWindowDestroyed(self, windowId: str):
         item: TouchifyWindow = self.instances[windowId]
@@ -44,7 +46,6 @@ class TouchifyPlugin(Extension):
                 window = __window
         
         if window == None: return
-
         window.windowClosed.connect(lambda: self.onWindowDestroyed(window_id))
         self.instances[window_id] = self.new_instance
         Logger.logDebug("Touchify","Plugin", "unknown", "window_load")

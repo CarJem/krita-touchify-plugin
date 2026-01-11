@@ -23,18 +23,26 @@ if TYPE_CHECKING:
 
 class PropertyView_Sections(PropertyView):
 
-    def __init__(self, parent: "PropertyViewport", praser: DataHandler):
+    def __init__(self, parent: "PropertyViewport", praser: DataHandler, isHorizontal: bool = False):
         PropertyView.__init__(self, parent, praser)
 
         self.__sections: list["PropertyViewport" | "PropertyViewportNested"] = []
         self.__titles: list[QLabel] = []
+        self.__isHorizontal = isHorizontal
 
         self.setContentsMargins(0,0,0,0)
 
-        self.gridLayout = QVBoxLayout(self)
-        self.gridLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.gridLayout.setSpacing(0)
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        if self.__isHorizontal:
+            self.gridLayout = QHBoxLayout(self)
+            self.gridLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+            self.gridLayout.setSpacing(0)
+            self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        else:
+            self.gridLayout = QVBoxLayout(self)
+            self.gridLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+            self.gridLayout.setSpacing(0)
+            self.gridLayout.setContentsMargins(0, 0, 0, 0)
+            
         self.setLayout(self.gridLayout)
 
 
@@ -127,10 +135,6 @@ class PropertyView_Sections(PropertyView):
         self.__sections[index].setVisible(visible)
         self.__titles[index].setVisible(visible)
 
-    def addTab(self, page: "PropertyViewport | PropertyViewportNested", title: QLabel):
-        self.gridLayout.addWidget(title)
-        self.gridLayout.addWidget(page)
-
     #endregion
 
     #region Signal Recievers
@@ -175,7 +179,11 @@ class PropertyView_Sections(PropertyView):
                 page = self.createSection(item, variable_id)
 
             if page:
-                tab = self.createTitle(variable_id, labelData)
-                tabIndex = self.addTab(page, tab)
+                if self.__isHorizontal:
+                    self.gridLayout.addWidget(page)
+                else:
+                    title = self.createTitle(variable_id, labelData)
+                    self.gridLayout.addWidget(title)
+                    self.gridLayout.addWidget(page)
 
     #endregion

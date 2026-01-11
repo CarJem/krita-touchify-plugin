@@ -10,6 +10,7 @@ from jemlib.api_touchify.env import *
 
 from touchify.src.PluginOptions import PluginOptions
 from touchify.src.config.TouchifyRegistry import TouchifyRegistry
+from touchify.src.managers.ApplicationManager import ApplicationManager
 from touchify.src.settings.TouchifySettings import TouchifySettings
 
 
@@ -38,6 +39,7 @@ class TouchifyWindow(QObject):
         self.api_window = window
         self.setParent(self.api_window.qwindow)
         self.managers.Load(self)
+        ApplicationManager.instance().onWindowLoaded(window.qwindow)
 
         self.api_window.qwindow.installEventFilter(self)
         

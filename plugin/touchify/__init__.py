@@ -8,7 +8,6 @@ from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDoc
 from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
 from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import DynamicToolshelfDockerWidgetPad
 
-
 KritaAPI.add_extension(TouchifyPlugin)
 KritaAPI.add_dock_widget_factory(TouchifyEnv.DockerID.TOOLSHELFDOCKER, DockWidgetFactoryAPI.DockPosition.DockLeft, ToolshelfDockerWidget)
 KritaAPI.add_dock_widget_factory(TouchifyEnv.DockerID.TOOLBOX, DockWidgetFactoryAPI.DockPosition.DockRight, ToolboxDocker)

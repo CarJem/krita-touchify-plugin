@@ -120,6 +120,11 @@ class PropertyViewport(QWidget):
                         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
                         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
                         self.setWidget(self.property_view)
+                    case "sections_horizontal":
+                        self.property_view = PropertyView_Sections(self, self.getPraser(), True)
+                        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+                        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+                        self.setWidget(self.property_view)
                     case "form_alt":
                         self.property_view = PropertyView_Form(self, self.getPraser())
                         self.property_view.setHorizontalLabels(True)

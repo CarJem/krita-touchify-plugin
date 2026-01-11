@@ -82,7 +82,7 @@ class ResourcePackRegistry:
 
     def propertygrid_labels(self):
         labels = {}
-        labels["presets"] = "Presets"
+        labels["presets"] = "Resource Packs"
         return labels
 
     def propertygrid_restrictions(self):

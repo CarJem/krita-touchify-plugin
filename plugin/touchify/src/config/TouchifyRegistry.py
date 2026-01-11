@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 
 from touchify.__env__ import BASE_DIR
 from touchify.src.config.resource_pack.ResourcePackRegistry import ResourcePackRegistry
-from touchify.src.config.TouchifyRegistryPreferences import TouchifyRegistryPreferences
+from touchify.src.config.TouchifyPreferences import TouchifyPreferences
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.api_touchify.env import *
 
@@ -14,7 +14,7 @@ class TouchifyRegistry:
     def __init__(self):
         self.__base_dir__ = BASE_DIR            
         self.resources: ResourcePackRegistry = ResourcePackRegistry()
-        self.preferences: TouchifyRegistryPreferences = TouchifyRegistryPreferences()
+        self.preferences: TouchifyPreferences = TouchifyPreferences()
 
     def propertygrid_labels(self):
         labels = {}
@@ -23,12 +23,12 @@ class TouchifyRegistry:
         return labels
     
     def propertygrid_view_type(self):
-        return "tabs"
+        return "sections_horizontal"
     
     def propertygrid_sorted(self):
         return [
             "resources",
-            "preferences"
+            "preferences",
         ]
     
     def propertygrid_sisters(self):
