@@ -51,6 +51,9 @@ class PropertyGrid(QWidget):
 
     #region Get / Set Functions
 
+    def getPraser(self):
+        return self.__praser
+
     def getPropertyGrid(self):
         return self.__property_grid
 
@@ -136,8 +139,6 @@ class PropertyGrid(QWidget):
         for i in range(0, amount):
             lastIndex = self.getCurrentIndex() - 1
             currentWidget = self.getCurrentWidget()
-            if isinstance(currentWidget, QDialog):
-                currentWidget.reject()
             self.setCurrentIndex(lastIndex)
             self.page_stack.removeWidget(currentWidget)
         self.onNavigationTabsChanged()

@@ -5,12 +5,12 @@ from jemlib.alib_propertygrid.dialogs.PropertyGrid_Window import PropertyGrid_Wi
 from jemlib.api_krita.wrappers.window import WindowAPI
 
 from krita import *
-from touchify.src.alib_propertygrid.data.TouchifyDataHandler import TouchifyDataHandler
+from touchify.src.alib_propertygrid.data.TouchifyDataExtension import TouchifyDataExtension
 
 class SettingsDialog(PropertyGrid_Window):
     @staticmethod
     def Setup(dlg: "SettingsDialog", api_window: WindowAPI, title: str, input: any):
-        result = PropertyGrid_Window.Setup(dlg, api_window.qwindow.window(), input, TouchifyDataHandler.Praser(), cls=SettingsDialog)
+        result = PropertyGrid_Window.Setup(dlg, api_window.qwindow.window(), input, TouchifyDataExtension.Praser(), cls=SettingsDialog)
         result.setWindowTitle(title)
         return result
 

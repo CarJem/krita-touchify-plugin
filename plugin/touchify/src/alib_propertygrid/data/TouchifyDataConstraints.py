@@ -9,7 +9,11 @@ from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 if TYPE_CHECKING:
     from jemlib.alib_propertygrid.fields.PropertyField_Str import PropertyField_Str
 
-class PropertyGrid_TouchifyRestrictions:
+class TouchifyDataConstraints:
+
+
+    class TypeOverride(EnumStr):
+        RestrictionContextBuilder="restriction_context_builder"
 
     class StrRegistryMod(EnumStr):
         DockerGroupRegistry="registry_docker_group_selection"
@@ -25,14 +29,18 @@ class PropertyGrid_TouchifyRestrictions:
         IsRegistry="IsRegistry"
 
     @staticmethod
+    def typeOverride(type: TypeOverride):
+        return DataConstraints.typeOverride(str(type))
+
+    @staticmethod
     def registryListMod():
-        return DataConstraints.listMod(DataConstraints.ListMod.ItemModifier, PropertyGrid_TouchifyRestrictions.StrListModParams.IsRegistry)
+        return DataConstraints.listMod(DataConstraints.ListMod.ItemModifier, TouchifyDataConstraints.StrListModParams.IsRegistry)
 
     @staticmethod
     def registryReferenceEditor(src: "PropertyField_Str", registryType: str, current_data: str):
 
         from touchify.src.settings.TouchifySettings import TouchifySettings
-        registryType = PropertyGrid_TouchifyRestrictions.strRegistryModType(registryType)
+        registryType = TouchifyDataConstraints.strRegistryModType(registryType)
         if not registryType: return
 
         targetItem = TouchifySettings.registry(registryType).get(current_data)
@@ -69,18 +77,18 @@ class PropertyGrid_TouchifyRestrictions:
         from touchify.src.config.script.CustomScript import CustomScript
         from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 
-        if type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.PopupRegistry: return PopupData
-        elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.DockerGroupRegistry: return DockerGroup
-        elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.CanvasPresetRegistry: return CanvasPreset
-        elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.MenuRegistry: return ContextMenu
-        elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.ShelfRegistry: return Toolshelf
-        elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.ScriptRegistry: return CustomScript
-        elif type == PropertyGrid_TouchifyRestrictions.StrRegistryMod.PieWheelRegistry: return PieWheelData
+        if type == TouchifyDataConstraints.StrRegistryMod.PopupRegistry: return PopupData
+        elif type == TouchifyDataConstraints.StrRegistryMod.DockerGroupRegistry: return DockerGroup
+        elif type == TouchifyDataConstraints.StrRegistryMod.CanvasPresetRegistry: return CanvasPreset
+        elif type == TouchifyDataConstraints.StrRegistryMod.MenuRegistry: return ContextMenu
+        elif type == TouchifyDataConstraints.StrRegistryMod.ShelfRegistry: return Toolshelf
+        elif type == TouchifyDataConstraints.StrRegistryMod.ScriptRegistry: return CustomScript
+        elif type == TouchifyDataConstraints.StrRegistryMod.PieWheelRegistry: return PieWheelData
         else: return None
 
     @staticmethod
     def strRegistryMod(type: StrRegistryMod):
         from touchify.src.settings.TouchifySettings import TouchifySettings
-        registryType =PropertyGrid_TouchifyRestrictions.strRegistryModType(type)
+        registryType =TouchifyDataConstraints.strRegistryModType(type)
         if not registryType: return {}
-        return {"type": DataConstraints.StrMod.TouchifyRegistry, "entries": TouchifySettings.registry(registryType), "registry_type": type, "callback": PropertyGrid_TouchifyRestrictions.registryReferenceEditor }
+        return {"type": DataConstraints.StrMod.TouchifyRegistry, "entries": TouchifySettings.registry(registryType), "registry_type": type, "callback": TouchifyDataConstraints.registryReferenceEditor }

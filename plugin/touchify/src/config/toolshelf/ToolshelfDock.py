@@ -4,6 +4,7 @@ from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_datatypes.EnumStr import EnumStr
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
+from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import TouchifyDataConstraints as DataConstraintsT
 
 class ToolshelfDock:
     class SectionType(EnumStr):
@@ -294,13 +295,12 @@ class ToolshelfDock:
     def propertygrid_restrictions(self):
         restrictions = {}
 
-        
         restrictions["min_size_x"] = DataConstraints.range(min=0)
         restrictions["min_size_y"] = DataConstraints.range(min=0)
         restrictions["max_size_x"] = DataConstraints.range(min=0)
         restrictions["max_size_y"] = DataConstraints.range(min=0)
         restrictions["section_type"] = DataConstraints.strEnumValues(self.SectionType)
-        restrictions["section_requirements"] = DataConstraints.strMod(DataConstraints.StrMod.RequirementSelection)
+        restrictions["section_requirements"] = DataConstraintsT.typeOverride(DataConstraintsT.TypeOverride.RestrictionContextBuilder)
 
         restrictions["docker_id"] = DataConstraints.strMod(DataConstraints.StrMod.DockerSelection)
         restrictions["docker_nesting_mode"] = DataConstraints.strEnumValues(self.DockerNestingMode)

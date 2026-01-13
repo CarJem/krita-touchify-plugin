@@ -18,9 +18,9 @@ class QuickTriggerPickerDialog(QDialog):
             super().__init__(parent)
             self.pickerParent = parent
 
-            from touchify.src.alib_propertygrid.data.TouchifyDataHandler import TouchifyDataHandler
+            from touchify.src.alib_propertygrid.data.TouchifyDataExtension import TouchifyDataExtension
             self.praser = DataHandler()
-            self.praser.installExtension(TouchifyDataHandler())
+            self.praser.installExtension(TouchifyDataExtension())
 
             self.propertyGrid = PropertyGrid(self, self.praser)
             self.propertyGrid.setDataObject(Trigger())
@@ -64,27 +64,26 @@ class QuickTriggerPickerDialog(QDialog):
         self.tabWidget.addTab(QuickTriggerPickerDialog.TriggerTab(self), "Custom")
 
     def createTab(self, onAccept: any, mode: DataConstraints.StrMod):
-        dlg = PropertyGrid_SelectorDialog(None)
-        dlg.header_buttons.buttons()[0].setText("Insert")
-        dlg.header_buttons.buttons()[1].setText("Cancel")
-        dlg.header_buttons.accepted.connect(lambda: onAccept(dlg))
-        dlg.header_buttons.rejected.connect(self.onReject)
+        dlg = None
+        dlg = PropertyGrid_SelectorDialog.Setup(dlg, None, "", { 'button_names': [ "Insert", "Cancel" ], 'close_on_save': False })
+        dlg.onAcceptFunction = onAccept
+        dlg.onRejectFunction = self.onReject
         dlg.load_list(mode)
         return dlg
 
-    def onAddBrush(self, source: PropertyGrid_SelectorDialog):
+    def onAddBrush(self, source: str):
         trigger = Trigger()
         trigger.variant = str(Trigger.Variants.Brush)
         trigger.display_custom_text_enabled = False
-        trigger.brush_name = source.selected_item
+        trigger.brush_name = source
         self.sigOnNewItem.emit(trigger)
 
-    def onAddAction(self, source: PropertyGrid_SelectorDialog):
+    def onAddAction(self, source: str):
         trigger = Trigger()
         trigger.variant = str(Trigger.Variants.Action)
 
         trigger.display_custom_text_enabled = False
-        trigger.action_id = source.selected_item
+        trigger.action_id = source
         self.sigOnNewItem.emit(trigger)
 
     def onAddTrigger(self, source: Trigger):

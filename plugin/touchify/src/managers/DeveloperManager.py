@@ -25,6 +25,8 @@ class DeveloperManager(object):
         self.__timer.setInterval(150)
         self.__timer.timeout.connect(self.onRapidTestInterval)
 
+        self.dlg = None
+
 
     def Actions_Post(self, menu: QMenu):
         menu.addMenu(self.root_menu)
@@ -56,6 +58,10 @@ class DeveloperManager(object):
         self.rapidSaveLoadTest2 = QAction("Toggle Rapid PropertyGrid_Window Test...")
         self.rapidSaveLoadTest2.triggered.connect(lambda: self.onRapidTestRequested("pg"))
         self.danger_menu.addAction(self.rapidSaveLoadTest2)
+
+        self.rapidSaveLoadTest3 = QAction("Toggle Rapid ToolshelfDock Editor Test...")
+        self.rapidSaveLoadTest3.triggered.connect(lambda: self.onRapidTestRequested("tsdpg"))
+        self.danger_menu.addAction(self.rapidSaveLoadTest3)
     
         if len(self.root_menu.actions()) == 0:
             testUIAction = self.root_menu.addAction("No Actions")
@@ -69,6 +75,8 @@ class DeveloperManager(object):
                 case "io":
                     self.__timer.setInterval(150)
                 case "pg":
+                    self.__timer.setInterval(500)
+                case "tsdpg":
                     self.__timer.setInterval(500)
                 case _:
                     self.__timer.setInterval(150)
@@ -99,17 +107,16 @@ class DeveloperManager(object):
 
     def onZooRequested(self, type: DataConstraints.StrMod):
 
-        def copyItemToClipboard():
+        def copyItemToClipboard(result: str):
             clipboard = QApplication.clipboard()
-            clipboard.setText(dlg.selected_item)
+            clipboard.setText(result)
 
-        dlg = PropertyGrid_SelectorDialog(None)
-        dlg.header_buttons.buttons()[0].setText("Copy to Clipboard...")
-        dlg.header_buttons.buttons()[1].setText("Exit...")
-        dlg.header_buttons.accepted.connect(copyItemToClipboard)
-        dlg.header_buttons.rejected.connect(lambda: dlg.reject())
-        dlg.load_list(type)
-        dlg.exec_()
+        self.dlg = PropertyGrid_SelectorDialog.Setup(self.dlg, None, "zoo", {
+            'button_names': [ "Exit...", "Copy to Clipboard..." ],
+        })
+        self.dlg.onAcceptFunction = copyItemToClipboard
+        self.dlg.load_list(type)
+        self.dlg.exec()
 
 
 

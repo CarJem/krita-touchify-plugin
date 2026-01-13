@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 from jemlib.alib_propertygrid.PropertyGrid import PropertyGrid
 from jemlib.alib_propertygrid.data.DataHandler import *
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import *
-
+from jemlib.alib_vaporjem import Logger
 
 from jemlib.alib_propertygrid.views.PropertyView import PropertyView
 from jemlib.alib_propertygrid.views.PropertyView_Form import PropertyView_Form

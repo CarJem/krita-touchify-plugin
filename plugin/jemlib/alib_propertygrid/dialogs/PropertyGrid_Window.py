@@ -97,17 +97,23 @@ class PropertyGrid_Window(QDialog):
     def exec(self):
         self.__is_exec = True
         response = super().exec()
+        Logger.logDebug("JemLib", "PropertyGrid_Window", "exec", f"Execution Completed")
         self.__is_exec = False
         if response:
+            Logger.logDebug("JemLib", "PropertyGrid_Window", "exec", f"response: {self.data_object}")
             return self.data_object
+        Logger.logDebug("JemLib", "PropertyGrid_Window", "exec", f"response: {response}")
         return response
     
     def exec_(self):
         self.__is_exec = True
         response = super().exec_()
+        Logger.logDebug("JemLib", "PropertyGrid_Window", "exec_", f"Execution Completed")
         self.__is_exec = False
         if response:
+            Logger.logDebug("JemLib", "PropertyGrid_Window", "exec_", f"response: {self.data_object}")
             return self.data_object
+        Logger.logDebug("JemLib", "PropertyGrid_Window", "exec_", f"response: {response}")
         return response
 
     def _onApply(self):

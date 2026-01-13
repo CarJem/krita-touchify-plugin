@@ -1,5 +1,6 @@
 
 # Field Imports
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_propertygrid.data.DataPath import DataPath
 from jemlib.alib_propertygrid.fields.PropertyField_Dict import PropertyField_Dict
 from jemlib.alib_propertygrid.fields.PropertyField import PropertyField
@@ -24,6 +25,7 @@ class DataHandler:
         self.installExtension(DataExtension())
 
     def installExtension(self, ext: "DataExtension"):
+        ext.setGlobalHandler(self)
         self.__extensions.append(ext)
 
     def isSpecialType(self, property: DataPath):
@@ -31,6 +33,18 @@ class DataHandler:
             if praser.isSpecialType(property):
                 return True
         return False
+    
+    def isOverridenType(self, property: DataPath):
+        for praser in self.__extensions:
+            if praser.isOverridenType(property):
+                return True
+        return False
+    
+    def getOverridenType(self, property: DataPath):
+        for praser in self.__extensions:
+            result = praser.getOverridenType(self, property)
+            if result: return result
+        return PropertyField(self, property)
 
     def getSpecialType(self, property: DataPath):
         for praser in self.__extensions:
@@ -46,6 +60,8 @@ class DataHandler:
         
         if self.isSpecialType(property):
             return self.getSpecialType(property)
+        elif self.isOverridenType(property):
+            return self.getOverridenType(property)
         elif varType == str:
             return PropertyField_Str(self, property)
         elif varType == int:
@@ -129,6 +145,18 @@ class DataHandler:
         if hasattr(obj, "propertygrid_view_type"):
             return str(obj.propertygrid_view_type())
         return "default"
+    
+    def getObjectValueTypeOverride(self, property: DataPath):
+        constraints = self.getObjectConstraints(property)
+        if len(constraints) == 0: return None
+
+        overrides = [c for c in constraints if "type" in c and c["type"] == DataConstraints.OtherMod.OverrideType]
+        if len(overrides) == 0: return None
+
+        descriptor = overrides[0]
+        if not "value" in descriptor: return None
+
+        return descriptor["value"]
 
     def getObjectConstraints(self, property: DataPath) -> list[dict[str, any]]:
         if hasattr(property.variableSource(), "propertygrid_restrictions"):

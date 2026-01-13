@@ -6,24 +6,39 @@ from touchify.src.alib_propertygrid.fields.PropertyField_ToolboxDataItem import 
 from touchify.src.alib_propertygrid.fields.PropertyField_ToolboxDataSubitem import PropertyField_ToolboxDataSubitem
 from touchify.src.alib_propertygrid.fields.PropertyField_TriggerGroups import PropertyField_TriggerGroups
 from touchify.src.alib_propertygrid.fields.PropertyField_TriggerList import PropertyField_TriggerList
+from touchify.src.alib_propertygrid.fields.PropertyField_ConditionBuilder import PropertyField_ConditionBuilder
 
 
 if TYPE_CHECKING:
     from jemlib.alib_propertygrid.data.DataHandler import DataHandler
 
-class TouchifyDataHandler(DataExtension):
+class TouchifyDataExtension(DataExtension):
 
 
     @staticmethod
     def Praser():
         from jemlib.alib_propertygrid.data.DataHandler import DataHandler
         praser = DataHandler()
-        praser.installExtension(TouchifyDataHandler())
+        praser.installExtension(TouchifyDataExtension())
         return praser
 
     def __init__(self):
         super().__init__()
 
+
+    def isOverridenType(self, property: DataPath):
+        from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import TouchifyDataConstraints as DCT
+        if not self.getGlobalHandler(): return False
+
+        value: str | None = self.getGlobalHandler().getObjectValueTypeOverride(property)
+        if not value: return False
+
+        match value:
+            case DCT.TypeOverride.RestrictionContextBuilder:
+                return True
+            case _:
+                return False
+    
     def isSpecialType(self, property: DataPath):
         from touchify.src.config.triggers.TriggerGroup import TriggerGroup
         from touchify.src.config.triggers.Trigger import Trigger
@@ -42,6 +57,19 @@ class TouchifyDataHandler(DataExtension):
             return True
         else:
             return False
+        
+    def getOverridenType(self,  handler: "DataHandler", property: DataPath):
+        from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import TouchifyDataConstraints as DCT
+        if not self.getGlobalHandler(): return None
+
+        value: str | None = self.getGlobalHandler().getObjectValueTypeOverride(property)
+        if not value: return None
+
+        match value:
+            case DCT.TypeOverride.RestrictionContextBuilder:
+                return PropertyField_ConditionBuilder(handler, property)
+            case _:
+                return None
 
     def getSpecialType(self, handler: "DataHandler", property: DataPath):
         from touchify.src.config.triggers.TriggerGroup import TriggerGroup

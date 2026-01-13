@@ -1,4 +1,4 @@
-from logging import Logger
+from jemlib.alib_vaporjem import Logger
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *

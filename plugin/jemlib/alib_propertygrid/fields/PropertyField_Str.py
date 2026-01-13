@@ -26,6 +26,9 @@ class PropertyField_Str(PropertyField[str]):
         super().__init__(handler, property, True)
 
 
+        self.helper_dlg = None
+
+
         self.is_icon_viewer = False
         self.is_brush_selection = False
         self.is_special_selector = False
@@ -190,8 +193,6 @@ class PropertyField_Str(PropertyField[str]):
             self.editorHelper.setIcon(IconRepository.iconLoader("properties"))
 
         self.editorHelper.clicked.connect(lambda: self.onHelperRequested(self.special_selector_type, self.special_selector_entries))
-        
-
 
         editorLayout = QHBoxLayout(self)
         editorLayout.setSpacing(0)
@@ -216,29 +217,28 @@ class PropertyField_Str(PropertyField[str]):
         editorLayout.addWidget(self.editor)
         self.setLayout(editorLayout)
 
-    def onHelperDlgAccept(self):
+    def onHelperSaved(self, result: str):
         self.getParentContainer().navigateBackwards()
-        self.dlg.accept()
-    
-    def onHelperDlgReject(self):
+        if not result: return
+
+        if self.is_icon_viewer: 
+            self.editorHelper.setIcon(IconRepository.iconLoader(result))
+        elif self.is_brush_selection:
+            self.editorHelper.setIcon(IconRepository.brushIcon(result))
+        self.editor.setText(result)
+        
+    def onHelperClosed(self):
         self.getParentContainer().navigateBackwards()
-        self.dlg.reject()
 
     def onHelperRequested(self, mode, entries):
-        self.dlg = PropertyGrid_SelectorDialog(self.getParentContainer())
-        self.dlg.setWindowFlags(Qt.WindowType.Widget)
-        self.dlg.header_buttons.accepted.connect(lambda: self.onHelperDlgAccept())
-        self.dlg.header_buttons.rejected.connect(lambda: self.onHelperDlgReject())
+        self.helper_dlg: PropertyGrid_SelectorDialog = PropertyGrid_SelectorDialog.Setup(self.helper_dlg, self, "str_picker", {
+            'container': self.getParentContainer()
+        })
+        self.helper_dlg.onAcceptFunction = self.onHelperSaved
+        self.helper_dlg.onRejectFunction = self.onHelperClosed
+        self.helper_dlg.load_list(mode, entries, self.propertyData.variableData())
+        self.helper_dlg.showAsWidget()
 
-        self.dlg.load_list(mode, entries, self.propertyData.variableData())
-        self.getParentContainer().navigateForwards(self.dlg)
-        if self.dlg.exec_():
-            result = self.dlg.selectedResult()
-            if self.is_icon_viewer: 
-                self.editorHelper.setIcon(IconRepository.iconLoader(result))
-            elif self.is_brush_selection:
-                self.editorHelper.setIcon(IconRepository.brushIcon(result))
-            self.editor.setText(result)
 
     def onTouchifyInspectorRequested(self):
         if self.touchify_registry_callback:

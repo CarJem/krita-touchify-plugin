@@ -4,7 +4,7 @@ from jemlib.alib_datatypes.EnumStr import EnumStr
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 
 from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
-from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import PropertyGrid_TouchifyRestrictions
+from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import TouchifyDataConstraints
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
@@ -330,7 +330,7 @@ class Trigger:
 
     def propertygrid_listmod(self, mods: list[any]):
         for mod in mods:
-            if mod == PropertyGrid_TouchifyRestrictions.StrListModParams.IsRegistry:
+            if mod == TouchifyDataConstraints.StrListModParams.IsRegistry:
                 self.__is_registry = True
 
     def propertygrid_restrictions(self):
@@ -345,12 +345,12 @@ class Trigger:
         restrictions["docker_id"] = DataConstraints.strMod(DataConstraints.StrMod.DockerSelection)
         restrictions["menu_data"] = DataConstraints.expandable("...")
         restrictions["script_data"] = DataConstraints.expandable("...")
-        restrictions["refrenced_dockergroup"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.DockerGroupRegistry)
-        restrictions["refrenced_popup"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.PopupRegistry)
-        restrictions["refrenced_canvaspreset"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.CanvasPresetRegistry)
-        restrictions["refrenced_menu"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.MenuRegistry)
-        restrictions["refrenced_script"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.ScriptRegistry)
-        restrictions["refrenced_piewheel"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.PieWheelRegistry)
+        restrictions["refrenced_dockergroup"] = TouchifyDataConstraints.strRegistryMod(TouchifyDataConstraints.StrRegistryMod.DockerGroupRegistry)
+        restrictions["refrenced_popup"] = TouchifyDataConstraints.strRegistryMod(TouchifyDataConstraints.StrRegistryMod.PopupRegistry)
+        restrictions["refrenced_canvaspreset"] = TouchifyDataConstraints.strRegistryMod(TouchifyDataConstraints.StrRegistryMod.CanvasPresetRegistry)
+        restrictions["refrenced_menu"] = TouchifyDataConstraints.strRegistryMod(TouchifyDataConstraints.StrRegistryMod.MenuRegistry)
+        restrictions["refrenced_script"] = TouchifyDataConstraints.strRegistryMod(TouchifyDataConstraints.StrRegistryMod.ScriptRegistry)
+        restrictions["refrenced_piewheel"] = TouchifyDataConstraints.strRegistryMod(TouchifyDataConstraints.StrRegistryMod.PieWheelRegistry)
         restrictions["color_id"] = DataConstraints.strMod(DataConstraints.StrMod.ColorPicker)
         
         return restrictions

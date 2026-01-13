@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 
 from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from jemlib.alib_propertygrid.data.DataPath import DataPath
-from jemlib.alib_propertygrid.dialogs.PropertyGrid_Subwindow import PropertyGrid_Subwindow
+from jemlib.alib_propertygrid.dialogs.PropertyGrid_Subpage import PropertyGrid_Subpage
 
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_propertygrid.PropertyGrid import *
@@ -29,6 +29,7 @@ class PropertyField(QWidget, Generic[T]):
         self.propertyData = property
         self.sister_id = None
         self.__parent_grid = None
+        self.nested_page_dialog = None
 
         self.setContentsMargins(0, 0, 0, 0)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
@@ -102,21 +103,20 @@ class PropertyField(QWidget, Generic[T]):
         if item_data != None and item_type != None:
             PropertySystem.setSettingsClipboard(item_type, item_data)
 
+    def nested_edit_reject(self):
+        self.getParentContainer().navigateBackwards()
+
+    def nested_edit_accept(self, result):
+        self.getParentContainer().navigateBackwards()
+
     def nested_edit(self):
-        self.nested_page_dialog = PropertyGrid_Subwindow(self)
-        self.nested_page_dialog.setWindowTitle(str(self.propertyData.variableName()))
-        self.nested_page_dialog.setWindowFlags(Qt.WindowType.Widget)
-        self.nested_page_layout = QVBoxLayout(self)
-        self.nested_page_layout.setContentsMargins(0,0,0,0)
-        self.nested_page_layout.setSpacing(0)
-
-        from ..PropertyViewport import PropertyViewport
-        self.nested_page_properties = PropertyViewport(self.getParentContainer(), self.praser)
-        self.nested_page_layout.addWidget(self.nested_page_properties)
-        self.nested_page_dialog.setLayout(self.nested_page_layout)
-
-        self.nested_page_properties.setDataObject(self.propertyData.variableData())
-        self.getParentContainer().navigateForwards(self.nested_page_dialog)
-        self.nested_page_dialog.show()
+        self.nested_page_dialog = PropertyGrid_Subpage.Setup(self.nested_page_dialog, self, "nested_edit", {
+            'title': f'{str(self.propertyData.variableName())}',
+            'item': self.propertyData.variableData(),
+            'container': self.getParentContainer()
+        })
+        self.nested_page_dialog.onRejectFunction = self.nested_edit_reject
+        self.nested_page_dialog.onAcceptFunction = self.nested_edit_accept
+        self.nested_page_dialog.showAsWidget()
 
     #endregion

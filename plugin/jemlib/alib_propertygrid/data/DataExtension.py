@@ -9,7 +9,19 @@ if TYPE_CHECKING:
 class DataExtension:
 
     def __init__(self):
-        pass
+        self.__globalHandler = None
+
+    def getGlobalHandler(self):
+        return self.__globalHandler
+
+    def setGlobalHandler(self, handler: "DataHandler"):
+        self.__globalHandler = handler
+
+    def isOverridenType(self, property: DataPath):
+        return False
+    
+    def getOverridenType(self,  handler: "DataHandler", property: DataPath):
+        return None
     
     def isSpecialType(self, property: DataPath):
         from jemlib.alib_kis.dataclass.KisColor import KisColor

@@ -18,7 +18,7 @@ from jemlib.alib_datatypes.TypedList import TypedList
 
 from touchify.__env__ import RESOURCE_PACKS_DIRECTORY
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints as RS
-from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import PropertyGrid_TouchifyRestrictions as RSA
+from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import TouchifyDataConstraints as RSA
 
 HAS_ALREADY_LOADED: bool = False
 

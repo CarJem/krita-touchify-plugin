@@ -7,7 +7,7 @@ from PyQt5.QtCore import *
 
 from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from jemlib.alib_propertygrid.data.DataPath import DataPath
-from jemlib.alib_propertygrid.dialogs.PropertyGrid_Subwindow import PropertyGrid_Subwindow
+from jemlib.alib_propertygrid.dialogs.PropertyGrid_Subpage import PropertyGrid_Subpage
 from jemlib.alib_propertygrid.fields.PropertyField import PropertyField
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_datatypes.TypedList import TypedList
@@ -56,7 +56,7 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         self.view_layout.setContentsMargins(0,0,0,0)
         self.view_widget.setLayout(self.view_layout)
 
-        self.view_editor = None
+        self.subview_dlg = None
 
         self.model = QtGui.QStandardItemModel(self)
         if self.has_sub_array:
@@ -72,12 +72,6 @@ class PropertyField_TypedList(PropertyField[TypedList]):
 
 
 
-        if self.has_property_view:
-            # TODO: Fix and Reimplement
-            from ..PropertyViewport import PropertyViewport
-            self.view_editor = PropertyViewport(self, self.praser)
-            self.view_editor.sigPropertiesChanged.connect(self.onPropertyViewUpdate)
-            self.field_layout.addWidget(self.view_editor)
 
 
         self.selection_model = self.view.selectionModel()
@@ -195,26 +189,6 @@ class PropertyField_TypedList(PropertyField[TypedList]):
     
     def setParentContainer(self, container: "PropertyGrid"):
         super().setParentContainer(container)
-        if self.has_property_view: self.view_editor.setContainer(container)
-
-    def getNewEditorPage(self):
-        dlg = PropertyGrid_Subwindow(self)
-        dlg.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
-        dlg.setWindowTitle(self.propertyData.variableName() + ' - ' + str(self.selected_item))
-        dlg.setWindowFlags(Qt.WindowType.Widget)
-        dlg.rejected.connect(self.updateList)
-        
-        container = QVBoxLayout(dlg)
-        container.setContentsMargins(0,0,0,0)
-        container.setSpacing(0)
-
-        from ..PropertyViewport import PropertyViewport
-        container_props = PropertyViewport(self.getParentContainer(), self.praser)
-        container_props.setParent(dlg)
-        container.addWidget(container_props)
-        dlg.setLayout(container)
-
-        return (container_props, dlg)
 
     def getEditableValue(self, item):
         if hasattr(item, "propertygrid_listload"):
@@ -325,22 +299,20 @@ class PropertyField_TypedList(PropertyField[TypedList]):
                 self.sigPropertyFieldChanged.emit()
             
         elif mode == 'edit':
-            prop_grid = None
-            page_dialog = None
-
-            if self.has_property_view: prop_grid = self.view_editor
-            else: prop_grid, page_dialog = self.getNewEditorPage()
-
-
             if self.selected_row != -1:
-                if self.selected_sub_row != -1:
-                    prop_grid.setDataObject(self.selected_sub_item)
-                else:
-                    prop_grid.setDataObject(self.selected_item)
+                if self.selected_sub_row != -1: is_sub_item = True
+                else: is_sub_item = False
+            else: is_sub_item = False
 
-            if not self.has_property_view and page_dialog:
-                self.getParentContainer().navigateForwards(page_dialog)
-                page_dialog.show()
+            self.subview_dlg = PropertyGrid_Subpage.Setup(self.subview_dlg, self, "list_item", {
+                'title': f'{self.propertyData.variableName()} - {str(self.selected_item)}',
+                'item': self.selected_sub_item if is_sub_item else self.selected_item,
+                'container': self.getParentContainer()
+            })
+            self.subview_dlg.onRejectFunction = self.onPropertyDialogRejected
+            self.subview_dlg.onAcceptFunction = self.onPropertyDialogAccepted
+            self.subview_dlg.showAsWidget()
+
 
     def list_copy(self):
         item_type: type | None = None
@@ -468,9 +440,6 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         self.selected_sub_row = -1
         self.selected_sub_item = None
 
-        if self.has_property_view:
-            self.updatePropertyView()
-
         if self.has_sub_array:
             QTimer.singleShot(100, self.view.expandAll)
 
@@ -492,9 +461,6 @@ class PropertyField_TypedList(PropertyField[TypedList]):
         self.selected_row = x
         self.selected_sub_row = y
 
-
-
- 
         if self.selected_row != -1:
             item = self.propertyData.currentData()[self.selected_row]
             self.selected_item = self.getEditableValue(item)
@@ -510,21 +476,6 @@ class PropertyField_TypedList(PropertyField[TypedList]):
 
         if self.has_sub_array:
             self.view.expandAll()
-
-        if self.has_property_view:
-            self.updatePropertyView()
-
-    def updatePropertyView(self):
-        if not self.has_property_view: return
-        if self.view_editor == None: return
-
-        if self.selected_row != -1:
-            if self.selected_sub_row != -1:
-                self.view_editor.setDataObject(self.selected_sub_item)
-            else:
-                self.view_editor.setDataObject(self.selected_item)
-        else:
-            self.view_editor.setDataObject(None)
     
     #endregion
 
@@ -533,5 +484,13 @@ class PropertyField_TypedList(PropertyField[TypedList]):
     def onItemDuplication(self, item):
         if hasattr(item, "propertygrid_on_duplicate"):
             item.propertygrid_on_duplicate()   
+
+    def onPropertyDialogRejected(self):
+        self.getParentContainer().navigateBackwards()
+        self.updateList()
+
+    def onPropertyDialogAccepted(self, result):
+        self.getParentContainer().navigateBackwards()
+        self.updateList()
     
     #endregion

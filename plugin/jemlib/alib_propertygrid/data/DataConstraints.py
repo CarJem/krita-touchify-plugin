@@ -4,6 +4,7 @@ class DataConstraints:
 
     class OtherMod(EnumStr):
         Expandable="expandable"
+        OverrideType="global_override_type"
 
     class StrMod(EnumStr):
         Values="values"
@@ -21,7 +22,6 @@ class DataConstraints:
         BrushSelection="brush_selection"
         ToolSelection="tool_selection"
         MultiToolSelection="multi_tool_selection"
-        RequirementSelection="requirement_selection"
         
 
         TouchifyRegistry="touchify_registry"
@@ -76,6 +76,10 @@ class DataConstraints:
     def strEnumValues(items: EnumStr):
         return {"type": DataConstraints.StrMod.EnumStrValues, "entries": items}
     
+    @staticmethod
+    def typeOverride(type: str):
+        return {"type": DataConstraints.OtherMod.OverrideType, "value": type}
+    
     def strSelectors():
         return [
             DataConstraints.StrMod.ActionSelection,
@@ -84,7 +88,6 @@ class DataConstraints:
             DataConstraints.StrMod.IconSelection,
             DataConstraints.StrMod.BrushSelection,
             DataConstraints.StrMod.MultiToolSelection,
-            DataConstraints.StrMod.RequirementSelection,
             DataConstraints.StrMod.TouchifyRegistry
         ]
 

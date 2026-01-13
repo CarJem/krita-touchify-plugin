@@ -23,19 +23,18 @@ class QuickToolItemPickerDialog(QDialog):
         self.tabWidget.addTab(self.createTab(self.onAddTool, DataConstraints.StrMod.ToolSelection), "Tool")
 
     def createTab(self, onAccept: any, mode: DataConstraints.StrMod):
-        dlg = PropertyGrid_SelectorDialog(None)
-        dlg.header_buttons.buttons()[0].setText("Insert")
-        dlg.header_buttons.buttons()[1].setText("Cancel")
-        dlg.header_buttons.accepted.connect(lambda: onAccept(dlg))
-        dlg.header_buttons.rejected.connect(self.onReject)
+        dlg = None
+        dlg = PropertyGrid_SelectorDialog.Setup(dlg, None, "", { 'button_names': [ "Insert", "Cancel" ], 'close_on_save': False })
+        dlg.onAcceptFunction = onAccept
+        dlg.onRejectFunction = self.onReject
         dlg.load_list(mode)
         return dlg
 
-    def onAddTool(self, source: PropertyGrid_SelectorDialog):
-        self.sigOnNewItem.emit(source.selected_item)
+    def onAddTool(self, source: str):
+        self.sigOnNewItem.emit(source)
 
-    def onAddAction(self, source: PropertyGrid_SelectorDialog):
-        self.sigOnNewItem.emit(source.selected_item)
+    def onAddAction(self, source: str):
+        self.sigOnNewItem.emit(source)
 
     def onReject(self):
         self.reject()

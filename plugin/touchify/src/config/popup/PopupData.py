@@ -1,4 +1,4 @@
-from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import PropertyGrid_TouchifyRestrictions
+from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import TouchifyDataConstraints
 from touchify.src.config.docker_group.DockerItem import DockerItem
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
@@ -292,7 +292,7 @@ class PopupData:
         restrictions["closing_method"] = DataConstraints.strEnumValues(self.ClosingMethod)
         restrictions["dockers_tab_type"] = DataConstraints.strEnumValues(self.DockersTabType)
         restrictions["window_fixed_layout"] = DataConstraints.strEnumValues(self.WindowFixedLayoutMode)
-        restrictions["shelf_id"] = PropertyGrid_TouchifyRestrictions.strRegistryMod(PropertyGrid_TouchifyRestrictions.StrRegistryMod.ShelfRegistry)
+        restrictions["shelf_id"] = TouchifyDataConstraints.strRegistryMod(TouchifyDataConstraints.StrRegistryMod.ShelfRegistry)
 
         restrictions["actions_item_height"] = DataConstraints.range(min=0)
         restrictions["actions_item_width"] = DataConstraints.range(min=0)

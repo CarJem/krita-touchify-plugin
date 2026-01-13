@@ -2,25 +2,27 @@ from typing import Any
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from jemlib.alib_propertygrid.dialogs.PropertyGrid_Subview import PropertyGrid_Subview
 from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
-from jemlib.api_touchify.ContextRequirements import ContextRequirements
 from krita import *
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.enums.tool import Tool
 
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
-from jemlib.alib_propertygrid.dialogs.PropertyGrid_Subwindow import PropertyGrid_Subwindow
 from jemlib.managers.IconRepository import IconRepository
 
 DATA_INDEX = 3
 
-class PropertyGrid_SelectorDialog(PropertyGrid_Subwindow):
-    def __init__(self, parent: QStackedWidget):
-        super().__init__(parent)
+class PropertyGrid_SelectorDialog(PropertyGrid_Subview):
 
+    @staticmethod
+    def Setup(dlg: "PropertyGrid_SelectorDialog", parent: QWidget, mode: str, options: dict[str, any]):
+        return PropertyGrid_Subview.Setup(dlg, parent, mode, options, cls=PropertyGrid_SelectorDialog)
+
+    def initContents(self):
         self.selector_registry_type = None
 
-        self.list_view = QListWidget()
+        self.list_view = QListWidget(self)
         self.list_view.setResizeMode(QListView.ResizeMode.Adjust)
         self.list_view.setMovement(QListView.Movement.Static)
         self.list_view.setSelectionMode(QListView.SelectionMode.SingleSelection)
@@ -32,14 +34,30 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Subwindow):
         self.show_status_bar = False
         self.is_checkbox_selector = False
 
-        self.filter_bar = QLineEdit()
+        self.filter_bar = QLineEdit(self)
         self.filter_bar.setPlaceholderText("Filter...")
         self.filter_bar.textChanged.connect(self.onFilterUpdate)
 
         self.header = QWidget(self)
         self.header.setContentsMargins(0,0,0,0)
 
-        self.header_buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.header_buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+
+        if 'button_names' in self.getOptions():
+            names: list[str] = self.getOptions()['button_names']
+            if isinstance(names, list) and len(names) == 2:
+                self.header_buttons.buttons()[0].setText(names[0])
+                self.header_buttons.buttons()[1].setText(names[1])
+
+
+        self.header_buttons.rejected.connect(self.onClose)
+        if 'close_on_save' in self.getOptions():
+            if self.getOptions()['close_on_save'] == False:
+                self.header_buttons.accepted.connect(self.onApply)
+            else:
+                self.header_buttons.accepted.connect(self.onSave)
+        else:
+            self.header_buttons.accepted.connect(self.onSave)
 
         self.header_text = QLabel(self.header)
         self.header_text.setContentsMargins(0,0,0,0)
@@ -65,6 +83,9 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Subwindow):
 
         self.setLayout(self.dlg_layout)
 
+    def getAcceptResult(self):
+        return self.selected_item
+
     def onFilterUpdate(self):
         currentFilter = self.filter_bar.text()
         for i in range(self.list_view.count()):
@@ -78,7 +99,6 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Subwindow):
                 else:
                     currentItem.setHidden(True)
         
-
     def updateSelected(self):
         if self.show_status_bar:
             self.header_icon.setVisible(True)
@@ -109,13 +129,9 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Subwindow):
                 self.header_icon.setIcon(QIcon())
                 self.header_text.setText("")
 
-
-
-
     def selectedResult(self):
         return self.selected_item
-
-
+    
     def load_list(self, mode, entries: Any = None, selection_input: str | None = None):
         self.list_view.setSelectionRectVisible(True)
         
@@ -219,29 +235,6 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Subwindow):
                 if data.value == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
 
-        elif mode == DataConstraints.StrMod.RequirementSelection:
-            __currentRequirements = selection_input.split(",")
-            if "" in __currentRequirements: __currentRequirements.remove("")
-
-            self.list_view.setViewMode(QListView.ViewMode.ListMode)
-            self.list_view.setUniformItemSizes(True)
-
-            def addItem(text: str, value: str, icon: QIcon):
-                listItem = QListWidgetItem()
-                listItem.setFlags(listItem.flags() | QtCore.Qt.ItemFlag.ItemIsUserCheckable)
-                listItem.setCheckState(Qt.CheckState.Unchecked)
-                listItem.setToolTip(text)
-                listItem.setText(text)
-                listItem.setData(DATA_INDEX, value)
-                listItem.setIcon(icon)
-            
-                if value in __currentRequirements: selected_items.append(listItem)
-                self.list_view.addItem(listItem)
-
-            self.is_checkbox_selector = True
-            for data in ContextRequirements.getRequirements():
-                addItem(data['name'], data['value'], data['icon'])
-
         elif mode == DataConstraints.StrMod.MultiToolSelection:
             __currentRequirements = selection_input.split(",")
             if "" in __currentRequirements: __currentRequirements.remove("")
@@ -269,7 +262,3 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Subwindow):
         else:
             for item in selected_items:
                 item.setSelected(True)
-
-class PropertyGrid_SelectorDialogItem(QListWidgetItem):
-    def __init_subclass__(cls) -> None:
-        return super().__init_subclass__()
