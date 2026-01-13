@@ -14,6 +14,7 @@ class BrushPresetPicker(IconButton):
 
     def __init__(self, parent: QWidget | None = None):
         super(BrushPresetPicker, self).__init__(parent)
+        self.__lastBrush: Resource = None
         self.clicked.connect(self.openBrushPicker)
         self.setContentsMargins(0,0,0,0)
 
@@ -27,11 +28,10 @@ class BrushPresetPicker(IconButton):
         self.managers.mgr_actions.Create_Popup(TouchifyEnv.InternalPopups.BRUSH_PICKER, self) 
 
     def onBrushChanged(self, current_brush: Resource):
-        self.brush = current_brush
+        if self.__lastBrush == current_brush: return
+        self.__lastBrush = current_brush
 
-        if not self.brush: return
-        
-        image = self.brush.image()
+        if not self.__lastBrush: return
+        image = self.__lastBrush.image()
         if image: self.setIcon(QIcon(QPixmap.fromImage(image)))
-
         self.update()

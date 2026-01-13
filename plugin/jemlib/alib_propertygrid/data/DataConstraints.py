@@ -21,6 +21,7 @@ class DataConstraints:
         BrushSelection="brush_selection"
         ToolSelection="tool_selection"
         MultiToolSelection="multi_tool_selection"
+        RequirementSelection="requirement_selection"
         
 
         TouchifyRegistry="touchify_registry"
@@ -83,6 +84,7 @@ class DataConstraints:
             DataConstraints.StrMod.IconSelection,
             DataConstraints.StrMod.BrushSelection,
             DataConstraints.StrMod.MultiToolSelection,
+            DataConstraints.StrMod.RequirementSelection,
             DataConstraints.StrMod.TouchifyRegistry
         ]
 

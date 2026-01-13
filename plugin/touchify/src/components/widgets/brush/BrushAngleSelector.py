@@ -15,6 +15,7 @@ class BrushAngleSelector(KisAngleSelector):
         super().__init__(parent)
 
         self.api_window: WindowAPI = None
+        self.__lastValue: float = 0
 
         self.setContentsMargins(0,0,0,0)
         self.setMinimumWidth(100)
@@ -37,7 +38,9 @@ class BrushAngleSelector(KisAngleSelector):
         self.view = view
 
     def onRotationChanged(self, value: float):
-        self.spinBox.setValue(value)
+        if self.__lastValue == value: return
+        self.__lastValue = value
+        self.setValue(value, suppress_signals=True)
 
     def onValueChanged(self, value):
         if self.view == None: return

@@ -15,6 +15,8 @@ class BrushOpacitySlider(KisSliderSpinBoxContainer):
         super(BrushOpacitySlider, self).__init__(KisSliderSpinBox(parent=None, isInt=True), parent)
         self.view: View = None
         self.api_window: WindowAPI = None
+        self.__lastValue: float = 0
+        
         self.slider().setAffixes('Opacity: ', '%')
         self.slider().connectValueChanged(self.onValueChanged)
     
@@ -30,7 +32,9 @@ class BrushOpacitySlider(KisSliderSpinBoxContainer):
         self.view = view
 
     def onOpacityChanged(self, value: float):
-        self.slider().setValue(value*100)
+        if self.__lastValue == value: return
+        self.__lastValue = value
+        self.slider().setValue(value*100, suppress_signals=True)
 
     def onValueChanged(self, value):
         if self.view == None: return

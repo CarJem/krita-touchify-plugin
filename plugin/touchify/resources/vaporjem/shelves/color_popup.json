@@ -31,9 +31,7 @@
                 "max_size_x": 0,
                 "max_size_y": 0,
                 "section_type": "docker",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "",
-                "invert_required_tools": false,
+                "section_requirements": "",
                 "docker_id": "ColorSelectorNg",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -74,7 +72,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "61e42e75-9745-4fbe-ae1a-1c22a50a83cd": {
                 "display_name": "",
@@ -83,9 +81,7 @@
                 "max_size_x": 0,
                 "max_size_y": 0,
                 "section_type": "docker",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "",
-                "invert_required_tools": false,
+                "section_requirements": "",
                 "docker_id": "PaletteDocker",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -126,7 +122,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             }
         },
         "pages": [],

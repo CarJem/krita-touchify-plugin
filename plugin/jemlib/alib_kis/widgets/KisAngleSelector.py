@@ -129,6 +129,7 @@ class KisAngleSelector(QWidget):
         self.spinBox.setWrapping(True)
         self._flip_options_mode = KisAngleSelector.FlipOptionsMode.Buttons
         self._common_widgets_height = 0
+        self.__externalValueChangedFunction = None
         self._init_ui()
         self._init_connections()
 
@@ -273,6 +274,16 @@ class KisAngleSelector(QWidget):
     def setAngle(self, angle):
         self.spinBox.setValue(angle % 360)
 
+    def setValue(self, val: float, suppress_signals=False):
+        if self.__externalValueChangedFunction and suppress_signals: 
+            self.spinBox.valueChanged.disconnect(self.__externalValueChangedFunction)
+
+        self.spinBox.setValue(val)
+
+        if self.__externalValueChangedFunction and suppress_signals: 
+            self.spinBox.valueChanged.connect(self.__externalValueChangedFunction)
+
+
     def setFlipOptionsMode(self, mode: FlipOptionsMode):
         self._flip_options_mode = mode
         self._updateFlipButtonsVisibility()
@@ -345,6 +356,11 @@ class KisAngleSelector(QWidget):
         cme = QContextMenuEvent(e)
         self._tool_button_flip_options.menu().exec_(cme.globalPos())
         return True
+    
+    def connectValueChanged(self, func):
+        if self.__externalValueChangedFunction != None: return
+        self.__externalValueChangedFunction = func
+        self.spinBox.valueChanged.connect(self.__externalValueChangedFunction)
 
     def _updateFlipButtonsVisibility(self):
         use_buttons = self._flip_options_mode == KisAngleSelector.FlipOptionsMode.Buttons

@@ -59,12 +59,13 @@ class ToolshelfNestedDock(ShelfDock):
             if not in_bounds: self.nestedShelf.setEditMode(False)
             self._isEditMode = False
             self._isAllowedToEditContainer = False
+
+        self.updateHandles()
             
 
     def setEditMode(self, enabled):
         super().setEditMode(enabled)
         self.updateContainerEditMode(enabled, self._isAllowedToEditContainer)
-        self.updateGrips()
 
     def onShelfIndexChanged(self):
         pass

@@ -13,6 +13,8 @@ class BrushFlowSlider(KisSliderSpinBoxContainer):
     def __init__(self, parent=None):
         super(BrushFlowSlider, self).__init__(KisSliderSpinBox(parent=None, isInt=True), parent)
         self.api_window: WindowAPI = None
+        self.__lastValue: float = 0
+
         self.slider().setAffixes('Flow: ', '%')
         self.slider().connectValueChanged(self.onValueChanged)
         self.view: View = None
@@ -29,7 +31,9 @@ class BrushFlowSlider(KisSliderSpinBoxContainer):
         self.view = view
 
     def onFlowChanged(self, value: float):
-        self.slider().setValue(value*100)
+        if self.__lastValue == value: return
+        self.__lastValue = value
+        self.slider().setValue(value*100, suppress_signals=True)
 
     def onValueChanged(self, value):
         if self.view == None: return

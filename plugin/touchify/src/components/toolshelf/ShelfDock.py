@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from PyQt5.QtGui import QPaintEvent, QPainter, QPen
+from jemlib.api_touchify.ContextRequirements import ContextRequirements
 from touchify.src.components.widgets.other.DockerContainer import DockerContainer
 from touchify.src.components.toolshelf.ShelfContainer import ShelfContainer, ShelfHContainer, ShelfSplitterContainer, ShelfVContainer
 from touchify.src.components.toolshelf.ShelfDockDrop import ShelfDropDock
@@ -27,6 +28,7 @@ class ShelfDock(Dock):
         self.dockdrop = ShelfDropDock(self)
         self._titleText = _uuid
         self._folded = False
+        self._hasFoldedYet = False
         self.label: ShelfDockLabel
         self.hideTitleBar(False)
 
@@ -39,10 +41,10 @@ class ShelfDock(Dock):
         self._isEditMode = False
 
 
-        __requiredTools = _config.requires_specific_tool.split(",")
-        if "" in __requiredTools: __requiredTools.remove("")
-        self._requiredTools: list[str] = __requiredTools
-        self._invertRequiredTools: bool = _config.invert_required_tools
+        __requirements = _config.section_requirements.split(",")
+        if "" in __requirements: __requirements.remove("")
+        self.__requirements: list[str] = __requirements
+        self.__requirementsContext: ContextRequirements.Context = None
 
 
         self.layout.setContentsMargins(0,0,0,0)
@@ -87,9 +89,6 @@ class ShelfDock(Dock):
     def setParentAreaId(self, value: str):
         self._parentAreaId = value
         self.dockdrop.setParentAreaId(value)
-
-    def getHandleMode(self):
-        return self._dockSettings.section_handles
 
     def accessible(self, id: str):
         return id == self._parentAreaId
@@ -150,14 +149,11 @@ class ShelfDock(Dock):
         self.updateStyle()
         self.sync()
 
-    def matchesCurrentTool(self):
-        if self._invertRequiredTools:
-            return self._currentTool not in self._requiredTools and self._currentTool != "" and len(self._requiredTools) != 0
-        else:
-            return self._currentTool in self._requiredTools or self._currentTool == "" or len(self._requiredTools) == 0
-
-    def onToolChanged(self, current_tool: str):
-        self._currentTool = current_tool
+    def hasValidRequirements(self):
+        return ContextRequirements.hasRequirements(self.__requirements, self.__requirementsContext)
+        
+    def onRequirementsContextChanged(self, context):
+        self.__requirementsContext = context
         self.sync()
 
     def onMouseOverChanged(self, state: bool):
@@ -170,22 +166,21 @@ class ShelfDock(Dock):
         pass
 
     def setFold(self, state: bool):
-        if self._folded != state:
-            self._folded = state
-            if(ShelfContainer.isContainer(self.container())):
-                cnt = ShelfContainer.asContainer(self.container())
-                cnt.setItemFold(self, self._folded)
+        self._folded = state
+        if(ShelfContainer.isContainer(self.container())):
+            cnt = ShelfContainer.asContainer(self.container())
+            cnt.setItemFold(self, self._folded)
 
     def sync(self):
-        if self.matchesCurrentTool() or self._isEditMode: self.setFold(True)
+        if self.hasValidRequirements() or self._isEditMode: self.setFold(True)
         else: self.setFold(False)
-        self.updateGrips()
+        self.updateHandles()
 
-    def updateGrips(self):
+    def updateHandles(self):
         if(ShelfContainer.isContainer(self.container())):
             cnt = ShelfContainer.asContainer(self.container())
             if isinstance(cnt, ShelfHContainer) or isinstance(cnt, ShelfVContainer):
-                ShelfSplitterContainer.updateGrips(cnt, self)
+                ShelfSplitterContainer.updateHandles(cnt)
 
     def setOrientation(self, o='auto', force=False):
         self.revalidateTitlebar()

@@ -274,20 +274,21 @@ class CanvasGradientPicker(IconButton):
 
     def __init__(self, parent: QWidget | None = None):
         super(CanvasGradientPicker, self).__init__(parent)
+        self.__lastGradient: Resource = None
         self.clicked.connect(self.openBrushPicker)
 
     def setInstance(self, window: WindowAPI, managers: "TouchifyManagers"):
         self.notifier = window.notifier
         self.managers = managers
-        self.notifier.gradientChanged.connect(self.onGradientChanged)
         self.onGradientChanged(self.notifier.getCurrentGradient())
+        self.notifier.gradientChanged.connect(self.onGradientChanged)
 
     def openBrushPicker(self):
         self.managers.mgr_actions.Create_Popup(TouchifyEnv.InternalPopups.GRADIENT_CHOOSER, self)
 
     def updateIcon(self):
-        if self.gradient:
-            file_name = self.gradient.filename()
+        if self.__lastGradient:
+            file_name = self.__lastGradient.filename()
             if file_name == "Foreground to Background.svg":
                 data = GradientLoader.ForegroundToBackground()
             elif file_name == "Foreground to Transparent.svg":
@@ -341,5 +342,6 @@ class CanvasGradientPicker(IconButton):
         return super().resizeEvent(a0)
 
     def onGradientChanged(self, current_gradient: Resource):
-        self.gradient = current_gradient
+        if self.__lastGradient == current_gradient: return
+        self.__lastGradient = current_gradient
         self.updateIcon()

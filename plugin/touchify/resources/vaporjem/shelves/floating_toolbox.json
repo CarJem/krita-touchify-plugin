@@ -29,6 +29,9 @@
                             "sizes": [
                                 60,
                                 60
+                            ],
+                            "handles_hidden": [
+                                1
                             ]
                         }
                     ],
@@ -50,15 +53,22 @@
                             "sizes": [
                                 29,
                                 29
+                            ],
+                            "handles_hidden": [
+                                1
                             ]
                         }
                     ]
                 ],
                 {
                     "sizes": [
-                        628,
+                        448,
                         124,
                         30
+                    ],
+                    "handles_hidden": [
+                        1,
+                        2
                     ]
                 }
             ],
@@ -72,9 +82,7 @@
                 "max_size_x": 60,
                 "max_size_y": 60,
                 "section_type": "special",
-                "section_handles": "no_handles",
-                "requires_specific_tool": "",
-                "invert_required_tools": false,
+                "section_requirements": "",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -115,18 +123,16 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "8ed4dbbd-10ed-4bc9-acdf-731c0a655ea3": {
                 "display_name": "",
                 "min_size_x": 64,
-                "min_size_y": 630,
+                "min_size_y": 450,
                 "max_size_x": 58,
-                "max_size_y": 630,
+                "max_size_y": 450,
                 "section_type": "docker",
-                "section_handles": "no_handles",
-                "requires_specific_tool": "",
-                "invert_required_tools": false,
+                "section_requirements": "",
                 "docker_id": "Touchify/TouchifyToolbox",
                 "docker_nesting_mode": "docking",
                 "docker_unloaded_visibility": "normal",
@@ -167,7 +173,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "efc981e1-18e0-493f-a350-a5a15fc2d0cf": {
                 "display_name": "",
@@ -176,9 +182,7 @@
                 "max_size_x": 30,
                 "max_size_y": 30,
                 "section_type": "special",
-                "section_handles": "no_handles",
-                "requires_specific_tool": "",
-                "invert_required_tools": false,
+                "section_requirements": "",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -219,7 +223,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "e8662042-6651-4e35-a112-a71ea4883904": {
                 "display_name": "",
@@ -228,9 +232,7 @@
                 "max_size_x": 30,
                 "max_size_y": 30,
                 "section_type": "special",
-                "section_handles": "no_handles",
-                "requires_specific_tool": "",
-                "invert_required_tools": false,
+                "section_requirements": "",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -271,7 +273,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "1efcf887-7858-40a3-85d0-f70a93be7070": {
                 "display_name": "",
@@ -280,9 +282,7 @@
                 "max_size_x": 60,
                 "max_size_y": 60,
                 "section_type": "special",
-                "section_handles": "no_handles",
-                "requires_specific_tool": "",
-                "invert_required_tools": false,
+                "section_requirements": "",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -323,7 +323,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             }
         },
         "pages": [],

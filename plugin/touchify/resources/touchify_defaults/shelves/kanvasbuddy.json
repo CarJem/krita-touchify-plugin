@@ -40,9 +40,7 @@
                 "max_size_x": 0,
                 "max_size_y": 0,
                 "section_type": "special",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "",
-                "invert_required_tools": false,
+                "section_requirements": "",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -83,7 +81,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "8b5f08a1-f9ab-4933-866e-148f1c93f130": {
                 "display_name": "",
@@ -92,9 +90,7 @@
                 "max_size_x": 0,
                 "max_size_y": 0,
                 "section_type": "special",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "",
-                "invert_required_tools": false,
+                "section_requirements": "",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -135,7 +131,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "65d3c3f3-5163-45a7-8857-32b26b8e959a": {
                 "display_name": "",
@@ -144,9 +140,7 @@
                 "max_size_x": 0,
                 "max_size_y": 0,
                 "section_type": "actions",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "",
-                "invert_required_tools": false,
+                "section_requirements": "",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -283,7 +277,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             }
         },
         "pages": [
@@ -314,9 +308,7 @@
                         "max_size_x": 0,
                         "max_size_y": 0,
                         "section_type": "docker",
-                        "section_handles": "both_handles",
-                        "requires_specific_tool": "",
-                        "invert_required_tools": false,
+                        "section_requirements": "",
                         "docker_id": "PresetDocker",
                         "docker_nesting_mode": "normal",
                         "docker_unloaded_visibility": "normal",
@@ -357,7 +349,7 @@
                             },
                             "json_version": 1
                         },
-                        "json_version": 5
+                        "json_version": 6
                     }
                 },
                 "options": {
@@ -393,9 +385,7 @@
                         "max_size_x": 0,
                         "max_size_y": 0,
                         "section_type": "docker",
-                        "section_handles": "both_handles",
-                        "requires_specific_tool": "",
-                        "invert_required_tools": false,
+                        "section_requirements": "",
                         "docker_id": "PaletteDocker",
                         "docker_nesting_mode": "normal",
                         "docker_unloaded_visibility": "normal",
@@ -436,7 +426,7 @@
                             },
                             "json_version": 1
                         },
-                        "json_version": 5
+                        "json_version": 6
                     }
                 },
                 "options": {
@@ -472,9 +462,7 @@
                         "max_size_x": 0,
                         "max_size_y": 0,
                         "section_type": "docker",
-                        "section_handles": "both_handles",
-                        "requires_specific_tool": "",
-                        "invert_required_tools": false,
+                        "section_requirements": "",
                         "docker_id": "KisLayerBox",
                         "docker_nesting_mode": "normal",
                         "docker_unloaded_visibility": "normal",
@@ -515,7 +503,7 @@
                             },
                             "json_version": 1
                         },
-                        "json_version": 5
+                        "json_version": 6
                     }
                 },
                 "options": {
@@ -551,9 +539,7 @@
                         "max_size_x": 0,
                         "max_size_y": 0,
                         "section_type": "docker",
-                        "section_handles": "both_handles",
-                        "requires_specific_tool": "",
-                        "invert_required_tools": false,
+                        "section_requirements": "",
                         "docker_id": "ColorSelectorNg",
                         "docker_nesting_mode": "normal",
                         "docker_unloaded_visibility": "normal",
@@ -594,7 +580,7 @@
                             },
                             "json_version": 1
                         },
-                        "json_version": 5
+                        "json_version": 6
                     }
                 },
                 "options": {
@@ -630,9 +616,7 @@
                         "max_size_x": 0,
                         "max_size_y": 0,
                         "section_type": "docker",
-                        "section_handles": "both_handles",
-                        "requires_specific_tool": "",
-                        "invert_required_tools": false,
+                        "section_requirements": "",
                         "docker_id": "OverviewDocker",
                         "docker_nesting_mode": "docking",
                         "docker_unloaded_visibility": "normal",
@@ -673,7 +657,7 @@
                             },
                             "json_version": 1
                         },
-                        "json_version": 5
+                        "json_version": 6
                     }
                 },
                 "options": {

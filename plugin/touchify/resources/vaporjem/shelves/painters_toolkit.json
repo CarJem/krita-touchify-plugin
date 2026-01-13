@@ -118,9 +118,7 @@
                 "max_size_x": 0,
                 "max_size_y": 32,
                 "section_type": "special",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
-                "invert_required_tools": false,
+                "section_requirements": "OR||Tool||KritaShape/KisToolMultiBrush,OR||Tool||KritaShape/KisToolBrush,OR||Tool||KritaShape/KisToolDyna,OR||Tool||KritaShape/KisToolLazyBrush",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -161,7 +159,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "c631d2f0-7e8b-4d67-91b8-29d412b52f23": {
                 "display_name": "",
@@ -170,9 +168,7 @@
                 "max_size_x": 0,
                 "max_size_y": 32,
                 "section_type": "special",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
-                "invert_required_tools": false,
+                "section_requirements": "OR||Tool||KritaShape/KisToolMultiBrush,OR||Tool||KritaShape/KisToolBrush,OR||Tool||KritaShape/KisToolDyna,OR||Tool||KritaShape/KisToolLazyBrush",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -213,7 +209,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "ba9cad0c-7f49-4051-ad03-ed3b70033912": {
                 "display_name": "",
@@ -222,9 +218,7 @@
                 "max_size_x": 0,
                 "max_size_y": 32,
                 "section_type": "special",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
-                "invert_required_tools": false,
+                "section_requirements": "OR||Tool||KritaShape/KisToolMultiBrush,OR||Tool||KritaShape/KisToolBrush,OR||Tool||KritaShape/KisToolDyna,OR||Tool||KritaShape/KisToolLazyBrush",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -265,7 +259,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "f94e7f2f-bae3-47e6-b725-c9c55c52dde1": {
                 "display_name": "",
@@ -274,9 +268,7 @@
                 "max_size_x": 0,
                 "max_size_y": 32,
                 "section_type": "actions",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
-                "invert_required_tools": false,
+                "section_requirements": "OR||Tool||KritaShape/KisToolMultiBrush,OR||Tool||KritaShape/KisToolBrush,OR||Tool||KritaShape/KisToolDyna,OR||Tool||KritaShape/KisToolLazyBrush",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -443,7 +435,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "d6c9091b-28b5-43f8-9523-c051460717bb": {
                 "display_name": "",
@@ -452,9 +444,7 @@
                 "max_size_x": 35,
                 "max_size_y": 35,
                 "section_type": "special",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
-                "invert_required_tools": false,
+                "section_requirements": "OR||Tool||KritaShape/KisToolMultiBrush,OR||Tool||KritaShape/KisToolBrush,OR||Tool||KritaShape/KisToolDyna,OR||Tool||KritaShape/KisToolLazyBrush",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -495,7 +485,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "7cd9b10b-4aef-4be4-baca-d7ba53b02c54": {
                 "display_name": "",
@@ -504,9 +494,7 @@
                 "max_size_x": 35,
                 "max_size_y": 35,
                 "section_type": "special",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
-                "invert_required_tools": false,
+                "section_requirements": "OR||Tool||KritaShape/KisToolMultiBrush,OR||Tool||KritaShape/KisToolBrush,OR||Tool||KritaShape/KisToolDyna,OR||Tool||KritaShape/KisToolLazyBrush",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -547,7 +535,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "9ff57d6c-f6fd-4487-9224-45ebec2fe9ee": {
                 "display_name": "",
@@ -556,9 +544,7 @@
                 "max_size_x": 0,
                 "max_size_y": 0,
                 "section_type": "actions",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
-                "invert_required_tools": false,
+                "section_requirements": "OR||Tool||KritaShape/KisToolMultiBrush,OR||Tool||KritaShape/KisToolBrush,OR||Tool||KritaShape/KisToolDyna,OR||Tool||KritaShape/KisToolLazyBrush",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -599,7 +585,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "53325748-610b-4990-8df7-5f87ac120e3f": {
                 "display_name": "",
@@ -608,9 +594,7 @@
                 "max_size_x": 35,
                 "max_size_y": 35,
                 "section_type": "special",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
-                "invert_required_tools": false,
+                "section_requirements": "OR||Tool||KritaShape/KisToolMultiBrush,OR||Tool||KritaShape/KisToolBrush,OR||Tool||KritaShape/KisToolDyna,OR||Tool||KritaShape/KisToolLazyBrush",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -651,7 +635,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "3a68760b-012f-45b7-8b5e-d866a87c2d4b": {
                 "display_name": "",
@@ -660,9 +644,7 @@
                 "max_size_x": 32,
                 "max_size_y": 0,
                 "section_type": "actions",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
-                "invert_required_tools": false,
+                "section_requirements": "OR||Tool||KritaShape/KisToolMultiBrush,OR||Tool||KritaShape/KisToolBrush,OR||Tool||KritaShape/KisToolDyna,OR||Tool||KritaShape/KisToolLazyBrush",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -809,7 +791,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "26d8798f-b127-4aca-a2ce-668467df6720": {
                 "display_name": "",
@@ -818,9 +800,7 @@
                 "max_size_x": 35,
                 "max_size_y": 35,
                 "section_type": "special",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
-                "invert_required_tools": false,
+                "section_requirements": "OR||Tool||KritaShape/KisToolMultiBrush,OR||Tool||KritaShape/KisToolBrush,OR||Tool||KritaShape/KisToolDyna,OR||Tool||KritaShape/KisToolLazyBrush",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -861,7 +841,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             },
             "034834f4-5f5f-4eb0-a341-1baa6ea86fde": {
                 "display_name": "",
@@ -870,9 +850,7 @@
                 "max_size_x": 0,
                 "max_size_y": 35,
                 "section_type": "special",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "KritaShape/KisToolMultiBrush,KritaShape/KisToolBrush,KritaShape/KisToolDyna,KritaShape/KisToolLazyBrush",
-                "invert_required_tools": false,
+                "section_requirements": "OR||Tool||KritaShape/KisToolMultiBrush,OR||Tool||KritaShape/KisToolBrush,OR||Tool||KritaShape/KisToolDyna,OR||Tool||KritaShape/KisToolLazyBrush",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -913,7 +891,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             }
         },
         "pages": [],

@@ -73,6 +73,8 @@ class BrushBlendingSelector(QPushButton):
         self.modeActions: list[BrushBlendingOption] = []
         self.setMinimumHeight(30)
 
+        self.__lastBlendingMode: str = None
+
         self.clicked.connect(self.showMenu)  
         self.menu = QMenu(self)
         self.menu.aboutToShow.connect(self.beforeShow)
@@ -113,6 +115,9 @@ class BrushBlendingSelector(QPushButton):
         self.updateFavs()
 
     def onBlendingModeChanged(self, blending_mode: str):
+        if self.__lastBlendingMode == blending_mode: return
+        self.__lastBlendingMode = blending_mode
+
         text = self.getFancyName(blending_mode)
         self.setText(text)
 
@@ -172,7 +177,7 @@ class BrushBlendingSelector(QPushButton):
         activeView = KritaAPI.get_active_view()
         if not activeView: return
 
-        activeView.blending_mode = BlendingMode.of(mode)
-        self.setText(sender.text())
+        self.onBlendingModeChanged(mode)
         self.updateFavs()
+        activeView.blending_mode = BlendingMode.of(mode)
 

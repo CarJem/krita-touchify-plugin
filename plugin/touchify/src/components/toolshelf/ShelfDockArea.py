@@ -1,6 +1,9 @@
 from typing import TYPE_CHECKING
+
+import PyQt5
+import PyQt5.QtCore
 from jemlib.alib_pyqtgraph.dockarea.DockArea import DockArea
-from touchify.src.components.toolshelf.ShelfContainer import ShelfContainer, ShelfHContainer, ShelfSplitterContainer, ShelfVContainer
+from touchify.src.components.toolshelf.ShelfContainer import ShelfHContainer, ShelfSplitterContainer, ShelfVContainer
 from touchify.src.components.toolshelf.ShelfDockDrop import ShelfDropDock
 
 
@@ -8,6 +11,8 @@ if TYPE_CHECKING:
     from touchify.src.components.toolshelf.ShelfDock import ShelfDock
 
 class ShelfDockArea(DockArea):
+    sigLayoutSaveRequest = PyQt5.QtCore.pyqtSignal()
+
     def __init__(self, parent=None, temporary=False, home=None):
         super().__init__(parent, temporary, home)
         self.dockdrop = ShelfDropDock(self)
@@ -23,8 +28,10 @@ class ShelfDockArea(DockArea):
         from touchify.src.components.toolshelf.ShelfContainer import ShelfHContainer, ShelfTContainer, ShelfVContainer
         if typ == 'vertical':
             new = ShelfVContainer(self)
+            new.sigLayoutSaveRequest.connect(self.onLayoutSaveRequest)
         elif typ == 'horizontal':
             new = ShelfHContainer(self)
+            new.sigLayoutSaveRequest.connect(self.onLayoutSaveRequest)
         elif typ == 'tab':
             new = ShelfTContainer(self)
         else:
@@ -115,31 +122,30 @@ class ShelfDockArea(DockArea):
         self.docks[dock.name()] = dock
         if old is not None:
             old.apoptose()
-        
-        self.updateDocks()
+
+        self.updateHandles()
         return dock
 
     def moveDock(self, dock, position, neighbor):
         super().moveDock(dock, position, neighbor)
-        self.updateDocks()
+        self.updateHandles()
 
     def restoreState(self, state, missing='error', extra='bottom'):
         super().restoreState(state, missing, extra)
-        self.updateDocks()
-
-
+        self.updateHandles()
+        
     #endregion
 
-    def updateDocks(self):
-        from touchify.src.components.toolshelf.ShelfDock import ShelfDock
-        for cnt in self.findChildren(ShelfContainer):
-            if isinstance(cnt, ShelfVContainer) or isinstance(cnt, ShelfHContainer):
-                ShelfSplitterContainer.updateGrips(cnt)
+    def onLayoutSaveRequest(self):
+        self.sigLayoutSaveRequest.emit()
 
-        for uuid in self.docks:
-            dock = self.docks[uuid]
-            if isinstance(dock, ShelfDock):
-                dock.updateGrips()
+    def updateHandles(self):
+        from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
+        nested_dock_items = [x for xs in self.findChildren(ToolshelfNestedDock) for x in xs.children()]
+        for cnt in self.findChildren(ShelfVContainer): 
+            if cnt not in nested_dock_items: ShelfSplitterContainer.updateHandles(cnt)
+        for cnt in self.findChildren(ShelfHContainer): 
+            if cnt not in nested_dock_items: ShelfSplitterContainer.updateHandles(cnt)
 
     def setEditMode(self, state: bool):
         from touchify.src.components.toolshelf.ShelfDock import ShelfDock
@@ -149,6 +155,7 @@ class ShelfDockArea(DockArea):
             if isinstance(dock, ShelfDock):
                 dock: ShelfDock
                 dock.setEditMode(state)
+        self.updateHandles()
     
     def setAreaId(self, value: str):
         self._parentAreaId = value

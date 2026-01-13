@@ -10,6 +10,8 @@ class KisSliderSpinBox(QDoubleSpinBox):
         self.setMinimumWidth(100)
         self.setFixedHeight(30)
 
+        self.__externalValueChangedFunction = None
+
         self.editMode = False
         self.editModeInit = False
         self.scaling = 1
@@ -153,15 +155,23 @@ class KisSliderSpinBox(QDoubleSpinBox):
     def paintEvent(self, e: QPaintEvent | None) -> None:
         return super().paintEvent(e)
 
-    def setValue(self, val):
+    def setValue(self, val: float, suppress_signals=False):
+        if self.__externalValueChangedFunction and suppress_signals: 
+            super().valueChanged.disconnect(self.__externalValueChangedFunction)
+
         super().setValue(val)
+
+        if self.__externalValueChangedFunction and suppress_signals: 
+            super().valueChanged.connect(self.__externalValueChangedFunction)
 
     def setAffixes(self, pre, suf):
         self.setPrefix(pre)
         self.setSuffix(suf)
 
     def connectValueChanged(self, func):
-        super().valueChanged.connect(func)
+        if self.__externalValueChangedFunction != None: return
+        self.__externalValueChangedFunction = func
+        super().valueChanged.connect(self.__externalValueChangedFunction)
 
     def synchronize(self):
         pass

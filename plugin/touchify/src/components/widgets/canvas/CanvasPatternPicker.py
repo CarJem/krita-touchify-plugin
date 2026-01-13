@@ -19,6 +19,7 @@ class CanvasPatternPicker(IconButton):
         super(CanvasPatternPicker, self).__init__(parent)
         self.clicked.connect(self.openBrushPicker)
         self.cached_pixmap: QPixmap = None
+        self.__lastPattern: Resource = None
 
     def setInstance(self, window: WindowAPI, managers: "TouchifyManagers"):
         self.managers = managers
@@ -33,7 +34,7 @@ class CanvasPatternPicker(IconButton):
         super().paintEvent(event)
 
     def updateIcon(self):
-        if not self.pattern: 
+        if not self.__lastPattern: 
             return
         
         icon_width = self.width()
@@ -52,7 +53,7 @@ class CanvasPatternPicker(IconButton):
         pixmap_painter.setClipRegion(clipRegion)
         pixmap_painter.setClipping(True)
 
-        resource_image = self.pattern.image()
+        resource_image = self.__lastPattern.image()
 
         img = QImage(icon_width * self.devicePixelRatio(), icon_height*self.devicePixelRatio(), QImage.Format.Format_ARGB32)
         img.setDevicePixelRatio(self.devicePixelRatioF())
@@ -77,6 +78,7 @@ class CanvasPatternPicker(IconButton):
         self.setIcon(QIcon(self.cached_pixmap))
 
     def onPatternChanged(self, current_pattern: Resource):
-        self.pattern = current_pattern
+        if self.__lastPattern == current_pattern: return
+        self.__lastPattern = current_pattern
         self.updateIcon()
         self.update()

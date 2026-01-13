@@ -195,6 +195,7 @@ class ShelfWidget(QWidget):
 
         self.dockArea = ShelfDockArea(self)
         self.dockStack.addWidget(self.dockArea)
+        self.__pageSetup(self.dockArea)
 
         self.optionsMenu = ShelfContextMenu(self, self.currentPresetId(), self.is_nested, self.is_restricted)
         self.optionsMenu.aboutToHide.connect(self.onOptionsMenuAboutToHide)
@@ -224,7 +225,7 @@ class ShelfWidget(QWidget):
         self.updateStyle()
 
         managers.mgr_canvas.normalFocus.connect(self.onCanvasFocusGained)
-        managers.api_window().notifier.toolChanged.connect(self.onToolChanged)
+        managers.api_window().notifier.requirementsContextChanged.connect(self.onRequirementsContextChanged)
 
     def updateStyle(self):
         if self.is_nested:
@@ -346,6 +347,13 @@ class ShelfWidget(QWidget):
         dock_item.setParentAreaId(self.getDockAreaId(index))
         dock_item.sigContextMenuRequested.connect(self.onContextMenu)
         dock_item.sigContainerHoverUpdated.connect(self.onMouseHover)
+        dock_item.onRequirementsContextChanged(self.managers.api_window().notifier.getRequirementsContext())
+
+    def __pageSetup(self, page_item: ShelfDockArea):
+        page_item.sigLayoutSaveRequest.connect(self.onLayoutSaveRequested)
+
+    def __pageDispose(self, page_item: ShelfDockArea):
+        page_item.sigLayoutSaveRequest.disconnect(self.onLayoutSaveRequested)
 
     #endregion
 
@@ -362,9 +370,12 @@ class ShelfWidget(QWidget):
         self.dockArea.docks.clear()
 
         for page in self.dockPages:
+            self.__pageDispose(page)
             for dock in page.docks.values():
                 self.__shelfDispose(dock)
             
+            
+
             page.clear()
             page.docks.clear()
             page.close()
@@ -457,6 +468,7 @@ class ShelfWidget(QWidget):
             Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | loading_layout: load started page_{str(idx)}')
             subpage_state: ToolshelfPage
             sub_dock_area = ShelfDockArea(self)
+            self.__pageSetup(sub_dock_area)
             self.dockStack.addWidget(sub_dock_area)
             self.dockPages.append(sub_dock_area)
             self.dockPageOptions.append(subpage_state.options)
@@ -490,10 +502,11 @@ class ShelfWidget(QWidget):
 
     def insertPage(self):
         new_dock_area = ShelfDockArea(self)
-        new_dock_area_settigns = ToolshelfPageSettings()
+        new_dock_area_settings = ToolshelfPageSettings()
         self.dockPages.append(new_dock_area)
-        self.dockPageOptions.append(new_dock_area_settigns)
+        self.dockPageOptions.append(new_dock_area_settings)
         self.dockStack.addWidget(new_dock_area)
+        self.__pageSetup(new_dock_area)
         
         self.saveLayout()
         self.loadLayout()
@@ -521,6 +534,7 @@ class ShelfWidget(QWidget):
         removed_dock_area = self.dockPages.pop(index)
         self.dockStack.removeWidget(removed_dock_area)
         
+        self.__pageDispose(removed_dock_area)
         for dock in removed_dock_area.docks.values():
             self.__shelfDispose(dock)
         
@@ -709,46 +723,49 @@ class ShelfWidget(QWidget):
         self.header.mainButton.setMenu(None)
 
     def onCanvasFocusGained(self):
-        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | container_focus_gained')
+        Logger.logDebug('Touchify','ShelfWidget', "onCanvasFocusGained", f'shelf: {self.registry_index} | container_focus_gained')
         if self.containerOptions.enable_pinning:
             if self.dockStack.currentIndex() != 1 and not self.header.pinButton.isChecked():
                 self.goToHomePage()
 
-    def onToolChanged(self, current_tool: str):
+    def onRequirementsContextChanged(self, context):
         def _recursive(da: ShelfDockArea):
             for uuid in da.docks:
                 dock = da.docks[uuid]
                 if isinstance(dock, ShelfDock):
                     dock: ShelfDock
-                    dock.onToolChanged(current_tool)
+                    dock.onRequirementsContextChanged(context)
 
-        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | tool_changed')
+        Logger.logDebug('Touchify','ShelfWidget', "onRequirementsContextChanged", f'shelf: {self.registry_index} | context_changed')
         _recursive(self.dockArea)
         for dockArea in self.dockPages:
             _recursive(dockArea)
 
     def onThemeChanged(self):
-        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | theme_changing: start')
+        Logger.logDebug('Touchify','ShelfWidget', "onThemeChanged", f'shelf: {self.registry_index} | theme_changing: start')
         self.updateStyle()
         self.loadLayout()
-        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | theme_changing: finish')
+        Logger.logDebug('Touchify','ShelfWidget', "onThemeChanged", f'shelf: {self.registry_index} | theme_changing: finish')
             
     def onConfigUpdated(self):
-        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | onConfigUpdated')
+        Logger.logDebug('Touchify','ShelfWidget', "onConfigUpdated", f'shelf: {self.registry_index} | onConfigUpdated')
         self.loadLayout()
 
+    def onLayoutSaveRequested(self):
+        self.saveLayout()
+
     def onShelfIndexChanged(self):
-        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | onShelfIndexChanged')
+        Logger.logDebug('Touchify','ShelfWidget', "onShelfIndexChanged", f'shelf: {self.registry_index} | onShelfIndexChanged')
         self.sigShelfIndexChanged.emit()
 
     def onEditModeChanged(self, enabled: bool):        
-        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | onEditModeChanged: started')
+        Logger.logDebug('Touchify','ShelfWidget', "onEditModeChanged", f'shelf: {self.registry_index} | onEditModeChanged: started')
         self.dockArea.setEditMode(enabled)
         for dockArea in self.dockPages:
             dockArea.setEditMode(enabled)
         self.saveLayout()
-        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | onEditModeChanged: prefinished')
+        Logger.logDebug('Touchify','ShelfWidget', "onEditModeChanged", f'shelf: {self.registry_index} | onEditModeChanged: prefinished')
         self.sigEditModeChanged.emit(enabled)
-        Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | onEditModeChanged: finished')
+        Logger.logDebug('Touchify','ShelfWidget', "onEditModeChanged", f'shelf: {self.registry_index} | onEditModeChanged: finished')
 
     #endregion

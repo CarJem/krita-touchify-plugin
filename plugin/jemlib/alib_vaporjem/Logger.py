@@ -6,6 +6,7 @@ ALLOWED_NAMESPACES = [
 ]
 
 ALLOWED_FILENAMES = [
+    #"ContextRequirements",
     #"TouchifyWindow",
     #"TouchifyManagers",
     #"PropertyViewport",

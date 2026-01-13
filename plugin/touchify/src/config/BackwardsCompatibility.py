@@ -105,6 +105,21 @@ class BackwardsCompatibility:
             Helpers.changeVarName(args, "size_x", "docker_size_hint_x")
             Helpers.changeVarName(args, "size_y", "docker_size_hint_y")
             Helpers.setVersion(args, 5)
+        if Helpers.getVersion(args) == 5:
+            
+            Helpers.changeVarName(args, "requires_specific_tool", "section_requirements")
+            if "invert_required_tools" in args: mod = "NOT" if bool(args["invert_required_tools"]) else "OR"
+            else: mod = "OR"
+
+
+            if "section_requirements" in args:
+                results = str(args["section_requirements"])
+                if results != "":
+                    results = mod + "||Tool||" + results
+                    results = results.replace(",", "," + mod + "||Tool||")
+                    args["section_requirements"] = results
+                    
+            Helpers.setVersion(args, 6)
         return args
   
     def PopupData(args: dict[str, any]):

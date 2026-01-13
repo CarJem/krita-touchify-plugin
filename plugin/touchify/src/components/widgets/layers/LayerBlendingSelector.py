@@ -67,6 +67,7 @@ class LayerBlendingSelector(QPushButton):
 
     def __init__(self, parent: QWidget=None):
         super().__init__(parent)
+        self.__lastBlendingMode: str = None
         self.constructLayout()
 
     def showEvent(self, event):
@@ -116,6 +117,9 @@ class LayerBlendingSelector(QPushButton):
         self.updateFavs()
 
     def onBlendingModeChanged(self, blending_mode: str):
+        if self.__lastBlendingMode == blending_mode: return
+        self.__lastBlendingMode = blending_mode
+
         text = self.getFancyName(blending_mode)
         self.setText(text)
 
@@ -175,7 +179,7 @@ class LayerBlendingSelector(QPushButton):
         activeView = KritaAPI.get_active_document().active_node
         if not activeView: return
 
-        activeView.blending_mode = mode
-        self.setText(sender.text())
+        self.onBlendingModeChanged(mode)
         self.updateFavs()
+        activeView.blending_mode = mode
 

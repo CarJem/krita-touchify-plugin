@@ -15,7 +15,8 @@
                 {
                     "sizes": [
                         42
-                    ]
+                    ],
+                    "handles_hidden": []
                 }
             ],
             "float": []
@@ -28,9 +29,7 @@
                 "max_size_x": 0,
                 "max_size_y": 0,
                 "section_type": "actions",
-                "section_handles": "both_handles",
-                "requires_specific_tool": "KisToolTransform,KritaTransform/KisToolMove,KisToolEncloseAndFill,KisToolSelectRectangular,KisToolSelectElliptical,KisToolSelectPolygonal,KisToolSelectOutline,KisToolSelectContiguous,KisToolSelectSimilar,KisToolSelectPath,KisToolSelectMagnetic",
-                "invert_required_tools": false,
+                "section_requirements": "OR||Tool||KisToolTransform,OR||Tool||KisToolSelectSimilar,OR||Tool||KisToolSelectRectangular,OR||Tool||KisToolSelectPolygonal,OR||Tool||KritaTransform/KisToolMove,OR||Tool||KisToolSelectMagnetic,OR||Tool||KisToolSelectOutline,OR||Tool||KisToolEncloseAndFill,OR||Tool||KisToolSelectElliptical,OR||Tool||KisToolSelectContiguous,OR||Tool||KisToolSelectPath,OR||Status||HasSelection",
                 "docker_id": "",
                 "docker_nesting_mode": "normal",
                 "docker_unloaded_visibility": "normal",
@@ -587,7 +586,7 @@
                     },
                     "json_version": 1
                 },
-                "json_version": 5
+                "json_version": 6
             }
         },
         "pages": [],

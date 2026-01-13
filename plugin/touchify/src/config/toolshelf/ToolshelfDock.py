@@ -6,13 +6,6 @@ from jemlib.alib_datatypes.EnumStr import EnumStr
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class ToolshelfDock:
-
-    class SectionHandles(EnumStr):
-        NoHandles = "no_handles"
-        LeftHandle = "left_handle"
-        RightHandle = "right_handle"
-        BothHandles = "both_handles"
-        
     class SectionType(EnumStr):
         Actions = "actions"
         Docker = "docker"
@@ -82,9 +75,7 @@ class ToolshelfDock:
         self.max_size_y: int = 0
 
         self.section_type: str = "docker"
-        self.section_handles: str = str(ToolshelfDock.SectionHandles.BothHandles)
-        self.requires_specific_tool: str = ""
-        self.invert_required_tools: bool = False
+        self.section_requirements: str = ""
 
         self.docker_id: str = ""
         self.docker_nesting_mode: str = "normal"
@@ -237,10 +228,7 @@ class ToolshelfDock:
         labels["max_size"] = "Max Width / Height"
         labels["min_size"] = "Min Width / Height"
         labels["section_type"] = "Section Type"
-        labels["section_handles"] = "Section Handles"
-
-        labels["requires_specific_tool"] = "Requires Specific Tool"
-        labels["invert_required_tools"] = "Invert Requirements"
+        labels["section_requirements"] = "Section Requirements"
 
         labels["docker_id"] = "Docker ID"
         labels["docker_size_hint"] = "Docker Size Hint"
@@ -269,9 +257,7 @@ class ToolshelfDock:
             "display_name",
             "min_size",
             "max_size",
-            "section_handles",
-            "requires_specific_tool",
-            "invert_required_tools"
+            "section_requirements"
         ]
 
         variant_group = [
@@ -314,9 +300,7 @@ class ToolshelfDock:
         restrictions["max_size_x"] = DataConstraints.range(min=0)
         restrictions["max_size_y"] = DataConstraints.range(min=0)
         restrictions["section_type"] = DataConstraints.strEnumValues(self.SectionType)
-        restrictions["requires_specific_tool"] = DataConstraints.strMod(DataConstraints.StrMod.MultiToolSelection)
-        restrictions["section_handles"] = DataConstraints.strEnumValues(self.SectionHandles)
-
+        restrictions["section_requirements"] = DataConstraints.strMod(DataConstraints.StrMod.RequirementSelection)
 
         restrictions["docker_id"] = DataConstraints.strMod(DataConstraints.StrMod.DockerSelection)
         restrictions["docker_nesting_mode"] = DataConstraints.strEnumValues(self.DockerNestingMode)

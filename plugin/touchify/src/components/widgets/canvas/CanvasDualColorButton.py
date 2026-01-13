@@ -21,8 +21,13 @@ class CanvasDualColorButton(QWidget):
         size_policy.setWidthForHeight(True)
         self.setContentsMargins(0,0,0,0)
         self.updateIcons()
-        self.__background_color: QColor = self.palette().color(self.backgroundRole())
-        self.__foreground_color: QColor = self.palette().color(self.backgroundRole())
+
+        self.__canvas = None
+
+        self.__last_background_color: ManagedColor = None
+        self.__last_foreground_color: ManagedColor = None
+        self.__actual_foreground_color: QColor = self.palette().color(self.backgroundRole())
+        self.__actual_background_color: QColor = self.palette().color(self.backgroundRole())
 
     def updateIcons(self):
         self.__resetIcon: QIcon = IconRepository.kritaIcon("color-to-alpha")
@@ -124,11 +129,11 @@ class CanvasDualColorButton(QWidget):
 
         painter = QPainter(self)
 
-        foreground_brush = QBrush(self.__foreground_color, Qt.SolidPattern)
+        foreground_brush = QBrush(self.__actual_foreground_color, Qt.SolidPattern)
         painter.fillRect(foreground_rect, foreground_brush)
         self.drawBorder(painter, foreground_rect)
 
-        background_brush = QBrush(self.__background_color, Qt.SolidPattern)
+        background_brush = QBrush(self.__actual_background_color, Qt.SolidPattern)
         painter.fillRect(background_rect, background_brush)
         self.drawBorder(painter, background_rect)
 
@@ -153,19 +158,24 @@ class CanvasDualColorButton(QWidget):
             KritaAPI.get_action("reset_fg_bg").trigger()
 
     def onFGColorChanged(self, managed_color: ManagedColor):
-        self.__foreground_color = self.krita_to_qcolor(managed_color)
+        if self.__last_foreground_color == managed_color: return
+        self.__last_foreground_color = managed_color
+        self.__actual_foreground_color = self.krita_to_qcolor(managed_color)
         self.update()
 
     def onBGColorChanged(self, managed_color: ManagedColor):
-        self.__background_color = self.krita_to_qcolor(managed_color)
+        if self.__last_background_color == managed_color: return
+        self.__last_background_color = managed_color
+        self.__actual_background_color = self.krita_to_qcolor(managed_color)
         self.update()
 
     def krita_to_qcolor(self, source: ManagedColor):
-        if self.canvas == None or source == None: return QColor()
-        return source.colorForCanvas(self.canvas)
+        if self.__canvas == None or source == None: return QColor()
+        return source.colorForCanvas(self.__canvas)
     
     def onCanvasChanged(self, canvas: Canvas):
-        self.canvas = canvas
+        if self.__canvas == canvas: return
+        self.__canvas = canvas
 
     def setInstance(self, window: WindowAPI):
         self.notifier = window.notifier

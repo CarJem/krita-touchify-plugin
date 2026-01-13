@@ -3,6 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
+from jemlib.api_touchify.ContextRequirements import ContextRequirements
 from krita import *
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.enums.tool import Tool
@@ -217,10 +218,33 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Subwindow):
                 listItem.setData(DATA_INDEX, data.value)
                 if data.value == selection_input: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
-    
+
+        elif mode == DataConstraints.StrMod.RequirementSelection:
+            __currentRequirements = selection_input.split(",")
+            if "" in __currentRequirements: __currentRequirements.remove("")
+
+            self.list_view.setViewMode(QListView.ViewMode.ListMode)
+            self.list_view.setUniformItemSizes(True)
+
+            def addItem(text: str, value: str, icon: QIcon):
+                listItem = QListWidgetItem()
+                listItem.setFlags(listItem.flags() | QtCore.Qt.ItemFlag.ItemIsUserCheckable)
+                listItem.setCheckState(Qt.CheckState.Unchecked)
+                listItem.setToolTip(text)
+                listItem.setText(text)
+                listItem.setData(DATA_INDEX, value)
+                listItem.setIcon(icon)
+            
+                if value in __currentRequirements: selected_items.append(listItem)
+                self.list_view.addItem(listItem)
+
+            self.is_checkbox_selector = True
+            for data in ContextRequirements.getRequirements():
+                addItem(data['name'], data['value'], data['icon'])
+
         elif mode == DataConstraints.StrMod.MultiToolSelection:
-            __requiredTools = selection_input.split(",")
-            if "" in __requiredTools: __requiredTools.remove("")
+            __currentRequirements = selection_input.split(",")
+            if "" in __currentRequirements: __currentRequirements.remove("")
 
             self.list_view.setViewMode(QListView.ViewMode.IconMode)
             self.list_view.setUniformItemSizes(True)
@@ -234,7 +258,7 @@ class PropertyGrid_SelectorDialog(PropertyGrid_Subwindow):
                 listItem.setToolTip(data.pretty_name)
                 listItem.setIcon(data.icon)
                 listItem.setData(DATA_INDEX, data.value)
-                if data.value in __requiredTools: selected_items.append(listItem)
+                if data.value in __currentRequirements: selected_items.append(listItem)
                 self.list_view.addItem(listItem)
         
         self.list_view.model().sort(0, Qt.SortOrder.DescendingOrder)

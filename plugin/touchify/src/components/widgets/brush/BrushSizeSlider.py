@@ -14,6 +14,7 @@ class BrushSizeSlider(KisSliderSpinBoxContainer):
         super(BrushSizeSlider, self).__init__(KisSliderSpinBox(0.01, 1000, False, None), parent)
         self.view: View = None
         self.api_window: WindowAPI = None
+        self.__lastValue: float = 0
         self.slider().setScaling(3)
         self.slider().setAffixes('Size: ', ' px')
         self.slider().connectValueChanged(self.onValueChanged)
@@ -27,10 +28,13 @@ class BrushSizeSlider(KisSliderSpinBoxContainer):
         self.onSizeChanged(self.notifier.getBrushSize())
 
     def onViewChanged(self, view: View):
+        if self.view == view: return
         self.view = view
 
     def onSizeChanged(self, value: float):
-        self.slider().setValue(value)
+        if self.__lastValue == value: return
+        self.__lastValue = value
+        self.slider().setValue(value, suppress_signals=True)
 
     def onValueChanged(self, value):
         if self.view == None: return

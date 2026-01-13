@@ -18,6 +18,7 @@ class CanvasColorPicker(ColorFramedButton):
     def __init__(self, parent: QWidget | None = None, mode: Mode = 0):
         super(CanvasColorPicker, self).__init__(parent)
         self.mode = mode
+        self.__lastColor: ManagedColor = None
 
         if self.mode == CanvasColorPicker.Mode.Foreground:
             self.clicked.connect(self.setForegroundColor)
@@ -52,5 +53,6 @@ class CanvasColorPicker(ColorFramedButton):
         self.canvas = canvas
 
     def onColorChanged(self, managed_color: ManagedColor):
-        color = self.krita_to_qcolor(managed_color)
-        self.setColor(color)
+        if self.__lastColor == managed_color: return
+        self.__lastColor = managed_color
+        self.setColor(self.krita_to_qcolor(managed_color))
