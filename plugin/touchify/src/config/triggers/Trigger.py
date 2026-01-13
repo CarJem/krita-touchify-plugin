@@ -8,7 +8,8 @@ from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import Touchify
 from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
-
+@dict
+class Test(Datadic)
 
 class Trigger:
     class Variants(EnumStr):

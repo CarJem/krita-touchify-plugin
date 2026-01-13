@@ -153,11 +153,12 @@ class CBT_Toggler():
             self.cur_size  = KritaAPI.get_active_view().brush_size
  
             #self.get_palette_values() 
-            if cur_brush.name() != self.last_brush:  
+            if cur_brush != self.last_brush:  
                 self.resetBrushSetting()   
                 self.last_brush = cur_brush
                 self.loadState() 
-        except:
+        except Exception as ex:
+            print(f'failed: {ex}')
             pass
 
 
