@@ -62,7 +62,7 @@
                 ],
                 {
                     "sizes": [
-                        448,
+                        348,
                         124,
                         30
                     ],
@@ -128,9 +128,9 @@
             "8ed4dbbd-10ed-4bc9-acdf-731c0a655ea3": {
                 "display_name": "",
                 "min_size_x": 64,
-                "min_size_y": 450,
+                "min_size_y": 350,
                 "max_size_x": 58,
-                "max_size_y": 450,
+                "max_size_y": 350,
                 "section_type": "docker",
                 "section_requirements": "",
                 "docker_id": "Touchify/TouchifyToolbox",

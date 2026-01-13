@@ -246,10 +246,11 @@ class ShelfTContainer(ShelfContainer, TContainer):
         ShelfContainer.restoreState(self, state)
 
     def setItemFold(self, item: "ShelfDock", state: bool):
-        ShelfContainer.setItemFold(self, item, state)
+        #if not ShelfContainer.setItemFold(self, item, state): return
         #if state: item.show()
         #else: item.hide()
 
         #if all(self.widget(x).isHidden() for x in range(self.count())) == True: self.hide()
         #else: self.show()
+        pass
 
