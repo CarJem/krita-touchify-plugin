@@ -8,6 +8,7 @@ from jemlib.api_krita.wrappers.window import WindowAPI
 
 from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
 from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
+from touchify.src.managers.ToolOptionsManager import ToolOptionsManager
 from touchify.src.managers.CanvasManager import CanvasManager
 from touchify.src.managers.DeveloperManager import DeveloperManager
 from jemlib.api_touchify.env import *
@@ -39,17 +40,19 @@ class TouchifyManagers:
         self.mgr_dev = DeveloperManager(window)
         self.mgr_actions = ActionManager(window, self)
         self.mgr_widgetpad = WidgetPadManager(window, self)
+        self.mgr_tooloptions = ToolOptionsManager(window, self)
 
     def api_window(self):
         return self.__window__.api_window
 
     def Load(self, window: "TouchifyWindow"):
-        self.mgr_dockers = DockerManager(window)
+        self.mgr_dockers = DockerManager(window.api_window)
         self.mgr_actions.Window_Load(window.api_window)
         self.mgr_shortcuts.Window_Load()
         self.mgr_tweaker.Window_Load()
         self.mgr_canvas.Window_Load(window.api_window)
         self.mgr_widgetpad.Window_Load(window)
+        self.mgr_tooloptions.Window_Load(window)
 
     def Reload(self):
         Logger.logDebug("Touchify", "TouchifyManagers", "Reload", "started")

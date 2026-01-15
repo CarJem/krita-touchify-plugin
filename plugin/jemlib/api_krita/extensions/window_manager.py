@@ -248,6 +248,11 @@ class WindowNotifier(QObject):
     def getCurrentBrush(self):
         return self.__lastBrushPreset
     
+    def getCurrentBrushName(self):
+        result = self.getCurrentBrush()
+        if not result: return None
+        else: return result.name()
+
     def getBrushSize(self):
         return self.__lastBrushSize
     

@@ -136,13 +136,6 @@
                     "icon": "",
                     "open_on_click": false,
                     "json_version": 1
-                },
-                {
-                    "name": "touchify_registry_VaporJem_CustomContext",
-                    "items": [],
-                    "icon": "configure-thicker",
-                    "open_on_click": false,
-                    "json_version": 1
                 }
             ],
             "column_count": 0,

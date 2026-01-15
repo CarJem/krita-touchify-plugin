@@ -42,6 +42,9 @@ class TouchifyPreferences:
         self.Canvas_LeftClickAction: str = ""
         self.Canvas_MiddleClickAction: str = ""
 
+        self.Brushes_OptionsPerBrush: bool = False
+        self.Brushes_OptionsPerBrushCache: str = ""
+
         self.Application_EnableMenuIcons: bool = False
         self.Application_EnableScalingWorkarounds: bool = False
         
@@ -56,6 +59,15 @@ class TouchifyPreferences:
     
     def propertygrid_sisters(self):
         row: dict[str, list[str]] = {}
+
+
+        row["brush_options"] = {
+            "items": [
+                "Brushes_OptionsPerBrush",
+            ], 
+            "use_labels": True, 
+            "flip_labels": True
+        }
 
         row["canvas_triggers"] = { 
             "items": [
@@ -92,6 +104,8 @@ class TouchifyPreferences:
             "Styles_DockedBrushEditor",
             "Styles_BrushEditorZoomFix",
 
+            "Brushes_OptionsPerBrushCache",
+
             "DockerUtils_HiddenDockersLeft",
             "DockerUtils_HiddenDockersRight",
             "DockerUtils_HiddenDockersUp",
@@ -112,12 +126,16 @@ class TouchifyPreferences:
     
     def propertygrid_sorted(self):
         return [
+            "brush_options",
             "canvas_triggers",
             "application_overrides"
         ]
     
     def propertygrid_labels(self):
         return {
+            "brush_options": "Brush Options",
+            "Brushes_OptionsPerBrush": "Remember Options Per Preset",
+
             "canvas_triggers": "Canvas Click Event Actions",
             "Canvas_RightClickAction": "Right Click",
             "Canvas_LeftClickAction": "Left Click",
@@ -159,6 +177,9 @@ class TouchifyPreferences:
         self.Canvas_LeftClickAction = TouchifyPreferences.IO.readStr("Canvas_LeftClickAction", "")
         self.Canvas_MiddleClickAction = TouchifyPreferences.IO.readStr("Canvas_MiddleClickAction", "")
 
+        self.Brushes_OptionsPerBrush = TouchifyPreferences.IO.readBool("Brushes_OptionsPerBrush", False)
+        self.Brushes_OptionsPerBrushCache = TouchifyPreferences.IO.readStr("Brushes_OptionsPerBrushCache", "")
+
         self.Application_EnableMenuIcons = TouchifyPreferences.IO.readBool("Application_EnableMenuIcons", False)
         self.Application_EnableScalingWorkarounds = TouchifyPreferences.IO.readBool("Application_EnableScalingWorkarounds", False)
 
@@ -183,6 +204,8 @@ class TouchifyPreferences:
         TouchifyPreferences.IO.writeStr("Canvas_RightClickAction", self.Canvas_RightClickAction, "")
         TouchifyPreferences.IO.writeStr("Canvas_LeftClickAction", self.Canvas_LeftClickAction, "")
         TouchifyPreferences.IO.writeStr("Canvas_MiddleClickAction", self.Canvas_MiddleClickAction, "")
+
+        TouchifyPreferences.IO.writeBool("Brushes_OptionsPerBrush", self.Brushes_OptionsPerBrush, False)
 
         TouchifyPreferences.IO.writeBool("Application_EnableMenuIcons", self.Application_EnableMenuIcons, False)
         TouchifyPreferences.IO.writeBool("Application_EnableScalingWorkarounds", self.Application_EnableScalingWorkarounds, False)

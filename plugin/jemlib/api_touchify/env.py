@@ -69,3 +69,4 @@ class TouchifyEnv:
         TOOLBOX_NOPRESETDATA="Touchify/Toolbox/NoPresetData"
         SUB_VIEW="Touchify/SubView"
         QUICK_ACTIONS="Touchify/QuickActions"
+        CACHE="Touchify/Cache"

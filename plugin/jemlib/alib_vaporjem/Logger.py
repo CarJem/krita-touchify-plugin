@@ -6,15 +6,16 @@ ALLOWED_NAMESPACES = [
 ]
 
 ALLOWED_FILENAMES = [
+    "BrushManager",
     #"ContextRequirements",
-    "TouchifyWindow",
-    "TouchifyManagers",
-    "PropertyViewport",
-    "PropertyGrid_Window",
-    "PropertyGrid",
-    "DockerManager",
-    "DockerContainer",
-    "ActionManager",
+    #"TouchifyWindow",
+    #"TouchifyManagers",
+    #"PropertyViewport",
+    #"PropertyGrid_Window",
+    #"PropertyGrid",
+    #"DockerManager",
+    #"DockerContainer",
+    #"ActionManager",
 ]
 
 def logDebug(namespace: str, filename: str, function: str, value: str):
