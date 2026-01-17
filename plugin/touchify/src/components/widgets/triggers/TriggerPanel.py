@@ -211,13 +211,15 @@ class TriggerPanel(QWidget):
 
     def sizeHint(self):
         if self.hinted_size:
-            return self.hinted_size
+            return self.hinted_size.grownBy(QMargins(1,0,1,0))
         else:
-            return super().sizeHint()
+            return super().sizeHint().grownBy(QMargins(1,0,1,0))
         
     def minimumSizeHint(self):
-        hint = super().minimumSizeHint()
-        return hint
+        return super().minimumSizeHint().grownBy(QMargins(1,0,1,0))
+    
+    def minimumSize(self):
+        return super().minimumSize().grownBy(QMargins(1,0,1,0))
     
     def close(self):
         super().close()
