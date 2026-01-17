@@ -184,7 +184,7 @@ class DockerContainer(QWidget):
 
     #region Overrides
 
-    def getBorrowedSizeHint(self, size: QSize, mode: str = "normal"):
+    def hintPadding(self, size: QSize):
         if not self.borrowedDocker: return size
         if not self.nested_mode: return size
         if not isinstance(self.borrowedDocker, QDockWidget): return size
@@ -196,19 +196,34 @@ class DockerContainer(QWidget):
         leftover_width = -(scroll_area.viewport().width() - scroll_area.widget().width())
         leftover_height = -(scroll_area.viewport().height() - scroll_area.widget().height())
         
-        new_size = QSize(size.width() + leftover_width, size.height() + leftover_height)
-
-        
-        
-        print(f"Old Size {mode}: {size.width()}, {size.height()}")
-        print(f"New Size {mode}: {new_size.width()}, {new_size.height()}")
+        #new_size = QSize(size.width() + leftover_width, size.height() + leftover_height)
 
         return size
+    
+
+    def size(self):
+        baseSize: QSize = QSize()
+        if self.borrowedDocker:
+            baseSize = self.borrowedDocker.size()
+        else:
+            baseSize = super().size()
+            
+        return baseSize
+    
+    def minimumSize(self):
+        baseSize: QSize = QSize()
+        if self.borrowedDocker:
+            baseSize = self.borrowedDocker.minimumSize()
+        else:
+            baseSize = super().minimumSize()
+            
+        return baseSize
+        
 
     def minimumSizeHint(self):
         baseSize: QSize = QSize()
         if self.borrowedDocker:
-            self.getBorrowedSizeHint(self.borrowedDocker.minimumSizeHint(), "min")
+            baseSize = self.borrowedDocker.minimumSizeHint()
         else:
             baseSize = super().minimumSizeHint()
             
@@ -219,7 +234,7 @@ class DockerContainer(QWidget):
         if self.size != None:
             baseSize = self.size
         elif self.borrowedDocker:
-            baseSize = self.getBorrowedSizeHint(self.borrowedDocker.sizeHint())
+            baseSize = self.borrowedDocker.sizeHint()
         else:
             baseSize = super().sizeHint()
             

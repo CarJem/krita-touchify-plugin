@@ -64,22 +64,31 @@ class ToolshelfDockerWidget(DockWidget):
         self.setWidget(self.mainWidget)    
 
     def getWindowMargins(self):
-        border_thickness = 5
+        border_thickness = 0
         return QMargins(border_thickness, border_thickness + self.titleBarWidget().height(), border_thickness, border_thickness)
-
-    def shrinkToFit(self):
-        margins = self.getWindowMargins()
-        if self.isFloating():
-            if self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.Minimum:
-                self.resize(self.mainWidget.minimumSize().grownBy(margins))
-            elif self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.AdjustSize:
-                self.adjustSize()
-            elif self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.SizeHint:
-                self.resize(self.mainWidget.sizeHint().grownBy(margins))
-            elif self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.SizeHintMinimum:
-                self.resize(self.mainWidget.minimumSizeHint().grownBy(margins))
+    
+    def getWindowSize(self):
+        if self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.Minimum:
+            return self.minimumSize()
+        elif self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.AdjustSize:
+            return self.size()
+        elif self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.SizeHint:
+            return self.sizeHint()
+        elif self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.SizeHintMinimum:
+            return self.minimumSizeHint()
         else:
-            pass
+            return self.size()
+        
+    def shrinkToFit(self):
+        if self.isFloating():
+            size = self.getWindowSize()
+            margin = self.getWindowMargins()
+
+            if self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.AdjustSize:
+                self.adjustSize()
+            elif self.sizeManagementType != ToolshelfAreaSettings.ResizeStyle.Default:
+                super().resize(size.grownBy(margin))
+        
 
 
     def onShelfIndexChanged(self):

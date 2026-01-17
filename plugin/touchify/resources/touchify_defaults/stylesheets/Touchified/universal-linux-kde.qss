@@ -1,0 +1,311 @@
+/* #region SubWindows */
+
+
+QMdiSubWindow {
+	border: 3px solid QPalette.Window;
+	titlebar-close-icon: url(stylesheet:images/close-light.svg);
+    titlebar-normal-icon: url(stylesheet:images/normal-light.svg);
+	titlebar-minimize-icon: url(stylesheet:images/minimize-light.svg);
+	titlebar-maximize-icon: url(stylesheet:images/maximize-light.svg);
+}
+
+QMdiSubWindow::title {
+	background-color: QPalette.ToolTipBase(l: 0.86);
+	selection-background-color: orange;
+	border-bottom: 3px solid QPalette.ButtonText(l: 0.84);
+	border-radius: 0px;
+	height: 12px;
+	padding: 6px;
+	margin: -3px;
+	color: QPalette.Highlight(l: 0.00);
+	image: url();
+}
+
+QMdiSubWindow:maximized, QMdiSubWindow::title:maximized {
+	border: 0px solid QPalette.Window;
+	background-color: QPalette.Window;
+}
+
+QMdiSubWindow::close-button, QMdiSubWindow::minimize-button, QMdiSubWindow::maximize-button, QMdiSubWindow::normal-button {
+	background: QPalette.ToolTipBase(l: 0.86);
+	border: 1px solid QPalette.ToolTipBase(l: 0.86);
+	width: 11px;
+	height: 11px;
+	padding: 2px;
+    border-radius: 8px;
+	subcontrol-position: left;
+}
+
+QMdiSubWindow::close-button:maximized, QMdiSubWindow::minimize-button:maximized, QMdiSubWindow::maximize-button:maximized, QMdiSubWindow::normal-button:maximized {
+	background: QPalette.Window;
+	border: 1px solid QPalette.Window;
+	subcontrol-position: top;
+}
+
+QMdiSubWindow::close-button:hover, QMdiSubWindow::minimize-button:hover, QMdiSubWindow::maximize-button:hover, QMdiSubWindow::normal-button:hover {
+	background: QPalette.Window(l: 1.64);
+}
+
+QMdiSubWindow::close-button:pressed, QMdiSubWindow::minimize-button:pressed, QMdiSubWindow::maximize-button:pressed, QMdiSubWindow::normal-button:pressed {
+    background: QPalette.ButtonText(l: 1.09);
+}
+
+/* #endregion */
+
+/* #region Tabs */
+
+QTabBar::tab {
+	color: QPalette.WindowText(l: 1.09);
+	background-color: QPalette.Base(l: 1.56);
+	border-color: QPalette.Button(l:1.2);
+	border-width: 1px;
+	font-size: 11px;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	border-radius: 4px;
+	margin-right: 4px;
+	margin-bottom: 2px;
+}
+
+QTabBar::tab:selected {
+	background-color: QPalette.Button(l:1.8);
+}
+
+QTabBar::tab:hover {
+	color: QPalette.ButtonText(l: 0.96);
+	background-color: QPalette.Button(l:1.2);
+}
+
+QTabBar::tab:selected:hover {
+	background-color: QPalette.Button(l:1.8);
+}
+
+/* #endregion */
+
+/* #region Document tabs */
+
+
+QMdiArea > QTabBar::tab {
+	font-size: 11px;
+	border-radius: 0px;
+	max-height: 15px;
+	margin-bottom: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-top: 0px;
+	padding-bottom: 6px;
+	padding-top: 4px;
+	background-color: QPalette.Window(l: 0.65);
+	border: 1px solid QPalette.ButtonText(l: 0.62);
+	color: QPalette.ButtonText(l: 0.68);
+}
+
+QMdiArea > QTabBar::tab:only-one {
+	max-height: 0px;
+	min-height: 0px;
+	border: 0px;
+	margin-bottom: -20px;
+}
+
+QMdiArea > QTabBar::tab:selected, QMdiArea > QTabBar::tab:middle:selected {
+	border-left: 1px solid QPalette.ButtonText(l: 0.62);
+	border-bottom: 1px solid QPalette.ButtonText(l: 0.62);
+	border-right: 1px solid QPalette.ButtonText(l: 0.62);
+	border-top: 0px;
+	border-radius: 0px;
+	color: QPalette.ButtonText(l: 0.96);
+	background-color: QPalette.Window;
+	padding-bottom: 6px;
+	padding-top: 5px;
+	background-image: url();
+}
+
+QMdiArea > QTabBar::tab:first:selected {
+	border-left: 0px;
+	border-bottom: 1px solid QPalette.ButtonText(l: 0.62);
+	border-right: 1px solid QPalette.ButtonText(l: 0.62);
+	border-top: 0px;
+	border-radius: 0px;
+	padding-left: 9px;
+	color: QPalette.ButtonText(l: 0.96);
+	background-color: QPalette.Window;
+	background-image: url();
+}
+
+QMdiArea > QTabBar::tab:last:selected {
+	border-left: 1px solid QPalette.ButtonText(l: 0.62);
+	border-bottom: 1px solid QPalette.ButtonText(l: 0.62);
+	border-right: 0px;
+	border-top: 0px;
+	border-radius: 0px;
+	padding-right: 9px;
+	color: QPalette.ButtonText(l: 0.96);
+	background-color: QPalette.Window;
+	background-image: url();
+}
+
+QMdiArea > QTabBar::tab:first {
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	margin-right: -1px;
+	margin-left: 0px;
+	padding-right: 8px;
+	padding-left: 8px;
+}
+
+QMdiArea > QTabBar::tab:last {
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	margin-left: -1px;
+	margin-right: 0px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+QMdiArea > QTabBar::tab:middle {
+	margin-left: -1px;
+	margin-right: -1px;
+	padding-left: 8px;
+	padding-right: 8px;
+	border-top: 1px solid QPalette.ButtonText(l: 0.62);
+}
+
+QMdiArea > QTabBar::tab:hover {
+	color: QPalette.ButtonText(l: 0.96);
+	background-color: QPalette.Window(l: 1.36);
+}
+
+QMdiArea > QTabBar::tab:selected:hover, QMdiArea > QTabBar::tab:first:selected:hover, QMdiArea > QTabBar::tab:last:selected:hover {
+	color: QPalette.ButtonText(l: 1.09);
+	background: QPalette.Window;
+}
+
+QMdiArea > QTabBar::tab:pressed, QMdiArea > QTabBar::tab:last:pressed, QMdiArea > QTabBar::tab:first:pressed {
+	color: QPalette.ButtonText(l: 1.09);
+	font-size: 11px;
+	padding-bottom: 6px;
+	padding-top: 5px;
+}
+
+QMdiArea > QTabBar::close-button {
+	/*image: url(stylesheet:images/close-light.png);*/
+	subcontrol-position: left;
+	margin-bottom: 4px;
+	margin-top: 0px;
+	padding-bottom: 4x;
+}
+
+/* #endregion */
+
+/* #region Scrollbars */
+
+QAbstractScrollArea {
+	background: QPalette.Base(l:1.06);
+}
+
+QDialog QTabWidget QStackedWidget QWidget QAbstractScrollArea {
+	background: transparent;
+}
+
+.QScrollBar:horizontal {
+	max-height: 16px;
+	padding-top: 3px;
+	padding-bottom: 2px;
+	padding-left: 3px;
+	padding-right: 3px;
+	margin: 0;
+	background: transparent;
+}
+.QScrollBar:vertical {
+	max-width: 16px;
+	padding: 3px 2px 3px 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 3px;
+	padding-right: 2px;
+	background: transparent;
+}
+.QScrollBar::handle:vertical, .QScrollBar::handle:horizontal {
+	background: QPalette.Window(l: 1.4);
+	border-style: solid;
+	border-radius: 4px;
+	border-width: 1px;
+	border-color: QPalette.Window(l: 1.4);
+	min-height: 25px;
+	min-width: 25px;
+}
+.QScrollBar::handle:horizontal:hover, .QScrollBar::handle:vertical:hover {
+	background-color: QPalette.Window(l: 0.96, s:1.6);
+	border-style: solid;
+	border-width: 1px;
+	border-color: QPalette.Window(l: 0.96, s:1.6);
+}
+.QScrollBar::add-line, .QScrollBar::sub-line {
+    border: 0px;
+    border-radius: 0px;
+}
+
+KisZoomableScrollBar {
+	min-height: 14px;
+	padding: 0px;
+}
+
+/* #endregion */
+
+/* #region QSlider */
+
+QSlider {
+	margin: 5px;
+}
+
+QSlider::groove:horizontal {
+    border: 0px;
+	border-radius: 2px;
+    height: 4px;
+    background: QPalette.ToolTipBase(l: 1.85);
+    margin: 2px 2px;;
+}
+
+QSlider::handle:horizontal {
+    background: QPalette.Button(l: 1.1);
+    border: 1px solid QPalette.Button(l: 2.8);
+    width: 14px;
+    margin: -6px 0;
+    border-radius: 8px;
+}
+
+QSlider::handle:horizontal:hover {
+    background: QPalette.Button(l: 1.1);
+    border: 1px solid QPalette.Highlight(l: 1.4, s: 1.6);
+    width: 14px;
+    margin: -6px 0;
+    border-radius: 8px;
+}
+
+QSlider::handle:horizontal:pressed {
+    background: QPalette.Highlight(l: 0.97);
+    border: 1px solid QPalette.Highlight(l: 1.4, s: 1.6);
+    width: 14px;
+    margin: -6px 0;
+    border-radius: 8px;
+}
+
+QSlider::add-page:horizontal {
+    background: QPalette.Button(l: 1.8);
+	height: 6px;
+	border: 1px solid QPalette.Button(l: 2.2);
+	border-radius: 3px;
+	margin: 1px 1px;;
+}
+
+QSlider::sub-page:horizontal {
+    background: QPalette.Highlight(l: 0.8);
+	height: 6px;
+	border: 1px solid QPalette.Highlight(l: 1);
+	border-radius: 3px;
+	margin: 1px 1px;;
+}
+
+/* #endregion */

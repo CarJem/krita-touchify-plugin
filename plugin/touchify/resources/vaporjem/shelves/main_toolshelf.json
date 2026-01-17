@@ -20,7 +20,7 @@
                 {
                     "sizes": [
                         180,
-                        107
+                        40
                     ],
                     "handles_hidden": []
                 }
@@ -1182,7 +1182,7 @@
             "header_size": 16,
             "enable_pinning": false,
             "position": "top",
-            "resize_style": "size_hint",
+            "resize_style": "minimum_size_hint",
             "stack_preview": "default",
             "stack_alignment": "left",
             "stack_actions": [],

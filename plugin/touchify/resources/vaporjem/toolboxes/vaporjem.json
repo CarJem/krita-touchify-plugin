@@ -6,7 +6,7 @@
     "background_opacity": 255,
     "button_opacity": 255,
     "theme": "default",
-    "orientation_mode": "dynamic",
+    "orientation_mode": "vertical",
     "categories": [
         {
             "id": "A",
