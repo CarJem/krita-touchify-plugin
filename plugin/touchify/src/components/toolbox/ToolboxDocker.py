@@ -142,7 +142,6 @@ class ToolboxDocker(QDockWidget):
         self.scrollArea = ToolboxScrollArea(self, self.toolbox)
         self.scrollArea.setContentsMargins(0,0,0,0)
         self.scrollArea.setViewportMargins(0,0,0,0)
-        self.scrollArea.setWidgetResizable(True)
         self.setWidget(self.scrollArea)
 
         self.settingsMenu = ToolboxMenu(self, self.settingsManager.getCurrentToolboxId())

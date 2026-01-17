@@ -10,6 +10,7 @@ from touchify.src.settings.TouchifySettings import *
 from typing import Callable
 
 class DockerManager(QObject):
+
     class BorrowData:
         def __init__(self, dockMode: bool, docker: QDockWidget, mainWindow: QMainWindow) -> None:
             self.__is_nested_mode = dockMode
@@ -20,6 +21,7 @@ class DockerManager(QObject):
             self.isDead = False
             
             self.nestedWidget = None
+            self.nestedEventFilter = None
             self.nestedWidgetArea = self.__main_window.dockWidgetArea(docker)
             self.nestedWidgetTitle = None
 
@@ -32,10 +34,13 @@ class DockerManager(QObject):
         def setup(self):
             if self.__is_nested_mode:
                 self.nestedWidget: QDockWidget = self.__docker
+                self.nestedEventFilter = DockerManager.NestedDockerEventFilter(self.nestedWidget)
+                self.nestedWidget.installEventFilter(self.nestedEventFilter)
                 self.nestedWidgetTitle = self.nestedWidget.titleBarWidget()
-                self.titleBarHider = QWidget()
-                self.titleBarHider.setFixedHeight(0)
-                self.nestedWidget.setTitleBarWidget(self.titleBarHider)
+
+                titleBarHider = QWidget()
+                titleBarHider.setFixedHeight(0)
+                self.nestedWidget.setTitleBarWidget(titleBarHider)
             else:
                 self.childParent: QDockWidget = self.__docker
                 self.childWidget: QWidget = self.__docker.widget()
@@ -60,6 +65,7 @@ class DockerManager(QObject):
         def clearWidgetData(self):
             if self.__is_nested_mode:
                 self.__main_window.addDockWidget(self.nestedWidgetArea, self.nestedWidget)
+                self.nestedWidget.removeEventFilter(self.nestedEventFilter)
                 self.nestedWidget.setTitleBarWidget(self.nestedWidgetTitle)
                 if self.__was_visible == False: self.nestedWidget.hide()
             else:
@@ -81,6 +87,14 @@ class DockerManager(QObject):
     class LoadArguments:
         def __init__(self, dockMode: bool = False) -> None:
             self.dockMode = dockMode
+
+    class NestedDockerEventFilter(QObject):
+        def __init__(self, parent: QDockWidget):
+            super().__init__(parent)
+            self.__docker = parent
+        
+        def eventFilter(self, obj: QObject, event: QEvent):
+            return super().eventFilter(obj, event)
 
     onReleaseDockerSignal = pyqtSignal(str)
     onStealDockerSignal = pyqtSignal(str)

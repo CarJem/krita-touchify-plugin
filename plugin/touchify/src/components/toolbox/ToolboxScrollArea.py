@@ -48,7 +48,9 @@ class ToolboxScrollArea(QScrollArea):
 
         scroller.setScrollerProperties(sp)
         scroller.stateChanged.connect(self.slotScrollerStateChange)
-        self.setWidget(toolbox)
+        
+        self._toolbox.setOrientation(self.m_orientation)
+        self.setWidget(self._toolbox)
 
     def setOrientation(self, orientation):
         if orientation == self.m_orientation:
@@ -59,14 +61,32 @@ class ToolboxScrollArea(QScrollArea):
 
     def orientation(self):
         return self.m_orientation
+    
+    def getScrollMargins(self):
+        scrollButtonWidth = self.scrollButtonWidth()
+        scrollbar = self.verticalScrollBar() if self.m_orientation == Qt.Vertical else self.horizontalScrollBar()
+        canPrev = scrollbar.value() != scrollbar.minimum()
+        canNext = scrollbar.value() != scrollbar.maximum()
+
+        up = 0
+        down = 0
+        left = 0
+        right = 0
+
+        if self.m_orientation == Qt.Vertical:
+            up = scrollButtonWidth #if canPrev else 0
+            #down = scrollButtonWidth #if canNext else 0
+        else:
+            left = scrollButtonWidth #if canPrev else 0
+            #right = scrollButtonWidth #if canNext else 0
+
+        return QMargins(left,up,right,down)
 
     def minimumSizeHint(self):
-        margin = 0
-        return self._toolbox.minimumSizeHint().grownBy(QMargins(margin,margin,margin,margin))
+        return self._toolbox.minimumSizeHint().grownBy(self.getScrollMargins())
 
     def sizeHint(self):
-        margin = 0
-        return self._toolbox.sizeHint().grownBy(QMargins(margin,margin,margin,margin))
+        return self._toolbox.sizeHint().grownBy(self.getScrollMargins())
 
     def slotScrollerStateChange(self, state):
         pass
@@ -116,6 +136,14 @@ class ToolboxScrollArea(QScrollArea):
         return self.style().pixelMetric(QStyle.PM_TabBarScrollButtonWidth, opt, self)
 
     def layoutItems(self):
+        l = self._toolbox._toolboxLayout
+        newSize = self.viewport().size()
+        if self.m_orientation == Qt.Orientation.Vertical:
+            newSize.setHeight(l.heightForWidth(newSize.width()))
+        else:
+            newSize.setWidth(l.widthForHeight(newSize.height()))
+            
+        self._toolbox.resize(newSize)
         self.updateScrollButtons()
 
     def updateScrollButtons(self):

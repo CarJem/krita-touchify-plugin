@@ -60,6 +60,7 @@ class ShelfLoader(QObject):
         actionWidget = DockerContainer(dock, actionInfo.docker_id, self.rootPanel.managers.mgr_dockers)
         if actionInfo.docker_nesting_mode == ToolshelfDock.DockerNestingMode.Docking:
             actionWidget.setDockMode(True)
+            actionWidget.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
 
         if actionInfo.docker_unloaded_visibility == ToolshelfDock.DockerUnloadedVisibility.Hidden:
             actionWidget.setHiddenMode(True)

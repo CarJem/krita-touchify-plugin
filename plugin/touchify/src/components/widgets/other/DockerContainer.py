@@ -39,7 +39,7 @@ class DockerContainer(QWidget):
         self.container.setLayout(self.container_layout)
         
         self.hiddenMode = False
-        self.dockMode = False
+        self.nested_mode = False
         self.passiveMode = False
         
         self.unloaded_label = QLabel(self.container)
@@ -120,7 +120,7 @@ class DockerContainer(QWidget):
 
     def _loadDocker(self):
         Logger.logDebug("Touchify", "DockerContainer", "_loadDocker", f"started: {self.docker_id}")
-        shareArgs = DockerManager.LoadArguments(self.dockMode)
+        shareArgs = DockerManager.LoadArguments(self.nested_mode)
         dockerLoaded: QWidget | None = self.docker_manager.loadDocker(self.docker_id, shareArgs)
         Logger.logDebug("Touchify", "DockerContainer", "_loadDocker", f"loaded: {self.docker_id}")
         if not dockerLoaded: return
@@ -129,7 +129,7 @@ class DockerContainer(QWidget):
         Logger.logDebug("Touchify", "DockerContainer", "_loadDocker", f"installed: {self.docker_id}")
         self.dockerChanged.emit()
         self.container_layout.addWidget(self.borrowedDocker, 1)
-        if self.dockMode: self.borrowedDocker.show()
+        if self.nested_mode: self.borrowedDocker.show()
         self.updateVisibility()
         Logger.logDebug("Touchify", "DockerContainer", "_loadDocker", f"finished: {self.docker_id}")
 
@@ -176,7 +176,7 @@ class DockerContainer(QWidget):
         self.passiveMode = value
 
     def setDockMode(self, value):
-        self.dockMode = value
+        self.nested_mode = value
 
     def setSizeHint(self, size):
         self.size = QSize(size[0], size[1])
@@ -184,10 +184,31 @@ class DockerContainer(QWidget):
 
     #region Overrides
 
+    def getBorrowedSizeHint(self, size: QSize, mode: str = "normal"):
+        if not self.borrowedDocker: return size
+        if not self.nested_mode: return size
+        if not isinstance(self.borrowedDocker, QDockWidget): return size
+
+        dock_widget: QDockWidget = self.borrowedDocker
+        if not isinstance(dock_widget.widget(), QScrollArea): return size
+        scroll_area: QScrollArea = dock_widget.widget()
+        
+        leftover_width = -(scroll_area.viewport().width() - scroll_area.widget().width())
+        leftover_height = -(scroll_area.viewport().height() - scroll_area.widget().height())
+        
+        new_size = QSize(size.width() + leftover_width, size.height() + leftover_height)
+
+        
+        
+        print(f"Old Size {mode}: {size.width()}, {size.height()}")
+        print(f"New Size {mode}: {new_size.width()}, {new_size.height()}")
+
+        return size
+
     def minimumSizeHint(self):
         baseSize: QSize = QSize()
         if self.borrowedDocker:
-            baseSize = self.borrowedDocker.minimumSizeHint()
+            self.getBorrowedSizeHint(self.borrowedDocker.minimumSizeHint(), "min")
         else:
             baseSize = super().minimumSizeHint()
             
@@ -198,7 +219,7 @@ class DockerContainer(QWidget):
         if self.size != None:
             baseSize = self.size
         elif self.borrowedDocker:
-            baseSize = self.borrowedDocker.sizeHint()
+            baseSize = self.getBorrowedSizeHint(self.borrowedDocker.sizeHint())
         else:
             baseSize = super().sizeHint()
             
