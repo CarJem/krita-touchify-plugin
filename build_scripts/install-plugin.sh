@@ -1,8 +1,5 @@
 #!/bin/bash
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-ROOT_DIR=$( dirname "$SCRIPT_DIR" )
-KRITA_PATH="$HOME/.var/app/org.kde.krita/data/krita/pykrita"
-
+source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/zenv.env"
 
 install_plugin() {
     PLUGIN_NAME=$1

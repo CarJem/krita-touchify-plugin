@@ -1,6 +1,6 @@
 #!/bin/bash
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/zenv.env"
 
 "$SCRIPT_DIR/close-krita.sh"
 "$SCRIPT_DIR/install-plugin.sh"
-"$SCRIPT_DIR/launch-krita.sh"
+$START_COMMAND

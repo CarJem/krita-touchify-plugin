@@ -1,2 +1,3 @@
 #!/bin/bash
-/usr/bin/flatpak kill org.kde.krita || echo 'Krita was not running'
+source "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/zenv.env"
+$EXIT_COMMAND|| echo 'Krita was not running'
