@@ -54,6 +54,9 @@ class ToolboxButton(TriggerButton):
         if self._isEditMode:
             self._isHovered = state
             self.update()
+        elif self._isHovered and not self._isEditMode:
+            self._isHovered = False
+            self.update()
 
     #endregion
 

@@ -46,6 +46,12 @@ class ToolboxLoader(QObject):
         subMenu: ToolboxSubtoolMenu = self.sender() # link the toolbutton menu to this function
         if subMenu.isEmpty(): self.Build_Menu(subMenu) # prevents the menu from continuously adding actions every click
 
+    def Signal_OnClickMenu(self, source: ToolboxButton):
+        if not source: return
+        subMenu: ToolboxSubtoolMenu = source.menu() # link the toolbutton menu to this function
+        if subMenu.isEmpty(): self.Build_Menu(subMenu) # prevents the menu from continuously adding actions every click
+        source.menu().show()
+
     def Build_Action(self, tool: ToolboxDataItem):
         trigger = Trigger()
         trigger.variant = Trigger.Variants.Action
@@ -57,7 +63,7 @@ class ToolboxLoader(QObject):
         if btn:
             tool_names: list[str] = [item.name for item in tool.items]
             tool_names.append(tool.name)
-            btn.setupBlenderButton(is_toolbox_menu, tool_names)
+            btn.setupBlenderButton(is_toolbox_menu, tool.open_on_click, tool_names)
             btn.setWindowOpacity(self._opacityLevel)
 
             if tool.icon != "": 
@@ -73,8 +79,10 @@ class ToolboxLoader(QObject):
                 subMenu = ToolboxSubtoolMenu(btn, tool)
                 btn.setMenu(subMenu) # this will be the submenu for each main tool
 
-                btn.menu().aboutToShow.connect(self.Signal_OnMenu) # Show submenu when clicked
-                if tool.open_on_click == True:
+                
+                if tool.open_on_click:
+                    btn.menuRequested.connect(lambda: self.Signal_OnClickMenu(btn))
+                else:
                     btn.menu().aboutToShow.connect(self.Signal_OnMenu)
             return btn
         return None

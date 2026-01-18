@@ -22,6 +22,7 @@ class TriggerButton(QToolButton):
 
     triggerActivated = pyqtSignal()
     triggerToggled = pyqtSignal(bool)
+    menuRequested = pyqtSignal()
 
     clicked: typing.ClassVar[QtCore.pyqtSignal]
     released: typing.ClassVar[QtCore.pyqtSignal]
@@ -50,6 +51,7 @@ class TriggerButton(QToolButton):
         self.action_source: QAction = None
 
         self.is_blender_menu = False
+        self.open_blender_menu_on_click = False
         self.blender_item_list = []
 
         self.is_tool_action = False
@@ -113,9 +115,10 @@ class TriggerButton(QToolButton):
 
         if is_active: self.toggled = (True)
 
-    def setupBlenderButton(self, is_blender_menu: bool, item_list: list[str]):
+    def setupBlenderButton(self, is_blender_menu: bool, blender_menu_opens_on_click: bool, item_list: list[str]):
         self.is_blender_menu = is_blender_menu
         self.trigger_mode = TriggerButton.TriggerMode.OnRelease if is_blender_menu else TriggerButton.TriggerMode.OnPress
+        self.open_blender_menu_on_click = blender_menu_opens_on_click
         self.blender_item_list = item_list
         self.onPaletteChanged()
 
@@ -186,13 +189,19 @@ class TriggerButton(QToolButton):
         elif self.is_blender_menu: self.menu_toggled = (False)
         
     def onReleased(self):
-        if self.trigger_mode == TriggerButton.TriggerMode.OnRelease: self.trigger()
+        if self.trigger_mode == TriggerButton.TriggerMode.OnRelease: 
+            if self.open_blender_menu_on_click: self.menuRequested.emit()
+            else: self.trigger()
 
     def onPressed(self):
-        if self.trigger_mode == TriggerButton.TriggerMode.OnPress: self.trigger()
+        if self.trigger_mode == TriggerButton.TriggerMode.OnPress: 
+            if self.open_blender_menu_on_click: self.menuRequested.emit()
+            else: self.trigger()
 
     def onClicked(self):
-        if self.trigger_mode == TriggerButton.TriggerMode.OnClick: self.trigger()
+        if self.trigger_mode == TriggerButton.TriggerMode.OnClick: 
+            if self.open_blender_menu_on_click: self.menuRequested.emit()
+            else: self.trigger()
 
     def onToggled(self, toggled):
         p = self.window().palette()

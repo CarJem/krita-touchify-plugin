@@ -39,7 +39,7 @@ class ToolboxDataItem:
     
     def propertygrid_hidden(self):
         return [
-            "name"
+
         ]
     
     def propertygrid_view_type(self):
@@ -55,7 +55,7 @@ class ToolboxDataItem:
     
     def propertygrid_labels(self):
         labels = {}
-        labels["name"] = "Action ID"
+        labels["name"] = "Action"
         labels["icon"] = "Custom Icon"
         labels["open_on_click"] = "Click to Open Menu"
         labels["items"] = "Menu Items"

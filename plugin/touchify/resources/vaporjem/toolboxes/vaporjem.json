@@ -5,7 +5,7 @@
     "submenu_delay": 200,
     "background_opacity": 255,
     "button_opacity": 255,
-    "theme": "default",
+    "theme": "krita",
     "orientation_mode": "vertical",
     "categories": [
         {
@@ -99,7 +99,7 @@
                         }
                     ],
                     "icon": "",
-                    "open_on_click": false,
+                    "open_on_click": true,
                     "json_version": 1
                 },
                 {
