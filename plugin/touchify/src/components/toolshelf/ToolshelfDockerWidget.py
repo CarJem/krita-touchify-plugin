@@ -63,10 +63,6 @@ class ToolshelfDockerWidget(DockWidget):
         self.mainWidget.setTitlebarVisibility(True)
         self.setWidget(self.mainWidget)    
 
-    def getWindowMargins(self):
-        border_thickness = 0
-        return QMargins(border_thickness, border_thickness + self.titleBarWidget().height(), border_thickness, border_thickness)
-    
     def getWindowSize(self):
         if self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.Minimum:
             return self.minimumSize()
@@ -82,12 +78,10 @@ class ToolshelfDockerWidget(DockWidget):
     def shrinkToFit(self):
         if self.isFloating():
             size = self.getWindowSize()
-            margin = self.getWindowMargins()
-
             if self.sizeManagementType == ToolshelfAreaSettings.ResizeStyle.AdjustSize:
                 self.adjustSize()
             elif self.sizeManagementType != ToolshelfAreaSettings.ResizeStyle.Default:
-                super().resize(size.grownBy(margin))
+                super().resize(size)
         
 
 

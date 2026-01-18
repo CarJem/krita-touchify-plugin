@@ -12,8 +12,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-
 from jemlib.alib_vaporjem.extensions import pyqt_extensions as PyQtExt
+
 
 
 
@@ -124,16 +124,10 @@ class ShelfDock(Dock):
             self.hideTitleBar(False)
             self.widgetArea.setStyleSheet(self.nStyle)
         elif self.container().type() == 'tab':
-            self.showTitleBar(False)
+            self.hideTitleBar(False)
             if self.orientation == 'vertical':
-                self.label.setOrientation('vertical')
-                if self.moveLabel:
-                    self.topLayout.addWidget(self.label, 1, 0)
                 self.widgetArea.setStyleSheet(self.vStyle)
             else:
-                self.label.setOrientation('horizontal')
-                if self.moveLabel:
-                    self.topLayout.addWidget(self.label, 0, 1)
                 self.widgetArea.setStyleSheet(self.hStyle)
         else:
             self.hideTitleBar(False)
@@ -213,6 +207,12 @@ class ShelfDock(Dock):
 
     def setUUID(self, uuid: str):
         self._name = uuid
+
+    def containerChanged(self, c):
+        if self._container is not None:
+            self._container.onDockChangedContainers(self)
+        super().containerChanged(c)
+
 
 class ShelfDockLabel(DockLabel):
     def __init__(self, text, closable=False, fontSize="12px"):

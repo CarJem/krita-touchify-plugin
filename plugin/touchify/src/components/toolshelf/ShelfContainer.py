@@ -1,11 +1,13 @@
 
 from typing import TYPE_CHECKING
 
-from jemlib.alib_pyqtgraph.dockarea.Container import HContainer, TContainer, VContainer
+from jemlib.alib_pyqtgraph.dockarea.Container import HContainer, VContainer, Container
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
+from jemlib.alib_pyqtgraph.dockarea.Dock import Dock
 
 
 
@@ -50,6 +52,9 @@ class ShelfContainer(object):
             return ShelfContainer.asContainer(container)
         else:
             return None
+        
+    def onDockChangedContainers(self, c: "ShelfDock"):
+        pass
 
     @staticmethod
     def isContainer(obj: object):
@@ -233,17 +238,88 @@ class ShelfHContainer(ShelfContainer, HContainer):
         ShelfContainer.setEditMode(self, state)
         ShelfSplitterContainer.setEditMode(self, state)
 
-class ShelfTContainer(ShelfContainer, TContainer):
+class ShelfTContainer(ShelfContainer, Container, QWidget):
+
+    class StackedWidget(QStackedWidget):
+        def __init__(self, *, container):
+            super().__init__()
+            self.container = container
+
+        def childEvent(self, ev):
+            super().childEvent(ev)
+            self.container.childEvent_(ev)
+
+    sigStretchChanged = pyqtSignal()
     def __init__(self, area):
-        TContainer.__init__(self, area)
+        QWidget.__init__(self)
         ShelfContainer.__init__(self)
+        Container.__init__(self, area)
+
+        self._orientation = 'horizontal'
+
+        self.gridLayout = QGridLayout()
+        self.gridLayout.setSpacing(0)
+        self.gridLayout.setContentsMargins(0,0,0,0)
+        self.setLayout(self.gridLayout)
+        
+        self.hTabBox = QTabBar()
+        self.hTabBox.setMovable(False)
+        self.hTabBox.setContentsMargins(0,0,0,0)
+        self.hTabBox.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        self.hTabBox.currentChanged.connect(self.tabChanged)
+        self.gridLayout.addWidget(self.hTabBox, 0, 1, 1, 2)
+
+        self.stack = self.StackedWidget(container=self)
+        self.gridLayout.addWidget(self.stack, 1, 1, 1, 2)
+        self.setLayout(self.gridLayout)
+
+    def count(self):
+        return self.stack.count()
+    
+    def widget(self, i: int):
+        return self.stack.widget(i)
+
+    def indexOf(self, i: QWidget | None):
+        return self.stack.indexOf(i)
+
+    def _insertItem(self, item, index):
+        if not isinstance(item, Dock):
+            raise Exception("Tab containers may hold only docks, not other containers.")
+        self.stack.insertWidget(index, item)
+        index = self.hTabBox.insertTab(index, item.title())
+        self.hTabBox.setTabData(index, item.name())
+        self.hTabBox.setCurrentIndex(index)
+        
+    def tabChanged(self):
+        self.stack.setCurrentIndex(self.hTabBox.currentIndex())
+        
+    def raiseDock(self, dock):
+        """Move *dock* to the top of the stack"""
+        self.hTabBox.blockSignals(True)
+        self.stack.setCurrentWidget(dock)
+        self.hTabBox.setCurrentIndex(self.indexOf(dock))
+        self.hTabBox.blockSignals(False)
+        
+    def type(self):
+        return 'tab'
+        
+    def updateStretch(self):
+        ##Set the stretch values for this container to reflect its contents
+        x = 0
+        y = 0
+        for i in range(self.count()):
+            wx, wy = self.widget(i).stretch()
+            x = max(x, wx)
+            y = max(y, wy)
+        self.setStretch(x, y)
 
     def saveState(self):
-        return TContainer.saveState(self) | ShelfContainer.saveState(self)
+        return {'index': self.stack.currentIndex()} | ShelfContainer.saveState(self)
     
     def restoreState(self, state):
-        TContainer.restoreState(self, state)
+        self.stack.setCurrentIndex(state['index'])
         ShelfContainer.restoreState(self, state)
+
 
     def setItemFold(self, item: "ShelfDock", state: bool):
         #if not ShelfContainer.setItemFold(self, item, state): return
@@ -253,4 +329,22 @@ class ShelfTContainer(ShelfContainer, TContainer):
         #if all(self.widget(x).isHidden() for x in range(self.count())) == True: self.hide()
         #else: self.show()
         pass
+
+    def onDockChangedContainers(self, c: "ShelfDock"):
+        idx = 0
+        name = c.name()
+        while idx < self.hTabBox.count():
+            current_name = self.hTabBox.tabData(idx)
+            if current_name == c.name():
+                self.hTabBox.removeTab(idx)
+                idx = 0
+            else:
+                idx+=1
+
+            
+                
+            
+            
+
+            
 

@@ -162,7 +162,7 @@ class ShelfWidget(QWidget):
             self.is_restricted = False
 
         self.hasPreloaded = False
-        self._hideTitlebar = False
+        self._showTitlebar = False
         
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.setContentsMargins(0,0,0,0)
@@ -277,8 +277,11 @@ class ShelfWidget(QWidget):
     #region Getters / Setters
 
     def setTitlebarVisibility(self, state: bool):
-        self._hideTitlebar = state
+        self._showTitlebar = state
         self.header.setVisible(state)
+    
+    def getTitlebarVisibility(self):
+        return self._showTitlebar
 
     def setEditMode(self, state: bool) -> bool:
         self.optionsMenu.editModeAction.setChecked(state)
@@ -481,7 +484,7 @@ class ShelfWidget(QWidget):
         self.header.reload(state, self.currentPresetId())
         self.optionsMenu.reload(self.currentPresetId())
 
-        self.header.setVisible(self._hideTitlebar)
+        self.header.setVisible(self._showTitlebar)
 
         Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | loading_layout: reload display')
         self.display.shelfReloadEvent(state)

@@ -24,6 +24,18 @@ class ShelfDockArea(DockArea):
     
     #region Overrides
 
+    def addContainer(self, typ, obj):
+        """Add a new container around obj"""
+        new = self.makeContainer(typ)
+        
+        container = self.getContainer(obj)
+        container.insert(new, 'before', obj)
+        #print "Add container:", new, " -> ", container
+        if obj is not None:
+            new.insert(obj)
+        self.dockdrop.raiseOverlay()
+        return new
+
     def makeContainer(self, typ):
         from touchify.src.components.toolshelf.ShelfContainer import ShelfHContainer, ShelfTContainer, ShelfVContainer
         if typ == 'vertical':
