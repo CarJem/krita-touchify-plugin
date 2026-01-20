@@ -1,104 +1,68 @@
+from typing import TYPE_CHECKING
 from jemlib.api_krita.wrappers.window import WindowAPI
-from jemlib.managers.IconRepository import IconRepository
 from krita import *
+
 from touchify.src.settings.TouchifySettings import TouchifySettings
 from PyQt5.QtWidgets import *
+if TYPE_CHECKING:
+    from touchify.src.PluginManagers import TouchifyManagers
 
 
 class BrushEditorTweak(QObject):
 
-    def __init__(self, window: WindowAPI):
+    def __init__(self, window: WindowAPI, managers: "TouchifyManagers"):
+        super().__init__(window.qwindow)
         self.qWin = window.qwindow
         self.notifier = window.notifier
+        self.managers = managers
+        self._blockSignals = False
 
-        self.stack_docker: BrushEditorTweakContainer | None = None
-        self.stack_index: int | None = None
+    def eventFilter(self, a0: QObject, a1: QEvent):
+        if TouchifySettings.preferences().Styles_DockedBrushEditor:
+            if a1.type() == QEvent.Type.Resize or a1.type() == QEvent.Type.Move:
+                if not self._blockSignals: self.update()
+        return super().eventFilter(a0, a1)
 
-    def Get_DockArea(self) -> QStackedWidget | None:
-        mdi_area: QMdiArea = self.qWin.findChild(QMdiArea)
-        if not mdi_area: return None
-
-        stack_area: QStackedWidget = mdi_area.parentWidget()
-        if not stack_area: return None
-        if not isinstance(stack_area, QStackedWidget): return None
-
-        return stack_area
-
-    def Get_Editor(self):
+    def installTweak(self):
         container = self.qWin.findChild(QWidget, "KisPaintOpPresetsEditor")
         if not container: return None
         if not container.isVisible(): return None
 
         editor = container.parentWidget()
-        if not editor: return None
-
-        return editor
-
-    def Subwindow_Spawn(self):
-        if self.stack_docker: return
-
-        docking_area = self.Get_DockArea()
-        if not docking_area: return None
-
-        editor = self.Get_Editor()
         if not editor: return
 
-        self.stack_docker = BrushEditorTweakContainer(docking_area, self, editor)
-        stack_index = docking_area.addWidget(self.stack_docker)
-        docking_area.setCurrentIndex(stack_index)
+        if not editor.property("eventFilterInstalled"):
+            editor.setProperty("eventFilterInstalled", True)
+            editor.installEventFilter(self)
+            self.update()
 
-    def Subwindow_Kill(self):
-        if self.stack_docker == None: return
-        self.stack_docker.OnEvent_Close()
+    def update(self):
+        if not TouchifySettings.preferences().Styles_DockedBrushEditor: return
 
-    def Update_State(self):
+        container = self.qWin.findChild(QWidget, "KisPaintOpPresetsEditor")
+        if not container: return None
+        if not container.isVisible(): return None
+
+        editor = container.parentWidget()
+        if not editor: return
+
+        canvas = self.managers.mgr_canvas.active_canvas
+        self._blockSignals = True
+        editor.move(canvas.mapToGlobal(QPoint(0,0)))
+        editor.resize(canvas.size())
+        if editor.size() != canvas.size():
+            editor_bounds = QRect(canvas.pos(), editor.size())
+            editor_bounds.moveCenter(canvas.mapToGlobal(canvas.rect().center()))
+            editor.move(editor_bounds.topLeft())
+        self._blockSignals = False
+
+    def refresh(self):
+
         is_docked = TouchifySettings.preferences().Styles_DockedBrushEditor
+        if is_docked: self.installTweak()
+
         fix_zoom = TouchifySettings.preferences().Styles_BrushEditorZoomFix
-
-        if is_docked: self.Subwindow_Spawn()
-        else: self.Subwindow_Kill()
-
         if fix_zoom:
             canvas = self.notifier.getCurrentCanvas()
             if canvas: canvas.resetZoom()
 
-class BrushEditorTweakContainer(QWidget):
-    def __init__(self, parent: QStackedWidget, tweak: "BrushEditorTweak", editor: QWidget):
-        super().__init__(parent)
-        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
-        self.setContentsMargins(0,0,0,0)
-
-        self.Stack = parent
-        self.Tweak = tweak
-
-        self.lay = QVBoxLayout(self)
-        self.lay.setContentsMargins(0,0,0,0)
-        self.lay.setSpacing(0)
-        self.setLayout(self.lay)
-
-        self.close_action = QAction(self)
-        self.close_action.setIcon(IconRepository.kritaIcon("window-close"))
-        self.close_action.setText("Close")
-        self.close_action.setToolTip("Close")
-        self.close_action.triggered.connect(self.OnEvent_Close)
-
-        self.toolbar = QToolBar(self)
-        self.toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
-        self.toolbar.addAction(self.close_action)
-        self.lay.addWidget(self.toolbar)
-
-        self.OnEvent_Show(editor)
-
-    def OnEvent_Close(self):
-        self.editor.setParent(self.__widget_last_parent)
-        self.editor.setWindowFlags(self.__widget_last_winflags)
-
-        self.Stack.removeWidget(self)
-        self.Tweak.stack_docker = None
-        self.close()
-
-    def OnEvent_Show(self, editor: QWidget):
-        self.editor = editor
-        self.__widget_last_parent = editor.parent()
-        self.__widget_last_winflags = editor.windowFlags()
-        self.lay.addWidget(editor)

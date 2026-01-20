@@ -34,11 +34,11 @@ class TweakManager(QObject):
         self.api_window = self.app_window.api_window
         self.qt_window = self.api_window.qwindow
         self.qt_window.themeChanged.connect(self.rebuildStyleSheet)
-        self.brush_editor_tweak = BrushEditorTweak(self.app_window.api_window)
+        self.brush_editor_tweak = BrushEditorTweak(self.app_window.api_window, self.app_window.managers)
         self.rebuildStyleSheet()
 
     def onBrushEditorTrigged(self):
-        self.brush_editor_tweak.Update_State()
+        self.brush_editor_tweak.refresh()
 
     #endregion
 
@@ -77,12 +77,12 @@ class TweakManager(QObject):
     def brushEditorZoomFixToggled(self, toggled):
         TouchifySettings.preferences().Styles_BrushEditorZoomFix = toggled
         TouchifySettings.preferences().save()
-        self.brush_editor_tweak.Update_State()
+        self.brush_editor_tweak.refresh()
 
     def dockedBrushEditorToggled(self, toggled):
         TouchifySettings.preferences().Styles_DockedBrushEditor = toggled
         TouchifySettings.preferences().save()
-        self.brush_editor_tweak.Update_State()
+        self.brush_editor_tweak.refresh()
 
     def toolbarBorderToggled(self, toggled):
         TouchifySettings.preferences().Styles_BorderlessToolbar = toggled
