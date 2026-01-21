@@ -1,0 +1,189 @@
+{
+    "registry_name": "Test",
+    "preset_data": {
+        "grids": [
+            {
+                "brush_presets": [
+                    {
+                        "uuid": "e4dec921-b932-4771-b39b-3121546b8cca",
+                        "trigger_data": {
+                            "registry_id": "NewTrigger",
+                            "variant": "action",
+                            "display_icon_hide": false,
+                            "display_icon_padding": 0,
+                            "display_custom_icon_enabled": false,
+                            "display_custom_icon": "",
+                            "display_text_hide": false,
+                            "display_custom_text_enabled": false,
+                            "display_custom_text": "",
+                            "extra_closes_popup": false,
+                            "extra_composer_mode": false,
+                            "action_id": "ZoomTool",
+                            "brush_name": "",
+                            "docker_id": "",
+                            "workspace_id": "",
+                            "color_id": "#000000",
+                            "menu_data": [],
+                            "script_data": {
+                                "script_name": "New Script",
+                                "script_code": ""
+                            },
+                            "refrenced_menu": "",
+                            "refrenced_dockergroup": "none",
+                            "refrenced_popup": "none",
+                            "refrenced_canvaspreset": "none",
+                            "refrenced_script": "",
+                            "refrenced_piewheel": "",
+                            "json_version": 3
+                        }
+                    },
+                    {
+                        "uuid": "c0aac0ec-1348-4d6f-8cc0-4a649f0cbc4c",
+                        "trigger_data": {
+                            "registry_id": "NewTrigger",
+                            "variant": "action",
+                            "display_icon_hide": false,
+                            "display_icon_padding": 0,
+                            "display_custom_icon_enabled": false,
+                            "display_custom_icon": "",
+                            "display_text_hide": false,
+                            "display_custom_text_enabled": false,
+                            "display_custom_text": "",
+                            "extra_closes_popup": false,
+                            "extra_composer_mode": false,
+                            "action_id": "view_zoom_out",
+                            "brush_name": "",
+                            "docker_id": "",
+                            "workspace_id": "",
+                            "color_id": "#000000",
+                            "menu_data": [],
+                            "script_data": {
+                                "script_name": "New Script",
+                                "script_code": ""
+                            },
+                            "refrenced_menu": "",
+                            "refrenced_dockergroup": "none",
+                            "refrenced_popup": "none",
+                            "refrenced_canvaspreset": "none",
+                            "refrenced_script": "",
+                            "refrenced_piewheel": "",
+                            "json_version": 3
+                        }
+                    },
+                    {
+                        "uuid": "c20ab8e5-c09d-4a85-93c0-a0b74957a8a5",
+                        "trigger_data": {
+                            "registry_id": "NewTrigger",
+                            "variant": "action",
+                            "display_icon_hide": false,
+                            "display_icon_padding": 0,
+                            "display_custom_icon_enabled": false,
+                            "display_custom_icon": "",
+                            "display_text_hide": false,
+                            "display_custom_text_enabled": false,
+                            "display_custom_text": "",
+                            "extra_closes_popup": false,
+                            "extra_composer_mode": false,
+                            "action_id": "view_zoom_out",
+                            "brush_name": "",
+                            "docker_id": "",
+                            "workspace_id": "",
+                            "color_id": "#000000",
+                            "menu_data": [],
+                            "script_data": {
+                                "script_name": "New Script",
+                                "script_code": ""
+                            },
+                            "refrenced_menu": "",
+                            "refrenced_dockergroup": "none",
+                            "refrenced_popup": "none",
+                            "refrenced_canvaspreset": "none",
+                            "refrenced_script": "",
+                            "refrenced_piewheel": "",
+                            "json_version": 3
+                        }
+                    },
+                    {
+                        "uuid": "d7b9abc6-5aa1-4090-b055-fe179d657f38",
+                        "trigger_data": {
+                            "registry_id": "NewTrigger",
+                            "variant": "action",
+                            "display_icon_hide": false,
+                            "display_icon_padding": 0,
+                            "display_custom_icon_enabled": false,
+                            "display_custom_icon": "",
+                            "display_text_hide": false,
+                            "display_custom_text_enabled": false,
+                            "display_custom_text": "",
+                            "extra_closes_popup": false,
+                            "extra_composer_mode": false,
+                            "action_id": "view_zoom_out",
+                            "brush_name": "",
+                            "docker_id": "",
+                            "workspace_id": "",
+                            "color_id": "#000000",
+                            "menu_data": [],
+                            "script_data": {
+                                "script_name": "New Script",
+                                "script_code": ""
+                            },
+                            "refrenced_menu": "",
+                            "refrenced_dockergroup": "none",
+                            "refrenced_popup": "none",
+                            "refrenced_canvaspreset": "none",
+                            "refrenced_script": "",
+                            "refrenced_piewheel": "",
+                            "json_version": 3
+                        }
+                    },
+                    {
+                        "uuid": "2677459f-574b-4da1-b298-e9ac075522a6",
+                        "trigger_data": {
+                            "registry_id": "NewTrigger",
+                            "variant": "action",
+                            "display_icon_hide": false,
+                            "display_icon_padding": 0,
+                            "display_custom_icon_enabled": false,
+                            "display_custom_icon": "",
+                            "display_text_hide": false,
+                            "display_custom_text_enabled": false,
+                            "display_custom_text": "",
+                            "extra_closes_popup": false,
+                            "extra_composer_mode": false,
+                            "action_id": "view_zoom_out",
+                            "brush_name": "",
+                            "docker_id": "",
+                            "workspace_id": "",
+                            "color_id": "#000000",
+                            "menu_data": [],
+                            "script_data": {
+                                "script_name": "New Script",
+                                "script_code": ""
+                            },
+                            "refrenced_menu": "",
+                            "refrenced_dockergroup": "none",
+                            "refrenced_popup": "none",
+                            "refrenced_canvaspreset": "none",
+                            "refrenced_script": "",
+                            "refrenced_piewheel": "",
+                            "json_version": 3
+                        }
+                    }
+                ],
+                "name": "Group 1",
+                "is_collapsed": false,
+                "is_active": true,
+                "layout": {
+                    "override_global_style": false,
+                    "max_brush_per_row": 8,
+                    "spacing_between_buttons": 1,
+                    "brush_icon_size": 65,
+                    "list_mode": false,
+                    "list_column_count": 1,
+                    "display_brush_names": true
+                },
+                "ui": null
+            }
+        ]
+    }
+}

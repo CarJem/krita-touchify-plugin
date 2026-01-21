@@ -1,6 +1,7 @@
 import types
 from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
+from touchify.src.config.quick_actions.QuickActionsPreset import QuickActionsPreset
 from touchify.src.config.script.CustomScript import CustomScript
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 from touchify.src.config.triggers.Trigger import Trigger
@@ -35,6 +36,7 @@ class ResourcePack:
         self.shelves: TypedList[Toolshelf] = []
         self.scripts: TypedList[CustomScript] = []
         self.pie_wheels: TypedList[PieWheelData] = []
+        self.quick_actions: TypedList[QuickActionsPreset] = []
 
     def __init__(self, location: str = "") -> None:
         self.__defaults__()
@@ -61,6 +63,7 @@ class ResourcePack:
         self.shelves = TypedList(self.shelves, Toolshelf)
         self.scripts = TypedList(self.scripts, CustomScript)
         self.pie_wheels = TypedList(self.pie_wheels, PieWheelData)
+        self.quick_actions = TypedList(self.quick_actions, QuickActionsPreset)
 
 
     def __str__(self):
@@ -129,6 +132,9 @@ class ResourcePack:
                 elif os.path.isdir(contentPath) and contentName == "pie_wheels":
                     self.pie_wheels = loadItems(contentPath, PieWheelData)
 
+                elif os.path.isdir(contentPath) and contentName == "quick_actions":
+                    self.quick_actions = loadItems(contentPath, QuickActionsPreset)
+
             self.INTERNAL_has_loaded = True
         except Exception as err:
             print("Loading Resource Pack: ", err)
@@ -190,8 +196,6 @@ class ResourcePack:
 
                 JsonExtensions.saveClassToFile(outputData, filePath)
             
-
-
         JsonExtensions.saveClassToFile(self.metadata, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "metadata.json"))
         saveItems(self.triggers, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "triggers"))
         saveItems(self.menus, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "menus"))
@@ -202,6 +206,7 @@ class ResourcePack:
         saveItems(self.canvas_presets, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "canvas_presets"))
         saveItems(self.scripts, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "scripts"))
         saveItems(self.pie_wheels, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "pie_wheels"))
+        saveItems(self.quick_actions, os.path.join(self.INTERNAL_ROOT_DIRECTORY, "quick_actions"))
 
         removed_files: list[str] = list(set(self.INTERNAL_active_files).difference(found_files))
         for file in removed_files:
@@ -236,6 +241,7 @@ class ResourcePack:
             "docker_groups",
             "canvas_presets",
             "pie_wheels",
+            "quick_actions",
             "scripts"
         ]
 
@@ -250,6 +256,7 @@ class ResourcePack:
         labels["canvas_presets"] = "Canvas Presets"
         labels["metadata"] = "Metadata"
         labels["pie_wheels"] = "Pie Wheels"
+        labels["quick_actions"] = "Quick Actions"
         labels["scripts"] = "Scripts"
         return labels
 
@@ -264,5 +271,6 @@ class ResourcePack:
         restrictions["docker_groups"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
         restrictions["canvas_presets"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
         restrictions["scripts"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
+        restrictions["quick_actions"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
         restrictions["pie_wheels"] = [RS.listMod(RS.ListMod.Inmovable), RS.listMod(RS.ListMod.NestedTabs), RSA.registryListMod()]
         return restrictions

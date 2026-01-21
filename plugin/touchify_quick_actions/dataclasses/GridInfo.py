@@ -73,6 +73,16 @@ class GridInfo:
 
     def propertygrid_view_type(self):
         return "sections"
+    
+    def dump(self):
+        result = GridInfo()
+        result.brush_presets = self.brush_presets
+        result.name = self.name
+        result.is_collapsed = self.is_collapsed
+        result.is_active = self.is_active
+        result.layout = self.layout
+        result.ui = None
+        return result
 
     @staticmethod
     def createEmpty(name: str):

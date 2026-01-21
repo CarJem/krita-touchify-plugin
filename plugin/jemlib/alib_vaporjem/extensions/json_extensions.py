@@ -30,7 +30,9 @@ class JsonExtensions:
         try:
             with open(filePath) as f:
                 return type(**json.load(f))
-        except:
+        except Exception as ex:
+            print("failed to load json class of type: " + str(type))
+            print(ex)
             return type()
             
     def saveClassToFile(data: any, filePath: str, check_circular=True, allow_private=False):

@@ -15,9 +15,7 @@ from .config_utils import (
     get_brush_name_font_size,
     get_brush_name_label_height,
     load_common_config,
-    save_common_config,
-    load_grids_data,
-    save_grids_data,
+    save_common_config
 )
 from .drag_utils import encode_single, encode_multi, decode_single, decode_multi
 
@@ -35,8 +33,6 @@ __all__ = [
     # data_manager
     "load_common_config",
     "save_common_config",
-    "load_grids_data",
-    "save_grids_data",
     # drag_utils
     "encode_single",
     "encode_multi",

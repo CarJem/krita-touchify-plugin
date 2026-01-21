@@ -10,14 +10,15 @@ class GridConfig:
         JsonExtensions.dictToObject(self, args, [GridInfo])
         self.grids = JsonExtensions.init_list(args, "grids", GridInfo)
 
-    def dump(self):
-        return {
-            "grids": [{
-                "brush_presets": x.brush_presets,
-                "name": x.name,
-                "is_collapsed": x.is_collapsed,
-                "is_active": x.is_active,
-                "layout": x.layout
-            } for x in self.grids]
-        }
+    def restore(self):
+        result = []
+        for x in self.grids:
+            item = GridInfo()
+            item.brush_presets = x.brush_presets
+            item.is_active = x.is_active
+            item.is_collapsed = x.is_collapsed
+            item.layout = x.layout
+            item.name = x.name
+            result.append(item)
+        return result
 

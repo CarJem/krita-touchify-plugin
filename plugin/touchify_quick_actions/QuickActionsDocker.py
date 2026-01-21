@@ -16,14 +16,21 @@ The docker inherits from multiple mixins to organize functionality:
 import re
 from typing import TYPE_CHECKING
 import uuid
+from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.api_touchify.env import TouchifyEnv
+from jemlib.managers.KritaSettings import KritaSettings
 from krita import DockWidgetFactory, DockWidgetFactoryBase  # type: ignore
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from touchify.src.PluginOptions import PluginOptions
+from touchify.src.config.quick_actions.QuickActionsPreset import QuickActionsPreset
 from touchify.src.config.triggers.Trigger import Trigger
+from touchify.src.settings.TouchifySettings import TouchifySettings
+from touchify_quick_actions.dataclasses import VariousClasses
 from touchify_quick_actions.dataclasses.CommonConfig import CommonConfig
+from touchify_quick_actions.dataclasses.GridConfig import GridConfig
 from touchify_quick_actions.dataclasses.GridInfo import GridInfo
 from touchify_quick_actions.dataclasses.GridPresetItem import GridPresetItem
 from touchify.src.alib_propertygrid.dialogs.QuickTriggerPickerDialog import QuickTriggerPickerDialog
@@ -40,9 +47,7 @@ from .utils.styles import *
 from .utils.config_utils import (
     get_common_config,
     load_common_config,
-    load_grids_data,
     save_common_config,
-    save_grids_data,
     get_list_column_count,
     get_list_mode,
     get_spacing_between_grids,
@@ -91,7 +96,7 @@ class QuickActionsDocker(QDockWidget):
         self.actions_manager = None
 
         self.__isSavePending = False
-        self.__reloadOnSave = False
+        self.__property_dlg = None
         #endregion
 
         """Initialize the docker UI layout."""
@@ -284,11 +289,6 @@ class QuickActionsDocker(QDockWidget):
         self.refresh_styles()
         self.reload_grids()
 
-    def onSaveGridsRequested(self):
-        """Actually perform the save operation."""
-        self.__isSavePending = False
-        save_grids_data(self.grids)
-
     def onResizeCompleted(self):
         """Called after resize events have stopped; Update all grids with recalculated column count"""
         for grid_info in self.grids:
@@ -480,7 +480,7 @@ class QuickActionsDocker(QDockWidget):
         if not result: return
         
         grid_info.layout = result
-        save_grids_data(self.grids)
+        self.force_save_grids()
         self.reload_grids()
         
     def rename_grid(self, grid_info: GridInfo=None):
@@ -787,6 +787,56 @@ class QuickActionsDocker(QDockWidget):
         self.delete_selected_grids(None, True)
         self.load_grids()
 
+    def switch_preset(self):
+        ac: QAction = self.sender()
+        if not isinstance(ac, QAction): return
+        id: str = ac.data()
+        if not isinstance(id, str): return
+        self.set_current_preset(id)
+        self.reload_grids()
+    
+    def save_preset_as(self):
+        self.__property_dlg = PluginOptions.Setup(self.__property_dlg, self.api_window.qwindow.window(), VariousClasses.PresetSaveAs())
+        result: VariousClasses.PresetSaveAs = self.__property_dlg.exec_()
+        if not result: return
+
+        current_state = self.get_grids_data()
+        if not current_state: return
+
+        selectedResourcePackIndex: int = int(result.resource_pack) - 1
+        if selectedResourcePackIndex <= -1: return
+
+        selectedResourcePack = TouchifySettings.resourcePacks()[selectedResourcePackIndex]
+    
+        result: QuickActionsPreset = QuickActionsPreset()
+        result.registry_name = result.display_name
+        result.preset_data = current_state
+        selectedResourcePack.quick_actions.append(result)
+        TouchifySettings.save()
+        TouchifySettings.load()
+        self.reload_grids()
+
+    def delete_preset(self):
+        shelfToDelete = self.get_current_preset()
+        shelfRegistryKey = self.get_current_preset_key()
+
+        if shelfToDelete == None or shelfToDelete == "none":
+            return
+        
+        shelfParentResourcePack = shelfRegistryKey.getResourcePack()
+        if shelfParentResourcePack == None:
+            return
+        
+        shelfParentResourcePack.quick_actions.remove(shelfToDelete)
+
+        self.set_current_preset("none")
+        TouchifySettings.save()
+        TouchifySettings.load()
+        self.reload_grids()
+
+    def reset_grids(self):
+        pass
+
     def show_settings(self):
         settings_menu = QMenu()
 
@@ -796,9 +846,76 @@ class QuickActionsDocker(QDockWidget):
 
         settings_menu.addSeparator()
 
+        presets_menu = settings_menu.addMenu("Presets...")
+        self.show_presets_menu(presets_menu)
+
+        settings_menu.addSeparator()
+
         settings_menu.addAction("Quick Access Settings...", self.show_settings_dialog)
 
         settings_menu.exec_(QCursor.pos())
+
+    def show_presets_menu(self, menuTarget: QMenu):
+        isNoPresetActive = self.get_current_preset_id() == "none"
+
+        menus: dict[str, QMenu] = {}
+        sub_menus: dict[str, dict[str, QMenu]] = {}
+
+        registry = TouchifySettings.registry(QuickActionsPreset)
+        if registry != None:
+            for key, preset in registry.items():
+                if not key.id in menus:
+                    menus[key.id] = menuTarget.addMenu(key.name)
+                    sub_menus[key.id] = {}
+
+                preset: QuickActionsPreset
+                preset_group: str = ""
+
+                action = QAction(preset.registry_name, self)
+                action.setCheckable(True)
+                if self.get_current_preset_id() == key.actual_key:
+                    action.setChecked(True)
+                action.setData(key.actual_key)
+                action.triggered.connect(self.switch_preset)
+
+                if preset_group == "":
+                    menus[key.id].addAction(action)
+                else:
+                    if not preset_group in sub_menus[key.id]:
+                        sub_menus[key.id][preset_group] = menus[key.id].addMenu(preset_group)
+                    sub_menus[key.id][preset_group].addAction(action)
+
+        if len(menuTarget.actions()) == 0:
+            noActions = menuTarget.addAction("No Presets Avaliable")
+            noActions.setEnabled(False)
+
+
+        menuTarget.addSeparator()
+
+        noPresetAction = menuTarget.addAction("No Preset")
+        noPresetAction.setCheckable(True)
+        noPresetAction.setChecked(isNoPresetActive)
+        noPresetAction.setData("none")
+        noPresetAction.triggered.connect(self.switch_preset)
+        menuTarget.addSeparator()
+
+
+        if not isNoPresetActive:
+            presetSaveAsAction = menuTarget.addAction("Save as...")
+            presetSaveAsAction.setEnabled(True)
+            presetSaveAsAction.triggered.connect(self.save_preset_as)
+
+            presetDeleteAction = menuTarget.addAction("Delete")
+            presetDeleteAction.setEnabled(True)
+            presetDeleteAction.triggered.connect(self.delete_preset)
+        else:
+            presetSaveAsAction = menuTarget.addAction("Export to Preset...")
+            presetSaveAsAction.setEnabled(True)
+            presetSaveAsAction.triggered.connect(self.save_preset_as)
+
+            resetAction = menuTarget.addAction("Reset Layout")
+            resetAction.setEnabled(True)
+            resetAction.triggered.connect(self.reset_grids)
 
     def show_settings_dialog(self):
         """Show settings dialog and apply changes."""
@@ -1239,7 +1356,7 @@ class QuickActionsDocker(QDockWidget):
 
     def load_grids(self):
         """Load preset resources and grid data."""
-        self.grids, self.grid_counter = load_grids_data()
+        self.grids, self.grid_counter = self.load_grids_data()
         if not self.grids: 
             self.add_new_grid()
             return
@@ -1251,16 +1368,76 @@ class QuickActionsDocker(QDockWidget):
                 
             if self.grids: self.set_active_grid(self.grids[0])
 
+    def load_grids_data(self):
+        if self.get_current_preset_id().lower() != "none":
+            grid_config = self.get_current_preset().preset_data
+        else:
+            jsonStr = KritaSettings.readSetting(TouchifyEnv.SettingsPath.QUICK_ACTIONS, "fallback_data", "")
+            grid_config = JsonExtensions.loadClass(jsonStr, GridConfig)
+            
+        grids = grid_config.restore()
+        return grids, len(grids)
+
     def save_grids(self):
         """Schedule grids data save with debouncing to avoid excessive file writes."""
         if self.__isSavePending:
             return
         self.__isSavePending = True
-        QTimer.singleShot(_SAVE_DEBOUNCE, self.onSaveGridsRequested)
+        QTimer.singleShot(_SAVE_DEBOUNCE, self.force_save_grids)
+    
+    def force_save_grids(self):
+        """Actually perform the save operation."""
+        self.__isSavePending = False
+        state = self.get_grids_data()
+        if not state: return
+
+        if self.get_current_preset_id().lower() != "none":
+            cached_state = self.get_current_preset()
+            cached_state.preset_data = state
+            TouchifySettings.save()
+        else:
+            jsonStr = JsonExtensions.saveClass(state)
+            KritaSettings.writeSetting(TouchifyEnv.SettingsPath.QUICK_ACTIONS, "fallback_data", jsonStr, False)
 
     #endregion
 
     #region Get/Set Functions
+
+    def get_current_preset_key(self):
+        registry = TouchifySettings.registry(QuickActionsPreset)
+        registry_selection: str = self.get_current_preset_id()
+
+        if registry_selection in registry:
+            keys = [key for key, val in registry.items() if key.actual_key == registry_selection]
+            return keys[0]
+        else: 
+            return "none"
+    
+    def get_current_preset(self):
+        registry = TouchifySettings.registry(QuickActionsPreset)
+        registry_selection = self.get_current_preset_id()
+
+        if registry_selection in registry:
+            return registry[registry_selection]    
+        else: 
+            return QuickActionsPreset()
+
+    def get_current_preset_id(self):
+        fallback_val = "none"
+        return KritaSettings.readSetting(TouchifyEnv.SettingsPath.QUICK_ACTIONS, "current_preset", fallback_val)
+
+    def set_current_preset(self, id: str):
+        KritaSettings.writeSetting(TouchifyEnv.SettingsPath.QUICK_ACTIONS, "current_preset", id, False)
+
+    def get_grids_data(self):
+        try:
+            from touchify_quick_actions.dataclasses.GridConfig import GridConfig
+            cfg = GridConfig()
+            cfg.grids = [x.dump() for x in self.grids]
+            return cfg
+        except Exception as e:
+            print(f"Error generating Grid Config: {e}")
+            return None
 
     def set_active_grid(self, grid_info: GridInfo):
         """Set a grid as active"""

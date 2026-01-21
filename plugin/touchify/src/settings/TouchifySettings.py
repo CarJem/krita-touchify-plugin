@@ -4,6 +4,7 @@ from PyQt5.QtCore import *
 
 
 from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
+from touchify.src.config.quick_actions.QuickActionsPreset import QuickActionsPreset
 from touchify.src.config.resource_pack.ResourcePack import ResourcePack
 from touchify.src.config.TouchifyRegistry import TouchifyRegistry
 from touchify.src.config.canvas_preset.CanvasPreset import CanvasPreset
@@ -17,7 +18,7 @@ from touchify.src.config.context_menu.ContextMenu import ContextMenu
 from jemlib.api_touchify.env import *
 
 
-RegistryItemType = None | ContextMenu | PopupData | DockerGroup | CanvasPreset | Toolshelf | ToolboxData | CustomScript | PieWheelData
+RegistryItemType = None | ContextMenu | PopupData | DockerGroup | CanvasPreset | Toolshelf | ToolboxData | CustomScript | PieWheelData | QuickActionsPreset
 
 class TouchifySettings:
 
@@ -125,6 +126,11 @@ class TouchifySettings:
                     item: PieWheelData
                     id = f"{pack.INTERNAL_UUID_ID}/pie_wheels/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
+            elif type == QuickActionsPreset:
+                for item in pack.quick_actions:
+                    item: QuickActionsPreset
+                    id = f"{pack.INTERNAL_UUID_ID}/quick_actions/{item.INTERNAL_UUID_ID}"
+                    if item_id == id: return item
 
         return None
 
@@ -174,6 +180,11 @@ class TouchifySettings:
                 for item in pack.pie_wheels:
                     item: PieWheelData
                     id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "pie_wheels", item.INTERNAL_UUID_ID)
+                    results[id] = item
+            elif type == QuickActionsPreset:
+                for item in pack.quick_actions:
+                    item: QuickActionsPreset
+                    id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "quick_actions", item.INTERNAL_UUID_ID)
                     results[id] = item
 
         return results
