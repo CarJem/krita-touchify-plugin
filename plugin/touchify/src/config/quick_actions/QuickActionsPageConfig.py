@@ -3,19 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints as RS
 
-class CommonConfig:
-
-    class Shortcut:
-        def __init__(self, **args) -> None:
-            self.add_brush_to_grid = "W"
-            self.choose_left_in_grid = ","
-            self.choose_right_in_grid = "."
-            self.wrap_around_navigation = True
-            JsonExtensions.dictToObject(self, args, [])
-
-        def propertygrid_view_type(self):
-            return "form_alt"
-
+class QuickActionsPageConfig:
     class Layout:
         def __init__(self, **args) -> None:
             self.max_brush_per_row = 8
@@ -53,24 +41,19 @@ class CommonConfig:
             return "form_alt"
         
     def __init__(self, **args) -> None:
-        #self.shortcut = CommonConfig.Shortcut()
-        self.layout = CommonConfig.Layout()
-        JsonExtensions.dictToObject(self, args, [CommonConfig.Shortcut, CommonConfig.Layout])
+        self.layout = QuickActionsPageConfig.Layout()
+        JsonExtensions.dictToObject(self, args, [QuickActionsPageConfig.Layout])
         
     def propertygrid_sorted(self):
         return [
-            "shortcut",
             "layout",
         ]
     
     def propertygrid_hidden(self):
-        return [
-            "shortcut"
-        ]
+        return []
 
     def propertygrid_labels(self):
         labels = {}
-        labels["shortcut"] = "Shortcut"
         labels["layout"] = "Layout"
         return labels
     

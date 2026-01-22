@@ -18,13 +18,13 @@ from jemlib.alib_widgets.widget.DropIndicatorOverlay import DropIndicatorOverlay
 
 if TYPE_CHECKING:
     from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
-    from touchify_quick_actions.dataclasses.GridInfo import GridInfo
+    from touchify.src.config.quick_actions.QuickActionsGrid import QuickActionsGrid
 
 
 class DraggableGridWidgetHeader(QWidget):
     """A draggable widget containing the collapse button and name button for a grid."""
     
-    def __init__(self, grid_info: "GridInfo", parent_docker: "QuickActionsDocker"):
+    def __init__(self, grid_info: "QuickActionsGrid", parent_docker: "QuickActionsDocker"):
         super().__init__()
         self.grid_info = grid_info
         self.parent_docker = parent_docker
@@ -133,7 +133,7 @@ class DraggableGridWidgetHeader(QWidget):
         
         return [self.grid_info]
     
-    def _create_drag_pixmap(self, grids: list["GridInfo"]):
+    def _create_drag_pixmap(self, grids: list["QuickActionsGrid"]):
         """Create a visual representation of the grids being dragged."""
         from PyQt5.QtGui import QPixmap
         

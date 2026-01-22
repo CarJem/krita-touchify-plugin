@@ -50,6 +50,23 @@ class CanvasManager(QObject):
     def Actions_Init(self, window: WindowAPI, path: str):
         pass
 
+    def currentBrushPreset(self):
+        current_view = self.api_window.active_view
+        if not current_view: return None
+
+        window_views = self.api_window.views
+        if current_view not in window_views: return None
+
+        return current_view.brush_preset
+    
+    def underMouse(self):
+        if not self.active_canvas: return False
+        return self.active_canvas.underMouse()
+
+    def hasFocus(self):
+        if not self.active_canvas: return False
+        return self.active_canvas.hasFocus()
+
     def OnEvent_ActiveViewChanged(self):
         if self.active_canvas != None:
             try: self.active_canvas.removeEventFilter(self)

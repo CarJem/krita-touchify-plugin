@@ -1,189 +1,842 @@
 {
-    "registry_name": "Test",
-    "preset_data": {
-        "grids": [
-            {
-                "brush_presets": [
-                    {
-                        "uuid": "e4dec921-b932-4771-b39b-3121546b8cca",
-                        "trigger_data": {
-                            "registry_id": "NewTrigger",
-                            "variant": "action",
-                            "display_icon_hide": false,
-                            "display_icon_padding": 0,
-                            "display_custom_icon_enabled": false,
-                            "display_custom_icon": "",
-                            "display_text_hide": false,
-                            "display_custom_text_enabled": false,
-                            "display_custom_text": "",
-                            "extra_closes_popup": false,
-                            "extra_composer_mode": false,
-                            "action_id": "ZoomTool",
-                            "brush_name": "",
-                            "docker_id": "",
-                            "workspace_id": "",
-                            "color_id": "#000000",
-                            "menu_data": [],
-                            "script_data": {
-                                "script_name": "New Script",
-                                "script_code": ""
-                            },
-                            "refrenced_menu": "",
-                            "refrenced_dockergroup": "none",
-                            "refrenced_popup": "none",
-                            "refrenced_canvaspreset": "none",
-                            "refrenced_script": "",
-                            "refrenced_piewheel": "",
-                            "json_version": 3
-                        }
+    "preset_name": "Test",
+    "preset_pages": [
+        {
+            "name": "General",
+            "icon": "",
+            "grids": [
+                {
+                    "name": "Brushes",
+                    "is_collapsed": false,
+                    "is_active": true,
+                    "layout": {
+                        "override_global_style": false,
+                        "max_brush_per_row": 8,
+                        "spacing_between_buttons": 1,
+                        "brush_icon_size": 65,
+                        "list_mode": false,
+                        "list_column_count": 1,
+                        "display_brush_names": true
                     },
-                    {
-                        "uuid": "c0aac0ec-1348-4d6f-8cc0-4a649f0cbc4c",
-                        "trigger_data": {
-                            "registry_id": "NewTrigger",
-                            "variant": "action",
-                            "display_icon_hide": false,
-                            "display_icon_padding": 0,
-                            "display_custom_icon_enabled": false,
-                            "display_custom_icon": "",
-                            "display_text_hide": false,
-                            "display_custom_text_enabled": false,
-                            "display_custom_text": "",
-                            "extra_closes_popup": false,
-                            "extra_composer_mode": false,
-                            "action_id": "view_zoom_out",
-                            "brush_name": "",
-                            "docker_id": "",
-                            "workspace_id": "",
-                            "color_id": "#000000",
-                            "menu_data": [],
-                            "script_data": {
-                                "script_name": "New Script",
-                                "script_code": ""
-                            },
-                            "refrenced_menu": "",
-                            "refrenced_dockergroup": "none",
-                            "refrenced_popup": "none",
-                            "refrenced_canvaspreset": "none",
-                            "refrenced_script": "",
-                            "refrenced_piewheel": "",
-                            "json_version": 3
+                    "brush_presets": [
+                        {
+                            "uuid": "2e144cc3-3b02-4305-9698-42f6f508dc61",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "c) Pencil-1 Hard",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "fa72a9c6-1830-4d29-ab80-258f9db7612a",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "c) Pencil-3 Large 4B",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "ad740716-e453-4ba1-9e30-d25f4ee186cc",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "c) Pencil-2",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "7c1d421f-7d31-414d-b01d-cbb5d482309d",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "c) Pencil-4 Soft",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "fa1f91d3-4a4e-498c-9049-43c97ef264ec",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "c) Pencil-5 Tilted",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "bc88945d-2bf5-47c2-b2cc-3c0196c1f7ef",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "c) Pencil-6 Quick Shade",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "c0059a4c-7144-4920-95ff-d93e460ff5f9",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "Eraser soft",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "52c9f9fe-2fc5-4b8b-ac5a-c67b0d030649",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "f) Bristles-2 Flat Rough",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "7544d2ea-053c-434d-99c3-5c3d1b1d9130",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "f) Bristles-5 Flat",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "b4ff0522-bce9-4cea-9907-41035e1dad23",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "f) Charcoal Rock Soft",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "7626d13a-3bc6-49d2-b59c-632f92bb3d5b",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "f) Dry Roller",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "785bfbe0-086c-49f0-8d4b-77543e7cd2d0",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "g) Dry Brushing",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "0831c02f-1417-46b5-891b-c22980c0ad21",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "h) Chalk Details",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "45b55d5e-3280-4642-bc13-c13fa5744530",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "h) Chalk Grainy",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "c4ce64cd-10a5-4e00-a3e9-60140f2f0c03",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "h) Chalk Soft",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "f39a2a5b-1190-49e3-9d7c-c08077cd8a7a",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "h) Charcoal pencil large",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "e26c793a-2b3b-4faa-8ca3-be133153a9c5",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "h) Charcoal Pencil Medium",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "a21eaef9-040a-43c7-b97d-b8c5fb0cb79a",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "h) Charcoal Pencil Thin",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "22b17d02-c476-492f-83ff-86f2a179aa17",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "k) Blender Basic",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "800925e3-514d-4dd4-8580-260d7e9006d5",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "k) Blender Rake",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "99306081-c730-4f31-b869-4431cd103941",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "k) Blender Smear",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "8a4b1df3-bbed-4a55-a01e-4679ffd03e36",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "Pencil 2B",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "65b7928f-b304-472d-aa39-4ca4a6b28e68",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "a) Eraser Circle",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
+                        },
+                        {
+                            "uuid": "0871356b-7433-4658-b151-3f5545a5e1c9",
+                            "trigger_data": {
+                                "registry_id": "NewTrigger",
+                                "variant": "brush",
+                                "display_icon_hide": false,
+                                "display_icon_padding": 0,
+                                "display_custom_icon_enabled": false,
+                                "display_custom_icon": "",
+                                "display_text_hide": false,
+                                "display_custom_text_enabled": false,
+                                "display_custom_text": "",
+                                "extra_closes_popup": false,
+                                "extra_composer_mode": false,
+                                "action_id": "",
+                                "brush_name": "a) Eraser Small",
+                                "docker_id": "",
+                                "workspace_id": "",
+                                "color_id": "#000000",
+                                "menu_data": [],
+                                "script_data": {
+                                    "script_name": "New Script",
+                                    "script_code": ""
+                                },
+                                "refrenced_menu": "",
+                                "refrenced_dockergroup": "none",
+                                "refrenced_popup": "none",
+                                "refrenced_canvaspreset": "none",
+                                "refrenced_script": "",
+                                "refrenced_piewheel": "",
+                                "json_version": 3
+                            }
                         }
-                    },
-                    {
-                        "uuid": "c20ab8e5-c09d-4a85-93c0-a0b74957a8a5",
-                        "trigger_data": {
-                            "registry_id": "NewTrigger",
-                            "variant": "action",
-                            "display_icon_hide": false,
-                            "display_icon_padding": 0,
-                            "display_custom_icon_enabled": false,
-                            "display_custom_icon": "",
-                            "display_text_hide": false,
-                            "display_custom_text_enabled": false,
-                            "display_custom_text": "",
-                            "extra_closes_popup": false,
-                            "extra_composer_mode": false,
-                            "action_id": "view_zoom_out",
-                            "brush_name": "",
-                            "docker_id": "",
-                            "workspace_id": "",
-                            "color_id": "#000000",
-                            "menu_data": [],
-                            "script_data": {
-                                "script_name": "New Script",
-                                "script_code": ""
-                            },
-                            "refrenced_menu": "",
-                            "refrenced_dockergroup": "none",
-                            "refrenced_popup": "none",
-                            "refrenced_canvaspreset": "none",
-                            "refrenced_script": "",
-                            "refrenced_piewheel": "",
-                            "json_version": 3
-                        }
-                    },
-                    {
-                        "uuid": "d7b9abc6-5aa1-4090-b055-fe179d657f38",
-                        "trigger_data": {
-                            "registry_id": "NewTrigger",
-                            "variant": "action",
-                            "display_icon_hide": false,
-                            "display_icon_padding": 0,
-                            "display_custom_icon_enabled": false,
-                            "display_custom_icon": "",
-                            "display_text_hide": false,
-                            "display_custom_text_enabled": false,
-                            "display_custom_text": "",
-                            "extra_closes_popup": false,
-                            "extra_composer_mode": false,
-                            "action_id": "view_zoom_out",
-                            "brush_name": "",
-                            "docker_id": "",
-                            "workspace_id": "",
-                            "color_id": "#000000",
-                            "menu_data": [],
-                            "script_data": {
-                                "script_name": "New Script",
-                                "script_code": ""
-                            },
-                            "refrenced_menu": "",
-                            "refrenced_dockergroup": "none",
-                            "refrenced_popup": "none",
-                            "refrenced_canvaspreset": "none",
-                            "refrenced_script": "",
-                            "refrenced_piewheel": "",
-                            "json_version": 3
-                        }
-                    },
-                    {
-                        "uuid": "2677459f-574b-4da1-b298-e9ac075522a6",
-                        "trigger_data": {
-                            "registry_id": "NewTrigger",
-                            "variant": "action",
-                            "display_icon_hide": false,
-                            "display_icon_padding": 0,
-                            "display_custom_icon_enabled": false,
-                            "display_custom_icon": "",
-                            "display_text_hide": false,
-                            "display_custom_text_enabled": false,
-                            "display_custom_text": "",
-                            "extra_closes_popup": false,
-                            "extra_composer_mode": false,
-                            "action_id": "view_zoom_out",
-                            "brush_name": "",
-                            "docker_id": "",
-                            "workspace_id": "",
-                            "color_id": "#000000",
-                            "menu_data": [],
-                            "script_data": {
-                                "script_name": "New Script",
-                                "script_code": ""
-                            },
-                            "refrenced_menu": "",
-                            "refrenced_dockergroup": "none",
-                            "refrenced_popup": "none",
-                            "refrenced_canvaspreset": "none",
-                            "refrenced_script": "",
-                            "refrenced_piewheel": "",
-                            "json_version": 3
-                        }
-                    }
-                ],
-                "name": "Group 1",
-                "is_collapsed": false,
-                "is_active": true,
+                    ],
+                    "ui": null
+                }
+            ],
+            "settings": {
                 "layout": {
-                    "override_global_style": false,
                     "max_brush_per_row": 8,
                     "spacing_between_buttons": 1,
+                    "spacing_between_grids": 1,
                     "brush_icon_size": 65,
                     "list_mode": false,
                     "list_column_count": 1,
-                    "display_brush_names": true
-                },
-                "ui": null
+                    "display_brush_names": true,
+                    "exclusive_uncollapse": false
+                }
             }
-        ]
+        }
+    ],
+    "preset_selected_page": 0,
+    "preset_settings": {
+        "shortcut": {
+            "enable_add_brush_to_grid": false,
+            "add_brush_to_grid": "W"
+        },
+        "layout": {
+            "display_pages_as": "tabs"
+        }
     }
 }

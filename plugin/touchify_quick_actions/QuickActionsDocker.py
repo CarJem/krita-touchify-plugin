@@ -16,8 +16,12 @@ The docker inherits from multiple mixins to organize functionality:
 import re
 from typing import TYPE_CHECKING
 import uuid
+from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
+from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.api_touchify.env import TouchifyEnv
+from jemlib.managers.GlobalEvents import GlobalEvents
+from jemlib.managers.IconRepository import IconRepository
 from jemlib.managers.KritaSettings import KritaSettings
 from krita import DockWidgetFactory, DockWidgetFactoryBase  # type: ignore
 from PyQt5.QtGui import *
@@ -25,15 +29,17 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from touchify.src.PluginOptions import PluginOptions
+from touchify.src.config.quick_actions.QuickActionsPage import QuickActionsPage
+from touchify.src.config.quick_actions.QuickActionsPageConfig import QuickActionsPageConfig
 from touchify.src.config.quick_actions.QuickActionsPreset import QuickActionsPreset
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.settings.TouchifySettings import TouchifySettings
-from touchify_quick_actions.dataclasses import VariousClasses
-from touchify_quick_actions.dataclasses.CommonConfig import CommonConfig
-from touchify_quick_actions.dataclasses.GridConfig import GridConfig
-from touchify_quick_actions.dataclasses.GridInfo import GridInfo
-from touchify_quick_actions.dataclasses.GridPresetItem import GridPresetItem
+from touchify_quick_actions.dataclasses import SourceSaveAs
+from touchify.src.config.quick_actions.QuickActionsPresetConfig import QuickActionsPresetConfig
+from touchify.src.config.quick_actions.QuickActionsGrid import QuickActionsGrid
+from touchify.src.config.quick_actions.QuickActionsItem import QuickActionsItem
 from touchify.src.alib_propertygrid.dialogs.QuickTriggerPickerDialog import QuickTriggerPickerDialog
+from touchify_quick_actions.dataclasses.SourcePageData import SourcePageData
 from touchify_quick_actions.dialogs.SettingsDialog import SettingsDialog
 from touchify_quick_actions.widgets.MenuIconButton import MenuIconButton
 
@@ -44,22 +50,14 @@ from .widgets.DraggableGridWidgetHeader import DraggableGridWidgetHeader, Dragga
 from .widgets.DraggableGridButton import DraggableGridButton
 
 from .utils.styles import *
-from .utils.config_utils import (
-    get_common_config,
-    load_common_config,
-    save_common_config,
-    get_list_column_count,
-    get_list_mode,
-    get_spacing_between_grids,
-    get_brush_icon_size,
-    reload_common_config,
-    get_spacing_between_buttons,
-    get_display_brush_names,
-    get_brush_name_label_height
-)
 
-# Pattern for auto-generated group names
+# Module-level cache for configuration
+_config_cache = None
+_page_config_cache = None
+
+# Pattern for auto-generated names
 _GROUP_NAME_PATTERN = re.compile(r"^Group\s+(\d+)$")
+_PAGE_NAME_PATTERN = re.compile(r"^Page\s+(\d+)$")
 
 # Timer intervals (ms)
 _RESIZE_DEBOUNCE = 50
@@ -79,8 +77,12 @@ class QuickActionsDocker(QDockWidget):
         
         """Initialize all instance state variables."""
         #region
-        self.grids: list[GridInfo] = []
-        self.active_grid: GridInfo = None
+        self.grids: list[QuickActionsGrid] = []
+        self.active_grid: QuickActionsGrid = None
+        self.pages: list[SourcePageData] = []
+        self.current_page: SourcePageData = None
+        self.tabs: list[QWidget] = []
+        self.dropdown_items: list[QAction] = []
         self.main_widget = None
         self.main_grid_layout = None
         self.grid_counter = 0
@@ -89,8 +91,8 @@ class QuickActionsDocker(QDockWidget):
         self.brush_buttons = []
         self.selected_buttons = []
         self.last_selected_button = None
-        self.selected_grids: list[GridInfo] = []
-        self.last_selected_grid: GridInfo = None
+        self.selected_grids: list[QuickActionsGrid] = []
+        self.last_selected_grid: QuickActionsGrid = None
         self._add_brush_qt_key = Qt.Key_W
         self.dlg = None
         self.actions_manager = None
@@ -129,13 +131,26 @@ class QuickActionsDocker(QDockWidget):
         main_layout.addWidget(self.top_row_widget)
         #endregion
 
+        """Create tab bar."""
+        #region
+        tab_bar_layout = QHBoxLayout()
+        tab_bar_layout.setSpacing(0)
+        tab_bar_layout.setContentsMargins(0,0,0,0)
+
+        self.tab_bar_widget = QWidget()
+        self.tab_bar_widget.setContentsMargins(0,0,0,0)
+        self.tab_bar_widget.setAutoFillBackground(True)
+        self.tab_bar_widget.setLayout(tab_bar_layout)
+        main_layout.addWidget(self.tab_bar_widget)
+        #endregion
+
         """Create the scrollable grids section."""
         #region
         self.main_widget = QWidget()
         self.main_widget.mousePressEvent = self.mainWidgetPressEvent
         self.main_grid_layout = QVBoxLayout()
         self.main_grid_layout.setAlignment(Qt.AlignTop)
-        self.main_grid_layout.setSpacing(get_spacing_between_grids())
+        self.main_grid_layout.setSpacing(self.get_spacing_between_grids())
         self.main_grid_layout.setContentsMargins(0, 0, 0, 0)
         self.main_widget.setLayout(self.main_grid_layout)
 
@@ -165,13 +180,15 @@ class QuickActionsDocker(QDockWidget):
         """Schedule initial layout update"""
         #region
         QTimer.singleShot(100, self.onResizeCompleted)
-        self.load_grids()
+        self.load()
         #endregion
 
     def setup(self, instance: "TouchifyWindow"):
         qApp.paletteChanged.connect(self.onPaletteChanged)
         self.api_window = instance.api_window
         self.actions_manager = instance.managers.mgr_actions
+        self.canvas_manager = instance.managers.mgr_canvas
+        GlobalEvents().SIGNAL_KEY_RELEASED.connect(self.onGlobalKeyRelease)
         self.reload_grids()
 
     #region Event Handlers
@@ -203,7 +220,7 @@ class QuickActionsDocker(QDockWidget):
                 self.clear_selection()
         QScrollArea.mousePressEvent(self.scroll_area, event)
 
-    def nameButtonPressEvent(self, name_button: QPushButton, grid_info: "GridInfo"):
+    def nameButtonPressEvent(self, name_button: QPushButton, grid_info: "QuickActionsGrid"):
         """Create mousePressEvent handler for name button.
         
         Note: Drag initiation is handled by the parent DraggableGridRow widget.
@@ -218,7 +235,7 @@ class QuickActionsDocker(QDockWidget):
             QPushButton.mousePressEvent(name_button, event)
         return handler
 
-    def nameButtonReleaseEvent(self, name_button: QPushButton, grid_info: "GridInfo"):
+    def nameButtonReleaseEvent(self, name_button: QPushButton, grid_info: "QuickActionsGrid"):
         """Create mouseReleaseEvent handler for name button"""
         def handler(event):
             if event.button() == Qt.LeftButton:
@@ -239,7 +256,7 @@ class QuickActionsDocker(QDockWidget):
             QPushButton.mouseReleaseEvent(name_button, event)
         return handler
 
-    def nameButtonDoubleClickEvent(self, name_button: QPushButton, grid_info: "GridInfo"):
+    def nameButtonDoubleClickEvent(self, name_button: QPushButton, grid_info: "QuickActionsGrid"):
         """Create mouseDoubleClickEvent handler for name button"""
         def handler(event):
             if event.button() == Qt.LeftButton:
@@ -247,7 +264,7 @@ class QuickActionsDocker(QDockWidget):
             QPushButton.mouseDoubleClickEvent(name_button, event)
         return handler
     
-    def nameButtonRightClickEvent(self, event, name_button: QPushButton, grid_info: "GridInfo"):
+    def nameButtonRightClickEvent(self, event, name_button: QPushButton, grid_info: "QuickActionsGrid"):
         """Handle right-click on grid name button"""
         mods = QApplication.keyboardModifiers()
         if mods == Qt.ShiftModifier:
@@ -263,7 +280,7 @@ class QuickActionsDocker(QDockWidget):
         elif (mods & (Qt.ControlModifier | Qt.AltModifier | Qt.ShiftModifier)) == (Qt.ControlModifier | Qt.AltModifier | Qt.ShiftModifier):
             self.delete_selected_grids(grid_info)
 
-    def nameButtonContextMenuEvent(self, name_widget: QPushButton, grid_info: "GridInfo", global_pos):
+    def nameButtonContextMenuEvent(self, name_widget: QPushButton, grid_info: "QuickActionsGrid", global_pos):
         """Show context dialog for grid name on right-click"""
         if grid_info in self.selected_grids and len(self.selected_grids) > 1:
             target_grid = None
@@ -279,10 +296,98 @@ class QuickActionsDocker(QDockWidget):
 
         settings_menu.exec_(QCursor.pos())
 
+    def tabButtonPressEvent(self, name_button: QPushButton, page_info: "SourcePageData"):
+        """Create mousePressEvent handler for name button.
+        
+        Note: Drag initiation is handled by the parent DraggableGridRow widget.
+        """
+        def handler(event):
+            if event.button() == Qt.RightButton:
+                self.tabButtonRightClickEvent(event, name_button, page_info)
+            elif event.button() == Qt.LeftButton:
+                # Track click start for detecting clicks vs. drags
+                name_button.click_pos = event.globalPos()
+                # Let the event propagate to the parent DraggableGridRow for drag handling
+            QPushButton.mousePressEvent(name_button, event)
+        return handler
+
+    def tabButtonReleaseEvent(self, name_button: QPushButton, page_info: "SourcePageData"):
+        """Create mouseReleaseEvent handler for tab button"""
+        def handler(event):
+            if event.button() == Qt.LeftButton:
+                # Only handle click if it wasn't a drag
+                click_pos = getattr(name_button, 'click_pos', None)
+                if click_pos:
+                    drag_distance = (event.globalPos() - click_pos).manhattanLength()
+                    # If this was a click (not a drag), handle selection
+                    if drag_distance < QApplication.startDragDistance():
+                        mods = QApplication.keyboardModifiers()
+                        if mods == Qt.ShiftModifier:
+                            pass
+                        elif mods == Qt.ControlModifier:
+                            pass
+                        else:
+                            pass
+                name_button.click_pos = None
+            QPushButton.mouseReleaseEvent(name_button, event)
+        return handler
+
+    def tabButtonDoubleClickEvent(self, name_button: QPushButton, page_info: "SourcePageData"):
+        """Create mouseDoubleClickEvent handler for tab button"""
+        def handler(event):
+            QPushButton.mouseDoubleClickEvent(name_button, event)
+
+        return handler
+    
+    def tabButtonRightClickEvent(self, event, name_button: QPushButton, page_info: "SourcePageData"):
+        """Handle right-click on tab button"""
+        mods = QApplication.keyboardModifiers()
+        if mods == Qt.ShiftModifier:
+            self.tabButtonContextMenuEvent(name_button, page_info, event.globalPos())
+        elif mods == Qt.ControlModifier:
+            self.tabButtonContextMenuEvent(name_button, page_info, event.globalPos())
+        elif mods == Qt.NoModifier:
+            self.tabButtonContextMenuEvent(name_button, page_info, event.globalPos())
+        elif mods == Qt.AltModifier:
+            pass
+        elif (mods & (Qt.ControlModifier | Qt.AltModifier | Qt.ShiftModifier)) == (Qt.ControlModifier | Qt.AltModifier | Qt.ShiftModifier):
+            pass
+
+    def tabButtonContextMenuEvent(self, name_widget: QPushButton, page_info: "SourcePageData", global_pos):
+        """Show context dialog for grid name on right-click"""
+        settings_menu = QMenu()
+
+        settings_menu.addAction("Change Name...", lambda: self.rename_page(page_info))
+        settings_menu.addAction("Change Icon...", lambda: self.edit_page_icon(page_info))
+        settings_menu.addAction("Change Properties...", self.show_page_settings_dialog)
+        settings_menu.addSeparator()
+        settings_menu.addAction("Delete Page", lambda: self.delete_page(page_info))
+
+        settings_menu.exec_(QCursor.pos())
+
 
     #endregion
 
     #region Signal Recievers
+
+    def onTabChanged(self):
+        if isinstance(self.sender(), QAction):
+            ac: QAction = self.sender()
+            btn: SourcePageData = ac.data()
+            self.switch_page(btn)
+        elif isinstance(self.sender(), QPushButton):
+            ac: QPushButton = self.sender()
+            btn: SourcePageData = ac.property("data")
+            self.switch_page(btn)
+    
+    def onTabDropdownAboutToShow(self):
+        menu: QMenu = self.sender()
+        button: QPushButton = menu.parentWidget()
+        menu.setMinimumWidth(button.width())
+    
+    def onGlobalKeyRelease(self, event: QKeyEvent):
+        if event.text().lower() == self.get_brush_add_key() and self.get_enable_add_brush_to_grid():
+            self.add_current_brush()
 
     def onPaletteChanged(self):
         Stylemap.instance(True)
@@ -316,7 +421,7 @@ class QuickActionsDocker(QDockWidget):
                 header_row.drop_position = None
                 header_row.update()
 
-    def onInlineGridRenameStart(self, grid_info: GridInfo):
+    def onInlineGridRenameStart(self, grid_info: QuickActionsGrid):
         """Turn the grid name button into an inline editable textbox."""
 
         def _create_inline_editor(parent, text):
@@ -353,7 +458,7 @@ class QuickActionsDocker(QDockWidget):
 
     def onInlineGridRenameFinish(self, editor: QLineEdit, apply_change: bool):
         """Finalize inline rename: apply or discard, then restore the button."""
-        grid_info: GridInfo = getattr(editor, "_grid_info", None)
+        grid_info: QuickActionsGrid = getattr(editor, "_grid_info", None)
         original_name: str = getattr(editor, "_original_name", None)
 
         if not grid_info or original_name is None:
@@ -448,7 +553,7 @@ class QuickActionsDocker(QDockWidget):
         next_num = _get_next_group_number()
         self.grid_counter = max(self.grid_counter, next_num)
         
-        grid_info = GridInfo.createEmpty(f"Group {next_num}")
+        grid_info = QuickActionsGrid.createEmpty(f"Group {next_num}")
         self.grids.append(grid_info)
         grid_container = self.create_grid_ui(grid_info)
         self.main_grid_layout.addWidget(grid_container)
@@ -456,34 +561,91 @@ class QuickActionsDocker(QDockWidget):
         
         if len(self.grids) == 1:
             self.set_active_grid(grid_info)
-        self.save_grids()
+        self.save_page_buffered()
 
     def add_new_button(self):
         def accept(source: Trigger):
-            new_item = GridPresetItem(uuid=str(uuid.uuid4()), trigger_data=source)
+            new_item = QuickActionsItem(uuid=str(uuid.uuid4()), trigger_data=source)
             self.active_grid.brush_presets.append(new_item)
         
             self.update_grid(self.active_grid)
-            self.save_grids()
+            self.save_page_buffered()
 
         dlg = QuickTriggerPickerDialog(None)
         dlg.sigOnNewItem.connect(accept)
         dlg.exec()
 
-    def edit_grid(self, grid_info: GridInfo=None):
+    def add_new_page(self):
+        """Add a new page with auto-generated name."""
+
+        def _get_next_page_number():
+            """Calculate the next available page number."""
+            existing_numbers = []
+            for grid in self.grids:
+                name = str(grid.name).strip()
+                match = _PAGE_NAME_PATTERN.match(name)
+                if match:
+                    existing_numbers.append(int(match.group(1)))
+            return max(existing_numbers, default=0) + 1
+
+        next_num = _get_next_page_number()
+        next_page = QuickActionsPage.createEmpty(f"Page {next_num}")
+
+        cached_data = self.get_current_preset_data()
+        cached_data.preset_pages.append(next_page)
+        self.save(cached_data)
+        self.reload_grids()
+
+    def add_current_brush(self):
+        # Get current brush preset
+    
+        current_preset = self.canvas_manager.currentBrushPreset()
+        if current_preset and self.active_grid:
+            # Add to the active grid instead of the last grid
+            active_grid = self.active_grid
+
+            # Check if preset already exists in any grid
+            all_presets: list[str] = []
+            for grid in self.grids:
+                items = [p.trigger_data.brush_name for p in grid.brush_presets if p.trigger_data and p.trigger_data.variant == Trigger.Variants.Brush]
+                all_presets.extend(items)
+
+            if current_preset not in all_presets:
+                new_item = QuickActionsItem.fromBrush(uuid=str(uuid.uuid4()),brush_id=current_preset)
+                active_grid.brush_presets.append(new_item)
+                self.update_grid(active_grid)
+                self.save_page_buffered()
+
+    def edit_grid(self, grid_info: QuickActionsGrid=None):
         """Show edit grid settings dialog and apply changes."""
         if grid_info is None:
             return
         
         self.dlg = SettingsDialog.Setup(self.dlg, self.api_window, "Grid Options", grid_info.layout)
-        result: GridInfo.Layout = self.dlg.exec_()
+        result: QuickActionsGrid.Layout = self.dlg.exec_()
         if not result: return
         
         grid_info.layout = result
-        self.force_save_grids()
+        self.save_page()
         self.reload_grids()
+    
+    def edit_page_icon(self, page_info: SourcePageData=None):
+        if page_info is None:
+            return
         
-    def rename_grid(self, grid_info: GridInfo=None):
+        def _onAccept(result: str):
+            self.dlg.close()
+            cached_data = self.get_current_preset_data()
+            cached_data.preset_pages[page_info.index].icon = result
+            self.save(cached_data)
+            self.reload_grids()
+
+        self.dlg: PropertyGrid_SelectorDialog = PropertyGrid_SelectorDialog.Setup(self.dlg, None, "icon_picker", {})
+        self.dlg.load_list(DataConstraints.StrMod.IconSelection)
+        self.dlg.onAcceptFunction = _onAccept
+        self.dlg.exec()
+
+    def rename_grid(self, grid_info: QuickActionsGrid=None):
         """Rename grid(s) - handles both single and multiple selection."""
 
         def _rename_next_grid(grids_remaining):
@@ -541,6 +703,21 @@ class QuickActionsDocker(QDockWidget):
         )
         if ok and new_name.strip():
             self.update_grid_name_ui(grid_info, new_name.strip())
+    
+    def rename_page(self, page_info: SourcePageData=None):
+        """Rename page"""
+
+        if page_info is None:
+            return
+        
+        new_name, ok = QInputDialog.getText(
+            self, "Rename Page", "Enter new page name:", text=page_info.name
+        )
+        if ok and new_name.strip():
+            cached_data = self.get_current_preset_data()
+            cached_data.preset_pages[page_info.index].name = new_name
+            self.save(cached_data)
+            self.reload_grids()
 
     def delete_item(self):
         """Handle click on the delete button (deletelayer icon)"""
@@ -557,14 +734,14 @@ class QuickActionsDocker(QDockWidget):
         grids_to_update = {}
         for button in self.selected_buttons:
             if hasattr(button, 'grid_info') and hasattr(button, 'preset'):
-                grid_info: GridInfo = button.grid_info
+                grid_info: QuickActionsGrid = button.grid_info
                 grid_name = grid_info.name
                 if grid_name not in grids_to_update:
                     grids_to_update[grid_name] = {"grid_info": grid_info, "presets": []}
                 grids_to_update[grid_name]["presets"].append(button.preset)
         
         for grid_data in grids_to_update.values():
-            grid_info: GridInfo = grid_data["grid_info"]
+            grid_info: QuickActionsGrid = grid_data["grid_info"]
             presets_to_remove = grid_data["presets"]
             for preset in presets_to_remove:
                 for i, p in enumerate(grid_info.brush_presets):
@@ -573,9 +750,9 @@ class QuickActionsDocker(QDockWidget):
             self.update_grid(grid_info)
         
         self.clear_selection()
-        self.save_grids()
+        self.save_page_buffered()
 
-    def delete_selected_grids(self, grid_info: GridInfo=None, no_save: bool = False):
+    def delete_selected_grids(self, grid_info: QuickActionsGrid=None, no_save: bool = False):
         """Remove grid(s) - handles both single and multiple selection."""
 
         def _cleanup_grid_buttons(layout):
@@ -589,7 +766,7 @@ class QuickActionsDocker(QDockWidget):
                     widget.setParent(None)
                     widget.deleteLater()
 
-        def _remove_single_grid(sub_grid_info: GridInfo):
+        def _remove_single_grid(sub_grid_info: QuickActionsGrid):
             """Remove a single grid and its UI elements."""
             if sub_grid_info not in self.grids:
                 return
@@ -619,7 +796,7 @@ class QuickActionsDocker(QDockWidget):
             if self.active_grid:
                 self.set_active_grid(self.active_grid)
             
-            if not no_save: self.save_grids()
+            if not no_save: self.save_page_buffered()
         
 
         if grid_info is None and self.selected_grids:
@@ -633,7 +810,15 @@ class QuickActionsDocker(QDockWidget):
         if grid_info:
             _remove_single_grid(grid_info)
 
-    def move_grid(self, grid_info: GridInfo, direction: int):
+    def delete_page(self, page_info: "SourcePageData"):
+        cached_data = self.get_current_preset_data()
+        if (0 < page_info.index) and (page_info.index < len(cached_data.preset_pages)):
+            cached_data.preset_pages.pop(page_info.index)
+            cached_data.preset_selected_page = 0
+        self.save(cached_data)
+        self.reload_grids()
+
+    def move_grid(self, grid_info: QuickActionsGrid, direction: int):
         """Move a grid up or down in the list"""
         idx = self.grids.index(grid_info)
         new_idx = idx + direction
@@ -641,7 +826,7 @@ class QuickActionsDocker(QDockWidget):
             self.grids.pop(idx)
             self.grids.insert(new_idx, grid_info)
             self.rebuild_grid_layout()
-            self.save_grids()
+            self.save_page_buffered()
 
     def move_grids_to_position(self, source_grids, target_grid, insert_after=False):
         """Move source grids to a new position relative to target grid.
@@ -686,10 +871,17 @@ class QuickActionsDocker(QDockWidget):
         self.rebuild_grid_layout()
         self.update_grid_selection_highlights()
 
+    def switch_page(self, page_info: "SourcePageData"):
+        print(f"Switching to: {page_info.name}:{page_info.index}")
+        cached_data = self.get_current_preset_data()
+        cached_data.preset_selected_page = page_info.index
+        self.save(cached_data)
+        self.reload_grids()
+
     def select_button(self, button, add_to_selection=False, range_selection=False):
         """Select a button with optional modifiers"""
 
-        def get_buttons_in_range(button1, button2, grid_info: GridInfo):
+        def get_buttons_in_range(button1, button2, grid_info: QuickActionsGrid):
             """Get all buttons between button1 and button2 in the grid"""
             if button1 == button2:
                 return [button1]
@@ -738,14 +930,14 @@ class QuickActionsDocker(QDockWidget):
         
         self.update_selection_highlights()
     
-    def select_single_grid(self, grid_info: GridInfo):
+    def select_single_grid(self, grid_info: QuickActionsGrid):
         """Select a single grid, deselecting all others"""
         self.selected_grids = [grid_info]
         self.last_selected_grid = grid_info
         self.set_active_grid(grid_info)
         self.update_grid_selection_highlights()
 
-    def select_grid_range(self, grid_info: GridInfo):
+    def select_grid_range(self, grid_info: QuickActionsGrid):
         """Select a range of grids from last_selected_grid to grid_info"""
         if not self.last_selected_grid or self.last_selected_grid == grid_info:
             self.selected_grids = [grid_info]
@@ -785,7 +977,8 @@ class QuickActionsDocker(QDockWidget):
     def reload_grids(self):
         self.selected_grids = self.grids.copy()
         self.delete_selected_grids(None, True)
-        self.load_grids()
+        self.delete_tab_ui()
+        self.load()
 
     def switch_preset(self):
         ac: QAction = self.sender()
@@ -796,12 +989,12 @@ class QuickActionsDocker(QDockWidget):
         self.reload_grids()
     
     def save_preset_as(self):
-        self.__property_dlg = PluginOptions.Setup(self.__property_dlg, self.api_window.qwindow.window(), VariousClasses.PresetSaveAs())
-        result: VariousClasses.PresetSaveAs = self.__property_dlg.exec_()
+        self.__property_dlg = PluginOptions.Setup(self.__property_dlg, self.api_window, SourceSaveAs.PresetSaveAs())
+        result: SourceSaveAs.PresetSaveAs = self.__property_dlg.exec_()
         if not result: return
 
-        current_state = self.get_grids_data()
-        if not current_state: return
+        preset_data = self.get_current_preset_data()
+        if not preset_data: return
 
         selectedResourcePackIndex: int = int(result.resource_pack) - 1
         if selectedResourcePackIndex <= -1: return
@@ -809,15 +1002,18 @@ class QuickActionsDocker(QDockWidget):
         selectedResourcePack = TouchifySettings.resourcePacks()[selectedResourcePackIndex]
     
         result: QuickActionsPreset = QuickActionsPreset()
-        result.registry_name = result.display_name
-        result.preset_data = current_state
+        result.preset_name = result.display_name
+        result.preset_pages = preset_data.preset_pages
+        result.preset_settings = preset_data.preset_settings
+        result.preset_selected_page = preset_data.preset_selected_page
         selectedResourcePack.quick_actions.append(result)
+        
         TouchifySettings.save()
         TouchifySettings.load()
         self.reload_grids()
 
     def delete_preset(self):
-        shelfToDelete = self.get_current_preset()
+        shelfToDelete = self.get_current_preset_data(False)
         shelfRegistryKey = self.get_current_preset_key()
 
         if shelfToDelete == None or shelfToDelete == "none":
@@ -842,6 +1038,8 @@ class QuickActionsDocker(QDockWidget):
 
         settings_menu.addAction("Add Grid Item...", self.add_new_button)
         settings_menu.addAction("Add Grid Group", self.add_new_grid)
+        settings_menu.addAction("Add Grid Page", self.add_new_page)
+        settings_menu.addSeparator()
         settings_menu.addAction("Delete Selected Item", self.delete_item)
 
         settings_menu.addSeparator()
@@ -851,7 +1049,8 @@ class QuickActionsDocker(QDockWidget):
 
         settings_menu.addSeparator()
 
-        settings_menu.addAction("Quick Access Settings...", self.show_settings_dialog)
+        settings_menu.addAction("Page Settings...", lambda: self.show_page_settings_dialog())
+        settings_menu.addAction("Common Settings...", lambda: self.show_common_settings_dialog())
 
         settings_menu.exec_(QCursor.pos())
 
@@ -871,7 +1070,7 @@ class QuickActionsDocker(QDockWidget):
                 preset: QuickActionsPreset
                 preset_group: str = ""
 
-                action = QAction(preset.registry_name, self)
+                action = QAction(preset.preset_name, self)
                 action.setCheckable(True)
                 if self.get_current_preset_id() == key.actual_key:
                     action.setChecked(True)
@@ -917,20 +1116,28 @@ class QuickActionsDocker(QDockWidget):
             resetAction.setEnabled(True)
             resetAction.triggered.connect(self.reset_grids)
 
-    def show_settings_dialog(self):
-        """Show settings dialog and apply changes."""
-        self.dlg = SettingsDialog.Setup(self.dlg, self.api_window, "Settings", load_common_config())
-        result: CommonConfig = self.dlg.exec_()
+    def show_page_settings_dialog(self):
+        self.dlg = SettingsDialog.Setup(self.dlg, self.api_window, "Settings", self.load_page_config())
+        result: QuickActionsPresetConfig = self.dlg.exec_()
         if not result: return
 
-        save_common_config(result)
-        self.update_after_config_changes()
+        self.save_page_config(result)
+        self.reload_grids()
+    
+    def show_common_settings_dialog(self):
+        """Show settings dialog and apply changes."""
+        self.dlg = SettingsDialog.Setup(self.dlg, self.api_window, "Settings", self.load_preset_config())
+        result: QuickActionsPresetConfig = self.dlg.exec_()
+        if not result: return
+
+        self.save_preset_config(result)
+        self.reload_grids()
 
     #endregion
 
     #region Update Functions
 
-    def update_grid_visibility(self,  grid_info: GridInfo):
+    def update_grid_visibility(self,  grid_info: QuickActionsGrid):
         """Show/hide the brush grid area based on collapse state and contents."""
         grid_widget = grid_info.ui.widget
         if not grid_widget:
@@ -1027,10 +1234,10 @@ class QuickActionsDocker(QDockWidget):
         for grid in self.grids:
             self.update_grid_style(grid)
                 
-    def update_grid_style(self, grid_info: GridInfo):
+    def update_grid_style(self, grid_info: QuickActionsGrid):
         """Update visual style based on active status and selection."""
 
-        def _apply_grid_widget_styles(grid_info: GridInfo, name_style, collapse_style, widget_style):
+        def _apply_grid_widget_styles(grid_info: QuickActionsGrid, name_style, collapse_style, widget_style):
             """Apply styles to grid widget components."""
             name_button = grid_info.ui.name_button or grid_info.ui.name_label
             collapse_button = grid_info.ui.collapse_button
@@ -1069,7 +1276,7 @@ class QuickActionsDocker(QDockWidget):
                 widget_style
             )
         
-    def update_grid(self, grid_info: GridInfo):
+    def update_grid(self, grid_info: QuickActionsGrid):
         """Update grid with current brush presets"""
 
         def _restore_button_selection(brush_button: DraggableGridButton, index, selected_indices):
@@ -1085,9 +1292,9 @@ class QuickActionsDocker(QDockWidget):
         def _calculate_grid_height(preset_count: int, columns: int, name_label_height: int=0):
             """Calculate required height for grid based on preset count and name labels"""
             required_rows = (preset_count + columns - 1) // columns if preset_count > 0 else 1
-            icon_size = get_brush_icon_size(grid_info)
-            button_height = icon_size + name_label_height if not get_list_mode(grid_info) else icon_size
-            spacing = get_spacing_between_buttons(grid_info)
+            icon_size = self.get_brush_icon_size(grid_info)
+            button_height = icon_size + name_label_height if not self.get_list_mode(grid_info) else icon_size
+            spacing = self.get_spacing_between_buttons(grid_info)
             return required_rows * button_height + (required_rows - 1) * spacing + 4
 
         def _store_selected_indices(layout):
@@ -1117,7 +1324,7 @@ class QuickActionsDocker(QDockWidget):
                 widget.setParent(None)
                 widget.deleteLater()
 
-        def _calculate_max_name_lines_for_grid(presets: list[GridPresetItem]):
+        def _calculate_max_name_lines_for_grid(presets: list[QuickActionsItem]):
             """Calculate the maximum number of lines needed for brush names in a grid.
             
             Args:
@@ -1126,15 +1333,14 @@ class QuickActionsDocker(QDockWidget):
             Returns:
                 1 or 2 based on the longest name in the grid
             """
-            if not get_display_brush_names(grid_info) or not presets:
+            if not self.get_display_brush_names(grid_info) or not presets:
                 return 0
             
             max_lines = 1
-            icon_size = get_brush_icon_size(grid_info)
+            icon_size = self.get_brush_icon_size(grid_info)
             
-            # Import here to get font size calculation
-            from .utils.config_utils import get_brush_name_font_size
-            font_size = get_brush_name_font_size(grid_info)
+            
+            font_size = self.get_brush_name_font_size(grid_info)
             
             # Calculate chars per line
             avg_char_width = font_size * 0.55
@@ -1148,7 +1354,7 @@ class QuickActionsDocker(QDockWidget):
             
             return max_lines
 
-        def _clear_last_selected_if_in_grid(grid_info: GridInfo):
+        def _clear_last_selected_if_in_grid(grid_info: QuickActionsGrid):
             """Clear last_selected_button if it was in this grid"""
             if not self.last_selected_button:
                 return
@@ -1168,7 +1374,7 @@ class QuickActionsDocker(QDockWidget):
         
         # Calculate consistent name label height for all buttons in this grid
         max_lines = _calculate_max_name_lines_for_grid(presets)
-        name_label_height = get_brush_name_label_height(max_lines, grid_info) if max_lines > 0 else 0
+        name_label_height = self.get_brush_name_label_height(max_lines, grid_info) if max_lines > 0 else 0
         
         new_height = _calculate_grid_height(preset_count, columns, name_label_height)
         grid_info.ui.widget.setFixedHeight(new_height)
@@ -1182,14 +1388,14 @@ class QuickActionsDocker(QDockWidget):
         self.update_selection_highlights()
         self.update_grid_visibility(grid_info)
 
-    def update_grid_name_ui(self, grid_info: GridInfo, new_name: str):
+    def update_grid_name_ui(self, grid_info: QuickActionsGrid, new_name: str):
         """Update grid name in UI elements."""
         grid_info.name = new_name
         if grid_info.ui.name_label:
             grid_info.ui.name_label.setText(new_name)
         if grid_info.ui.name_button:
             grid_info.ui.name_label.setText(new_name)
-        self.save_grids()
+        self.save_page_buffered()
 
     def rebuild_grid_layout(self):
         """Rebuild the grid layout after reordering"""
@@ -1205,7 +1411,7 @@ class QuickActionsDocker(QDockWidget):
 
         for grid_info in self.grids:
             self.update_grid_style(grid_info)
-        self.save_grids()
+        self.save_page_buffered()
 
     def clear_active_grid_highlight(self):
         """Clear the active grid highlight state.
@@ -1246,10 +1452,11 @@ class QuickActionsDocker(QDockWidget):
                     container.layout().setSpacing(1)
                 layout = grid_info.ui.layout
                 if layout:
-                    layout.setSpacing(get_spacing_between_buttons(grid_info))
+                    layout.setSpacing(self.get_spacing_between_buttons(grid_info))
                 self.update_grid(grid_info)
 
-        reload_common_config()
+        self.reload_preset_config()
+        self.reload_page_config()
         _apply_grid_spacing()
         self.refresh_styles()
 
@@ -1257,7 +1464,7 @@ class QuickActionsDocker(QDockWidget):
 
     #region Creation Functions
 
-    def create_preset_button(self, preset: GridPresetItem, grid_info: GridInfo, layout: QGridLayout, columns: int, index: int, name_label_height: int):
+    def create_preset_button(self, preset: QuickActionsItem, grid_info: QuickActionsGrid, layout: QGridLayout, columns: int, index: int, name_label_height: int):
         """Add a single preset button to the grid"""
         row = index // columns
         col = index % columns
@@ -1273,7 +1480,7 @@ class QuickActionsDocker(QDockWidget):
         
         return brush_button
 
-    def create_grid_ui(self, grid_info: GridInfo):
+    def create_grid_ui(self, grid_info: QuickActionsGrid):
         """Add UI elements for a grid."""
 
         def _create_name_button():
@@ -1333,13 +1540,13 @@ class QuickActionsDocker(QDockWidget):
 
         # Create grid widget for brush buttons
         grid_widget = DraggableGridWidget(grid_info, self)
-        initial_height = get_brush_icon_size(grid_info) + 4
+        initial_height = self.get_brush_icon_size(grid_info) + 4
         grid_widget.setFixedHeight(initial_height)
         grid_widget.setMinimumHeight(initial_height)
 
         grid_layout = QGridLayout()
         grid_layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
-        grid_layout.setSpacing(get_spacing_between_buttons(grid_info))
+        grid_layout.setSpacing(self.get_spacing_between_buttons(grid_info))
         grid_layout.setContentsMargins(0, 0, 0, 0)
         grid_widget.setLayout(grid_layout)
         container_layout.addWidget(grid_widget)
@@ -1350,13 +1557,97 @@ class QuickActionsDocker(QDockWidget):
 
         return grid_container
 
+    def create_tab_ui(self):
+        def _create_tab_button(tab_info: SourcePageData):
+            """Create and configure the name button for a grid."""
+
+            icon = IconRepository.iconLoader(tab_info.icon)
+            tab_button = QPushButton(tab_info.name)
+            if icon: tab_button.setIcon(icon)
+            tab_button.setProperty("data", tab_info)
+            tab_button.clicked.connect(self.onTabChanged)
+            if tab_info.active:
+                tab_button.setCheckable(True)
+                tab_button.setChecked(True)
+            tab_button.mousePressEvent = self.tabButtonPressEvent(tab_button, tab_info)
+            tab_button.mouseReleaseEvent = self.tabButtonReleaseEvent(tab_button, tab_info)
+            tab_button.mouseDoubleClickEvent = self.tabButtonDoubleClickEvent(tab_button, tab_info)
+            tab_button.setStyleSheet(PAGE_TAB_BUTTON_STYLE())
+            return tab_button
+        
+        def _create_dropdown_button():
+            dropdown_button = QPushButton("(unset)")
+            dropdown_menu = QMenu(dropdown_button)
+            for tab_info in self.pages: 
+                
+                icon: QIcon = IconRepository.iconLoader(tab_info.icon)
+                if icon.isNull(): icon = None
+
+                action = dropdown_menu.addAction(tab_info.name)
+                if icon: action.setIcon(icon)
+                action.setData(tab_info)
+                action.triggered.connect(self.onTabChanged)
+                
+                if tab_info.active: 
+                    action.setDisabled(True)
+                    dropdown_button.setText(tab_info.name)
+                    if icon: dropdown_button.setIcon(icon)
+                    dropdown_button.mousePressEvent = self.tabButtonPressEvent(dropdown_button, tab_info)
+            dropdown_button.setMenu(dropdown_menu)
+            dropdown_button.setStyleSheet(PAGE_TAB_BUTTON_STYLE())
+            dropdown_menu.aboutToShow.connect(self.onTabDropdownAboutToShow)
+            return dropdown_button
+
+        
+        if len(self.pages) <= 1: return
+
+        display_type = self.get_tab_display_type()
+        
+        if display_type == QuickActionsPresetConfig.Layout.TabDisplayType.Dropdown:
+            dropdown_button = _create_dropdown_button()
+            self.tab_bar_widget.layout().setSpacing(0)
+            self.tab_bar_widget.layout().addWidget(dropdown_button)
+            self.tabs.append(dropdown_button)
+        else:
+            for x in self.pages:
+                tab_button = _create_tab_button(x)
+                self.tab_bar_widget.layout().setSpacing(4)
+                self.tab_bar_widget.layout().addWidget(tab_button)
+                self.tabs.append(tab_button)
+
+    def delete_tab_ui(self):
+        for x in self.dropdown_items:
+            x.deleteLater()
+    
+        for x in self.tabs:
+            self.tab_bar_widget.layout().removeWidget(x)
+            x.deleteLater()
+
+        self.tabs = []
+
     #endregion
 
     #region Load/Save Functions
 
-    def load_grids(self):
+    def load(self):
         """Load preset resources and grid data."""
-        self.grids, self.grid_counter = self.load_grids_data()
+
+        def _get_current_preset_data():
+            preset_data = self.get_current_preset_data()
+            grids, current_page_idx = preset_data.load_page(preset_data.preset_selected_page)
+            pages = [SourcePageData(name=x.name,icon=x.icon,index=idx,active=idx==current_page_idx) for idx, x in enumerate(preset_data.preset_pages)]
+
+            current_page = [x for x in pages if x.active]
+            if len(current_page) >= 1: current_page = current_page[0]
+            else: current_page = None
+
+            return grids, len(grids), pages, current_page
+
+        self.grids, self.grid_counter, self.pages, self.current_page = _get_current_preset_data()
+        self.reload_page_config()
+        self.reload_preset_config()
+
+        self.create_tab_ui()
         if not self.grids: 
             self.add_new_grid()
             return
@@ -1368,36 +1659,92 @@ class QuickActionsDocker(QDockWidget):
                 
             if self.grids: self.set_active_grid(self.grids[0])
 
-    def load_grids_data(self):
-        if self.get_current_preset_id().lower() != "none":
-            grid_config = self.get_current_preset().preset_data
-        else:
-            jsonStr = KritaSettings.readSetting(TouchifyEnv.SettingsPath.QUICK_ACTIONS, "fallback_data", "")
-            grid_config = JsonExtensions.loadClass(jsonStr, GridConfig)
-            
-        grids = grid_config.restore()
-        return grids, len(grids)
+    def save(self, data: QuickActionsPreset):
+        if self.get_current_preset_id().lower() != "none": TouchifySettings.save()
+        else: KritaSettings.writeSetting(TouchifyEnv.SettingsPath.QUICK_ACTIONS, "fallback_data", JsonExtensions.saveClass(data), False)
 
-    def save_grids(self):
-        """Schedule grids data save with debouncing to avoid excessive file writes."""
-        if self.__isSavePending:
-            return
-        self.__isSavePending = True
-        QTimer.singleShot(_SAVE_DEBOUNCE, self.force_save_grids)
-    
-    def force_save_grids(self):
+
+    def save_page(self):
         """Actually perform the save operation."""
         self.__isSavePending = False
         state = self.get_grids_data()
         if not state: return
+        if not self.current_page: return
 
-        if self.get_current_preset_id().lower() != "none":
-            cached_state = self.get_current_preset()
-            cached_state.preset_data = state
-            TouchifySettings.save()
-        else:
-            jsonStr = JsonExtensions.saveClass(state)
-            KritaSettings.writeSetting(TouchifyEnv.SettingsPath.QUICK_ACTIONS, "fallback_data", jsonStr, False)
+        cached_state = self.get_current_preset_data()
+        cached_state.save_page(self.current_page.index, state)
+        self.save(cached_state)
+
+    def save_page_buffered(self):
+        """Schedule grids data save with debouncing to avoid excessive file writes."""
+        if self.__isSavePending:
+            return
+        self.__isSavePending = True
+        QTimer.singleShot(_SAVE_DEBOUNCE, self.save_page)
+
+
+    def load_preset_config(self):
+        """Load common configuration, falling back to defaults."""
+        return JsonExtensions.loadClass(KritaSettings.readSetting(TouchifyEnv.SettingsPath.QUICK_ACTIONS, "common_config", ""), QuickActionsPresetConfig)
+    
+    def get_preset_config(self) -> QuickActionsPresetConfig:
+        """Get common configuration, cached for performance."""
+        global _config_cache
+        if _config_cache is None:
+            _config_cache = self.load_preset_config()
+        return _config_cache
+
+    def reload_preset_config(self):
+        """Clear cache and reload configuration from disk."""
+        global _config_cache
+        _config_cache = None
+        return self.get_preset_config()
+
+    def save_preset_config(self, config: QuickActionsPresetConfig):
+        """Save common configuration to file."""
+        try:
+            json_str = JsonExtensions.saveClass(config)
+            KritaSettings.writeSetting(TouchifyEnv.SettingsPath.QUICK_ACTIONS, "common_config", json_str, False)
+            return True
+        except Exception as e:
+            print(f"Error writing Common Config: {e}")
+            return False
+
+
+    def load_page_config(self):
+        """Load common configuration, falling back to defaults."""
+        try:
+            return self.get_current_preset_data().preset_pages[self.current_page.index].settings
+        except Exception as e:
+            print(f"Error reading Page Config: {e}")
+            return QuickActionsPageConfig()    
+
+    def get_page_config(self) -> QuickActionsPageConfig:
+        """Get common configuration, cached for performance."""
+        global _page_config_cache
+        if _page_config_cache is None:
+            _page_config_cache = self.load_page_config()
+        return _page_config_cache
+
+    def reload_page_config(self):
+        """Clear cache and reload configuration from disk."""
+        global _page_config_cache
+        _page_config_cache = None
+        return self.get_page_config()
+
+    def save_page_config(self, config: QuickActionsPageConfig):
+        """Save common configuration to file."""
+        if not self.current_page: return False
+
+        try:
+            cached_data = self.get_current_preset_data()
+            cached_data.preset_pages[self.current_page.index].settings = config
+            self.save(cached_data)
+            return True
+        except Exception as e:
+            print(f"Error writing Page Config: {e}")
+            return False
+        
 
     #endregion
 
@@ -1413,11 +1760,13 @@ class QuickActionsDocker(QDockWidget):
         else: 
             return "none"
     
-    def get_current_preset(self):
+    def get_current_preset_data(self, include_fallback: bool = True) -> QuickActionsPreset:
         registry = TouchifySettings.registry(QuickActionsPreset)
         registry_selection = self.get_current_preset_id()
-
-        if registry_selection in registry:
+    
+        if include_fallback and registry_selection.lower() == "none":
+            return JsonExtensions.loadClass(KritaSettings.readSetting(TouchifyEnv.SettingsPath.QUICK_ACTIONS, "fallback_data", ""), QuickActionsPreset)
+        elif registry_selection in registry:
             return registry[registry_selection]    
         else: 
             return QuickActionsPreset()
@@ -1431,15 +1780,12 @@ class QuickActionsDocker(QDockWidget):
 
     def get_grids_data(self):
         try:
-            from touchify_quick_actions.dataclasses.GridConfig import GridConfig
-            cfg = GridConfig()
-            cfg.grids = [x.dump() for x in self.grids]
-            return cfg
+            return [x.dump() for x in self.grids]
         except Exception as e:
             print(f"Error generating Grid Config: {e}")
             return None
 
-    def set_active_grid(self, grid_info: GridInfo):
+    def set_active_grid(self, grid_info: QuickActionsGrid):
         """Set a grid as active"""
         for grid in self.grids:
             grid.is_active = False
@@ -1467,26 +1813,26 @@ class QuickActionsDocker(QDockWidget):
 
         return usable_width
 
-    def get_column_width(self, grid_info: GridInfo):
-        if not get_list_mode(grid_info):
-            return get_brush_icon_size(grid_info)
+    def get_column_width(self, grid_info: QuickActionsGrid):
+        if not self.get_list_mode(grid_info):
+            return self.get_brush_icon_size(grid_info)
         else:
-            usable_width = self.get_usable_width() + get_spacing_between_buttons(grid_info)
-            return int(usable_width / get_list_column_count(grid_info))
+            usable_width = self.get_usable_width() + self.get_spacing_between_buttons(grid_info)
+            return int(usable_width / self.get_list_column_count(grid_info))
         
-    def get_dynamic_columns(self, grid_info: GridInfo):
+    def get_dynamic_columns(self, grid_info: QuickActionsGrid):
         """Calculate max_brush_per_row dynamically based on available docker width"""  
 
-        if get_list_mode(grid_info):
-            return get_list_column_count(grid_info)
+        if self.get_list_mode(grid_info):
+            return self.get_list_column_count(grid_info)
 
         usable_width = self.get_usable_width()
         if usable_width == -1:
-            max_brush = get_common_config().layout.max_brush_per_row
+            max_brush = self.get_page_config().layout.max_brush_per_row
             return int(max_brush)
 
-        button_size = get_brush_icon_size(grid_info)
-        spacing = get_spacing_between_buttons(grid_info)
+        button_size = self.get_brush_icon_size(grid_info)
+        spacing = self.get_spacing_between_buttons(grid_info)
         
         if button_size + spacing <= 0:
             return 1
@@ -1494,30 +1840,181 @@ class QuickActionsDocker(QDockWidget):
         max_columns = max(1, int((usable_width + spacing) / (button_size + spacing)))
         return max_columns
 
+    def get_list_column_count(self, grid_info: "QuickActionsGrid") -> int:
+        if not grid_info.layout.override_global_style:
+            return self.get_page_config().layout.list_column_count
+        return grid_info.layout.list_column_count
+        
+    def get_spacing_between_buttons(self, grid_info: "QuickActionsGrid" = None) -> int:
+        """Get spacing between buttons from config."""
+        if not grid_info.layout.override_global_style:
+            return self.get_page_config().layout.spacing_between_buttons
+        return grid_info.layout.spacing_between_buttons
+
+    def get_spacing_between_grids(self) -> int:
+        """Get spacing between grids from config."""
+        return self.get_page_config().layout.spacing_between_grids
+
+    def get_brush_icon_size(self,grid_info: "QuickActionsGrid" = None) -> int:
+        """Get brush icon size from config."""
+        if not grid_info.layout.override_global_style:
+            return self.get_page_config().layout.brush_icon_size
+        return grid_info.layout.brush_icon_size
+
+    def get_display_brush_names(self,grid_info: "QuickActionsGrid" = None) -> bool:
+        """Get whether brush names should be displayed below icons."""
+        if not grid_info.layout.override_global_style:
+            return self.get_page_config().layout.display_brush_names
+        return grid_info.layout.display_brush_names
+
+    def get_brush_add_key(self) -> str:
+        """Get the keyboard shortcut for choosing left brush in grid."""
+        return self.get_preset_config().shortcut.add_brush_to_grid
+    
+    def get_enable_add_brush_to_grid(self) -> str:
+        """Get the keyboard shortcut for choosing left brush in grid."""
+        return self.get_preset_config().shortcut.enable_add_brush_to_grid
+
+    def get_wrap_around_navigation(self) -> bool:
+        """Get whether wrap-around navigation is enabled."""
+        return False
+    
+    def get_tab_display_type(self) -> str:
+        """Get whether wrap-around navigation is enabled."""
+        return self.get_preset_config().layout.display_pages_as
+
+    def get_exclusive_uncollapse(self) -> bool:
+        """Get whether exclusive uncollapse mode is enabled.
+        
+        When enabled, only one group can be uncollapsed at a time.
+        The uncollapsed group becomes the active_grid.
+        """
+        return self.get_page_config().layout.exclusive_uncollapse
+
+    def get_font_px(font_size_str: str) -> int:
+        """Convert font size string (e.g., '12px') to integer pixels."""
+        try:
+            return int(str(font_size_str).replace("px", ""))
+        except (ValueError, TypeError):
+            return 12
+
+    def get_list_mode(self, grid_info: "QuickActionsGrid") -> bool:
+        if not grid_info.layout.override_global_style:
+            return self.get_page_config().layout.list_mode
+        return grid_info.layout.list_mode
+
+    def get_list_column_count(self, grid_info: "QuickActionsGrid") -> int:
+        if not grid_info.layout.override_global_style:
+            return self.get_page_config().layout.list_column_count
+        return grid_info.layout.list_column_count
+
+    def get_brush_name_font_size(self, grid_info: "QuickActionsGrid" = None) -> int:
+        """Calculate font size for brush names based on icon size.
+        
+        Scales proportionally with brush_icon_size slider, clamped between
+        min and max thresholds for readability.
+        """
+        icon_size = self.get_brush_icon_size(grid_info)
+
+        if self.get_list_mode(grid_info):
+            _BRUSH_NAME_MIN_FONT_SIZE = 10
+            _BRUSH_NAME_MAX_FONT_SIZE = 15
+            _BRUSH_NAME_BASE_FONT_SIZE = 12
+            _BRUSH_NAME_REFERENCE_ICON_SIZE = 65
+        else:
+            _BRUSH_NAME_MIN_FONT_SIZE = 7
+            _BRUSH_NAME_MAX_FONT_SIZE = 12
+            _BRUSH_NAME_BASE_FONT_SIZE = 9
+            _BRUSH_NAME_REFERENCE_ICON_SIZE = 65
+
+        # Scale proportionally from reference size
+        scale_factor = icon_size / _BRUSH_NAME_REFERENCE_ICON_SIZE
+        calculated_size = int(_BRUSH_NAME_BASE_FONT_SIZE * scale_factor)
+        # Clamp between min and max
+        return max(_BRUSH_NAME_MIN_FONT_SIZE, min(_BRUSH_NAME_MAX_FONT_SIZE, calculated_size))
+    
+    def get_button_count_in_grid(self, grid_info: QuickActionsGrid):
+        """Get total count of brush buttons in a grid."""
+        layout = grid_info.ui.layout
+        if not layout: return 0
+        
+        count = 0
+        for i in range(layout.count()):
+            item = layout.itemAt(i)
+            if item:
+                btn = item.widget()
+                if btn and hasattr(btn, 'grid_index'):
+                    count += 1
+        return count
+    
+    def get_current_button_index_in_active_grid(self):
+        """Get the grid_index of the currently selected button in the active grid.
+        Returns None if no button is selected in the active grid."""
+        if not self.active_grid:
+            return None
+        
+        current_selected_button: DraggableGridButton = self.last_selected_button
+        # Check if current_selected_button is in active grid
+        if (current_selected_button and 
+            hasattr(current_selected_button, 'grid_info') and 
+            current_selected_button.grid_info == self.active_grid and
+            hasattr(current_selected_button, 'grid_index')):
+            return current_selected_button.grid_index
+        
+        return None
+
+    def get_button_by_grid_index(self, grid_info: QuickActionsGrid, index: int):
+        """Get a brush button by its 1-based grid index within a specific grid."""
+        layout = grid_info.ui.layout
+        if not layout:
+            return None
+        
+        for i in range(layout.count()):
+            item = layout.itemAt(i)
+            if item:
+                btn: DraggableGridButton = item.widget()
+                if btn and isinstance(btn, DraggableGridButton) and btn.grid_index == index:
+                    return btn
+        return None
+
+
+    def get_brush_name_label_height(self, lines: int = 1, grid_info: "QuickActionsGrid" = None) -> int:
+        """Calculate height for brush name label based on number of lines.
+        
+        Args:
+            lines: Number of text lines (1 or 2)
+        
+        Returns:
+            Height in pixels for the name label area
+        """
+        font_size = self.get_brush_name_font_size(grid_info)
+        line_height = int(font_size * 1.3)  # Line height multiplier
+        padding = 4  # Top + bottom padding
+        return (line_height * lines) + padding
     #endregion
 
     #region Other Functions
 
-    def toggle_grid_collapse(self,  grid_info: GridInfo):
+    def toggle_grid_collapse(self,  grid_info: QuickActionsGrid):
         """Toggle collapse state of a grid.
         
         In exclusive uncollapse mode, only one grid can be uncollapsed at a time.
         The uncollapsed grid becomes the active_grid.
         """
 
-        def _update_collapse_button_icon(info: GridInfo):
+        def _update_collapse_button_icon(info: QuickActionsGrid):
             """Update the collapse button icon for a grid."""
             collapse_button = info.ui.collapse_button
             if collapse_button:
                 collapse_button.updateIconSize()
                 collapse_button.set_collapse_button_icon(info.is_collapsed)
 
-        from .utils.config_utils import get_exclusive_uncollapse
+
         
         is_currently_collapsed = grid_info.is_collapsed
         new_collapsed_state = not is_currently_collapsed
         
-        if get_exclusive_uncollapse():
+        if self.get_exclusive_uncollapse():
             if new_collapsed_state:
                 # Collapsing this grid
                 grid_info.is_collapsed = True
@@ -1550,7 +2047,7 @@ class QuickActionsDocker(QDockWidget):
             _update_collapse_button_icon(grid_info)
             self.update_grid_visibility(grid_info)
     
-    def toggle_grid_selection(self, grid_info: GridInfo):
+    def toggle_grid_selection(self, grid_info: QuickActionsGrid):
         """Toggle selection of a grid"""
         if grid_info in self.selected_grids:
             self.selected_grids.remove(grid_info)
@@ -1560,7 +2057,62 @@ class QuickActionsDocker(QDockWidget):
             self.selected_grids.append(grid_info)
             self.last_selected_grid = grid_info
         self.update_grid_selection_highlights()
-    
+
+
+
+
+    def navigate_brush_in_grid(self, direction: int):
+        """Navigate to adjacent brush in the active grid.
+        
+        Args:
+            direction: -1 for left (previous), 1 for right (next)
+        """
+        if not self.active_grid:
+            return
+        
+        # Get total button count in active grid
+        button_count = self.get_button_count_in_grid(self.active_grid)
+        if button_count == 0: return
+        
+        # Get current index
+        current_index = self.get_current_button_index_in_active_grid()
+        
+        # If no button is currently selected in the active grid, select appropriate boundary
+        if current_index is None:
+            if direction == -1:
+                # Navigating left with nothing selected - select last button
+                target_index = button_count
+            else:
+                # Navigating right with nothing selected - select first button
+                target_index = 1
+        else:
+            # Calculate new index
+            target_index = current_index + direction
+            
+            # Check wrap-around setting
+            wrap_around = self.get_wrap_around_navigation()
+            
+            if target_index < 1:
+                if wrap_around:
+                    target_index = button_count
+                else:
+                    return  # At left boundary, do nothing
+            elif target_index > button_count:
+                if wrap_around:
+                    target_index = 1
+                else:
+                    return  # At right boundary, do nothing
+        
+        # Get the button at target index and select it
+        target_button = self.get_button_by_grid_index(self.active_grid, target_index)
+        if target_button:
+            # Clear any multi-selection
+            self.selected_buttons = []
+            self.last_selected_button = None
+            
+            # Select the brush preset (simulates left-click on the button)
+            self.select_button(target_button)
+
     #endregion
 
     #region Drag/Drop Functions

@@ -1,5 +1,6 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 
 
 
@@ -12,7 +13,7 @@ class GlobalEventsProxyInstance(QObject):
 
     SIGNAL_TIMER_TICKED = pyqtSignal()
     SIGNAL_MOUSE_RELEASED = pyqtSignal()
-    SIGNAL_KEY_RELEASED = pyqtSignal()
+    SIGNAL_KEY_RELEASED = pyqtSignal(QKeyEvent)
     SIGNAL_WINDOW_RESIZED = pyqtSignal()
     SIGNAL_WINDOW_MOVED = pyqtSignal()
     
@@ -36,7 +37,7 @@ class GlobalEventsProxyInstance(QObject):
             event.type() == QEvent.Type.TabletRelease:
                 self.SIGNAL_MOUSE_RELEASED.emit()
             elif event.type() == QEvent.Type.KeyRelease:
-                self.SIGNAL_KEY_RELEASED.emit()
+                self.SIGNAL_KEY_RELEASED.emit(event)
             return False
         except:
             return False

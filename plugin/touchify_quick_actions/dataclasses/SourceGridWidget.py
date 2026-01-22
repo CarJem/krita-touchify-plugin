@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING, TypedDict
 
 if TYPE_CHECKING:
-    from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
-    from touchify_quick_actions.dataclasses.GridConfig import GridInfo, GridPresetItem
+    from touchify.src.config.quick_actions.QuickActionsPage import QuickActionsGrid
+    from touchify.src.config.quick_actions.QuickActionsItem import QuickActionsItem
 
 class SourceGridWidget(TypedDict):
-    preset: "GridPresetItem"
-    grid: "GridInfo"
+    preset: "QuickActionsItem"
+    grid: "QuickActionsGrid"
     index: int
     name: str

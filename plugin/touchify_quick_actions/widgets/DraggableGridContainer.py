@@ -15,15 +15,15 @@ from PyQt5.QtWidgets import QWidget
 
 if TYPE_CHECKING:
     from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
-    from touchify_quick_actions.dataclasses.GridConfig import GridInfo
-    from touchify_quick_actions.dataclasses.GridPresetItem import GridPresetItem
+    from touchify.src.config.quick_actions.QuickActionsPage import QuickActionsGrid
+    from touchify.src.config.quick_actions.QuickActionsItem import QuickActionsItem
 
 from ..dataclasses.SourceGridWidget import SourceGridWidget
 
 class DraggableGridContainer(QWidget):
     """Container for draggable grids"""
 
-    def __init__(self, grid_info: "GridInfo", parent_docker: "QuickActionsDocker"):
+    def __init__(self, grid_info: "QuickActionsGrid", parent_docker: "QuickActionsDocker"):
         super().__init__()
         self.grid_info = grid_info
         self.parent_docker = parent_docker
@@ -102,7 +102,7 @@ class DraggableGridContainer(QWidget):
             self.parent_docker.update_grid(source_grid)
             self.parent_docker.update_grid(target_grid)
 
-        self.parent_docker.save_grids()
+        self.parent_docker.save_page_buffered()
         event.acceptProposedAction()
 
     def _handle_header_multi_brush_drop(self, event, text):
@@ -153,5 +153,5 @@ class DraggableGridContainer(QWidget):
 
         # Clear selection and save
         self.parent_docker.clear_selection()
-        self.parent_docker.save_grids()
+        self.parent_docker.save_page_buffered()
         event.acceptProposedAction()

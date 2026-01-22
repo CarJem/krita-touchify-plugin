@@ -18,23 +18,17 @@ from touchify_quick_actions.dialogs.SettingsDialog import SettingsDialog
 from jemlib.alib_widgets.widget.DropIndicatorOverlay import DropIndicatorOverlay
 from touchify_quick_actions.utils.styles import DRAGGABLE_GRID_BUTTON_BACKGROUND_COLOR, DRAGGABLE_GRID_BUTTON_ICON_STYLE, DRAGGABLE_GRID_BUTTON_LABEL_STYLE
 
-from ..utils.config_utils import (
-    get_brush_icon_size,
-    get_display_brush_names,
-    get_brush_name_font_size,
-    get_list_mode
-)
 from ..utils.drag_utils import encode_single, encode_multi
 
 if TYPE_CHECKING:
     from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
-    from touchify_quick_actions.dataclasses.GridConfig import GridInfo
-    from touchify_quick_actions.dataclasses.GridPresetItem import GridPresetItem
+    from touchify.src.config.quick_actions.QuickActionsPage import QuickActionsGrid
+    from touchify.src.config.quick_actions.QuickActionsItem import QuickActionsItem
 
 class DraggableGridButton(QWidget):
     """A draggable widget for brush presets with optional name display."""
 
-    def __init__(self, preset: "GridPresetItem", grid_info: "GridInfo", parent_docker: "QuickActionsDocker"):
+    def __init__(self, preset: "QuickActionsItem", grid_info: "QuickActionsGrid", parent_docker: "QuickActionsDocker"):
         super().__init__()
 
         self.preset = preset
@@ -57,7 +51,7 @@ class DraggableGridButton(QWidget):
 
         """Setup the widget layout with icon button and name label."""
         #region
-        layout = QVBoxLayout() if not get_list_mode(self.grid_info) else QHBoxLayout()
+        layout = QVBoxLayout() if not self.parent_docker.get_list_mode(self.grid_info) else QHBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         
@@ -75,8 +69,8 @@ class DraggableGridButton(QWidget):
 
         """Configure button size and icon."""
         #region
-        icon_size = get_brush_icon_size(self.grid_info)
-        show_names = get_display_brush_names(self.grid_info)
+        icon_size = self.parent_docker.get_brush_icon_size(self.grid_info)
+        show_names = self.parent_docker.get_display_brush_names(self.grid_info)
         
         self.setToolTip(self.getItemLabelText())
         
@@ -343,8 +337,8 @@ class DraggableGridButton(QWidget):
     def setNameLabelHeight(self, height: int):
         """Set the name label height (called by grid for consistency across row)."""
         self._name_label_height = height
-        if get_display_brush_names(self.grid_info) and height > 0:
-            if get_list_mode(self.grid_info):
+        if self.parent_docker.get_display_brush_names(self.grid_info) and height > 0:
+            if self.parent_docker.get_list_mode(self.grid_info):
                 self.name_label.setMinimumHeight(height)
             else:
                 self.name_label.setFixedHeight(height)
@@ -381,16 +375,16 @@ class DraggableGridButton(QWidget):
         self.name_label.setVisible(True)
         self.name_label.setText(self.getItemLabelText())
         self.name_label.updateStyles()
-        if get_list_mode(self.grid_info):
-            self.name_label.setFixedWidth(self.parent_docker.get_column_width(self.grid_info) - get_brush_icon_size(self.grid_info))
+        if self.parent_docker.get_list_mode(self.grid_info):
+            self.name_label.setFixedWidth(self.parent_docker.get_column_width(self.grid_info) - self.parent_docker.get_brush_icon_size(self.grid_info))
         else:
-            self.name_label.setFixedWidth(get_brush_icon_size(self.grid_info))
+            self.name_label.setFixedWidth(self.parent_docker.get_brush_icon_size(self.grid_info))
 
     def updateWidgetSize(self):
         """Update the total widget size based on icon and name label."""
-        icon_size = get_brush_icon_size(self.grid_info)
-        show_names = get_display_brush_names(self.grid_info)
-        list_mode = get_list_mode(self.grid_info)
+        icon_size = self.parent_docker.get_brush_icon_size(self.grid_info)
+        show_names = self.parent_docker.get_display_brush_names(self.grid_info)
+        list_mode = self.parent_docker.get_list_mode(self.grid_info)
         
         if show_names and self._name_label_height > 0:
             total_height = icon_size + self._name_label_height if not list_mode else icon_size
@@ -441,7 +435,7 @@ class DraggableGridButton(QWidget):
             presets[button_index].trigger_data = result
 
             self.parent_docker.update_grid(self.grid_info)
-            self.parent_docker.save_grids()
+            self.parent_docker.save_page_buffered()
 
     def removeButton(self):
         """Remove this preset from the grid."""
@@ -458,7 +452,7 @@ class DraggableGridButton(QWidget):
                     break
         
         self.parent_docker.update_grid(self.grid_info)
-        self.parent_docker.save_grids()
+        self.parent_docker.save_page_buffered()
 
     def showContextMenu(self, global_pos):
         """Show context menu based on selection state.
@@ -557,7 +551,7 @@ class DraggableGridButtonLabel(QLabel):
 
     def updateStyles(self, bg_color: str = "transparent"):
         """Update the name label background to reflect hover state."""
-        font_size = get_brush_name_font_size(self.parent_widget.grid_info)
+        font_size = self.parent_widget.parent_docker.get_brush_name_font_size(self.parent_widget.grid_info)
         self.setStyleSheet(DRAGGABLE_GRID_BUTTON_LABEL_STYLE(font_size, bg_color))
         
     def mousePressEvent(self, event):

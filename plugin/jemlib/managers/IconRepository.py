@@ -254,7 +254,7 @@ class IconRepository:
             case "krita" | _:
                 return krita_registry()
 
-    def iconLoader(iconName: str):
+    def iconLoader(iconName: str) -> QIcon:
         if str(iconName).startswith("material:"):
             materialName = str(iconName)[len("material:"):]
             return IconRepository.materialIcon(materialName)

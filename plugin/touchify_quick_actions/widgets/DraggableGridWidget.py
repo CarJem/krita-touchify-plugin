@@ -13,17 +13,11 @@ from PyQt5.QtCore import Qt, QPoint, QMimeData
 from PyQt5.QtGui import QDrag
 
 
-from ..utils.config_utils import (
-    get_brush_icon_size,
-    get_spacing_between_buttons,
-    get_display_brush_names,
-    get_brush_name_label_height,
-)
 from ..utils.drag_utils import decode_single, decode_multi
 
 if TYPE_CHECKING:
     from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
-    from touchify_quick_actions.dataclasses.GridConfig import GridInfo, GridPresetItem
+    from touchify.src.config.quick_actions.QuickActionsPage import QuickActionsGrid, GridPresetItem
 
 from ..dataclasses.SourceGridWidget import SourceGridWidget
 
@@ -31,7 +25,7 @@ from ..dataclasses.SourceGridWidget import SourceGridWidget
 class DraggableGridWidget(QWidget):
     """A clickable and droppable grid widget for brush presets"""
 
-    def __init__(self, grid_info: "GridInfo", parent_docker: "QuickActionsDocker"):
+    def __init__(self, grid_info: "QuickActionsGrid", parent_docker: "QuickActionsDocker"):
         super().__init__()
         self.grid_info = grid_info
         self.parent_docker = parent_docker
@@ -122,7 +116,7 @@ class DraggableGridWidget(QWidget):
                 self.parent_docker.update_grid(source_grid)
                 self.parent_docker.update_grid(self.grid_info)
 
-            self.parent_docker.save_grids()
+            self.parent_docker.save_page_buffered()
             event.acceptProposedAction()
 
     def find_source_preset(self, preset_name):
@@ -169,12 +163,12 @@ class DraggableGridWidget(QWidget):
     def _remove_presets_from_source_grids(self, grids_to_update):
         """Remove presets from source grids in reverse index order"""
         for grid_data in grids_to_update.values():
-            grid_info: "GridInfo" = grid_data["grid_info"]
+            grid_info: "QuickActionsGrid" = grid_data["grid_info"]
             presets_data = grid_data["presets_data"]
             for data in sorted(presets_data, key=lambda x: x["index"], reverse=True):
                 grid_info.brush_presets.pop(data["index"])
 
-    def _calculate_adjusted_target_index(self, target_index: int, original_indices: list[int], target_grid: "GridInfo"):
+    def _calculate_adjusted_target_index(self, target_index: int, original_indices: list[int], target_grid: "QuickActionsGrid"):
         """Calculate adjusted target index for same-grid reordering"""
         if not original_indices:
             return target_index
@@ -186,19 +180,19 @@ class DraggableGridWidget(QWidget):
         target_index = max(0, target_index - removed_before_target)
         return min(target_index, len(target_grid.brush_presets))
 
-    def _insert_presets_at_target(self, target_grid: "GridInfo", presets_to_insert: list[str], target_index: int):
+    def _insert_presets_at_target(self, target_grid: "QuickActionsGrid", presets_to_insert: list[str], target_index: int):
         """Insert presets at target position in grid"""
         for i, preset in enumerate(presets_to_insert):
             target_grid.brush_presets.insert(target_index + i, preset)
 
-    def _handle_same_grid_reorder(self, target_grid: "GridInfo", presets_to_insert: list[str], source_presets_data, target_index: int):
+    def _handle_same_grid_reorder(self, target_grid: "QuickActionsGrid", presets_to_insert: list[str], source_presets_data, target_index: int):
         """Handle reordering within the same grid"""
         original_indices = sorted([data["index"] for data in source_presets_data])
         adjusted_index = self._calculate_adjusted_target_index(target_index, original_indices, target_grid)
         self._insert_presets_at_target(target_grid, presets_to_insert, adjusted_index)
         self.parent_docker.update_grid(target_grid)
 
-    def _handle_cross_grid_move(self, target_grid: "GridInfo", presets_to_insert: list[str], grids_to_update: dict[str, "GridInfo"], target_index: int):
+    def _handle_cross_grid_move(self, target_grid: "QuickActionsGrid", presets_to_insert: list[str], grids_to_update: dict[str, "QuickActionsGrid"], target_index: int):
         """Handle moving presets between different grids"""
         target_index = min(target_index, len(target_grid.brush_presets))
         self._insert_presets_at_target(target_grid, presets_to_insert, target_index)
@@ -229,21 +223,21 @@ class DraggableGridWidget(QWidget):
             self._handle_cross_grid_move(target_grid, presets_to_insert, grids_to_update, target_index)
 
         self.parent_docker.clear_selection()
-        self.parent_docker.save_grids()
+        self.parent_docker.save_page_buffered()
         event.acceptProposedAction()
 
     def calculate_drop_position(self, drop_pos):
         """Calculate target position for drop"""
         # Use dynamic columns from parent docker instead of config
         columns = self.parent_docker.get_dynamic_columns(self.grid_info)
-        button_size = get_brush_icon_size(self.grid_info)
-        spacing = get_spacing_between_buttons(self.grid_info)
+        button_size = self.parent_docker.get_brush_icon_size(self.grid_info)
+        spacing = self.parent_docker.get_spacing_between_buttons(self.grid_info)
         
         # Account for name label height if brush names are displayed
         name_label_height = 0
-        if get_display_brush_names(self.grid_info):
+        if self.parent_docker.get_display_brush_names(self.grid_info):
             # Use 2-line height as max since we don't know exact grid state
-            name_label_height = get_brush_name_label_height(2, self.grid_info)
+            name_label_height = self.parent_docker.get_brush_name_label_height(2, self.grid_info)
         
         total_button_height = button_size + name_label_height
 

@@ -96,6 +96,27 @@ class Stylemap:
 @staticmethod
 def SM(): return Stylemap.instance()
 
+@staticmethod
+def PAGE_TAB_BUTTON_STYLE():
+    bg_color = SM().SELECTED_WIDGET_BACKGROUND
+    text_color = SM().NAME_BUTTON_TEXT_COLOR
+
+    return f"""
+        QPushButton {{
+            background-color: {bg_color};
+            color: {text_color};
+            font-weight: bold;
+            font-size: 12px;
+            border: 2px solid {SM().SELECTED_WIDGET_BACKGROUND};
+            border-radius: 4px;
+            padding: 4px 4px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }}
+        QPushButton:checked {{ border: 2px solid {SM().NAME_BUTTON_SELECTED_TEXT_COLOR}; }}
+        QPushButton:hover {{ background-color: rgba(0, 0, 0, 0.3); }}
+        QPushButton:pressed {{ background-color: rgba(0, 0, 0, 0.5); }}
+    """
 
 @staticmethod
 def COLLAPSE_BUTTON_STYLE(bg_color: str = None):
