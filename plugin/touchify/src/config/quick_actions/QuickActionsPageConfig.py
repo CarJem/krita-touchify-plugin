@@ -28,6 +28,18 @@ class QuickActionsPageConfig:
             labels["exclusive_uncollapse"] = "Exclusive uncollapse"
             return labels
         
+        def propertygrid_sorted(self):
+            return [
+                "list_mode",
+                "display_brush_names",
+                "exclusive_uncollapse",
+                "max_brush_per_row",
+                "spacing_between_buttons",
+                "spacing_between_grids",
+                "list_column_count",
+                "brush_icon_size"
+            ]
+        
         def propertygrid_restrictions(self):
             restrictions = {}
             restrictions["max_brush_per_row"] = RS.range(min=1)

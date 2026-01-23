@@ -109,10 +109,8 @@ class ShelfWidget(QWidget):
             self.sync(registry_index, no_reload)
         
         def savePresetAs(self, editorResults: ResourcePackExtensions.PresetSaveAs, state: ToolshelfArea, registry_index: int):
-            selectedResourcePackIndex: int = int(editorResults.resource_pack) - 1
-            if selectedResourcePackIndex <= -1: return
-
-            selectedResourcePack = TouchifySettings.resourcePacks()[selectedResourcePackIndex]
+            selectedResourcePack = TouchifySettings.getResourcePackFromResult(editorResults)
+            if not selectedResourcePack: return
         
             result: Toolshelf = Toolshelf()
             result.preset_data = state

@@ -987,24 +987,22 @@ class QuickActionsDocker(QDockWidget):
         self.reload_grids()
     
     def save_preset_as(self):
-        self.__property_dlg = PluginOptions.Setup(self.__property_dlg, self.api_window, ResourcePackExtensions.PresetSaveAs())
+        self.__property_dlg = PluginOptions.Setup(self.__property_dlg, self.api_window.qwindow, ResourcePackExtensions.PresetSaveAs())
         result: ResourcePackExtensions.PresetSaveAs = self.__property_dlg.exec_()
         if not result: return
 
         preset_data = self.get_current_preset_data()
         if not preset_data: return
 
-        selectedResourcePackIndex: int = int(result.resource_pack) - 1
-        if selectedResourcePackIndex <= -1: return
-
-        selectedResourcePack = TouchifySettings.resourcePacks()[selectedResourcePackIndex]
+        selectedResourcePack = TouchifySettings.getResourcePackFromResult(result)
+        if not selectedResourcePack: return
     
-        result: QuickActionsPreset = QuickActionsPreset()
-        result.preset_name = result.display_name
-        result.preset_pages = preset_data.preset_pages
-        result.preset_settings = preset_data.preset_settings
-        result.preset_selected_page = preset_data.preset_selected_page
-        selectedResourcePack.quick_actions.append(result)
+        output: QuickActionsPreset = QuickActionsPreset()
+        output.preset_name = result.display_name
+        output.preset_pages = preset_data.preset_pages
+        output.preset_settings = preset_data.preset_settings
+        output.preset_selected_page = preset_data.preset_selected_page
+        selectedResourcePack.quick_actions.append(output)
         
         TouchifySettings.save()
         TouchifySettings.load()
@@ -1864,14 +1862,6 @@ class QuickActionsDocker(QDockWidget):
         if not grid_info.layout.override_global_style:
             return self.get_page_config().layout.display_brush_names
         return grid_info.layout.display_brush_names
-
-    def get_brush_add_key(self) -> str:
-        """Get the keyboard shortcut for choosing left brush in grid."""
-        return self.get_preset_config().shortcut.add_brush_to_grid
-    
-    def get_enable_add_brush_to_grid(self) -> str:
-        """Get the keyboard shortcut for choosing left brush in grid."""
-        return self.get_preset_config().shortcut.enable_add_brush_to_grid
 
     def get_wrap_around_navigation(self) -> bool:
         """Get whether wrap-around navigation is enabled."""

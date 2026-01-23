@@ -1,6 +1,6 @@
 # beta.0.1.1
 - Several Fixes to Issues found in beta.0.1.0
-## Additions:
+## Notable Changes:
 - **Optional Features: Preset Specific Tool Options**
     > A setting that keeps track of the tool option dialog prefrences and load/saves them per brush preset, so keeping track of brush smoothing options between presets (off by default, found in Touchify Settings)
 - **Optional Features: Application Scaling Workarounds**
@@ -22,6 +22,8 @@
     > - Preset support has been added (similar to how it's implemented in toolshelves and the toolbox)
     > - Added the ability for presets to contain multiple pages of actions
     > - Added a button to quickly add the current preset to the actively selected grid
+- **Resilence Improvements: PropertyGrid**
+    > Outside of just improving the overall presentation of the propertygrid, I have also reduced the dataleaks that were causing crashes related to it significantly
 
 
 # alpha.0.0.5

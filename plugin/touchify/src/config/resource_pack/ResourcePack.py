@@ -139,10 +139,8 @@ class ResourcePack:
         except Exception as err:
             print("Loading Resource Pack: ", err)
             self.INTERNAL_has_loaded = False
-
-
+            
     def save(self):
-
         if self.INTERNAL_ROOT_DIRECTORY == "":
             resource_pack_directory = RESOURCE_PACKS_DIRECTORY
             folder_name = FileExtensions.fileStringify(str(self.metadata.registry_id))
@@ -225,7 +223,7 @@ class ResourcePack:
             del self.INTERNAL_UUID_ID
             
     def propertygrid_hidden(self):
-        return [  ]
+        return [ ]
     
     def propertygrid_view_type(self):
         return "tabs_vertical"

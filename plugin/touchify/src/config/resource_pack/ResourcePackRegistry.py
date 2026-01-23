@@ -40,10 +40,7 @@ class ResourcePackRegistry:
         
         self.presets = TypedList(results, ResourcePack)
 
-
-    
     def save(self):
-
         found_files: list[str] = []
 
         for item in self.presets:
@@ -76,7 +73,29 @@ class ResourcePackRegistry:
             if os.path.exists(file):
                 shutil.rmtree(file)
             self.INTERNAL_active_files.remove(file)
-            
+
+    def create(self, registry_id: str):
+        item: ResourcePack = ResourcePack()
+
+        folderPath = RESOURCE_PACKS_DIRECTORY
+        registryName = FileExtensions.fileStringify(registry_id)
+
+        path = FileExtensions.uniquify(os.path.join(folderPath, registryName))
+        if os.path.exists(path): os.remove(path)
+        name = os.path.basename(path)
+        uuid = name
+
+        os.mkdir(path)
+
+        item.INTERNAL_ROOT_DIRECTORY = path
+        item.INTERNAL_FILEPATH_ID = path
+        item.INTERNAL_FILENAME_ID = name
+        item.INTERNAL_UUID_ID = uuid
+        item.INTERNAL_FILESYSTEM_MANAGED = True
+        item.save()
+
+        return registry_id
+
     def propertygrid_hidden(self):
         return [ ]
 

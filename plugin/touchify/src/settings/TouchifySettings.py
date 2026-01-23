@@ -1,5 +1,7 @@
+from typing import TYPE_CHECKING
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+
 
 
 
@@ -16,6 +18,9 @@ from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 from touchify.src.config.TouchifyPreferences import TouchifyPreferences
 from touchify.src.config.various.ContextMenu import ContextMenu
 from jemlib.api_touchify.env import *
+
+if TYPE_CHECKING:
+    from touchify.src.config.resource_pack.ResourcePackExtensions import ResourcePackExtensions
 
 
 RegistryItemType = None | ContextMenu | PopupData | DockerGroup | CanvasPreset | Toolshelf | ToolboxData | CustomScript | PieWheelData | QuickActionsPreset
@@ -188,6 +193,24 @@ class TouchifySettings:
                     results[id] = item
 
         return results
+
+    @staticmethod
+    def getResourcePackFromResult(result: "ResourcePackExtensions.PresetSaveAs"):
+        selectedResourcePackIndex: int = int(result.resource_pack)
+
+        if selectedResourcePackIndex == 0:
+            #No Resource Pack Selected
+            return None
+        elif selectedResourcePackIndex == 1:
+            #New Resource Pack Selected
+            new_resource_pack = ResourcePack()
+            new_resource_pack.metadata.registry_name = result.new_resourcepack_name
+            TouchifySettings.resourcePacks().append(new_resource_pack)
+            return new_resource_pack
+        else:
+            #Existing Resource Pack Selected
+            actual_index = selectedResourcePackIndex - 2
+            return TouchifySettings.resourcePacks()[actual_index]
 
 
 

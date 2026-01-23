@@ -271,10 +271,9 @@ class ToolboxDocker(QDockWidget):
         editorResults: ResourcePackExtensions.PresetSaveAs = self.propertyEditor.exec_()
         if not editorResults: return
 
-        selectedResourcePackIndex: int = int(editorResults.resource_pack) - 1
-        if selectedResourcePackIndex <= -1: return
+        selectedResourcePack = TouchifySettings.getResourcePackFromResult(editorResults)
+        if not selectedResourcePack: return
 
-        selectedResourcePack = TouchifySettings.resourcePacks()[selectedResourcePackIndex]
         result = ToolboxData()
         result.update(PropertySystem.deepcopy(self.settingsManager.loadLayout()))
         result.preset_name = editorResults.display_name

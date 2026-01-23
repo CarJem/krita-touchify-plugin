@@ -11,25 +11,40 @@ class ResourcePackExtensions:
         def __init__(self) -> None:
             self.resource_pack: str = "0"
             self.display_name: str = ""
+            self.new_resourcepack_name: str = "New Resource Pack"
 
         def getKnownResourcePacks(self):
             results = []
             results.append("<unset>")
+            results.append("<new>")
             for entry in TouchifySettings.resourcePacks():
                 entry: ResourcePack
                 results.append(entry.metadata.registry_name)
 
             return results
+        
+        def propertygrid_sorted(self):
+            return [
+                "display_name",
+                "resource_pack",
+                "new_resourcepack_name"
+            ]
+
 
         def propertygrid_hidden(self):
-            return []
+            result = []
+            if self.resource_pack != "1":
+                result.append("new_resourcepack_name")
+            return result
 
         def propertygrid_listload(self):
             pass
 
         def propertygrid_labels(self):
             labels = {}
-            labels["resource_pack_destination"] = "Resource Pack"
+            labels["resource_pack"] = "Resource Pack"
+            labels["new_resourcepack_name"] = "Pack Name"
+            labels["new_resourcepack_id"] = "Pack Id"
             labels["display_name"] = "Display Name"
             return labels
 

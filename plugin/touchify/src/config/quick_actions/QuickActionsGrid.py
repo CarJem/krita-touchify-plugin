@@ -23,6 +23,7 @@ class QuickActionsGrid:
 
         def propertygrid_labels(self):
             labels = {}
+            labels["override_global_style"] = "Override global style"
             labels["max_brush_per_row"] = "Max buttons per row"
             labels["spacing_between_buttons"] = "Spacing between buttons"
             labels["brush_icon_size"] = "Button icon size"
@@ -30,6 +31,32 @@ class QuickActionsGrid:
             labels["list_column_count"] = "Number of list columns"
             labels["display_brush_names"] = "Display brush names"
             return labels
+        
+        def propertygrid_sorted(self):
+            return [
+                "override_global_style",
+                "list_mode",
+                "display_brush_names",
+                "exclusive_uncollapse",
+                "max_brush_per_row",
+                "spacing_between_buttons",
+                "spacing_between_grids",
+                "list_column_count",
+                "brush_icon_size"
+            ]
+
+        def propertygrid_hidden(self):
+            result = []
+            if not self.override_global_style:
+                result.append("list_mode")
+                result.append("display_brush_names")
+                result.append("exclusive_uncollapse")
+                result.append("max_brush_per_row")
+                result.append("spacing_between_buttons")
+                result.append("spacing_between_grids")
+                result.append("brush_icon_size")
+                result.append("list_column_count")
+            return result
         
         def propertygrid_restrictions(self):
             restrictions = {}
@@ -55,7 +82,36 @@ class QuickActionsGrid:
         self.ui = SourceGridComponents()
 
     def propertygrid_view_type(self):
-        return "sections"
+        return "form_alt"
+    
+    def __str__(self):
+        return self.name
+    
+    def propertygrid_sorted(self):
+        return [
+            "name",
+            "layout",
+            "brush_presets"
+        ]
+
+    def propertygrid_labels(self):
+        return {
+            "name": "Grid Name",
+            "layout": "Grid Settings",
+            "brush_presets": "Grid Items",
+        }
+    
+    def propertygrid_hidden(self):
+        return [
+            "ui",
+            "is_collapsed",
+            "is_active"
+        ]
+    
+    def propertygrid_restrictions(self):
+        results = {}
+        results["layout"] = RS.expandable()
+        return results
     
     def dump(self):
         result = QuickActionsGrid()

@@ -6,26 +6,6 @@ from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints as RS
 
 class QuickActionsPresetConfig:
 
-    class Shortcut:
-        def __init__(self, **args) -> None:
-            self.enable_add_brush_to_grid: bool = False
-            self.add_brush_to_grid = "W"
-            JsonExtensions.dictToObject(self, args, [])
-
-        def propertygrid_sisters(self):
-            row: dict[str, list[str]] = {}
-            row["add_brush_to_grid_group"] = {"items": ["enable_add_brush_to_grid","add_brush_to_grid"]}
-            return row
-
-        
-        def propertygrid_labels(self):
-            labels = {}
-            labels["add_brush_to_grid_group"] = "Add Brush to Grid"
-            return labels
-
-        def propertygrid_view_type(self):
-            return "form_alt"
-
     class Layout:
 
         class TabDisplayType(EnumStr):
@@ -50,13 +30,11 @@ class QuickActionsPresetConfig:
             return "form_alt"
         
     def __init__(self, **args) -> None:
-        self.shortcut = QuickActionsPresetConfig.Shortcut()
         self.layout = QuickActionsPresetConfig.Layout()
-        JsonExtensions.dictToObject(self, args, [QuickActionsPresetConfig.Shortcut, QuickActionsPresetConfig.Layout])
+        JsonExtensions.dictToObject(self, args, [QuickActionsPresetConfig.Layout])
         
     def propertygrid_sorted(self):
         return [
-            "shortcut",
             "layout",
         ]
     
@@ -65,7 +43,6 @@ class QuickActionsPresetConfig:
 
     def propertygrid_labels(self):
         labels = {}
-        labels["shortcut"] = "Shortcuts"
         labels["layout"] = "Layout"
         return labels
     
@@ -75,6 +52,5 @@ class QuickActionsPresetConfig:
     def propertygrid_restrictions(self):
         restrictions = {}
         restrictions["layout"] = RS.expandable()
-        restrictions["shortcut"] = RS.expandable()
         return restrictions
 

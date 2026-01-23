@@ -6,8 +6,8 @@ HAS_ALREADY_LOADED: bool = False
 class ResourcePackMetadata:
     def __defaults__(self):
         self.json_version: int = 1
-        self.registry_id: str = "NewActRegistry"
-        self.registry_name: str = "New Action Registry"
+        self.registry_id: str = "NewResourcePack"
+        self.registry_name: str = "New Resource Pack"
 
     def __init__(self, **args) -> None:
         self.__defaults__()
@@ -36,8 +36,8 @@ class ResourcePackMetadata:
 
     def propertygrid_labels(self):
         labels = {}
-        labels["registry_id"] = "Registry ID"
-        labels["registry_name"] = "Registry Name"
+        labels["registry_id"] = "Pack ID"
+        labels["registry_name"] = "Pack Name"
         return labels
 
     def propertygrid_restrictions(self):

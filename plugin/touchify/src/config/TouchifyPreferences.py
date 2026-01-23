@@ -126,6 +126,12 @@ class TouchifyPreferences:
                 "number_of_toolshelves": "Number of Toolshelves",
             }
 
+        def propertygrid_hints(self):
+            hints = {}
+            hints["number_of_widgetpads"] = "The number of Widgetpad dockers to be registered (requires a restart to take affect)"
+            hints["number_of_toolshelves"] = "The number of Toolshelf dockers to be registered (requires a restart to take affect)"
+            return hints
+
         def propertygrid_hidden(self):
             return [
                 "hidden_dockers_left",
@@ -210,6 +216,11 @@ class TouchifyPreferences:
 
             return row
 
+        def propertygrid_hints(self):
+            hints = {}
+            hints["preset_specific_options"] = "keeps track of the tool option dialog prefrences and load/saves them per brush preset, so keeping track of brush smoothing options between presets (requires Tool Options be displayed in a Docker, not in the Toolbar)"
+            return hints
+
         def propertygrid_view_type(self):
             return "form"
         
@@ -279,6 +290,11 @@ class TouchifyPreferences:
                 
 
             return result
+
+        def propertygrid_hints(self):
+            hints = {}
+            hints["Application_EnableScalingWorkarounds"] = "A series of optional options that can be used to work around the limited options for High DPI displays to get Krita scaled how you want it to be scaled. Proceed with CAUTION"
+            return hints
 
         def propertygrid_sisters(self):
             row: dict[str, list[str]] = {}
