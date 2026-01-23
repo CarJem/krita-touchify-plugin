@@ -1,5 +1,28 @@
-# alpha.0.0.6
-- TODO
+# beta.0.1.1
+- Several Fixes to Issues found in beta.0.1.0
+## Additions:
+- **Optional Features: Preset Specific Tool Options**
+    > A setting that keeps track of the tool option dialog prefrences and load/saves them per brush preset, so keeping track of brush smoothing options between presets (off by default, found in Touchify Settings)
+- **Optional Features: Application Scaling Workarounds**
+    > A series of optional options that can be used to work around the limited options for High DPI displays to get Krita scaled how you want it to be scaled
+- **Toolshelf / WidgetPad: Bugfixes and Features**
+    > This includes the following:
+    > - Added the ability to disable resize handles
+    > - A configurable amount of additional dockers registered (found in Touchify Settings, defaults to 4 of each)
+    > - Fixed floating behavior timings to be more reliable
+    > - Added support to add additional padding to trigger icons
+    > - Improved and Expanded the Section Requirement Contraints
+- **Toolbox: Bugfixes and Features**
+    > This includes the following:
+    > - Toolbox Edit Mode Now Supports Drag & Drop Operations
+    > - Fixed Trigger Buttons Not Opening Menus Correctly
+- **Quick Actions: Bugfixes and Features**
+    > This includes the following:
+    > - Theming is now done dynamically
+    > - Preset support has been added (similar to how it's implemented in toolshelves and the toolbox)
+    > - Added the ability for presets to contain multiple pages of actions
+    > - Added a button to quickly add the current preset to the actively selected grid
+
 
 # alpha.0.0.5
 ## Additions:

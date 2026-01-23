@@ -20,7 +20,6 @@ from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.api_touchify.env import TouchifyEnv
-from jemlib.managers.GlobalEvents import GlobalEvents
 from jemlib.managers.IconRepository import IconRepository
 from jemlib.managers.KritaSettings import KritaSettings
 from krita import DockWidgetFactory, DockWidgetFactoryBase  # type: ignore
@@ -119,8 +118,12 @@ class QuickActionsDocker(QDockWidget):
         # Settings Btn
         self.setting_btn = MenuIconButton("settings-button", self.show_settings)
         top_row_layout.addWidget(self.setting_btn, 0, Qt.AlignRight)
-        top_row_layout.addSpacerItem(QSpacerItem(2, 0, QSizePolicy.Fixed, QSizePolicy.Minimum))
 
+        # Add brush button
+        self.add_current_brush_btn = MenuIconButton("material:pen-plus", self.add_current_brush)
+        top_row_layout.addWidget(self.add_current_brush_btn, 0, Qt.AlignRight)
+
+        top_row_layout.addSpacerItem(QSpacerItem(2, 0, QSizePolicy.Fixed, QSizePolicy.Minimum))
         top_row_layout.addStretch()
 
         self.top_row_widget = QWidget()
@@ -188,7 +191,6 @@ class QuickActionsDocker(QDockWidget):
         self.api_window = instance.api_window
         self.actions_manager = instance.managers.mgr_actions
         self.canvas_manager = instance.managers.mgr_canvas
-        GlobalEvents().SIGNAL_KEY_RELEASED.connect(self.onGlobalKeyRelease)
         self.reload_grids()
 
     #region Event Handlers
@@ -384,10 +386,6 @@ class QuickActionsDocker(QDockWidget):
         menu: QMenu = self.sender()
         button: QPushButton = menu.parentWidget()
         menu.setMinimumWidth(button.width())
-    
-    def onGlobalKeyRelease(self, event: QKeyEvent):
-        if event.text().lower() == self.get_brush_add_key() and self.get_enable_add_brush_to_grid():
-            self.add_current_brush()
 
     def onPaletteChanged(self):
         Stylemap.instance(True)

@@ -2,7 +2,7 @@ import os
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from krita import Krita
+from jemlib.managers.IconRepository import IconRepository
 from touchify_quick_actions.utils.styles import MENU_ICON_BUTTON_STYLE # type: ignore
 
 
@@ -50,22 +50,7 @@ class MenuIconButton(QPushButton):
     def _load_and_set_icon(self, icon_name, button_size, icon_size):
         """Load icon from custom file or Krita and set it on the button"""
         try:
-            # Try loading custom icon first
-            custom_pixmap = self._load_custom_icon(icon_name)
-            if custom_pixmap:
-                scaled_pixmap = custom_pixmap.scaled(
-                    icon_size,
-                    icon_size,
-                    Qt.KeepAspectRatio,
-                    Qt.SmoothTransformation,
-                )
-                self.setIcon(QIcon(scaled_pixmap))
-                self.setIconSize(QSize(icon_size, icon_size))
-                return
-
-            # Fall back to Krita's built-in icons
-            app = Krita.instance()
-            icon = app.icon(icon_name)
+            icon = IconRepository.iconLoader(icon_name)
             if not icon or icon.isNull():
                 return
 
