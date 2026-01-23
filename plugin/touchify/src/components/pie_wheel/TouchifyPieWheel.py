@@ -25,7 +25,7 @@ from touchify.src.components.pie_wheel.api_composer.touchify_constants import SE
 
 
 
-from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
+from touchify.src.config.various.PieWheelData import PieWheelData
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from jemlib.managers.GlobalEvents import GlobalEvents

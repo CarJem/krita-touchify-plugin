@@ -5,7 +5,7 @@ from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 
 from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import TouchifyDataConstraints
-from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
+from touchify.src.config.TouchifyCompatibility import TouchifyCompatibility
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class Trigger:
@@ -28,8 +28,8 @@ class Trigger:
 
 
     def __defaults__(self):
-        from touchify.src.config.context_menu.ContextMenu import ContextMenu
-        from touchify.src.config.script.CustomScript import CustomScript
+        from touchify.src.config.various.ContextMenu import ContextMenu
+        from touchify.src.config.various.CustomScript import CustomScript
         
         self.registry_id: str = "NewTrigger"      
         self.variant: str = "action"
@@ -69,11 +69,11 @@ class Trigger:
         self.json_version: int = 3
     
     def __init__(self, **args) -> None:
-        from touchify.src.config.script.CustomScript import CustomScript
+        from touchify.src.config.various.CustomScript import CustomScript
 
         self.__is_registry = False
         self.__defaults__()
-        args = BackwardsCompatibility.Trigger(args)
+        args = TouchifyCompatibility.Trigger(args)
         JsonExtensions.dictToObject(self, args, [CustomScript, Trigger])
 
     def __str__(self):

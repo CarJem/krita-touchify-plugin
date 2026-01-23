@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from touchify.src.config.context_menu.ContextMenu import ContextMenu
+from touchify.src.config.various.ContextMenu import ContextMenu
 from touchify.src.config.triggers.Trigger import *
 from krita import *
 

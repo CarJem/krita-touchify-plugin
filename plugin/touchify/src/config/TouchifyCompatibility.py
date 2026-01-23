@@ -25,7 +25,7 @@ class Helpers:
     def isLegacyConfig(args: dict[str, any]):
         return Helpers.getVersion(args) == -1
 
-class BackwardsCompatibility:
+class TouchifyCompatibility:
 
     def Trigger(args: dict[str, any]):
         if not args: return args

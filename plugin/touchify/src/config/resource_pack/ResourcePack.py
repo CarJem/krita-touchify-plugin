@@ -1,18 +1,18 @@
 import types
 from jemlib.alib_propertygrid.PropertySystem import PropertySystem
-from touchify.src.config.pie_wheel.PieWheelData import PieWheelData
+from touchify.src.config.various.PieWheelData import PieWheelData
 from touchify.src.config.quick_actions.QuickActionsPreset import QuickActionsPreset
-from touchify.src.config.script.CustomScript import CustomScript
+from touchify.src.config.various.CustomScript import CustomScript
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.config.resource_pack.ResourcePackMetadata import ResourcePackMetadata
 import os
 
-from touchify.src.config.canvas_preset.CanvasPreset import CanvasPreset
-from touchify.src.config.docker_group.DockerGroup import DockerGroup
-from touchify.src.config.popup.PopupData import PopupData
+from touchify.src.config.various.CanvasPreset import CanvasPreset
+from touchify.src.config.various.DockerGroup import DockerGroup
+from touchify.src.config.various.PopupData import PopupData
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
-from touchify.src.config.context_menu.ContextMenu import ContextMenu
+from touchify.src.config.various.ContextMenu import ContextMenu
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_datatypes.TypedList import TypedList

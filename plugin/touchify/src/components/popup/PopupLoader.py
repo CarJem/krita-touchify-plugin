@@ -3,7 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from jemlib.api_touchify.env import *
-from touchify.src.config.popup.PopupData import PopupData
+from touchify.src.config.various.PopupData import PopupData
 from touchify.src.config.toolshelf.Toolshelf import Toolshelf
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
@@ -46,7 +46,7 @@ class PopupLoader(QObject):
         dockers = [ ]
 
         if data.type == PopupData.Variants.MultipleDockers:
-            from touchify.src.config.docker_group.DockerItem import DockerItem
+            from touchify.src.config.various.DockerItem import DockerItem
             for item in data.dockers_list:
                 item: DockerItem
                 dockers.append(item.id)

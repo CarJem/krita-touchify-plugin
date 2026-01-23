@@ -1,9 +1,9 @@
 from touchify.src.alib_propertygrid.data.TouchifyDataConstraints import TouchifyDataConstraints
-from touchify.src.config.docker_group.DockerItem import DockerItem
+from touchify.src.config.various.DockerItem import DockerItem
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_datatypes.TypedList import TypedList
-from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
+from touchify.src.config.TouchifyCompatibility import TouchifyCompatibility
 from jemlib.alib_datatypes.EnumStr import EnumStr
 
 from typing import TYPE_CHECKING
@@ -90,7 +90,7 @@ class PopupData:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = BackwardsCompatibility.PopupData(args)        
+        args = TouchifyCompatibility.PopupData(args)        
         JsonExtensions.dictToObject(self, args, [])
         
         from touchify.src.config.triggers.TriggerGroup import TriggerGroup

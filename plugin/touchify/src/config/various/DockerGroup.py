@@ -1,8 +1,8 @@
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_datatypes.TypedList import TypedList
-from touchify.src.config.docker_group.DockerItem import DockerItem
-from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
+from touchify.src.config.various.DockerItem import DockerItem
+from touchify.src.config.TouchifyCompatibility import TouchifyCompatibility
 
 class DockerGroup:
 
@@ -15,7 +15,7 @@ class DockerGroup:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = BackwardsCompatibility.DockerGroup(args)
+        args = TouchifyCompatibility.DockerGroup(args)
         JsonExtensions.dictToObject(self, args)
         self.docker_names = JsonExtensions.init_list(args, "docker_names", DockerItem)
 

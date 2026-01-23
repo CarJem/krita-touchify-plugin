@@ -9,7 +9,7 @@ from touchify.src.components.popup.PopupGeometryInfo import PopupGeometryInfo
 from touchify.src.components.popup.PopupLoader import PopupLoader
 from touchify.src.components.popup.PopupTitlebar import PopupTitlebar
 from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
-from touchify.src.config.popup.PopupData import PopupData
+from touchify.src.config.various.PopupData import PopupData
 from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 import jemlib.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions

@@ -4,7 +4,7 @@ from jemlib.alib_datatypes.EnumStr import EnumStr
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
-from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
+from touchify.src.config.TouchifyCompatibility import TouchifyCompatibility
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 
@@ -45,7 +45,7 @@ class ToolboxData:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = BackwardsCompatibility.ToolboxData(args)
+        args = TouchifyCompatibility.ToolboxData(args)
         JsonExtensions.dictToObject(self, args)
         self.categories = JsonExtensions.init_list(args, "categories", ToolboxDataCategory)
 

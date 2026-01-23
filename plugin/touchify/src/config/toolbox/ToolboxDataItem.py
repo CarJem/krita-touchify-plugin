@@ -2,7 +2,7 @@ from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
-from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
+from touchify.src.config.TouchifyCompatibility import TouchifyCompatibility
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class ToolboxDataItem:
@@ -17,7 +17,7 @@ class ToolboxDataItem:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = BackwardsCompatibility.ToolboxDataItem(args)
+        args = TouchifyCompatibility.ToolboxDataItem(args)
         JsonExtensions.dictToObject(self, args)
         self.items = JsonExtensions.init_list(args, "items", ToolboxDataSubitem)
 

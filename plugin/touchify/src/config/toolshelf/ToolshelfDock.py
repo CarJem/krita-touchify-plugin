@@ -1,4 +1,4 @@
-from touchify.src.config.BackwardsCompatibility import BackwardsCompatibility
+from touchify.src.config.TouchifyCompatibility import TouchifyCompatibility
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
@@ -107,7 +107,7 @@ class ToolshelfDock:
 
     def __init__(self, **args) -> None:
         self.__defaults__()
-        args = BackwardsCompatibility.ToolshelfDock(args)
+        args = TouchifyCompatibility.ToolshelfDock(args)
         from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
         JsonExtensions.dictToObject(self, args, [ToolshelfArea])
         self.action_section_contents = JsonExtensions.init_list(args, "action_section_contents", TriggerGroup)
