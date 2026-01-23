@@ -112,7 +112,8 @@ class DeveloperManager(object):
             clipboard.setText(result)
 
         self.dlg = PropertyGrid_SelectorDialog.Setup(self.dlg, None, "zoo", {
-            'button_names': [ "Exit...", "Copy to Clipboard..." ],
+            'button_names': [ "Copy to Clipboard...", "Exit..." ],
+            'close_on_save': False
         })
         self.dlg.onAcceptFunction = copyItemToClipboard
         self.dlg.load_list(type)
