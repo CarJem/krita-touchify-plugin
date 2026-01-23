@@ -1,5 +1,5 @@
 # beta.0.1.1
-- Several Fixes to Issues found in beta.0.1.0
+- Several Fixes to Issues found in beta.0.1.0 along with some QOL improvements
 ## Notable Changes:
 - **Optional Features: Preset Specific Tool Options**
     > A setting that keeps track of the tool option dialog prefrences and load/saves them per brush preset, so keeping track of brush smoothing options between presets (off by default, found in Touchify Settings)
