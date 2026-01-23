@@ -1,4 +1,4 @@
-ENABLE_DEBUG = True
+ENABLE_DEBUG = False
 
 ALLOWED_NAMESPACES = [
     "JemLib",

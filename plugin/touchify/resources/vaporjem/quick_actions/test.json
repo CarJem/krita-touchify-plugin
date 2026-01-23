@@ -10,13 +10,13 @@
                     "is_collapsed": false,
                     "is_active": true,
                     "layout": {
-                        "override_global_style": false,
+                        "override_global_style": true,
                         "max_brush_per_row": 8,
-                        "spacing_between_buttons": 1,
-                        "brush_icon_size": 65,
+                        "spacing_between_buttons": 0,
+                        "brush_icon_size": 62,
                         "list_mode": false,
                         "list_column_count": 1,
-                        "display_brush_names": true
+                        "display_brush_names": false
                     },
                     "brush_presets": [
                         {
