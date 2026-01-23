@@ -23,7 +23,7 @@ class TouchifyRegistry:
         return labels
     
     def propertygrid_view_type(self):
-        return "sections_horizontal"
+        return "tabs"
     
     def propertygrid_sorted(self):
         return [

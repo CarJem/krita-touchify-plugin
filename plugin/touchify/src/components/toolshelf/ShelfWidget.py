@@ -16,6 +16,7 @@ from touchify.src.components.toolshelf.ShelfDockArea import ShelfDockArea
 from touchify.src.components.toolshelf.ShelfTabBar import ShelfTabBar
 from touchify.src.components.toolshelf.ShelfToolbar import ShelfToolbar
 from touchify.src.components.toolshelf.ShelfWidgetStack import ShelfWidgetStack
+from touchify.src.config.resource_pack.ResourcePackExtensions import ResourcePackExtensions
 from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
 from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
@@ -23,7 +24,6 @@ from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.managers.GlobalEvents import GlobalEvents
-import touchify.src.components.toolshelf.ShelfClasses as ShelfClasses
 from touchify.src.settings.TouchifySettings import *
 from jemlib.api_touchify.env import *
 from touchify.src.managers.DockerManager import *
@@ -108,7 +108,7 @@ class ShelfWidget(QWidget):
             cached_state.preset_data = state
             self.sync(registry_index, no_reload)
         
-        def savePresetAs(self, editorResults: ShelfClasses.PresetSaveAs, state: ToolshelfArea, registry_index: int):
+        def savePresetAs(self, editorResults: ResourcePackExtensions.PresetSaveAs, state: ToolshelfArea, registry_index: int):
             selectedResourcePackIndex: int = int(editorResults.resource_pack) - 1
             if selectedResourcePackIndex <= -1: return
 
@@ -675,8 +675,8 @@ class ShelfWidget(QWidget):
         self.settingsLoader.savePreset(self.currentState(), self.registry_index)
 
     def savePresetAs(self):
-        self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ShelfClasses.PresetSaveAs())
-        result: ShelfClasses.PresetSaveAs = self.propertyEditor.exec_()
+        self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ResourcePackExtensions.PresetSaveAs())
+        result: ResourcePackExtensions.PresetSaveAs = self.propertyEditor.exec_()
         if not result: return
 
         self.settingsLoader.savePresetAs(result, self.currentState(), self.registry_index)

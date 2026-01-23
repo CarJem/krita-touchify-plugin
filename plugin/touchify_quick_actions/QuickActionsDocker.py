@@ -32,9 +32,9 @@ from touchify.src.PluginOptions import PluginOptions
 from touchify.src.config.quick_actions.QuickActionsPage import QuickActionsPage
 from touchify.src.config.quick_actions.QuickActionsPageConfig import QuickActionsPageConfig
 from touchify.src.config.quick_actions.QuickActionsPreset import QuickActionsPreset
+from touchify.src.config.resource_pack.ResourcePackExtensions import ResourcePackExtensions
 from touchify.src.config.triggers.Trigger import Trigger
 from touchify.src.settings.TouchifySettings import TouchifySettings
-from touchify_quick_actions.dataclasses import SourceSaveAs
 from touchify.src.config.quick_actions.QuickActionsPresetConfig import QuickActionsPresetConfig
 from touchify.src.config.quick_actions.QuickActionsGrid import QuickActionsGrid
 from touchify.src.config.quick_actions.QuickActionsItem import QuickActionsItem
@@ -989,8 +989,8 @@ class QuickActionsDocker(QDockWidget):
         self.reload_grids()
     
     def save_preset_as(self):
-        self.__property_dlg = PluginOptions.Setup(self.__property_dlg, self.api_window, SourceSaveAs.PresetSaveAs())
-        result: SourceSaveAs.PresetSaveAs = self.__property_dlg.exec_()
+        self.__property_dlg = PluginOptions.Setup(self.__property_dlg, self.api_window, ResourcePackExtensions.PresetSaveAs())
+        result: ResourcePackExtensions.PresetSaveAs = self.__property_dlg.exec_()
         if not result: return
 
         preset_data = self.get_current_preset_data()

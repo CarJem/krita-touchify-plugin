@@ -11,11 +11,11 @@ from krita import *
 from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.api_touchify.env import *
 from touchify.src.PluginOptions import PluginOptions
-from touchify.src.components.toolbox import ToolboxClasses
 from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
 from touchify.src.components.toolbox.ToolboxMenu import ToolboxMenu
 from touchify.src.components.toolbox.ToolboxStyles import ToolboxStyles
 from touchify.src.components.toolbox.ToolboxLayout import ToolboxEmptySpace
+from touchify.src.config.resource_pack.ResourcePackExtensions import ResourcePackExtensions
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from jemlib.managers.GlobalEvents import GlobalEvents
 from jemlib.api_touchify.env import *
@@ -267,8 +267,8 @@ class ToolboxDocker(QDockWidget):
         self.updateToolbox()
 
     def savePresetAs(self):
-        self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ToolboxClasses.PresetSaveAs())
-        editorResults: ToolboxClasses.PresetSaveAs = self.propertyEditor.exec_()
+        self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ResourcePackExtensions.PresetSaveAs())
+        editorResults: ResourcePackExtensions.PresetSaveAs = self.propertyEditor.exec_()
         if not editorResults: return
 
         selectedResourcePackIndex: int = int(editorResults.resource_pack) - 1
