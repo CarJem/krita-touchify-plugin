@@ -812,7 +812,17 @@
                             }
                         }
                     ],
-                    "ui": null
+                    "ui": {
+                        "container": null,
+                        "name_label": null,
+                        "collapse_button": null,
+                        "name_button": null,
+                        "header_layout": null,
+                        "header_row": null,
+                        "widget": null,
+                        "layout": null,
+                        "name_editor": null
+                    }
                 }
             ],
             "settings": {

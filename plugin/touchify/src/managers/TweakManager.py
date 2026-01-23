@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import *
 from jemlib.api_krita import KritaAPI
 from jemlib.api_krita.wrappers.window import WindowAPI
-from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from jemlib.api_touchify.env import *
 from touchify.src.components.tweaks.BrushEditorTweak import BrushEditorTweak
 from touchify.src.settings.TouchifySettings import *
@@ -16,8 +15,6 @@ SMALL_TAB_SIZE = 22
 SMALL_TAB_ICON_SIZE = 12
 SMALL_TAB_CLOSE_BUTTON_MARGIN = 2
 
-
-
 class TweakManager(QObject):
 
     def __init__(self, instance: "TouchifyWindow"):
@@ -27,8 +24,6 @@ class TweakManager(QObject):
         self.qt_window: QMainWindow = None
         self.brush_editor_tweak: BrushEditorTweak | None = None
 
-    #region Signals
-
     def Window_Load(self):
         KritaAPI.get_action("show_brush_editor").triggered.connect(self.onBrushEditorTrigged)
         self.api_window = self.app_window.api_window
@@ -37,81 +32,28 @@ class TweakManager(QObject):
         self.brush_editor_tweak = BrushEditorTweak(self.app_window.api_window, self.app_window.managers)
         self.rebuildStyleSheet()
 
-    def onBrushEditorTrigged(self):
+    def Window_Reload(self):
         self.brush_editor_tweak.refresh()
-
-    #endregion
-
-    #region Actions
+        self.rebuildStyleSheet()
 
     def Actions_Init(self, window: WindowAPI, path: str):
-
-        def createAction(id: str, text: str, menuLocation: str, setCheckable: bool, setChecked: bool, onToggled: any):
-            result = window.create_action(id, text, menuLocation)
-            result.setCheckable(setCheckable)
-            result.setChecked(setChecked)
-            result.toggled.connect(onToggled)
-            return result
-    
-        config = TouchifySettings.preferences()
-
-        nu_options_menu = QMenu("Tweaks", window.qwindow)
-        options_action = window.create_action(TouchifyEnv.ActionID.Styles.MENU, "Tweaks", path)
-        options_action.setMenu(nu_options_menu)
-        sublocation_path = "{0}/{1}".format(path, TouchifyEnv.ActionID.Styles.MENU)
-
-        nu_options_menu.addAction(createAction(TouchifyEnv.ActionID.Styles.PRIVACYMODE, "Privacy Mode", sublocation_path, True, config.Styles_PrivacyMode, self.privacyModeToggled))        
-        nu_options_menu.addAction(createAction(TouchifyEnv.ActionID.Styles.BORDERLESSTOOLBARS, "Borderless Toolbars", sublocation_path, True, config.Styles_BorderlessToolbar, self.toolbarBorderToggled))
-        nu_options_menu.addAction(createAction(TouchifyEnv.ActionID.Styles.TABHEIGHT, "Thin Document Tabs", sublocation_path, True, config.Styles_ThinDocumentTabs, self.tabHeightToggled))
-        nu_options_menu.addAction(createAction(TouchifyEnv.ActionID.Styles.DOCKEDBRUSHEDITOR, "Docked Brush Editor", sublocation_path, True, config.Styles_DockedBrushEditor, self.dockedBrushEditorToggled))
-        nu_options_menu.addAction(createAction(TouchifyEnv.ActionID.Styles.DOCKEDBRUSHEDITORZOOMFIX, "Brush Editor Zoom Fix", sublocation_path, True, config.Styles_BrushEditorZoomFix, self.brushEditorZoomFixToggled))
+        pass
 
     def Actions_Post(self):
-        settings_menu = self.qt_window.findChild(QMenu, 'settings')
-        KritaExtensions.moveActionTo(TouchifyEnv.ActionID.Styles.MENU, settings_menu, settings_menu, 'style_menu')
+        pass
 
-    #endregion
-
-    #region Toggles
-
-    def brushEditorZoomFixToggled(self, toggled):
-        TouchifySettings.preferences().Styles_BrushEditorZoomFix = toggled
-        TouchifySettings.preferences().save()
+    def onBrushEditorTrigged(self):
         self.brush_editor_tweak.refresh()
-
-    def dockedBrushEditorToggled(self, toggled):
-        TouchifySettings.preferences().Styles_DockedBrushEditor = toggled
-        TouchifySettings.preferences().save()
-        self.brush_editor_tweak.refresh()
-
-    def toolbarBorderToggled(self, toggled):
-        TouchifySettings.preferences().Styles_BorderlessToolbar = toggled
-        TouchifySettings.preferences().save()
-        self.rebuildStyleSheet()
-
-    def tabHeightToggled(self, toggled):
-        TouchifySettings.preferences().Styles_ThinDocumentTabs = toggled
-        TouchifySettings.preferences().save()
-        self.rebuildStyleSheet()
-        
-    def privacyModeToggled(self, toggled):
-        TouchifySettings.preferences().Styles_PrivacyMode = toggled
-        TouchifySettings.preferences().save()
-        self.rebuildStyleSheet()
-
-    #endregion
-
-    #region Methods
 
     def rebuildStyleSheet(self):
         if self.qt_window == None:
             return
 
-        config = TouchifySettings.preferences()
+        config = TouchifySettings.preferences().tweaks
 
         # region No Toolbar Borders
         full_style_sheet = ""
-        if config.Styles_BorderlessToolbar:
+        if config.borderless_toolbar:
             full_style_sheet += f"\n QToolBar {{ border: none; }} \n"    
         self.qt_window.setStyleSheet(full_style_sheet)
         #endregion
@@ -119,7 +61,7 @@ class TweakManager(QObject):
         # region Small Tabs
         canvas_style_sheet = ""
         
-        if config.Styles_ThinDocumentTabs:
+        if config.thin_document_tabs:
             canvas_style_sheet += f"""\n 
             QTabBar {{ icon-size: {SMALL_TAB_ICON_SIZE}px {SMALL_TAB_ICON_SIZE}px; }}
             QTabBar::tab {{ height: {SMALL_TAB_SIZE}px;  }} 
@@ -135,7 +77,7 @@ class TweakManager(QObject):
         # region Privacy Mode
         recentDocumentsListView = self.qt_window.findChild(QListView,'recentDocumentsListView')
         if recentDocumentsListView:
-            recentDocumentsListView.setHidden(config.Styles_PrivacyMode)
+            recentDocumentsListView.setHidden(config.enable_privacy_mode)
             recent_files_action = KritaAPI.get_action("file_open_recent")
             recent_files_native_actions = [
                 "no_entries",
@@ -144,10 +86,9 @@ class TweakManager(QObject):
             ]
             for item in recent_files_action.menu().actions():
                 if item.objectName() not in recent_files_native_actions:
-                    item.setVisible(not config.Styles_PrivacyMode)
+                    item.setVisible(not config.enable_privacy_mode)
         #endregion
 
-    #endregion
 
 
     

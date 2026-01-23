@@ -18,7 +18,7 @@ class BrushEditorTweak(QObject):
         self._blockSignals = False
 
     def eventFilter(self, a0: QObject, a1: QEvent):
-        if TouchifySettings.preferences().Styles_DockedBrushEditor:
+        if TouchifySettings.preferences().tweaks.docked_brush_editor:
             if a1.type() == QEvent.Type.Resize or a1.type() == QEvent.Type.Move:
                 if not self._blockSignals: self.update()
         return super().eventFilter(a0, a1)
@@ -37,7 +37,7 @@ class BrushEditorTweak(QObject):
             self.update()
 
     def update(self):
-        if not TouchifySettings.preferences().Styles_DockedBrushEditor: return
+        if not TouchifySettings.preferences().tweaks.docked_brush_editor: return
 
         container = self.qWin.findChild(QWidget, "KisPaintOpPresetsEditor")
         if not container: return None
@@ -58,10 +58,10 @@ class BrushEditorTweak(QObject):
 
     def refresh(self):
 
-        is_docked = TouchifySettings.preferences().Styles_DockedBrushEditor
+        is_docked = TouchifySettings.preferences().tweaks.docked_brush_editor
         if is_docked: self.installTweak()
 
-        fix_zoom = TouchifySettings.preferences().Styles_BrushEditorZoomFix
+        fix_zoom = TouchifySettings.preferences().tweaks.brush_editor_zoomfix
         if fix_zoom:
             canvas = self.notifier.getCurrentCanvas()
             if canvas: canvas.resetZoom()

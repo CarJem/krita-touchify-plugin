@@ -90,7 +90,7 @@ class ToolOptionsManager(QObject):
             self.options_page = None
 
         
-        if not TouchifySettings.preferences().Brushes_OptionsPerBrush: return
+        if not TouchifySettings.preferences().brushes.preset_specific_options: return
         if not new_brush_id: return
         if not self.__lastBrushId: return
 

@@ -56,6 +56,7 @@ class TouchifyManagers:
 
     def Reload(self):
         Logger.logDebug("Touchify", "TouchifyManagers", "Reload", "started")
+        self.mgr_tweaker.Window_Reload()
         self.mgr_actions.Window_Reload()
         for docker in self.__managedDockers:
             if not hasattr(docker, "onTouchifyReload"): pass

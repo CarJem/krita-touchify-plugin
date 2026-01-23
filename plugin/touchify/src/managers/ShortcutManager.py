@@ -36,10 +36,10 @@ class ShortcutsManager(object):
 
         self._hiddenDockers: dict[Qt.DockWidgetArea, list[str]] = {}
 
-        self._hiddenDockers[1] = TouchifySettings.preferences().DockerUtils_HiddenDockersLeft.split(",")
-        self._hiddenDockers[2] = TouchifySettings.preferences().DockerUtils_HiddenDockersRight.split(",")
-        self._hiddenDockers[4] = TouchifySettings.preferences().DockerUtils_HiddenDockersUp.split(",")
-        self._hiddenDockers[8] = TouchifySettings.preferences().DockerUtils_HiddenDockersDown.split(",")
+        self._hiddenDockers[1] = TouchifySettings.preferences().dockers.hidden_dockers_left.split(",")
+        self._hiddenDockers[2] = TouchifySettings.preferences().dockers.hidden_dockers_right.split(",")
+        self._hiddenDockers[4] = TouchifySettings.preferences().dockers.hidden_dockers_up.split(",")
+        self._hiddenDockers[8] = TouchifySettings.preferences().dockers.hidden_dockers_down.split(",")
 
     #endregion
 
@@ -216,13 +216,13 @@ class ShortcutsManager(object):
 
         match area:
             case 1:
-                TouchifySettings.preferences().DockerUtils_HiddenDockersLeft = ",".join(self._hiddenDockers[area])
+                TouchifySettings.preferences().dockers.hidden_dockers_left = ",".join(self._hiddenDockers[area])
             case 2:
-                TouchifySettings.preferences().DockerUtils_HiddenDockersRight = ",".join(self._hiddenDockers[area])
+                TouchifySettings.preferences().dockers.hidden_dockers_right = ",".join(self._hiddenDockers[area])
             case 4:
-                TouchifySettings.preferences().DockerUtils_HiddenDockersUp = ",".join(self._hiddenDockers[area])
+                TouchifySettings.preferences().dockers.hidden_dockers_up = ",".join(self._hiddenDockers[area])
             case 8:
-                TouchifySettings.preferences().DockerUtils_HiddenDockersDown = ",".join(self._hiddenDockers[area])
+                TouchifySettings.preferences().dockers.hidden_dockers_down = ",".join(self._hiddenDockers[area])
         TouchifySettings.preferences().save()
 
     #endregion

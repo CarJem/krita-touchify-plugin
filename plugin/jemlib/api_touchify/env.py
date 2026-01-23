@@ -63,10 +63,20 @@ class TouchifyEnv:
     
     class SettingsPath:
         TOUCHIFY="Touchify"
+
+        TOUCHIFY_CONFIG_CANVAS="Touchify/Canvas"
+        TOUCHIFY_CONFIG_DOCKERS="Touchify/Dockers"
+        TOUCHIFY_CONFIG_TWEAKS="Touchify/Tweaks"
+        TOUCHIFY_CONFIG_BRUSHES="Touchify/Brushes"
+        TOUCHIFY_CONFIG_APPLICATION="Touchify/Application"
+
+        CACHE="Touchify/Cache"
+        
         TOOLSHELF="Touchify/Shelves"
         TOOLSHELF_NOPRESETDATA="Touchify/Shelves/NoPresetData"
-        WIDGETPAD="Touchify/WidgetPads"
+        TOOLBOX="Touchify/Toolbox"
         TOOLBOX_NOPRESETDATA="Touchify/Toolbox/NoPresetData"
+
+        WIDGETPAD="Touchify/WidgetPads"
         SUB_VIEW="Touchify/SubView"
         QUICK_ACTIONS="Touchify/QuickActions"
-        CACHE="Touchify/Cache"

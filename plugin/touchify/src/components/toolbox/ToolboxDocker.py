@@ -49,10 +49,10 @@ class ToolboxDocker(QDockWidget):
 
         def getCurrentToolboxId(self) -> str:
             fallback_val = "none"
-            return KritaSettings.readSetting(TouchifyEnv.DockerID.TOOLBOX, "SelectedPreset", fallback_val)
+            return KritaSettings.readSetting(TouchifyEnv.SettingsPath.TOOLBOX, "SelectedPreset", fallback_val)
 
         def setCurrentToolboxId(self, id: str):
-            KritaSettings.writeSetting(TouchifyEnv.DockerID.TOOLBOX, "SelectedPreset", id, False)
+            KritaSettings.writeSetting(TouchifyEnv.SettingsPath.TOOLBOX, "SelectedPreset", id, False)
             GlobalEvents().SIGNAL_TOOLBOX_LAYOUT_UPDATED.emit()
 
         def getCurrentRegistryKey(self) -> "TouchifySettings.RegistryKey":

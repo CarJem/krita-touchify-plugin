@@ -10,14 +10,14 @@ class ApplicationManager(QObject):
     def __init__(self, parent: QObject):
         super().__init__(parent)
 
-        self.__allowScalingWorkarounds = TouchifySettings.preferences().Application_EnableScalingWorkarounds
-        self.__allowMenuIcons = TouchifySettings.preferences().Application_EnableMenuIcons
+        self.__allowScalingWorkarounds = TouchifySettings.preferences().application.Application_EnableScalingWorkarounds
+        self.__allowMenuIcons = TouchifySettings.preferences().application.Application_EnableMenuIcons
 
-        self.__useFakeHighDpiScaling = TouchifySettings.preferences().Scaling_UseFakeHighDpiScaling
-        self.__useHighDpiPixmaps = TouchifySettings.preferences().Scaling_UseHighDpiPixmaps
-        self.__use96DPI = TouchifySettings.preferences().Scaling_Use96Dpi
-        self.__adjustFontScale = TouchifySettings.preferences().Scaling_UseAdjustedFontScale
-        self.__fontScaleOffset = TouchifySettings.preferences().Scaling_AdjustedFontScale
+        self.__useFakeHighDpiScaling = TouchifySettings.preferences().application.Scaling_UseFakeHighDpiScaling
+        self.__useHighDpiPixmaps = TouchifySettings.preferences().application.Scaling_UseHighDpiPixmaps
+        self.__use96DPI = TouchifySettings.preferences().application.Scaling_Use96Dpi
+        self.__adjustFontScale = TouchifySettings.preferences().application.Scaling_UseAdjustedFontScale
+        self.__fontScaleOffset = TouchifySettings.preferences().application.Scaling_AdjustedFontScale
         
 
     def onApplicationLoad(self):

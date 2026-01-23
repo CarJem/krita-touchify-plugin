@@ -128,13 +128,13 @@ class CanvasManager(QObject):
             if event.type() == QEvent.Type.MouseButtonPress or event.type() == QEvent.Type.TabletPress:
                     match event.button():
                         case Qt.MouseButton.LeftButton:
-                            Trigger_Run(TouchifySettings.preferences().Canvas_LeftClickAction)
+                            Trigger_Run(TouchifySettings.preferences().canvas.canvas_left_click_action)
                             self.mouseLeftPress.emit()
                         case Qt.MouseButton.RightButton:
-                            Trigger_Run(TouchifySettings.preferences().Canvas_RightClickAction)     
+                            Trigger_Run(TouchifySettings.preferences().canvas.canvas_right_click_action)     
                             self.mouseRightPress.emit()
                         case Qt.MouseButton.MiddleButton:
-                            Trigger_Run(TouchifySettings.preferences().Canvas_MiddleClickAction)
+                            Trigger_Run(TouchifySettings.preferences().canvas.canvas_middle_click_action)
                             self.mouseMiddlePress.emit()
             elif event.type() == QEvent.Type.MouseButtonRelease or event.type() == QEvent.Type.TabletRelease:
                     if self.last_canvas_focus:
