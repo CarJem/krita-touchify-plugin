@@ -2,7 +2,7 @@ from typing import Union, Callable
 from PyQt5.QtCore import pyqtBoundSignal, QObject, pyqtSignal, QTimer
 from PyQt5.QtWidgets import QWidget, QButtonGroup, QAbstractButton
 from jemlib.alib_vaporjem import Logger
-from jemlib.api_touchify.ContextRequirements import ContextRequirements
+from jemlib.api_touchify.types.ContextRequirements import ContextRequirements
 from krita import ManagedColor, Resource, View, Canvas, Node, Window, Krita as KritaAPI
 
 

@@ -11,10 +11,10 @@ from jemlib.api_krita import KritaAPI
 from touchify_toolbox.src.components.ToolboxButton import ToolboxButton
 from touchify_toolbox.src.components.ToolboxSubtoolMenu import ToolboxSubtoolMenu
 from touchify_toolbox.src.components.ToolboxStyles import ToolboxStyles
-from touchify_toolbox.src.config.ToolboxData import ToolboxData
-from touchify_toolbox.src.config.ToolboxDataItem import ToolboxDataItem
-from touchify_toolbox.src.config.ToolboxDataSubitem import ToolboxDataSubitem
-from touchify.src.config.triggers.Trigger import Trigger
+from jemlib.api_touchify.config.toolbox.ToolboxData import ToolboxData
+from jemlib.api_touchify.config.toolbox.ToolboxDataItem import ToolboxDataItem
+from jemlib.api_touchify.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
+from jemlib.api_touchify.config.triggers.Trigger import Trigger
 from jemlib.managers.IconRepository import IconRepository
 
 

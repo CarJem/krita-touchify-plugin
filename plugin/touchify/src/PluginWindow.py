@@ -9,7 +9,7 @@ from jemlib.api_krita.wrappers.window import WindowAPI
 from jemlib.api_touchify.env import *
 
 from touchify.src.PluginOptions import PluginOptions
-from touchify.src.config.TouchifyRegistry import TouchifyRegistry
+from touchify.src.settings.TouchifyRegistry import TouchifyRegistry
 from touchify.src.managers.ApplicationManager import ApplicationManager
 from touchify.src.settings.TouchifySettings import TouchifySettings
 

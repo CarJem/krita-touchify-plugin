@@ -28,15 +28,15 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from touchify.src.PluginOptions import PluginOptions
-from touchify.src.config.quick_actions.QuickActionsPage import QuickActionsPage
-from touchify.src.config.quick_actions.QuickActionsPageConfig import QuickActionsPageConfig
-from touchify.src.config.quick_actions.QuickActionsPreset import QuickActionsPreset
-from touchify.src.config.resource_pack.ResourcePackExtensions import ResourcePackExtensions
-from touchify.src.config.triggers.Trigger import Trigger
+from jemlib.api_touchify.config.quick_actions.QuickActionsPage import QuickActionsPage
+from jemlib.api_touchify.config.quick_actions.QuickActionsPageConfig import QuickActionsPageConfig
+from jemlib.api_touchify.config.quick_actions.QuickActionsPreset import QuickActionsPreset
+from touchify.src.config.ResourcePackExtensions import ResourcePackExtensions
+from jemlib.api_touchify.config.triggers.Trigger import Trigger
 from touchify.src.settings.TouchifySettings import TouchifySettings
-from touchify.src.config.quick_actions.QuickActionsPresetConfig import QuickActionsPresetConfig
-from touchify.src.config.quick_actions.QuickActionsGrid import QuickActionsGrid
-from touchify.src.config.quick_actions.QuickActionsItem import QuickActionsItem
+from jemlib.api_touchify.config.quick_actions.QuickActionsPresetConfig import QuickActionsPresetConfig
+from jemlib.api_touchify.config.quick_actions.QuickActionsGrid import QuickActionsGrid
+from jemlib.api_touchify.config.quick_actions.QuickActionsItem import QuickActionsItem
 from touchify.src.alib_propertygrid.dialogs.QuickTriggerPickerDialog import QuickTriggerPickerDialog
 from touchify_quick_actions.dataclasses.SourcePageData import SourcePageData
 from touchify_quick_actions.dialogs.SettingsDialog import SettingsDialog

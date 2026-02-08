@@ -2,7 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_Subview import PropertyGrid_Subview
-from jemlib.api_touchify.ContextRequirements import ContextRequirements
+from jemlib.api_touchify.types.ContextRequirements import ContextRequirements
 from krita import *
 
 

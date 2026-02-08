@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from krita import QAction, QMenu, pyqtSignal
-from touchify_toolbox.src.config.ToolboxData import ToolboxData
-from touchify.src.settings.TouchifySettings import TouchifySettings
+from jemlib.api_touchify.config.toolbox.ToolboxData import ToolboxData
+
 
 
 from PyQt5.QtWidgets import QAction, QMenu
@@ -138,6 +138,7 @@ class ToolboxMenu(QMenu):
 
 
         menuTarget = self.presetsSubmenuAction.menu()
+        from touchify.src.settings.TouchifySettings import TouchifySettings
         registry = TouchifySettings.registry(ToolboxData)
         if registry != None:
             for key, preset in registry.items():

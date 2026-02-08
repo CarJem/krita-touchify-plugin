@@ -5,7 +5,7 @@ from touchify_toolshelves.src.components.ToolshelfNestedDock import ToolshelfNes
 from touchify_toolshelves.src.components.ShelfDock import ShelfDock
 from touchify.src.components.widgets.triggers.TriggerPanel import TriggerPanel
 from touchify.src.components.widgets.canvas.CanvasDualColorButton import CanvasDualColorButton
-from touchify_toolshelves.src.config.ToolshelfDock import ToolshelfDock
+from jemlib.api_touchify.config.toolshelf.ToolshelfDock import ToolshelfDock
 from touchify.src.components.widgets.brush.BrushBlendingSelector import BrushBlendingSelector
 from touchify.src.components.widgets.brush.BrushFlowSlider import BrushFlowSlider
 from touchify.src.components.widgets.brush.BrushOpacitySlider import BrushOpacitySlider
@@ -25,7 +25,7 @@ from krita import *
 
 from typing import TYPE_CHECKING
 
-from touchify.src.config.triggers.TriggerList import TriggerList
+from jemlib.api_touchify.config.triggers.TriggerList import TriggerList
 
 if TYPE_CHECKING:
     from touchify_toolshelves.src.components.ShelfWidget import ShelfWidget

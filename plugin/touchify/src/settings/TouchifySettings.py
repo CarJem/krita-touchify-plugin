@@ -5,25 +5,25 @@ from PyQt5.QtCore import *
 
 
 
-from touchify.src.config.various.PieWheelData import PieWheelData
-from touchify.src.config.quick_actions.QuickActionsPreset import QuickActionsPreset
-from touchify.src.config.resource_pack.ResourcePack import ResourcePack
-from touchify.src.config.TouchifyRegistry import TouchifyRegistry
-from touchify.src.config.various.CanvasPreset import CanvasPreset
-from touchify.src.config.various.DockerGroup import DockerGroup
-from touchify.src.config.various.PopupData import PopupData
-from touchify.src.config.various.CustomScript import CustomScript
-from touchify_toolbox.src.config.ToolboxData import ToolboxData
-from touchify_toolshelves.src.config.Toolshelf import Toolshelf
-from touchify.src.config.TouchifyPreferences import TouchifyPreferences
-from touchify.src.config.various.ContextMenu import ContextMenu
+from jemlib.api_touchify.config.pie_wheels.PieWheelData import PieWheelData
+from jemlib.api_touchify.config.quick_actions.QuickActionsPreset import QuickActionsPreset
+from touchify.src.config.ResourcePack import ResourcePack
+from touchify.src.settings.TouchifyRegistry import TouchifyRegistry
+from jemlib.api_touchify.config.canvas_preset.CanvasPreset import CanvasPreset
+from jemlib.api_touchify.config.docker_groups.DockerGroup import DockerGroup
+from jemlib.api_touchify.config.popups.PopupData import PopupData
+from jemlib.api_touchify.config.custom_scripts.CustomScript import CustomScript
+from jemlib.api_touchify.config.toolbox.ToolboxData import ToolboxData
+from jemlib.api_touchify.config.toolshelf.ToolshelfData import ToolshelfData
+from touchify.src.settings.TouchifyPreferences import TouchifyPreferences
+from jemlib.api_touchify.config.triggers.TriggerContextMenu import TriggerContextMenu
 from jemlib.api_touchify.env import *
 
 if TYPE_CHECKING:
-    from touchify.src.config.resource_pack.ResourcePackExtensions import ResourcePackExtensions
+    from touchify.src.config.ResourcePackExtensions import ResourcePackExtensions
 
 
-RegistryItemType = None | ContextMenu | PopupData | DockerGroup | CanvasPreset | Toolshelf | ToolboxData | CustomScript | PieWheelData | QuickActionsPreset
+RegistryItemType = None | TriggerContextMenu | PopupData | DockerGroup | CanvasPreset | ToolshelfData | ToolboxData | CustomScript | PieWheelData | QuickActionsPreset
 
 class TouchifySettings:
 
@@ -96,14 +96,14 @@ class TouchifySettings:
                     item: PopupData
                     id = f"{pack.INTERNAL_UUID_ID}/popup/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
-            elif type == ContextMenu:
+            elif type == TriggerContextMenu:
                 for item in pack.menus:
-                    item: ContextMenu
+                    item: TriggerContextMenu
                     id = f"{pack.INTERNAL_UUID_ID}/menu/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
-            elif type == Toolshelf:
+            elif type == ToolshelfData:
                 for item in pack.shelves:
-                    item: Toolshelf
+                    item: ToolshelfData
                     id = f"{pack.INTERNAL_UUID_ID}/shelves/{item.INTERNAL_UUID_ID}"
                     if item_id == id: return item
             elif type == ToolboxData:
@@ -151,9 +151,9 @@ class TouchifySettings:
                     item: PopupData
                     id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "popup", item.INTERNAL_UUID_ID)
                     results[id] = item
-            elif type == ContextMenu:
+            elif type == TriggerContextMenu:
                 for item in pack.menus:
-                    item: ContextMenu
+                    item: TriggerContextMenu
                     id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "menu", item.INTERNAL_UUID_ID)
                     results[id] = item
             elif type == DockerGroup:
@@ -166,9 +166,9 @@ class TouchifySettings:
                     item: CanvasPreset
                     id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "canvas_preset", item.INTERNAL_UUID_ID)
                     results[id] = item
-            elif type == Toolshelf:
+            elif type == ToolshelfData:
                 for item in pack.shelves:
-                    item: Toolshelf
+                    item: ToolshelfData
                     id = TouchifySettings.RegistryKey(pack.INTERNAL_UUID_ID, pack.metadata.registry_name, "shelves", item.INTERNAL_UUID_ID)
                     results[id] = item
             elif type == ToolboxData:

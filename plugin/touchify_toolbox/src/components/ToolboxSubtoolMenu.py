@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from krita import *
-from touchify_toolbox.src.config.ToolboxDataItem import ToolboxDataItem
+from jemlib.api_touchify.config.toolbox.ToolboxDataItem import ToolboxDataItem
 
 class ToolboxSubtoolMenu(QMenu): # this is the subtools menu
 

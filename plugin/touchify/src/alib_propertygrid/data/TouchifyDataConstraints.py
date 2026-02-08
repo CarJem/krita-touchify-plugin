@@ -69,19 +69,23 @@ class TouchifyDataConstraints:
 
     @staticmethod
     def strRegistryModType(type: StrRegistryMod):
-        from touchify.src.config.various.CanvasPreset import CanvasPreset
-        from touchify.src.config.various.DockerGroup import DockerGroup
-        from touchify.src.config.various.PieWheelData import PieWheelData
-        from touchify.src.config.various.PopupData import PopupData
-        from touchify.src.config.various.ContextMenu import ContextMenu
-        from touchify.src.config.various.CustomScript import CustomScript
-        from touchify_toolshelves.src.config.Toolshelf import Toolshelf
+        from jemlib.api_touchify.config.canvas_preset.CanvasPreset import CanvasPreset
+        from jemlib.api_touchify.config.docker_groups.DockerGroup import DockerGroup
+        from jemlib.api_touchify.config.pie_wheels.PieWheelData import PieWheelData
+        from jemlib.api_touchify.config.popups.PopupData import PopupData
+        from jemlib.api_touchify.config.triggers.TriggerContextMenu import TriggerContextMenu
+        from jemlib.api_touchify.config.custom_scripts.CustomScript import CustomScript
+        
 
         if type == TouchifyDataConstraints.StrRegistryMod.PopupRegistry: return PopupData
         elif type == TouchifyDataConstraints.StrRegistryMod.DockerGroupRegistry: return DockerGroup
         elif type == TouchifyDataConstraints.StrRegistryMod.CanvasPresetRegistry: return CanvasPreset
-        elif type == TouchifyDataConstraints.StrRegistryMod.MenuRegistry: return ContextMenu
-        elif type == TouchifyDataConstraints.StrRegistryMod.ShelfRegistry: return Toolshelf
+        elif type == TouchifyDataConstraints.StrRegistryMod.MenuRegistry: return TriggerContextMenu
+        elif type == TouchifyDataConstraints.StrRegistryMod.ShelfRegistry: 
+            try:
+                from jemlib.api_touchify.config.toolshelf.ToolshelfData import ToolshelfData
+                return ToolshelfData
+            except: return None
         elif type == TouchifyDataConstraints.StrRegistryMod.ScriptRegistry: return CustomScript
         elif type == TouchifyDataConstraints.StrRegistryMod.PieWheelRegistry: return PieWheelData
         else: return None

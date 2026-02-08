@@ -6,13 +6,13 @@ from jemlib.api_krita import KritaAPI
 
 from touchify.__env__ import REGISTERED_ACTIONS_FILE
 from jemlib.alib_vaporjem import Logger
-from touchify.src.config.various.PieWheelData import PieWheelData
-from touchify.src.config.resource_pack.ResourcePack import ResourcePack
-from touchify.src.config.resource_pack.ResourcePackMetadata import ResourcePackMetadata
-from touchify.src.config.various.CanvasPreset import CanvasPreset
-from touchify.src.config.various.DockerGroup import DockerGroup
-from touchify.src.config.various.ContextMenu import ContextMenu
-from touchify.src.config.various.CustomScript import CustomScript
+from jemlib.api_touchify.config.pie_wheels.PieWheelData import PieWheelData
+from touchify.src.config.ResourcePack import ResourcePack
+from touchify.src.config.ResourcePackMetadata import ResourcePackMetadata
+from jemlib.api_touchify.config.canvas_preset.CanvasPreset import CanvasPreset
+from jemlib.api_touchify.config.docker_groups.DockerGroup import DockerGroup
+from jemlib.api_touchify.config.triggers.TriggerContextMenu import TriggerContextMenu
+from jemlib.api_touchify.config.custom_scripts.CustomScript import CustomScript
 
 import jemlib.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 from touchify.src.components.widgets.triggers.TriggerMenuWidget import TriggerMenuWidget
@@ -24,13 +24,11 @@ from jemlib.api_touchify.env import *
 
 from functools import partial
 
-from touchify.src.config.triggers.Trigger import Trigger
-from touchify.src.config.various.PopupData import PopupData
+from jemlib.api_touchify.config.triggers.Trigger import Trigger
+from jemlib.api_touchify.config.popups.PopupData import PopupData
 from jemlib.alib_vaporjem.extensions.krita_extensions import *
 
 from touchify.src.settings.TouchifySettings import TouchifySettings
-
-from touchify.src.components.popup.PopupWidget import PopupWidget
 
 from jemlib.alib_kis.KritaActions import KritaActions
 
@@ -62,7 +60,7 @@ class ActionManager(QObject):
         self.custom_docker_states = {}
         self.registeredActions = {}
         self.registeredActionsData = {}
-        self.active_popups: dict[str, PopupWidget] = {}
+        self.active_popups: dict[str, any] = {}
         self.composer_action_down: bool = False
         self.composer_action_down_start: QDateTime = QDateTime.currentDateTime()
         self.pie_wheel_api: Extension = None
@@ -203,10 +201,12 @@ class ActionManager(QObject):
             if popup_id in self.active_popups: 
                 del self.active_popups[popup_id]
 
-            print("attempting to build")
-            popup = PopupWidget(self.api_window.qwindow.window(), id, data, self.managers)
-            if popup == None: 
-                print("failed to build")
+            try:
+                from touchify_toolshelves.src.components.PopupWidget import PopupWidget
+                popup = PopupWidget(self.api_window.qwindow.window(), id, data, self.managers)
+                if popup == None: 
+                    return
+            except:
                 return
             
             self.active_popups[popup_id] = popup
@@ -352,15 +352,19 @@ class ActionManager(QObject):
         Logger.logDebug("Touchify", "ActionManager", "OnEvent_ReloadRegisteredActions", f"finished")
 
     def OnEvent_DisposePopups(self):
-        
-        for popup_id in self.active_popups:
-            try:
-                Logger.logDebug("Touchify", "ActionManager", "OnEvent_DisposePopups", f"disposing: {popup_id}")
-                popup: PopupWidget = self.active_popups[popup_id]
-                popup.dispose()
-                Logger.logDebug("Touchify", "ActionManager", "OnEvent_DisposePopups", f"dispose finished: {popup_id}")
-            except:
-                Logger.logDebug("Touchify", "ActionManager", "OnEvent_DisposePopups", f"dispose FAILED: {popup_id}")
+        try:
+            from touchify_toolshelves.src.components.PopupWidget import PopupWidget
+            for popup_id in self.active_popups:
+                try:
+                    Logger.logDebug("Touchify", "ActionManager", "OnEvent_DisposePopups", f"disposing: {popup_id}")
+                    popup: PopupWidget = self.active_popups[popup_id]
+                    popup.dispose()
+                    Logger.logDebug("Touchify", "ActionManager", "OnEvent_DisposePopups", f"dispose finished on {popup_id}")
+                except Exception as ex:
+                    Logger.logDebug("Touchify", "ActionManager", "OnEvent_DisposePopups", f"dispose FAILED on {popup_id}: {ex}")
+        except Exception as exx:
+            Logger.logDebug("Touchify", "ActionManager", "OnEvent_DisposePopups", f"dispose FAILED: {exx}")
+
         self.active_popups.clear()
 
     def OnEvent_GlobalMouseRelease(self):
@@ -387,8 +391,8 @@ class ActionManager(QObject):
 
     def ButtonEvent_ShortcutComposer(self, btn: TriggerButton, onClick: any):
         def tryFindParentPopup(source: QWidget):
-            from touchify.src.components.popup.PopupWidget import PopupWidget
             try:
+                from touchify_toolshelves.src.components.PopupWidget import PopupWidget
                 widget = source.parent()
                 while (widget):
                     foo = widget
@@ -408,15 +412,20 @@ class ActionManager(QObject):
         self.OnEvent_ComposerStart()
 
     def ButtonEvent_ClosePopup(self, btn: TriggerButton):
-        if btn:
-            parent: QWidget | None = btn.parentWidget()
-            while parent:
-                if isinstance(parent, PopupWidget):
-                    parent.closePopup()
-                    return
-                else:
-                    parent = parent.parentWidget()
-            return
+        try:
+            from touchify_toolshelves.src.components.PopupWidget import PopupWidget
+            if btn:
+                parent: QWidget | None = btn.parentWidget()
+                while parent:
+                    if isinstance(parent, PopupWidget):
+                        parent.closePopup()
+                        return
+                    else:
+                        parent = parent.parentWidget()
+                return
+        except Exception as ex:
+            Logger.logError("Touchify", "ActionManager", "ButtonEvent_ClosePopup", f"Error: {ex}")
+
                 
     #endregion
 
@@ -448,8 +457,8 @@ class ActionManager(QObject):
                    
     def Button_Menu(self, act: Trigger, classType: type = TriggerButton):
         if act.variant == Trigger.Variants.Shared_Menu:
-            data: ContextMenu = TouchifySettings.registryItem(act.refrenced_menu, ContextMenu)
-            if not isinstance(data, ContextMenu) or data == None: return None
+            data: TriggerContextMenu = TouchifySettings.registryItem(act.refrenced_menu, TriggerContextMenu)
+            if not isinstance(data, TriggerContextMenu) or data == None: return None
         elif act.variant == Trigger.Variants.Menu:
             data = act.menu_data
         else:
@@ -574,10 +583,10 @@ class ActionManager(QObject):
                 if data.extra_composer_mode: self.OnEvent_ComposerStart()
                 action.trigger()
     
-    def Execute_Menu(self, action: QAction, id: str=None, data: ContextMenu=None):
+    def Execute_Menu(self, action: QAction, id: str=None, data: TriggerContextMenu=None):
         if id:
-            menu_data: ContextMenu = TouchifySettings.registryItem(id, ContextMenu)
-            if not isinstance(menu_data, ContextMenu) or menu_data == None: return
+            menu_data: TriggerContextMenu = TouchifySettings.registryItem(id, TriggerContextMenu)
+            if not isinstance(menu_data, TriggerContextMenu) or menu_data == None: return
         elif data:
             menu_data = data
         else:

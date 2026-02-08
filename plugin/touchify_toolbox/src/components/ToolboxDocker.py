@@ -24,19 +24,20 @@ from touchify_toolbox.src.components.ToolboxWidget import ToolboxWidget
 from touchify_toolbox.src.components.ToolboxScrollArea import ToolboxScrollArea
 
 
-from touchify.src.settings.TouchifySettings import TouchifySettings
 
-from touchify.src.config.resource_pack.ResourcePackExtensions import ResourcePackExtensions
-from touchify_toolbox.src.config.ToolboxData import ToolboxData
-from touchify_toolbox.src.config.ToolboxDataCategory import ToolboxDataCategory
-from touchify_toolbox.src.config.ToolboxDataItem import ToolboxDataItem
+
+
+from jemlib.api_touchify.config.toolbox.ToolboxData import ToolboxData
+from jemlib.api_touchify.config.toolbox.ToolboxDataCategory import ToolboxDataCategory
+from jemlib.api_touchify.config.toolbox.ToolboxDataItem import ToolboxDataItem
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from touchify.src.PluginOptions import PluginOptions
     from touchify.src.PluginManagers import TouchifyManagers
     from touchify.src.PluginWindow import TouchifyWindow
+    from touchify.src.settings.TouchifySettings import TouchifySettings
+    from touchify.src.PluginOptions import PluginOptions
 
     
 
@@ -58,6 +59,7 @@ class ToolboxDocker(QDockWidget):
             GlobalEvents().SIGNAL_TOOLBOX_LAYOUT_UPDATED.emit()
 
         def getCurrentRegistryKey(self) -> "TouchifySettings.RegistryKey":
+            from touchify.src.settings.TouchifySettings import TouchifySettings
             registry = TouchifySettings.registry(ToolboxData)
             registry_selection: str = self.getCurrentToolboxId()
 
@@ -70,6 +72,7 @@ class ToolboxDocker(QDockWidget):
 
         def loadLayout(self) -> ToolboxData:
             if self.getCurrentToolboxId().lower() != "none":
+                from touchify.src.settings.TouchifySettings import TouchifySettings
                 registry = TouchifySettings.registry(ToolboxData)
                 registry_selection = self.getCurrentToolboxId()
 
@@ -91,6 +94,7 @@ class ToolboxDocker(QDockWidget):
                 KritaSettings.writeSetting(TouchifyEnv.SettingsPath.TOOLBOX_NOPRESETDATA, "Cache", jsonStr, False)
                 GlobalEvents().SIGNAL_TOOLBOX_LAYOUT_UPDATED.emit()
             else:
+                from touchify.src.settings.TouchifySettings import TouchifySettings
                 TouchifySettings.save()
                 TouchifySettings.load()
                 GlobalEvents().SIGNAL_TOOLBOX_LAYOUT_UPDATED.emit()
@@ -269,7 +273,10 @@ class ToolboxDocker(QDockWidget):
         self.updateToolbox()
 
     def savePresetAs(self):
+        from touchify.src.settings.TouchifySettings import TouchifySettings
         from touchify.src.PluginOptions import PluginOptions
+        from touchify.src.config.ResourcePackExtensions import ResourcePackExtensions
+
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ResourcePackExtensions.PresetSaveAs())
         editorResults: ResourcePackExtensions.PresetSaveAs = self.propertyEditor.exec_()
         if not editorResults: return
@@ -284,12 +291,13 @@ class ToolboxDocker(QDockWidget):
         self.settingsManager.saveLayout(result, False)
 
     def addSection(self):
+        from touchify.src.PluginOptions import PluginOptions
+
         layout_config = self.settingsManager.loadLayout()
 
         avaliable_section_names = self.getSectionNames(layout_config)
         if not avaliable_section_names: return
         
-        from touchify.src.PluginOptions import PluginOptions
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ToolboxDataCategory())
         result: ToolboxDataCategory = self.propertyEditor.exec_()
         if not result: return
@@ -300,6 +308,7 @@ class ToolboxDocker(QDockWidget):
         self.settingsManager.saveLayout(layout_config)
 
     def editSection(self, id: str):
+        from touchify.src.PluginOptions import PluginOptions
         layout_config = self.settingsManager.loadLayout()
         
         avaliable_section_names = self.getSectionNames(layout_config)
@@ -310,7 +319,6 @@ class ToolboxDocker(QDockWidget):
 
         selected_section_index = layout_config.categories.index(selected_section)
         
-        from touchify.src.PluginOptions import PluginOptions
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), selected_section)
         result: ToolboxDataCategory = self.propertyEditor.exec_()
         if not result: return
@@ -346,12 +354,12 @@ class ToolboxDocker(QDockWidget):
         self.settingsManager.saveLayout(layout_config)
 
     def addTool(self, section_id: str):
+        from touchify.src.PluginOptions import PluginOptions
         layout_config = self.settingsManager.loadLayout()
 
         selected_section = self.getSectionByUUID(layout_config, section_id)
         if not selected_section: return
         
-        from touchify.src.PluginOptions import PluginOptions
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ToolboxDataItem())
         result: ToolboxDataItem = self.propertyEditor.exec_()
         if not result: return
@@ -360,6 +368,7 @@ class ToolboxDocker(QDockWidget):
         self.settingsManager.saveLayout(layout_config)
 
     def editTool(self, section_id: str, tool_id: str):
+        from touchify.src.PluginOptions import PluginOptions
         layout_config = self.settingsManager.loadLayout()
 
         selected_section = self.getSectionByUUID(layout_config, section_id)
@@ -372,7 +381,6 @@ class ToolboxDocker(QDockWidget):
         selected_item_index = selected_button._dataIndex
         if len(selected_section.items) < selected_item_index or selected_item_index < 0: return
 
-        from touchify.src.PluginOptions import PluginOptions
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), selected_item)
         result: ToolboxDataItem = self.propertyEditor.exec_()
         if not result: return

@@ -1,11 +1,11 @@
 from uuid import uuid4
 
 from PyQt5.QtGui import QPaintEvent, QPainter, QPen
-from jemlib.api_touchify.ContextRequirements import ContextRequirements
+from jemlib.api_touchify.types.ContextRequirements import ContextRequirements
 from touchify.src.components.widgets.other.DockerContainer import DockerContainer
 from touchify_toolshelves.src.components.ShelfContainer import ShelfContainer, ShelfHContainer, ShelfSplitterContainer, ShelfVContainer
 from touchify_toolshelves.src.components.ShelfDockDrop import ShelfDropDock
-from touchify_toolshelves.src.config.ToolshelfDock import ToolshelfDock
+from jemlib.api_touchify.config.toolshelf.ToolshelfDock import ToolshelfDock
 from jemlib.alib_pyqtgraph.dockarea.Dock import Dock, DockLabel
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import *

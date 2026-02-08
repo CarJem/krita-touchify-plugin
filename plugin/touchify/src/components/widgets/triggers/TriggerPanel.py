@@ -1,7 +1,7 @@
 import uuid
 from jemlib.alib_kis.KritaActions import KritaActions
 from krita import *
-from touchify.src.config.triggers.TriggerList import TriggerList
+from jemlib.api_touchify.config.triggers.TriggerList import TriggerList
 from jemlib.alib_datatypes.EnumStr import EnumStr
 
 from touchify.src.components.widgets.triggers.TriggerButton import *
@@ -9,8 +9,8 @@ from touchify.src.components.widgets.triggers.TriggerButton import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-from touchify.src.config.triggers.Trigger import Trigger
-from touchify.src.config.triggers.TriggerGroup import TriggerGroup
+from jemlib.api_touchify.config.triggers.Trigger import Trigger
+from jemlib.api_touchify.config.triggers.TriggerGroup import TriggerGroup
 from jemlib.api_touchify.env import *
 from touchify.src.settings.TouchifySettings import *
 from typing import TYPE_CHECKING

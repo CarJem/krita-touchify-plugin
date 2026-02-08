@@ -7,8 +7,8 @@ from PyQt5.QtWidgets import *
 from jemlib.api_krita import KritaAPI
 
 
-from touchify_toolshelves.src.config.ToolshelfAreaSettings import ToolshelfAreaSettings
-from touchify_toolshelves.src.config.ToolshelfArea import ToolshelfArea
+from jemlib.api_touchify.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
+from jemlib.api_touchify.config.toolshelf.ToolshelfArea import ToolshelfArea
 from touchify.__env__ import *
 from jemlib.managers.IconRepository import IconRepository
 

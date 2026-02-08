@@ -7,8 +7,8 @@ from touchify_toolshelves.src.components.ShelfDock import ShelfDock
 
 from PyQt5.QtWidgets import QSizePolicy
 
-from touchify_toolshelves.src.config.ToolshelfArea import ToolshelfArea
-from touchify_toolshelves.src.config.ToolshelfDock import ToolshelfDock
+from jemlib.api_touchify.config.toolshelf.ToolshelfArea import ToolshelfArea
+from jemlib.api_touchify.config.toolshelf.ToolshelfDock import ToolshelfDock
 
 if TYPE_CHECKING:
     from touchify_toolshelves.src.components.ShelfWidget import ShelfWidget

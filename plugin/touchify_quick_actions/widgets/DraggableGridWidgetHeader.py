@@ -18,7 +18,7 @@ from jemlib.alib_widgets.widget.DropIndicatorOverlay import DropIndicatorOverlay
 
 if TYPE_CHECKING:
     from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
-    from touchify.src.config.quick_actions.QuickActionsGrid import QuickActionsGrid
+    from jemlib.api_touchify.config.quick_actions.QuickActionsGrid import QuickActionsGrid
 
 
 class DraggableGridWidgetHeader(QWidget):

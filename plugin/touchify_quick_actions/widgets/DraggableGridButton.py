@@ -13,7 +13,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
-from touchify.src.config.triggers.Trigger import Trigger
+from jemlib.api_touchify.config.triggers.Trigger import Trigger
 from touchify_quick_actions.dialogs.SettingsDialog import SettingsDialog
 from jemlib.alib_widgets.widget.DropIndicatorOverlay import DropIndicatorOverlay
 from touchify_quick_actions.utils.styles import DRAGGABLE_GRID_BUTTON_BACKGROUND_COLOR, DRAGGABLE_GRID_BUTTON_ICON_STYLE, DRAGGABLE_GRID_BUTTON_LABEL_STYLE
@@ -22,8 +22,8 @@ from ..utils.drag_utils import encode_single, encode_multi
 
 if TYPE_CHECKING:
     from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
-    from touchify.src.config.quick_actions.QuickActionsPage import QuickActionsGrid
-    from touchify.src.config.quick_actions.QuickActionsItem import QuickActionsItem
+    from jemlib.api_touchify.config.quick_actions.QuickActionsPage import QuickActionsGrid
+    from jemlib.api_touchify.config.quick_actions.QuickActionsItem import QuickActionsItem
 
 class DraggableGridButton(QWidget):
     """A draggable widget for brush presets with optional name display."""

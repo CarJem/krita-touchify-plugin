@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from krita import QAction, QMenu, pyqtSignal
-from touchify_toolshelves.src.config.Toolshelf import Toolshelf
-from touchify.src.settings.TouchifySettings import TouchifySettings
+from jemlib.api_touchify.config.toolshelf.ToolshelfData import ToolshelfData
+
 
 
 from PyQt5.QtWidgets import QAction, QMenu
@@ -114,6 +114,7 @@ class ShelfContextMenu(QMenu):
         self.loadPresets(currentPresetId)
 
     def loadPresets(self, currentPresetId: str):
+        from touchify.src.settings.TouchifySettings import TouchifySettings
         self.shelfPresetsSubmenuAction.menu().clear()
 
         if self.is_restricted:
@@ -132,14 +133,14 @@ class ShelfContextMenu(QMenu):
         else:
             menuTarget = self.shelfPresetsSubmenuAction.menu()
 
-        registry = TouchifySettings.registry(Toolshelf)
+        registry = TouchifySettings.registry(ToolshelfData)
         if registry != None:
             for key, preset in registry.items():
                 if not key.id in menus:
                     menus[key.id] = menuTarget.addMenu(key.name)
                     sub_menus[key.id] = {}
 
-                preset: Toolshelf
+                preset: ToolshelfData
                 action = QAction(preset.preset_name, self)
                 action.setCheckable(not self.is_nested)
                 if not self.is_nested:

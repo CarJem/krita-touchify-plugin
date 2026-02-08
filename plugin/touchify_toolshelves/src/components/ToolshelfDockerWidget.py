@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING
 
 
 from jemlib.api_touchify.env import *
-from touchify_toolshelves.src.config.ToolshelfArea import ToolshelfArea
-from touchify_toolshelves.src.config.ToolshelfAreaSettings import ToolshelfAreaSettings
+from jemlib.api_touchify.config.toolshelf.ToolshelfArea import ToolshelfArea
+from jemlib.api_touchify.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 from jemlib.managers.GlobalEvents import GlobalEvents
 
 if TYPE_CHECKING:
@@ -23,9 +23,6 @@ from touchify_toolshelves.src.components.ShelfWidget import ShelfWidget
 TIMER_INTERVAL = 10
 
 class ToolshelfDockerWidget(DockWidget):
-
-    DOCKER_TITLE=f"{TouchifyEnv.Title.CORE_DOCKERS_PREFIX} Toolshelf"
-    CLONE_DOCKER_TITLE=f"{TouchifyEnv.Title.CLONE_DOCKERS_PREFIX}  Toolshelf"
 
     resizeByDefaultRequested=pyqtSignal()
 
@@ -41,11 +38,11 @@ class ToolshelfDockerWidget(DockWidget):
 
         
         if index == 0:
-            self.setWindowTitle(ToolshelfDockerWidget.DOCKER_TITLE)
+            self.setWindowTitle(f"{TouchifyEnv.Title.CORE_DOCKERS_PREFIX} Toolshelf")
             self.PanelIndex = 0
         elif index != -1:
             self.PanelIndex = index
-            self.setWindowTitle(f"{ToolshelfDockerWidget.CLONE_DOCKER_TITLE} (Ext. {index})")
+            self.setWindowTitle(f"{TouchifyEnv.Title.TOOLSHELF_DOCKERS_PREFIX} Toolshelf (Ext. {index})")
         
         GlobalEvents().SIGNAL_TOOLSHELF_PRESET_UPDATED.connect(self.onPresetUpdated)
         self.startTimer(TIMER_INTERVAL)

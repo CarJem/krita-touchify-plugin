@@ -4,14 +4,14 @@ from krita import *
 from PyQt5.QtWidgets import *
 
 
-from touchify_toolshelves.src.config.ToolshelfArea import ToolshelfArea
-from touchify_toolshelves.src.config.ToolshelfPage import ToolshelfPage
-from touchify_toolshelves.src.config.ToolshelfPageSettings import ToolshelfPageSettings
-from touchify.src.config.triggers.Trigger import Trigger
-from touchify.src.config.triggers.TriggerGroup import TriggerGroup
+from jemlib.api_touchify.config.toolshelf.ToolshelfArea import ToolshelfArea
+from jemlib.api_touchify.config.toolshelf.ToolshelfPage import ToolshelfPage
+from jemlib.api_touchify.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
+from jemlib.api_touchify.config.triggers.Trigger import Trigger
+from jemlib.api_touchify.config.triggers.TriggerGroup import TriggerGroup
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
 import jemlib.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
-from touchify_toolshelves.src.config.ToolshelfAreaSettings import ToolshelfAreaSettings
+from jemlib.api_touchify.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
 
 from jemlib.api_touchify.env import *
 from jemlib.managers.IconRepository import IconRepository

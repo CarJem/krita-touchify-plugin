@@ -1,12 +1,10 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 from PyQt5 import *
 from PyQt5.QtWidgets import *
 from jemlib.alib_vaporjem import Logger
 from krita import *
 
 from jemlib.api_krita.wrappers.window import WindowAPI
-
-from touchify_toolshelves.src.components.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
 from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.ToolOptionsManager import ToolOptionsManager
 from touchify.src.managers.CanvasManager import CanvasManager
@@ -20,8 +18,7 @@ from touchify.src.managers.ShortcutManager import ShortcutsManager
 from touchify.src.managers.TweakManager import TweakManager
 
 
-from touchify_toolshelves.src.components.ToolshelfDockerWidget import ToolshelfDockerWidget
-from touchify.src.managers.WidgetPadManager import WidgetPadManager
+
 
 if TYPE_CHECKING:
     from .Plugin import TouchifyWindow
@@ -30,6 +27,7 @@ class TouchifyManagers:
     def __init__(self, window: "TouchifyWindow"):
         self.__window__ = window
 
+        self.__externalManagers: dict[str, any] = {}
         self.__managedDockers: list[QDockWidget] = []
 
         self.mgr_tweaker = TweakManager(window)
@@ -37,11 +35,22 @@ class TouchifyManagers:
         self.mgr_canvas = CanvasManager(window, self)
         self.mgr_dev = DeveloperManager(window)
         self.mgr_actions = ActionManager(window, self)
-        self.mgr_widgetpad = WidgetPadManager(window, self)
         self.mgr_tooloptions = ToolOptionsManager(window, self)
 
     def api_window(self):
         return self.__window__.api_window
+    
+    def Inject(self, id: str, mgr: Any, window: "TouchifyWindow") -> Any | None:
+        if id in self.__externalManagers:
+            return self.__externalManagers[id]
+        try:
+            result = mgr(window, self)
+            result.Window_Load(window)
+            self.__externalManagers[id] = result
+            return result
+        except Exception as ex:
+            Logger.logError("Touchify", "TouchifyManagers", "Inject", f"failed to setup external manager for \"{id}\": {ex}")
+            return False
 
     def Load(self, window: "TouchifyWindow"):
         self.mgr_dockers = DockerManager(window.api_window)
@@ -49,7 +58,6 @@ class TouchifyManagers:
         self.mgr_shortcuts.Window_Load()
         self.mgr_tweaker.Window_Load()
         self.mgr_canvas.Window_Load(window.api_window)
-        self.mgr_widgetpad.Window_Load(window)
         self.mgr_tooloptions.Window_Load(window)
 
     def Reload(self):
@@ -70,16 +78,63 @@ class TouchifyManagers:
             else: getattr(docker, "onThemeChanged")()
 
     def Addons(self, window: "TouchifyWindow"):
+
+        def tryAddPluginToList(action: QAction, text: str, prefix: str, items: list[QAction]):
+            if text.startswith(prefix): 
+                action.setText(text.removeprefix(prefix))
+                items.append(action)  
+                return True
+            else:
+                return False
+            
+        def trySetPluginTitle(docker: QDockWidget, window_title: str, prefix: str):
+            if window_title.startswith(prefix):
+                window_title = window_title.removeprefix(prefix)
+                docker.setWindowTitle(window_title)
+                return True
+            else:
+                return False
+            
+        def trySetupPlugin(docker_id: str, docker: QDockWidget, current_window: "TouchifyWindow", condition: bool, items: list[QDockWidget]):
+            try:
+                if condition:
+                    docker.setup(current_window)
+                    items.append(docker)
+                    return True
+                else:
+                    return False
+            except Exception as ex:
+                Logger.logError("Touchify", "TouchifyManagers", "Addons", f"failed to setup plugin for \"{docker_id}\": {ex}")
+                return False
+        
+        def trySetupGenericPlugin(docker_id: str, docker: QDockWidget, current_window: "TouchifyWindow", items: list[QDockWidget]):
+            addon_setup_method = "TOUCHIFY_ADDON_SETUP"
+            try:
+                if not hasattr(docker, addon_setup_method): 
+                    return False
+                elif not callable(getattr(docker, addon_setup_method, False)): 
+                    return False
+                else: 
+                    getattr(docker, addon_setup_method)(current_window)
+                    items.append(docker)
+                    return True
+            except Exception as ex:
+                Logger.logError("Touchify", "TouchifyManagers", "Addons", f"failed to setup generic plugin for \"{docker_id}\": {ex}")
+                return False
+
+        def addSectionAndAddItems(title: str, source: QAction, items: list[QAction]):
+            if len(items) != 0:
+                source.menu().addSection(title)
+                for act in items: source.menu().addAction(act)
+
         dockers_menu_action = KritaExtensions.getDockerMenu(window.api_window)
         if dockers_menu_action == None: return
 
         touchify_title_prefix = TouchifyEnv.Title.CORE_DOCKERS_PREFIX
-        addon_title_prefix = TouchifyEnv.Title.ADDON_DOCKERS_PREFIX
-        touchify_clone_prefix = TouchifyEnv.Title.CLONE_DOCKERS_PREFIX
+        touchify_addon_title_prefix = TouchifyEnv.Title.ADDON_DOCKERS_PREFIX
+        touchify_toolshelf_prefix = TouchifyEnv.Title.TOOLSHELF_DOCKERS_PREFIX
+        touchify_widgetpad_prefix = TouchifyEnv.Title.WIDGETPAD_DOCKERS_PREFIX
 
-        addon_id_prefix = "Touchify/"
-        addon_setup_method = "TOUCHIFY_ADDON_SETUP"
-        
         addons_list: list[QAction] = []
         core_list: list[QAction] = []
         toolshelves_list: list[QAction] = []
@@ -87,78 +142,30 @@ class TouchifyManagers:
 
         for docker_action in dockers_menu_action.menu().actions():
             docker_text = docker_action.text()
-
-            if docker_text.startswith(addon_title_prefix): 
-                docker_action.setText(docker_text.removeprefix(addon_title_prefix))
-                addons_list.append(docker_action)  
-            elif docker_text.startswith(touchify_title_prefix):
-                docker_action.setText(docker_text.removeprefix(touchify_title_prefix))
-                core_list.append(docker_action)
-            elif docker_text.startswith(touchify_clone_prefix):
-                if docker_text.startswith(ToolshelfDockerWidget.CLONE_DOCKER_TITLE):
-                    docker_action.setText(docker_text.removeprefix(touchify_clone_prefix))
-                    toolshelves_list.append(docker_action)
-                elif docker_text.startswith(ToolshelfDockerWidgetPad.CLONE_DOCKER_TITLE):
-                    docker_action.setText(docker_text.removeprefix(touchify_clone_prefix))
-                    widgetpads_list.append(docker_action)
+            if tryAddPluginToList(docker_action, docker_text, touchify_addon_title_prefix, addons_list): pass
+            elif tryAddPluginToList(docker_action, docker_text, touchify_title_prefix, core_list): pass
+            elif tryAddPluginToList(docker_action, docker_text, touchify_toolshelf_prefix, toolshelves_list): pass
+            elif tryAddPluginToList(docker_action, docker_text, touchify_widgetpad_prefix, widgetpads_list): pass
                 
-        dockers_menu_action.menu().addSection("Touchify Core")
-        for act in core_list: dockers_menu_action.menu().addAction(act)
-
-        dockers_menu_action.menu().addSection("Touchify Addons")
-        for act in addons_list: dockers_menu_action.menu().addAction(act)
-
-        dockers_menu_action.menu().addSection("Toolshelves")
-        for act in toolshelves_list: dockers_menu_action.menu().addAction(act)
-
-        dockers_menu_action.menu().addSection("Widget Pads")
-        for act in widgetpads_list: dockers_menu_action.menu().addAction(act)
+        addSectionAndAddItems("Touchify Core", dockers_menu_action, core_list)
+        addSectionAndAddItems("Touchify Addons", dockers_menu_action, addons_list)
+        addSectionAndAddItems("Toolshelves", dockers_menu_action, toolshelves_list)
+        addSectionAndAddItems("Widget Pads", dockers_menu_action, widgetpads_list)
 
         for docker in window.api_window.dockers:
             window_title = docker.windowTitle()
             docker_id = docker.objectName()
 
-            if window_title.startswith(addon_title_prefix):
-                window_title = window_title.removeprefix(addon_title_prefix)
-                docker.setWindowTitle(window_title)
-            elif window_title.startswith(touchify_title_prefix):
-                window_title = window_title.removeprefix(touchify_title_prefix)
-                docker.setWindowTitle(window_title)
-            elif window_title.startswith(touchify_clone_prefix):
-                window_title = window_title.removeprefix(touchify_clone_prefix)
-                docker.setWindowTitle(window_title)
+            if trySetPluginTitle(docker, window_title, touchify_title_prefix): pass
+            elif trySetPluginTitle(docker, window_title, touchify_addon_title_prefix): pass
+            elif trySetPluginTitle(docker, window_title, touchify_toolshelf_prefix): pass
+            elif trySetPluginTitle(docker, window_title, touchify_widgetpad_prefix): pass
 
-            if docker_id.startswith(TouchifyEnv.DockerID.TOOLSHELFDOCKER):
-                toolshelfDocker: ToolshelfDockerWidget = docker
-                toolshelfDocker.setup(window)
-                self.__managedDockers.append(toolshelfDocker)
-            elif docker_id.startswith(TouchifyEnv.DockerID.WIDGETPAD):
-                widgetPadDocker: ToolshelfDockerWidgetPad = docker
-                widgetPadDocker.setup(window)
-                self.__managedDockers.append(widgetPadDocker)
-            elif docker_id == TouchifyEnv.DockerID.TOOLBOX:
-                try:
-                    from touchify_toolbox.src.components.ToolboxDocker import ToolboxDocker
-                    toolboxDocker: ToolboxDocker = docker
-                    toolboxDocker.setup(window)
-                    self.__managedDockers.append(toolboxDocker)
-                except:
-                    pass
-            elif docker_id == TouchifyEnv.DockerID.QUICK_ACTIONS:
-                try:
-                    from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
-                    quickActionsDocker: QuickActionsDocker = docker
-                    quickActionsDocker.setup(window)
-                    self.__managedDockers.append(quickActionsDocker)
-                except:
-                    pass
-            else:
-                if not docker_id.startswith(addon_id_prefix): pass
-                elif not hasattr(docker, addon_setup_method): pass
-                elif not callable(getattr(docker, addon_setup_method, False)): pass
-                else: 
-                    getattr(docker, addon_setup_method)(window)
-                    self.__managedDockers.append(docker)
+            if trySetupPlugin(docker_id, docker, window, docker_id.startswith(TouchifyEnv.DockerID.TOOLSHELFDOCKER), self.__managedDockers): pass
+            elif trySetupPlugin(docker_id, docker, window, docker_id.startswith(TouchifyEnv.DockerID.WIDGETPAD), self.__managedDockers): pass
+            elif trySetupPlugin(docker_id, docker, window, docker_id == TouchifyEnv.DockerID.TOOLBOX, self.__managedDockers): pass
+            elif trySetupPlugin(docker_id, docker, window, docker_id == TouchifyEnv.DockerID.QUICK_ACTIONS, self.__managedDockers): pass
+            elif trySetupGenericPlugin(docker_id, docker, window, self.__managedDockers): pass
 
     def Actions(self, window: WindowAPI):
         self.mgr_shortcuts.Actions_Init(window, "tools/touchify", "settings")

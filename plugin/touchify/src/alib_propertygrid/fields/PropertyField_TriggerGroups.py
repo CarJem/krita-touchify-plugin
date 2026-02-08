@@ -6,8 +6,8 @@ from PyQt5.QtCore import *
 
 from jemlib.alib_propertygrid.data.DataPath import DataPath
 from touchify.src.alib_propertygrid.fields.PropertyField_TouchifyExtras import PropertyField_TouchifyExtras
-from touchify.src.config.triggers.Trigger import Trigger
-from touchify.src.config.triggers.TriggerGroup import TriggerGroup
+from jemlib.api_touchify.config.triggers.Trigger import Trigger
+from jemlib.api_touchify.config.triggers.TriggerGroup import TriggerGroup
 from jemlib.alib_propertygrid.fields.PropertyField_TypedList import PropertyField_TypedList
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints

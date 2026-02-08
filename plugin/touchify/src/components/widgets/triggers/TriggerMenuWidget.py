@@ -2,8 +2,8 @@ from typing import TYPE_CHECKING
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from touchify.src.config.various.ContextMenu import ContextMenu
-from touchify.src.config.triggers.Trigger import *
+from jemlib.api_touchify.config.triggers.TriggerContextMenu import TriggerContextMenu
+from jemlib.api_touchify.config.triggers.Trigger import *
 from krita import *
 
 if TYPE_CHECKING:
@@ -11,10 +11,10 @@ if TYPE_CHECKING:
 
 class TriggerMenuWidget(QMenu):
     
-    def __init__(self, cfg: Trigger | ContextMenu, parent: QWidget, action_mgr: "ActionManager"):
+    def __init__(self, cfg: Trigger | TriggerContextMenu, parent: QWidget, action_mgr: "ActionManager"):
         super().__init__(parent)
 
-        if isinstance(cfg, ContextMenu):
+        if isinstance(cfg, TriggerContextMenu):
             action_list = cfg.context_menu_actions
         elif isinstance(cfg, Trigger):
             action_list = cfg.menu_data

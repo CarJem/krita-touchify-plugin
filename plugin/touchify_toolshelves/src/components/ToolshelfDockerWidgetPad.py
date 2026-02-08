@@ -6,7 +6,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from jemlib.api_touchify.env import *
 from touchify_toolshelves.src.components.ToolshelfDockerWidget import ToolshelfDockerWidget
-from touchify.src.managers.WidgetPadManager import WidgetPadAlignment
+from touchify_toolshelves.src.managers.WidgetPadManager import WidgetPadAlignment, WidgetPadManager
 from jemlib.managers.IconRepository import IconRepository
 from jemlib.managers.KritaSettings import KritaSettings
 if TYPE_CHECKING:
@@ -17,9 +17,6 @@ if TYPE_CHECKING:
 
 
 class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
-    DOCKER_TITLE=f"{TouchifyEnv.Title.CORE_DOCKERS_PREFIX} Widget Pad"
-    CLONE_DOCKER_TITLE=f"{TouchifyEnv.Title.CLONE_DOCKERS_PREFIX} Widget Pad"
-
     class TitlebarWidget(QWidget):
 
         sigButtonToggled = pyqtSignal(bool)
@@ -139,7 +136,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
     def __init__(self, index: int = 0):
         super().__init__(-1)
         
-        self.setWindowTitle(f"{ToolshelfDockerWidgetPad.CLONE_DOCKER_TITLE} (Ext. {index})")
+        self.setWindowTitle(f"{TouchifyEnv.Title.WIDGETPAD_DOCKERS_PREFIX} WidgetPad (Ext. {index})")
         self.PanelIndex = 10 + index
 
         self._alignment = WidgetPadAlignment.AlignNone
@@ -173,6 +170,8 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
 
     def setup(self, app_window: "TouchifyWindow"):
         super().setup(app_window)
+        self.mgr_widgetpad: WidgetPadManager = self.managers.Inject("widgetpad", WidgetPadManager, app_window)
+
         self.setAlignment(self._settings.getAlignment())
         self.mainWidget.setTitlebarVisibility(self._settings.getShowHeader())
         self.setPriority(self._settings.getPriority())
@@ -283,7 +282,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
 
     def setPriority(self, level: int):
         self._priority = level
-        self.managers.mgr_widgetpad.nudgeWidgetPad(self)
+        self.mgr_widgetpad.nudgeWidgetPad(self)
 
     def setAlignment(self, align: WidgetPadAlignment):
         old_alignment = self._alignment
@@ -309,7 +308,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
             case _:
                 pass
 
-        self.managers.mgr_widgetpad.moveWidgetPad(self, old_alignment, align)
+        self.mgr_widgetpad.moveWidgetPad(self, old_alignment, align)
 
     def resizeEvent(self, a0: QResizeEvent):
         if self._allowSignals: 

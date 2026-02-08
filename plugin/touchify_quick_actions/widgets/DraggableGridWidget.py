@@ -17,7 +17,7 @@ from ..utils.drag_utils import decode_single, decode_multi
 
 if TYPE_CHECKING:
     from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
-    from touchify.src.config.quick_actions.QuickActionsPage import QuickActionsGrid, GridPresetItem
+    from jemlib.api_touchify.config.quick_actions.QuickActionsPage import QuickActionsGrid, GridPresetItem
 
 from ..dataclasses.SourceGridWidget import SourceGridWidget
 

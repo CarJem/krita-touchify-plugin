@@ -7,7 +7,8 @@ from PyQt5.QtWidgets import *
 from krita import *
 
 from jemlib.alib_vaporjem import Logger
-from touchify.src.PluginOptions import PluginOptions
+
+
 from touchify_toolshelves.src.components.ShelfContextMenu import ShelfContextMenu
 from touchify_toolshelves.src.components.ShelfDock import ShelfDock
 from touchify_toolshelves.src.components.ShelfLoader import ShelfLoader
@@ -16,26 +17,31 @@ from touchify_toolshelves.src.components.ShelfDockArea import ShelfDockArea
 from touchify_toolshelves.src.components.ShelfTabBar import ShelfTabBar
 from touchify_toolshelves.src.components.ShelfToolbar import ShelfToolbar
 from touchify_toolshelves.src.components.ShelfWidgetStack import ShelfWidgetStack
-from touchify.src.config.resource_pack.ResourcePackExtensions import ResourcePackExtensions
-from touchify_toolshelves.src.config.ToolshelfPageSettings import ToolshelfPageSettings
-from touchify_toolshelves.src.config.ToolshelfAreaSettings import ToolshelfAreaSettings
-from touchify_toolshelves.src.config.ToolshelfDock import ToolshelfDock
-from touchify_toolshelves.src.config.ToolshelfArea import ToolshelfArea
-from touchify_toolshelves.src.config.ToolshelfPage import ToolshelfPage
+
+from jemlib.api_touchify.config.toolshelf.ToolshelfData import ToolshelfData
+from jemlib.api_touchify.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
+from jemlib.api_touchify.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
+from jemlib.api_touchify.config.toolshelf.ToolshelfDock import ToolshelfDock
+from jemlib.api_touchify.config.toolshelf.ToolshelfArea import ToolshelfArea
+from jemlib.api_touchify.config.toolshelf.ToolshelfPage import ToolshelfPage
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.managers.GlobalEvents import GlobalEvents
-from touchify.src.settings.TouchifySettings import *
+
 from jemlib.api_touchify.env import *
-from touchify.src.managers.DockerManager import *
+
 
 from typing import TYPE_CHECKING
 
 from jemlib.managers.KritaSettings import KritaSettings
 if TYPE_CHECKING:
     from .ToolshelfDockerWidget import ToolshelfDockerWidget
-    from touchify.src.components.popup.PopupWidget import PopupWidget
+    from touchify_toolshelves.src.components.PopupWidget import PopupWidget
     from touchify.src.PluginManagers import TouchifyManagers
     from touchify_toolshelves.src.components.ToolshelfNestedDock import ToolshelfNestedDock
+    from touchify.src.settings.TouchifySettings import TouchifySettings
+    from touchify.src.config.ResourcePackExtensions import ResourcePackExtensions
+    from touchify.src.PluginOptions import PluginOptions
+
 
 class ShelfWidget(QWidget):
 
@@ -53,28 +59,31 @@ class ShelfWidget(QWidget):
             else:
                 return fallback_val
 
-        def getCurrentShelf(self, registry_index: int) -> Toolshelf:
-            registry = TouchifySettings.registry(Toolshelf)
+        def getCurrentShelf(self, registry_index: int) -> ToolshelfData:
+            from touchify.src.settings.TouchifySettings import TouchifySettings
+            registry = TouchifySettings.registry(ToolshelfData)
             registry_selection = self.getCurrentShelfId(registry_index)
 
             if registry_selection in registry:
                 return registry[registry_selection]    
             else: 
-                return Toolshelf()
+                return ToolshelfData()
             
-        def getShelf(self, registry_selection: str) -> Toolshelf:
-            registry = TouchifySettings.registry(Toolshelf)
+        def getShelf(self, registry_selection: str) -> ToolshelfData:
+            from touchify.src.settings.TouchifySettings import TouchifySettings
+            registry = TouchifySettings.registry(ToolshelfData)
             if registry_selection in registry:
                 return registry[registry_selection]    
             else: 
-                return Toolshelf()
+                return ToolshelfData()
             
         def setCurrentShelf(self, registry_index: int, id: str) -> str:
             if registry_index >= 0:
                 KritaSettings.writeSetting(TouchifyEnv.SettingsPath.TOOLSHELF, "SelectedPreset_" + str(registry_index), id, False)
 
         def getCurrentRegistryKey(self, registry_index: int) -> "TouchifySettings.RegistryKey":
-            registry = TouchifySettings.registry(Toolshelf)
+            from touchify.src.settings.TouchifySettings import TouchifySettings
+            registry = TouchifySettings.registry(ToolshelfData)
             registry_selection: str = self.getCurrentShelfId(registry_index)
 
             if registry_selection in registry:
@@ -84,6 +93,7 @@ class ShelfWidget(QWidget):
                 return "none"
 
         def sync(self, registry_index: int, noReload: bool = False):
+            from touchify.src.settings.TouchifySettings import TouchifySettings
             TouchifySettings.save()
             if noReload: return
             TouchifySettings.load()
@@ -104,15 +114,17 @@ class ShelfWidget(QWidget):
                 KritaSettings.writeSetting(TouchifyEnv.SettingsPath.TOOLSHELF_NOPRESETDATA, str(registry_index), jsonStr, False)
             
         def savePreset(self, state: ToolshelfArea, registry_index: int, no_reload: bool = False):
+            
             cached_state = self.getCurrentShelf(registry_index)
             cached_state.preset_data = state
             self.sync(registry_index, no_reload)
         
-        def savePresetAs(self, editorResults: ResourcePackExtensions.PresetSaveAs, state: ToolshelfArea, registry_index: int):
+        def savePresetAs(self, editorResults: "ResourcePackExtensions.PresetSaveAs", state: ToolshelfArea, registry_index: int):
+            from touchify.src.settings.TouchifySettings import TouchifySettings
             selectedResourcePack = TouchifySettings.getResourcePackFromResult(editorResults)
             if not selectedResourcePack: return
         
-            result: Toolshelf = Toolshelf()
+            result: ToolshelfData = ToolshelfData()
             result.preset_data = state
             result.preset_name = editorResults.display_name
             selectedResourcePack.shelves.append(result)
@@ -166,7 +178,7 @@ class ShelfWidget(QWidget):
         self.setContentsMargins(0,0,0,0)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
-        self.propertyEditor: PluginOptions | None = None
+        self.propertyEditor: "PluginOptions" | None = None
         self.containerOptions: ToolshelfAreaSettings = ToolshelfAreaSettings()
         self.homepageOptions: ToolshelfPageSettings = ToolshelfPageSettings()
 
@@ -489,6 +501,8 @@ class ShelfWidget(QWidget):
         Logger.logDebug('Touchify','ShelfWidget', "unknown", f'shelf: {self.registry_index} | loading_layout: finished')
 
     def editLayout(self):
+        from touchify.src.PluginOptions import PluginOptions
+
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), self.containerOptions)
         result: ToolshelfAreaSettings = self.propertyEditor.exec_()
         if not result: return 
@@ -515,6 +529,8 @@ class ShelfWidget(QWidget):
         self.goToPage(len(self.dockPages) - 1)
 
     def editPage(self, index: int):
+        from touchify.src.PluginOptions import PluginOptions
+
         if index == -1:
             pageData = self.homepageOptions
         else:
@@ -552,6 +568,8 @@ class ShelfWidget(QWidget):
     #region Actions (ShelfItems)
 
     def addShelfItem(self):
+        from touchify.src.PluginOptions import PluginOptions
+
         current_area: ShelfDockArea | None = self.dockStack.currentWidget()
         if current_area == None or not isinstance(current_area, ShelfDockArea):
             return
@@ -582,6 +600,8 @@ class ShelfWidget(QWidget):
         self.saveLayout()
 
     def editShelfItem(self, uuid: str):
+        from touchify.src.PluginOptions import PluginOptions
+
         current_area: ShelfDockArea | None = self.dockStack.currentWidget()
         if current_area == None or not isinstance(current_area, ShelfDockArea):
             return
@@ -673,6 +693,8 @@ class ShelfWidget(QWidget):
         self.settingsLoader.savePreset(self.currentState(), self.registry_index)
 
     def savePresetAs(self):
+        from touchify.src.config.ResourcePackExtensions import ResourcePackExtensions
+        from touchify.src.PluginOptions import PluginOptions
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ResourcePackExtensions.PresetSaveAs())
         result: ResourcePackExtensions.PresetSaveAs = self.propertyEditor.exec_()
         if not result: return

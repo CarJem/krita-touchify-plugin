@@ -51,7 +51,8 @@ class TouchifyEnv:
     class Title:
         CORE_DOCKERS_PREFIX="Touchify Core:"
         ADDON_DOCKERS_PREFIX="Touchify Addon:"
-        CLONE_DOCKERS_PREFIX="Touchify Clone:"
+        WIDGETPAD_DOCKERS_PREFIX="Touchify Widgetpad:"
+        TOOLSHELF_DOCKERS_PREFIX="Touchify Toolshelf:"
         REGISTERED_ACTIONS="Registered Actions"
     
     class DockerID:

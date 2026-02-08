@@ -40,10 +40,10 @@ class TouchifyDataExtension(DataExtension):
                 return False
     
     def isSpecialType(self, property: DataPath):
-        from touchify.src.config.triggers.TriggerGroup import TriggerGroup
-        from touchify.src.config.triggers.Trigger import Trigger
-        from touchify_toolbox.src.config.ToolboxDataItem import ToolboxDataItem
-        from touchify_toolbox.src.config.ToolboxDataSubitem import ToolboxDataSubitem
+        from jemlib.api_touchify.config.triggers.TriggerGroup import TriggerGroup
+        from jemlib.api_touchify.config.triggers.Trigger import Trigger
+        from jemlib.api_touchify.config.toolbox.ToolboxDataItem import ToolboxDataItem
+        from jemlib.api_touchify.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
         varType = property.variableType()
         listType = property.variableListType()
         
@@ -72,10 +72,10 @@ class TouchifyDataExtension(DataExtension):
                 return None
 
     def getSpecialType(self, handler: "DataHandler", property: DataPath):
-        from touchify.src.config.triggers.TriggerGroup import TriggerGroup
-        from touchify.src.config.triggers.Trigger import Trigger
-        from touchify_toolbox.src.config.ToolboxDataItem import ToolboxDataItem
-        from touchify_toolbox.src.config.ToolboxDataSubitem import ToolboxDataSubitem
+        from jemlib.api_touchify.config.triggers.TriggerGroup import TriggerGroup
+        from jemlib.api_touchify.config.triggers.Trigger import Trigger
+        from jemlib.api_touchify.config.toolbox.ToolboxDataItem import ToolboxDataItem
+        from jemlib.api_touchify.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
         varType = property.variableType()
         listType = property.variableListType()
         

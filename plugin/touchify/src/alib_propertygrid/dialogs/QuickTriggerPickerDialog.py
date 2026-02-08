@@ -8,7 +8,7 @@ from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_propertygrid.data.DataHandler import DataHandler
 from jemlib.alib_propertygrid.dialogs.PropertyGrid_SelectorDialog import PropertyGrid_SelectorDialog
 
-from touchify.src.config.triggers.Trigger import Trigger
+from jemlib.api_touchify.config.triggers.Trigger import Trigger
 
 class QuickTriggerPickerDialog(QDialog):
     sigOnNewItem = pyqtSignal(Trigger)

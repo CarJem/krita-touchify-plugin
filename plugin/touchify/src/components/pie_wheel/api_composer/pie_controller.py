@@ -15,7 +15,7 @@ from jemlib.managers.IconRepository import IconRepository
 from touchify.src.components.pie_wheel.api_composer.touchify_constants import SEPERATOR
 
 
-from touchify.src.config.triggers.Trigger import Trigger
+from jemlib.api_touchify.config.triggers.Trigger import Trigger
 from jemlib.managers.GlobalEvents import GlobalEvents
     
 class PieAction(EnumGroup):

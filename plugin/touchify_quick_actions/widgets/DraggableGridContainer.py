@@ -15,8 +15,8 @@ from PyQt5.QtWidgets import QWidget
 
 if TYPE_CHECKING:
     from touchify_quick_actions.QuickActionsDocker import QuickActionsDocker
-    from touchify.src.config.quick_actions.QuickActionsPage import QuickActionsGrid
-    from touchify.src.config.quick_actions.QuickActionsItem import QuickActionsItem
+    from jemlib.api_touchify.config.quick_actions.QuickActionsPage import QuickActionsGrid
+    from jemlib.api_touchify.config.quick_actions.QuickActionsItem import QuickActionsItem
 
 from ..dataclasses.SourceGridWidget import SourceGridWidget
 
