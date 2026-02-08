@@ -8,9 +8,9 @@ from krita import *
 from typing import TYPE_CHECKING
 
 from jemlib.api_krita import KritaAPI
-from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
-from touchify.src.components.toolbox.ToolboxSubtoolMenu import ToolboxSubtoolMenu
-from touchify.src.components.toolbox.ToolboxStyles import ToolboxStyles
+from touchify_toolbox.src.components.ToolboxButton import ToolboxButton
+from touchify_toolbox.src.components.ToolboxSubtoolMenu import ToolboxSubtoolMenu
+from touchify_toolbox.src.components.ToolboxStyles import ToolboxStyles
 from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
 from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
@@ -19,7 +19,7 @@ from jemlib.managers.IconRepository import IconRepository
 
 
 if TYPE_CHECKING:
-    from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
+    from touchify_toolbox.src.components.ToolboxDocker import ToolboxDocker
 
 class ToolboxLoader(QObject):
     def __init__(self, parent: "ToolboxDocker"):

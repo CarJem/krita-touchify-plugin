@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import QLayout, QWidget, QAbstractButton, QLayoutItem, QWid
 from jemlib.alib_vaporjem.extensions import pyqt_extensions  as PyQtExt
 
 from jemlib.alib_pyqtgraph.Qt import QtCore
-from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
+from touchify_toolbox.src.components.ToolboxButton import ToolboxButton
 
 class ToolboxEmptySpace(QToolButton):
     def __init__(self, parent: QWidget = None):

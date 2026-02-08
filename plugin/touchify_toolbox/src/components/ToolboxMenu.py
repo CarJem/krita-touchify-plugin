@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QAction, QMenu
 
 
 if TYPE_CHECKING:
-    from touchify.src.components.toolbox.ToolboxWidget import ToolboxWidget
+    from touchify_toolbox.src.components.ToolboxWidget import ToolboxWidget
 
 class ToolboxMenu(QMenu):
     sigEditModeToggled = pyqtSignal(bool)

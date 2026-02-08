@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from touchify.src.components.toolbox.ToolboxDocker import ToolboxDocker
-    from touchify.src.components.toolbox.ToolboxWidget import ToolboxWidget
+    from touchify_toolbox.src.components.ToolboxDocker import ToolboxDocker
+    from touchify_toolbox.src.components.ToolboxWidget import ToolboxWidget
 
 class ToolboxScrollArea(QScrollArea):
     def __init__(self, parent: "ToolboxDocker", toolbox: "ToolboxWidget"):

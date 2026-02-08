@@ -3,38 +3,39 @@ from uuid import uuid4
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-from jemlib.alib_propertygrid.PropertySystem import PropertySystem
 from krita import *
 
 
 
 from jemlib.api_krita.wrappers.window import WindowAPI
-from jemlib.api_touchify.env import *
-from touchify.src.PluginOptions import PluginOptions
-from touchify.src.components.toolbox.ToolboxButton import ToolboxButton
-from touchify.src.components.toolbox.ToolboxMenu import ToolboxMenu
-from touchify.src.components.toolbox.ToolboxStyles import ToolboxStyles
-from touchify.src.components.toolbox.ToolboxLayout import ToolboxEmptySpace
-from touchify.src.config.resource_pack.ResourcePackExtensions import ResourcePackExtensions
-from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from jemlib.managers.GlobalEvents import GlobalEvents
 from jemlib.api_touchify.env import *
+from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
+from jemlib.alib_propertygrid.PropertySystem import PropertySystem
+from jemlib.managers.KritaSettings import KritaSettings
+from jemlib.alib_widgets.widget.DropIndicatorOverlay import DropIndicatorOverlay
 
-from touchify.src.components.toolbox.ToolboxLoader import ToolboxLoader
-from touchify.src.components.toolbox.ToolboxWidget import ToolboxWidget
-from touchify.src.components.toolbox.ToolboxScrollArea import ToolboxScrollArea
+from touchify_toolbox.src.components.ToolboxButton import ToolboxButton
+from touchify_toolbox.src.components.ToolboxMenu import ToolboxMenu
+from touchify_toolbox.src.components.ToolboxStyles import ToolboxStyles
+from touchify_toolbox.src.components.ToolboxLayout import ToolboxEmptySpace
+from touchify_toolbox.src.components.ToolboxLoader import ToolboxLoader
+from touchify_toolbox.src.components.ToolboxWidget import ToolboxWidget
+from touchify_toolbox.src.components.ToolboxScrollArea import ToolboxScrollArea
+
+from touchify.src.PluginOptions import PluginOptions
+from touchify.src.settings.TouchifySettings import TouchifySettings
+
+from touchify.src.config.resource_pack.ResourcePackExtensions import ResourcePackExtensions
+from touchify.src.config.toolbox.ToolboxData import ToolboxData
 from touchify.src.config.toolbox.ToolboxDataCategory import ToolboxDataCategory
 from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
-from touchify.src.settings.TouchifySettings import TouchifySettings
-from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 
 from typing import TYPE_CHECKING
 
-from jemlib.managers.KritaSettings import KritaSettings
-from jemlib.alib_widgets.widget.DropIndicatorOverlay import DropIndicatorOverlay
 if TYPE_CHECKING:
     from touchify.src.PluginManagers import TouchifyManagers
-    from ...PluginWindow import TouchifyWindow
+    from touchify.src.PluginWindow import TouchifyWindow
 
     
 
