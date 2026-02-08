@@ -11,7 +11,7 @@ from jemlib.alib_vaporjem.extensions.krita_extensions import *
 if TYPE_CHECKING:
     from ..PluginManagers import TouchifyManagers
     from ..Plugin import TouchifyWindow
-    from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
+    from touchify_toolshelves.src.components.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
 
 
 EDGE_PADDING: int = 5

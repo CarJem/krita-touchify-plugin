@@ -1,6 +1,6 @@
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_datatypes.TypedList import TypedList
-from touchify.src.config.toolbox.ToolboxDataItem import *
+from touchify_toolbox.src.config.ToolboxDataItem import *
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 
 class ToolboxDataCategory:

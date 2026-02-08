@@ -109,8 +109,8 @@ class DockerManager(QObject):
         self.qWin = api.qwindow
 
     def isNotForbidden(self, obj):
-        from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
-        from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
+        from touchify_toolshelves.src.components.ToolshelfDockerWidget import ToolshelfDockerWidget
+        from touchify_toolshelves.src.components.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
         return not isinstance(obj, ToolshelfDockerWidget) and not isinstance(obj, ToolshelfDockerWidgetPad)
 
     def registerListener(self, type: SignalType, source: Callable):

@@ -8,15 +8,15 @@ from typing import TYPE_CHECKING
 
 
 from jemlib.api_touchify.env import *
-from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
-from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
+from touchify_toolshelves.src.config.ToolshelfArea import ToolshelfArea
+from touchify_toolshelves.src.config.ToolshelfAreaSettings import ToolshelfAreaSettings
 from jemlib.managers.GlobalEvents import GlobalEvents
 
 if TYPE_CHECKING:
-    from ...PluginWindow import TouchifyWindow
+    from touchify.src.PluginWindow import TouchifyWindow
     from touchify.src.PluginManagers import TouchifyManagers
 
-from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
+from touchify_toolshelves.src.components.ShelfWidget import ShelfWidget
 
 
 

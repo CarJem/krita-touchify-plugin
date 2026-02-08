@@ -3,7 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from touchify.src.components.widgets.triggers.TriggerButton import TriggerButton
-from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
+from touchify_toolbox.src.config.ToolboxDataItem import ToolboxDataItem
 
 UNIQUE_DRAG_ID = "####touchify/toolbox_button###"
 

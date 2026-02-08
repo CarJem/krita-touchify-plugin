@@ -8,20 +8,20 @@ from krita import *
 
 from jemlib.alib_vaporjem import Logger
 from touchify.src.PluginOptions import PluginOptions
-from touchify.src.components.toolshelf.ShelfContextMenu import ShelfContextMenu
-from touchify.src.components.toolshelf.ShelfDock import ShelfDock
-from touchify.src.components.toolshelf.ShelfLoader import ShelfLoader
+from touchify_toolshelves.src.components.ShelfContextMenu import ShelfContextMenu
+from touchify_toolshelves.src.components.ShelfDock import ShelfDock
+from touchify_toolshelves.src.components.ShelfLoader import ShelfLoader
 
-from touchify.src.components.toolshelf.ShelfDockArea import ShelfDockArea
-from touchify.src.components.toolshelf.ShelfTabBar import ShelfTabBar
-from touchify.src.components.toolshelf.ShelfToolbar import ShelfToolbar
-from touchify.src.components.toolshelf.ShelfWidgetStack import ShelfWidgetStack
+from touchify_toolshelves.src.components.ShelfDockArea import ShelfDockArea
+from touchify_toolshelves.src.components.ShelfTabBar import ShelfTabBar
+from touchify_toolshelves.src.components.ShelfToolbar import ShelfToolbar
+from touchify_toolshelves.src.components.ShelfWidgetStack import ShelfWidgetStack
 from touchify.src.config.resource_pack.ResourcePackExtensions import ResourcePackExtensions
-from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
-from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
-from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
-from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
-from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
+from touchify_toolshelves.src.config.ToolshelfPageSettings import ToolshelfPageSettings
+from touchify_toolshelves.src.config.ToolshelfAreaSettings import ToolshelfAreaSettings
+from touchify_toolshelves.src.config.ToolshelfDock import ToolshelfDock
+from touchify_toolshelves.src.config.ToolshelfArea import ToolshelfArea
+from touchify_toolshelves.src.config.ToolshelfPage import ToolshelfPage
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.managers.GlobalEvents import GlobalEvents
 from touchify.src.settings.TouchifySettings import *
@@ -33,9 +33,9 @@ from typing import TYPE_CHECKING
 from jemlib.managers.KritaSettings import KritaSettings
 if TYPE_CHECKING:
     from .ToolshelfDockerWidget import ToolshelfDockerWidget
-    from ..popup.PopupWidget import PopupWidget
+    from touchify.src.components.popup.PopupWidget import PopupWidget
     from touchify.src.PluginManagers import TouchifyManagers
-    from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
+    from touchify_toolshelves.src.components.ToolshelfNestedDock import ToolshelfNestedDock
 
 class ShelfWidget(QWidget):
 
@@ -637,7 +637,7 @@ class ShelfWidget(QWidget):
         if item_uuid not in current_area.docks:
             return
         
-        from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
+        from touchify_toolshelves.src.components.ToolshelfNestedDock import ToolshelfNestedDock
         if not isinstance(current_area.docks[item_uuid], ToolshelfNestedDock):
             return
         

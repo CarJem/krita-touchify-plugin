@@ -8,7 +8,7 @@ from touchify.src.settings.TouchifySettings import QStackedWidget
 from PyQt5.QtWidgets import QStackedWidget
 
 if TYPE_CHECKING:
-    from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
+    from touchify_toolshelves.src.components.ShelfWidget import ShelfWidget
 
 
 class ShelfWidgetStack(QStackedWidget):

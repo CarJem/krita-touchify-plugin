@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 from krita import QAction, QMenu, pyqtSignal
-from touchify.src.config.toolshelf.Toolshelf import Toolshelf
+from touchify_toolshelves.src.config.Toolshelf import Toolshelf
 from touchify.src.settings.TouchifySettings import TouchifySettings
 
 
@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QAction, QMenu
 
 
 if TYPE_CHECKING:
-    from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
+    from touchify_toolshelves.src.components.ShelfWidget import ShelfWidget
 
 class ShelfContextMenu(QMenu):
     sigEditModeToggled = pyqtSignal(bool)
@@ -193,9 +193,9 @@ class ShelfContextMenu(QMenu):
             resetAction.triggered.connect(self.onResetRequested)
 
     def updateSelection(self, item_id: str = None):
-        from touchify.src.components.toolshelf.ShelfDockArea import ShelfDockArea
-        from touchify.src.components.toolshelf.ShelfDock import ShelfDock
-        from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
+        from touchify_toolshelves.src.components.ShelfDockArea import ShelfDockArea
+        from touchify_toolshelves.src.components.ShelfDock import ShelfDock
+        from touchify_toolshelves.src.components.ToolshelfNestedDock import ToolshelfNestedDock
 
         current_area: ShelfDockArea | None = self.host.dockStack.currentWidget()
         if current_area == None or not isinstance(current_area, ShelfDockArea): dock_item = None

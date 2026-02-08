@@ -1,7 +1,7 @@
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
-from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
+from touchify_toolbox.src.config.ToolboxDataSubitem import ToolboxDataSubitem
 from touchify.src.config.TouchifyCompatibility import TouchifyCompatibility
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 

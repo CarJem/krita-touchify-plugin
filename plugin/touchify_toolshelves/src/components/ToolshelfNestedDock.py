@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-from touchify.src.components.toolshelf.ShelfDock import ShelfDock
+from touchify_toolshelves.src.components.ShelfDock import ShelfDock
 
 
 
@@ -7,11 +7,11 @@ from touchify.src.components.toolshelf.ShelfDock import ShelfDock
 
 from PyQt5.QtWidgets import QSizePolicy
 
-from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
-from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
+from touchify_toolshelves.src.config.ToolshelfArea import ToolshelfArea
+from touchify_toolshelves.src.config.ToolshelfDock import ToolshelfDock
 
 if TYPE_CHECKING:
-    from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
+    from touchify_toolshelves.src.components.ShelfWidget import ShelfWidget
     from touchify.src.PluginManagers import TouchifyManagers
 
 class ToolshelfNestedDock(ShelfDock):
@@ -23,7 +23,7 @@ class ToolshelfNestedDock(ShelfDock):
         self.nestedShelf: "ShelfWidget" = None
 
 
-        from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
+        from touchify_toolshelves.src.components.ShelfWidget import ShelfWidget
         self.nestedShelf = ShelfWidget(self, self.managers, parent_dock_widget=self)
         self.nestedShelf.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.nestedShelf.setTitlebarVisibility(self._dockSettings.special_nested_show_titlebar)

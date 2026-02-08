@@ -42,8 +42,8 @@ class TouchifyDataExtension(DataExtension):
     def isSpecialType(self, property: DataPath):
         from touchify.src.config.triggers.TriggerGroup import TriggerGroup
         from touchify.src.config.triggers.Trigger import Trigger
-        from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
-        from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
+        from touchify_toolbox.src.config.ToolboxDataItem import ToolboxDataItem
+        from touchify_toolbox.src.config.ToolboxDataSubitem import ToolboxDataSubitem
         varType = property.variableType()
         listType = property.variableListType()
         
@@ -74,8 +74,8 @@ class TouchifyDataExtension(DataExtension):
     def getSpecialType(self, handler: "DataHandler", property: DataPath):
         from touchify.src.config.triggers.TriggerGroup import TriggerGroup
         from touchify.src.config.triggers.Trigger import Trigger
-        from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
-        from touchify.src.config.toolbox.ToolboxDataSubitem import ToolboxDataSubitem
+        from touchify_toolbox.src.config.ToolboxDataItem import ToolboxDataItem
+        from touchify_toolbox.src.config.ToolboxDataSubitem import ToolboxDataSubitem
         varType = property.variableType()
         listType = property.variableListType()
         

@@ -1,11 +1,11 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
-from touchify.src.components.toolshelf.ShelfDock import ShelfDock
+from touchify_toolshelves.src.components.ToolshelfNestedDock import ToolshelfNestedDock
+from touchify_toolshelves.src.components.ShelfDock import ShelfDock
 from touchify.src.components.widgets.triggers.TriggerPanel import TriggerPanel
 from touchify.src.components.widgets.canvas.CanvasDualColorButton import CanvasDualColorButton
-from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
+from touchify_toolshelves.src.config.ToolshelfDock import ToolshelfDock
 from touchify.src.components.widgets.brush.BrushBlendingSelector import BrushBlendingSelector
 from touchify.src.components.widgets.brush.BrushFlowSlider import BrushFlowSlider
 from touchify.src.components.widgets.brush.BrushOpacitySlider import BrushOpacitySlider
@@ -28,7 +28,7 @@ from typing import TYPE_CHECKING
 from touchify.src.config.triggers.TriggerList import TriggerList
 
 if TYPE_CHECKING:
-    from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
+    from touchify_toolshelves.src.components.ShelfWidget import ShelfWidget
 
 class ShelfLoader(QObject):
 

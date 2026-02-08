@@ -4,9 +4,9 @@ from PyQt5.QtCore import *
 
 from jemlib.api_touchify.env import *
 from touchify.src.config.various.PopupData import PopupData
-from touchify.src.config.toolshelf.Toolshelf import Toolshelf
-from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
-from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
+from touchify_toolshelves.src.config.Toolshelf import Toolshelf
+from touchify_toolshelves.src.config.ToolshelfArea import ToolshelfArea
+from touchify_toolshelves.src.config.ToolshelfDock import ToolshelfDock
 from touchify.src.settings.TouchifySettings import TouchifySettings
 from krita import *
 

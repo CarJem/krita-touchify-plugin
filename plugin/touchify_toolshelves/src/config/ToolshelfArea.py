@@ -1,10 +1,10 @@
 
 from typing import Any
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
-from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
-from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
-from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
-from touchify.src.config.toolshelf.ToolshelfPage import ToolshelfPage
+from touchify_toolshelves.src.config.ToolshelfPageSettings import ToolshelfPageSettings
+from touchify_toolshelves.src.config.ToolshelfAreaSettings import ToolshelfAreaSettings
+from touchify_toolshelves.src.config.ToolshelfDock import ToolshelfDock
+from touchify_toolshelves.src.config.ToolshelfPage import ToolshelfPage
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions

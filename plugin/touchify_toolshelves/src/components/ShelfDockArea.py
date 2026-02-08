@@ -3,12 +3,12 @@ from typing import TYPE_CHECKING
 import PyQt5
 import PyQt5.QtCore
 from jemlib.alib_pyqtgraph.dockarea.DockArea import DockArea
-from touchify.src.components.toolshelf.ShelfContainer import ShelfHContainer, ShelfSplitterContainer, ShelfVContainer
-from touchify.src.components.toolshelf.ShelfDockDrop import ShelfDropDock
+from touchify_toolshelves.src.components.ShelfContainer import ShelfHContainer, ShelfSplitterContainer, ShelfVContainer
+from touchify_toolshelves.src.components.ShelfDockDrop import ShelfDropDock
 
 
 if TYPE_CHECKING:
-    from touchify.src.components.toolshelf.ShelfDock import ShelfDock
+    from touchify_toolshelves.src.components.ShelfDock import ShelfDock
 
 class ShelfDockArea(DockArea):
     sigLayoutSaveRequest = PyQt5.QtCore.pyqtSignal()
@@ -37,7 +37,7 @@ class ShelfDockArea(DockArea):
         return new
 
     def makeContainer(self, typ):
-        from touchify.src.components.toolshelf.ShelfContainer import ShelfHContainer, ShelfTContainer, ShelfVContainer
+        from touchify_toolshelves.src.components.ShelfContainer import ShelfHContainer, ShelfTContainer, ShelfVContainer
         if typ == 'vertical':
             new = ShelfVContainer(self)
             new.sigLayoutSaveRequest.connect(self.onLayoutSaveRequest)
@@ -152,7 +152,7 @@ class ShelfDockArea(DockArea):
         self.sigLayoutSaveRequest.emit()
 
     def updateHandles(self):
-        from touchify.src.components.toolshelf.ToolshelfNestedDock import ToolshelfNestedDock
+        from touchify_toolshelves.src.components.ToolshelfNestedDock import ToolshelfNestedDock
         nested_dock_items = [x for xs in self.findChildren(ToolshelfNestedDock) for x in xs.children()]
         for cnt in self.findChildren(ShelfVContainer): 
             if cnt not in nested_dock_items: ShelfSplitterContainer.updateHandles(cnt)
@@ -160,7 +160,7 @@ class ShelfDockArea(DockArea):
             if cnt not in nested_dock_items: ShelfSplitterContainer.updateHandles(cnt)
 
     def setEditMode(self, state: bool):
-        from touchify.src.components.toolshelf.ShelfDock import ShelfDock
+        from touchify_toolshelves.src.components.ShelfDock import ShelfDock
         self._isEditMode = state
         for uuid in self.docks:
             dock = self.docks[uuid]

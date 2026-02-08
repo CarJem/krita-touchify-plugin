@@ -1,6 +1,6 @@
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
-from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
-from touchify.src.config.toolshelf.ToolshelfPageSettings import ToolshelfPageSettings
+from touchify_toolshelves.src.config.ToolshelfDock import ToolshelfDock
+from touchify_toolshelves.src.config.ToolshelfPageSettings import ToolshelfPageSettings
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions
 
 

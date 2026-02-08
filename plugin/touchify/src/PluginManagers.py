@@ -6,7 +6,7 @@ from krita import *
 
 from jemlib.api_krita.wrappers.window import WindowAPI
 
-from touchify.src.components.toolshelf.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
+from touchify_toolshelves.src.components.ToolshelfDockerWidgetPad import ToolshelfDockerWidgetPad
 from jemlib.alib_vaporjem.extensions.krita_extensions import KritaExtensions
 from touchify.src.managers.ToolOptionsManager import ToolOptionsManager
 from touchify.src.managers.CanvasManager import CanvasManager
@@ -20,7 +20,7 @@ from touchify.src.managers.ShortcutManager import ShortcutsManager
 from touchify.src.managers.TweakManager import TweakManager
 
 
-from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
+from touchify_toolshelves.src.components.ToolshelfDockerWidget import ToolshelfDockerWidget
 from touchify.src.managers.WidgetPadManager import WidgetPadManager
 
 if TYPE_CHECKING:

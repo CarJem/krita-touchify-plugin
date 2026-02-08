@@ -14,7 +14,7 @@ from jemlib.alib_pyqtgraph.dockarea.Dock import Dock
 
 
 if TYPE_CHECKING:
-    from touchify.src.components.toolshelf.ShelfDock import ShelfDockLabel, ShelfDock
+    from touchify_toolshelves.src.components.ShelfDock import ShelfDockLabel, ShelfDock
 
 
 class ShelfContainer(object):

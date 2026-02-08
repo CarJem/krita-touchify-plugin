@@ -1,5 +1,5 @@
-from touchify.src.config.toolbox.ToolboxDataItem import *
-from touchify.src.config.toolbox.ToolboxDataCategory import *
+from touchify_toolbox.src.config.ToolboxDataItem import *
+from touchify_toolbox.src.config.ToolboxDataCategory import *
 from jemlib.alib_datatypes.EnumStr import EnumStr
 from jemlib.alib_vaporjem.extensions.file_extensions import FileExtensions
 from jemlib.alib_datatypes.TypedList import TypedList

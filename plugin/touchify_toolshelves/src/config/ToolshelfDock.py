@@ -100,7 +100,7 @@ class ToolshelfDock:
         self.special_slider_orientation: str = "horizontal"
         self.special_nested_show_titlebar: bool = True
 
-        from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
+        from touchify_toolshelves.src.config.ToolshelfArea import ToolshelfArea
         self.special_nested_data: ToolshelfArea = ToolshelfArea()
 
         self.json_version: int = 5
@@ -108,7 +108,7 @@ class ToolshelfDock:
     def __init__(self, **args) -> None:
         self.__defaults__()
         args = TouchifyCompatibility.ToolshelfDock(args)
-        from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
+        from touchify_toolshelves.src.config.ToolshelfArea import ToolshelfArea
         JsonExtensions.dictToObject(self, args, [ToolshelfArea])
         self.action_section_contents = JsonExtensions.init_list(args, "action_section_contents", TriggerGroup)
 

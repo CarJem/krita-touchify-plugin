@@ -75,7 +75,7 @@ class TouchifyDataConstraints:
         from touchify.src.config.various.PopupData import PopupData
         from touchify.src.config.various.ContextMenu import ContextMenu
         from touchify.src.config.various.CustomScript import CustomScript
-        from touchify.src.config.toolshelf.Toolshelf import Toolshelf
+        from touchify_toolshelves.src.config.Toolshelf import Toolshelf
 
         if type == TouchifyDataConstraints.StrRegistryMod.PopupRegistry: return PopupData
         elif type == TouchifyDataConstraints.StrRegistryMod.DockerGroupRegistry: return DockerGroup

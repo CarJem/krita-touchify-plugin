@@ -1,5 +1,5 @@
 from typing import Any
-from touchify.src.config.toolshelf.ToolshelfDock import ToolshelfDock
+from touchify_toolshelves.src.config.ToolshelfDock import ToolshelfDock
 from touchify.src.config.triggers.TriggerGroup import TriggerGroup
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.alib_vaporjem.extensions.json_extensions import JsonExtensions

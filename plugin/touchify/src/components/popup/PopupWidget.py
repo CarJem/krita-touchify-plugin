@@ -8,10 +8,10 @@ from jemlib.api_krita.wrappers.window import WindowAPI
 from touchify.src.components.popup.PopupGeometryInfo import PopupGeometryInfo
 from touchify.src.components.popup.PopupLoader import PopupLoader
 from touchify.src.components.popup.PopupTitlebar import PopupTitlebar
-from touchify.src.components.toolshelf.ShelfWidget import ShelfWidget
+from touchify_toolshelves.src.components.ShelfWidget import ShelfWidget
 from touchify.src.config.various.PopupData import PopupData
-from touchify.src.config.toolshelf.ToolshelfArea import ToolshelfArea
-from touchify.src.config.toolshelf.ToolshelfAreaSettings import ToolshelfAreaSettings
+from touchify_toolshelves.src.config.ToolshelfArea import ToolshelfArea
+from touchify_toolshelves.src.config.ToolshelfAreaSettings import ToolshelfAreaSettings
 import jemlib.alib_vaporjem.extensions.pyqt_extensions as PyQtExtensions
 from jemlib.alib_widgets.widget.AnimatedWidget import AnimatedWidget
 

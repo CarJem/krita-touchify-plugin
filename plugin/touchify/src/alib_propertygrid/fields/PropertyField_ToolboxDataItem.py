@@ -7,7 +7,7 @@ from PyQt5.QtCore import *
 from jemlib.alib_propertygrid.data.DataConstraints import DataConstraints
 from jemlib.alib_propertygrid.data.DataPath import DataPath
 from touchify.src.alib_propertygrid.fields.PropertyField_TouchifyExtras import PropertyField_TouchifyExtras
-from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
+from touchify_toolbox.src.config.ToolboxDataItem import ToolboxDataItem
 from jemlib.alib_propertygrid.fields.PropertyField_TypedList import PropertyField_TypedList
 from jemlib.alib_datatypes.TypedList import TypedList
 from jemlib.managers.IconRepository import *

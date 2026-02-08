@@ -23,17 +23,18 @@ from touchify_toolbox.src.components.ToolboxLoader import ToolboxLoader
 from touchify_toolbox.src.components.ToolboxWidget import ToolboxWidget
 from touchify_toolbox.src.components.ToolboxScrollArea import ToolboxScrollArea
 
-from touchify.src.PluginOptions import PluginOptions
+
 from touchify.src.settings.TouchifySettings import TouchifySettings
 
 from touchify.src.config.resource_pack.ResourcePackExtensions import ResourcePackExtensions
-from touchify.src.config.toolbox.ToolboxData import ToolboxData
-from touchify.src.config.toolbox.ToolboxDataCategory import ToolboxDataCategory
-from touchify.src.config.toolbox.ToolboxDataItem import ToolboxDataItem
+from touchify_toolbox.src.config.ToolboxData import ToolboxData
+from touchify_toolbox.src.config.ToolboxDataCategory import ToolboxDataCategory
+from touchify_toolbox.src.config.ToolboxDataItem import ToolboxDataItem
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from touchify.src.PluginOptions import PluginOptions
     from touchify.src.PluginManagers import TouchifyManagers
     from touchify.src.PluginWindow import TouchifyWindow
 
@@ -115,7 +116,7 @@ class ToolboxDocker(QDockWidget):
         self.managers: "TouchifyManagers" = None
 
         self.containerLoader = ToolboxLoader(self)
-        self.propertyEditor: PluginOptions = None
+        self.propertyEditor: "PluginOptions" = None
         
         self._isDynamicOrientation = False
         self._toolboxItems: list[ToolboxButton] = []
@@ -268,6 +269,7 @@ class ToolboxDocker(QDockWidget):
         self.updateToolbox()
 
     def savePresetAs(self):
+        from touchify.src.PluginOptions import PluginOptions
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ResourcePackExtensions.PresetSaveAs())
         editorResults: ResourcePackExtensions.PresetSaveAs = self.propertyEditor.exec_()
         if not editorResults: return
@@ -287,6 +289,7 @@ class ToolboxDocker(QDockWidget):
         avaliable_section_names = self.getSectionNames(layout_config)
         if not avaliable_section_names: return
         
+        from touchify.src.PluginOptions import PluginOptions
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ToolboxDataCategory())
         result: ToolboxDataCategory = self.propertyEditor.exec_()
         if not result: return
@@ -307,6 +310,7 @@ class ToolboxDocker(QDockWidget):
 
         selected_section_index = layout_config.categories.index(selected_section)
         
+        from touchify.src.PluginOptions import PluginOptions
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), selected_section)
         result: ToolboxDataCategory = self.propertyEditor.exec_()
         if not result: return
@@ -347,6 +351,7 @@ class ToolboxDocker(QDockWidget):
         selected_section = self.getSectionByUUID(layout_config, section_id)
         if not selected_section: return
         
+        from touchify.src.PluginOptions import PluginOptions
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), ToolboxDataItem())
         result: ToolboxDataItem = self.propertyEditor.exec_()
         if not result: return
@@ -367,6 +372,7 @@ class ToolboxDocker(QDockWidget):
         selected_item_index = selected_button._dataIndex
         if len(selected_section.items) < selected_item_index or selected_item_index < 0: return
 
+        from touchify.src.PluginOptions import PluginOptions
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), selected_item)
         result: ToolboxDataItem = self.propertyEditor.exec_()
         if not result: return
@@ -446,6 +452,7 @@ class ToolboxDocker(QDockWidget):
         self.settingsManager.saveLayout(ToolboxData())
 
     def editToolbox(self):
+        from touchify.src.PluginOptions import PluginOptions
         layout_config = self.settingsManager.loadLayout()
         self.propertyEditor = PluginOptions.Setup(self.propertyEditor, self.api_window.qwindow.window(), layout_config)
         result: ToolboxData = self.propertyEditor.exec_()

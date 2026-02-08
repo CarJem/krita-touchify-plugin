@@ -5,12 +5,12 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from jemlib.api_touchify.env import *
-from touchify.src.components.toolshelf.ToolshelfDockerWidget import ToolshelfDockerWidget
+from touchify_toolshelves.src.components.ToolshelfDockerWidget import ToolshelfDockerWidget
 from touchify.src.managers.WidgetPadManager import WidgetPadAlignment
 from jemlib.managers.IconRepository import IconRepository
 from jemlib.managers.KritaSettings import KritaSettings
 if TYPE_CHECKING:
-    from ...PluginWindow import TouchifyWindow
+    from touchify.src.PluginWindow import TouchifyWindow
     from touchify.src.PluginManagers import TouchifyManagers
 
 

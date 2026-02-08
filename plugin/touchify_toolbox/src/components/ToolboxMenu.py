@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 from krita import QAction, QMenu, pyqtSignal
-from touchify.src.config.toolbox.ToolboxData import ToolboxData
+from touchify_toolbox.src.config.ToolboxData import ToolboxData
 from touchify.src.settings.TouchifySettings import TouchifySettings
 
 

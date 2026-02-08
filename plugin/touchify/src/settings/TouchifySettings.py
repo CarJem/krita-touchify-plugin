@@ -13,8 +13,8 @@ from touchify.src.config.various.CanvasPreset import CanvasPreset
 from touchify.src.config.various.DockerGroup import DockerGroup
 from touchify.src.config.various.PopupData import PopupData
 from touchify.src.config.various.CustomScript import CustomScript
-from touchify.src.config.toolbox.ToolboxData import ToolboxData
-from touchify.src.config.toolshelf.Toolshelf import Toolshelf
+from touchify_toolbox.src.config.ToolboxData import ToolboxData
+from touchify_toolshelves.src.config.Toolshelf import Toolshelf
 from touchify.src.config.TouchifyPreferences import TouchifyPreferences
 from touchify.src.config.various.ContextMenu import ContextMenu
 from jemlib.api_touchify.env import *
