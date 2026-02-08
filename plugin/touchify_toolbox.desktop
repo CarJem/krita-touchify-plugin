@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=touchify_toolbox
+X-Python-2-Compatible=false
+X-Krita-Manual=manual.html
+Name=Touchify Addon - Toolbox
+Comment=[Requires Touchify] A Customizable Toolbox Widget

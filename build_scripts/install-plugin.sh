@@ -13,6 +13,7 @@ install_plugin() {
 
 install_plugin "jemlib"
 install_plugin "touchify"
+install_plugin "touchify_toolbox"
 install_plugin "touchify_brush_options"
 install_plugin "touchify_color_options"
 install_plugin "touchify_compact_brush_toggler"
