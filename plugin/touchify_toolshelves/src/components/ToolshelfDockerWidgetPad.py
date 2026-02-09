@@ -12,7 +12,7 @@ from jemlib.managers.KritaSettings import KritaSettings
 if TYPE_CHECKING:
     from touchify.src.PluginWindow import TouchifyWindow
     from touchify.src.PluginManagers import TouchifyManagers
-
+    from touchify_toolshelves.src.managers.WidgetPadManager import WidgetPadManager
 
 
 
@@ -139,6 +139,8 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self.setWindowTitle(f"{TouchifyEnv.Title.WIDGETPAD_DOCKERS_PREFIX} WidgetPad (Ext. {index})")
         self.PanelIndex = 10 + index
 
+        self.mgr_widgetpad: "WidgetPadManager" | None = None
+
         self._alignment = WidgetPadAlignment.AlignNone
         self._collapsed_size = QSize()
         self._collapsed_position = QPoint()
@@ -147,6 +149,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self._nextNeighbor: "ToolshelfDockerWidgetPad" = None
         self._autoCollapse = False
         self._allowSignals = True
+        self.__subWindow = None
 
         self.setAllowedAreas(Qt.DockWidgetArea.NoDockWidgetArea)
 
@@ -156,6 +159,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self._titlebar.sigButtonToggled.connect(self.onToggled)
         self._titlebar.sigContextMenuRequested.connect(self.onContextMenu)
         self.setTitleBarWidget(self._titlebar)
+
 
         self.__lastResizeEvent: QResizeEvent = None
         self.__lastMoveEvent: QMoveEvent = None
@@ -170,8 +174,9 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
 
     def setup(self, app_window: "TouchifyWindow"):
         super().setup(app_window)
-        self.mgr_widgetpad: WidgetPadManager = self.managers.Inject("widgetpad", WidgetPadManager, app_window)
 
+    def setupDocker(self, manager: "WidgetPadManager"):
+        self.mgr_widgetpad = manager
         self.setAlignment(self._settings.getAlignment())
         self.mainWidget.setTitlebarVisibility(self._settings.getShowHeader())
         self.setPriority(self._settings.getPriority())
@@ -190,8 +195,6 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
         self._titlebar.toggleButton.blockSignals(False)
         self._collapsed_size = self.size()
         self.mainWidget.hide()
-
-    
 
     def onContextMenu(self, pos: QPoint):
         menu = QMenu(self)
@@ -240,6 +243,16 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
 
         menu.exec_(pos)
 
+    def isFloating(self):
+        if not self.mgr_widgetpad: return False
+        elif self.mgr_widgetpad.dockWidgetMode(): return super().isFloating()
+        else: return True
+    
+    def setFloating(self, value: bool):
+        if not self.mgr_widgetpad: return
+        elif self.mgr_widgetpad.dockWidgetMode(): self.setFloating(value)
+        else: pass
+
     def onIncreasePriority(self):
         result = self._priority + 2
         self.setPriority(result)
@@ -282,7 +295,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
 
     def setPriority(self, level: int):
         self._priority = level
-        self.mgr_widgetpad.nudgeWidgetPad(self)
+        if self.mgr_widgetpad: self.mgr_widgetpad.nudgeWidgetPad(self)
 
     def setAlignment(self, align: WidgetPadAlignment):
         old_alignment = self._alignment
@@ -308,7 +321,7 @@ class ToolshelfDockerWidgetPad(ToolshelfDockerWidget):
             case _:
                 pass
 
-        self.mgr_widgetpad.moveWidgetPad(self, old_alignment, align)
+        if self.mgr_widgetpad: self.mgr_widgetpad.moveWidgetPad(self, old_alignment, align)
 
     def resizeEvent(self, a0: QResizeEvent):
         if self._allowSignals: 

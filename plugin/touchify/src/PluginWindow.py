@@ -52,6 +52,7 @@ class TouchifyWindow(QObject):
         self.managers.ActionWidgets(self)
 
         self.managers.Addons(self)
+        self.managers.Plugins(self)
 
     def LoadActions(self, window: WindowAPI):
         self.action_plugin_settings = window.create_action(TouchifyEnv.ActionID.CONFIGURE, "Configure Touchify...", "settings")

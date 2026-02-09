@@ -23,6 +23,9 @@ from touchify.src.managers.TweakManager import TweakManager
 if TYPE_CHECKING:
     from .Plugin import TouchifyWindow
 
+
+
+
 class TouchifyManagers:
     def __init__(self, window: "TouchifyWindow"):
         self.__window__ = window
@@ -39,18 +42,6 @@ class TouchifyManagers:
 
     def api_window(self):
         return self.__window__.api_window
-    
-    def Inject(self, id: str, mgr: Any, window: "TouchifyWindow") -> Any | None:
-        if id in self.__externalManagers:
-            return self.__externalManagers[id]
-        try:
-            result = mgr(window, self)
-            result.Window_Load(window)
-            self.__externalManagers[id] = result
-            return result
-        except Exception as ex:
-            Logger.logError("Touchify", "TouchifyManagers", "Inject", f"failed to setup external manager for \"{id}\": {ex}")
-            return False
 
     def Load(self, window: "TouchifyWindow"):
         self.mgr_dockers = DockerManager(window.api_window)
@@ -59,6 +50,7 @@ class TouchifyManagers:
         self.mgr_tweaker.Window_Load()
         self.mgr_canvas.Window_Load(window.api_window)
         self.mgr_tooloptions.Window_Load(window)
+        
 
     def Reload(self):
         Logger.logDebug("Touchify", "TouchifyManagers", "Reload", "started")
@@ -167,6 +159,24 @@ class TouchifyManagers:
             elif trySetupPlugin(docker_id, docker, window, docker_id == TouchifyEnv.DockerID.QUICK_ACTIONS, self.__managedDockers): pass
             elif trySetupGenericPlugin(docker_id, docker, window, self.__managedDockers): pass
 
+    def Plugins(self, window: "TouchifyWindow"):
+
+        def trySetupGenericPlugin(extension: Extension, current_window: "TouchifyWindow"):
+            addon_setup_method = "TOUCHIFY_ADDON_SETUP"
+            try:
+                if not hasattr(extension, addon_setup_method): 
+                    return False
+                elif not callable(getattr(extension, addon_setup_method, False)): 
+                    return False
+                else: 
+                    getattr(extension, addon_setup_method)(self, current_window)
+                    return True
+            except Exception as ex:
+                Logger.logError("Touchify", "TouchifyManagers", "Plugins", f"failed to setup generic plugin for \"{extension.objectName()}\": {ex}")
+                return False
+
+        for i in Krita.instance().extensions(): trySetupGenericPlugin(i, window)
+
     def Actions(self, window: WindowAPI):
         self.mgr_shortcuts.Actions_Init(window, "tools/touchify", "settings")
         self.mgr_actions.Actions_Init(window, "tools/touchify")  
@@ -180,3 +190,21 @@ class TouchifyManagers:
         self.mgr_canvas.Actions_Post()
         self.mgr_actions.Actions_Post(window.action_plugin_tools_menu)
         self.mgr_dev.Actions_Post(window.action_plugin_tools_menu)
+
+    def External_Load(self, id: str, mgr: Any, window: "TouchifyWindow") -> Any | None:
+        if id in self.__externalManagers:
+            return self.__externalManagers[id]
+        try:
+            result = mgr(window, self)
+            result.Window_Load(window)
+            self.__externalManagers[id] = result
+            return result
+        except Exception as ex:
+            Logger.logError("Touchify", "TouchifyManagers", "Inject", f"failed to setup external manager for \"{id}\": {ex}")
+            return False
+
+    def External_Get(self, id: str):
+        if id in self.__externalManagers:
+            return self.__externalManagers[id]
+        else:
+            return None

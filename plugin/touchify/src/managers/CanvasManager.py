@@ -28,6 +28,7 @@ class CanvasManager(QObject):
 
     canvasResized = pyqtSignal()
     canvasMoved = pyqtSignal()
+    canvasChanged = pyqtSignal()
 
 
 
@@ -36,6 +37,9 @@ class CanvasManager(QObject):
         self.managers = managers
         self.api_window: WindowAPI | None = None
         self.last_canvas_focus = None
+        self.mdi_area: QMdiArea | None = None
+        self.mdi_subwindow: QMdiSubWindow | None = None
+        self.view_container: QWidget | None = None
         self.active_canvas: QOpenGLWidget | None = None
 
     def Window_Load(self, api_window: WindowAPI):
@@ -68,32 +72,43 @@ class CanvasManager(QObject):
         return self.active_canvas.hasFocus()
 
     def OnEvent_ActiveViewChanged(self):
-        if self.active_canvas != None:
-            try: self.active_canvas.removeEventFilter(self)
-            except: pass
+        def main():
+            if self.active_canvas != None:
+                try: self.active_canvas.removeEventFilter(self)
+                except: pass
+                
+
+                self.mdi_area = None
+                self.mdi_subwindow = None
+                self.view_container = None
+                self.active_canvas = None
             
-            self.active_canvas = None
-        
-        current_view = self.api_window.active_view
-        if not current_view: return
+            current_view = self.api_window.active_view
+            if not current_view: return
 
-        window_views = self.api_window.views
-        if current_view not in window_views: return
+            window_views = self.api_window.views
+            if current_view not in window_views: return
 
-        mdi_area = self.api_window.mdi_area
-        if not mdi_area: return
+            mdi_area = self.api_window.mdi_area
+            if not mdi_area: return
+            
 
-        mdi_subwindow = mdi_area.activeSubWindow()
-        if not mdi_subwindow: return
 
-        view_container = next((w for w in mdi_subwindow.findChildren(QWidget) if w.metaObject().className() == 'KisView'), None)
-        if not view_container: return
-        
-        active_canvas = next((w for w in view_container.findChildren(QOpenGLWidget) if w.metaObject().className() == 'KisOpenGLCanvas2'), None)
-        if not active_canvas: return
+            mdi_subwindow = mdi_area.activeSubWindow()
+            if not mdi_subwindow: return
 
-        self.active_canvas = active_canvas
-        self.active_canvas.installEventFilter(self)
+            view_container = next((w for w in mdi_subwindow.findChildren(QWidget) if w.metaObject().className() == 'KisView'), None)
+            if not view_container: return
+            
+            active_canvas = next((w for w in view_container.findChildren(QOpenGLWidget) if w.metaObject().className() == 'KisOpenGLCanvas2'), None)
+            if not active_canvas: return
+
+            self.mdi_area = mdi_area
+            self.mdi_subwindow = mdi_subwindow
+            self.view_container = view_container
+            self.active_canvas = active_canvas
+            self.active_canvas.installEventFilter(self)
+        main(); self.canvasChanged.emit()
 
     def onTick(self):
         pass
